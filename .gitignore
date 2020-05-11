@@ -1,3 +1,14 @@
+run/*
+.classpath
+.location
+build/*
+.project
+0.tree
+eclipse/*
+.gradle/*
+.settings
+gradle-wrapper.properties
+
 # Compiled class file
 *.class
 
@@ -21,3 +32,4 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/bin/

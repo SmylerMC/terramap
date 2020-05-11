@@ -1,0 +1,16 @@
+[
+{
+  "modid": "terramap",
+  "name": "Terramap",
+  "description": "A tiled map in minecraft as an addon for terra121",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["TheSmyler"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
