@@ -1,4 +1,4 @@
-package fr.smyler.terramap.client.gui;
+package fr.smyler.terramap.gui;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -6,6 +6,7 @@ import org.lwjgl.input.Mouse;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
+import fr.smyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
 import fr.smyler.terramap.maps.utils.TerramapUtils;
 import fr.smyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
@@ -19,7 +20,7 @@ public class GuiTiledMap extends GuiScreen {
 	 * The position of the map on the GUI
 	 */
 	
-	private final float GUI_SIZING = 3;
+	private final float GUI_SIZING = 1;
 	protected int x;
 	protected int y;
 	
@@ -40,13 +41,15 @@ public class GuiTiledMap extends GuiScreen {
 		this.hovered = false;
 		this.map = map;
 		this.zoomLevel = map.getZoomLevel();
+		this.setZoom(10);
 		this.focusLatitude = 0;
 		this.focusLongitude = 0;
 	}
 	
 	@Override
 	public void initGui() {
-		this.initGui(0, 0, 500, 500); //TODO maybe have a look at minecraft's window's size
+		Minecraft mc = Minecraft.getMinecraft();
+		this.initGui(0, 0, mc.displayWidth, mc.displayHeight); //TODO maybe have a look at minecraft's window's size
 	}
 	
 	public void initGui(int x, int y, int width, int height) {
@@ -57,7 +60,8 @@ public class GuiTiledMap extends GuiScreen {
 	}
     
 	//FIXME Zooming to much kills it
-	public void draw() {
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 
 		if((int)this.zoomLevel != this.map.getZoomLevel()) {
 			TerramapMod.logger.info("Zooms are differents: GUI: " + this.zoomLevel + " | Map: " + this.map.getZoomLevel());
@@ -95,7 +99,11 @@ public class GuiTiledMap extends GuiScreen {
 			
 			for(int tY = lowerTY; tY * renderSize < maxY; tY++) {
 
-				RasterWebTile tile = map.getTile(TerramapUtils.modulus(tX, maxTileXY), tY, (int) this.zoomLevel);
+				RasterWebTile tile;
+				
+				try {
+					tile = map.getTile(TerramapUtils.modulus(tX, maxTileXY), tY, (int) this.zoomLevel);
+				} catch(InvalidTileCoordinatesException e) { continue ;}
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				RasterWebTile bestTile = tile;
 				boolean lowerResRender = false;

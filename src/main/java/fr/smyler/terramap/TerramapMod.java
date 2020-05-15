@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.logging.log4j.Logger;
 
 import fr.smyler.terramap.caching.CacheManager;
+import fr.smyler.terramap.input.KeyBindings;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -47,5 +48,8 @@ public class TerramapMod {
     @EventHandler
     public void init(FMLInitializationEvent event) {
     	TerramapMod.logger.debug("Terramap init...");
+    	KeyBindings.registerBindings();
     }
+    
+        
 }
