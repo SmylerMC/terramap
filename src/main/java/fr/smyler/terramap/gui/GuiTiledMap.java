@@ -9,7 +9,10 @@ import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
 import fr.smyler.terramap.maps.utils.TerramapUtils;
 import fr.smyler.terramap.maps.utils.WebMercatorUtils;
+import io.github.terra121.EarthBiomeProvider;
+import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -41,7 +44,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.hovered = false;
 		this.map = map;
 		this.zoomLevel = map.getZoomLevel();
-		this.setZoom(10);
+		this.setZoom(13);
 		this.focusLatitude = 0;
 		this.focusLongitude = 0;
 	}
@@ -49,7 +52,7 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void initGui() {
 		Minecraft mc = Minecraft.getMinecraft();
-		this.initGui(0, 0, mc.displayWidth, mc.displayHeight); //TODO maybe have a look at minecraft's window's size
+		this.initGui(0, 0, mc.displayWidth, mc.displayHeight);
 	}
 	
 	public void initGui(int x, int y, int width, int height) {
@@ -57,6 +60,11 @@ public class GuiTiledMap extends GuiScreen {
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		GeographicProjection proj = ((EarthBiomeProvider)Minecraft.getMinecraft().getIntegratedServer().getWorld(0).getBiomeProvider()).projection;
+		EntityPlayerSP p = Minecraft.getMinecraft().player;
+		double coords[] = proj.toGeo(p.posX, p.posZ);
+		this.focusLatitude = coords[1];
+		this.focusLongitude = coords[0];
 	}
     
 	//FIXME Zooming to much kills it
@@ -67,16 +75,14 @@ public class GuiTiledMap extends GuiScreen {
 			TerramapMod.logger.info("Zooms are differents: GUI: " + this.zoomLevel + " | Map: " + this.map.getZoomLevel());
 		}
 		double renderFactor = this.getSizeFactor((int) this.zoomLevel);
-		int renderSize = (int) (renderFactor * WebMercatorUtils.TILE_DIMENSIONS);
+		int renderSize = WebMercatorUtils.TILE_DIMENSIONS;
 		
 		long upperLeftX = (long)(
 				(double)(WebMercatorUtils.getXFromLongitude(this.focusLongitude, (int)this.zoomLevel))
-				* renderFactor
-				- ((double)this.width) / 2f);
+				- ((double)this.width) / 2f / renderFactor);
 		long upperLeftY = (long)(
 				(double)WebMercatorUtils.getYFromLatitude(this.focusLatitude, (int)this.zoomLevel)
-				* renderFactor
-				- (double)this.height / 2f);
+				- (double)this.height / 2f / renderFactor);
 		
 		//TODO handle keybord input in a method
 		this.handleMouseInput();
@@ -89,8 +95,8 @@ public class GuiTiledMap extends GuiScreen {
 		TextureManager textureManager = mc.getTextureManager();
 
 		int maxTileXY = (int) map.getSizeInTiles();
-		long maxX = upperLeftX + this.width;
-		long maxY = upperLeftY + this.height;
+		long maxX = (long) (upperLeftX + this.width / renderFactor);
+		long maxY = (long) (upperLeftY + this.height / renderFactor);
 
 		int lowerTX = (int) Math.floor((double)upperLeftX / (double)renderSize);
 		int lowerTY = (int) Math.floor((double)upperLeftY / (double)renderSize);
@@ -295,7 +301,8 @@ public class GuiTiledMap extends GuiScreen {
     
     private double getSizeFactor(double mapZoom, int tileZoom) {
     	//TODO WIP, Math.pow and double are not precise enough
-    	return 1f/this.GUI_SIZING;
+    	return Minecraft.getMinecraft().gameSettings.guiScale;
+    	//return 1f/this.GUI_SIZING;
     	//return (Math.pow(2, mapZoom - tileZoom) / this.GUI_SIZING);
     	//return (Math.pow(2, mapZoom));
     }
