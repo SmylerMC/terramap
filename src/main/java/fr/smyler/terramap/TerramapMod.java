@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import fr.smyler.terramap.caching.CacheManager;
 import fr.smyler.terramap.input.KeyBindings;
+import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -49,6 +50,7 @@ public class TerramapMod {
     public void init(FMLInitializationEvent event) {
     	TerramapMod.logger.debug("Terramap init...");
     	KeyBindings.registerBindings();
+    	RasterWebTile.registerErrorTexture();
     }
     
         

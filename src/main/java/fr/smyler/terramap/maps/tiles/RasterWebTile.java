@@ -48,6 +48,8 @@ public abstract class RasterWebTile implements Cachable {
 	protected BufferedImage image;
 	protected ResourceLocation texture = null;
 	
+	private static ResourceLocation errorTileTexture = null;
+
 
 	public RasterWebTile(int size, long x, long y, int zoom) {
 
@@ -83,9 +85,8 @@ public abstract class RasterWebTile implements Cachable {
 	public BufferedImage getImage() throws IOException {
 		if(this.image == null) {
 			File f = TerramapMod.cacheManager.getFile(this);
-
 			//If the file has been cached, it may have been loaded in this::cached
-			if(this.image == null) this.loadImageFomFile(f);
+				if(this.image == null) this.loadImageFomFile(f);
 		}
 		return this.image;
 	}
@@ -122,7 +123,7 @@ public abstract class RasterWebTile implements Cachable {
 		return ImageUtils.decodeRGBA2Array(this.getImage().getRGB(x, y));
 	}
 
-	
+
 	public ResourceLocation getTexture() {
 		if(this.texture == null) {
 			Minecraft mc = Minecraft.getMinecraft();
@@ -130,15 +131,25 @@ public abstract class RasterWebTile implements Cachable {
 			try {
 				BufferedImage image = this.getImage();
 				this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.x + "/" + this.y + "/" + this.zoom, new DynamicTexture(image));
-			} catch (IOException e) {
+			} catch (Exception e) {
 				TerramapMod.logger.catching(e);
+				TerramapMod.cacheManager.reportError(this);
+				TerramapMod.cacheManager.cacheAsync(this);
+				return RasterWebTile.errorTileTexture;
 			}
 		}
 		return this.texture;
-		//TODO We should be able to unload textures
 	}
-	
-	
+
+	public void unloadTexture() {
+		if(this.texture != null) {
+			Minecraft mc = Minecraft.getMinecraft();
+			TextureManager textureManager = mc.getTextureManager();
+			textureManager.deleteTexture(this.texture);
+		}
+	}
+
+
 	///// Various uninteresting getters and setters from here /////
 
 	public long getX() {
@@ -152,15 +163,15 @@ public abstract class RasterWebTile implements Cachable {
 	public int getZoom() {
 		return zoom;
 	}
-	
+
 	public long getXinPixel() {
 		return this.x * this.size;
 	}
-	
+
 	public long getYinPixel() {
 		return this.y * this.size;
 	}
-	
+
 	public int getSideSize() {
 		return this.size;
 	}
@@ -179,8 +190,15 @@ public abstract class RasterWebTile implements Cachable {
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 
 	}
 	
+	public static void registerErrorTexture() {
+		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+		int color[] = {175, 175, 175};
+		RasterWebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(ImageUtils.imageFromColor(256,  256, color)));
+
+	}
+
 }

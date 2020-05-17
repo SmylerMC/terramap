@@ -13,10 +13,15 @@ import io.github.terra121.EarthBiomeProvider;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 
+//TODO Max zoom level
+//TODO Min zoom level
+//TODO Better zoom
+//TODO Custom scaling
 public class GuiTiledMap extends GuiScreen {
 
 	/*
@@ -70,6 +75,17 @@ public class GuiTiledMap extends GuiScreen {
 	//FIXME Zooming to much kills it
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawMap(mouseX, mouseY, partialTicks);
+		Gui.drawRect(0, 0, 200, 150, 0xAA000000);
+		String dispLat = "" + (float)Math.round(this.focusLatitude * 100000) / 100000;
+		String dispLong = "" + (float)Math.round(this.focusLatitude * 100000) / 100000;
+		this.drawString(this.fontRenderer, "Map position: " + dispLat + " " + dispLong, 10, 10, 0xFFFFFF);
+		this.drawString(this.fontRenderer, "Zoom level: " + this.zoomLevel, 10, 20 + this.fontRenderer.FONT_HEIGHT, 0xFFFFFF);
+		this.drawString(this.fontRenderer, "Cache queue: " + TerramapMod.cacheManager.getQueueSize(), 10, 30 + + this.fontRenderer.FONT_HEIGHT * 2, 0xFFFFFF );
+		this.drawString(this.fontRenderer, "Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad(), 10, 40 + this.fontRenderer.FONT_HEIGHT * 3, 0xFFFFFF);
+	}
+	
+	private void drawMap(int mouseX, int mouseY, float partialTicks) {
 
 		if((int)this.zoomLevel != this.map.getZoomLevel()) {
 			TerramapMod.logger.info("Zooms are differents: GUI: " + this.zoomLevel + " | Map: " + this.map.getZoomLevel());
@@ -254,6 +270,11 @@ public class GuiTiledMap extends GuiScreen {
         }
     }
     
+    @Override
+    public void onGuiClosed() {
+    	this.map.unloadAll();
+    }
+    
     public void zoom(double val) {
     	
     	double nzoom = this.zoomLevel + val;
@@ -278,7 +299,8 @@ public class GuiTiledMap extends GuiScreen {
 //    	long newUpperLeftY = (long) ((double)(this.upperLeftY - mouseY) / oldRenderSize * newRenderSize);
 //    	IRLW.logger.info(newUpperLeftX);
 //    	IRLW.logger.info(newUpperLeftY);
-    	//if(this.setPosition(newUpperLeftX, newUpperLeftY)){    	
+    	//if(this.setPosition(newUpperLeftX, newUpperLeftY)){   
+    	TerramapMod.cacheManager.clearQueue(); // We are displaying new tiles, we don't need what we needed earlier
     		this.zoomLevel = nzoom;
     	//}
     	this.setTiledMapZoom();

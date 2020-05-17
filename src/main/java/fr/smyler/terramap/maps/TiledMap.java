@@ -19,7 +19,7 @@
 package fr.smyler.terramap.maps;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
@@ -34,20 +34,22 @@ public class TiledMap<T extends RasterWebTile> {
 
 	protected int zoomLevel;
 	protected TileFactory<T> factory;
-	protected ArrayList<T> tiles;
+	protected LinkedList<T> tiles;
+	protected int maxLoaded;
 	
 	protected boolean smartLoadEnable = false;
 	
 	//TODO javadoc
-	public TiledMap(TileFactory<T> fact, int zoomLevel) {
+	public TiledMap(TileFactory<T> fact, int zoomLevel, int maxLoaded) {
 		this.factory = fact;
 		this.zoomLevel = zoomLevel;
-		this.tiles = new ArrayList<T>();
+		this.tiles = new LinkedList<T>();
+		this.maxLoaded = maxLoaded;
 	}
 	
 	//TODO javadoc
 	public TiledMap(TileFactory<T> fact) {
-		this(fact, 0);
+		this(fact, 0, 20);
 	}
 	
 	
@@ -65,7 +67,7 @@ public class TiledMap<T extends RasterWebTile> {
 	
 	
 	protected void loadTile(T tile) {
-		this.tiles.add(tile);
+		this.tiles.add(0, tile);
 		if(this.isSmartLoadingEnabled()) {
 			TerramapMod.cacheManager.cacheAsync(tile);
 			this.disableSmartLoading();
@@ -79,12 +81,16 @@ public class TiledMap<T extends RasterWebTile> {
 			}
 			this.enableSmartLoading();
 		}
+		this.unloadToMaxLoad();
 	}
+	
 	public T getTile(long x, long y, int zoom) {
 		//TODO A better way to store our tiles, this will be very slow with large maps
 		for(T tile: this.tiles)
-			if(tile.getX() == x && tile.getY() == y && tile.getZoom() == zoom)
+			if(tile.getX() == x && tile.getY() == y && tile.getZoom() == zoom) {
+				this.needTile(tile);
 				return tile;
+			}
 		T tile = this.factory.getInstance(x, y, zoom);
 		this.loadTile(tile);
 		return tile;
@@ -107,8 +113,7 @@ public class TiledMap<T extends RasterWebTile> {
 	}
 	
 	public void unloadTile(T tile) {
-		TerramapMod.logger.error("Trying to unload a tile but the method is not yet implemented");
-		//TODO Tile unloading
+		tile.unloadTexture();
 	}
 	
 	
@@ -139,4 +144,42 @@ public class TiledMap<T extends RasterWebTile> {
 		return this.smartLoadEnable;
 	}
 	
-} 	
+	/**
+	 * @return The number of tiles currently loaded
+	 */
+	public int getLoadedCount() {
+		return this.tiles.size();
+	}
+	
+	public void needTile(T tile) {
+		if(this.tiles.contains(tile)) {
+			this.tiles.remove(tile);
+		}
+		this.tiles.add(0, tile);
+	}
+	
+	public int getMaxLoad() {
+		return this.maxLoaded;
+	}
+	
+	public void setMaxLoad(int maxLoad) {
+		this.maxLoaded = maxLoad;
+	}
+	
+	/**
+	 * Unloads tiles until we are at the max number of loaded tiles
+	 */
+	public void unloadToMaxLoad() {
+		while(this.tiles.size() > this.maxLoaded) {
+			this.unloadTile(this.tiles.removeLast());
+		}
+	}
+	
+	public void unloadAll() {
+		int i = this.maxLoaded;
+		this.maxLoaded = 0;
+		this.unloadToMaxLoad();
+		this.maxLoaded = i;
+	}
+	
+}
