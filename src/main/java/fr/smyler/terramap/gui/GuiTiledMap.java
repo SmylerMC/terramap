@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
@@ -34,9 +35,12 @@ public class GuiTiledMap extends GuiScreen {
 
 	protected double focusLatitude;
 	protected double focusLongitude;
+	protected double lastMouseLong, lastMouseLat = 0;
 	protected boolean debug = false; //Show tiles borders or not
 
 	protected int zoomLevel;
+
+	private RightClickMenu rclickMenu;
 
 	public GuiTiledMap(TiledMap<?> map) {
 		this.visible = true;
@@ -46,6 +50,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.setZoom(13);
 		this.focusLatitude = 0;
 		this.focusLongitude = 0;
+		this.rclickMenu = new RightClickMenu();
 	}
 
 	@Override
@@ -55,13 +60,18 @@ public class GuiTiledMap extends GuiScreen {
 		double coords[] = proj.toGeo(p.posX, p.posZ);
 		this.focusLatitude = coords[1];
 		this.focusLongitude = coords[0];
+		this.rclickMenu.init(fontRenderer);
+		this.rclickMenu.addEntry("Teleport here", () -> {TerramapMod.logger.info("teleport!");});
+		this.rclickMenu.addEntry("Center here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.handleMouseInput(mouseX, mouseY, partialTicks);
 		this.drawMap(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
 		this.drawCopyright(mouseX, mouseY, partialTicks);
+		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
 	}
 
 	private void drawMap(int mouseX, int mouseY, float partialTicks) {
@@ -73,8 +83,6 @@ public class GuiTiledMap extends GuiScreen {
 
 		long upperLeftX = this.getUpperLeftX(this.zoomLevel, this.focusLongitude);
 		long upperLeftY = this.getUpperLeftY(this.zoomLevel, this.focusLatitude);
-
-		this.handleMouseInput();
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
@@ -187,22 +195,20 @@ public class GuiTiledMap extends GuiScreen {
 
 	private void drawInformation(int mouseX, int mouseY, float partialTicks) {
 		List<String> lines = new ArrayList<String>();
-		double mouseLong = this.getScreenLong(mouseX);
-		double mouseLat = this.getScreenLat(mouseY);
-		String dispLat = "" + (float)Math.round(mouseLong * 100000) / 100000;
-		String dispLong = "" + (float)Math.round(mouseLat * 100000) / 100000;
+		String dispLat = "" + (float)Math.round(this.lastMouseLat * 100000) / 100000; //TODO Better formating
+		String dispLong = "" + (float)Math.round(this.lastMouseLong * 100000) / 100000;
 		lines.add("Map position: " + dispLat + " " + dispLong);
 		lines.add("Zoom level: " + this.zoomLevel);
 		if(this.debug) {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
 		}
-		
+
 		Gui.drawRect(0, 0, 180, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
 	}
-	
+
 	private void drawCopyright(int mouseX, int mouseY, float partialTicks) {
 		String copyrightString = "© OpenStreetMap contributors";
 		int rectWidth = 10 + this.fontRenderer.getStringWidth(copyrightString);
@@ -219,41 +225,55 @@ public class GuiTiledMap extends GuiScreen {
 		}
 	}		
 
-    @Override
+	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        super.keyTyped(typedChar, keyCode);
-        if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug;
-    }
-    
+		super.keyTyped(typedChar, keyCode);
+		if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug;
+	}
+
 	/**
 	 * Handles mouse input.
 	 */
-	@Override
-	public void handleMouseInput(){
+	public void handleMouseInput(int mouseX, int mouseY, float partialTicks){
 
-		//Moving
-		if(Mouse.isButtonDown(0)) {
+		boolean lclick = Mouse.isButtonDown(0);
+		boolean rclick = Mouse.isButtonDown(1);
 
-			//TODO This should adapt to the zoom level
-			int dX = Mouse.getDX();
-			int dY = Mouse.getDY();
+		if(rclick) {
+			this.rclickMenu.showAt(mouseX, mouseY); //TODO Make sure it fits on screen
+		}
+		
+		if(this.rclickMenu.isDisplayed()) {
+			if(lclick) {
+				this.rclickMenu.onMouseClick(mouseX, mouseY);
+				this.rclickMenu.hide();
+			}
+		} else {
+			//Moving
+			if(lclick) {
+				//TODO This should adapt to the zoom level
+				int dX = Mouse.getDX();
+				int dY = Mouse.getDY();
 
-			double nlon = this.focusLongitude - dX/Math.pow(2, this.zoomLevel)/2;
-			double nlat = this.focusLatitude - dY/Math.pow(2, this.zoomLevel)/2;
-			this.setLongitude(nlon);
-			this.setLatitude(nlat);
-
+				double nlon = this.focusLongitude - dX/Math.pow(2, this.zoomLevel)/2;
+				double nlat = this.focusLatitude - dY/Math.pow(2, this.zoomLevel)/2;
+				this.setLongitude(nlon);
+				this.setLatitude(nlat);
+			} else {
+				//Scrolling
+				int i = Mouse.getDWheel();
+				int z;
+				if (i != 0){
+					if (i > 0) z = 1;
+					else z = - 1;
+					this.zoom(z);
+				}
+				this.lastMouseLong = this.getScreenLong(mouseX);
+				this.lastMouseLat = this.getScreenLat(mouseY);
+			}
 
 		}
 
-		//Scrolling
-		int i = Mouse.getDWheel();
-		int z;
-		if (i != 0){
-			if (i > 0) z = 1;
-			else z = - 1;
-			this.zoom(z);
-		}
 	}
 
 	@Override
@@ -265,7 +285,7 @@ public class GuiTiledMap extends GuiScreen {
 
 		int nzoom = this.zoomLevel + val;
 		if(!this.isPositionValid(nzoom, this.focusLongitude, this.focusLatitude)) return;
-		
+
 		TerramapMod.cacheManager.clearQueue(); // We are displaying new tiles, we don't need what we needed earlier
 		this.zoomLevel = nzoom;
 		//}
@@ -347,14 +367,14 @@ public class GuiTiledMap extends GuiScreen {
 		if(lowerLeftY > this.getMaxMapSize(zoomLevel)) return false;
 		return true;
 	}
-	
+
 	private double getScreenLong(int xOnScreen) {
-		double xOnMap = this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen;
+		long xOnMap = this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen;
 		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
 	}
-	
-	private double getScreenLat(int yOnScreen) {
-		double yOnMap = this.getUpperLeftY(this.zoomLevel, this.focusLongitude) + yOnScreen;
+
+	private double getScreenLat(int yOnScreen) { //FIXME This does not work
+		long yOnMap = this.getUpperLeftY(this.zoomLevel, this.focusLongitude) + yOnScreen;
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
 	}
 
