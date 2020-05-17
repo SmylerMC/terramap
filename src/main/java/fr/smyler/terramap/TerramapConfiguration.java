@@ -34,7 +34,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class TerramapConfiguration{
 	
 	@Config.Comment("Where to cache our files")
-	public static String cachingDir = "IRLW_cache";
+	public static String cachingDir = "Terramap_cache";
 	
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
