@@ -20,13 +20,8 @@ import net.minecraft.client.renderer.texture.TextureManager;
 
 //TODO Better zoom
 //TODO Custom scaling
+//TODO Localization
 public class GuiTiledMap extends GuiScreen {
-
-	/*
-	 * The position of the map on the GUI
-	 */
-	protected int x;
-	protected int y;
 
 	protected boolean visible;
 	protected boolean hovered;
@@ -51,15 +46,6 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		Minecraft mc = Minecraft.getMinecraft();
-		this.initGui(0, 0, mc.displayWidth, mc.displayHeight);
-	}
-
-	public void initGui(int x, int y, int width, int height) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
 		GeographicProjection proj = ((EarthBiomeProvider)Minecraft.getMinecraft().getIntegratedServer().getWorld(0).getBiomeProvider()).projection;
 		EntityPlayerSP p = Minecraft.getMinecraft().player;
 		double coords[] = proj.toGeo(p.posX, p.posZ);
@@ -70,13 +56,8 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawMap(mouseX, mouseY, partialTicks);
-		Gui.drawRect(0, 0, 200, 150, 0xAA000000);
-		String dispLat = "" + (float)Math.round(this.focusLatitude * 100000) / 100000;
-		String dispLong = "" + (float)Math.round(this.focusLongitude * 100000) / 100000;
-		this.drawString(this.fontRenderer, "Map position: " + dispLat + " " + dispLong, 10, 10, 0xFFFFFF);
-		this.drawString(this.fontRenderer, "Zoom level: " + this.zoomLevel, 10, 20 + this.fontRenderer.FONT_HEIGHT, 0xFFFFFF);
-		this.drawString(this.fontRenderer, "Cache queue: " + TerramapMod.cacheManager.getQueueSize(), 10, 30 + + this.fontRenderer.FONT_HEIGHT * 2, 0xFFFFFF );
-		this.drawString(this.fontRenderer, "Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad(), 10, 40 + this.fontRenderer.FONT_HEIGHT * 3, 0xFFFFFF);
+		this.drawInformation();
+		this.drawCopyright();
 	}
 
 	private void drawMap(int mouseX, int mouseY, float partialTicks) {
@@ -84,7 +65,6 @@ public class GuiTiledMap extends GuiScreen {
 		if((int)this.zoomLevel != this.map.getZoomLevel()) {
 			TerramapMod.logger.info("Zooms are differents: GUI: " + this.zoomLevel + " | Map: " + this.map.getZoomLevel());
 		}
-		double renderFactor = this.getSizeFactor();
 		int renderSize = WebMercatorUtils.TILE_DIMENSIONS;
 
 		long upperLeftX = this.getUpperLeftX(this.zoomLevel, this.focusLongitude);
@@ -101,8 +81,8 @@ public class GuiTiledMap extends GuiScreen {
 		TextureManager textureManager = mc.getTextureManager();
 
 		int maxTileXY = (int) map.getSizeInTiles();
-		long maxX = (long) (upperLeftX + this.width / renderFactor);
-		long maxY = (long) (upperLeftY + this.height / renderFactor);
+		long maxX = (long) (upperLeftX + this.width);
+		long maxY = (long) (upperLeftY + this.height);
 
 		int lowerTX = (int) Math.floor((double)upperLeftX / (double)renderSize);
 		int lowerTY = (int) Math.floor((double)upperLeftY / (double)renderSize);
@@ -129,11 +109,11 @@ public class GuiTiledMap extends GuiScreen {
 					}
 				}
 
-				int dispX = Math.round(this.x + tX * renderSize - upperLeftX);
+				int dispX = Math.round(tX * renderSize - upperLeftX);
 				int displayWidth = (int) Math.min(renderSize, maxX - tX * renderSize);
 
 				int displayHeight = (int) Math.min(renderSize, maxY - tY * renderSize);
-				int dispY = Math.round(this.y + tY * renderSize - upperLeftY);
+				int dispY = Math.round(tY * renderSize - upperLeftY);
 
 				int renderSizedSize = renderSize;
 
@@ -154,13 +134,13 @@ public class GuiTiledMap extends GuiScreen {
 				}
 
 				if(tX == lowerTX) {
-					dX += this.x-dispX;
-					dispX = this.x;
+					dX -= dispX;
+					dispX = 0;
 				}
 
 				if(tY == lowerTY) {
-					dY += this.y-dispY;
-					dispY = this.y;
+					dY -= dispY;
+					dispY = 0;
 				}
 
 				textureManager.bindTexture(tile.getTexture());
@@ -206,6 +186,23 @@ public class GuiTiledMap extends GuiScreen {
 
 	}
 
+	private void drawInformation() {
+		Gui.drawRect(0, 0, 200, 150, 0xAA000000);
+		String dispLat = "" + (float)Math.round(this.focusLatitude * 100000) / 100000;
+		String dispLong = "" + (float)Math.round(this.focusLongitude * 100000) / 100000;
+		this.drawString(this.fontRenderer, "Map position: " + dispLat + " " + dispLong, 10, 10, 0xFFFFFF);
+		this.drawString(this.fontRenderer, "Zoom level: " + this.zoomLevel, 10, 20 + this.fontRenderer.FONT_HEIGHT, 0xFFFFFF);
+		this.drawString(this.fontRenderer, "Cache queue: " + TerramapMod.cacheManager.getQueueSize(), 10, 30 + + this.fontRenderer.FONT_HEIGHT * 2, 0xFFFFFF );
+		this.drawString(this.fontRenderer, "Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad(), 10, 40 + this.fontRenderer.FONT_HEIGHT * 3, 0xFFFFFF);
+	}
+	
+	private void drawCopyright() {
+		String copyrightString = "© OpenStreetMap contributors";
+		int rectWidth = 10 + this.fontRenderer.getStringWidth(copyrightString);
+		int rectHeight = this.fontRenderer.FONT_HEIGHT + 10;
+		Gui.drawRect(this.width - rectWidth, this.height - rectHeight, this.width, this.height, 0x50000000);
+		this.drawString(this.fontRenderer, copyrightString, this.width - rectWidth + 5, this.height - rectHeight + 5, 0xFFFFFF);
+	}
 
 	@Override
 	public void updateScreen(){
@@ -255,23 +252,7 @@ public class GuiTiledMap extends GuiScreen {
 
 		int nzoom = this.zoomLevel + val;
 		if(!this.isPositionValid(nzoom, this.focusLongitude, this.focusLatitude)) return;
-
-		//int oldRenderSize = this.getTileRenderSize(this.map.getZoomLevel());
-
-		//int mouseX = Mouse.getX() - this.x;
-		//int mouseY = Mouse.getY() - this.y;
-
-		//TODO TEMP
-		//IRLW.logger.info(mouseX);
-		//IRLW.logger.info(mouseY);
-		//    	long newUpperLeftX = (long) ((double)this.upperLeftX / oldRenderSize * newRenderSize);
-		//long newUpperLeftY = (long) ((double)this.upperLeftY / oldRenderSize * newRenderSize);
-		//long newUpperLeftX = (long) ((double)this.upperLeftX / oldRenderSize * newRenderSize);
-		//newUpperLeftX -=  (double)mouseX/this.width/oldRenderSize * newRenderSize;
-		//    	long newUpperLeftY = (long) ((double)(this.upperLeftY - mouseY) / oldRenderSize * newRenderSize);
-		//    	IRLW.logger.info(newUpperLeftX);
-		//    	IRLW.logger.info(newUpperLeftY);
-		//if(this.setPosition(newUpperLeftX, newUpperLeftY)){   
+		
 		TerramapMod.cacheManager.clearQueue(); // We are displaying new tiles, we don't need what we needed earlier
 		this.zoomLevel = nzoom;
 		//}
@@ -290,10 +271,6 @@ public class GuiTiledMap extends GuiScreen {
 
 	private void setTiledMapZoom() {
 		this.map.setZoomLevel((int)this.zoomLevel);
-	}
-
-	private double getSizeFactor() {
-		return Minecraft.getMinecraft().gameSettings.guiScale;
 	}
 
 	/**
@@ -337,24 +314,22 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private long getUpperLeftX(int zoomLevel, double centerLong) {
-		double renderFactor = this.getSizeFactor();
 		return (long)(
 				(double)(WebMercatorUtils.getXFromLongitude(centerLong, zoomLevel))
-				- ((double)this.width) / 2f / renderFactor);
+				- ((double)this.width) / 2f);
 	}
 
 	private long getUpperLeftY(int zoomLevel, double centerLat) {
-		double renderFactor = this.getSizeFactor();
 		return (long)(
 				(double)WebMercatorUtils.getYFromLatitude(centerLat, zoomLevel)
-				- (double)this.height / 2f / renderFactor);
+				- (double)this.height / 2f);
 	}
 
 	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
 		if(zoomLevel < 0) return false;
 		if(zoomLevel > 19) return false;
 		long upperLeftY = this.getUpperLeftY(zoomLevel, centerLat);
-		long lowerLeftY = (long) (upperLeftY + this.height / this.getSizeFactor());
+		long lowerLeftY = (long) (upperLeftY + this.height);
 		if(upperLeftY < 0) return false;
 		if(lowerLeftY > this.getMaxMapSize(zoomLevel)) return false;
 		return true;
