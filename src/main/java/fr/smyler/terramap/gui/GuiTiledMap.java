@@ -198,7 +198,7 @@ public class GuiTiledMap extends GuiScreen {
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
 		}
 		
-		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0xAA000000);
+		Gui.drawRect(0, 0, 180, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
 	}
