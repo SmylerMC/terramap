@@ -19,9 +19,11 @@ public abstract class KeyBindings {
 
 	
 	public static final KeyBinding OPEN_MAP = new KeyBinding("key.terramap.openmap", Keyboard.KEY_M, "key.terramap.category");
+	public static final KeyBinding TOGGLE_DEBUG = new KeyBinding("key.terramap.toggle_debug", Keyboard.KEY_P, "key.terramap.category");
 	
 	public static void registerBindings() {
 		ClientRegistry.registerKeyBinding(OPEN_MAP);
+		ClientRegistry.registerKeyBinding(TOGGLE_DEBUG);
 	}
 	
 	public static void checkBindings() {

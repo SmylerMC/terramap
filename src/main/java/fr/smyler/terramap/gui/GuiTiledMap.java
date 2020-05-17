@@ -1,12 +1,13 @@
 package fr.smyler.terramap.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
@@ -73,12 +74,7 @@ public class GuiTiledMap extends GuiScreen {
 		long upperLeftX = this.getUpperLeftX(this.zoomLevel, this.focusLongitude);
 		long upperLeftY = this.getUpperLeftY(this.zoomLevel, this.focusLatitude);
 
-		//TODO handle keybord input in a method
 		this.handleMouseInput();
-
-		if(Keyboard.isKeyDown(Keyboard.KEY_L)) {
-			this.debug = !this.debug;
-		}
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
@@ -223,6 +219,12 @@ public class GuiTiledMap extends GuiScreen {
 		}
 	}		
 
+    @Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        super.keyTyped(typedChar, keyCode);
+        if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug;
+    }
+    
 	/**
 	 * Handles mouse input.
 	 */
