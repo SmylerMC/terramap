@@ -27,7 +27,7 @@ compileJava {
 
 minecraft {
     version = project.forge_version
-    mappings = project.mcp_mappings"
+    mappings = project.mcp_mappings
     runDir = "run"
 }
 dependencies {
