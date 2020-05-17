@@ -373,8 +373,8 @@ public class GuiTiledMap extends GuiScreen {
 		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
 	}
 
-	private double getScreenLat(int yOnScreen) { //FIXME This does not work
-		long yOnMap = this.getUpperLeftY(this.zoomLevel, this.focusLongitude) + yOnScreen;
+	private double getScreenLat(int yOnScreen) {
+		long yOnMap = this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen;
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
 	}
 
