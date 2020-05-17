@@ -41,7 +41,7 @@ public class WikimediaTile extends RasterWebTile {
 	 * @param defaultPixel
 	 */
 	public WikimediaTile(long x, long y, int zoom) {
-		super(255, x, y, zoom);
+		super(256, x, y, zoom);
 	}
 
 	@Override
