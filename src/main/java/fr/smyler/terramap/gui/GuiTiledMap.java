@@ -1,5 +1,8 @@
 package fr.smyler.terramap.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -56,8 +59,8 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawMap(mouseX, mouseY, partialTicks);
-		this.drawInformation();
-		this.drawCopyright();
+		this.drawInformation(mouseX, mouseY, partialTicks);
+		this.drawCopyright(mouseX, mouseY, partialTicks);
 	}
 
 	private void drawMap(int mouseX, int mouseY, float partialTicks) {
@@ -186,17 +189,25 @@ public class GuiTiledMap extends GuiScreen {
 
 	}
 
-	private void drawInformation() {
-		Gui.drawRect(0, 0, 200, 150, 0xAA000000);
-		String dispLat = "" + (float)Math.round(this.focusLatitude * 100000) / 100000;
-		String dispLong = "" + (float)Math.round(this.focusLongitude * 100000) / 100000;
-		this.drawString(this.fontRenderer, "Map position: " + dispLat + " " + dispLong, 10, 10, 0xFFFFFF);
-		this.drawString(this.fontRenderer, "Zoom level: " + this.zoomLevel, 10, 20 + this.fontRenderer.FONT_HEIGHT, 0xFFFFFF);
-		this.drawString(this.fontRenderer, "Cache queue: " + TerramapMod.cacheManager.getQueueSize(), 10, 30 + + this.fontRenderer.FONT_HEIGHT * 2, 0xFFFFFF );
-		this.drawString(this.fontRenderer, "Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad(), 10, 40 + this.fontRenderer.FONT_HEIGHT * 3, 0xFFFFFF);
+	private void drawInformation(int mouseX, int mouseY, float partialTicks) {
+		List<String> lines = new ArrayList<String>();
+		double mouseLong = this.getScreenLong(mouseX);
+		double mouseLat = this.getScreenLat(mouseY);
+		String dispLat = "" + (float)Math.round(mouseLong * 100000) / 100000;
+		String dispLong = "" + (float)Math.round(mouseLat * 100000) / 100000;
+		lines.add("Map position: " + dispLat + " " + dispLong);
+		lines.add("Zoom level: " + this.zoomLevel);
+		if(this.debug) {
+			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
+			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
+		}
+		
+		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0xAA000000);
+		int i = 0;
+		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
 	}
 	
-	private void drawCopyright() {
+	private void drawCopyright(int mouseX, int mouseY, float partialTicks) {
 		String copyrightString = "© OpenStreetMap contributors";
 		int rectWidth = 10 + this.fontRenderer.getStringWidth(copyrightString);
 		int rectHeight = this.fontRenderer.FONT_HEIGHT + 10;
@@ -333,6 +344,16 @@ public class GuiTiledMap extends GuiScreen {
 		if(upperLeftY < 0) return false;
 		if(lowerLeftY > this.getMaxMapSize(zoomLevel)) return false;
 		return true;
+	}
+	
+	private double getScreenLong(int xOnScreen) {
+		double xOnMap = this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen;
+		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
+	}
+	
+	private double getScreenLat(int yOnScreen) {
+		double yOnMap = this.getUpperLeftY(this.zoomLevel, this.focusLongitude) + yOnScreen;
+		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
 	}
 
 }
