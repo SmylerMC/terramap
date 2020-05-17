@@ -32,7 +32,6 @@ public abstract class KeyBindings {
 	
     @SubscribeEvent
     public static void onKeyInput(InputEvent.KeyInputEvent event) {
-    	System.out.println("triggered");
     	KeyBindings.checkBindings();
     }
 }
