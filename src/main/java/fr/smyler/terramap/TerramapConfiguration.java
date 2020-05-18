@@ -18,6 +18,9 @@ public class TerramapConfiguration{
 	@Config.Comment("Where to cache our files")
 	public static String cachingDir = "Terramap_cache";
 	
+	@Config.Comment("The base tpll command to use")
+	public static String tpllcmd = "/tpll {latitude} {longitude}";
+	
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
 	}

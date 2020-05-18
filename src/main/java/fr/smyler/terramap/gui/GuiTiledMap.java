@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 
 import fr.smyler.terramap.GeoServices;
+import fr.smyler.terramap.TerramapConfiguration;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.input.KeyBindings;
@@ -62,7 +63,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.focusLatitude = coords[1];
 		this.focusLongitude = coords[0];
 		this.rclickMenu.init(fontRenderer);
-		this.rclickMenu.addEntry("Teleport here", () -> {TerramapMod.logger.error("teleport not yet implemented");}); //TODO implement teleport from map
+		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.lastMouseLong, this.lastMouseLat);}); //TODO implement teleport from map
 		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
 		this.rclickMenu.addEntry("Copy location to clipboard", () -> {GuiScreen.setClipboardString("" + this.lastMouseLong + " " + this.lastMouseLat);});
 		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.lastMouseLong, this.lastMouseLat);});
@@ -382,6 +383,10 @@ public class GuiTiledMap extends GuiScreen {
 	private double getScreenLat(int yOnScreen) {
 		long yOnMap = this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen;
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
+	}
+	
+	private void teleportPlayerTo(double longitude, double latitude) {
+		Minecraft.getMinecraft().player.sendChatMessage(TerramapConfiguration.tpllcmd.replace("{latitude}", "" + latitude).replace("{longitude}", "" + longitude));
 	}
 
 }
