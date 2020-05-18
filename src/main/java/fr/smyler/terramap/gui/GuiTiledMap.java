@@ -16,7 +16,7 @@ import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
 import fr.smyler.terramap.maps.utils.TerramapUtils;
 import fr.smyler.terramap.maps.utils.WebMercatorUtils;
-import io.github.terra121.EarthBiomeProvider;
+import fr.smyler.terramap.world.TerraUtils;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -36,10 +36,10 @@ public class GuiTiledMap extends GuiScreen {
 
 	protected double focusLatitude;
 	protected double focusLongitude;
-	protected double lastMouseLong, lastMouseLat = 0;
-	protected boolean debug = false; //Show tiles borders or not
-
 	protected int zoomLevel;
+	protected double lastMouseLong, lastMouseLat = 0;
+	protected GeographicProjection projection;
+	protected boolean debug = false; //Show tiles borders or not
 
 	private RightClickMenu rclickMenu;
 
@@ -48,7 +48,6 @@ public class GuiTiledMap extends GuiScreen {
 		this.hovered = false;
 		this.map = map;
 		this.zoomLevel = map.getZoomLevel();
-		this.setZoom(13);
 		this.focusLatitude = 0;
 		this.focusLongitude = 0;
 		this.rclickMenu = new RightClickMenu();
@@ -56,11 +55,19 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		GeographicProjection proj = ((EarthBiomeProvider)Minecraft.getMinecraft().getIntegratedServer().getWorld(0).getBiomeProvider()).projection;
-		EntityPlayerSP p = Minecraft.getMinecraft().player;
-		double coords[] = proj.toGeo(p.posX, p.posZ);
-		this.focusLatitude = coords[1];
-		this.focusLongitude = coords[0];
+		this.projection = TerraUtils.getProjection();
+		if(this.projection != null) {
+			EntityPlayerSP p = Minecraft.getMinecraft().player;
+			double coords[] = this.projection.toGeo(p.posX, p.posZ);
+			this.focusLatitude = coords[1];
+			this.focusLongitude = coords[0];
+			this.setZoom(13);
+		} else {
+			TerramapMod.logger.info("Projection was not available");
+			this.focusLatitude = 0;
+			this.focusLongitude = 0;
+			this.setZoomToMinimum();
+		}
 		this.rclickMenu.init(fontRenderer);
 		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.lastMouseLong, this.lastMouseLat);}); //TODO implement teleport from map
 		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
