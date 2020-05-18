@@ -2,7 +2,10 @@ package fr.smyler.terramap.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.lwjgl.input.Mouse;
 
@@ -10,6 +13,7 @@ import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.TerramapConfiguration;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
+import fr.smyler.terramap.gui.widgets.poi.EntityPOI;
 import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
@@ -24,13 +28,11 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.world.World;
 
 //TODO Better zoom
 //TODO Localization
 public class GuiTiledMap extends GuiScreen {
-
-	protected boolean visible;
-	protected boolean hovered;
 
 	protected TiledMap<?> map;
 
@@ -42,24 +44,26 @@ public class GuiTiledMap extends GuiScreen {
 	protected GeographicProjection projection;
 	protected boolean debug = false; //Show tiles borders or not
 
-	private RightClickMenu rclickMenu;
+	protected RightClickMenu rclickMenu;
 
-	public GuiTiledMap(TiledMap<?> map) {
-		this.visible = true;
-		this.hovered = false;
+	protected Map<UUID, EntityPOI> entityPOIs;
+	protected World world; 
+
+	public GuiTiledMap(TiledMap<?> map, World world) {
 		this.map = map;
 		this.zoomLevel = map.getZoomLevel();
 		this.focusLatitude = 0;
 		this.focusLongitude = 0;
 		this.rclickMenu = new RightClickMenu();
+		this.world = world;
 	}
 
 	@Override
 	public void initGui() {
+		EntityPlayerSP p = Minecraft.getMinecraft().player;
 		this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
 		if(this.genSettings != null) {
 			this.projection = this.genSettings.getProjection();
-			EntityPlayerSP p = Minecraft.getMinecraft().player;
 			double coords[] = this.projection.toGeo(p.posX, p.posZ);
 			this.focusLatitude = coords[1];
 			this.focusLongitude = coords[0];
@@ -70,6 +74,8 @@ public class GuiTiledMap extends GuiScreen {
 			this.focusLongitude = 0;
 			this.setZoomToMinimum();
 		}
+		this.entityPOIs = new HashMap<UUID, EntityPOI>();
+		this.entityPOIs.put(p.getPersistentID(), new EntityPOI(p)); //TODO TEMP TEST
 		this.rclickMenu.init(fontRenderer);
 		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.lastMouseLong, this.lastMouseLat);}); //TODO implement teleport from map
 		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
@@ -84,6 +90,8 @@ public class GuiTiledMap extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.handleMouseInput(mouseX, mouseY, partialTicks);
 		this.drawMap(mouseX, mouseY, partialTicks);
+		this.updatePOIs(); //TODO No needed at each frame
+		this.drawPOIs(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
 		this.drawCopyright(mouseX, mouseY, partialTicks);
 		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
@@ -96,8 +104,8 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 
-		long upperLeftX = this.getUpperLeftX(this.zoomLevel, this.focusLongitude);
-		long upperLeftY = this.getUpperLeftY(this.zoomLevel, this.focusLatitude);
+		long upperLeftX = this.getUpperLeftX(this.focusLongitude);
+		long upperLeftY = this.getUpperLeftY(this.focusLatitude);
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
@@ -234,6 +242,20 @@ public class GuiTiledMap extends GuiScreen {
 		this.drawString(this.fontRenderer, copyrightString, this.width - rectWidth + 5, this.height - rectHeight + 5, 0xFFFFFF);
 	}
 
+	private void drawPOIs(int mouseX, int mouseY, float partialTicks) {
+		for(EntityPOI poi: this.entityPOIs.values()) {
+			long x = this.getScreenX(poi.getLongitude());
+			if(x > this.width || x < 0) continue;
+			long y = this.getScreenY(poi.getLatitude());
+			if(y > this.height || y < 0) continue;
+			poi.draw((int)x, (int)y);
+		}
+	}
+
+	private void updatePOIs() {
+		for(EntityPOI poi: this.entityPOIs.values()) poi.updatePosition(this.projection);
+	}
+
 	@Override
 	public void updateScreen(){
 		if(!this.isPositionValid(this.zoomLevel, this.focusLongitude, this.focusLatitude)) {
@@ -254,7 +276,7 @@ public class GuiTiledMap extends GuiScreen {
 	public void handleMouseInput(int mouseX, int mouseY, float partialTicks){
 
 		//TODO Use vanilla methods
-		
+
 		boolean lclick = Mouse.isButtonDown(0);
 		boolean rclick = Mouse.isButtonDown(1);
 
@@ -268,7 +290,7 @@ public class GuiTiledMap extends GuiScreen {
 			displayY = mouseY + rClickHeight > this.height ? this.height - rClickHeight: mouseY;
 			this.rclickMenu.showAt(displayX, displayY); //TODO Make sure it fits on screen
 		}
-		
+
 		if(this.rclickMenu.isDisplayed()) {
 			if(lclick) {
 				this.rclickMenu.onMouseClick(mouseX, mouseY);
@@ -341,8 +363,6 @@ public class GuiTiledMap extends GuiScreen {
 		return (long) (WebMercatorUtils.getDimensionsInTile(zoom) * WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 	}
 
-	/* === Getters and Setters from this point === */
-
 	public void setSize(int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -372,12 +392,53 @@ public class GuiTiledMap extends GuiScreen {
 		this.setTiledMapZoom();
 	}
 
-	private long getUpperLeftX(int zoomLevel, double centerLong) {
-		return (long)((WebMercatorUtils.getXFromLongitude(centerLong, zoomLevel)) * TerramapConfiguration.tileScaling - this.width / 2f);
+	private long getMapX(double longitude) {
+		return this.getMapX(this.zoomLevel, longitude);
+	}
+
+	private long getMapY(double latitude) {
+		return this.getMapY(this.zoomLevel, latitude);
+	}
+
+	private long getMapX(int zoomLevel, double longitude) {
+		return (long) (WebMercatorUtils.getXFromLongitude(longitude, zoomLevel) * TerramapConfiguration.tileScaling);
+
+	}
+
+	private long getMapY(int zoomLevel, double latitude) {
+		return (long)(WebMercatorUtils.getYFromLatitude(latitude, zoomLevel) * TerramapConfiguration.tileScaling);
+	}
+
+	private long getScreenX(double longitude) {
+		return this.getMapX(longitude) -  this.getUpperLeftX();
+	}
+
+	private long getScreenY(double latitude) {
+		return this.getMapY(latitude) - this.getUpperLeftY();
+	}
+
+	private long getUpperLeftX(double centerLon) {
+		return this.getUpperLeftX(this.zoomLevel, centerLon);
+	}
+
+	private long getUpperLeftY(double centerLat) {
+		return this.getUpperLeftY(this.zoomLevel, centerLat);
+	}
+
+	private long getUpperLeftX(int zoomLevel, double centerLon) {
+		return this.getMapX(centerLon) - this.width / 2;
 	}
 
 	private long getUpperLeftY(int zoomLevel, double centerLat) {
-		return (long)(WebMercatorUtils.getYFromLatitude(centerLat, zoomLevel) * TerramapConfiguration.tileScaling - this.height / 2f);
+		return this.getMapY(centerLat) - this.height / 2;
+	}
+	
+	private long getUpperLeftX() {
+		return this.getUpperLeftX(this.focusLongitude);
+	}
+
+	private long getUpperLeftY() {
+		return this.getUpperLeftY(this.focusLatitude);
 	}
 
 	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
@@ -399,7 +460,7 @@ public class GuiTiledMap extends GuiScreen {
 		long yOnMap = (long) ((this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfiguration.tileScaling);
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
 	}
-	
+
 	private void teleportPlayerTo(double longitude, double latitude) {
 		Minecraft.getMinecraft().player.sendChatMessage(TerramapConfiguration.tpllcmd.replace("{latitude}", "" + latitude).replace("{longitude}", "" + longitude));
 	}
