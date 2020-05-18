@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 
 //TODO Better zoom
-//TODO Custom scaling
 //TODO Localization
 public class GuiTiledMap extends GuiScreen {
 
