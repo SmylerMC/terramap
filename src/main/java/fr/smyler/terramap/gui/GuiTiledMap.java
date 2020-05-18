@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.input.KeyBindings;
@@ -61,8 +62,13 @@ public class GuiTiledMap extends GuiScreen {
 		this.focusLatitude = coords[1];
 		this.focusLongitude = coords[0];
 		this.rclickMenu.init(fontRenderer);
-		this.rclickMenu.addEntry("Teleport here", () -> {TerramapMod.logger.info("teleport!");});
-		this.rclickMenu.addEntry("Center here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
+		this.rclickMenu.addEntry("Teleport here", () -> {TerramapMod.logger.error("teleport not yet implemented");}); //TODO implement teleport from map
+		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
+		this.rclickMenu.addEntry("Copy location to clipboard", () -> {GuiScreen.setClipboardString("" + this.lastMouseLong + " " + this.lastMouseLat);});
+		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.lastMouseLong, this.lastMouseLat);});
+		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.lastMouseLong, this.lastMouseLat);});
+		//TODO Open in google Earth
+		//TODO Copy Minecraft coordinates to clipboard
 	}
 
 	@Override
@@ -268,8 +274,8 @@ public class GuiTiledMap extends GuiScreen {
 					else z = - 1;
 					this.zoom(z);
 				}
-				this.lastMouseLong = this.getScreenLong(mouseX);
-				this.lastMouseLat = this.getScreenLat(mouseY);
+				this.lastMouseLong = (float)Math.round(this.getScreenLong(mouseX) * 100000) / 100000;
+				this.lastMouseLat = (float)Math.round(this.getScreenLat(mouseY) * 100000) / 100000;
 			}
 
 		}
