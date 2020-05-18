@@ -21,6 +21,9 @@ public class TerramapConfiguration{
 	@Config.Comment("The base tpll command to use")
 	public static String tpllcmd = "/tpll {latitude} {longitude}";
 	
+	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
+	public static float tileScaling = 1f;
+	
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
 	}

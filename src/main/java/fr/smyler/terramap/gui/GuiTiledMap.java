@@ -86,7 +86,7 @@ public class GuiTiledMap extends GuiScreen {
 		if((int)this.zoomLevel != this.map.getZoomLevel()) {
 			TerramapMod.logger.info("Zooms are differents: GUI: " + this.zoomLevel + " | Map: " + this.map.getZoomLevel());
 		}
-		int renderSize = WebMercatorUtils.TILE_DIMENSIONS;
+		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 
 		long upperLeftX = this.getUpperLeftX(this.zoomLevel, this.focusLongitude);
 		long upperLeftY = this.getUpperLeftY(this.zoomLevel, this.focusLatitude);
@@ -258,9 +258,9 @@ public class GuiTiledMap extends GuiScreen {
 		} else {
 			//Moving
 			if(lclick) {
-				//TODO This should adapt to the zoom level
-				int dX = Mouse.getDX();
-				int dY = Mouse.getDY();
+				//TODO This should adapt to the zoom level and should be in its own method to add keyboard controls
+				int dX = (int) (Mouse.getDX() / TerramapConfiguration.tileScaling);
+				int dY = (int) (Mouse.getDY() / TerramapConfiguration.tileScaling);
 
 				double nlon = this.focusLongitude - dX/Math.pow(2, this.zoomLevel)/2;
 				double nlat = this.focusLatitude - dY/Math.pow(2, this.zoomLevel)/2;
@@ -316,10 +316,10 @@ public class GuiTiledMap extends GuiScreen {
 	/**
 	 * 
 	 * @param zoom
-	 * @return The size of the full map, in pixel
+	 * @return The size of the full map, in pixel on screen
 	 */
 	private long getMaxMapSize(int zoom) {
-		return (long) (WebMercatorUtils.getDimensionsInTile(zoom) * WebMercatorUtils.TILE_DIMENSIONS);
+		return (long) (WebMercatorUtils.getDimensionsInTile(zoom) * WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 	}
 
 	/* === Getters and Setters from this point === */
@@ -354,15 +354,11 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private long getUpperLeftX(int zoomLevel, double centerLong) {
-		return (long)(
-				(double)(WebMercatorUtils.getXFromLongitude(centerLong, zoomLevel))
-				- ((double)this.width) / 2f);
+		return (long)((WebMercatorUtils.getXFromLongitude(centerLong, zoomLevel)) * TerramapConfiguration.tileScaling - this.width / 2f);
 	}
 
 	private long getUpperLeftY(int zoomLevel, double centerLat) {
-		return (long)(
-				(double)WebMercatorUtils.getYFromLatitude(centerLat, zoomLevel)
-				- (double)this.height / 2f);
+		return (long)(WebMercatorUtils.getYFromLatitude(centerLat, zoomLevel) * TerramapConfiguration.tileScaling - this.height / 2f);
 	}
 
 	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
@@ -376,12 +372,12 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private double getScreenLong(int xOnScreen) {
-		long xOnMap = this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen;
+		long xOnMap = (long) ((this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling);
 		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
 	}
 
 	private double getScreenLat(int yOnScreen) {
-		long yOnMap = this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen;
+		long yOnMap = (long) ((this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfiguration.tileScaling);
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
 	}
 	
