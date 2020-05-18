@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 //TODO Better zoom
@@ -229,7 +230,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.debug) {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
-			lines.add("Projection: " + this.projection);
+			if(this.genSettings != null) lines.add("Projection: " + this.genSettings.settings.projection);
 			lines.add(Minecraft.getDebugFPS() + "FPS");
 		}
 
@@ -382,7 +383,7 @@ public class GuiTiledMap extends GuiScreen {
 	
 	private boolean shouldTrackEntity(Entity entity) {
 		if(entity instanceof EntityItem) return false;
-		return true; //TODO shouldTrackEntity
+		return entity instanceof EntityPlayer; //TODO shouldTrackEntity
 	}
 	/**
 	 * 
