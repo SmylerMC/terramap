@@ -204,14 +204,15 @@ public class GuiTiledMap extends GuiScreen {
 		List<String> lines = new ArrayList<String>();
 		String dispLat = "" + (float)Math.round(this.lastMouseLat * 100000) / 100000; //TODO Better formating
 		String dispLong = "" + (float)Math.round(this.lastMouseLong * 100000) / 100000;
-		lines.add("Map position: " + dispLat + " " + dispLong);
+		lines.add("Mouse position: " + dispLat + " " + dispLong);
 		lines.add("Zoom level: " + this.zoomLevel);
 		if(this.debug) {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
+			lines.add(Minecraft.getDebugFPS() + "FPS");
 		}
 
-		Gui.drawRect(0, 0, 180, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
+		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
 	}
