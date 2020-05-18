@@ -35,6 +35,7 @@ public class CacheManager implements Runnable {
 	private LinkedList<Cachable> toCacheAsync = new LinkedList<Cachable>();
 	private Map<URL, Integer> faultyUrls = new HashMap<URL, Integer>();
 	private int maxCacheTries = 3;
+	private int queueSizeWarningThershold = 30;
 
 	private File cachingDirectory;
 
@@ -210,6 +211,7 @@ public class CacheManager implements Runnable {
 	public void cacheAsync(Cachable toCache) {
 		synchronized(this.toCacheAsync) {
 			this.toCacheAsync.add(toCache);
+			if(this.toCacheAsync.size() > this.queueSizeWarningThershold) TerramapMod.logger.warn("The caching queue is getting too large!! " + this.toCacheAsync.size());
 		}
 	}
 
