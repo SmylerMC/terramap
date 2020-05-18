@@ -3,8 +3,10 @@ package fr.smyler.terramap.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.lwjgl.input.Mouse;
@@ -28,6 +30,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.world.World;
 
 //TODO Better zoom
@@ -75,7 +79,7 @@ public class GuiTiledMap extends GuiScreen {
 			this.setZoomToMinimum();
 		}
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
-		this.entityPOIs.put(p.getPersistentID(), new EntityPOI(p)); //TODO TEMP TEST
+//		this.entityPOIs.put(p.getPersistentID(), new EntityPOI(p)); //TODO TEMP TEST
 		this.rclickMenu.init(fontRenderer);
 		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.lastMouseLong, this.lastMouseLat);}); //TODO implement teleport from map
 		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
@@ -253,7 +257,19 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void updatePOIs() {
-		for(EntityPOI poi: this.entityPOIs.values()) poi.updatePosition(this.projection);
+		Set<UUID> toUntrack = new HashSet<UUID>();
+		toUntrack.addAll(this.entityPOIs.keySet()); //The key set is backed by the map
+		Set<Entity> toTrack = new HashSet<Entity>();
+		for(Entity entity: this.world.loadedEntityList) {
+			if(!toUntrack.remove(entity.getPersistentID()) && this.shouldTrackEntity(entity)) {
+				toTrack.add(entity);
+			}
+		}
+		for(Entity entity: toTrack) this.entityPOIs.put(entity.getPersistentID(), new EntityPOI(entity));
+		for(EntityPOI poi: this.entityPOIs.values()) {
+			poi.updatePosition(this.projection);
+		}
+		
 	}
 
 	@Override
@@ -350,10 +366,24 @@ public class GuiTiledMap extends GuiScreen {
 		this.setPosition(0, 0);
 	}
 
+	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
+		if(zoomLevel < 0) return false;
+		if(zoomLevel > 19) return false;
+		long upperLeftY = this.getUpperLeftY(zoomLevel, centerLat);
+		long lowerLeftY = (long) (upperLeftY + this.height);
+		if(upperLeftY < 0) return false;
+		if(lowerLeftY > this.getMaxMapSize(zoomLevel)) return false;
+		return true;
+	}
+
 	private void setTiledMapZoom() {
 		this.map.setZoomLevel((int)this.zoomLevel);
 	}
-
+	
+	private boolean shouldTrackEntity(Entity entity) {
+		if(entity instanceof EntityItem) return false;
+		return true; //TODO shouldTrackEntity
+	}
 	/**
 	 * 
 	 * @param zoom
@@ -361,6 +391,20 @@ public class GuiTiledMap extends GuiScreen {
 	 */
 	private long getMaxMapSize(int zoom) {
 		return (long) (WebMercatorUtils.getDimensionsInTile(zoom) * WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
+	}
+	
+	private double getScreenLong(int xOnScreen) {
+		long xOnMap = (long) ((this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling);
+		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
+	}
+
+	private double getScreenLat(int yOnScreen) {
+		long yOnMap = (long) ((this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfiguration.tileScaling);
+		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
+	}
+
+	private void teleportPlayerTo(double longitude, double latitude) {
+		Minecraft.getMinecraft().player.sendChatMessage(TerramapConfiguration.tpllcmd.replace("{latitude}", "" + latitude).replace("{longitude}", "" + longitude));
 	}
 
 	public void setSize(int width, int height) {
@@ -440,29 +484,5 @@ public class GuiTiledMap extends GuiScreen {
 	private long getUpperLeftY() {
 		return this.getUpperLeftY(this.focusLatitude);
 	}
-
-	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
-		if(zoomLevel < 0) return false;
-		if(zoomLevel > 19) return false;
-		long upperLeftY = this.getUpperLeftY(zoomLevel, centerLat);
-		long lowerLeftY = (long) (upperLeftY + this.height);
-		if(upperLeftY < 0) return false;
-		if(lowerLeftY > this.getMaxMapSize(zoomLevel)) return false;
-		return true;
-	}
-
-	private double getScreenLong(int xOnScreen) {
-		long xOnMap = (long) ((this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling);
-		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
-	}
-
-	private double getScreenLat(int yOnScreen) {
-		long yOnMap = (long) ((this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfiguration.tileScaling);
-		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
-	}
-
-	private void teleportPlayerTo(double longitude, double latitude) {
-		Minecraft.getMinecraft().player.sendChatMessage(TerramapConfiguration.tpllcmd.replace("{latitude}", "" + latitude).replace("{longitude}", "" + longitude));
-	}
-
+	
 }

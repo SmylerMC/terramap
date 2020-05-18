@@ -19,4 +19,8 @@ public class EntityPOI extends PointOfInterest {
 		this.latitude = coords[1];
 	}
 	
+	@Override
+	public void draw(int x, int y) {
+		super.draw(x, y);
+	}
 }
