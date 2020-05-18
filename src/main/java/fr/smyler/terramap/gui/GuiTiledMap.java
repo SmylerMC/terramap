@@ -244,11 +244,20 @@ public class GuiTiledMap extends GuiScreen {
 	 */
 	public void handleMouseInput(int mouseX, int mouseY, float partialTicks){
 
+		//TODO Use vanilla methods
+		
 		boolean lclick = Mouse.isButtonDown(0);
 		boolean rclick = Mouse.isButtonDown(1);
 
 		if(rclick) {
-			this.rclickMenu.showAt(mouseX, mouseY); //TODO Make sure it fits on screen
+
+			int displayX = mouseX;
+			int displayY = mouseY;
+			int rClickWidth = this.rclickMenu.getWidth();
+			int rClickHeight = this.rclickMenu.getHeight();
+			displayX = mouseX + rClickWidth > this.width ? this.width - rClickWidth: mouseX;
+			displayY = mouseY + rClickHeight > this.height ? this.height - rClickHeight: mouseY;
+			this.rclickMenu.showAt(displayX, displayY); //TODO Make sure it fits on screen
 		}
 		
 		if(this.rclickMenu.isDisplayed()) {
