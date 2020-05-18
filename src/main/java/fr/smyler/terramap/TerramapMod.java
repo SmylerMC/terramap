@@ -32,7 +32,6 @@ public class TerramapMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
     	logger = event.getModLog();
-    	TerramapMod.logger.debug("Terramap pre-init...");
     	TerramapMod.proxy.preInit(event);
     }
 

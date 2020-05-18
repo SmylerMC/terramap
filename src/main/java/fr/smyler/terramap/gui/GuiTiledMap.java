@@ -16,7 +16,7 @@ import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
 import fr.smyler.terramap.maps.utils.TerramapUtils;
 import fr.smyler.terramap.maps.utils.WebMercatorUtils;
-import fr.smyler.terramap.world.TerraUtils;
+import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -38,6 +38,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected double focusLongitude;
 	protected int zoomLevel;
 	protected double lastMouseLong, lastMouseLat = 0;
+	protected EarthGeneratorSettings genSettings;
 	protected GeographicProjection projection;
 	protected boolean debug = false; //Show tiles borders or not
 
@@ -55,8 +56,9 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		this.projection = TerraUtils.getProjection();
-		if(this.projection != null) {
+		this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
+		if(this.genSettings != null) {
+			this.projection = this.genSettings.getProjection();
 			EntityPlayerSP p = Minecraft.getMinecraft().player;
 			double coords[] = this.projection.toGeo(p.posX, p.posZ);
 			this.focusLatitude = coords[1];
@@ -215,6 +217,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.debug) {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
+			lines.add("Projection: " + this.projection);
 			lines.add(Minecraft.getDebugFPS() + "FPS");
 		}
 
