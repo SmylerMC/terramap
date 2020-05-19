@@ -103,7 +103,7 @@ public class GuiTiledMap extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.handleMouseInput(mouseX, mouseY, partialTicks);
 		this.drawMap(mouseX, mouseY, partialTicks);
-		this.drawPOIs(mouseX, mouseY, partialTicks);
+		if(this.projection != null) this.drawPOIs(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
 		this.drawCopyright(mouseX, mouseY, partialTicks);
 		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
@@ -238,11 +238,12 @@ public class GuiTiledMap extends GuiScreen {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
 			if(this.genSettings != null) lines.add("Projection: " + this.genSettings.settings.projection);
-			int entityPOICount = this.entityPOIs.size();
-			if(this.thePlayerPOI != null) entityPOICount++;
-			lines.add("FPS:" + Minecraft.getDebugFPS() + " EPOIs: " + this.lastEntityPoiRenderedCount +"/" + entityPOICount);
+			int playerPOICount = this.playerPOIs.size();
+			if(this.thePlayerPOI != null) playerPOICount++;
+			lines.add("FPS:" + Minecraft.getDebugFPS() +
+					 " ePOIs: " + this.lastEntityPoiRenderedCount +"/" + this.entityPOIs.size() +
+					 " pPOIs: " + this.lastEntityPoiRenderedCount +"/" + playerPOICount);
 		}
-
 		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
@@ -309,7 +310,7 @@ public class GuiTiledMap extends GuiScreen {
 		for(Entity entity: this.world.loadedEntityList) {
 			if(!toUntrackEntities.remove(entity.getPersistentID())
 					&& this.shouldTrackEntity(entity)
-					&& !(entity instanceof AbstractClientPlayer)) {
+					&& !(entity instanceof EntityPlayer)) {
 				toTrackEntities.add(entity);
 			}
 		}
@@ -325,6 +326,8 @@ public class GuiTiledMap extends GuiScreen {
 		for(AbstractClientPlayer player: toTrackPlayers) {
 			this.entityPOIs.put(player.getPersistentID(), new EntityPOI(player));
 		}
+		for(UUID uid: toUntrackEntities) this.entityPOIs.remove(uid);
+		for(UUID uid: toUntrackPlayers) this.playerPOIs.remove(uid);
 		for(EntityPOI poi: this.entityPOIs.values()) {
 			poi.updatePosition(this.projection);
 		}
@@ -341,7 +344,7 @@ public class GuiTiledMap extends GuiScreen {
 			TerramapMod.logger.error("Map is in an invalid state! Reseting!");
 			this.setZoomToMinimum();
 		}
-		this.updatePOIs();
+		if(this.projection != null) this.updatePOIs();
 	}		
 
 	@Override
