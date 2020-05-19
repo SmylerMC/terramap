@@ -59,6 +59,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected Map<UUID, PlayerPOI> playerPOIs; //Tracked players, excluding ourself
 	protected PlayerPOI thePlayerPOI;
 	protected int lastEntityPoiRenderedCount = 0;
+	protected int lastPlayerPoiRenderedCount = 0;
 	protected World world; 
 
 	public GuiTiledMap(TiledMap<?> map, World world) {
@@ -242,7 +243,7 @@ public class GuiTiledMap extends GuiScreen {
 			if(this.thePlayerPOI != null) playerPOICount++;
 			lines.add("FPS:" + Minecraft.getDebugFPS() +
 					 " ePOIs: " + this.lastEntityPoiRenderedCount +"/" + this.entityPOIs.size() +
-					 " pPOIs: " + this.lastEntityPoiRenderedCount +"/" + playerPOICount);
+					 " pPOIs: " + this.lastPlayerPoiRenderedCount +"/" + playerPOICount);
 		}
 		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
@@ -259,7 +260,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	private void drawPOIs(int mouseX, int mouseY, float partialTicks) {
 		this.lastEntityPoiRenderedCount = 0;
-		List<PointOfInterest> pois = new ArrayList<PointOfInterest>();
+		this.lastPlayerPoiRenderedCount = 0;
 		boolean mainPlayerRendered = false;
 		long playerX = 0;
 		long playerY = 0;
@@ -271,9 +272,7 @@ public class GuiTiledMap extends GuiScreen {
 			playerY = this.getScreenY(this.thePlayerPOI.getLatitude());
 			mainPlayerRendered = this.isPoiBBOnScreen(playerX, playerY, this.thePlayerPOI);
 		}
-		pois.addAll(this.entityPOIs.values());
-		pois.addAll(this.playerPOIs.values());
-		for(PointOfInterest poi: pois) {
+		for(EntityPOI poi: this.entityPOIs.values()) {
 			long lx = this.getScreenX(poi.getLongitude());
 			long ly = this.getScreenY(poi.getLatitude());
 			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
@@ -289,6 +288,17 @@ public class GuiTiledMap extends GuiScreen {
 				hoveredPOI = poi;
 			}
 		}
+		for(PlayerPOI poi: this.playerPOIs.values()) {
+			long lx = this.getScreenX(poi.getLongitude());
+			long ly = this.getScreenY(poi.getLatitude());
+			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
+			int ix = (int)lx;
+			int iy = (int)ly;
+			if(mainPlayerRendered && this.poiBBCollide(ix, iy, poi, (int)playerX, (int)playerY, this.thePlayerPOI)) continue; 
+			boolean h = this.isPointOverPOI(ix, iy, mouseX, mouseY, poi);
+			poi.draw(ix, iy, h);
+			poi.drawName(ix, iy, h);
+		}
 		if(hoveredPOI != null) hoveredPOI.drawName(hoverPOIX, hoverPOIY, true);
 		if(mainPlayerRendered) {
 			int px = (int)playerX;
@@ -296,7 +306,7 @@ public class GuiTiledMap extends GuiScreen {
 			boolean h = this.isPointOverPOI(px, py, mouseX, mouseY, this.thePlayerPOI);
 			this.thePlayerPOI.draw(px, py, h);
 			this.thePlayerPOI.drawName(px, py, h);
-			this.lastEntityPoiRenderedCount++;
+			this.lastPlayerPoiRenderedCount++;
 		}
 	}
 
@@ -324,7 +334,7 @@ public class GuiTiledMap extends GuiScreen {
 			this.entityPOIs.put(entity.getPersistentID(), new EntityPOI(entity));
 		}
 		for(AbstractClientPlayer player: toTrackPlayers) {
-			this.entityPOIs.put(player.getPersistentID(), new EntityPOI(player));
+			this.playerPOIs.put(player.getPersistentID(), new PlayerPOI(player));
 		}
 		for(UUID uid: toUntrackEntities) this.entityPOIs.remove(uid);
 		for(UUID uid: toUntrackPlayers) this.playerPOIs.remove(uid);

@@ -35,7 +35,7 @@ public class CacheManager implements Runnable {
 	private LinkedList<Cachable> toCacheAsync = new LinkedList<Cachable>();
 	private Map<URL, Integer> faultyUrls = new HashMap<URL, Integer>();
 	private int maxCacheTries = 3;
-	private int queueSizeWarningThershold = 30;
+	private int queueSizeWarningThershold = 75;
 
 	private File cachingDirectory;
 
