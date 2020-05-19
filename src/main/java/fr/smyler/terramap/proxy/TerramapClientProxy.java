@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy{
 
-	private EarthGeneratorSettings genSettings;
+	private EarthGeneratorSettings genSettings; //TODO Clear this when logging out so we know it's not reliable
 	
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {

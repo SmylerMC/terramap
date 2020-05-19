@@ -2,9 +2,9 @@ package fr.smyler.terramap.gui.widgets.poi;
 
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -14,10 +14,11 @@ public class EntityPOI extends PointOfInterest {
 
 	public EntityPOI(Entity e) {
 		this.entity = e;
-		if(this.entity instanceof EntityPlayer) {
-			EntityPlayer player = (EntityPlayer)this.entity;
-//			this.texture = Minecraft.getMinecraft().getSkinManager().loadSkin(profileTexture, textureType)
-			this.texture = DefaultPlayerSkin.getDefaultSkin(player.getPersistentID()); //TODO Get the real skin
+		
+		//Special case for players as we need the skin
+		if(this.entity instanceof AbstractClientPlayer) {
+			AbstractClientPlayer player = (AbstractClientPlayer)this.entity;
+			this.texture = player.getLocationSkin();
 		}
 	}
 
@@ -31,6 +32,8 @@ public class EntityPOI extends PointOfInterest {
 
 	@Override
 	public void draw(int x, int y) {
+		
+		//This is a special case for players as we need to draw both the skull and the hat
 		if(this.entity instanceof EntityPlayer) {
 			Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
 			GlStateManager.color(255, 255, 255, 255);
