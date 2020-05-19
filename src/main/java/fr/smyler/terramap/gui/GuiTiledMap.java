@@ -16,6 +16,8 @@ import fr.smyler.terramap.TerramapConfiguration;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.gui.widgets.poi.EntityPOI;
+import fr.smyler.terramap.gui.widgets.poi.PlayerPOI;
+import fr.smyler.terramap.gui.widgets.poi.PointOfInterest;
 import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
@@ -25,12 +27,14 @@ import fr.smyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -52,6 +56,9 @@ public class GuiTiledMap extends GuiScreen {
 	protected RightClickMenu rclickMenu;
 
 	protected Map<UUID, EntityPOI> entityPOIs;
+	protected Map<UUID, PlayerPOI> playerPOIs; //Tracked players, excluding ourself
+	protected PlayerPOI thePlayerPOI;
+	protected int lastEntityPoiRenderedCount = 0;
 	protected World world; 
 
 	public GuiTiledMap(TiledMap<?> map, World world) {
@@ -65,11 +72,11 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void initGui() {
-		EntityPlayerSP p = Minecraft.getMinecraft().player;
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
 		if(this.genSettings != null) {
 			this.projection = this.genSettings.getProjection();
-			double coords[] = this.projection.toGeo(p.posX, p.posZ);
+			double coords[] = this.projection.toGeo(player.posX, player.posZ);
 			this.focusLatitude = coords[1];
 			this.focusLongitude = coords[0];
 			this.setZoom(13);
@@ -80,9 +87,10 @@ public class GuiTiledMap extends GuiScreen {
 			this.setZoomToMinimum();
 		}
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
-//		this.entityPOIs.put(p.getPersistentID(), new EntityPOI(p)); //TODO TEMP TEST
+		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
+		this.thePlayerPOI = new PlayerPOI((AbstractClientPlayer)player);
 		this.rclickMenu.init(fontRenderer);
-		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.lastMouseLong, this.lastMouseLat);}); //TODO implement teleport from map
+		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.lastMouseLong, this.lastMouseLat);});
 		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
 		this.rclickMenu.addEntry("Copy location to clipboard", () -> {GuiScreen.setClipboardString("" + this.lastMouseLong + " " + this.lastMouseLat);});
 		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.lastMouseLong, this.lastMouseLat);});
@@ -95,7 +103,6 @@ public class GuiTiledMap extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.handleMouseInput(mouseX, mouseY, partialTicks);
 		this.drawMap(mouseX, mouseY, partialTicks);
-		this.updatePOIs(); //TODO No needed at each frame
 		this.drawPOIs(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
 		this.drawCopyright(mouseX, mouseY, partialTicks);
@@ -231,7 +238,9 @@ public class GuiTiledMap extends GuiScreen {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
 			if(this.genSettings != null) lines.add("Projection: " + this.genSettings.settings.projection);
-			lines.add(Minecraft.getDebugFPS() + "FPS");
+			int entityPOICount = this.entityPOIs.size();
+			if(this.thePlayerPOI != null) entityPOICount++;
+			lines.add("FPS:" + Minecraft.getDebugFPS() + " EPOIs: " + this.lastEntityPoiRenderedCount +"/" + entityPOICount);
 		}
 
 		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
@@ -248,28 +257,81 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void drawPOIs(int mouseX, int mouseY, float partialTicks) {
-		for(EntityPOI poi: this.entityPOIs.values()) {
-			long x = this.getScreenX(poi.getLongitude());
-			if(x > this.width || x < 0) continue;
-			long y = this.getScreenY(poi.getLatitude());
-			if(y > this.height || y < 0) continue;
-			poi.draw((int)x, (int)y);
+		this.lastEntityPoiRenderedCount = 0;
+		List<PointOfInterest> pois = new ArrayList<PointOfInterest>();
+		boolean mainPlayerRendered = false;
+		long playerX = 0;
+		long playerY = 0;
+		int hoverPOIX = 0;
+		int hoverPOIY = 0;
+		PointOfInterest hoveredPOI = null;
+		if(this.thePlayerPOI != null) {
+			playerX = this.getScreenX(this.thePlayerPOI.getLongitude());
+			playerY = this.getScreenY(this.thePlayerPOI.getLatitude());
+			mainPlayerRendered = this.isPoiBBOnScreen(playerX, playerY, this.thePlayerPOI);
+		}
+		pois.addAll(this.entityPOIs.values());
+		pois.addAll(this.playerPOIs.values());
+		for(PointOfInterest poi: pois) {
+			long lx = this.getScreenX(poi.getLongitude());
+			long ly = this.getScreenY(poi.getLatitude());
+			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
+			int ix = (int)lx;
+			int iy = (int)ly;
+			if(mainPlayerRendered && this.poiBBCollide(ix, iy, poi, (int)playerX, (int)playerY, this.thePlayerPOI)) continue; 
+			boolean h = this.isPointOverPOI(ix, iy, mouseX, mouseY, poi);
+			poi.draw(ix, iy, h);
+			this.lastEntityPoiRenderedCount ++;
+			if(h && hoveredPOI == null) {
+				hoverPOIX = ix;
+				hoverPOIY = iy;
+				hoveredPOI = poi;
+			}
+		}
+		if(hoveredPOI != null) hoveredPOI.drawName(hoverPOIX, hoverPOIY, true);
+		if(mainPlayerRendered) {
+			int px = (int)playerX;
+			int py = (int)playerY;
+			boolean h = this.isPointOverPOI(px, py, mouseX, mouseY, this.thePlayerPOI);
+			this.thePlayerPOI.draw(px, py, h);
+			this.thePlayerPOI.drawName(px, py, h);
+			this.lastEntityPoiRenderedCount++;
 		}
 	}
 
 	private void updatePOIs() {
-		Set<UUID> toUntrack = new HashSet<UUID>();
-		toUntrack.addAll(this.entityPOIs.keySet()); //The key set is backed by the map
-		Set<Entity> toTrack = new HashSet<Entity>();
+		Set<UUID> toUntrackEntities = new HashSet<UUID>();
+		toUntrackEntities.addAll(this.entityPOIs.keySet()); //The key set is backed by the map, we can't mute it while iterating
+		Set<UUID> toUntrackPlayers = new HashSet<UUID>();
+		toUntrackPlayers.addAll(this.playerPOIs.keySet());
+		Set<Entity> toTrackEntities = new HashSet<Entity>();
+		Set<AbstractClientPlayer> toTrackPlayers = new HashSet<AbstractClientPlayer>();
 		for(Entity entity: this.world.loadedEntityList) {
-			if(!toUntrack.remove(entity.getPersistentID()) && this.shouldTrackEntity(entity)) {
-				toTrack.add(entity);
+			if(!toUntrackEntities.remove(entity.getPersistentID())
+					&& this.shouldTrackEntity(entity)
+					&& !(entity instanceof AbstractClientPlayer)) {
+				toTrackEntities.add(entity);
 			}
 		}
-		for(Entity entity: toTrack) this.entityPOIs.put(entity.getPersistentID(), new EntityPOI(entity));
+		for(EntityPlayer player: this.world.playerEntities) {
+			if(!toUntrackPlayers.remove(player.getPersistentID())
+					&& !player.getPersistentID().equals(this.thePlayerPOI.getEntity().getPersistentID())){
+				toTrackPlayers.add((AbstractClientPlayer)player);
+			}
+		}
+		for(Entity entity: toTrackEntities) {
+			this.entityPOIs.put(entity.getPersistentID(), new EntityPOI(entity));
+		}
+		for(AbstractClientPlayer player: toTrackPlayers) {
+			this.entityPOIs.put(player.getPersistentID(), new EntityPOI(player));
+		}
 		for(EntityPOI poi: this.entityPOIs.values()) {
 			poi.updatePosition(this.projection);
 		}
+		for(PlayerPOI poi: this.playerPOIs.values()) {
+			poi.updatePosition(this.projection);
+		}
+		if(this.thePlayerPOI != null) this.thePlayerPOI.updatePosition(this.projection);
 		
 	}
 
@@ -279,6 +341,7 @@ public class GuiTiledMap extends GuiScreen {
 			TerramapMod.logger.error("Map is in an invalid state! Reseting!");
 			this.setZoomToMinimum();
 		}
+		this.updatePOIs();
 	}		
 
 	@Override
@@ -345,6 +408,11 @@ public class GuiTiledMap extends GuiScreen {
 	public void onGuiClosed() {
 		this.map.unloadAll();
 	}
+	
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
 
 	public void zoom(int val) {
 
@@ -383,7 +451,8 @@ public class GuiTiledMap extends GuiScreen {
 	
 	private boolean shouldTrackEntity(Entity entity) {
 		if(entity instanceof EntityItem) return false;
-		return entity instanceof EntityPlayer; //TODO shouldTrackEntity
+		return entity instanceof EntityLiving;
+//		return entity instanceof EntityPlayer; //TODO shouldTrackEntity
 	}
 	/**
 	 * 
@@ -486,4 +555,24 @@ public class GuiTiledMap extends GuiScreen {
 		return this.getUpperLeftY(this.focusLatitude);
 	}
 	
+	private boolean isPoiBBOnScreen(long x, long y, PointOfInterest poi) {
+		return x + poi.getXOffset() <= this.width
+			&& x + poi.getXOffset() + poi.getWidth() >= 0
+			&& y + poi.getYOffset() <= this.height
+			&& y + poi.getYOffset() + poi.getHeight() >= 0;
+	}
+	
+	private boolean isPointOverPOI(int x, int y, int mouseX, int mouseY, PointOfInterest poi) {
+		return x + poi.getXOffset() <= mouseX
+			&& x + poi.getXOffset() + poi.getWidth() >= mouseX
+			&& y + poi.getYOffset() <= mouseY
+			&& y + poi.getYOffset() + poi.getHeight() >= mouseY;
+	}
+	
+	private boolean poiBBCollide(int x1, int y1, PointOfInterest poi1, int x2, int y2, PointOfInterest poi2) {
+		return this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset(), poi2)
+			|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset(), poi2)
+			|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2)
+			|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
+	}
 }
