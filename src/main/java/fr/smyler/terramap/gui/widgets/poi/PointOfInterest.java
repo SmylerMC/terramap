@@ -16,6 +16,7 @@ public abstract class PointOfInterest extends Gui {
 	public void draw(int x, int y, boolean hovered) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
 		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
 		this.drawTexturedModalRect(x - 5, y - 5, 0, hovered? 32:0, 10, hovered? 43:11);
 	}
 	
