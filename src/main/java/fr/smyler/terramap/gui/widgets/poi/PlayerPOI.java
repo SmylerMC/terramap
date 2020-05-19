@@ -19,7 +19,7 @@ public class PlayerPOI extends EntityPOI{
 	@Override
 	public void draw(int x, int y, boolean hovered) {
 		GlStateManager.enableAlpha();
-		if(hovered) Gui.drawRect(x - 7, y - 7, x + 9, y + 9, 0x80000000);
+		if(hovered) Gui.drawRect(x - 7, y - 7, x + 9, y + 9, 0x50000000);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
 		GlStateManager.color(255, 255, 255, 255);
 		Gui.drawModalRectWithCustomSizedTexture(x - 8, y - 8, 16, 16, 16, 16, 128, 128);

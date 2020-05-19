@@ -246,7 +246,7 @@ public class GuiTiledMap extends GuiScreen {
 					" ePOIs: " + this.lastEntityPoiRenderedCount +"/" + this.entityPOIs.size() +
 					" pPOIs: " + this.lastPlayerPoiRenderedCount +"/" + playerPOICount);
 		}
-		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
+		Gui.drawRect(0, 0, 220, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
 	}
@@ -394,8 +394,8 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.lastMouseClickX != -1 && this.lastMouseClickY != -1 && clickedMouseButton == 0) {
 			int dX = mouseX - this.lastMouseClickX;
 			int dY = mouseY - this.lastMouseClickY;
-			double nlon = this.focusLongitude - (double)dX * Math.PI/ (1<<(1 + this.zoomLevel)) / TerramapConfiguration.tileScaling;
-			double nlat = this.focusLatitude + dY/Math.pow(2, this.zoomLevel)/2 / TerramapConfiguration.tileScaling;
+			double nlon = this.getScreenLong(this.width/2 - dX);
+			double nlat = this.getScreenLat(this.height/2 - dY);
 			this.setLongitude(nlon);
 			this.setLatitude(nlat);
 		}
