@@ -9,8 +9,9 @@ It' still in early dev and will evolve, but here is what it currently looks like
 ### Currently implemented:
 * A basic full screen tiled map
 * A right click menu on the map to teleport and open the location in various third-party tools
+* Display nearby players and entities on the map
 
 ### Planned:
-* Display nearby players and maybe entities
+* Cutom icon for each entity type
 * Better control over the map
 * Waypoints
