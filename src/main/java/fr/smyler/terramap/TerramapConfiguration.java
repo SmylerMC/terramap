@@ -27,6 +27,9 @@ public class TerramapConfiguration{
 	@Config.Comment("This is the maximum number of tiles to keep loaded. A lower number implies lower memory usage, however, if this is lower than the number of tiles displayed on your screen at once you will experience a huge performance drop. Change for a higher value if you experience lag when displaying a map on a large display")
 	public static int maxTileLoad = 128;
 	
+	@Config.Comment("Set to true if you want the entities to be displayed on the map")
+	public static boolean showEntities = false;
+	
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
 	}

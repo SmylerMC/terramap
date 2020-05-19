@@ -451,8 +451,7 @@ public class GuiTiledMap extends GuiScreen {
 	
 	private boolean shouldTrackEntity(Entity entity) {
 		if(entity instanceof EntityItem) return false;
-		return entity instanceof EntityLiving;
-//		return entity instanceof EntityPlayer; //TODO shouldTrackEntity
+		return TerramapConfiguration.showEntities && entity instanceof EntityLiving;
 	}
 	/**
 	 * 
