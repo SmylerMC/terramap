@@ -48,9 +48,11 @@ public class GuiTiledMap extends GuiScreen {
 	protected double focusLatitude;
 	protected double focusLongitude;
 	protected int zoomLevel;
-	protected double lastMouseLong, lastMouseLat = 0;
+	protected double mouseLong, mouseLat = 0;
+	protected int lastMouseClickX, lastMouseClickY = -1;
 	protected EarthGeneratorSettings genSettings;
 	protected GeographicProjection projection;
+
 	protected boolean debug = false; //Show tiles borders or not
 
 	protected RightClickMenu rclickMenu;
@@ -91,18 +93,17 @@ public class GuiTiledMap extends GuiScreen {
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
 		this.thePlayerPOI = new PlayerPOI((AbstractClientPlayer)player);
 		this.rclickMenu.init(fontRenderer);
-		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.lastMouseLong, this.lastMouseLat);});
-		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.lastMouseLong, this.lastMouseLat);});
-		this.rclickMenu.addEntry("Copy location to clipboard", () -> {GuiScreen.setClipboardString("" + this.lastMouseLong + " " + this.lastMouseLat);});
-		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.lastMouseLong, this.lastMouseLat);});
-		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.lastMouseLong, this.lastMouseLat);});
+		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry("Copy location to clipboard", () -> {GuiScreen.setClipboardString("" + this.mouseLong + " " + this.mouseLat);});
+		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		//TODO Open in google Earth
 		//TODO Copy Minecraft coordinates to clipboard
 	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		this.handleMouseInput(mouseX, mouseY, partialTicks);
 		this.drawMap(mouseX, mouseY, partialTicks);
 		if(this.projection != null) this.drawPOIs(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
@@ -231,8 +232,8 @@ public class GuiTiledMap extends GuiScreen {
 
 	private void drawInformation(int mouseX, int mouseY, float partialTicks) {
 		List<String> lines = new ArrayList<String>();
-		String dispLat = "" + (float)Math.round(this.lastMouseLat * 100000) / 100000; //TODO Better formating
-		String dispLong = "" + (float)Math.round(this.lastMouseLong * 100000) / 100000;
+		String dispLat = GeoServices.formatGeoCoordForDisplay(this.mouseLat) + "°";
+		String dispLong = GeoServices.formatGeoCoordForDisplay(this.mouseLong)  + "°";
 		lines.add("Mouse position: " + dispLat + " " + dispLong);
 		lines.add("Zoom level: " + this.zoomLevel);
 		if(this.debug) {
@@ -242,8 +243,8 @@ public class GuiTiledMap extends GuiScreen {
 			int playerPOICount = this.playerPOIs.size();
 			if(this.thePlayerPOI != null) playerPOICount++;
 			lines.add("FPS:" + Minecraft.getDebugFPS() +
-					 " ePOIs: " + this.lastEntityPoiRenderedCount +"/" + this.entityPOIs.size() +
-					 " pPOIs: " + this.lastPlayerPoiRenderedCount +"/" + playerPOICount);
+					" ePOIs: " + this.lastEntityPoiRenderedCount +"/" + this.entityPOIs.size() +
+					" pPOIs: " + this.lastPlayerPoiRenderedCount +"/" + playerPOICount);
 		}
 		Gui.drawRect(0, 0, 200, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
@@ -345,7 +346,7 @@ public class GuiTiledMap extends GuiScreen {
 			poi.updatePosition(this.projection);
 		}
 		if(this.thePlayerPOI != null) this.thePlayerPOI.updatePosition(this.projection);
-		
+
 	}
 
 	@Override
@@ -363,65 +364,81 @@ public class GuiTiledMap extends GuiScreen {
 		if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug;
 	}
 
-	/**
-	 * Handles mouse input.
-	 */
-	public void handleMouseInput(int mouseX, int mouseY, float partialTicks){
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		switch(mouseButton) {
+		case 0: //Left click
+			if(this.rclickMenu.isDisplayed()) {
+				this.rclickMenu.onMouseClick(mouseX, mouseY);
+				this.rclickMenu.hide();
+			} else {
 
-		//TODO Use vanilla methods
-
-		boolean lclick = Mouse.isButtonDown(0);
-		boolean rclick = Mouse.isButtonDown(1);
-
-		if(rclick) {
-
+			}
+			break;
+		case 1: //Right click
 			int displayX = mouseX;
 			int displayY = mouseY;
 			int rClickWidth = this.rclickMenu.getWidth();
 			int rClickHeight = this.rclickMenu.getHeight();
 			displayX = mouseX + rClickWidth > this.width ? this.width - rClickWidth: mouseX;
 			displayY = mouseY + rClickHeight > this.height ? this.height - rClickHeight: mouseY;
-			this.rclickMenu.showAt(displayX, displayY); //TODO Make sure it fits on screen
+			this.rclickMenu.showAt(displayX, displayY); //TODO Added a poi where the map was clicked
+			break;
 		}
+		this.lastMouseClickX = mouseX;
+		this.lastMouseClickY = mouseY;
+	}
 
-		if(this.rclickMenu.isDisplayed()) {
-			if(lclick) {
-				this.rclickMenu.onMouseClick(mouseX, mouseY);
-				this.rclickMenu.hide();
-			}
-		} else {
-			//Moving
-			if(lclick) {
-				//TODO This should adapt to the zoom level and should be in its own method to add keyboard controls
-				int dX = (int) (Mouse.getDX() / TerramapConfiguration.tileScaling);
-				int dY = (int) (Mouse.getDY() / TerramapConfiguration.tileScaling);
-
-				double nlon = this.focusLongitude - (double)dX * Math.PI/ (1<<(2 + this.zoomLevel));
-				double nlat = this.focusLatitude - dY/Math.pow(2, this.zoomLevel)/2;
-				this.setLongitude(nlon);
-				this.setLatitude(nlat);
-			} else {
-				//Scrolling
-				int i = Mouse.getDWheel();
-				int z;
-				if (i != 0){
-					if (i > 0) z = 1;
-					else z = - 1;
-					this.zoom(z);
-				}
-				this.lastMouseLong = (float)Math.round(this.getScreenLong(mouseX) * 100000) / 100000;
-				this.lastMouseLat = (float)Math.round(this.getScreenLat(mouseY) * 100000) / 100000;
-			}
-
+	@Override
+	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick){
+		if(this.lastMouseClickX != -1 && this.lastMouseClickY != -1 && clickedMouseButton == 0) {
+			int dX = mouseX - this.lastMouseClickX;
+			int dY = mouseY - this.lastMouseClickY;
+			double nlon = this.focusLongitude - (double)dX * Math.PI/ (1<<(1 + this.zoomLevel)) / TerramapConfiguration.tileScaling;
+			double nlat = this.focusLatitude + dY/Math.pow(2, this.zoomLevel)/2 / TerramapConfiguration.tileScaling;
+			this.setLongitude(nlon);
+			this.setLatitude(nlat);
 		}
+		this.lastMouseClickX = mouseX;
+		this.lastMouseClickY = mouseY;
+	}
 
+	@Override
+	protected void mouseReleased(int mouseX, int mouseY, int button) {
+		super.mouseReleased(mouseX, mouseY, button);
+	}
+
+	/**
+	 * Handles mouse input.
+	 */
+	@Override
+	public void handleMouseInput() throws IOException {
+		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
+		int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
+		this.mouseLong = this.getScreenLong(mouseX);
+		this.mouseLat = this.getScreenLat(mouseY);
+
+		super.handleMouseInput();
+
+		int scroll = Mouse.getDWheel();
+		if(scroll != 0) this.mouseScrolled(mouseX, mouseY, scroll);
+
+	}
+
+	public void mouseScrolled(int mouseX, int mouseY, int amount) {
+		this.rclickMenu.hide();
+		int z;
+		if (amount > 0) z = 1;
+		else z = - 1;
+		this.zoom(z);
 	}
 
 	@Override
 	public void onGuiClosed() {
 		this.map.unloadAll();
 	}
-	
+
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;
@@ -439,7 +456,6 @@ public class GuiTiledMap extends GuiScreen {
 
 		//FIXME
 	}
-
 
 	public void setZoomToMinimum() {
 		int i = this.zoomLevel;
@@ -461,7 +477,7 @@ public class GuiTiledMap extends GuiScreen {
 	private void setTiledMapZoom() {
 		this.map.setZoomLevel((int)this.zoomLevel);
 	}
-	
+
 	private boolean shouldTrackEntity(Entity entity) {
 		if(entity instanceof EntityItem) return false;
 		return TerramapConfiguration.showEntities && entity instanceof EntityLiving;
@@ -474,7 +490,7 @@ public class GuiTiledMap extends GuiScreen {
 	private long getMaxMapSize(int zoom) {
 		return (long) (WebMercatorUtils.getDimensionsInTile(zoom) * WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 	}
-	
+
 	private double getScreenLong(int xOnScreen) {
 		long xOnMap = (long) ((this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling);
 		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
@@ -486,11 +502,8 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void teleportPlayerTo(double longitude, double latitude) {
-		this.sendChatMessage(TerramapConfiguration.tpllcmd
-				.replace("{latitude}", "" + latitude)
-				.replace("{longitude}", "" + longitude),
-				false
-		);
+		String cmd = GeoServices.formatStringWithCoords(TerramapConfiguration.tpllcmd, 0, longitude, latitude);
+		this.sendChatMessage(cmd, false);
 	}
 
 	public void setSize(int width, int height) {
@@ -517,77 +530,79 @@ public class GuiTiledMap extends GuiScreen {
 		return true;
 	}
 
-	private void setZoom(int zoom) {
+	protected void setZoom(int zoom) {
 		this.zoomLevel = zoom;
 		this.setTiledMapZoom();
 	}
 
-	private long getMapX(double longitude) {
+	protected long getMapX(double longitude) {
 		return this.getMapX(this.zoomLevel, longitude);
 	}
 
-	private long getMapY(double latitude) {
+	protected long getMapY(double latitude) {
 		return this.getMapY(this.zoomLevel, latitude);
 	}
 
-	private long getMapX(int zoomLevel, double longitude) {
+	protected long getMapX(int zoomLevel, double longitude) {
 		return (long) (WebMercatorUtils.getXFromLongitude(longitude, zoomLevel) * TerramapConfiguration.tileScaling);
 	}
 
-	private long getMapY(int zoomLevel, double latitude) {
+	protected long getMapY(int zoomLevel, double latitude) {
 		return (long)(WebMercatorUtils.getYFromLatitude(latitude, zoomLevel) * TerramapConfiguration.tileScaling);
 	}
 
-	private long getScreenX(double longitude) {
+	protected long getScreenX(double longitude) {
 		return this.getMapX(longitude) -  this.getUpperLeftX();
 	}
 
-	private long getScreenY(double latitude) {
+	protected long getScreenY(double latitude) {
 		return this.getMapY(latitude) - this.getUpperLeftY();
 	}
 
-	private long getUpperLeftX(double centerLon) {
+	protected long getUpperLeftX(double centerLon) {
 		return this.getUpperLeftX(this.zoomLevel, centerLon);
 	}
 
-	private long getUpperLeftY(double centerLat) {
+	protected long getUpperLeftY(double centerLat) {
 		return this.getUpperLeftY(this.zoomLevel, centerLat);
 	}
 
-	private long getUpperLeftX(int zoomLevel, double centerLon) {
+	protected long getUpperLeftX(int zoomLevel, double centerLon) {
 		return this.getMapX(centerLon) - this.width / 2;
 	}
 
-	private long getUpperLeftY(int zoomLevel, double centerLat) {
+	protected long getUpperLeftY(int zoomLevel, double centerLat) {
 		return this.getMapY(centerLat) - this.height / 2;
 	}
-	
-	private long getUpperLeftX() {
+
+	protected long getUpperLeftX() {
 		return this.getUpperLeftX(this.focusLongitude);
 	}
 
-	private long getUpperLeftY() {
+	protected long getUpperLeftY() {
 		return this.getUpperLeftY(this.focusLatitude);
 	}
-	
-	private boolean isPoiBBOnScreen(long x, long y, PointOfInterest poi) {
+
+	protected boolean isPoiBBOnScreen(long x, long y, PointOfInterest poi) {
 		return x + poi.getXOffset() <= this.width
-			&& x + poi.getXOffset() + poi.getWidth() >= 0
-			&& y + poi.getYOffset() <= this.height
-			&& y + poi.getYOffset() + poi.getHeight() >= 0;
+				&& x + poi.getXOffset() + poi.getWidth() >= 0
+				&& y + poi.getYOffset() <= this.height
+				&& y + poi.getYOffset() + poi.getHeight() >= 0;
 	}
-	
-	private boolean isPointOverPOI(int x, int y, int mouseX, int mouseY, PointOfInterest poi) {
+
+	protected boolean isPointOverPOI(int x, int y, int mouseX, int mouseY, PointOfInterest poi) {
 		return x + poi.getXOffset() <= mouseX
-			&& x + poi.getXOffset() + poi.getWidth() >= mouseX
-			&& y + poi.getYOffset() <= mouseY
-			&& y + poi.getYOffset() + poi.getHeight() >= mouseY;
+				&& x + poi.getXOffset() + poi.getWidth() >= mouseX
+				&& y + poi.getYOffset() <= mouseY
+				&& y + poi.getYOffset() + poi.getHeight() >= mouseY;
+	}
+
+	protected boolean poiBBCollide(int x1, int y1, PointOfInterest poi1, int x2, int y2, PointOfInterest poi2) {
+		return this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset(), poi2)
+				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset(), poi2)
+				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2)
+				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
 	}
 	
-	private boolean poiBBCollide(int x1, int y1, PointOfInterest poi1, int x2, int y2, PointOfInterest poi2) {
-		return this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset(), poi2)
-			|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset(), poi2)
-			|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2)
-			|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
-	}
+	
 }
