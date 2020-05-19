@@ -1,5 +1,6 @@
 package fr.smyler.terramap.gui.widgets.poi;
 
+import fr.smyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -9,12 +10,15 @@ public abstract class PointOfInterest extends Gui {
 
 	protected double longitude;
 	protected double latitude;
-	protected ResourceLocation texture;
+	protected ResourceLocation texture = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
 	
 	public void draw(int x, int y, boolean hovered) {
-		int ux = x + this.getXOffset();
-		int uy = y + this.getYOffset();
-		Gui.drawRect(ux,  uy, ux + this.getWidth(), uy + this.getHeight(), 0xFFFF0000);
+//		int ux = x + this.getXOffset();
+//		int uy = y + this.getYOffset();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
+		this.drawTexturedModalRect(x - 5, y - 5, 0, hovered? 32:0, 10, hovered? 43:11);
+//		this.drawTexturedModalRect(x - 5, y - 5, 0, hovered? 32:0, 10, hovered? 58:26);
+//		Gui.drawRect(ux,  uy, ux + this.getWidth(), uy + this.getHeight(), 0xFFFF0000);
 	}
 	
 	public void drawName(int x, int y, boolean hovered) {

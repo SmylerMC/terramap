@@ -36,3 +36,4 @@ gradle-wrapper.properties
 hs_err_pid*
 /bin/
 /.gradle/
+/build/
