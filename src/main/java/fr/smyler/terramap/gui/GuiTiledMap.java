@@ -396,7 +396,7 @@ public class GuiTiledMap extends GuiScreen {
 				int dX = (int) (Mouse.getDX() / TerramapConfiguration.tileScaling);
 				int dY = (int) (Mouse.getDY() / TerramapConfiguration.tileScaling);
 
-				double nlon = this.focusLongitude - dX/Math.pow(2, this.zoomLevel)/2;
+				double nlon = this.focusLongitude - (double)dX * Math.PI/ (1<<(2 + this.zoomLevel));
 				double nlat = this.focusLatitude - dY/Math.pow(2, this.zoomLevel)/2;
 				this.setLongitude(nlon);
 				this.setLatitude(nlat);
@@ -451,10 +451,10 @@ public class GuiTiledMap extends GuiScreen {
 	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
 		if(zoomLevel < 0) return false;
 		if(zoomLevel > 19) return false;
-		long upperLeftY = this.getUpperLeftY(zoomLevel, centerLat);
-		long lowerLeftY = (long) (upperLeftY + this.height);
-		if(upperLeftY < 0) return false;
-		if(lowerLeftY > this.getMaxMapSize(zoomLevel)) return false;
+		long upperY = this.getUpperLeftY(zoomLevel, centerLat);
+		long lowerY = (long) (upperY + this.height);
+		if(upperY < 0) return false;
+		if(lowerY > this.getMaxMapSize(zoomLevel)) return false;
 		return true;
 	}
 
@@ -486,7 +486,11 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void teleportPlayerTo(double longitude, double latitude) {
-		Minecraft.getMinecraft().player.sendChatMessage(TerramapConfiguration.tpllcmd.replace("{latitude}", "" + latitude).replace("{longitude}", "" + longitude));
+		this.sendChatMessage(TerramapConfiguration.tpllcmd
+				.replace("{latitude}", "" + latitude)
+				.replace("{longitude}", "" + longitude),
+				false
+		);
 	}
 
 	public void setSize(int width, int height) {
@@ -528,7 +532,6 @@ public class GuiTiledMap extends GuiScreen {
 
 	private long getMapX(int zoomLevel, double longitude) {
 		return (long) (WebMercatorUtils.getXFromLongitude(longitude, zoomLevel) * TerramapConfiguration.tileScaling);
-
 	}
 
 	private long getMapY(int zoomLevel, double latitude) {
