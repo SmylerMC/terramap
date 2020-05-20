@@ -31,7 +31,7 @@ public class TerramapConfiguration{
 	public static boolean showEntities = false;
 	
 	@Config.Comment("Double click delay to use in guis, in milliscondes")
-	public static long doubleClickDelay = 500;
+	public static int doubleClickDelay = 500;
 	
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
