@@ -18,9 +18,8 @@
 */
 
 
-package fr.smyler.terramap.server.events;
+package fr.smyler.terramap;
 
-import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.network.ProjectionSyncPacket;
 import fr.smyler.terramap.network.TerramapPacketHandler;
 import io.github.terra121.EarthGeneratorSettings;
@@ -29,6 +28,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
@@ -38,15 +38,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
  *
  */
 @Mod.EventBusSubscriber(modid=TerramapMod.MODID)
-public final class TerramapServerEventHandler {
+public final class TerramapEventHandler {
 
-	/**
-	 * Fired on server side when a player is about to join.
-	 * 
-	 * @param event
-	 */
+
 	@SubscribeEvent
-	public static void onPlayerJoinServer(PlayerLoggedInEvent event){
+	public static void onPlayerLoggedIn(PlayerLoggedInEvent event){
 		//Send world data to the client
 		EntityPlayerMP player = (EntityPlayerMP)event.player;
 		World world = player.getEntityWorld();
@@ -55,6 +51,11 @@ public final class TerramapServerEventHandler {
 			IMessage data = new ProjectionSyncPacket(settings);
 			TerramapPacketHandler.INSTANCE.sendTo(data, player);
 		}
+	}
+	
+	@SubscribeEvent
+	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
+		TerramapMod.proxy.onPlayerLoggedOut(event);
 	}
 	
 }

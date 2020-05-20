@@ -9,9 +9,11 @@ import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.network.TerramapPacketHandler;
 import io.github.terra121.EarthGeneratorSettings;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy{
@@ -57,6 +59,15 @@ public class TerramapClientProxy extends TerramapProxy{
 	@Override
 	public EarthGeneratorSettings getCurrentEarthGeneratorSettings(World world) {
 		return this.genSettings;
+	}
+
+	@Override
+	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
+		if(event.player.equals(Minecraft.getMinecraft().player)) {
+			this.genSettings = null;
+			TerramapMod.logger.debug("Removed genSettings");
+		}
+		
 	}
 
 }

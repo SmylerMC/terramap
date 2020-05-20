@@ -7,6 +7,7 @@ import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapServerProxy extends TerramapProxy{
@@ -30,6 +31,11 @@ public class TerramapServerProxy extends TerramapProxy{
 	@Override
 	public EarthGeneratorSettings getCurrentEarthGeneratorSettings(World world) {
 		return ProjectionSyncPacket.getEarthGeneratorSettingsFromWorld(world);
+	}
+
+	@Override
+	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
+		// We don't care about that on servers
 	}
 
 }
