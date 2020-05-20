@@ -1,6 +1,6 @@
 package fr.smyler.terramap.gui.widgets.poi;
 
-import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.gui.GuiTiledMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -11,7 +11,7 @@ public abstract class PointOfInterest extends Gui {
 
 	protected double longitude;
 	protected double latitude;
-	protected ResourceLocation texture = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
+	protected ResourceLocation texture = GuiTiledMap.WIDGET_TEXTURES;
 	
 	public void draw(int x, int y, boolean hovered) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
