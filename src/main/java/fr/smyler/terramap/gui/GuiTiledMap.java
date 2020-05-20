@@ -18,6 +18,7 @@ import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.gui.widgets.GuiTexturedButton;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.gui.widgets.poi.EntityPOI;
+import fr.smyler.terramap.gui.widgets.poi.LocationPOI;
 import fr.smyler.terramap.gui.widgets.poi.PlayerPOI;
 import fr.smyler.terramap.gui.widgets.poi.PointOfInterest;
 import fr.smyler.terramap.input.KeyBindings;
@@ -64,6 +65,7 @@ public class GuiTiledMap extends GuiScreen {
 	private boolean buttonWasClicked = false; // Used to know when handling mouse if it super has triggered a button
 
 	protected RightClickMenu rclickMenu;
+	protected LocationPOI rightClickPOI = null;
 	protected GuiButton zoomInButton;
 	protected GuiButton zoomOutButton;
 	protected GuiButton centerOnPlayerButton;
@@ -111,6 +113,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Open location in Google Earth web", () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
+		this.closeRightClickMenu();
 		//TODO Open in google Earth pro
 		if(this.projection != null) {
 			this.rclickMenu.addEntry("Copy Minecraft coordinates to clipboard", ()->{
@@ -353,6 +356,12 @@ public class GuiTiledMap extends GuiScreen {
 			this.thePlayerPOI.drawName(px, py, h);
 			this.lastPlayerPoiRenderedCount++;
 		}
+		if(this.rightClickPOI != null) {
+			int x = (int) this.getScreenX(this.rightClickPOI.getLongitude());
+			int y = (int) this.getScreenY(this.rightClickPOI.getLatitude());
+			boolean h = this.isPointOverPOI(x, y, mouseX, mouseY, this.rightClickPOI);
+			this.rightClickPOI.draw(x, y, h);
+		}
 	}
 
 	private void updatePOIs() {
@@ -437,7 +446,7 @@ public class GuiTiledMap extends GuiScreen {
 		case 0: //Left click
 			if(this.rclickMenu.isDisplayed()) {
 				this.rclickMenu.onMouseClick(mouseX, mouseY);
-				this.rclickMenu.hide();
+				this.closeRightClickMenu();
 			}
 			break;
 		case 1: //Right click
@@ -447,8 +456,9 @@ public class GuiTiledMap extends GuiScreen {
 			int displayY = mouseY;
 			int rClickWidth = this.rclickMenu.getWidth();
 			int rClickHeight = this.rclickMenu.getHeight();
-			displayX = mouseX + rClickWidth > this.width ? this.width - rClickWidth: mouseX;
-			displayY = mouseY + rClickHeight > this.height ? this.height - rClickHeight: mouseY;
+			displayX = mouseX + rClickWidth > this.width ? mouseX - rClickWidth: mouseX;
+			displayY = mouseY + rClickHeight > this.height ? mouseY - rClickHeight: mouseY;
+			this.rightClickPOI = new LocationPOI(this.mouseLong, this.mouseLat, "Right Click");
 			this.rclickMenu.showAt(displayX, displayY); //TODO Added a poi where the map was clicked
 			break;
 		}
@@ -497,7 +507,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	public void mouseScrolled(int mouseX, int mouseY, int amount) {
-		this.rclickMenu.hide();
+		this.closeRightClickMenu();
 		int z;
 		if (amount > 0) z = 1;
 		else z = - 1;
@@ -585,7 +595,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	public void moveMap(int dX, int dY) {
-		this.rclickMenu.hide();
+		this.closeRightClickMenu();
 		this.followedPOI = null;
 		double nlon = this.getScreenLong((double)this.width/2 - dX);
 		double nlat = this.getScreenLat((double)this.height/2 - dY);
@@ -623,6 +633,11 @@ public class GuiTiledMap extends GuiScreen {
 	private void teleportPlayerTo(double longitude, double latitude) {
 		String cmd = GeoServices.formatStringWithCoords(TerramapConfiguration.tpllcmd, 0, longitude, latitude);
 		this.sendChatMessage(cmd, false);
+	}
+	
+	protected void closeRightClickMenu() {
+		this.rclickMenu.hide();
+		this.rightClickPOI = null;
 	}
 
 	public void setSize(int width, int height) {
