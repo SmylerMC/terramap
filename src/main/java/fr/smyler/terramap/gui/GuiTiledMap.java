@@ -108,9 +108,10 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Copy location to clipboard", () -> {GuiScreen.setClipboardString("" + this.mouseLong + " " + this.mouseLat);});
-		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
-		//TODO Open in google Earth
+		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry("Open location in Google Earth web", () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
+		//TODO Open in google Earth pro
 		if(this.projection != null) {
 			this.rclickMenu.addEntry("Copy Minecraft coordinates to clipboard", ()->{
 				double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
