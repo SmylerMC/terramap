@@ -257,6 +257,12 @@ public class GuiTiledMap extends GuiScreen {
 		String dispLat = GeoServices.formatGeoCoordForDisplay(this.mouseLat) + "°";
 		String dispLong = GeoServices.formatGeoCoordForDisplay(this.mouseLong)  + "°";
 		lines.add("Mouse position: " + dispLat + " " + dispLong);
+		if(this.projection != null) {
+			double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
+			String dispX = "" + Math.round(coords[0]);
+			String dispY = "" + Math.round(coords[1]);
+			lines.add("X: " + dispX + " Y: " + dispY);
+		}
 		if(this.followedPOI != null) {
 			lines.add("Tracking " + this.followedPOI.getDisplayName());
 		}
@@ -708,4 +714,9 @@ public class GuiTiledMap extends GuiScreen {
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
 	}
 	
+}
+
+//Thrown when trying to call a method which needs the projection but it is null
+class NoProjection extends Exception {
+	private static final long serialVersionUID = 5954255037351370636L;
 }
