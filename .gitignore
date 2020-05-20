@@ -10,6 +10,7 @@ gradle/*
 .settings
 gradle-wrapper.properties
 *.launch
+*.xcf
 
 # Compiled class file
 *.class

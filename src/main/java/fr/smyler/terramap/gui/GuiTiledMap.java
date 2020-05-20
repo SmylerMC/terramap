@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.TerramapConfiguration;
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.gui.widgets.GuiTexturedButton;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.gui.widgets.poi.EntityPOI;
 import fr.smyler.terramap.gui.widgets.poi.PlayerPOI;
@@ -30,6 +32,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -37,11 +40,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 //TODO Localization
 public class GuiTiledMap extends GuiScreen {
 
+	public static final ResourceLocation WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
 	protected TiledMap<?> map;
 
 	protected double focusLatitude;
@@ -55,6 +60,9 @@ public class GuiTiledMap extends GuiScreen {
 	protected boolean debug = false; //Show tiles borders or not
 
 	protected RightClickMenu rclickMenu;
+	protected GuiButton zoomInButton;
+	protected GuiButton zoomOutButton;
+	protected GuiButton centerOnPlayerButton;
 
 	protected Map<UUID, EntityPOI> entityPOIs;
 	protected Map<UUID, PlayerPOI> playerPOIs; //Tracked players, excluding ourself
@@ -74,6 +82,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void initGui() {
+		int buttonId = 0;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
 		if(this.genSettings != null) {
@@ -99,6 +108,12 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		//TODO Open in google Earth
 		//TODO Copy Minecraft coordinates to clipboard
+		this.zoomInButton = new GuiTexturedButton(buttonId++, this.width - 30, 15, 15, 15, 40, 0, 40, 15, 40, 30, GuiTiledMap.WIDGET_TEXTURES);
+		this.zoomOutButton = new GuiTexturedButton(buttonId++, this.width - 30, 40 + this.fontRenderer.FONT_HEIGHT, 15, 15, 55, 0, 55, 15, 55, 30, GuiTiledMap.WIDGET_TEXTURES);
+		this.centerOnPlayerButton = new GuiTexturedButton(buttonId++, this.width - 30,  65 + this.fontRenderer.FONT_HEIGHT, 15, 15, 70, 0, 70, 15, 70, 30, GuiTiledMap.WIDGET_TEXTURES);
+		this.addButton(this.zoomInButton);
+		this.addButton(this.zoomOutButton);
+		this.addButton(this.centerOnPlayerButton);
 	}
 
 	@Override
@@ -106,6 +121,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.drawBackground(0);
 		this.drawMap(mouseX, mouseY, partialTicks);
 		if(this.projection != null) this.drawPOIs(mouseX, mouseY, partialTicks);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
 		this.drawCopyright(mouseX, mouseY, partialTicks);
 		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
@@ -238,7 +254,6 @@ public class GuiTiledMap extends GuiScreen {
 		String dispLat = GeoServices.formatGeoCoordForDisplay(this.mouseLat) + "°";
 		String dispLong = GeoServices.formatGeoCoordForDisplay(this.mouseLong)  + "°";
 		lines.add("Mouse position: " + dispLat + " " + dispLong);
-		lines.add("Zoom level: " + this.zoomLevel);
 		if(this.debug) {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
@@ -252,6 +267,8 @@ public class GuiTiledMap extends GuiScreen {
 		Gui.drawRect(0, 0, 220, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
+		Gui.drawRect(this.width - 30 , 30, this.width - 15, 30 + this.fontRenderer.FONT_HEIGHT + 10 , 0x80000000);
+		this.drawCenteredString(this.fontRenderer, "" + this.zoomLevel, this.width - 22, 36, 0xFFFFFF);
 	}
 
 	private void drawCopyright(int mouseX, int mouseY, float partialTicks) {
@@ -365,10 +382,15 @@ public class GuiTiledMap extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		super.keyTyped(typedChar, keyCode);
 		if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug;
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.moveMap(0, 10);
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) this.moveMap(0, -10);
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) this.moveMap(-10, 0);
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || keyCode == Keyboard.KEY_LEFT) this.moveMap(10, 0);
 	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
 		switch(mouseButton) {
 		case 0: //Left click
 			if(this.rclickMenu.isDisplayed()) {
@@ -397,10 +419,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.lastMouseClickX != -1 && this.lastMouseClickY != -1 && clickedMouseButton == 0) {
 			int dX = mouseX - this.lastMouseClickX;
 			int dY = mouseY - this.lastMouseClickY;
-			double nlon = this.getScreenLong((double)this.width/2 - dX);
-			double nlat = this.getScreenLat((double)this.height/2 - dY);
-			this.setLongitude(nlon);
-			this.setLatitude(nlat);
+			this.moveMap(dX, dY);
 		}
 		this.lastMouseClickX = mouseX;
 		this.lastMouseClickY = mouseY;
@@ -441,7 +460,20 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	@Override
+	protected void actionPerformed(GuiButton button) throws IOException {
+		super.actionPerformed(button);
+		if(button.id == this.zoomInButton.id) {
+			this.zoom(1);
+		} else if(button.id == this.zoomOutButton.id) {
+			this.zoom(-1);
+		} else if(button.id == this.centerOnPlayerButton.id) {
+			this.setPosition(this.thePlayerPOI.getLongitude(), this.thePlayerPOI.getLatitude());
+		}
+	}
+	
+	@Override
 	public void onGuiClosed() {
+		super.onGuiClosed();
 		this.map.unloadAll();
 	}
 
@@ -480,6 +512,13 @@ public class GuiTiledMap extends GuiScreen {
 		this.setZoom(0);
 	}
 
+	public void moveMap(int dX, int dY) {
+		double nlon = this.getScreenLong((double)this.width/2 - dX);
+		double nlat = this.getScreenLat((double)this.height/2 - dY);
+		this.setLongitude(nlon);
+		this.setLatitude(nlat);
+	}
+	
 	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
 		return this.isZoomValid(zoomLevel);
 	}
