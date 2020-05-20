@@ -54,12 +54,13 @@ public class GuiTiledMap extends GuiScreen {
 	protected int zoomLevel;
 	protected double mouseLong, mouseLat = 0;
 	protected int lastMouseClickX, lastMouseClickY = -1;
+	protected float mapVelocityX, mapVelocityY = 0; //TODO Map velocity
 	protected EarthGeneratorSettings genSettings;
 	protected GeographicProjection projection;
 
 	protected boolean debug = false; //Show tiles borders or not
-	protected boolean followPlayer = false; //TODO
-	protected long lastClickTime = Long.MIN_VALUE; //Used for double clicks //TODO
+	protected PointOfInterest followedPOI = null; //TODO
+	protected long lastClickTime = 0; //Used for double clicks //TODO
 
 	protected RightClickMenu rclickMenu;
 	protected GuiButton zoomInButton;
@@ -416,6 +417,10 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		this.lastMouseClickX = mouseX;
 		this.lastMouseClickY = mouseY;
+		long ctime = System.currentTimeMillis();
+		long dclickDelay = TerramapConfiguration.doubleClickDelay;
+		if(ctime - this.lastClickTime < dclickDelay && mouseButton == 0) this.doubleClick(mouseX, mouseY);
+		this.lastClickTime = ctime;
 	}
 
 	@Override
@@ -463,6 +468,10 @@ public class GuiTiledMap extends GuiScreen {
 		this.zoom(mouseX, mouseY, z);
 	}
 
+	public void doubleClick(int mouseX, int mouseY) {
+		this.zoom(mouseX, mouseY, 1);
+	}
+	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
@@ -517,6 +526,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	public void moveMap(int dX, int dY) {
+		this.rclickMenu.hide();
 		double nlon = this.getScreenLong((double)this.width/2 - dX);
 		double nlat = this.getScreenLat((double)this.height/2 - dY);
 		this.setLongitude(nlon);

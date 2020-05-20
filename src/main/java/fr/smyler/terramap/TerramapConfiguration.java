@@ -30,6 +30,9 @@ public class TerramapConfiguration{
 	@Config.Comment("Set to true if you want the entities to be displayed on the map")
 	public static boolean showEntities = false;
 	
+	@Config.Comment("Double click delay to use in guis, in milliscondes")
+	public static long doubleClickDelay = 500;
+	
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
 	}
