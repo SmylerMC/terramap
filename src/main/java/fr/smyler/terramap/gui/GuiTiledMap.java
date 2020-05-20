@@ -60,7 +60,8 @@ public class GuiTiledMap extends GuiScreen {
 
 	protected boolean debug = false; //Show tiles borders or not
 	protected PointOfInterest followedPOI = null;
-	protected long lastClickTime = 0;
+	private long lastClickTime = 0;
+	private boolean buttonWasClicked = false; // Used to know when handling mouse if it super has triggered a button
 
 	protected RightClickMenu rclickMenu;
 	protected GuiButton zoomInButton;
@@ -450,7 +451,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.lastMouseClickY = mouseY;
 		long ctime = System.currentTimeMillis();
 		long dclickDelay = TerramapConfiguration.doubleClickDelay;
-		if(ctime - this.lastClickTime < dclickDelay && mouseButton == 0) this.doubleClick(mouseX, mouseY);
+		if(ctime - this.lastClickTime < dclickDelay && mouseButton == 0) this.mouseDoubleClick(mouseX, mouseY);
 		this.lastClickTime = ctime;
 	}
 
@@ -498,7 +499,8 @@ public class GuiTiledMap extends GuiScreen {
 		this.zoom(mouseX, mouseY, z);
 	}
 
-	public void doubleClick(int mouseX, int mouseY) {
+	public void mouseDoubleClick(int mouseX, int mouseY) {
+		if(this.buttonWasClicked) return;
 		if(this.thePlayerPOI != null) {
 			int px = (int) this.getScreenX(this.thePlayerPOI.getLongitude());
 			int py = (int) this.getScreenY(this.thePlayerPOI.getLatitude());
@@ -522,12 +524,15 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
+		this.buttonWasClicked = true;
 		if(button.id == this.zoomInButton.id) {
 			this.zoom(1);
 		} else if(button.id == this.zoomOutButton.id) {
 			this.zoom(-1);
 		} else if(button.id == this.centerOnPlayerButton.id) {
 			this.setPosition(this.thePlayerPOI.getLongitude(), this.thePlayerPOI.getLatitude());
+		} else {
+			this.buttonWasClicked = false;
 		}
 	}
 	
