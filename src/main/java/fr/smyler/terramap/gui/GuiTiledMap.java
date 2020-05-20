@@ -60,7 +60,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	protected boolean debug = false; //Show tiles borders or not
 	protected PointOfInterest followedPOI = null; //TODO
-	protected long lastClickTime = 0; //Used for double clicks //TODO
+	protected long lastClickTime = 0;
 
 	protected RightClickMenu rclickMenu;
 	protected GuiButton zoomInButton;
@@ -257,6 +257,9 @@ public class GuiTiledMap extends GuiScreen {
 		String dispLat = GeoServices.formatGeoCoordForDisplay(this.mouseLat) + "°";
 		String dispLong = GeoServices.formatGeoCoordForDisplay(this.mouseLong)  + "°";
 		lines.add("Mouse position: " + dispLat + " " + dispLong);
+		if(this.followedPOI != null) {
+			lines.add("Tracking " + this.followedPOI.getDisplayName());
+		}
 		if(this.debug) {
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
@@ -379,6 +382,7 @@ public class GuiTiledMap extends GuiScreen {
 			this.setZoomToMinimum();
 		}
 		if(this.projection != null) this.updatePOIs();
+		if(this.followedPOI != null) this.setPosition(this.followedPOI.getLongitude(), this.followedPOI.getLatitude());
 		this.zoomInButton.enabled = this.zoomLevel < this.getMaxZoom();
 		this.zoomOutButton.enabled = this.zoomLevel > this.getMinZoom();
 	}		
@@ -396,6 +400,7 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+		this.followedPOI = null;
 		switch(mouseButton) {
 		case 0: //Left click
 			if(this.rclickMenu.isDisplayed()) {
@@ -470,6 +475,23 @@ public class GuiTiledMap extends GuiScreen {
 
 	public void doubleClick(int mouseX, int mouseY) {
 		this.zoom(mouseX, mouseY, 1);
+		if(this.thePlayerPOI != null) {
+			int px = (int) this.getScreenX(this.thePlayerPOI.getLongitude());
+			int py = (int) this.getScreenY(this.thePlayerPOI.getLatitude());
+			if(this.isPointOverPOI(px, py, mouseX, mouseY, this.thePlayerPOI)) this.followedPOI = this.thePlayerPOI;
+		}
+		for(PlayerPOI poi: this.playerPOIs.values()) {
+			if(this.followedPOI != null) break;
+			int px = (int) this.getScreenX(poi.getLongitude());
+			int py = (int) this.getScreenY(poi.getLatitude());
+			if(this.isPointOverPOI(px, py, mouseX, mouseY, poi)) this.followedPOI = poi;
+		}
+		for(EntityPOI poi: this.entityPOIs.values()) {
+			if(this.followedPOI != null) break;
+			int px = (int) this.getScreenX(poi.getLongitude());
+			int py = (int) this.getScreenY(poi.getLatitude());
+			if(this.isPointOverPOI(px, py, mouseX, mouseY, poi)) this.followedPOI = poi;
+		}
 	}
 	
 	@Override
@@ -527,6 +549,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	public void moveMap(int dX, int dY) {
 		this.rclickMenu.hide();
+		this.followedPOI = null;
 		double nlon = this.getScreenLong((double)this.width/2 - dX);
 		double nlat = this.getScreenLat((double)this.height/2 - dY);
 		this.setLongitude(nlon);
