@@ -402,7 +402,7 @@ public class GuiTiledMap extends GuiScreen {
 			// Moves the map from its inertia if we are not moving it manually
 			// It would have been nice if this could have changed according to the time,
 			// But it seems to be very 
-			if(!Mouse.isButtonDown(0)){
+			if(!Mouse.isButtonDown(0) && (this.mapVelocityX != 0 || this.mapVelocityY != 0)){
 				this.moveMap((int)(this.mapVelocityX), (int)(this.mapVelocityY));
 				float f = .1f;
 				this.mapVelocityX -= f * this.mapVelocityX;
@@ -435,6 +435,8 @@ public class GuiTiledMap extends GuiScreen {
 			}
 			break;
 		case 1: //Right click
+			this.mapVelocityX = 0;
+			this.mapVelocityY = 0;
 			int displayX = mouseX;
 			int displayY = mouseY;
 			int rClickWidth = this.rclickMenu.getWidth();
