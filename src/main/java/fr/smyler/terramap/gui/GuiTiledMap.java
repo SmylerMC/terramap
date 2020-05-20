@@ -58,6 +58,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected double mapVelocityX, mapVelocityY = 0;
 	protected EarthGeneratorSettings genSettings;
 	protected GeographicProjection projection;
+	protected boolean manualProjection = false;
 
 	protected boolean debug = false; //Show tiles borders or not
 	protected PointOfInterest followedPOI = null;
@@ -102,6 +103,7 @@ public class GuiTiledMap extends GuiScreen {
 			this.focusLatitude = 0;
 			this.focusLongitude = 0;
 			this.setZoomToMinimum();
+			this.manualProjection = true;
 		}
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
@@ -139,6 +141,7 @@ public class GuiTiledMap extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
 		this.drawCopyright(mouseX, mouseY, partialTicks);
+		if(this.projection == null && !TerramapConfiguration.ignoreProjectionWarning) this.drawProjectionWarning(mouseX, mouseY, partialTicks);
 		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
 	}
 
@@ -304,6 +307,28 @@ public class GuiTiledMap extends GuiScreen {
 		int rectHeight = this.fontRenderer.FONT_HEIGHT + 10;
 		Gui.drawRect(this.width - rectWidth, this.height - rectHeight, this.width, this.height, 0x50000000);
 		this.drawString(this.fontRenderer, copyrightString, this.width - rectWidth + 5, this.height - rectHeight + 5, 0xFFFFFF);
+	}
+	
+	private void drawProjectionWarning(int mouseX, int mouseY, float partialTicks) {
+		List<String> warning = new ArrayList<String>();
+		warning.add("Terramap is not installed on the server!!");
+		warning.add("There is no way to identify the projection used.");
+		warning.add("Elements from the Minecraft world will not be displayed on the map.");
+		warning.add("You can ask the server administrator to install Terramap,");
+		warning.add("or you can manually set the projection used in the right click menu.");
+		int width = 0;
+		for(String line: warning) width = Math.max(width, this.fontRenderer.getStringWidth(line));
+		int height = 20 + warning.size() * (5 + this.fontRenderer.FONT_HEIGHT);
+		width += 20;
+		int centerX = width/2;
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+		GuiScreen.drawRect(0, this.height - height, width, this.height, 0xAA000000);
+		int y = this.height - height + 10;
+		for(String line: warning) {
+			this.drawCenteredString(this.fontRenderer, line, centerX, y, 0xFFCC00);
+			y += this.fontRenderer.FONT_HEIGHT + 5;
+		}
 	}
 
 	private void drawPOIs(int mouseX, int mouseY, float partialTicks) {

@@ -33,6 +33,9 @@ public class TerramapConfiguration{
 	@Config.Comment("Double click delay to use in guis, in milliscondes")
 	public static int doubleClickDelay = 500;
 	
+	@Config.Comment("Show a warning on the map if the projection was not available and allows to manually set one")
+	public static boolean ignoreProjectionWarning = false;
+	
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
 	}
