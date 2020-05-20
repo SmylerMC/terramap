@@ -56,7 +56,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected double mouseLong, mouseLat = 0;
 	protected int lastMouseClickX, lastMouseClickY = -1;
 	protected double mapVelocityX, mapVelocityY = 0;
-	protected EarthGeneratorSettings genSettings;
+	protected EarthGeneratorSettings genSettings = null;
 	protected GeographicProjection projection;
 	protected boolean manualProjection = false;
 
@@ -91,7 +91,7 @@ public class GuiTiledMap extends GuiScreen {
 	public void initGui() {
 		int buttonId = 0;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
+		if(this.manualProjection == false) this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
 		if(this.genSettings != null) {
 			this.projection = this.genSettings.getProjection();
 			double coords[] = this.projection.toGeo(player.posX, player.posZ);
@@ -115,7 +115,6 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Open location in Google Earth web", () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
-		this.closeRightClickMenu();
 		//TODO Open in google Earth pro
 		if(this.projection != null) {
 			this.rclickMenu.addEntry("Copy Minecraft coordinates to clipboard", ()->{
@@ -125,6 +124,12 @@ public class GuiTiledMap extends GuiScreen {
 				GuiScreen.setClipboardString(dispX + " " + dispY);
 			});
 		}
+		if(this.manualProjection) {
+			this.rclickMenu.addEntry("Set projection", ()-> {
+				Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(this, Minecraft.getMinecraft()));	
+			});
+		}
+		this.closeRightClickMenu();
 		this.zoomInButton = new GuiTexturedButton(buttonId++, this.width - 30, 15, 15, 15, 40, 0, 40, 15, 40, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.zoomOutButton = new GuiTexturedButton(buttonId++, this.width - 30, 40 + this.fontRenderer.FONT_HEIGHT, 15, 15, 55, 0, 55, 15, 55, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.centerOnPlayerButton = new GuiTexturedButton(buttonId++, this.width - 30,  65 + this.fontRenderer.FONT_HEIGHT, 15, 15, 70, 0, 70, 15, 70, 30, GuiTiledMap.WIDGET_TEXTURES);
@@ -281,13 +286,16 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.followedPOI != null) {
 			lines.add("Tracking " + this.followedPOI.getDisplayName());
 		}
+		if((this.debug || this.manualProjection) && this.genSettings != null) {
+			lines.add("Projection: " + this.genSettings.settings.projection);
+			lines.add("Orientation: " + this.genSettings.settings.orentation);
+		}
 		if(this.debug) {
 			String mapLa = GeoServices.formatGeoCoordForDisplay(this.focusLatitude);
 			String mapLo = GeoServices.formatGeoCoordForDisplay(this.focusLongitude);
 			lines.add("Map location: " + mapLo + " " + mapLa);
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
-			if(this.genSettings != null) lines.add("Projection: " + this.genSettings.settings.projection);
 			int playerPOICount = this.playerPOIs.size();
 			if(this.thePlayerPOI != null) playerPOICount++;
 			lines.add("FPS:" + Minecraft.getDebugFPS() +
@@ -770,6 +778,16 @@ public class GuiTiledMap extends GuiScreen {
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2)
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
 	}
+
+	public EarthGeneratorSettings getGenerationSettings() {
+		return genSettings;
+	}
+
+	public void setGenerationSettings(EarthGeneratorSettings genSettings) {
+		this.genSettings = genSettings;
+	}
+	
+	
 	
 }
 
