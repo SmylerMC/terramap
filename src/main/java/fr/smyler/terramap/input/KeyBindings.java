@@ -2,7 +2,7 @@ package fr.smyler.terramap.input;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.smyler.terramap.TerramapConfiguration;
+import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.gui.GuiTiledMap;
 import fr.smyler.terramap.maps.TileFactory;
 import fr.smyler.terramap.maps.TiledMap;

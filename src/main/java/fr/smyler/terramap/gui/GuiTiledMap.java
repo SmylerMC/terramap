@@ -13,8 +13,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import fr.smyler.terramap.GeoServices;
-import fr.smyler.terramap.TerramapConfiguration;
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.gui.widgets.GuiTexturedButton;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.gui.widgets.poi.EntityPOI;

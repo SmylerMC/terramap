@@ -2,9 +2,9 @@ package fr.smyler.terramap.proxy;
 
 import java.io.IOException;
 
-import fr.smyler.terramap.TerramapConfiguration;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.caching.CacheManager;
+import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.network.TerramapPacketHandler;
