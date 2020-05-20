@@ -211,7 +211,10 @@ public class CacheManager implements Runnable {
 	public void cacheAsync(Cachable toCache) {
 		synchronized(this.toCacheAsync) {
 			this.toCacheAsync.add(toCache);
-			if(this.toCacheAsync.size() > this.queueSizeWarningThershold) TerramapMod.logger.warn("The caching queue is getting too large!! " + this.toCacheAsync.size());
+			if(this.toCacheAsync.size() > this.queueSizeWarningThershold) {
+				TerramapMod.logger.warn("The caching queue is getting too large, dropping a request! Queue: " + this.toCacheAsync.size());
+				this.toCacheAsync.pop();
+			}
 		}
 	}
 
