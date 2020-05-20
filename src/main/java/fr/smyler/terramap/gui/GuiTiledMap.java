@@ -54,12 +54,12 @@ public class GuiTiledMap extends GuiScreen {
 	protected int zoomLevel;
 	protected double mouseLong, mouseLat = 0;
 	protected int lastMouseClickX, lastMouseClickY = -1;
-	protected float mapVelocityX, mapVelocityY = 0; //TODO Map velocity
+	protected double mapVelocityX, mapVelocityY = 0;
 	protected EarthGeneratorSettings genSettings;
 	protected GeographicProjection projection;
 
 	protected boolean debug = false; //Show tiles borders or not
-	protected PointOfInterest followedPOI = null; //TODO
+	protected PointOfInterest followedPOI = null;
 	protected long lastClickTime = 0;
 
 	protected RightClickMenu rclickMenu;
@@ -377,12 +377,25 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void updateScreen(){
+
 		if(!this.isPositionValid(this.zoomLevel, this.focusLongitude, this.focusLatitude)) {
 			TerramapMod.logger.error("Map is in an invalid state! Reseting!");
 			this.setZoomToMinimum();
 		}
 		if(this.projection != null) this.updatePOIs();
-		if(this.followedPOI != null) this.setPosition(this.followedPOI.getLongitude(), this.followedPOI.getLatitude());
+		if(this.followedPOI != null) {
+			this.setPosition(this.followedPOI.getLongitude(), this.followedPOI.getLatitude());
+		} else {
+			// Moves the map from its inertia if we are not moving it manually
+			// It would have been nice if this could have changed according to the time,
+			// But it seems to be very 
+			if(!Mouse.isButtonDown(0)){
+				this.moveMap((int)(this.mapVelocityX), (int)(this.mapVelocityY));
+				float f = .1f;
+				this.mapVelocityX -= f * this.mapVelocityX;
+				this.mapVelocityY -= f * this.mapVelocityY;
+			}
+		}
 		this.zoomInButton.enabled = this.zoomLevel < this.getMaxZoom();
 		this.zoomOutButton.enabled = this.zoomLevel > this.getMinZoom();
 	}		
@@ -433,6 +446,8 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.lastMouseClickX != -1 && this.lastMouseClickY != -1 && clickedMouseButton == 0) {
 			int dX = mouseX - this.lastMouseClickX;
 			int dY = mouseY - this.lastMouseClickY;
+			this.mapVelocityX = (double)dX;
+			this.mapVelocityY = (double)dY;
 			this.moveMap(dX, dY);
 		}
 		this.lastMouseClickX = mouseX;
@@ -444,9 +459,6 @@ public class GuiTiledMap extends GuiScreen {
 		super.mouseReleased(mouseX, mouseY, button);
 	}
 
-	/**
-	 * Handles mouse input.
-	 */
 	@Override
 	public void handleMouseInput() throws IOException {
 		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
@@ -474,7 +486,6 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	public void doubleClick(int mouseX, int mouseY) {
-		this.zoom(mouseX, mouseY, 1);
 		if(this.thePlayerPOI != null) {
 			int px = (int) this.getScreenX(this.thePlayerPOI.getLongitude());
 			int py = (int) this.getScreenY(this.thePlayerPOI.getLatitude());
@@ -492,6 +503,7 @@ public class GuiTiledMap extends GuiScreen {
 			int py = (int) this.getScreenY(poi.getLatitude());
 			if(this.isPointOverPOI(px, py, mouseX, mouseY, poi)) this.followedPOI = poi;
 		}
+		if(this.followedPOI == null) this.zoom(mouseX, mouseY, 1);
 	}
 	
 	@Override
@@ -536,6 +548,8 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		this.setLongitude(this.getScreenLong((double)this.width/2 + ndX));
 		this.setLatitude(this.getScreenLat((double)this.height/2 + ndY));
+		this.mapVelocityX *= factor;
+		this.mapVelocityY *= factor;
 		this.updateMouseGeoPos(mouseX, mouseY);
 
 		TerramapMod.cacheManager.clearQueue(); // We are displaying new tiles, we don't need what we needed earlier
@@ -693,6 +707,5 @@ public class GuiTiledMap extends GuiScreen {
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2)
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
 	}
-	
 	
 }
