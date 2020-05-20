@@ -180,4 +180,11 @@ public class WebMercatorUtils {
 		return 1 << zoomlvl;
 	}
 	
+	public static double getLongitudeInRange(double longitude) {
+		double l = longitude;
+		while(l> 180d) l -= 360d;
+		while(l<-180d) l += 360d;
+		return l;
+	}
+	
 }

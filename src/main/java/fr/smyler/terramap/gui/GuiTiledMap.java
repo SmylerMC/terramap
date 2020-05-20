@@ -275,6 +275,9 @@ public class GuiTiledMap extends GuiScreen {
 			lines.add("Tracking " + this.followedPOI.getDisplayName());
 		}
 		if(this.debug) {
+			String mapLa = GeoServices.formatGeoCoordForDisplay(this.focusLatitude);
+			String mapLo = GeoServices.formatGeoCoordForDisplay(this.focusLongitude);
+			lines.add("Map location: " + mapLo + " " + mapLa);
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
 			if(this.genSettings != null) lines.add("Projection: " + this.genSettings.settings.projection);
@@ -392,6 +395,7 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void updateScreen(){
 
+		this.focusLongitude = WebMercatorUtils.getLongitudeInRange(this.focusLongitude);
 		if(!this.isPositionValid(this.zoomLevel, this.focusLongitude, this.focusLatitude)) {
 			TerramapMod.logger.error("Map is in an invalid state! Reseting!");
 			this.setZoomToMinimum();
@@ -607,7 +611,7 @@ public class GuiTiledMap extends GuiScreen {
 	
 	private double getScreenLong(double xOnScreen) {
 		double xOnMap = (this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling;
-		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
+		return WebMercatorUtils.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel));
 	}
 	
 	private double getScreenLat(double yOnScreen) {
