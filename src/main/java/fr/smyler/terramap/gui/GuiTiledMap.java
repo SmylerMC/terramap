@@ -58,6 +58,8 @@ public class GuiTiledMap extends GuiScreen {
 	protected GeographicProjection projection;
 
 	protected boolean debug = false; //Show tiles borders or not
+	protected boolean followPlayer = false; //TODO
+	protected long lastClickTime = Long.MIN_VALUE; //Used for double clicks //TODO
 
 	protected RightClickMenu rclickMenu;
 	protected GuiButton zoomInButton;
@@ -376,6 +378,8 @@ public class GuiTiledMap extends GuiScreen {
 			this.setZoomToMinimum();
 		}
 		if(this.projection != null) this.updatePOIs();
+		this.zoomInButton.enabled = this.zoomLevel < this.getMaxZoom();
+		this.zoomOutButton.enabled = this.zoomLevel > this.getMinZoom();
 	}		
 
 	@Override
@@ -524,7 +528,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 	
 	private boolean isZoomValid(int zoom) {
-		return zoom >= 0 && zoom < 20; //TODO Read this from the tiled map
+		return zoom >= this.getMinZoom() && zoom <= this.getMaxZoom();
 	}
 
 	private void setTiledMapZoom() {
@@ -580,6 +584,14 @@ public class GuiTiledMap extends GuiScreen {
 		this.setTiledMapZoom();
 	}
 
+	protected int getMaxZoom() {
+		return 19; //TODO Get that from the TiledMap
+	}
+	
+	protected int getMinZoom() {
+		return 0;
+	}
+	
 	protected double getMapX(double longitude) {
 		return this.getMapX(this.zoomLevel, longitude);
 	}
