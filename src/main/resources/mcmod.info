@@ -8,7 +8,7 @@
   "url": "",
   "updateUrl": "",
   "authorList": ["TheSmyler"],
-  "credits": "",
+  "credits": "All the Terra121 for this amazing mod, specifically orangeadam3, shejan0 from whom the projection menu code for Terramap was stolen. OpenStreetMap contributors for the map data.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": ["terra121"]
