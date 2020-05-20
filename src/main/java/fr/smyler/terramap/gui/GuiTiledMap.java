@@ -110,7 +110,14 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		//TODO Open in google Earth
-		//TODO Copy Minecraft coordinates to clipboard
+		if(this.projection != null) {
+			this.rclickMenu.addEntry("Copy Minecraft coordinates to clipboard", ()->{
+				double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
+				String dispX = "" + Math.round(coords[0]);
+				String dispY = "" + Math.round(coords[1]);
+				GuiScreen.setClipboardString(dispX + " " + dispY);
+			});
+		}
 		this.zoomInButton = new GuiTexturedButton(buttonId++, this.width - 30, 15, 15, 15, 40, 0, 40, 15, 40, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.zoomOutButton = new GuiTexturedButton(buttonId++, this.width - 30, 40 + this.fontRenderer.FONT_HEIGHT, 15, 15, 55, 0, 55, 15, 55, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.centerOnPlayerButton = new GuiTexturedButton(buttonId++, this.width - 30,  65 + this.fontRenderer.FONT_HEIGHT, 15, 15, 70, 0, 70, 15, 70, 30, GuiTiledMap.WIDGET_TEXTURES);
@@ -425,8 +432,6 @@ public class GuiTiledMap extends GuiScreen {
 			if(this.rclickMenu.isDisplayed()) {
 				this.rclickMenu.onMouseClick(mouseX, mouseY);
 				this.rclickMenu.hide();
-			} else {
-
 			}
 			break;
 		case 1: //Right click
