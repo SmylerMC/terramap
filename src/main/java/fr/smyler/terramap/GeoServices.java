@@ -14,7 +14,7 @@ public abstract class GeoServices {
 	private static DecimalFormat  decFormat= new DecimalFormat();
 	
 	static {
-		decFormat.setMaximumFractionDigits(5);
+		decFormat.setMaximumFractionDigits(4);
 	}
 	
 	public static String formatStringWithCoords(String str, int zoomLevel, double longitude, double latitude) {

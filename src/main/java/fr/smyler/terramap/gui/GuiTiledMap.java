@@ -39,7 +39,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-//TODO Better zoom
 //TODO Localization
 public class GuiTiledMap extends GuiScreen {
 
@@ -104,6 +103,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawBackground(0);
 		this.drawMap(mouseX, mouseY, partialTicks);
 		if(this.projection != null) this.drawPOIs(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
@@ -118,8 +118,8 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 
-		long upperLeftX = this.getUpperLeftX(this.focusLongitude);
-		long upperLeftY = this.getUpperLeftY(this.focusLatitude);
+		long upperLeftX = (long) this.getUpperLeftX(this.focusLongitude);
+		long upperLeftY = (long) this.getUpperLeftY(this.focusLatitude);
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
@@ -177,15 +177,18 @@ public class GuiTiledMap extends GuiScreen {
 					dY += (int) (factorY * renderSizedSize);
 				}
 
-				if(tX == lowerTX) {
-					dX -= dispX;
-					dispX = 0;
-				}
-
-				if(tY == lowerTY) {
-					dY -= dispY;
-					dispY = 0;
-				}
+				//The following code is needed for a full screen map,
+				//but will be needed if we ever decide to make a map widget
+				//to embed in other guis
+//				if(tX == lowerTX) {
+//					dX -= dispX;
+//					dispX = 0;
+//				}
+//
+//				if(tY == lowerTY) {
+//					dY -= dispY;
+//					dispY = 0;
+//				}
 
 				textureManager.bindTexture(tile.getTexture());
 				drawModalRectWithCustomSizedTexture(
@@ -269,13 +272,13 @@ public class GuiTiledMap extends GuiScreen {
 		int hoverPOIY = 0;
 		PointOfInterest hoveredPOI = null;
 		if(this.thePlayerPOI != null) {
-			playerX = this.getScreenX(this.thePlayerPOI.getLongitude());
-			playerY = this.getScreenY(this.thePlayerPOI.getLatitude());
+			playerX = (long) this.getScreenX(this.thePlayerPOI.getLongitude());
+			playerY = (long) this.getScreenY(this.thePlayerPOI.getLatitude());
 			mainPlayerRendered = this.isPoiBBOnScreen(playerX, playerY, this.thePlayerPOI);
 		}
 		for(EntityPOI poi: this.entityPOIs.values()) {
-			long lx = this.getScreenX(poi.getLongitude());
-			long ly = this.getScreenY(poi.getLatitude());
+			long lx = (long) this.getScreenX(poi.getLongitude());
+			long ly = (long) this.getScreenY(poi.getLatitude());
 			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
 			int ix = (int)lx;
 			int iy = (int)ly;
@@ -290,8 +293,8 @@ public class GuiTiledMap extends GuiScreen {
 			}
 		}
 		for(PlayerPOI poi: this.playerPOIs.values()) {
-			long lx = this.getScreenX(poi.getLongitude());
-			long ly = this.getScreenY(poi.getLatitude());
+			long lx = (long) this.getScreenX(poi.getLongitude());
+			long ly = (long) this.getScreenY(poi.getLatitude());
 			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
 			int ix = (int)lx;
 			int iy = (int)ly;
@@ -394,8 +397,8 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.lastMouseClickX != -1 && this.lastMouseClickY != -1 && clickedMouseButton == 0) {
 			int dX = mouseX - this.lastMouseClickX;
 			int dY = mouseY - this.lastMouseClickY;
-			double nlon = this.getScreenLong(this.width/2 - dX);
-			double nlat = this.getScreenLat(this.height/2 - dY);
+			double nlon = this.getScreenLong((double)this.width/2 - dX);
+			double nlat = this.getScreenLat((double)this.height/2 - dY);
 			this.setLongitude(nlon);
 			this.setLatitude(nlat);
 		}
@@ -416,14 +419,17 @@ public class GuiTiledMap extends GuiScreen {
 		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
 		int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 
-		this.mouseLong = this.getScreenLong(mouseX);
-		this.mouseLat = this.getScreenLat(mouseY);
+		this.updateMouseGeoPos(mouseX, mouseY);
 
 		super.handleMouseInput();
 
 		int scroll = Mouse.getDWheel();
 		if(scroll != 0) this.mouseScrolled(mouseX, mouseY, scroll);
-
+	}
+	
+	public void updateMouseGeoPos(int mouseX, int mouseY) {
+		this.mouseLong = this.getScreenLong((double)mouseX);
+		this.mouseLat = this.getScreenLat((double)mouseY);
 	}
 
 	public void mouseScrolled(int mouseX, int mouseY, int amount) {
@@ -431,7 +437,7 @@ public class GuiTiledMap extends GuiScreen {
 		int z;
 		if (amount > 0) z = 1;
 		else z = - 1;
-		this.zoom(z);
+		this.zoom(mouseX, mouseY, z);
 	}
 
 	@Override
@@ -445,33 +451,41 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	public void zoom(int val) {
+		this.zoom(this.width/2, this.height/2, val);
+	}
+	
+	public void zoom(int mouseX, int mouseY, int zoom) {
 
-		int nzoom = this.zoomLevel + val;
-		if(!this.isPositionValid(nzoom, this.focusLongitude, this.focusLatitude)) return;
+		int nzoom = this.zoomLevel + zoom;
+		if(!this.isZoomValid(nzoom)) return;
+		
+		this.zoomLevel = nzoom;
+		double factor = Math.pow(2, zoom);
+		double ndX = ((double)this.width/2 - mouseX) * factor;
+		double ndY = ((double)this.height/2 - mouseY) * factor;
+		if(factor > 1) {
+			ndX = -ndX / 2;
+			ndY = -ndY / 2;
+		}
+		this.setLongitude(this.getScreenLong((double)this.width/2 + ndX));
+		this.setLatitude(this.getScreenLat((double)this.height/2 + ndY));
+		this.updateMouseGeoPos(mouseX, mouseY);
 
 		TerramapMod.cacheManager.clearQueue(); // We are displaying new tiles, we don't need what we needed earlier
-		this.zoomLevel = nzoom;
-		//}
 		this.setTiledMapZoom();
 
-		//FIXME
 	}
 
 	public void setZoomToMinimum() {
-		int i = this.zoomLevel;
-		while(!this.isPositionValid(i, 0, 0)) i++;
-		this.setZoom(i);
-		this.setPosition(0, 0);
+		this.setZoom(0);
 	}
 
 	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
-		if(zoomLevel < 0) return false;
-		if(zoomLevel > 19) return false;
-		long upperY = this.getUpperLeftY(zoomLevel, centerLat);
-		long lowerY = (long) (upperY + this.height);
-		if(upperY < 0) return false;
-		if(lowerY > this.getMaxMapSize(zoomLevel)) return false;
-		return true;
+		return this.isZoomValid(zoomLevel);
+	}
+	
+	private boolean isZoomValid(int zoom) {
+		return zoom >= 0 && zoom < 20; //TODO Read this from the tiled map
 	}
 
 	private void setTiledMapZoom() {
@@ -482,22 +496,14 @@ public class GuiTiledMap extends GuiScreen {
 		if(entity instanceof EntityItem) return false;
 		return TerramapConfiguration.showEntities && entity instanceof EntityLiving;
 	}
-	/**
-	 * 
-	 * @param zoom
-	 * @return The size of the full map, in pixel on screen
-	 */
-	private long getMaxMapSize(int zoom) {
-		return (long) (WebMercatorUtils.getDimensionsInTile(zoom) * WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
-	}
-
-	private double getScreenLong(int xOnScreen) {
-		long xOnMap = (long) ((this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling);
+	
+	private double getScreenLong(double xOnScreen) {
+		double xOnMap = (this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling;
 		return WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel);
 	}
-
-	private double getScreenLat(int yOnScreen) {
-		long yOnMap = (long) ((this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfiguration.tileScaling);
+	
+	private double getScreenLat(double yOnScreen) {
+		double yOnMap = (this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfiguration.tileScaling;
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
 	}
 
@@ -535,51 +541,51 @@ public class GuiTiledMap extends GuiScreen {
 		this.setTiledMapZoom();
 	}
 
-	protected long getMapX(double longitude) {
+	protected double getMapX(double longitude) {
 		return this.getMapX(this.zoomLevel, longitude);
 	}
 
-	protected long getMapY(double latitude) {
+	protected double getMapY(double latitude) {
 		return this.getMapY(this.zoomLevel, latitude);
 	}
 
-	protected long getMapX(int zoomLevel, double longitude) {
-		return (long) (WebMercatorUtils.getXFromLongitude(longitude, zoomLevel) * TerramapConfiguration.tileScaling);
+	protected double getMapX(int zoomLevel, double longitude) {
+		return WebMercatorUtils.getXFromLongitude(longitude, zoomLevel) * TerramapConfiguration.tileScaling;
 	}
 
-	protected long getMapY(int zoomLevel, double latitude) {
-		return (long)(WebMercatorUtils.getYFromLatitude(latitude, zoomLevel) * TerramapConfiguration.tileScaling);
+	protected double getMapY(int zoomLevel, double latitude) {
+		return WebMercatorUtils.getYFromLatitude(latitude, zoomLevel) * TerramapConfiguration.tileScaling;
 	}
 
-	protected long getScreenX(double longitude) {
+	protected double getScreenX(double longitude) {
 		return this.getMapX(longitude) -  this.getUpperLeftX();
 	}
 
-	protected long getScreenY(double latitude) {
+	protected double getScreenY(double latitude) {
 		return this.getMapY(latitude) - this.getUpperLeftY();
 	}
 
-	protected long getUpperLeftX(double centerLon) {
+	protected double getUpperLeftX(double centerLon) {
 		return this.getUpperLeftX(this.zoomLevel, centerLon);
 	}
 
-	protected long getUpperLeftY(double centerLat) {
+	protected double getUpperLeftY(double centerLat) {
 		return this.getUpperLeftY(this.zoomLevel, centerLat);
 	}
 
-	protected long getUpperLeftX(int zoomLevel, double centerLon) {
-		return this.getMapX(centerLon) - this.width / 2;
+	protected double getUpperLeftX(int zoomLevel, double centerLon) {
+		return this.getMapX(centerLon) - (double)this.width / 2;
 	}
 
-	protected long getUpperLeftY(int zoomLevel, double centerLat) {
-		return this.getMapY(centerLat) - this.height / 2;
+	protected double getUpperLeftY(int zoomLevel, double centerLat) {
+		return this.getMapY(centerLat) - (double)this.height / 2;
 	}
 
-	protected long getUpperLeftX() {
+	protected double getUpperLeftX() {
 		return this.getUpperLeftX(this.focusLongitude);
 	}
 
-	protected long getUpperLeftY() {
+	protected double getUpperLeftY() {
 		return this.getUpperLeftY(this.focusLatitude);
 	}
 
