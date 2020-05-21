@@ -13,17 +13,26 @@ public class TiledMap<T extends RasterWebTile> {
 	protected TileFactory<T> factory;
 	protected LinkedList<T> tiles;
 	protected int maxLoaded;
+	protected int maxZoom = 19;
+	protected int minZoom = 0;
+	
+	protected String name;
+	protected String copyright;
 	
 	protected boolean smartLoadEnable = false;
 	
-	public TiledMap(TileFactory<T> fact, int maxLoaded) {
+	public TiledMap(TileFactory<T> fact, int minZoom, int maxZoom, int maxLoaded, String name, String copyright) {
 		this.factory = fact;
 		this.tiles = new LinkedList<T>();
 		this.maxLoaded = maxLoaded;
+		this.maxZoom = maxZoom;
+		this.minZoom = minZoom;
+		this.name = name;
+		this.copyright = copyright;
 	}
 	
 	public TiledMap(TileFactory<T> fact) {
-		this(fact, 20);
+		this(fact, 0, 19, 120, "", "");
 	}	
 	
 	protected void loadTile(T tile) {

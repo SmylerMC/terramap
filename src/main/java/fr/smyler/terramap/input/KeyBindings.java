@@ -2,11 +2,8 @@ package fr.smyler.terramap.input;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.gui.GuiTiledMap;
-import fr.smyler.terramap.maps.TileFactory;
-import fr.smyler.terramap.maps.TiledMap;
-import fr.smyler.terramap.maps.tiles.WikimediaTile;
+import fr.smyler.terramap.maps.TiledMaps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -29,7 +26,7 @@ public abstract class KeyBindings {
 	
 	public static void checkBindings() {
 		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(new TiledMap<WikimediaTile>(TileFactory.WIKIMEDIA_TILE_FACTORY, TerramapConfiguration.maxTileLoad), Minecraft.getMinecraft().world));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(TiledMaps.OSM, Minecraft.getMinecraft().world));
 		}
 	}
 	

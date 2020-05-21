@@ -1,5 +1,6 @@
 package fr.smyler.terramap.maps;
 
+import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.OpenSMCyclingTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.maps.tiles.WikimediaTile;
@@ -23,6 +24,14 @@ public interface TileFactory <T extends RasterWebTile>{
 		@Override
 		public WikimediaTile getInstance(int zoom, long x, long y) {
 			return new WikimediaTile(zoom, x, y);
+		}
+	};
+	
+	public static final TileFactory<OSMTile> 
+	OSM_TILE_FACTORY = new TileFactory<OSMTile>() {
+		@Override
+		public OSMTile getInstance(int zoom, long x, long y) {
+			return new OSMTile(zoom, x, y);
 		}
 	};
 
