@@ -1,17 +1,27 @@
-# terramap
-An addon mod to terra121 providing an OpenStreetMap tiled map in-game for easier teleportation to new places and avoiding having to constantly copy-paste coordinates from a web browser.
+# Terramap
+An addon mod to Terra1:1 providing an map in-game of the world with various perks, including easy teleportation without having to copy-paste the gps coordinates from a web browser, or open various map websites at the desired location directly from the game.
 
-It's mainly client-side but still needs to be installed on the server to keep the client in sync with the projection used.
+Terramap will work best if it is installed both on the server and the client. This is because it needs to syncronize the map projection used by the server to the client, but it is still usable if installed only on the client, as long as you take the time to manually set the projection used (For the Build the Earth Project, this is bteairocean, with upright as the orientation).
 
-It' still in early dev and will evolve, but here is what it currently looks like: 
-![terramap screenshot](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tiledmap.png)
+Terramap is still in beta, si it's likely to have a few bugs and still lacks intended features. It also has no translation yet.
 
-### Currently implemented:
-* A basic full screen tiled map
-* A right click menu on the map to teleport and open the location in various third-party tools
-* Display nearby players and entities on the map
+Terramap on a solo world:
+![terramap screenshot solo](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tiledmap.png)
 
-### Planned:
-* Cutom icon for each entity type
-* Better control over the map
-* Waypoints
+
+Terramap on a server where it's not installed:
+![terramap screenshot server](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tiledmap_server.png)
+
+### How to use:
+Add the mod to your mods folder along with Terra1:1 and the other mods of you modpack.
+In game, press m to open the map (by default, but it can be changed in the config)
+Drag it, zoom, and explore the world just like with any other digital map.
+Right-click somwhere to get a menu with various usefull tools (see the screenshots).
+Additionally, you can: press p to toggle debug mod, enable entity rendering in the mod config
+
+### Planned Features:
+* Additoinal map styles
+* Choose wich type of enities you want to show
+* Waypoints, client and server side
+* Show all logged-in players, even if they are far away from you
+* I'm open to suggestions!
