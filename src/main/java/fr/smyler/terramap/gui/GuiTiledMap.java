@@ -470,6 +470,7 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		this.zoomInButton.enabled = this.zoomLevel < this.getMaxZoom();
 		this.zoomOutButton.enabled = this.zoomLevel > this.getMinZoom();
+		this.centerOnPlayerButton.enabled = this.followedPOI == null;
 	}		
 
 	@Override
@@ -486,7 +487,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		this.updateMouseGeoPos(mouseX, mouseY);
-		this.followedPOI = null;
+		if(!this.buttonWasClicked) this.followedPOI = null;
 		switch(mouseButton) {
 		case 0: //Left click
 			if(this.rclickMenu.isDisplayed()) {
@@ -504,14 +505,13 @@ public class GuiTiledMap extends GuiScreen {
 			displayX = mouseX + rClickWidth > this.width ? mouseX - rClickWidth: mouseX;
 			displayY = mouseY + rClickHeight > this.height ? mouseY - rClickHeight: mouseY;
 			this.rightClickPOI = new LocationPOI(this.mouseLong, this.mouseLat, "Right Click");
-			this.rclickMenu.showAt(displayX, displayY); //TODO Added a poi where the map was clicked
+			this.rclickMenu.showAt(displayX, displayY);
 			break;
 		}
 		this.lastMouseClickX = mouseX;
 		this.lastMouseClickY = mouseY;
 		long ctime = System.currentTimeMillis();
-		long dclickDelay = TerramapConfiguration.doubleClickDelay;
-		if(ctime - this.lastClickTime < dclickDelay && mouseButton == 0) this.mouseDoubleClick(mouseX, mouseY);
+		if(ctime - this.lastClickTime < TerramapConfiguration.doubleClickDelay && mouseButton == 0) this.mouseDoubleClick(mouseX, mouseY);
 		this.lastClickTime = ctime;
 	}
 
@@ -535,6 +535,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void handleMouseInput() throws IOException {
+		this.buttonWasClicked = false;
 		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
 		int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 
@@ -591,8 +592,6 @@ public class GuiTiledMap extends GuiScreen {
 			this.zoom(-1);
 		} else if(button.id == this.centerOnPlayerButton.id) {
 			this.setPosition(this.thePlayerPOI.getLongitude(), this.thePlayerPOI.getLatitude());
-		} else {
-			this.buttonWasClicked = false;
 		}
 	}
 	
