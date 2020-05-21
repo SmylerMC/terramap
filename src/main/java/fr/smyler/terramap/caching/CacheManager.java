@@ -293,7 +293,7 @@ public class CacheManager implements Runnable {
 
 		connection.setAllowUserInteraction(false);
 		connection.setRequestMethod("GET");
-		connection.setRequestProperty("User-Agent", TerramapMod.HTTP_USER_AGENT);
+		connection.setRequestProperty("User-Agent", TerramapMod.getUserAgent());
 
 		connection.connect();
 

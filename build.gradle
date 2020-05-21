@@ -49,13 +49,6 @@ processResources {
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-    
-    // replace stuff in TerramapMod.java, nothing else
-    from(sourceSets.main.java.srcDirs) {
-        include 'fr/smyler/terramap/TerramapMod.java'
-                
-        expand 'version':project.version
-    }
         
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {

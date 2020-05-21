@@ -160,8 +160,8 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 
 		this.mc.renderEngine.bindTexture(Gui.OPTIONS_BACKGROUND);
 		//this.drawTexturedModalRect(0, height-32, 0, 0, width, 32);
-		drawScaledCustomSizeModalRect(0, height-32, 0, 0, width, 32, width, 32, 32, 32); //footer, TODO: make not bad
-		drawScaledCustomSizeModalRect(0, 0, 0, 0, width, 32, width, 32, 32, 32); //header, TODO: make not bad
+		drawScaledCustomSizeModalRect(0, height-32, 0, 0, width, 32, width, 32, 32, 32); //footer
+		drawScaledCustomSizeModalRect(0, 0, 0, 0, width, 32, width, 32, 32, 32); //header
 
 		done.drawButton(mc, mouseX, mouseY, partialTicks);
 		cancel.drawButton(mc, mouseX, mouseY, partialTicks);
