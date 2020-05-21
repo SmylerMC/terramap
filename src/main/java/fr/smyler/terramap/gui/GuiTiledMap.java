@@ -292,7 +292,7 @@ public class GuiTiledMap extends GuiScreen {
 			double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
 			String dispX = "" + Math.round(coords[0]);
 			String dispY = "" + Math.round(coords[1]);
-			lines.add("X: " + dispX + " Y: " + dispY);
+			lines.add("X: " + dispX + " Z: " + dispY);
 		}
 		if(this.followedPOI != null) {
 			lines.add("Tracking " + this.followedPOI.getDisplayName());
