@@ -5,10 +5,10 @@
   "description": "A tiled map in minecraft as an addon for terra121",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://www.curseforge.com/minecraft/mc-mods/terramap",
   "updateUrl": "",
   "authorList": ["TheSmyler"],
-  "credits": "All the Terra121 team for this amazing mod, specifically orangeadam3 and shejan0 from whom the projection menu code for Terramap was stolen. OpenStreetMap contributors for the map data.",
+  "credits": "All the Terra121 team for this amazing mod, specifically orangeadam3 and shejan0 from whom I stole the projection menu code for Terramap. OpenStreetMap contributors for the map data.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": ["terra121"]
