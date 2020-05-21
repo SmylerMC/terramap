@@ -14,7 +14,7 @@ public class TerramapMod {
 	
     public static final String MODID = "terramap";
     public static final String NAME = "Terramap";
-    public static final String VERSION = "0.0.0";
+    public static final String VERSION = "${version}";
 	public static final String AUTHOR_EMAIL = "smyler at mail dot com";
 	public static final String HTTP_USER_AGENT =
 			"Terramap for the BTE project v" + VERSION +
