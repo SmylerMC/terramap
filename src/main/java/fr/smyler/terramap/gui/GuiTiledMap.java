@@ -15,6 +15,7 @@ import org.lwjgl.input.Mouse;
 import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.config.TerramapConfiguration;
+import fr.smyler.terramap.config.TerramapServerPreferences;
 import fr.smyler.terramap.gui.widgets.GuiTexturedButton;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.gui.widgets.poi.EntityPOI;
@@ -91,7 +92,17 @@ public class GuiTiledMap extends GuiScreen {
 	public void initGui() {
 		int buttonId = 0;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		if(this.manualProjection == false) this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
+		if(this.manualProjection == false) {
+			this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
+			if(this.genSettings == null) {
+				String savedSettings = TerramapServerPreferences.getServerGenSettings(Minecraft.getMinecraft().getCurrentServerData().serverIP);
+				if(savedSettings.length() != 0) {
+					this.genSettings = new EarthGeneratorSettings(savedSettings);
+					this.manualProjection = true;
+					TerramapMod.logger.info("Used local server preference for the projection");
+				}
+			}
+		}
 		if(this.genSettings != null) {
 			this.projection = this.genSettings.getProjection();
 			double coords[] = this.projection.toGeo(player.posX, player.posZ);

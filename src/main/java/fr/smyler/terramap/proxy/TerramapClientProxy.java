@@ -1,10 +1,12 @@
 package fr.smyler.terramap.proxy;
 
+import java.io.File;
 import java.io.IOException;
 
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.caching.CacheManager;
 import fr.smyler.terramap.config.TerramapConfiguration;
+import fr.smyler.terramap.config.TerramapServerPreferences;
 import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.network.TerramapPacketHandler;
@@ -18,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy{
 
-	private EarthGeneratorSettings genSettings; //TODO Clear this when logging out so we know it's not reliable
+	private EarthGeneratorSettings genSettings;
 	
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
@@ -35,6 +37,10 @@ public class TerramapClientProxy extends TerramapProxy{
 			
 		}
         TerramapMod.cacheManager.startWorker();
+
+    	File servPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + TerramapServerPreferences.FILENAME);
+    	TerramapServerPreferences.setFile(servPrefs);
+    	TerramapServerPreferences.load();
 	}
 
 	@Override
