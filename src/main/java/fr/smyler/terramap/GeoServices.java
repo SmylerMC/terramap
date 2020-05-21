@@ -12,7 +12,9 @@ public abstract class GeoServices {
 	public static final String OSM_SITE_BASE_URL = "https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}";
 	public static final String GEARTH_WEB_BASE_URL = "https://earth.google.com/web/@{latitude},{longitude},0a,10000d,1y,-0h,0t,0r";
 	
-	private static DecimalFormat  decFormat= new DecimalFormat();
+	public static final String OSM_CR_LINK = "https://www.openstreetmap.org/copyright";
+	
+	private static DecimalFormat decFormat= new DecimalFormat();
 	
 	static {
 		decFormat.setMaximumFractionDigits(4);

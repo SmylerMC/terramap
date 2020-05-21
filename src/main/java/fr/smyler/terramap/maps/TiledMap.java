@@ -18,10 +18,11 @@ public class TiledMap<T extends RasterWebTile> {
 	
 	protected String name;
 	protected String copyright;
+	protected String copyrightURL;
 	
 	protected boolean smartLoadEnable = false;
 	
-	public TiledMap(TileFactory<T> fact, int minZoom, int maxZoom, int maxLoaded, String name, String copyright) {
+	public TiledMap(TileFactory<T> fact, int minZoom, int maxZoom, int maxLoaded, String name, String copyright, String copyrightURL) {
 		this.factory = fact;
 		this.tiles = new LinkedList<T>();
 		this.maxLoaded = maxLoaded;
@@ -29,10 +30,11 @@ public class TiledMap<T extends RasterWebTile> {
 		this.minZoom = minZoom;
 		this.name = name;
 		this.copyright = copyright;
+		this.copyrightURL = copyrightURL;
 	}
 	
 	public TiledMap(TileFactory<T> fact) {
-		this(fact, 0, 19, 120, "", "");
+		this(fact, 0, 19, 120, "", "", "");
 	}	
 	
 	protected void loadTile(T tile) {
@@ -139,6 +141,26 @@ public class TiledMap<T extends RasterWebTile> {
 		this.maxLoaded = 0;
 		this.unloadToMaxLoad();
 		this.maxLoaded = i;
+	}
+	
+	public int getMinZoom() {
+		return this.minZoom;
+	}
+	
+	public int getMaxZoom() {
+		return this.maxZoom;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getCopyright() {
+		return this.copyright;
+	}
+	
+	public String getCopyRightURL() {
+		return this.copyrightURL;
 	}
 	
 }

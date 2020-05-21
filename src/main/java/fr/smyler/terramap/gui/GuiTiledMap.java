@@ -22,6 +22,7 @@ import fr.smyler.terramap.gui.widgets.poi.EntityPOI;
 import fr.smyler.terramap.gui.widgets.poi.LocationPOI;
 import fr.smyler.terramap.gui.widgets.poi.PlayerPOI;
 import fr.smyler.terramap.gui.widgets.poi.PointOfInterest;
+import fr.smyler.terramap.gui.widgets.CopyrightNoticeWidget;
 import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
@@ -71,6 +72,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected GuiButton zoomInButton;
 	protected GuiButton zoomOutButton;
 	protected GuiButton centerOnPlayerButton;
+	protected CopyrightNoticeWidget copyright;
 
 	protected Map<UUID, EntityPOI> entityPOIs;
 	protected Map<UUID, PlayerPOI> playerPOIs; //Tracked players, excluding ourself
@@ -144,9 +146,11 @@ public class GuiTiledMap extends GuiScreen {
 		this.zoomInButton = new GuiTexturedButton(buttonId++, this.width - 30, 15, 15, 15, 40, 0, 40, 15, 40, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.zoomOutButton = new GuiTexturedButton(buttonId++, this.width - 30, 40 + this.fontRenderer.FONT_HEIGHT, 15, 15, 55, 0, 55, 15, 55, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.centerOnPlayerButton = new GuiTexturedButton(buttonId++, this.width - 30,  65 + this.fontRenderer.FONT_HEIGHT, 15, 15, 70, 0, 70, 15, 70, 30, GuiTiledMap.WIDGET_TEXTURES);
+		this.copyright = new CopyrightNoticeWidget(buttonId++, 0, 0, this.map);
 		this.addButton(this.zoomInButton);
 		this.addButton(this.zoomOutButton);
 		this.addButton(this.centerOnPlayerButton);
+		this.addButton(this.copyright);
 	}
 
 	@Override
@@ -156,7 +160,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.projection != null) this.drawPOIs(mouseX, mouseY, partialTicks);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
-		this.drawCopyright(mouseX, mouseY, partialTicks);
+//		this.drawCopyright(mouseX, mouseY, partialTicks);
 		if(this.projection == null && !TerramapConfiguration.ignoreProjectionWarning) this.drawProjectionWarning(mouseX, mouseY, partialTicks);
 		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
 	}
@@ -317,13 +321,13 @@ public class GuiTiledMap extends GuiScreen {
 		this.drawCenteredString(this.fontRenderer, "" + this.zoomLevel, this.width - 22, 36, 0xFFFFFF);
 	}
 
-	private void drawCopyright(int mouseX, int mouseY, float partialTicks) {
-		String copyrightString = "© OpenStreetMap contributors";
-		int rectWidth = 10 + this.fontRenderer.getStringWidth(copyrightString);
-		int rectHeight = this.fontRenderer.FONT_HEIGHT + 10;
-		Gui.drawRect(this.width - rectWidth, this.height - rectHeight, this.width, this.height, 0x50000000);
-		this.drawString(this.fontRenderer, copyrightString, this.width - rectWidth + 5, this.height - rectHeight + 5, 0xFFFFFF);
-	}
+//	private void drawCopyright(int mouseX, int mouseY, float partialTicks) {
+//		String copyrightString = this.map.getCopyright();
+//		int rectWidth = 10 + this.fontRenderer.getStringWidth(copyrightString);
+//		int rectHeight = this.fontRenderer.FONT_HEIGHT + 10;
+//		Gui.drawRect(this.width - rectWidth, this.height - rectHeight, this.width, this.height, 0x50000000);
+//		this.drawString(this.fontRenderer, copyrightString, this.width - rectWidth + 5, this.height - rectHeight + 5, 0xFFFFFF);
+//	}
 	
 	private void drawProjectionWarning(int mouseX, int mouseY, float partialTicks) {
 		List<String> warning = new ArrayList<String>();
@@ -465,9 +469,11 @@ public class GuiTiledMap extends GuiScreen {
 				this.mapVelocityY -= f * this.mapVelocityY;
 			}
 		}
-		this.zoomInButton.enabled = this.zoomLevel < this.getMaxZoom();
-		this.zoomOutButton.enabled = this.zoomLevel > this.getMinZoom();
+		this.zoomInButton.enabled = this.zoomLevel < this.map.getMaxZoom();
+		this.zoomOutButton.enabled = this.zoomLevel > this.map.getMinZoom();
 		this.centerOnPlayerButton.enabled = this.followedPOI == null;
+		this.copyright.x = this.width - this.copyright.getWidth();
+		this.copyright.y = this.height - this.copyright.getHeight();
 	}		
 
 	@Override
@@ -589,6 +595,8 @@ public class GuiTiledMap extends GuiScreen {
 			this.zoom(-1);
 		} else if(button.id == this.centerOnPlayerButton.id) {
 			this.setPosition(this.thePlayerPOI.getLongitude(), this.thePlayerPOI.getLatitude());
+		} else if(button.id == this.copyright.id && this.map.getCopyRightURL().length() > 0) {
+			GeoServices.openURI(this.map.getCopyRightURL());
 		}
 	}
 	
@@ -648,7 +656,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 	
 	private boolean isZoomValid(int zoom) {
-		return zoom >= this.getMinZoom() && zoom <= this.getMaxZoom();
+		return zoom >= this.map.getMinZoom() && zoom <= this.map.getMaxZoom();
 	}
 
 	private boolean shouldTrackEntity(Entity entity) {
@@ -702,14 +710,6 @@ public class GuiTiledMap extends GuiScreen {
 
 	protected void setZoom(int zoom) {
 		this.zoomLevel = zoom;
-	}
-
-	protected int getMaxZoom() {
-		return 19; //TODO Get that from the TiledMap
-	}
-	
-	protected int getMinZoom() {
-		return 0;
 	}
 	
 	protected double getMapX(double longitude) {

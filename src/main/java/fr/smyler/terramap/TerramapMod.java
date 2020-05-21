@@ -1,6 +1,7 @@
 package fr.smyler.terramap;
 
 import org.apache.logging.log4j.Logger;
+
 import fr.smyler.terramap.caching.CacheManager;
 import fr.smyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.fml.common.Mod;

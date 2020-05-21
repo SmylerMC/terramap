@@ -45,7 +45,6 @@ public class GuiTexturedButton extends GuiButton {
 			v = this.hoverV;
 		}
 		this.drawTexturedModalRect(this.x, this.y, u, v, this.width, this.height);
-//		this.mouseDragged(mc, mouseX, mouseY);
 	}
 
 }
