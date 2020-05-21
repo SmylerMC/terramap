@@ -485,6 +485,7 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
+		this.updateMouseGeoPos(mouseX, mouseY);
 		this.followedPOI = null;
 		switch(mouseButton) {
 		case 0: //Left click
@@ -537,7 +538,7 @@ public class GuiTiledMap extends GuiScreen {
 		int mouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
 		int mouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 
-		this.updateMouseGeoPos(mouseX, mouseY);
+		if(!this.rclickMenu.isDisplayed()) this.updateMouseGeoPos(mouseX, mouseY);
 
 		super.handleMouseInput();
 
