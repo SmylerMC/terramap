@@ -152,7 +152,7 @@ public class WebMercatorUtils {
 	 * @param zoom
 	 * @return true if the tile at given x and z is on the real world scaled at zoom
 	 */
-	public static boolean isTileInWorld(long tX, long tY, int zoom){
+	public static boolean isTileInWorld(int zoom, long tX, long tY){
 		int mS = 1 << zoom;
 		return tX >= 0 && tX < mS && tY >= 0 && tY < mS;
 	}

@@ -81,7 +81,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	public GuiTiledMap(TiledMap<?> map, World world) {
 		this.map = map;
-		this.zoomLevel = map.getZoomLevel();
+		this.zoomLevel = 0;
 		this.focusLatitude = 0;
 		this.focusLongitude = 0;
 		this.rclickMenu = new RightClickMenu();
@@ -163,9 +163,6 @@ public class GuiTiledMap extends GuiScreen {
 
 	private void drawMap(int mouseX, int mouseY, float partialTicks) {
 
-		if((int)this.zoomLevel != this.map.getZoomLevel()) {
-			TerramapMod.logger.info("Zooms are differents: GUI: " + this.zoomLevel + " | Map: " + this.map.getZoomLevel());
-		}
 		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 
 		long upperLeftX = (long) this.getUpperLeftX(this.focusLongitude);
@@ -174,7 +171,7 @@ public class GuiTiledMap extends GuiScreen {
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
 
-		int maxTileXY = (int) map.getSizeInTiles();
+		int maxTileXY = (int) map.getSizeInTiles(this.zoomLevel);
 		long maxX = (long) (upperLeftX + this.width);
 		long maxY = (long) (upperLeftY + this.height);
 
@@ -188,7 +185,7 @@ public class GuiTiledMap extends GuiScreen {
 				RasterWebTile tile;
 
 				try {
-					tile = map.getTile(TerramapUtils.modulus(tX, maxTileXY), tY, this.zoomLevel);
+					tile = map.getTile(this.zoomLevel, TerramapUtils.modulus(tX, maxTileXY), tY);
 				} catch(InvalidTileCoordinatesException e) { continue ;}
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				RasterWebTile bestTile = tile;
@@ -199,7 +196,7 @@ public class GuiTiledMap extends GuiScreen {
 					if(!TerramapMod.cacheManager.isBeingCached(tile))
 						TerramapMod.cacheManager.cacheAsync(tile);
 					while(tile.getZoom() > 0 && !TerramapMod.cacheManager.isCached(tile)) {
-						tile = this.map.getTile(tile.getX() /2, tile.getY() /2, tile.getZoom()-1);
+						tile = this.map.getTile(tile.getZoom()-1, tile.getX() /2, tile.getY() /2);
 					}
 				}
 
@@ -630,7 +627,6 @@ public class GuiTiledMap extends GuiScreen {
 		this.updateMouseGeoPos(mouseX, mouseY);
 
 		TerramapMod.cacheManager.clearQueue(); // We are displaying new tiles, we don't need what we needed earlier
-		this.setTiledMapZoom();
 
 	}
 
@@ -653,10 +649,6 @@ public class GuiTiledMap extends GuiScreen {
 	
 	private boolean isZoomValid(int zoom) {
 		return zoom >= this.getMinZoom() && zoom <= this.getMaxZoom();
-	}
-
-	private void setTiledMapZoom() {
-		this.map.setZoomLevel((int)this.zoomLevel);
 	}
 
 	private boolean shouldTrackEntity(Entity entity) {
@@ -710,7 +702,6 @@ public class GuiTiledMap extends GuiScreen {
 
 	protected void setZoom(int zoom) {
 		this.zoomLevel = zoom;
-		this.setTiledMapZoom();
 	}
 
 	protected int getMaxZoom() {

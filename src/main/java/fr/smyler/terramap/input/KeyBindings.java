@@ -29,7 +29,7 @@ public abstract class KeyBindings {
 	
 	public static void checkBindings() {
 		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(new TiledMap<WikimediaTile>(TileFactory.WIKIMEDIA_TILE_FACTORY, 13, TerramapConfiguration.maxTileLoad), Minecraft.getMinecraft().world));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(new TiledMap<WikimediaTile>(TileFactory.WIKIMEDIA_TILE_FACTORY, TerramapConfiguration.maxTileLoad), Minecraft.getMinecraft().world));
 		}
 	}
 	

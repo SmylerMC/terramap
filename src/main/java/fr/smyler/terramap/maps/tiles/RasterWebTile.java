@@ -33,22 +33,22 @@ public abstract class RasterWebTile implements Cachable {
 	private static ResourceLocation errorTileTexture = null;
 
 
-	public RasterWebTile(int size, long x, long y, int zoom) {
+	public RasterWebTile(int size, int zoom, long x, long y) {
 
 		this.x = x;
 		this.y = y;
 		this.zoom = zoom;
 		this.size = size;
 
-		if(!WebMercatorUtils.isTileInWorld(x, y, zoom))
+		if(!WebMercatorUtils.isTileInWorld(zoom, x, y))
 			throw new InvalidTileCoordinatesException(this);
 
 	}
 
 
-	public RasterWebTile(int size, long x, long y, int zoom, int[] defaultPixel) {
+	public RasterWebTile(int size, int zoom, long x, long y, int[] defaultPixel) {
 
-		this(size, x, y, zoom);
+		this(size, zoom, x, y);
 		this.defaultPixel = defaultPixel;
 
 	}
@@ -76,7 +76,6 @@ public abstract class RasterWebTile implements Cachable {
 
 	@Override
 	public void cached(File f) {
-
 		try {
 			this.loadImageFomFile(f);
 		} catch (IOException e) {

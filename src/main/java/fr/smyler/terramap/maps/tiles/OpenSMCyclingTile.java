@@ -19,8 +19,8 @@ public class OpenSMCyclingTile extends RasterWebTile {
 	 * @param y
 	 * @param zoom
 	 */
-	public OpenSMCyclingTile(long x, long y, int zoom) {
-		super(256, x, y, zoom);
+	public OpenSMCyclingTile(int zoom, long x, long y) {
+		super(256, zoom, x, y);
 	}
 
 	@Override
