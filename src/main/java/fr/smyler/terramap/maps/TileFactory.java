@@ -1,5 +1,6 @@
 package fr.smyler.terramap.maps;
 
+import fr.smyler.terramap.maps.tiles.OSMFranceTile;
 import fr.smyler.terramap.maps.tiles.OSMHumanitarianTile;
 import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.OpenSMCyclingTile;
@@ -41,6 +42,14 @@ public interface TileFactory <T extends RasterWebTile>{
 		@Override
 		public OSMHumanitarianTile getInstance(int zoom, long x, long y) {
 			return new OSMHumanitarianTile(zoom, x, y);
+		}
+	};
+	
+	public static final TileFactory<OSMFranceTile> 
+	OSM_FRANCE_TILE_FACTORY = new TileFactory<OSMFranceTile>() {
+		@Override
+		public OSMFranceTile getInstance(int zoom, long x, long y) {
+			return new OSMFranceTile(zoom, x, y);
 		}
 	};
 
