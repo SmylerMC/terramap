@@ -1,12 +1,16 @@
 package fr.smyler.terramap.maps.utils;
 
+import java.util.Random;
+
 /**
  * @author SmylerMC
  *
  * TODO Type comment
  *
  */
-public class TerramapUtils {
+public abstract class TerramapUtils {
+	
+	private static Random random = new Random();
 	
 	public static int modulus(int a, int b) {
 		int mod = a%b;
@@ -29,6 +33,10 @@ public class TerramapUtils {
 	 */
 	public static int roudSmaller(double x){
 		return x >= 0? (int) x: (int) x - 1;
+	}
+	
+	public static char pickChar(char[] chars) {
+		return chars[random.nextInt(chars.length)];
 	}
 	
 }

@@ -1,5 +1,6 @@
 package fr.smyler.terramap.maps;
 
+import fr.smyler.terramap.maps.tiles.OSMHumanitarianTile;
 import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.OpenSMCyclingTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
@@ -34,7 +35,14 @@ public interface TileFactory <T extends RasterWebTile>{
 			return new OSMTile(zoom, x, y);
 		}
 	};
-
+	
+	public static final TileFactory<OSMHumanitarianTile> 
+	OSM_HUMANITARIAN_TILE_FACTORY = new TileFactory<OSMHumanitarianTile>() {
+		@Override
+		public OSMHumanitarianTile getInstance(int zoom, long x, long y) {
+			return new OSMHumanitarianTile(zoom, x, y);
+		}
+	};
 
 	public T getInstance(int zoom, long x, long y);
 

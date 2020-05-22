@@ -2,6 +2,7 @@ package fr.smyler.terramap.maps;
 
 import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.config.TerramapConfiguration;
+import fr.smyler.terramap.maps.tiles.OSMHumanitarianTile;
 import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.WikimediaTile;
 
@@ -22,4 +23,13 @@ public abstract class TiledMaps {
 			"OpenStreetMap", "© OpenStreetMap contributors",
 			GeoServices.OSM_CR_LINK
 	);
+	
+	public static final TiledMap<OSMHumanitarianTile> OSM_HUMANITARIAN = new TiledMap<OSMHumanitarianTile>(
+			TileFactory.OSM_HUMANITARIAN_TILE_FACTORY,
+			0, 19,
+			TerramapConfiguration.maxTileLoad,
+			"OpenStreetMap Humanitarian", "© OpenStreetMap contributors, Humanitarian OpenStreetMap Team",
+			GeoServices.OSM_CR_LINK
+	);
+	
 }

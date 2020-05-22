@@ -51,10 +51,11 @@ public class GuiTiledMap extends GuiScreen {
 
 	public static final ResourceLocation WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
 	protected TiledMap<?> map;
+	protected TiledMap<?>[] availableMaps;
 
-	protected double focusLatitude;
-	protected double focusLongitude;
-	protected int zoomLevel;
+	protected double focusLatitude = 0;
+	protected double focusLongitude = 0;
+	protected int zoomLevel = 0;
 	protected double mouseLong, mouseLat = 0;
 	protected int lastMouseClickX, lastMouseClickY = -1;
 	protected double mapVelocityX, mapVelocityY = 0;
@@ -65,28 +66,33 @@ public class GuiTiledMap extends GuiScreen {
 	protected boolean debug = false; //Show tiles borders or not
 	protected PointOfInterest followedPOI = null;
 	private long lastClickTime = 0;
-	private boolean buttonWasClicked = false; // Used to know when handling mouse if it super has triggered a button
+	private boolean buttonWasClicked = false; // Used to know when handling mouse if super has triggered a button
 
 	protected RightClickMenu rclickMenu;
 	protected LocationPOI rightClickPOI = null;
 	protected GuiButton zoomInButton;
 	protected GuiButton zoomOutButton;
 	protected GuiButton centerOnPlayerButton;
+	protected GuiButton tilesetButton;
 	protected CopyrightNoticeWidget copyright;
+	protected RightClickMenu tilesetMenu;
 
 	protected Map<UUID, EntityPOI> entityPOIs;
 	protected Map<UUID, PlayerPOI> playerPOIs; //Tracked players, excluding ourself
-	protected PlayerPOI thePlayerPOI;
-	protected int lastEntityPoiRenderedCount = 0;
+	protected PlayerPOI thePlayerPOI; //Ourself
+	protected int lastEntityPoiRenderedCount = 0; //Used for debug output
 	protected int lastPlayerPoiRenderedCount = 0;
 	protected World world; 
 
 	public GuiTiledMap(TiledMap<?> map, World world) {
+		this.availableMaps = new TiledMap<?>[] {map};
 		this.map = map;
-		this.zoomLevel = 0;
-		this.focusLatitude = 0;
-		this.focusLongitude = 0;
-		this.rclickMenu = new RightClickMenu();
+		this.world = world;
+	}
+	
+	public GuiTiledMap(TiledMap<?>[] maps, World world) {
+		this.map = maps[0];
+		this.availableMaps = maps;
 		this.world = world;
 	}
 
@@ -121,6 +127,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
 		this.thePlayerPOI = new PlayerPOI((AbstractClientPlayer)player);
+		this.rclickMenu = new RightClickMenu();
 		this.rclickMenu.init(fontRenderer);
 		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.mouseLong, this.mouseLat);});
@@ -142,15 +149,22 @@ public class GuiTiledMap extends GuiScreen {
 				Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(this, Minecraft.getMinecraft()));	
 			});
 		}
+		this.tilesetMenu = new RightClickMenu();
+		this.tilesetMenu.init(this.fontRenderer);
+		for(TiledMap<?> map: this.availableMaps) {
+			this.tilesetMenu.addEntry(map.getName(), () -> {this.setMap(map);});
+		}
 		this.closeRightClickMenu();
 		this.zoomInButton = new GuiTexturedButton(buttonId++, this.width - 30, 15, 15, 15, 40, 0, 40, 15, 40, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.zoomOutButton = new GuiTexturedButton(buttonId++, this.width - 30, 40 + this.fontRenderer.FONT_HEIGHT, 15, 15, 55, 0, 55, 15, 55, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.centerOnPlayerButton = new GuiTexturedButton(buttonId++, this.width - 30,  65 + this.fontRenderer.FONT_HEIGHT, 15, 15, 70, 0, 70, 15, 70, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.copyright = new CopyrightNoticeWidget(buttonId++, 0, 0, this.map);
+		this.tilesetButton = new GuiTexturedButton(buttonId++, this.width - 30,  90 + this.fontRenderer.FONT_HEIGHT, 15, 15, 85, 0, 85, 15, 85, 30, GuiTiledMap.WIDGET_TEXTURES); //TODO Texture
 		this.addButton(this.zoomInButton);
 		this.addButton(this.zoomOutButton);
 		this.addButton(this.centerOnPlayerButton);
 		this.addButton(this.copyright);
+		if(this.availableMaps.length > 1) this.addButton(this.tilesetButton);
 	}
 
 	@Override
@@ -160,9 +174,9 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.projection != null) this.drawPOIs(mouseX, mouseY, partialTicks);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
-//		this.drawCopyright(mouseX, mouseY, partialTicks);
 		if(this.projection == null && !TerramapConfiguration.ignoreProjectionWarning) this.drawProjectionWarning(mouseX, mouseY, partialTicks);
 		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
+		this.tilesetMenu.draw(mouseX, mouseY, partialTicks);
 	}
 
 	private void drawMap(int mouseX, int mouseY, float partialTicks) {
@@ -461,12 +475,14 @@ public class GuiTiledMap extends GuiScreen {
 		} else {
 			// Moves the map from its inertia if we are not moving it manually
 			// It would have been nice if this could have changed according to the time,
-			// But it seems to be very 
+			// TODO But last attempt was not a success and it's not a priority
 			if(!Mouse.isButtonDown(0) && (this.mapVelocityX != 0 || this.mapVelocityY != 0)){
 				this.moveMap((int)(this.mapVelocityX), (int)(this.mapVelocityY));
 				float f = .1f;
 				this.mapVelocityX -= f * this.mapVelocityX;
 				this.mapVelocityY -= f * this.mapVelocityY;
+				if(this.mapVelocityX < 0.1) this.mapVelocityX = 0;
+				if(this.mapVelocityY < 0.1) this.mapVelocityY = 0;
 			}
 		}
 		this.zoomInButton.enabled = this.zoomLevel < this.map.getMaxZoom();
@@ -496,9 +512,17 @@ public class GuiTiledMap extends GuiScreen {
 			if(this.rclickMenu.isDisplayed()) {
 				this.rclickMenu.onMouseClick(mouseX, mouseY);
 				this.closeRightClickMenu();
+			} else if(this.tilesetMenu.isDisplayed()) {
+				this.tilesetMenu.onMouseClick(mouseX, mouseY);
+			} else {
+				this.closeRightClickMenu();
 			}
+			long ctime = System.currentTimeMillis();
+			if(ctime - this.lastClickTime < TerramapConfiguration.doubleClickDelay && mouseButton == 0) this.mouseDoubleClick(mouseX, mouseY);
+			this.lastClickTime = ctime;
 			break;
 		case 1: //Right click
+			this.closeRightClickMenu();
 			this.mapVelocityX = 0;
 			this.mapVelocityY = 0;
 			int displayX = mouseX;
@@ -513,9 +537,6 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		this.lastMouseClickX = mouseX;
 		this.lastMouseClickY = mouseY;
-		long ctime = System.currentTimeMillis();
-		if(ctime - this.lastClickTime < TerramapConfiguration.doubleClickDelay && mouseButton == 0) this.mouseDoubleClick(mouseX, mouseY);
-		this.lastClickTime = ctime;
 	}
 
 	@Override
@@ -548,6 +569,7 @@ public class GuiTiledMap extends GuiScreen {
 
 		int scroll = Mouse.getDWheel();
 		if(scroll != 0) this.mouseScrolled(mouseX, mouseY, scroll);
+		this.buttonWasClicked = false;
 	}
 	
 	public void updateMouseGeoPos(int mouseX, int mouseY) {
@@ -565,6 +587,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	public void mouseDoubleClick(int mouseX, int mouseY) {
 		if(this.buttonWasClicked) return;
+		this.closeRightClickMenu();
 		if(this.thePlayerPOI != null) {
 			int px = (int) this.getScreenX(this.thePlayerPOI.getLongitude());
 			int py = (int) this.getScreenY(this.thePlayerPOI.getLatitude());
@@ -597,6 +620,13 @@ public class GuiTiledMap extends GuiScreen {
 			this.setPosition(this.thePlayerPOI.getLongitude(), this.thePlayerPOI.getLatitude());
 		} else if(button.id == this.copyright.id && this.map.getCopyRightURL().length() > 0) {
 			GeoServices.openURI(this.map.getCopyRightURL());
+		} else if(button.id == this.tilesetButton.id) {
+			this.mapVelocityX = 0;
+			this.mapVelocityY = 0;
+			if(this.tilesetMenu.isDisplayed()) this.tilesetMenu.hide();
+			else {
+				this.tilesetMenu.showAt(this.tilesetButton.x - this.tilesetMenu.getWidth(), this.tilesetButton.y);
+			}
 		}
 	}
 	
@@ -611,6 +641,14 @@ public class GuiTiledMap extends GuiScreen {
 		return false;
 	}
 
+	private void setMap(TiledMap<?> map) {
+		TerramapMod.logger.debug("Changing map");
+		TerramapMod.cacheManager.clearQueue();
+		this.map.unloadAll();
+		this.map = map;
+		this.copyright.map = this.map;
+	}
+	
 	public void zoom(int val) {
 		this.zoom(this.width/2, this.height/2, val);
 	}
@@ -682,6 +720,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected void closeRightClickMenu() {
 		this.rclickMenu.hide();
 		this.rightClickPOI = null;
+		this.tilesetMenu.hide();
 	}
 
 	public void setSize(int width, int height) {

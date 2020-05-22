@@ -3,6 +3,7 @@ package fr.smyler.terramap.input;
 import org.lwjgl.input.Keyboard;
 
 import fr.smyler.terramap.gui.GuiTiledMap;
+import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.TiledMaps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -26,7 +27,8 @@ public abstract class KeyBindings {
 	
 	public static void checkBindings() {
 		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null) {
-			Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(TiledMaps.OSM, Minecraft.getMinecraft().world));
+			TiledMap<?>[] maps = {TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
+			Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(maps, Minecraft.getMinecraft().world));
 		}
 	}
 	
