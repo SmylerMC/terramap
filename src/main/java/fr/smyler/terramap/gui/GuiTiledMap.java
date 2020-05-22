@@ -14,6 +14,7 @@ import org.lwjgl.input.Mouse;
 
 import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.TerramapUtils;
 import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.config.TerramapServerPreferences;
 import fr.smyler.terramap.gui.widgets.GuiTexturedButton;
@@ -27,7 +28,6 @@ import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
-import fr.smyler.terramap.maps.utils.TerramapUtils;
 import fr.smyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
