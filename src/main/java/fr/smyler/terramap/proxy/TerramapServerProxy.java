@@ -43,4 +43,10 @@ public class TerramapServerProxy extends TerramapProxy{
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 	}
 
+	@Override
+	public float getDefaultGuiSize() {
+		// Don't care on server, this is just for the client config
+		return 0;
+	}
+
 }

@@ -15,5 +15,6 @@ public abstract class TerramapProxy {
 	public abstract EarthGeneratorSettings getCurrentEarthGeneratorSettings(World world);
 	public abstract void onPlayerLoggedIn(PlayerLoggedInEvent event);
 	public abstract void onPlayerLoggedOut(PlayerLoggedOutEvent event);
+	public abstract float getDefaultGuiSize();
 	
 }

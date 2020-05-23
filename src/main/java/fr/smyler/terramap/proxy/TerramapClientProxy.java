@@ -113,4 +113,9 @@ public class TerramapClientProxy extends TerramapProxy{
     	TerramapClientProxy.tiledMap = null;
     }
 
+	@Override
+	public float getDefaultGuiSize() {
+		return 1f/Minecraft.getMinecraft().gameSettings.guiScale;
+	}
+
 }

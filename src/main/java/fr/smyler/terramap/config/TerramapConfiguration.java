@@ -1,7 +1,6 @@
 package fr.smyler.terramap.config;
 
 import fr.smyler.terramap.TerramapMod;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -32,7 +31,7 @@ public class TerramapConfiguration{
 	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
 	@Config.RangeDouble(min=0.125, max=4)
 	@Config.SlidingOption
-	public static double tileScaling = 1f/Minecraft.getMinecraft().gameSettings.guiScale;
+	public static double tileScaling = TerramapMod.proxy.getDefaultGuiSize();
 
 	@Config.Name("max_tile_load")
 	@Config.LangKey("terramap.config.max_tile_load")
