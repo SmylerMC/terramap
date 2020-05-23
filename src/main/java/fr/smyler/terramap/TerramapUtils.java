@@ -53,4 +53,12 @@ public abstract class TerramapUtils {
 		}
 	}
 	
+	public static boolean isPirate() {
+		try {
+			return Minecraft.getMinecraft().gameSettings.language.equalsIgnoreCase("en_PT");
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
 }

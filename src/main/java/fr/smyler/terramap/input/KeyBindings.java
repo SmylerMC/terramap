@@ -2,6 +2,7 @@ package fr.smyler.terramap.input;
 
 import org.lwjgl.input.Keyboard;
 
+import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.TerramapUtils;
 import fr.smyler.terramap.gui.GuiTiledMap;
 import fr.smyler.terramap.maps.TiledMap;
@@ -29,11 +30,16 @@ public abstract class KeyBindings {
 	
 	public static void checkBindings() {
 		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null) {
-			if(!TerramapUtils.isBaguette()) {
-				TiledMap<?>[] maps = {TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
+			if(TerramapUtils.isBaguette()) {
+				TerramapMod.logger.info("Pain au chocolat!");
+				TiledMap<?>[] maps = {TiledMaps.OSM_FRANCE, TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
+				Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(maps, Minecraft.getMinecraft().world));
+			} else if(TerramapUtils.isPirate()){
+				TerramapMod.logger.info("Her ye go");
+				TiledMap<?>[] maps = {TiledMaps.WATERCOLOR, TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
 				Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(maps, Minecraft.getMinecraft().world));
 			} else {
-				TiledMap<?>[] maps = {TiledMaps.OSM_FRANCE, TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
+				TiledMap<?>[] maps = {TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
 				Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(maps, Minecraft.getMinecraft().world));
 			}
 		}

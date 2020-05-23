@@ -4,7 +4,9 @@ import fr.smyler.terramap.maps.tiles.OSMFranceTile;
 import fr.smyler.terramap.maps.tiles.OSMHumanitarianTile;
 import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.OpenSMCyclingTile;
+import fr.smyler.terramap.maps.tiles.OpenTopoMapTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
+import fr.smyler.terramap.maps.tiles.WatercolorTile;
 import fr.smyler.terramap.maps.tiles.WikimediaTile;
 
 /**
@@ -50,6 +52,22 @@ public interface TileFactory <T extends RasterWebTile>{
 		@Override
 		public OSMFranceTile getInstance(int zoom, long x, long y) {
 			return new OSMFranceTile(zoom, x, y);
+		}
+	};
+	
+	public static final TileFactory<OpenTopoMapTile> 
+	OPEN_TOPO_TILE_FACTORY = new TileFactory<OpenTopoMapTile>() {
+		@Override
+		public OpenTopoMapTile getInstance(int zoom, long x, long y) {
+			return new OpenTopoMapTile(zoom, x, y);
+		}
+	};
+	
+	public static final TileFactory<WatercolorTile> 
+	WATERCOLOR_TILE_FACTORY = new TileFactory<WatercolorTile>() {
+		@Override
+		public WatercolorTile getInstance(int zoom, long x, long y) {
+			return new WatercolorTile(zoom, x, y);
 		}
 	};
 
