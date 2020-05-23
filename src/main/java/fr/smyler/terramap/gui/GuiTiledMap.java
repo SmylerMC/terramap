@@ -159,6 +159,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.addButton(this.centerOnPlayerButton);
 		this.addButton(this.copyright);
 		if(this.availableMaps.length > 1) this.addButton(this.tilesetButton);
+		this.updateMouseGeoPos(this.width/2, this.height/2);
 	}
 
 	@Override
