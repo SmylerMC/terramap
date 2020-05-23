@@ -5,6 +5,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
+//TODO Smaller head size option
 public class PlayerPOI extends EntityPOI{
 
 	public PlayerPOI(AbstractClientPlayer e) {

@@ -8,7 +8,6 @@ import fr.smyler.terramap.TerramapMod;
 /**
  * @author SmylerMC
  *
- * TODO Type comment
  *
  */
 public class OpenSMCyclingTile extends RasterWebTile {

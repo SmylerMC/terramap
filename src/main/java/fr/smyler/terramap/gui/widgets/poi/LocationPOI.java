@@ -47,7 +47,6 @@ public class LocationPOI extends PointOfInterest {
 
 	@Override
 	public int getYOffset() {
-		// TODO Auto-generated method stub
 		return -23;
 	}
 

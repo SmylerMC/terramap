@@ -16,24 +16,36 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Config(modid = TerramapMod.MODID)
 public class TerramapConfiguration{
 	
+	@Config.Name("cache_directory")
+	@Config.LangKey("terramap.config.cache_dir")
 	@Config.Comment("Where to cache our files")
 	public static String cachingDir = "Terramap_cache";
 	
+	@Config.Name("tpll_command")
 	@Config.Comment("The base tpll command to use")
-	public static String tpllcmd = "/tpll {latitude} {longitude}";
+	@Config.LangKey("terramap.config.tpllcmd")
+	public static String tpllcmd = "/tpll {latitude} {longitude}"; //TODO Save per server
 	
 	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
-	public static float tileScaling = 1f;
+	public static float tileScaling = 1f; //TODO Remove this
 
+	@Config.Name("max_tile_load")
+	@Config.LangKey("terramap.config.max_tile_load")
 	@Config.Comment("This is the maximum number of tiles to keep loaded. A lower number implies lower memory usage, however, if this is lower than the number of tiles displayed on your screen at once you will experience a huge performance drop. Change for a higher value if you experience lag when displaying a map on a large display")
 	public static int maxTileLoad = 128;
 	
+	@Config.Name("show_entities")
+	@Config.LangKey("terramap.config.show_entities")
 	@Config.Comment("Set to true if you want the entities to be displayed on the map")
 	public static boolean showEntities = false;
 	
+	@Config.Name("double_click_delay")
+	@Config.LangKey("terramap.config.double_click_delay")
 	@Config.Comment("Double click delay to use in guis, in milliscondes")
 	public static int doubleClickDelay = 500;
 	
+	@Config.Name("ignore_projection_warning")
+	@Config.LangKey("terramap.config.ignore_projection_warning")
 	@Config.Comment("Show a warning on the map if the projection was not available and allows to manually set one")
 	public static boolean ignoreProjectionWarning = false;
 	

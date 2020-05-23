@@ -39,6 +39,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
@@ -46,14 +47,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-//TODO Localization
 public class GuiTiledMap extends GuiScreen {
 
 	public static final ResourceLocation WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
 	protected TiledMap<?> map;
 	protected TiledMap<?>[] availableMaps;
 
-	protected double focusLatitude = 0;
+	protected double focusLatitude = 0; //Center of the screen
 	protected double focusLongitude = 0;
 	protected int zoomLevel = 0;
 	protected double mouseLong, mouseLat = 0;
@@ -129,23 +129,23 @@ public class GuiTiledMap extends GuiScreen {
 		this.thePlayerPOI = new PlayerPOI((AbstractClientPlayer)player);
 		this.rclickMenu = new RightClickMenu();
 		this.rclickMenu.init(fontRenderer);
-		this.rclickMenu.addEntry("Teleport here", () -> {this.teleportPlayerTo(this.mouseLong, this.mouseLat);});
-		this.rclickMenu.addEntry("Center map here", () -> {this.setPosition(this.mouseLong, this.mouseLat);});
-		this.rclickMenu.addEntry("Copy location to clipboard", () -> {GuiScreen.setClipboardString("" + this.mouseLong + " " + this.mouseLat);});
-		this.rclickMenu.addEntry("Open location in OpenStreetMaps", () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
-		this.rclickMenu.addEntry("Open location in Google Maps", () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
-		this.rclickMenu.addEntry("Open location in Google Earth web", () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
-		//TODO Open in google Earth pro
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.teleport"), () -> {this.teleportPlayerTo(this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.center"), () -> {this.setPosition(this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_geo"), () -> {GuiScreen.setClipboardString("" + this.mouseLong + " " + this.mouseLat);});
 		if(this.projection != null) {
-			this.rclickMenu.addEntry("Copy Minecraft coordinates to clipboard", ()->{
+			this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_mc"), ()->{
 				double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
 				String dispX = "" + Math.round(coords[0]);
 				String dispY = "" + Math.round(coords[1]);
 				GuiScreen.setClipboardString(dispX + " " + dispY);
 			});
 		}
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_mc"), () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gmaps"), () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gearth_web"), () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
+		//TODO Open in google Earth pro
 		if(this.manualProjection) {
-			this.rclickMenu.addEntry("Set projection", ()-> {
+			this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.set_proj"), ()-> {
 				Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(this, Minecraft.getMinecraft()));	
 			});
 		}
@@ -159,7 +159,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.zoomOutButton = new GuiTexturedButton(buttonId++, this.width - 30, 40 + this.fontRenderer.FONT_HEIGHT, 15, 15, 55, 0, 55, 15, 55, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.centerOnPlayerButton = new GuiTexturedButton(buttonId++, this.width - 30,  65 + this.fontRenderer.FONT_HEIGHT, 15, 15, 70, 0, 70, 15, 70, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.copyright = new CopyrightNoticeWidget(buttonId++, 0, 0, this.map);
-		this.tilesetButton = new GuiTexturedButton(buttonId++, this.width - 30,  90 + this.fontRenderer.FONT_HEIGHT, 15, 15, 85, 0, 85, 15, 85, 30, GuiTiledMap.WIDGET_TEXTURES); //TODO Texture
+		this.tilesetButton = new GuiTexturedButton(buttonId++, this.width - 30,  90 + this.fontRenderer.FONT_HEIGHT, 15, 15, 85, 0, 85, 15, 85, 30, GuiTiledMap.WIDGET_TEXTURES);
 		this.addButton(this.zoomInButton);
 		this.addButton(this.zoomOutButton);
 		this.addButton(this.centerOnPlayerButton);
@@ -300,26 +300,26 @@ public class GuiTiledMap extends GuiScreen {
 
 	private void drawInformation(int mouseX, int mouseY, float partialTicks) {
 		List<String> lines = new ArrayList<String>();
-		String dispLat = GeoServices.formatGeoCoordForDisplay(this.mouseLat) + "°";
-		String dispLong = GeoServices.formatGeoCoordForDisplay(this.mouseLong)  + "°";
-		lines.add("Mouse position: " + dispLat + " " + dispLong);
+		String dispLat = GeoServices.formatGeoCoordForDisplay(this.mouseLat);
+		String dispLong = GeoServices.formatGeoCoordForDisplay(this.mouseLong);
+		lines.add(I18n.format("terramap.mapgui.information.mouse_geo", dispLat, dispLong));
 		if(this.projection != null) {
 			double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
 			String dispX = "" + Math.round(coords[0]);
-			String dispY = "" + Math.round(coords[1]);
-			lines.add("X: " + dispX + " Z: " + dispY);
+			String dispZ = "" + Math.round(coords[1]);
+			lines.add(I18n.format("terramap.mapgui.information.mouse_mc", dispX, dispZ));
 		}
 		if(this.followedPOI != null) {
-			lines.add("Tracking " + this.followedPOI.getDisplayName());
+			lines.add(I18n.format("terramap.mapgui.information.followed", this.followedPOI.getDisplayName()));
 		}
 		if((this.debug || this.manualProjection) && this.genSettings != null) {
-			lines.add("Projection: " + this.genSettings.settings.projection);
-			lines.add("Orientation: " + this.genSettings.settings.orentation);
+			lines.add(I18n.format("terramap.mapgui.information.projection", this.genSettings.settings.projection));
+			lines.add(I18n.format("terramap.mapgui.information.orientation", this.genSettings.settings.orentation));
 		}
 		if(this.debug) {
 			String mapLa = GeoServices.formatGeoCoordForDisplay(this.focusLatitude);
 			String mapLo = GeoServices.formatGeoCoordForDisplay(this.focusLongitude);
-			lines.add("Map location: " + mapLo + " " + mapLa);
+			lines.add("Map location: " + mapLo + " " + mapLa); //Not translated, that's debug
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
 			int playerPOICount = this.playerPOIs.size();
@@ -334,22 +334,15 @@ public class GuiTiledMap extends GuiScreen {
 		Gui.drawRect(this.width - 30 , 30, this.width - 15, 30 + this.fontRenderer.FONT_HEIGHT + 10 , 0x80000000);
 		this.drawCenteredString(this.fontRenderer, "" + this.zoomLevel, this.width - 22, 36, 0xFFFFFF);
 	}
-
-//	private void drawCopyright(int mouseX, int mouseY, float partialTicks) {
-//		String copyrightString = this.map.getCopyright();
-//		int rectWidth = 10 + this.fontRenderer.getStringWidth(copyrightString);
-//		int rectHeight = this.fontRenderer.FONT_HEIGHT + 10;
-//		Gui.drawRect(this.width - rectWidth, this.height - rectHeight, this.width, this.height, 0x50000000);
-//		this.drawString(this.fontRenderer, copyrightString, this.width - rectWidth + 5, this.height - rectHeight + 5, 0xFFFFFF);
-//	}
 	
 	private void drawProjectionWarning(int mouseX, int mouseY, float partialTicks) {
 		List<String> warning = new ArrayList<String>();
-		warning.add("Terramap is not installed on the server!!");
-		warning.add("There is no way to identify the projection used.");
-		warning.add("Elements from the Minecraft world will not be displayed on the map.");
-		warning.add("You can ask the server administrator to install Terramap,");
-		warning.add("or you can manually set the projection used in the right click menu.");
+		int i = 1;
+		while(true) {
+			String key = "terramap.mapgui.projection_warning.line" + i;
+			if(I18n.hasKey(key)) warning.add(I18n.format(key));
+			else break;
+		}
 		int width = 0;
 		for(String line: warning) width = Math.max(width, this.fontRenderer.getStringWidth(line));
 		int height = 20 + warning.size() * (5 + this.fontRenderer.FONT_HEIGHT);
@@ -647,6 +640,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.map.unloadAll();
 		this.map = map;
 		this.copyright.map = this.map;
+		//TODO Make sure the zoom level is valid for the new map
 	}
 	
 	public void zoom(int val) {

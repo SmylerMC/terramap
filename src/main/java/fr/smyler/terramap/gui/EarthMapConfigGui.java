@@ -70,11 +70,6 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 		settingElems = new DynamicOptions.Element[] {
 				cycleButton(6969, "projection", projs, e -> {projectMap(true); return I18n.format("terra121.gui.projection")+": "+I18n.format("terra121.projection."+e);}),
 				cycleButton(6968, "orentation", GeographicProjection.Orientation.values(), e -> {projectMap(true); return I18n.format("terra121.gui.orientation")+": "+I18n.format("terra121.orientation."+e.toString());}),
-//				toggleButton(6967, "smoothblend", null),
-//				toggleButton(6966, "roads", null),
-//				toggleButton(6965, "osmwater", null),
-//				toggleButton(6964, "dynamicbaseheight", null),
-//				toggleButton(6963, "buildings", null),
 		};
 		projectMap(false);
 	}
@@ -159,14 +154,11 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 		drawScaledCustomSizeModalRect(width-mapsize, (height-mapsize)/2, 0, 0, 1024, 1024, mapsize, mapsize, 1024, 1024);
 
 		this.mc.renderEngine.bindTexture(Gui.OPTIONS_BACKGROUND);
-		//this.drawTexturedModalRect(0, height-32, 0, 0, width, 32);
 		drawScaledCustomSizeModalRect(0, height-32, 0, 0, width, 32, width, 32, 32, 32); //footer
 		drawScaledCustomSizeModalRect(0, 0, 0, 0, width, 32, width, 32, 32, 32); //header
 
 		done.drawButton(mc, mouseX, mouseY, partialTicks);
 		cancel.drawButton(mc, mouseX, mouseY, partialTicks);
-
-		//this.drawCenteredString(this.fontRenderer, "WORK IN PROGRESS", this.width/2, this.height/2, 0x00FF5555);
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

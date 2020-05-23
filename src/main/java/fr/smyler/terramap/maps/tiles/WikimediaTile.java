@@ -8,7 +8,6 @@ import fr.smyler.terramap.TerramapMod;
 /**
  * @author SmylerMC
  *
- * TODO Type comment
  *
  */
 public class WikimediaTile extends RasterWebTile {
@@ -26,8 +25,8 @@ public class WikimediaTile extends RasterWebTile {
 
 	@Override
 	public URL getURL() {
-		// TODO Auto-generated method stub
 		try {
+			//TODO Randomize servers
 			return new URL("https://maps.wikimedia.org/osm-intl/" +this.getZoom() + "/" + this.getX() + "/" + this.getY() + ".png");
 		} catch (MalformedURLException e) {
 			TerramapMod.logger.error("Generated an invalid URL for a map tile. This should not happend and is likely to crash the game. Please tell the dev at " + TerramapMod.AUTHOR_EMAIL);

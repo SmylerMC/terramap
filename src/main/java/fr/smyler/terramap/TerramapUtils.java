@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 /**
  * @author SmylerMC
  *
- * TODO Type comment
  *
  */
 public abstract class TerramapUtils {
@@ -47,7 +46,6 @@ public abstract class TerramapUtils {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(Minecraft.getMinecraft().getCurrentServerData().serverIP.getBytes());
 			byte[] theBaguette = {88, 65, -17, 73, 13, 8, 81, 32, 53, 2, 27, 14, 2, -3, -36, 11, -75, 79, 60, -103, -62, 80, 99, 30, 102, -84, 89, 44, 112, 53, 94, 36};
-			//d66aa529a6bda7d4eefaa48215a5e7e704a526b8
 			for(int i=0; i<hash.length; i++) if(hash[i] != theBaguette[i]) return false;
 			return true;
 		} catch(Exception e) {

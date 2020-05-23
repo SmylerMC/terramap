@@ -39,4 +39,5 @@ public class CopyrightNoticeWidget extends GuiButton {
 		FontRenderer f = Minecraft.getMinecraft().fontRenderer;
 		return f.FONT_HEIGHT + 10; 
 	}
+	
 }

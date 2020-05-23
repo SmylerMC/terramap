@@ -3,6 +3,7 @@ package fr.smyler.terramap.gui.widgets.poi;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.entity.Entity;
 
+//TODO Distinguish different entity types
 public class EntityPOI extends PointOfInterest {
 
 	protected Entity entity;

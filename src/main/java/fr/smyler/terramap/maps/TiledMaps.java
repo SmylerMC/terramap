@@ -6,6 +6,7 @@ import fr.smyler.terramap.maps.tiles.OSMFranceTile;
 import fr.smyler.terramap.maps.tiles.OSMHumanitarianTile;
 import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.WikimediaTile;
+import net.minecraft.client.resources.I18n;
 
 public abstract class TiledMaps {
 
@@ -13,7 +14,7 @@ public abstract class TiledMaps {
 			TileFactory.WIKIMEDIA_TILE_FACTORY,
 			0, 19,
 			TerramapConfiguration.maxTileLoad,
-			"Wikimedia maps", "Wikimedia Foundation, © OpenStreetMap contributors",
+			I18n.format("terramap.maps.name.wikimedia"), I18n.format("terramap.maps.copyright.wikimedia"),
 			GeoServices.OSM_CR_LINK
 	);
 	
@@ -21,7 +22,7 @@ public abstract class TiledMaps {
 			TileFactory.OSM_TILE_FACTORY,
 			0, 19,
 			TerramapConfiguration.maxTileLoad,
-			"OpenStreetMap", "© OpenStreetMap contributors",
+			I18n.format("terramap.maps.name.osm"), I18n.format("terramap.maps.copyright.osm"),
 			GeoServices.OSM_CR_LINK
 	);
 	
@@ -29,7 +30,7 @@ public abstract class TiledMaps {
 			TileFactory.OSM_HUMANITARIAN_TILE_FACTORY,
 			0, 19,
 			TerramapConfiguration.maxTileLoad,
-			"OpenStreetMap Humanitarian", "© OpenStreetMap contributors, Humanitarian OpenStreetMap Team",
+			I18n.format("terramap.maps.name.humanitarian"), I18n.format("terramap.maps.copyright.humanitarian"),
 			GeoServices.OSM_CR_LINK
 	);
 	
@@ -37,7 +38,7 @@ public abstract class TiledMaps {
 			TileFactory.OSM_FRANCE_TILE_FACTORY,
 			0, 19,
 			TerramapConfiguration.maxTileLoad,
-			"OpenStreetMap France", "© OpenStreetMap contributors, OSM France",
+			I18n.format("terramap.maps.name.osmfr"), I18n.format("terramap.maps.copyright.osmfr"),
 			GeoServices.OSM_CR_LINK
 	);
 	

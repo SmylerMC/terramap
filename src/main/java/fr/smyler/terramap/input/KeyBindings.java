@@ -17,9 +17,10 @@ import net.minecraftforge.fml.relauncher.Side;
 @EventBusSubscriber(Side.CLIENT)
 public abstract class KeyBindings {
 
+	private static final String KEY_CATEGORY = "terramap.binding.category";
 	
-	public static final KeyBinding OPEN_MAP = new KeyBinding("key.terramap.openmap", Keyboard.KEY_M, "key.terramap.category");
-	public static final KeyBinding TOGGLE_DEBUG = new KeyBinding("key.terramap.toggle_debug", Keyboard.KEY_P, "key.terramap.category");
+	public static final KeyBinding OPEN_MAP = new KeyBinding("terramap.binding.open_map", Keyboard.KEY_M, KeyBindings.KEY_CATEGORY); //TODO Close the map on when pressed
+	public static final KeyBinding TOGGLE_DEBUG = new KeyBinding("terramap.binding.toggle_debug", Keyboard.KEY_P, KeyBindings.KEY_CATEGORY);
 	
 	public static void registerBindings() {
 		ClientRegistry.registerKeyBinding(OPEN_MAP);
