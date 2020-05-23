@@ -1,5 +1,6 @@
 terramap.config.cache_dir=Cache directory name
 terramap.config.tpllcmd=tpll command
+terramap.config.tile_scaling=Tile Scaling
 terramap.config.max_tile_load=Max number of tiles to load
 terramap.config.show_entities=Show entities
 terramap.config.double_click_delay=Double click delay

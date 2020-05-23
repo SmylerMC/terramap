@@ -1,6 +1,7 @@
 package fr.smyler.terramap.config;
 
 import fr.smyler.terramap.TerramapMod;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -22,16 +23,22 @@ public class TerramapConfiguration{
 	public static String cachingDir = "Terramap_cache";
 	
 	@Config.Name("tpll_command")
-	@Config.Comment("The base tpll command to use")
 	@Config.LangKey("terramap.config.tpllcmd")
+	@Config.Comment("The base tpll command to use")
 	public static String tpllcmd = "/tpll {latitude} {longitude}"; //TODO Save per server
 	
+	@Config.Name("tile_scaling")
+	@Config.LangKey("terramap.config.tile_scaling")
 	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
-	public static float tileScaling = 1f; //TODO Remove this
+	@Config.RangeDouble(min=0.125, max=4)
+	@Config.SlidingOption
+	public static double tileScaling = 1f/Minecraft.getMinecraft().gameSettings.guiScale;
 
 	@Config.Name("max_tile_load")
 	@Config.LangKey("terramap.config.max_tile_load")
 	@Config.Comment("This is the maximum number of tiles to keep loaded. A lower number implies lower memory usage, however, if this is lower than the number of tiles displayed on your screen at once you will experience a huge performance drop. Change for a higher value if you experience lag when displaying a map on a large display")
+	@Config.RangeInt(min=16, max=256)
+	@Config.SlidingOption
 	public static int maxTileLoad = 128;
 	
 	@Config.Name("show_entities")
@@ -42,6 +49,8 @@ public class TerramapConfiguration{
 	@Config.Name("double_click_delay")
 	@Config.LangKey("terramap.config.double_click_delay")
 	@Config.Comment("Double click delay to use in guis, in milliscondes")
+	@Config.RangeInt(min=10, max=1000)
+	@Config.SlidingOption
 	public static int doubleClickDelay = 500;
 	
 	@Config.Name("ignore_projection_warning")
