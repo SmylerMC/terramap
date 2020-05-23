@@ -196,11 +196,15 @@ public class CacheManager implements Runnable {
 			TerramapMod.logger.warn("Caching from an other thread!!");
 
 		File f = this.getCachableFile(toCache);
-		this.downloadUrlToFile(toCache.getURL(), f);
-		if(!f.exists() || !f.isFile()) {
-			throw new IOException("A file should have been cached but doesn't exit: " + f.getAbsolutePath());
+		try {
+			this.downloadUrlToFile(toCache.getURL(), f);
+			if(!f.exists() || !f.isFile()) {
+				throw new IOException("A file should have been cached but doesn't exit: " + f.getAbsolutePath());
+			}
+			toCache.cached(f);
+		}catch (FileNotFoundException e) {
+			this.faultyUrls.put(toCache.getURL(), this.maxCacheTries);
 		}
-		toCache.cached(f);
 	}
 
 	/**
@@ -289,6 +293,7 @@ public class CacheManager implements Runnable {
 
 
 	public int downloadUrlToFile(URL url, File file) throws IOException {
+		TerramapMod.logger.debug("Requesting:" + url.toString());
 		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
 		connection.setAllowUserInteraction(false);
@@ -311,6 +316,7 @@ public class CacheManager implements Runnable {
 			inStream.close();
 			break;
 		case HttpURLConnection.HTTP_NOT_FOUND:
+			this.faultyUrls.put(url, this.maxCacheTries);
 			throw new FileNotFoundException();
 		}
 		connection.disconnect();
