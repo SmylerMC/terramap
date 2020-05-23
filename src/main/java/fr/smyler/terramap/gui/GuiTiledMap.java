@@ -639,9 +639,10 @@ public class GuiTiledMap extends GuiScreen {
 		TerramapMod.logger.debug("Changing map");
 		TerramapMod.cacheManager.clearQueue();
 		this.map.unloadAll();
+		if(this.map.getMaxZoom() > map.getMaxZoom()) this.zoomLevel = map.getMaxZoom();
+		if(this.map.getMinZoom() < map.getMinZoom()) this.zoomLevel = map.getMinZoom();
 		this.map = map;
 		this.copyright.map = this.map;
-		//TODO Make sure the zoom level is valid for the new map
 	}
 	
 	public void zoom(int val) {
