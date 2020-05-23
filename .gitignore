@@ -6,7 +6,6 @@ build/*
 0.tree
 eclipse/*
 .gradle/*
-gradle/*
 .settings
 gradle-wrapper.properties
 *.launch
