@@ -512,6 +512,7 @@ public class GuiTiledMap extends GuiScreen {
 			break;
 		case 1: //Right click
 			this.closeRightClickMenu();
+			this.updateMouseGeoPos(mouseX, mouseY);
 			this.mapVelocityX = 0;
 			this.mapVelocityY = 0;
 			int displayX = mouseX;
