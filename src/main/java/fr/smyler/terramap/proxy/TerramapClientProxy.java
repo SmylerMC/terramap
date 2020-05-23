@@ -18,6 +18,7 @@ import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.network.TerramapPacketHandler;
 import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -115,7 +116,8 @@ public class TerramapClientProxy extends TerramapProxy{
 
 	@Override
 	public float getDefaultGuiSize() {
-		return 1f/Minecraft.getMinecraft().gameSettings.guiScale;
+		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
+		return 1f/scaledRes.getScaleFactor();
 	}
 
 }
