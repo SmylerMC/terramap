@@ -19,25 +19,7 @@ public class TerramapPacketHandler {
 	 * @param side
 	 */
 	public static void registerHandlers(Side side){
-		if(side.isClient()){
-			registerClientHandlers();
-		}
-			registerServerHandlers();
-	}
-	
-	
-	/**
-	 * Registers the server handlers
-	 */
-	private static void registerServerHandlers(){
-		TerramapMod.logger.debug("Registering server network handlers");
-	}
-	
-	/**
-	 * Registers the client handlers
-	 */
-	private static void registerClientHandlers(){
-		TerramapMod.logger.debug("Registering client network handlers");
 		INSTANCE.registerMessage(ProjectionSyncPacket.ProjectionSyncPacketHandler.class, ProjectionSyncPacket.class, discriminator++, Side.CLIENT);
 	}
+	
 }
