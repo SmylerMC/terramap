@@ -6,6 +6,7 @@ import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.OpenSMCyclingTile;
 import fr.smyler.terramap.maps.tiles.OpenTopoMapTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
+import fr.smyler.terramap.maps.tiles.TerrainTile;
 import fr.smyler.terramap.maps.tiles.WatercolorTile;
 import fr.smyler.terramap.maps.tiles.WikimediaTile;
 
@@ -68,6 +69,14 @@ public interface TileFactory <T extends RasterWebTile>{
 		@Override
 		public WatercolorTile getInstance(int zoom, long x, long y) {
 			return new WatercolorTile(zoom, x, y);
+		}
+	};
+	
+	public static final TileFactory<TerrainTile> 
+	TERRAIN_TILE_FACTORY = new TileFactory<TerrainTile>() {
+		@Override
+		public TerrainTile getInstance(int zoom, long x, long y) {
+			return new TerrainTile(zoom, x, y);
 		}
 	};
 

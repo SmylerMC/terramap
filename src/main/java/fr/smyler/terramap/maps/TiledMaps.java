@@ -6,6 +6,7 @@ import fr.smyler.terramap.maps.tiles.OSMFranceTile;
 import fr.smyler.terramap.maps.tiles.OSMHumanitarianTile;
 import fr.smyler.terramap.maps.tiles.OSMTile;
 import fr.smyler.terramap.maps.tiles.OpenTopoMapTile;
+import fr.smyler.terramap.maps.tiles.TerrainTile;
 import fr.smyler.terramap.maps.tiles.WatercolorTile;
 import fr.smyler.terramap.maps.tiles.WikimediaTile;
 import net.minecraft.client.resources.I18n;
@@ -57,6 +58,14 @@ public abstract class TiledMaps {
 			0, 14,
 			TerramapConfiguration.maxTileLoad,
 			I18n.format("terramap.maps.name.watercolor"), I18n.format("terramap.maps.copyright.watercolor"),
+			GeoServices.OSM_CR_LINK
+	);
+	
+	public static final TiledMap<TerrainTile> TERRAIN = new TiledMap<TerrainTile>(
+			TileFactory.TERRAIN_TILE_FACTORY,
+			0, 18,
+			TerramapConfiguration.maxTileLoad,
+			I18n.format("terramap.maps.name.terrain"), I18n.format("terramap.maps.copyright.terrain"),
 			GeoServices.OSM_CR_LINK
 	);
 	

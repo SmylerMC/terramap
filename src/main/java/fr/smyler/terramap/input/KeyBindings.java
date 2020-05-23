@@ -32,14 +32,14 @@ public abstract class KeyBindings {
 		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null) {
 			if(TerramapUtils.isBaguette()) {
 				TerramapMod.logger.info("Pain au chocolat!");
-				TiledMap<?>[] maps = {TiledMaps.OSM_FRANCE, TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
+				TiledMap<?>[] maps = {TiledMaps.OSM_FRANCE, TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN, TiledMaps.TERRAIN};
 				Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(maps, Minecraft.getMinecraft().world));
 			} else if(TerramapUtils.isPirate()){
 				TerramapMod.logger.info("Her ye go");
-				TiledMap<?>[] maps = {TiledMaps.WATERCOLOR, TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
+				TiledMap<?>[] maps = {TiledMaps.WATERCOLOR, TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN, TiledMaps.TERRAIN};
 				Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(maps, Minecraft.getMinecraft().world));
 			} else {
-				TiledMap<?>[] maps = {TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN};
+				TiledMap<?>[] maps = {TiledMaps.OSM, TiledMaps.OSM_HUMANITARIAN, TiledMaps.TERRAIN};
 				Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(maps, Minecraft.getMinecraft().world));
 			}
 		}
