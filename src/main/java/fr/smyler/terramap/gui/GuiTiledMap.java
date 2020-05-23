@@ -706,6 +706,10 @@ public class GuiTiledMap extends GuiScreen {
 
 	private void teleportPlayerTo(double longitude, double latitude) {
 		String cmd = TerramapConfiguration.tpllcmd.replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
+		if(this.projection != null) {
+			double[] xz = projection.fromGeo(longitude, latitude);
+			cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
+		}
 		this.sendChatMessage(cmd, false);
 	}
 	

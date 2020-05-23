@@ -30,7 +30,6 @@ public class TerramapConfiguration{
 	@Config.LangKey("terramap.config.tile_scaling")
 	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
 	@Config.RangeDouble(min=0.125, max=4)
-	@Config.SlidingOption
 	public static double tileScaling = TerramapMod.proxy.getDefaultGuiSize();
 
 	@Config.Name("max_tile_load")
