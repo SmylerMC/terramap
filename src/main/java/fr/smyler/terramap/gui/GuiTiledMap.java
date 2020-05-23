@@ -134,7 +134,7 @@ public class GuiTiledMap extends GuiScreen {
 				GuiScreen.setClipboardString(dispX + " " + dispY);
 			});
 		}
-		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.osm"), () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_osm"), () -> {GeoServices.openInOSMWeb(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gmaps"), () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gearth_web"), () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
 		//TODO Open in google Earth pro
