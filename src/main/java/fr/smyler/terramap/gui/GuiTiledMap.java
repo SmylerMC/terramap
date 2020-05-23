@@ -493,6 +493,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) this.moveMap(0, -10);
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) this.moveMap(-10, 0);
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || keyCode == Keyboard.KEY_LEFT) this.moveMap(10, 0);
+		if(keyCode == KeyBindings.OPEN_MAP.getKeyCode()) Minecraft.getMinecraft().displayGuiScreen(null);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public abstract class KeyBindings {
 
 	private static final String KEY_CATEGORY = "terramap.binding.category";
 	
-	public static final KeyBinding OPEN_MAP = new KeyBinding("terramap.binding.open_map", Keyboard.KEY_M, KeyBindings.KEY_CATEGORY); //TODO Close the map on when pressed
+	public static final KeyBinding OPEN_MAP = new KeyBinding("terramap.binding.open_map", Keyboard.KEY_M, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding TOGGLE_DEBUG = new KeyBinding("terramap.binding.toggle_debug", Keyboard.KEY_P, KeyBindings.KEY_CATEGORY);
 	
 	public static void registerBindings() {
