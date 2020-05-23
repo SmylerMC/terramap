@@ -494,7 +494,7 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		this.updateMouseGeoPos(mouseX, mouseY);
+//		this.updateMouseGeoPos(mouseX, mouseY);
 		if(!this.buttonWasClicked) this.followedPOI = null;
 		switch(mouseButton) {
 		case 0: //Left click
@@ -704,7 +704,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void teleportPlayerTo(double longitude, double latitude) {
-		String cmd = GeoServices.formatStringWithCoords(TerramapConfiguration.tpllcmd, 0, longitude, latitude);
+		String cmd = TerramapConfiguration.tpllcmd.replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
 		this.sendChatMessage(cmd, false);
 	}
 	
