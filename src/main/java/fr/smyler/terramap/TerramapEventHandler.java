@@ -24,6 +24,7 @@ public final class TerramapEventHandler {
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event){
 		//Send world data to the client
+		TerramapMod.proxy.onPlayerLoggedIn(event);
 		EntityPlayerMP player = (EntityPlayerMP)event.player;
 		World world = player.getEntityWorld();
 		EarthGeneratorSettings settings = ProjectionSyncPacket.getEarthGeneratorSettingsFromWorld(world);

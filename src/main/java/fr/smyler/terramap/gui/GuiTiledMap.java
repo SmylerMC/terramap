@@ -83,22 +83,11 @@ public class GuiTiledMap extends GuiScreen {
 	protected int lastEntityPoiRenderedCount = 0; //Used for debug output
 	protected int lastPlayerPoiRenderedCount = 0;
 	protected World world; 
-
-	public GuiTiledMap(TiledMap<?> map, World world) {
-		this.availableMaps = new TiledMap<?>[] {map};
-		this.map = map;
-		this.world = world;
-	}
 	
 	public GuiTiledMap(TiledMap<?>[] maps, World world) {
 		this.map = maps[0];
 		this.availableMaps = maps;
 		this.world = world;
-	}
-
-	@Override
-	public void initGui() {
-		int buttonId = 0;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		if(this.manualProjection == false) {
 			this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
@@ -116,7 +105,6 @@ public class GuiTiledMap extends GuiScreen {
 			double coords[] = this.projection.toGeo(player.posX, player.posZ);
 			this.focusLatitude = coords[1];
 			this.focusLongitude = coords[0];
-			this.setZoom(13);
 		} else {
 			TerramapMod.logger.info("Projection was not available");
 			this.focusLatitude = 0;
@@ -127,6 +115,12 @@ public class GuiTiledMap extends GuiScreen {
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
 		this.thePlayerPOI = new PlayerPOI((AbstractClientPlayer)player);
+		this.setZoom(17);
+	}
+
+	@Override
+	public void initGui() {
+		int buttonId = 0;
 		this.rclickMenu = new RightClickMenu();
 		this.rclickMenu.init(fontRenderer);
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.teleport"), () -> {this.teleportPlayerTo(this.mouseLong, this.mouseLat);});

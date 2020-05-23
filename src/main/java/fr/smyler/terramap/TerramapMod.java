@@ -27,7 +27,7 @@ public class TerramapMod {
 	private static final String SERVER_PROXY_CLASS = "fr.smyler.terramap.proxy.TerramapServerProxy";
     @SidedProxy(clientSide = TerramapMod.CLIENT_PROXY_CLASS, serverSide = TerramapMod.SERVER_PROXY_CLASS)
 	public static TerramapProxy proxy;
-
+    
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
     	logger = event.getModLog();
