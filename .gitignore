@@ -7,7 +7,6 @@ build/*
 eclipse/*
 .gradle/*
 .settings
-gradle-wrapper.properties
 *.launch
 *.xcf
 
