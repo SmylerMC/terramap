@@ -333,8 +333,8 @@ public class GuiTiledMap extends GuiScreen {
 		String lengthstr = "-";
 		int barwidth = 75;
 		if(Math.abs(latAtScreenBottom) < 85) {
-			long EARTH_CIRCUMFERENCE = 40075017;
-			double circAtLat = EARTH_CIRCUMFERENCE * Math.cos(Math.toRadians(latAtScreenBottom));
+			
+			double circAtLat = TerramapUtils.EARTH_CIRCUMFERENCE * Math.cos(Math.toRadians(latAtScreenBottom));
 			double scale = circAtLat / WebMercatorUtils.getMapDimensionInPixel(this.zoomLevel) * barwidth;
 			String[] units = {"m", "km"};
 			int j=0;

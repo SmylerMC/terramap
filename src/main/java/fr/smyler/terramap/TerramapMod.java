@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = TerramapMod.MODID, name = TerramapMod.NAME)
+@Mod(modid = TerramapMod.MODID, name = TerramapMod.NAME, acceptableRemoteVersions = "*")
 public class TerramapMod {
 	
     public static final String MODID = "terramap";

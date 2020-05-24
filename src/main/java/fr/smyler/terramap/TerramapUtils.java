@@ -14,6 +14,8 @@ public abstract class TerramapUtils {
 	
 	private static Random random = new Random();
 	
+	public static final long EARTH_CIRCUMFERENCE = 40075017;
+	
 	public static int modulus(int a, int b) {
 		int mod = a%b;
 		return mod<0?b+mod:mod ;
