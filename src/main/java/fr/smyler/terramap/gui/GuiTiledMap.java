@@ -652,8 +652,8 @@ public class GuiTiledMap extends GuiScreen {
 		TerramapMod.logger.debug("Changing map");
 		TerramapMod.cacheManager.clearQueue();
 		this.map.unloadAll();
-		if(this.map.getMaxZoom() > map.getMaxZoom()) this.zoomLevel = map.getMaxZoom();
-		if(this.map.getMinZoom() < map.getMinZoom()) this.zoomLevel = map.getMinZoom();
+		if(this.zoomLevel > map.getMaxZoom()) this.zoomLevel = map.getMaxZoom();
+		if(this.zoomLevel < map.getMinZoom()) this.zoomLevel = map.getMinZoom();
 		this.map = map;
 		this.copyright.map = this.map;
 	}
