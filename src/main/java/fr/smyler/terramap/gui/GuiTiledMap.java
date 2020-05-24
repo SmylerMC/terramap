@@ -83,7 +83,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected int lastEntityPoiRenderedCount = 0; //Used for debug output
 	protected int lastPlayerPoiRenderedCount = 0;
 	protected World world; 
-	
+
 	public GuiTiledMap(TiledMap<?>[] maps, World world) {
 		this.map = maps[0];
 		this.availableMaps = maps;
@@ -240,15 +240,15 @@ public class GuiTiledMap extends GuiScreen {
 				//The following code is needed for a full screen map,
 				//but will be needed if we ever decide to make a map widget
 				//to embed in other guis
-//				if(tX == lowerTX) {
-//					dX -= dispX;
-//					dispX = 0;
-//				}
-//
-//				if(tY == lowerTY) {
-//					dY -= dispY;
-//					dispY = 0;
-//				}
+				//				if(tX == lowerTX) {
+				//					dX -= dispX;
+				//					dispX = 0;
+				//				}
+				//
+				//				if(tY == lowerTY) {
+				//					dY -= dispY;
+				//					dispY = 0;
+				//				}
 
 				textureManager.bindTexture(tile.getTexture());
 				drawModalRectWithCustomSizedTexture(
@@ -328,8 +328,26 @@ public class GuiTiledMap extends GuiScreen {
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
 		Gui.drawRect(this.width - 30 , 30, this.width - 15, 30 + this.fontRenderer.FONT_HEIGHT + 10 , 0x80000000);
 		this.drawCenteredString(this.fontRenderer, "" + this.zoomLevel, this.width - 22, 36, 0xFFFFFF);
+		int barY = this.height - 20;
+		double latAtScreenBottom = this.getScreenLat(barY);
+		String lengthstr = "-";
+		int barwidth = 75;
+		if(Math.abs(latAtScreenBottom) < 85) {
+			long EARTH_CIRCUMFERENCE = 40075017;
+			double circAtLat = EARTH_CIRCUMFERENCE * Math.cos(Math.toRadians(latAtScreenBottom));
+			double scale = circAtLat / WebMercatorUtils.getMapDimensionInPixel(this.zoomLevel) * barwidth;
+			String[] units = {"m", "km"};
+			int j=0;
+			for(; scale >= 1000 && j<units.length-1; j++) scale /= 1000;
+			lengthstr = "" + Math.round(scale) + " " + units[j];
+		}
+		int strwidth = this.fontRenderer.getStringWidth(lengthstr);
+		this.fontRenderer.drawString(lengthstr, 20 + barwidth/2 - strwidth/2, barY - this.fontRenderer.FONT_HEIGHT - 5, 0xFF444444);
+		GuiScreen.drawRect(20, barY, 20 + barwidth, barY+2, 0xFF444444);
+		GuiScreen.drawRect(20, barY-4, 22, barY+6, 0xFF444444);
+		GuiScreen.drawRect(18 + barwidth, barY-4, 20 + barwidth, barY+6, 0xFF444444);
 	}
-	
+
 	private void drawProjectionWarning(int mouseX, int mouseY, float partialTicks) {
 		List<String> warning = new ArrayList<String>();
 		int i = 1;
@@ -494,7 +512,6 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-//		this.updateMouseGeoPos(mouseX, mouseY);
 		if(!this.buttonWasClicked) this.followedPOI = null;
 		switch(mouseButton) {
 		case 0: //Left click
@@ -561,7 +578,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(scroll != 0) this.mouseScrolled(mouseX, mouseY, scroll);
 		this.buttonWasClicked = false;
 	}
-	
+
 	public void updateMouseGeoPos(int mouseX, int mouseY) {
 		this.mouseLong = this.getScreenLong((double)mouseX);
 		this.mouseLat = this.getScreenLat((double)mouseY);
@@ -597,7 +614,7 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		if(this.followedPOI == null) this.zoom(mouseX, mouseY, 1);
 	}
-	
+
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
@@ -619,7 +636,7 @@ public class GuiTiledMap extends GuiScreen {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
@@ -640,16 +657,16 @@ public class GuiTiledMap extends GuiScreen {
 		this.map = map;
 		this.copyright.map = this.map;
 	}
-	
+
 	public void zoom(int val) {
 		this.zoom(this.width/2, this.height/2, val);
 	}
-	
+
 	public void zoom(int mouseX, int mouseY, int zoom) {
 
 		int nzoom = this.zoomLevel + zoom;
 		if(!this.isZoomValid(nzoom)) return;
-		
+
 		this.zoomLevel = nzoom;
 		double factor = Math.pow(2, zoom);
 		double ndX = ((double)this.width/2 - mouseX) * factor;
@@ -680,11 +697,11 @@ public class GuiTiledMap extends GuiScreen {
 		this.setLongitude(nlon);
 		this.setLatitude(nlat);
 	}
-	
+
 	private boolean isPositionValid(int zoomLevel, double centerLong, double centerLat) {
 		return this.isZoomValid(zoomLevel);
 	}
-	
+
 	private boolean isZoomValid(int zoom) {
 		return zoom >= this.map.getMinZoom() && zoom <= this.map.getMaxZoom();
 	}
@@ -693,12 +710,12 @@ public class GuiTiledMap extends GuiScreen {
 		if(entity instanceof EntityItem) return false;
 		return TerramapConfiguration.showEntities && entity instanceof EntityLiving;
 	}
-	
+
 	private double getScreenLong(double xOnScreen) {
 		double xOnMap = (this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfiguration.tileScaling;
 		return WebMercatorUtils.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel));
 	}
-	
+
 	private double getScreenLat(double yOnScreen) {
 		double yOnMap = (this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfiguration.tileScaling;
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
@@ -712,7 +729,7 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		this.sendChatMessage(cmd, false);
 	}
-	
+
 	protected void closeRightClickMenu() {
 		this.rclickMenu.hide();
 		this.rightClickPOI = null;
@@ -746,7 +763,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected void setZoom(int zoom) {
 		this.zoomLevel = zoom;
 	}
-	
+
 	protected double getMapX(double longitude) {
 		return this.getMapX(this.zoomLevel, longitude);
 	}
@@ -823,9 +840,9 @@ public class GuiTiledMap extends GuiScreen {
 	public void setGenerationSettings(EarthGeneratorSettings genSettings) {
 		this.genSettings = genSettings;
 	}
-	
-	
-	
+
+
+
 }
 
 //Thrown when trying to call a method which needs the projection but it is null
