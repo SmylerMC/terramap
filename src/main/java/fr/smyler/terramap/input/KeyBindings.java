@@ -25,7 +25,7 @@ public abstract class KeyBindings {
 	}
 	
 	public static void checkBindings() {
-		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null) Minecraft.getMinecraft().displayGuiScreen(TerramapClientProxy.getTiledMap());
+		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player.dimension == 0) Minecraft.getMinecraft().displayGuiScreen(TerramapClientProxy.getTiledMap());
 	}
 	
     @SubscribeEvent
