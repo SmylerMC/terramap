@@ -120,6 +120,14 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void initGui() {
+		if(this.genSettings != null) this.projection = this.genSettings.getProjection();
+		else {
+			TerramapMod.logger.info("Projection was not available");
+			this.focusLatitude = 0;
+			this.focusLongitude = 0;
+			this.setZoomToMinimum();
+			this.manualProjection = true;
+		}
 		int buttonId = 0;
 		this.rclickMenu = new RightClickMenu();
 		this.rclickMenu.init(fontRenderer);
@@ -352,7 +360,7 @@ public class GuiTiledMap extends GuiScreen {
 		List<String> warning = new ArrayList<String>();
 		int i = 1;
 		while(true) {
-			String key = "terramap.mapgui.projection_warning.line" + i;
+			String key = "terramap.mapgui.projection_warning.line" + i++;
 			if(I18n.hasKey(key)) warning.add(I18n.format(key));
 			else break;
 		}

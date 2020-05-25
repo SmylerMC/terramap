@@ -49,7 +49,7 @@ public class TerramapClientProxy extends TerramapProxy{
 		}
 		TerramapMod.cacheManager.startWorker();
 
-		File servPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + TerramapServerPreferences.FILENAME);
+		File servPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapServerPreferences.FILENAME);
 		TerramapServerPreferences.setFile(servPrefs);
 		TerramapServerPreferences.load();
 	}
