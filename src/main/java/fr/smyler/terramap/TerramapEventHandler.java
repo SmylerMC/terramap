@@ -55,7 +55,6 @@ public final class TerramapEventHandler {
 		if(!(world.getWorldType() instanceof EarthWorldType)) return;
 		if(tickCounter == 0) {
 			SyncedPlayer[] players = new SyncedPlayer[world.playerEntities.size()];
-			System.out.println(world.playerEntities.size());
 			for(int i=0; i<players.length; i++) {
 				players[i] = new SyncedPlayer(world.playerEntities.get(i));
 			}
