@@ -20,6 +20,7 @@ public class TerramapPacketHandler {
 	 */
 	public static void registerHandlers(Side side){
 		INSTANCE.registerMessage(ProjectionSyncPacket.ProjectionSyncPacketHandler.class, ProjectionSyncPacket.class, discriminator++, Side.CLIENT);
+		INSTANCE.registerMessage(PlayerSyncPacket.PlayerSyncPacketHandler.class, PlayerSyncPacket.class, discriminator++, Side.CLIENT);
 	}
 	
 }

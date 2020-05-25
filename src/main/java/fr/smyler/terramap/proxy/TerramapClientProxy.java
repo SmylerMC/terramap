@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.TerramapServer;
 import fr.smyler.terramap.TerramapUtils;
 import fr.smyler.terramap.caching.CacheManager;
 import fr.smyler.terramap.config.TerramapConfiguration;
@@ -29,47 +30,50 @@ import net.minecraftforge.fml.relauncher.Side;
 public class TerramapClientProxy extends TerramapProxy{
 
 	private EarthGeneratorSettings genSettings;
-    private static GuiTiledMap tiledMap = null;
+	private static GuiTiledMap tiledMap = null;
 
-	
+
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client pre-init");
 		TerramapPacketHandler.registerHandlers(Side.CLIENT);
-        try {
-        	TerramapMod.cacheManager = new CacheManager(TerramapConfiguration.cachingDir);
-        	TerramapMod.cacheManager.createDirectory();
+		try {
+			TerramapMod.cacheManager = new CacheManager(TerramapConfiguration.cachingDir);
+			TerramapMod.cacheManager.createDirectory();
 		} catch (IOException e) {
 			TerramapMod.logger.catching(e);
 			TerramapMod.logger.error("Caching directory doesn't seem to be valid, we will use a temporary one.");
 			TerramapMod.logger.error("Make sure your config is correct!");
 			TerramapMod.cacheManager = new CacheManager();
-			
-		}
-        TerramapMod.cacheManager.startWorker();
 
-    	File servPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + TerramapServerPreferences.FILENAME);
-    	TerramapServerPreferences.setFile(servPrefs);
-    	TerramapServerPreferences.load();
+		}
+		TerramapMod.cacheManager.startWorker();
+
+		File servPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + TerramapServerPreferences.FILENAME);
+		TerramapServerPreferences.setFile(servPrefs);
+		TerramapServerPreferences.load();
 	}
 
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client init");
-    	KeyBindings.registerBindings();
-    	RasterWebTile.registerErrorTexture();
+		KeyBindings.registerBindings();
+		RasterWebTile.registerErrorTexture();
 	}
 
 	@Override
 	public void onSyncProjection(EarthGeneratorSettings settings) {
 
+		TerramapServer.setServer(new TerramapServer(true, true, settings));
+
+		//TODO Remove old sync code
 		if(settings == null) {
 			TerramapMod.logger.error("Received a null projection from Server");
 		} else {
 			TerramapMod.logger.info("Got generation settings from server: " + settings.toString());
 			this.genSettings = settings;
 		}
-		
+
 	}
 
 	@Override
@@ -80,39 +84,41 @@ public class TerramapClientProxy extends TerramapProxy{
 	@Override
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
 		if(event.player.equals(Minecraft.getMinecraft().player)) {
+			TerramapServer.resetServer();
+
+			//TODO remove old sync code
 			this.genSettings = null;
 			TerramapMod.logger.debug("Removed genSettings");
 			TerramapClientProxy.resetTiledMap();
 		}
-		
+
 	}
 
 	@Override
 	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 	}
-	
-    public static GuiTiledMap getTiledMap() {
-    	if(TerramapClientProxy.tiledMap == null) TerramapClientProxy.setTiledMap();
-    	return TerramapClientProxy.tiledMap;
-    }
-    
-    private static void setTiledMap() {
-    	List<TiledMap<?>> maps = new ArrayList<TiledMap<?>>();
-    	if(TerramapUtils.isPirate()) {
-    		maps.add(TiledMaps.WATERCOLOR);
+
+	public static GuiTiledMap getTiledMap() {
+		if(TerramapClientProxy.tiledMap == null) TerramapClientProxy.setTiledMap();
+		return TerramapClientProxy.tiledMap;
+	}
+
+	private static void setTiledMap() {
+		List<TiledMap<?>> maps = new ArrayList<TiledMap<?>>();
+		if(TerramapUtils.isPirate()) {
+			maps.add(TiledMaps.WATERCOLOR);
 		} else if(TerramapUtils.isBaguette()){
 			maps.add(TiledMaps.OSM_FRANCE);
-		} else {
-			maps.add(TiledMaps.OSM);
-			maps.add(TiledMaps.OSM_HUMANITARIAN);
-			maps.add(TiledMaps.TERRAIN);
 		}
-    	TerramapClientProxy.tiledMap = new GuiTiledMap(maps.toArray(new TiledMap[maps.size()]), Minecraft.getMinecraft().world);
-    }
-    
-    public static void resetTiledMap() {
-    	TerramapClientProxy.tiledMap = null;
-    }
+		maps.add(TiledMaps.OSM);
+		maps.add(TiledMaps.OSM_HUMANITARIAN);
+		maps.add(TiledMaps.TERRAIN);
+		TerramapClientProxy.tiledMap = new GuiTiledMap(maps.toArray(new TiledMap[maps.size()]), Minecraft.getMinecraft().world);
+	}
+
+	public static void resetTiledMap() {
+		TerramapClientProxy.tiledMap = null;
+	}
 
 	@Override
 	public float getDefaultGuiSize() {
