@@ -17,7 +17,6 @@ import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.TerramapServer;
 import fr.smyler.terramap.TerramapUtils;
 import fr.smyler.terramap.config.TerramapConfiguration;
-import fr.smyler.terramap.config.TerramapServerPreferences;
 import fr.smyler.terramap.gui.widgets.CopyrightNoticeWidget;
 import fr.smyler.terramap.gui.widgets.GuiTexturedButton;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
@@ -48,6 +47,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
+//TODO Save map state when closing
 public class GuiTiledMap extends GuiScreen {
 
 	public static final ResourceLocation WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
@@ -62,7 +62,6 @@ public class GuiTiledMap extends GuiScreen {
 	protected double mapVelocityX, mapVelocityY = 0;
 	protected EarthGeneratorSettings genSettings = null;
 	protected GeographicProjection projection;
-	@Deprecated protected boolean manualProjection = false;
 
 	protected boolean debug = false; //Show tiles borders or not
 	protected PointOfInterest followedPOI = null;
@@ -84,23 +83,15 @@ public class GuiTiledMap extends GuiScreen {
 	protected int lastEntityPoiRenderedCount = 0; //Used for debug output
 	protected int lastPlayerPoiRenderedCount = 0;
 
-	//TODO Do not save the whole map, it would cause problems if the player changes (dies or goes through the end portal)
 	public GuiTiledMap(TiledMap<?>[] maps) {
 		this.map = maps[0];
 		this.availableMaps = maps;
+	}
+
+	@Override
+	public void initGui() {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		if(this.manualProjection == false) {
-//			this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
-			this.genSettings = TerramapServer.getServer().getGeneratorSettings();
-			if(this.genSettings == null) {
-				String savedSettings = TerramapServerPreferences.getServerGenSettings(Minecraft.getMinecraft().getCurrentServerData().serverIP);
-				if(savedSettings.length() != 0) {
-					this.genSettings = new EarthGeneratorSettings(savedSettings);
-					this.manualProjection = true;
-					TerramapMod.logger.info("Used local server preference for the projection");
-				}
-			}
-		}
+		this.genSettings = TerramapServer.getServer().getGeneratorSettings();
 		if(this.genSettings != null) {
 			this.projection = this.genSettings.getProjection();
 			double coords[] = this.projection.toGeo(player.posX, player.posZ);
@@ -111,26 +102,10 @@ public class GuiTiledMap extends GuiScreen {
 			this.focusLatitude = 0;
 			this.focusLongitude = 0;
 			this.setZoomToMinimum();
-			this.manualProjection = true;
 		}
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
 		this.thePlayerPOI = new PlayerPOI(new TerramapLocalPlayer(player));
-		this.setZoom(17);
-	}
-
-	@Override
-	public void initGui() {
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		this.thePlayerPOI =  new PlayerPOI(new TerramapLocalPlayer(player));
-		if(this.genSettings != null) this.projection = this.genSettings.getProjection();
-		else {
-			TerramapMod.logger.info("Projection was not available");
-			this.focusLatitude = 0;
-			this.focusLongitude = 0;
-			this.setZoomToMinimum();
-			this.manualProjection = true;
-		}
 		int buttonId = 0;
 		this.rclickMenu = new RightClickMenu();
 		this.rclickMenu.init(fontRenderer);
@@ -149,7 +124,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gmaps"), () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gearth_web"), () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
 		//TODO Open in google Earth pro
-		if(this.manualProjection) {
+		if(TerramapServer.getServer().isInstalledOnServer()) {
 			this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.set_proj"), ()-> {
 				Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(this, Minecraft.getMinecraft()));	
 			});
@@ -170,6 +145,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.addButton(this.centerOnPlayerButton);
 		this.addButton(this.copyright);
 		if(this.availableMaps.length > 1) this.addButton(this.tilesetButton);
+		this.setZoom(17);
 		this.updateMouseGeoPos(this.width/2, this.height/2);
 	}
 
@@ -318,7 +294,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.followedPOI != null) {
 			lines.add(I18n.format("terramap.mapgui.information.followed", this.followedPOI.getDisplayName()));
 		}
-		if((this.debug || this.manualProjection) && this.genSettings != null) {
+		if((this.debug || !TerramapServer.getServer().isInstalledOnServer()) && this.genSettings != null) {
 			lines.add(I18n.format("terramap.mapgui.information.projection", this.genSettings.settings.projection));
 			lines.add(I18n.format("terramap.mapgui.information.orientation", this.genSettings.settings.orentation));
 		}
@@ -441,6 +417,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void updatePOIs() {
+		//We will have a problem if a local player goes remote
 		Set<UUID> toUntrackEntities = new HashSet<UUID>();
 		toUntrackEntities.addAll(this.entityPOIs.keySet()); //The key set is backed by the map, we can't mute it while iterating
 		Set<UUID> toUntrackPlayers = new HashSet<UUID>();
