@@ -15,8 +15,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
 
-import fr.smyler.terramap.TerramapMod;
-import fr.smyler.terramap.config.TerramapServerPreferences;
+import fr.smyler.terramap.TerramapServer;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.TerraMod;
 import io.github.terra121.control.DynamicOptions;
@@ -166,11 +165,7 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int mouseEvent) {
 		if(done.mousePressed(mc, mouseX, mouseY)) {
-			this.parent.setGenerationSettings(cfg); //save settings
-			String servIp = Minecraft.getMinecraft().getCurrentServerData().serverIP;
-			TerramapServerPreferences.setServerGenSettings(servIp, cfg.toString());
-			TerramapServerPreferences.save();
-			TerramapMod.logger.info("Saved projection preference for server " + servIp);
+			TerramapServer.getServer().setGeneratorSettings(this.cfg);
 			this.mc.displayGuiScreen(this.parent); ///exit
 			return;
 
