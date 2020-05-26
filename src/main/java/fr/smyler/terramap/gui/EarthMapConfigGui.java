@@ -166,6 +166,7 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 	public void mouseClicked(int mouseX, int mouseY, int mouseEvent) {
 		if(done.mousePressed(mc, mouseX, mouseY)) {
 			TerramapServer.getServer().setGeneratorSettings(this.cfg);
+			TerramapServer.getServer().saveGeneratorSettings();
 			this.mc.displayGuiScreen(this.parent); ///exit
 			return;
 
