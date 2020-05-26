@@ -113,7 +113,7 @@ public class TerramapClientProxy extends TerramapProxy{
 		maps.add(TiledMaps.OSM);
 		maps.add(TiledMaps.OSM_HUMANITARIAN);
 		maps.add(TiledMaps.TERRAIN);
-		TerramapClientProxy.tiledMap = new GuiTiledMap(maps.toArray(new TiledMap[maps.size()]), Minecraft.getMinecraft().world);
+		TerramapClientProxy.tiledMap = new GuiTiledMap(maps.toArray(new TiledMap[maps.size()]));
 	}
 
 	public static void resetTiledMap() {

@@ -2,7 +2,7 @@ package fr.smyler.terramap;
 
 import fr.smyler.terramap.network.PlayerSyncPacket;
 import fr.smyler.terramap.network.ProjectionSyncPacket;
-import fr.smyler.terramap.network.SyncedPlayer;
+import fr.smyler.terramap.network.TerramapLocalPlayer;
 import fr.smyler.terramap.network.TerramapPacketHandler;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.EarthWorldType;
@@ -50,13 +50,13 @@ public final class TerramapEventHandler {
 	@SubscribeEvent
 	public static void onWorldTick(WorldTickEvent event) {
 		//TODO Only sync players which changed
-		if(!event.phase.equals(TickEvent.Phase.END)) return;
-		World world = event.world;
+		if(!event.phase.equals(TickEvent.Phase.START)) return;
+		 World world = event.world.getMinecraftServer().worlds[0];
 		if(!(world.getWorldType() instanceof EarthWorldType)) return;
 		if(tickCounter == 0) {
-			SyncedPlayer[] players = new SyncedPlayer[world.playerEntities.size()];
+			TerramapLocalPlayer[] players = new TerramapLocalPlayer[world.playerEntities.size()];
 			for(int i=0; i<players.length; i++) {
-				players[i] = new SyncedPlayer(world.playerEntities.get(i));
+				players[i] = new TerramapLocalPlayer(world.playerEntities.get(i));
 			}
 			IMessage pkt = new PlayerSyncPacket(players);
 			for(EntityPlayer player: world.playerEntities) TerramapPacketHandler.INSTANCE.sendTo(pkt, (EntityPlayerMP)player);

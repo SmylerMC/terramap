@@ -14,25 +14,27 @@ import org.lwjgl.input.Mouse;
 
 import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.TerramapServer;
 import fr.smyler.terramap.TerramapUtils;
 import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.config.TerramapServerPreferences;
+import fr.smyler.terramap.gui.widgets.CopyrightNoticeWidget;
 import fr.smyler.terramap.gui.widgets.GuiTexturedButton;
 import fr.smyler.terramap.gui.widgets.RightClickMenu;
 import fr.smyler.terramap.gui.widgets.poi.EntityPOI;
 import fr.smyler.terramap.gui.widgets.poi.LocationPOI;
 import fr.smyler.terramap.gui.widgets.poi.PlayerPOI;
 import fr.smyler.terramap.gui.widgets.poi.PointOfInterest;
-import fr.smyler.terramap.gui.widgets.CopyrightNoticeWidget;
 import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
 import fr.smyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
 import fr.smyler.terramap.maps.utils.WebMercatorUtils;
+import fr.smyler.terramap.network.TerramapLocalPlayer;
+import fr.smyler.terramap.network.TerramapPlayer;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -45,7 +47,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 
 public class GuiTiledMap extends GuiScreen {
 
@@ -61,7 +62,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected double mapVelocityX, mapVelocityY = 0;
 	protected EarthGeneratorSettings genSettings = null;
 	protected GeographicProjection projection;
-	protected boolean manualProjection = false;
+	@Deprecated protected boolean manualProjection = false;
 
 	protected boolean debug = false; //Show tiles borders or not
 	protected PointOfInterest followedPOI = null;
@@ -82,15 +83,15 @@ public class GuiTiledMap extends GuiScreen {
 	protected PlayerPOI thePlayerPOI; //Ourself
 	protected int lastEntityPoiRenderedCount = 0; //Used for debug output
 	protected int lastPlayerPoiRenderedCount = 0;
-	protected World world; 
 
-	public GuiTiledMap(TiledMap<?>[] maps, World world) {
+	//TODO Do not save the whole map, it would cause problems if the player changes (dies or goes through the end portal)
+	public GuiTiledMap(TiledMap<?>[] maps) {
 		this.map = maps[0];
 		this.availableMaps = maps;
-		this.world = world;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		if(this.manualProjection == false) {
-			this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
+//			this.genSettings = TerramapMod.proxy.getCurrentEarthGeneratorSettings(null); //We are on client, world is not needed
+			this.genSettings = TerramapServer.getServer().getGeneratorSettings();
 			if(this.genSettings == null) {
 				String savedSettings = TerramapServerPreferences.getServerGenSettings(Minecraft.getMinecraft().getCurrentServerData().serverIP);
 				if(savedSettings.length() != 0) {
@@ -114,12 +115,14 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
-		this.thePlayerPOI = new PlayerPOI((AbstractClientPlayer)player);
+		this.thePlayerPOI = new PlayerPOI(new TerramapLocalPlayer(player));
 		this.setZoom(17);
 	}
 
 	@Override
 	public void initGui() {
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		this.thePlayerPOI =  new PlayerPOI(new TerramapLocalPlayer(player));
 		if(this.genSettings != null) this.projection = this.genSettings.getProjection();
 		else {
 			TerramapMod.logger.info("Projection was not available");
@@ -443,25 +446,25 @@ public class GuiTiledMap extends GuiScreen {
 		Set<UUID> toUntrackPlayers = new HashSet<UUID>();
 		toUntrackPlayers.addAll(this.playerPOIs.keySet());
 		Set<Entity> toTrackEntities = new HashSet<Entity>();
-		Set<AbstractClientPlayer> toTrackPlayers = new HashSet<AbstractClientPlayer>();
-		for(Entity entity: this.world.loadedEntityList) {
+		Set<TerramapPlayer> toTrackPlayers = new HashSet<TerramapPlayer>();
+		for(Entity entity: TerramapServer.getServer().getEntities()) {
 			if(!toUntrackEntities.remove(entity.getPersistentID())
 					&& this.shouldTrackEntity(entity)
 					&& !(entity instanceof EntityPlayer)) {
 				toTrackEntities.add(entity);
 			}
 		}
-		for(EntityPlayer player: this.world.playerEntities) {
-			if(!toUntrackPlayers.remove(player.getPersistentID())
-					&& !player.getPersistentID().equals(this.thePlayerPOI.getEntity().getPersistentID())){
-				toTrackPlayers.add((AbstractClientPlayer)player);
+		for(TerramapPlayer player: TerramapServer.getServer().getPlayers()) {
+			if(!toUntrackPlayers.remove(player.getUUID())
+					&& !player.getUUID().equals(this.thePlayerPOI.getPlayer().getUUID())){
+				toTrackPlayers.add(player);
 			}
 		}
 		for(Entity entity: toTrackEntities) {
 			this.entityPOIs.put(entity.getPersistentID(), new EntityPOI(entity));
 		}
-		for(AbstractClientPlayer player: toTrackPlayers) {
-			this.playerPOIs.put(player.getPersistentID(), new PlayerPOI(player));
+		for(TerramapPlayer player: toTrackPlayers) {
+			this.playerPOIs.put(player.getUUID(), new PlayerPOI(player));
 		}
 		for(UUID uid: toUntrackEntities) this.entityPOIs.remove(uid);
 		for(UUID uid: toUntrackPlayers) this.playerPOIs.remove(uid);

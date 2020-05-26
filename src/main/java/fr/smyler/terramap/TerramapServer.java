@@ -11,17 +11,22 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import fr.smyler.terramap.config.TerramapServerPreferences;
 import fr.smyler.terramap.forgeessentials.FeWarp;
-import fr.smyler.terramap.network.SyncedPlayer;
+import fr.smyler.terramap.network.TerramapLocalPlayer;
+import fr.smyler.terramap.network.TerramapPlayer;
+import fr.smyler.terramap.network.TerramapRemotePlayer;
 import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class TerramapServer {
 
 	private static TerramapServer instance;
 
-	private Map<UUID, SyncedPlayer> players = new HashMap<UUID, SyncedPlayer>();
+	private Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<UUID, TerramapRemotePlayer>();
 	private boolean installedOnServer = false;
 	private boolean syncPlayers = false;
 	private EarthGeneratorSettings genSettings = null;
@@ -30,6 +35,13 @@ public class TerramapServer {
 		this.installedOnServer = installedOnServer;
 		this.syncPlayers = syncPlayers;
 		this.genSettings = genSettings;
+		if(this.genSettings == null) {
+			String sttgStr = TerramapServerPreferences.getServerGenSettings(this.getCurrentServerIdentifer());
+			if(sttgStr.length() > 0) {
+				this.genSettings = new EarthGeneratorSettings(sttgStr);
+				TerramapMod.logger.info("Got generator settings from server preferences file");
+			}
+		}
 	}
 	
 	public boolean isInstalledOnServer() {
@@ -40,41 +52,67 @@ public class TerramapServer {
 		return this.syncPlayers;
 	}
 	
-	public Collection<SyncedPlayer> getPlayers() {
+	public Collection<TerramapPlayer> getPlayers() {
+		Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
 		if(this.isInstalledOnServer()) {
-			return this.players.values();
-		} else {
-			List<SyncedPlayer> players = new ArrayList<SyncedPlayer>();
-			for(EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) players.add(new SyncedPlayer(player));
-			return players;
+			players.putAll(this.remotePlayers);
 		}
+		players.putAll(this.getLocalPlayers());
+		return players.values();
 	}
 
+	private Map<UUID, TerramapPlayer> getLocalPlayers() {
+		Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
+		for(EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) {
+			players.put(player.getPersistentID(), new TerramapLocalPlayer(player));
+		}
+		return players;
+	}
+	
 	public EarthGeneratorSettings getGeneratorSettings() {
 		return this.genSettings;
 	}
-
-	public List<FeWarp> getFeWarps() {
-		return null; //TODO GetFeWarps
+	
+	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
+		this.genSettings = genSettings;
+	}
+	
+	public void saveGeneratorSettings() {
+		TerramapServerPreferences.setServerGenSettings(this.getCurrentServerIdentifer(), this.genSettings.toString());
+		TerramapServerPreferences.save();
 	}
 
-	public void syncPlayers(SyncedPlayer[] players) {
-		TerramapMod.logger.info("Got player packet");
-		Set<SyncedPlayer> toAdd = new HashSet<SyncedPlayer>();
+	public List<FeWarp> getFeWarps() {
+		return new ArrayList<FeWarp>(); //TODO getFeWarps
+	}
+
+	public void syncPlayers(TerramapRemotePlayer[] players) {
+		Set<TerramapRemotePlayer> toAdd = new HashSet<TerramapRemotePlayer>();
 		Set<UUID> toRemove = new HashSet<UUID>();
-		toRemove.addAll(this.players.keySet());
-		for(SyncedPlayer player: players) {
+		toRemove.addAll(this.remotePlayers.keySet());
+		for(TerramapRemotePlayer player: players) {
 			if(toRemove.remove(player.getUUID())) {
-				SyncedPlayer savedPlayer = this.players.get(player.getUUID());
+				TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
 				savedPlayer.setDisplayName(player.getDisplayName());
 				savedPlayer.setPosX(player.getPosX());
 				savedPlayer.setPosZ(player.getPosZ());
 			} else toAdd.add(player);
 		}
-		for(UUID uid: toRemove) this.players.remove(uid);
-		for(SyncedPlayer sp: toAdd) this.players.put(sp.getUUID(), sp);
+		for(UUID uid: toRemove) this.remotePlayers.remove(uid);
+		for(TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
 	}
 	
+	
+	public List<Entity> getEntities() {
+		return Minecraft.getMinecraft().world.loadedEntityList;
+	}
+	
+	public String getCurrentServerIdentifer() {
+		ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+		if(servData == null) return "wip@locahost"; //TODO Find something for single player
+		return servData.serverName + "@" + servData.serverIP;
+	}
+
 	public static TerramapServer getServer() {
 		return TerramapServer.instance;
 	}
