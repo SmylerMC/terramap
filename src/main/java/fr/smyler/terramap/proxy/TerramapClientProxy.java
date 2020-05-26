@@ -20,7 +20,6 @@ import fr.smyler.terramap.network.TerramapPacketHandler;
 import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -29,7 +28,6 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy{
 
-	private EarthGeneratorSettings genSettings;
 	private static GuiTiledMap tiledMap = null;
 
 
@@ -66,32 +64,10 @@ public class TerramapClientProxy extends TerramapProxy{
 
 		TerramapServer.setServer(new TerramapServer(true, true, settings));
 
-		//TODO Remove old sync code
-		if(settings == null) {
-			TerramapMod.logger.error("Received a null projection from Server");
-		} else {
-			TerramapMod.logger.info("Got generation settings from server: " + settings.toString());
-			this.genSettings = settings;
-		}
-
-	}
-
-	@Override
-	public EarthGeneratorSettings getCurrentEarthGeneratorSettings(World world) {
-		return this.genSettings;
 	}
 
 	@Override
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-		if(event.player.equals(Minecraft.getMinecraft().player)) {
-			TerramapServer.resetServer();
-
-			//TODO remove old sync code
-			this.genSettings = null;
-			TerramapMod.logger.debug("Removed genSettings");
-			TerramapClientProxy.resetTiledMap();
-		}
-
 	}
 
 	@Override

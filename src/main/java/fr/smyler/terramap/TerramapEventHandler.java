@@ -16,6 +16,8 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
@@ -44,9 +46,19 @@ public final class TerramapEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) { //FIXME Never caled on Client
+	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) { //FIXME Never called on Client
 		TerramapMod.proxy.onPlayerLoggedOut(event);
 	}
+	
+	@SubscribeEvent
+	public static void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
+		TerramapServer.resetServer();
+	}
+	
+	@SubscribeEvent
+	public static void onClientConnected(ClientConnectedToServerEvent event) {
+	}
+	
 
 	@SubscribeEvent
 	public static void onWorldTick(WorldTickEvent event) {

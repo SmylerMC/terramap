@@ -1,10 +1,8 @@
 package fr.smyler.terramap.proxy;
 
 import fr.smyler.terramap.TerramapMod;
-import fr.smyler.terramap.network.ProjectionSyncPacket;
 import fr.smyler.terramap.network.TerramapPacketHandler;
 import io.github.terra121.EarthGeneratorSettings;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -30,23 +28,18 @@ public class TerramapServerProxy extends TerramapProxy{
 	}
 
 	@Override
-	public EarthGeneratorSettings getCurrentEarthGeneratorSettings(World world) {
-		return ProjectionSyncPacket.getEarthGeneratorSettingsFromWorld(world);
-	}
-
-	@Override
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
 		// We don't care about that on servers
-	}
-
-	@Override
-	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 	}
 
 	@Override
 	public float getDefaultGuiSize() {
 		// Don't care on server, this is just for the client config
 		return 0;
+	}
+
+	@Override
+	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 	}
 
 }
