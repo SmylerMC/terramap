@@ -1,5 +1,6 @@
 package fr.smyler.terramap;
 
+import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.network.PlayerSyncPacket;
 import fr.smyler.terramap.network.ProjectionSyncPacket;
 import fr.smyler.terramap.network.TerramapLocalPlayer;
@@ -43,14 +44,15 @@ public final class TerramapEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
+	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) { //FIXME Never caled on Client
 		TerramapMod.proxy.onPlayerLoggedOut(event);
 	}
 
 	@SubscribeEvent
 	public static void onWorldTick(WorldTickEvent event) {
 		//TODO Only sync players which changed
-		if(!event.phase.equals(TickEvent.Phase.START)) return;
+		if(!TerramapConfiguration.synchronizePlayers) return;
+		if(!event.phase.equals(TickEvent.Phase.END)) return;
 		 World world = event.world.getMinecraftServer().worlds[0];
 		if(!(world.getWorldType() instanceof EarthWorldType)) return;
 		if(tickCounter == 0) {
@@ -61,7 +63,7 @@ public final class TerramapEventHandler {
 			IMessage pkt = new PlayerSyncPacket(players);
 			for(EntityPlayer player: world.playerEntities) TerramapPacketHandler.INSTANCE.sendTo(pkt, (EntityPlayerMP)player);
 		}
-		tickCounter = (tickCounter+1) % 20;
+		tickCounter = (tickCounter+1) % TerramapConfiguration.syncInterval;
 	}
 
 }

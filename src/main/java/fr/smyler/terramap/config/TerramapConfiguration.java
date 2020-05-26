@@ -56,6 +56,18 @@ public class TerramapConfiguration{
 	@Config.LangKey("terramap.config.ignore_projection_warning")
 	@Config.Comment("Show a warning on the map if the projection was not available and allows to manually set one")
 	public static boolean ignoreProjectionWarning = false;
+	
+	@Config.Name("synchronize_players")
+	@Config.LangKey("terramap.config.sync_players")
+	@Config.Comment("Wether or not to synchronize players from server to client so everyone appears on the map, no matter the distance")
+	public static boolean synchronizePlayers = false;
+	
+	@Config.Name("sync_interval")
+	@Config.LangKey("terramap.config.sync_interval")
+	@Config.Comment("Synchronization time interval, int ticks, higher means better perfomance but a map which lacks behind a bit more, effective on server-side only")
+	@Config.RangeInt(min=1, max=100)
+	@Config.SlidingOption
+	public static int syncInterval = 10;
 
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	

@@ -114,6 +114,7 @@ public class TerramapServer {
 	}
 
 	public static TerramapServer getServer() {
+		if(TerramapServer.instance == null) TerramapServer.resetServer();
 		return TerramapServer.instance;
 	}
 	
