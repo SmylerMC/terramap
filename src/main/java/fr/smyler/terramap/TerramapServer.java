@@ -42,7 +42,7 @@ public class TerramapServer {
 	private String serverVersion = null;
 	private EarthGeneratorSettings genSettings = null;
 	private boolean isRegisteredForUpdates = false;
-	
+
 
 	public TerramapServer(String serverVersion, boolean syncPlayers, boolean syncSpectators, boolean hasFe, @Nullable EarthGeneratorSettings genSettings) {
 		this.serverVersion = serverVersion;
@@ -58,19 +58,19 @@ public class TerramapServer {
 			}
 		}
 	}
-	
+
 	public TerramapServer() {
-		
+
 	}
-	
+
 	public boolean isInstalledOnServer() {
 		return this.serverVersion != null; 
 	}
-	
+
 	public boolean arePlayersSynchronized() {
 		return this.syncPlayers;
 	}
-	
+
 	public Collection<TerramapPlayer> getPlayers() {
 		Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
 		if(this.isInstalledOnServer()) {
@@ -87,24 +87,29 @@ public class TerramapServer {
 		}
 		return players;
 	}
-	
+
 	public EarthGeneratorSettings getGeneratorSettings() {
 		return this.genSettings;
 	}
-	
+
 	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
 		this.genSettings = genSettings;
 	}
-	
+
 	public void saveSettings() {
-		TerramapServerPreferences.setServerGenSettings(this.getCurrentServerIdentifer(), this.genSettings.toString());
-		TerramapServerPreferences.save();
+		try {
+			TerramapServerPreferences.setServerGenSettings(this.getCurrentServerIdentifer(), this.genSettings.toString());
+			TerramapServerPreferences.save();
+		} catch(Exception e) {
+			TerramapMod.logger.info("Failed to save server preference file");
+			TerramapMod.logger.catching(e);
+		}
 	}
 
 	public boolean doesSyncFeStuff() {
 		return this.serverHasFe;
 	}
-	
+
 	public List<FeWarp> getFeWarps() {
 		return new ArrayList<FeWarp>(); //TODO getFeWarps
 	}
@@ -124,34 +129,34 @@ public class TerramapServer {
 		for(UUID uid: toRemove) this.remotePlayers.remove(uid);
 		for(TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
 	}
-	
+
 	public boolean syncSpectators() {
 		return this.syncSpectators; //TODO Move and rename
 	}
-	
-	
+
+
 	public List<Entity> getEntities() {
 		return Minecraft.getMinecraft().world.loadedEntityList;
 	}
-	
+
 	public String getCurrentServerIdentifer() {
 		ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
 		if(servData == null) return "wip@locahost"; //TODO Find something for single player
 		return servData.serverName + "@" + servData.serverIP;
 	}
-	
+
 	public SavedMapState getSavedMap() {
 		return new SavedMapState(TerramapServerPreferences.getServerMapState(this.getCurrentServerIdentifer()));
 	}
-	
+
 	public boolean hasSavedMap() {
 		return TerramapServerPreferences.getServerMapState(this.getCurrentServerIdentifer()).length() != 0;
 	}
-	
+
 	public void setSavedMap(SavedMapState svd) {
 		TerramapServerPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd.toString());
 	}
-	
+
 	public void registerForUpdates(boolean yesNo) {
 		this.isRegisteredForUpdates = yesNo;
 		if(this.isInstalledOnServer())TerramapPacketHandlers.INSTANCE.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
@@ -161,12 +166,12 @@ public class TerramapServer {
 		if(TerramapServer.instance == null) TerramapServer.resetServer();
 		return TerramapServer.instance;
 	}
-	
+
 	public static void resetServer() {
 		TerramapMod.logger.info("Reseting server information");
 		TerramapServer.instance = new TerramapServer();
 	}
-	
+
 	public static void setServer(TerramapServer server) {
 		TerramapServer.instance = server;
 	}
