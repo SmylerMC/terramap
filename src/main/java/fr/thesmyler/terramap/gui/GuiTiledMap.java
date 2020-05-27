@@ -411,7 +411,7 @@ public class GuiTiledMap extends GuiScreen {
 		for(EntityPOI poi: this.entityPOIs.values()) {
 			double lon = poi.getLongitude();
 			double lat = poi.getLatitude();
-			if(lon == Double.NaN || lat == Double.NaN) continue;
+			if(Double.isNaN(lon) || Double.isNaN(lat)) continue;
 			long lx = (long) this.getScreenX(lon);
 			long ly = (long) this.getScreenY(lat);
 			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
@@ -430,7 +430,7 @@ public class GuiTiledMap extends GuiScreen {
 		for(PlayerPOI poi: this.playerPOIs.values()) {
 			double lon = poi.getLongitude();
 			double lat = poi.getLatitude();
-			if(lon == Double.NaN || lat == Double.NaN) continue;
+			if(Double.isNaN(lon) || Double.isNaN(lat)) continue;
 			long lx = (long) this.getScreenX(lon);
 			long ly = (long) this.getScreenY(lat);
 			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
