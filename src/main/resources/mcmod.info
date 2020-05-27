@@ -2,14 +2,14 @@
 {
   "modid": "terramap",
   "name": "Terramap",
-  "description": "A tiled map in minecraft as an addon for terra121",
+  "description": "A tiled map in minecraft as an addon for terra121, with cools features such as teleport or open in various web map services. All developed with the aim to make building or visiting the Earth easier and faster.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://www.curseforge.com/minecraft/mc-mods/terramap",
   "updateUrl": "",
   "authorList": ["TheSmyler"],
-  "credits": "All the Terra121 team for this amazing mod, specifically orangeadam3 and shejan0 from whom I stole the projection menu code for Terramap. OpenStreetMap contributors for the map data.",
-  "logoFile": "",
+  "credits": "All the Terra121 team for this amazing mod, there would of course be no Terramap without Terra121. Drope for the cool logo. Nalili for helping breaking the mod so I could repare it. OpenStreetMap contributors for the map data.",
+  "logoFile": "terramap.png",
   "screenshots": [],
   "dependencies": ["terra121"]
 }
