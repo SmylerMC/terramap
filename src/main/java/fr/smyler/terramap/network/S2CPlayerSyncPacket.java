@@ -9,14 +9,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PlayerSyncPacket implements IMessage {
+public class S2CPlayerSyncPacket implements IMessage {
 	
 	protected TerramapLocalPlayer[] localPlayers;
 	protected TerramapRemotePlayer[] remotePlayers;
 	
-	public PlayerSyncPacket() {} //Required by forge
+	public S2CPlayerSyncPacket() {} //Required by forge
 	
-	public PlayerSyncPacket(TerramapLocalPlayer[] players) {
+	public S2CPlayerSyncPacket(TerramapLocalPlayer[] players) {
 		this.localPlayers = players;
 	}
 
@@ -29,9 +29,10 @@ public class PlayerSyncPacket implements IMessage {
 			UUID uuid = new UUID(mostUUID, leastUUID);
 			double x = buf.readDouble();
 			double z = buf.readDouble();
+			boolean spec = buf.readBoolean();
 			int nameLen = buf.readInt();
 			String name = buf.readCharSequence(nameLen, Charset.forName("utf-8")).toString();
-			this.remotePlayers[i] = new TerramapRemotePlayer(uuid, name, x, z);
+			this.remotePlayers[i] = new TerramapRemotePlayer(uuid, name, x, z, spec);
 		}
 	}
 
@@ -43,19 +44,20 @@ public class PlayerSyncPacket implements IMessage {
 			buf.writeLong(player.getUUID().getMostSignificantBits());
 			buf.writeDouble(player.getPosX());
 			buf.writeDouble(player.getPosZ());
+			buf.writeBoolean(player.isSpectator());
 			String playerDisplayName = player.getDisplayName();
 			buf.writeInt(playerDisplayName.length());
 			buf.writeCharSequence(playerDisplayName, Charset.forName("utf-8"));
 		}
 	}
 	
-	public static class PlayerSyncPacketHandler implements IMessageHandler<PlayerSyncPacket, IMessage> {
+	public static class S2CPlayerSyncPacketHandler implements IMessageHandler<S2CPlayerSyncPacket, IMessage> {
 
 		//Required by forge
-		public PlayerSyncPacketHandler(){}
+		public S2CPlayerSyncPacketHandler(){}
 		
 		@Override
-		public IMessage onMessage(PlayerSyncPacket message, MessageContext ctx) {
+		public IMessage onMessage(S2CPlayerSyncPacket message, MessageContext ctx) {
 			if(TerramapServer.getServer() != null) {
 				TerramapServer.getServer().syncPlayers(message.remotePlayers);
 			}

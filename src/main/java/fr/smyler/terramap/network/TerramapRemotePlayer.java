@@ -19,12 +19,14 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	protected String displayName;
 	protected double posX;
 	protected double posZ;
+	protected boolean isSpectator;
 	
-	public TerramapRemotePlayer(UUID uuid, String name, double x, double z) {
+	public TerramapRemotePlayer(UUID uuid, String name, double x, double z, boolean isSpectator) {
 		this.uuid = uuid;
 		this.displayName = name;
 		this.posX = x;
 		this.posZ = z;
+		this.isSpectator = isSpectator;
 	}
 
 	@Override
@@ -67,6 +69,11 @@ public class TerramapRemotePlayer extends TerramapPlayer {
         Map<Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(profile);
         if (map.containsKey(Type.SKIN)) return minecraft.getSkinManager().loadSkin(map.get(Type.SKIN), Type.SKIN);
         else return DefaultPlayerSkin.getDefaultSkin(this.getUUID());
+	}
+
+	@Override
+	public boolean isSpectator() {
+		return this.isSpectator;
 	}
 
 }

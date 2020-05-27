@@ -42,4 +42,9 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 		return ((AbstractClientPlayer)this.player).getLocationSkin();
 	}
 
+	@Override
+	public boolean isSpectator() {
+		return this.player.isSpectator();
+	}
+
 }

@@ -13,13 +13,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class ProjectionSyncPacket implements IMessage {
+public class S2CTerramapHelloPacket implements IMessage {
 
 	public EarthGeneratorSettings settings;
 	
-	public ProjectionSyncPacket() {}
+	public S2CTerramapHelloPacket() {}
 	
-	public ProjectionSyncPacket(EarthGeneratorSettings settings) {
+	public S2CTerramapHelloPacket(EarthGeneratorSettings settings) {
 		this.settings = settings;
 	}
 
@@ -37,13 +37,13 @@ public class ProjectionSyncPacket implements IMessage {
 		buf.writeCharSequence(str, Charset.forName("ascii"));
 	}
 	
-	public static class ProjectionSyncPacketHandler implements IMessageHandler<ProjectionSyncPacket, IMessage> {
+	public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {
 
 		//Required by forge ?
-		public ProjectionSyncPacketHandler(){}
+		public S2CTerramapHelloPacketHandler(){}
 		
 		@Override
-		public IMessage onMessage(ProjectionSyncPacket message, MessageContext ctx) {
+		public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {
 			TerramapMod.proxy.onSyncProjection(message.settings);
 			return null;
 		}

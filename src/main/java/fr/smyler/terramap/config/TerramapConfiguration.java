@@ -68,6 +68,11 @@ public class TerramapConfiguration{
 	@Config.RangeInt(min=1, max=100)
 	@Config.SlidingOption
 	public static int syncInterval = 10;
+	
+	@Config.Name("sync_spectators")
+	@Config.LangKey("terramap.config.sync_spec")
+	@Config.Comment("Synchronize spectator players or not")
+	public static boolean syncSpectators = true;
 
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	

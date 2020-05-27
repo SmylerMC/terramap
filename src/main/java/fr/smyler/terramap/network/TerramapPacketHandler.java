@@ -19,8 +19,8 @@ public class TerramapPacketHandler {
 	 * @param side
 	 */
 	public static void registerHandlers(Side side){
-		INSTANCE.registerMessage(ProjectionSyncPacket.ProjectionSyncPacketHandler.class, ProjectionSyncPacket.class, discriminator++, Side.CLIENT);
-		INSTANCE.registerMessage(PlayerSyncPacket.PlayerSyncPacketHandler.class, PlayerSyncPacket.class, discriminator++, Side.CLIENT);
+		INSTANCE.registerMessage(S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class, discriminator++, Side.CLIENT);
+		INSTANCE.registerMessage(S2CPlayerSyncPacket.S2CPlayerSyncPacketHandler.class, S2CPlayerSyncPacket.class, discriminator++, Side.CLIENT);
 	}
 	
 }

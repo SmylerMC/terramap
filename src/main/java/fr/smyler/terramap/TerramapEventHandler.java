@@ -1,8 +1,11 @@
 package fr.smyler.terramap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.smyler.terramap.config.TerramapConfiguration;
-import fr.smyler.terramap.network.PlayerSyncPacket;
-import fr.smyler.terramap.network.ProjectionSyncPacket;
+import fr.smyler.terramap.network.S2CPlayerSyncPacket;
+import fr.smyler.terramap.network.S2CTerramapHelloPacket;
 import fr.smyler.terramap.network.TerramapLocalPlayer;
 import fr.smyler.terramap.network.TerramapPacketHandler;
 import io.github.terra121.EarthGeneratorSettings;
@@ -38,9 +41,9 @@ public final class TerramapEventHandler {
 		EntityPlayerMP player = (EntityPlayerMP)event.player;
 		World world = player.getEntityWorld();
 		if(!(world.getWorldType() instanceof EarthWorldType)) return;
-		EarthGeneratorSettings settings = ProjectionSyncPacket.getEarthGeneratorSettingsFromWorld(world);
+		EarthGeneratorSettings settings = S2CTerramapHelloPacket.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
-		IMessage data = new ProjectionSyncPacket(settings);
+		IMessage data = new S2CTerramapHelloPacket(settings);
 		TerramapPacketHandler.INSTANCE.sendTo(data, player);
 
 	}
@@ -65,14 +68,16 @@ public final class TerramapEventHandler {
 		//TODO Only sync players which changed
 		if(!TerramapConfiguration.synchronizePlayers) return;
 		if(!event.phase.equals(TickEvent.Phase.END)) return;
-		 World world = event.world.getMinecraftServer().worlds[0];
+		World world = event.world.getMinecraftServer().worlds[0];
 		if(!(world.getWorldType() instanceof EarthWorldType)) return;
 		if(tickCounter == 0) {
-			TerramapLocalPlayer[] players = new TerramapLocalPlayer[world.playerEntities.size()];
-			for(int i=0; i<players.length; i++) {
-				players[i] = new TerramapLocalPlayer(world.playerEntities.get(i));
+			List<TerramapLocalPlayer> players = new ArrayList<TerramapLocalPlayer>();
+			for(EntityPlayer player: world.playerEntities) {
+				TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
+				if(terraPlayer.isSpectator() && !TerramapConfiguration.syncSpectators) continue;
+				players.add(terraPlayer);
 			}
-			IMessage pkt = new PlayerSyncPacket(players);
+			IMessage pkt = new S2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));
 			for(EntityPlayer player: world.playerEntities) TerramapPacketHandler.INSTANCE.sendTo(pkt, (EntityPlayerMP)player);
 		}
 		tickCounter = (tickCounter+1) % TerramapConfiguration.syncInterval;

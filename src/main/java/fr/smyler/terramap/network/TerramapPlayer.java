@@ -16,6 +16,8 @@ public abstract class TerramapPlayer {
 
 	public abstract double getPosZ();
 	
+	public abstract boolean isSpectator();
+	
 	@SideOnly(Side.CLIENT)
 	public abstract ResourceLocation getSkin();
 

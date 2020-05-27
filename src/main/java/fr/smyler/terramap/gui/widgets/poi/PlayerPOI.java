@@ -8,6 +8,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
 //TODO Smaller head size option
+//TODO Render spectators differently
 public class PlayerPOI extends PointOfInterest {
 
 	private TerramapPlayer player;
