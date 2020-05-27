@@ -2,7 +2,7 @@ package fr.smyler.terramap.proxy;
 
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.network.S2CTerramapHelloPacket;
-import fr.smyler.terramap.network.TerramapPacketHandler;
+import fr.smyler.terramap.network.TerramapPacketHandlers;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -13,7 +13,7 @@ public class TerramapServerProxy extends TerramapProxy{
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
-		TerramapPacketHandler.registerHandlers(Side.SERVER);
+		TerramapPacketHandlers.registerHandlers(Side.SERVER);
 		TerramapMod.logger.debug("Terramap server pre-init");
 	}
 

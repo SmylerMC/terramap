@@ -1,13 +1,16 @@
 package fr.smyler.terramap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import fr.smyler.terramap.config.TerramapConfiguration;
 import fr.smyler.terramap.network.S2CPlayerSyncPacket;
 import fr.smyler.terramap.network.S2CTerramapHelloPacket;
 import fr.smyler.terramap.network.TerramapLocalPlayer;
-import fr.smyler.terramap.network.TerramapPacketHandler;
+import fr.smyler.terramap.network.TerramapPacketHandlers;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.EarthWorldType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,6 +35,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 @Mod.EventBusSubscriber(modid=TerramapMod.MODID)
 public final class TerramapEventHandler {
 
+	
+	public static Map<UUID, EntityPlayerMP> playersToUpdate= new HashMap<UUID, EntityPlayerMP>(); //TODO Remove player after some time
 	private static long tickCounter = 0;
 
 	@SubscribeEvent
@@ -44,13 +49,14 @@ public final class TerramapEventHandler {
 		EarthGeneratorSettings settings = S2CTerramapHelloPacket.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
 		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfiguration.synchronizePlayers, TerramapConfiguration.syncSpectators, false);
-		TerramapPacketHandler.INSTANCE.sendTo(data, player);
+		TerramapPacketHandlers.INSTANCE.sendTo(data, player);
 
 	}
 
 	@SubscribeEvent
-	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) { //FIXME Never called on Client
+	public static void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
 		TerramapMod.proxy.onPlayerLoggedOut(event);
+		TerramapEventHandler.playersToUpdate.remove(event.player.getPersistentID());
 	}
 	
 	@SubscribeEvent
@@ -65,7 +71,6 @@ public final class TerramapEventHandler {
 
 	@SubscribeEvent
 	public static void onWorldTick(WorldTickEvent event) {
-		//TODO Only sync players which changed
 		if(!TerramapConfiguration.synchronizePlayers) return;
 		if(!event.phase.equals(TickEvent.Phase.END)) return;
 		World world = event.world.getMinecraftServer().worlds[0];
@@ -78,7 +83,7 @@ public final class TerramapEventHandler {
 				players.add(terraPlayer);
 			}
 			IMessage pkt = new S2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));
-			for(EntityPlayer player: world.playerEntities) TerramapPacketHandler.INSTANCE.sendTo(pkt, (EntityPlayerMP)player);
+			for(EntityPlayerMP player: TerramapEventHandler.playersToUpdate.values()) TerramapPacketHandlers.INSTANCE.sendTo(pkt, player);
 		}
 		tickCounter = (tickCounter+1) % TerramapConfiguration.syncInterval;
 	}

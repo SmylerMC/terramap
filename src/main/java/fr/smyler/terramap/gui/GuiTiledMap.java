@@ -92,6 +92,7 @@ public class GuiTiledMap extends GuiScreen {
 		Keyboard.enableRepeatEvents(true);
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		TerramapServer serv = TerramapServer.getServer();
+		serv.registerForUpdates(true);
 		EarthGeneratorSettings genSettings = serv.getGeneratorSettings();
 		if(genSettings != null) this.projection = genSettings.getProjection();
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
@@ -671,6 +672,7 @@ public class GuiTiledMap extends GuiScreen {
 		TerramapServer.getServer().saveSettings();
 		super.onGuiClosed();
 		this.map.unloadAll();
+		TerramapServer.getServer().registerForUpdates(false);
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.EarthTerrainProcessor;
 import io.github.terra121.EarthWorldType;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -62,7 +63,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {
-			TerramapMod.proxy.onServerHello(message);
+			Minecraft.getMinecraft().addScheduledTask(()->{TerramapMod.proxy.onServerHello(message);});
 			return null;
 		}
 		

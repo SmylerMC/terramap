@@ -14,7 +14,9 @@ import javax.annotation.Nullable;
 import fr.smyler.terramap.config.TerramapServerPreferences;
 import fr.smyler.terramap.forgeessentials.FeWarp;
 import fr.smyler.terramap.gui.GuiTiledMap.SavedMapState;
+import fr.smyler.terramap.network.C2SRegisterForUpdatesPacket;
 import fr.smyler.terramap.network.TerramapLocalPlayer;
+import fr.smyler.terramap.network.TerramapPacketHandlers;
 import fr.smyler.terramap.network.TerramapPlayer;
 import fr.smyler.terramap.network.TerramapRemotePlayer;
 import io.github.terra121.EarthGeneratorSettings;
@@ -124,7 +126,7 @@ public class TerramapServer {
 	}
 	
 	public boolean syncSpectators() {
-		return this.syncSpectators;
+		return this.syncSpectators; //TODO Move and rename
 	}
 	
 	
@@ -148,6 +150,11 @@ public class TerramapServer {
 	
 	public void setSavedMap(SavedMapState svd) {
 		TerramapServerPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd.toString());
+	}
+	
+	public void registerForUpdates(boolean yesNo) {
+		this.isRegisteredForUpdates = yesNo;
+		if(this.isInstalledOnServer())TerramapPacketHandlers.INSTANCE.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
 	}
 
 	public static TerramapServer getServer() {

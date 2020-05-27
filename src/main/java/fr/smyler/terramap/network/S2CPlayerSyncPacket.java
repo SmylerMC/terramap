@@ -5,17 +5,18 @@ import java.util.UUID;
 
 import fr.smyler.terramap.TerramapServer;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class S2CPlayerSyncPacket implements IMessage {
-	
+
 	protected TerramapLocalPlayer[] localPlayers;
 	protected TerramapRemotePlayer[] remotePlayers;
-	
+
 	public S2CPlayerSyncPacket() {} //Required by forge
-	
+
 	public S2CPlayerSyncPacket(TerramapLocalPlayer[] players) {
 		this.localPlayers = players;
 	}
@@ -50,20 +51,18 @@ public class S2CPlayerSyncPacket implements IMessage {
 			buf.writeCharSequence(playerDisplayName, Charset.forName("utf-8"));
 		}
 	}
-	
+
 	public static class S2CPlayerSyncPacketHandler implements IMessageHandler<S2CPlayerSyncPacket, IMessage> {
 
 		//Required by forge
 		public S2CPlayerSyncPacketHandler(){}
-		
+
 		@Override
 		public IMessage onMessage(S2CPlayerSyncPacket message, MessageContext ctx) {
-			if(TerramapServer.getServer() != null) {
-				TerramapServer.getServer().syncPlayers(message.remotePlayers);
-			}
+			Minecraft.getMinecraft().addScheduledTask(()->{TerramapServer.getServer().syncPlayers(message.remotePlayers);});
 			return null;
 		}
-		
+
 
 	}
 
