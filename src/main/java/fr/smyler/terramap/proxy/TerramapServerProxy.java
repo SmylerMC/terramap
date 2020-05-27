@@ -1,8 +1,8 @@
 package fr.smyler.terramap.proxy;
 
 import fr.smyler.terramap.TerramapMod;
+import fr.smyler.terramap.network.S2CTerramapHelloPacket;
 import fr.smyler.terramap.network.TerramapPacketHandler;
-import io.github.terra121.EarthGeneratorSettings;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -23,7 +23,7 @@ public class TerramapServerProxy extends TerramapProxy{
 	}
 
 	@Override
-	public void onSyncProjection(EarthGeneratorSettings s) {
+	public void onServerHello(S2CTerramapHelloPacket s) {
 		// Should never be called on server
 	}
 

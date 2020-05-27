@@ -16,8 +16,8 @@ import fr.smyler.terramap.input.KeyBindings;
 import fr.smyler.terramap.maps.TiledMap;
 import fr.smyler.terramap.maps.TiledMaps;
 import fr.smyler.terramap.maps.tiles.RasterWebTile;
+import fr.smyler.terramap.network.S2CTerramapHelloPacket;
 import fr.smyler.terramap.network.TerramapPacketHandler;
-import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -60,10 +60,10 @@ public class TerramapClientProxy extends TerramapProxy{
 	}
 
 	@Override
-	public void onSyncProjection(EarthGeneratorSettings settings) {
-
-		TerramapServer.setServer(new TerramapServer(true, true, settings));
-
+	public void onServerHello(S2CTerramapHelloPacket pkt) {
+		TerramapMod.logger.info("Got server hello, remote version is " + pkt.serverVersion);
+		TerramapMod.logger.debug("sync players: " + pkt.syncPlayers + " sync spec: " + pkt.syncSpectators + " hasFe: " + pkt.hasFe);
+		TerramapServer.setServer(new TerramapServer(pkt.serverVersion, pkt.syncPlayers, pkt.syncSpectators, pkt.hasFe, pkt.settings));
 	}
 
 	@Override

@@ -16,25 +16,43 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class S2CTerramapHelloPacket implements IMessage {
 
 	public EarthGeneratorSettings settings;
+	public String serverVersion;
+	public boolean syncPlayers;
+	public boolean syncSpectators;
+	public boolean hasFe; //Forge essentials
 	
 	public S2CTerramapHelloPacket() {}
 	
-	public S2CTerramapHelloPacket(EarthGeneratorSettings settings) {
+	public S2CTerramapHelloPacket(String serverVersion, EarthGeneratorSettings settings, boolean syncPlayers, boolean syncSpectators, boolean hasFe) {
 		this.settings = settings;
+		this.serverVersion = serverVersion;
+		this.syncPlayers = syncPlayers;
+		this.syncSpectators = syncSpectators;
+		this.hasFe = hasFe;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+		int vlen = buf.readInt();
+		this.serverVersion = buf.readCharSequence(vlen, Charset.forName("utf-8")).toString();
+		this.syncPlayers = buf.readBoolean();
+		this.syncSpectators = buf.readBoolean();
+		this.hasFe = buf.readBoolean();
 		int nl = buf.readInt();
-		String settings = buf.readCharSequence(nl, Charset.forName("ascii")).toString(); //No fancy utf?
+		String settings = buf.readCharSequence(nl, Charset.forName("utf-8")).toString();
 		this.settings = new EarthGeneratorSettings(settings);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		String str = this.settings.toString();
-		buf.writeInt(str.length());
-		buf.writeCharSequence(str, Charset.forName("ascii"));
+		String settingsStr = this.settings.toString();
+		buf.writeInt(this.serverVersion.length());
+		buf.writeCharSequence(this.serverVersion, Charset.forName("utf-8"));
+		buf.writeBoolean(this.syncPlayers);
+		buf.writeBoolean(this.syncSpectators);
+		buf.writeBoolean(this.hasFe);
+		buf.writeInt(settingsStr.length());
+		buf.writeCharSequence(settingsStr, Charset.forName("utf-8"));
 	}
 	
 	public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {
@@ -44,7 +62,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {
-			TerramapMod.proxy.onSyncProjection(message.settings);
+			TerramapMod.proxy.onServerHello(message);
 			return null;
 		}
 		

@@ -23,18 +23,30 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * Used to represent the server from the client
+ * 
+ * @author hector
+ *
+ */
 public class TerramapServer {
 
 	private static TerramapServer instance;
 
 	private Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<UUID, TerramapRemotePlayer>();
-	private boolean installedOnServer = false;
 	private boolean syncPlayers = false;
+	private boolean syncSpectators = false;
+	private boolean serverHasFe = false;
+	private String serverVersion = null;
 	private EarthGeneratorSettings genSettings = null;
+	private boolean isRegisteredForUpdates = false;
+	
 
-	public TerramapServer(boolean installedOnServer, boolean syncPlayers, @Nullable EarthGeneratorSettings genSettings) {
-		this.installedOnServer = installedOnServer;
+	public TerramapServer(String serverVersion, boolean syncPlayers, boolean syncSpectators, boolean hasFe, @Nullable EarthGeneratorSettings genSettings) {
+		this.serverVersion = serverVersion;
 		this.syncPlayers = syncPlayers;
+		this.syncSpectators = syncSpectators;
+		this.serverHasFe = hasFe;
 		this.genSettings = genSettings;
 		if(this.genSettings == null) {
 			String sttgStr = TerramapServerPreferences.getServerGenSettings(this.getCurrentServerIdentifer());
@@ -45,8 +57,12 @@ public class TerramapServer {
 		}
 	}
 	
+	public TerramapServer() {
+		
+	}
+	
 	public boolean isInstalledOnServer() {
-		return this.installedOnServer; 
+		return this.serverVersion != null; 
 	}
 	
 	public boolean arePlayersSynchronized() {
@@ -83,6 +99,10 @@ public class TerramapServer {
 		TerramapServerPreferences.save();
 	}
 
+	public boolean doesSyncFeStuff() {
+		return this.serverHasFe;
+	}
+	
 	public List<FeWarp> getFeWarps() {
 		return new ArrayList<FeWarp>(); //TODO getFeWarps
 	}
@@ -101,6 +121,10 @@ public class TerramapServer {
 		}
 		for(UUID uid: toRemove) this.remotePlayers.remove(uid);
 		for(TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
+	}
+	
+	public boolean syncSpectators() {
+		return this.syncSpectators;
 	}
 	
 	
@@ -133,7 +157,7 @@ public class TerramapServer {
 	
 	public static void resetServer() {
 		TerramapMod.logger.info("Reseting server information");
-		TerramapServer.instance = new TerramapServer(false, false, null);
+		TerramapServer.instance = new TerramapServer();
 	}
 	
 	public static void setServer(TerramapServer server) {

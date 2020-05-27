@@ -43,7 +43,7 @@ public final class TerramapEventHandler {
 		if(!(world.getWorldType() instanceof EarthWorldType)) return;
 		EarthGeneratorSettings settings = S2CTerramapHelloPacket.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
-		IMessage data = new S2CTerramapHelloPacket(settings);
+		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfiguration.synchronizePlayers, TerramapConfiguration.syncSpectators, false);
 		TerramapPacketHandler.INSTANCE.sendTo(data, player);
 
 	}
