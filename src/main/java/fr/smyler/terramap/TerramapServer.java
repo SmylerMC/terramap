@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 
 import fr.smyler.terramap.config.TerramapServerPreferences;
 import fr.smyler.terramap.forgeessentials.FeWarp;
+import fr.smyler.terramap.gui.GuiTiledMap.SavedMapState;
 import fr.smyler.terramap.network.TerramapLocalPlayer;
 import fr.smyler.terramap.network.TerramapPlayer;
 import fr.smyler.terramap.network.TerramapRemotePlayer;
@@ -77,7 +78,7 @@ public class TerramapServer {
 		this.genSettings = genSettings;
 	}
 	
-	public void saveGeneratorSettings() {
+	public void saveSettings() {
 		TerramapServerPreferences.setServerGenSettings(this.getCurrentServerIdentifer(), this.genSettings.toString());
 		TerramapServerPreferences.save();
 	}
@@ -112,6 +113,18 @@ public class TerramapServer {
 		if(servData == null) return "wip@locahost"; //TODO Find something for single player
 		return servData.serverName + "@" + servData.serverIP;
 	}
+	
+	public SavedMapState getSavedMap() {
+		return new SavedMapState(TerramapServerPreferences.getServerMapState(this.getCurrentServerIdentifer()));
+	}
+	
+	public boolean hasSavedMap() {
+		return TerramapServerPreferences.getServerMapState(this.getCurrentServerIdentifer()).length() != 0;
+	}
+	
+	public void setSavedMap(SavedMapState svd) {
+		TerramapServerPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd.toString());
+	}
 
 	public static TerramapServer getServer() {
 		if(TerramapServer.instance == null) TerramapServer.resetServer();
@@ -119,6 +132,7 @@ public class TerramapServer {
 	}
 	
 	public static void resetServer() {
+		TerramapMod.logger.info("Reseting server information");
 		TerramapServer.instance = new TerramapServer(false, false, null);
 	}
 	

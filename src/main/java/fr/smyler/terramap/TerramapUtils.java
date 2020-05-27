@@ -3,6 +3,7 @@ package fr.smyler.terramap;
 import java.security.MessageDigest;
 import java.util.Random;
 
+import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -61,6 +62,26 @@ public abstract class TerramapUtils {
 		} catch(Exception e) {
 			return false;
 		}
+	}
+	
+	/**
+	 * This function is just a wrapper around GeographicProjection::toGeo
+	 * It's here in order to handle mapping Minecraft 0/0 to geographic 0°/0° instead of NaN/NaN
+	 * 
+	 * https://github.com/orangeadam3/terra121/issues/136
+	 * 
+	 * @param proj
+	 * @param x
+	 * @param z
+	 * @return double array [longitude, latitude]
+	 */
+	public static double[] toGeo(GeographicProjection proj, double x, double z) {
+		if(x == 0d && z == 0d) return new double[] {0, 0};
+		return proj.toGeo(x, z);
+	}
+	
+	public static double[] fromGeo(GeographicProjection proj, double longitude, double latitude) {
+		return proj.fromGeo(longitude, latitude);
 	}
 	
 }

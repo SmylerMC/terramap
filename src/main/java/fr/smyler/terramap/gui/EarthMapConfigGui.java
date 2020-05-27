@@ -47,7 +47,7 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 
 	public EarthMapConfigGui(GuiTiledMap parent, Minecraft mc) {
 
-		EarthGeneratorSettings parentCfg = parent.getGenerationSettings();
+		EarthGeneratorSettings parentCfg = TerramapServer.getServer().getGeneratorSettings();
 		if(parentCfg == null) cfg = new EarthGeneratorSettings("");
 		else cfg = new EarthGeneratorSettings(parentCfg.toString());
 
@@ -166,7 +166,7 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 	public void mouseClicked(int mouseX, int mouseY, int mouseEvent) {
 		if(done.mousePressed(mc, mouseX, mouseY)) {
 			TerramapServer.getServer().setGeneratorSettings(this.cfg);
-			TerramapServer.getServer().saveGeneratorSettings();
+			TerramapServer.getServer().saveSettings();
 			this.mc.displayGuiScreen(this.parent); ///exit
 			return;
 

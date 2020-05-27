@@ -1,5 +1,6 @@
 package fr.smyler.terramap.gui.widgets.poi;
 
+import fr.smyler.terramap.TerramapUtils;
 import fr.smyler.terramap.network.TerramapPlayer;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
@@ -58,7 +59,7 @@ public class PlayerPOI extends PointOfInterest {
 	public void updatePosition(GeographicProjection projection) {
 		double x = this.player.getPosX();
 		double z = this.player.getPosZ();
-		double coords[] = projection.toGeo(x, z);
+		double coords[] = TerramapUtils.toGeo(projection, x, z);
 		this.longitude = coords[0];
 		this.latitude = coords[1];
 	}

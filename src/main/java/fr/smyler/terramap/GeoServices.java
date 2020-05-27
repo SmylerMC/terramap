@@ -52,6 +52,7 @@ public abstract class GeoServices {
 	}
 	
 	public static String formatGeoCoordForDisplay(double x) {
+		if(x==Double.NaN) return "-";
 		return decFormat.format(x);
 	}
 	

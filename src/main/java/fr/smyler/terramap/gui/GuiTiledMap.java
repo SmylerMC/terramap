@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import com.google.gson.Gson;
 import fr.smyler.terramap.GeoServices;
 import fr.smyler.terramap.TerramapMod;
 import fr.smyler.terramap.TerramapServer;
@@ -60,7 +61,6 @@ public class GuiTiledMap extends GuiScreen {
 	protected double mouseLong, mouseLat = 0;
 	protected int lastMouseClickX, lastMouseClickY = -1;
 	protected double mapVelocityX, mapVelocityY = 0;
-	protected EarthGeneratorSettings genSettings = null;
 	protected GeographicProjection projection;
 
 	protected boolean debug = false; //Show tiles borders or not
@@ -91,21 +91,26 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void initGui() {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		this.genSettings = TerramapServer.getServer().getGeneratorSettings();
-		if(this.genSettings != null) {
-			this.projection = this.genSettings.getProjection();
-			double coords[] = this.projection.toGeo(player.posX, player.posZ);
-			this.focusLatitude = coords[1];
-			this.focusLongitude = coords[0];
-		} else {
-			TerramapMod.logger.info("Projection was not available");
-			this.focusLatitude = 0;
-			this.focusLongitude = 0;
-			this.setZoomToMinimum();
-		}
+		TerramapServer serv = TerramapServer.getServer();
+		EarthGeneratorSettings genSettings = serv.getGeneratorSettings();
+		if(genSettings != null) this.projection = genSettings.getProjection();
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
 		this.thePlayerPOI = new PlayerPOI(new TerramapLocalPlayer(player));
+		this.updatePOIs();
+		if(serv.hasSavedMap()) {
+			this.setFromSavedState(serv.getSavedMap());
+			TerramapMod.logger.debug("Restored saved map state");
+		} else if(this.projection != null){
+			TerramapMod.logger.debug("Focused map on player");
+			this.focusOn(this.thePlayerPOI); //TODO Make sure it's on the map
+			this.setZoom(17);
+		} else {
+			TerramapMod.logger.debug("Focused map to origine as no projection or saved state was available");
+			this.focusLatitude=0;
+			this.focusLongitude = 0;
+			this.zoomLevel = this.map.getMinZoom();
+		}
 		int buttonId = 0;
 		this.rclickMenu = new RightClickMenu();
 		this.rclickMenu.init(fontRenderer);
@@ -114,7 +119,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_geo"), () -> {GuiScreen.setClipboardString("" + this.mouseLong + " " + this.mouseLat);});
 		if(this.projection != null) {
 			this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_mc"), ()->{
-				double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
+				double[] coords = TerramapUtils.fromGeo(this.projection, this.mouseLong, this.mouseLat);
 				String dispX = "" + Math.round(coords[0]);
 				String dispY = "" + Math.round(coords[1]);
 				GuiScreen.setClipboardString(dispX + " " + dispY);
@@ -145,7 +150,6 @@ public class GuiTiledMap extends GuiScreen {
 		this.addButton(this.centerOnPlayerButton);
 		this.addButton(this.copyright);
 		if(this.availableMaps.length > 1) this.addButton(this.tilesetButton);
-		this.setZoom(17);
 		this.updateMouseGeoPos(this.width/2, this.height/2);
 	}
 
@@ -286,7 +290,7 @@ public class GuiTiledMap extends GuiScreen {
 		String dispLong = GeoServices.formatGeoCoordForDisplay(this.mouseLong);
 		lines.add(I18n.format("terramap.mapgui.information.mouse_geo", dispLat, dispLong));
 		if(this.projection != null) {
-			double[] coords = this.projection.fromGeo(this.mouseLong, this.mouseLat);
+			double[] coords = TerramapUtils.fromGeo(this.projection, this.mouseLong, this.mouseLat);
 			String dispX = "" + Math.round(coords[0]);
 			String dispZ = "" + Math.round(coords[1]);
 			lines.add(I18n.format("terramap.mapgui.information.mouse_mc", dispX, dispZ));
@@ -294,9 +298,9 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.followedPOI != null) {
 			lines.add(I18n.format("terramap.mapgui.information.followed", this.followedPOI.getDisplayName()));
 		}
-		if((this.debug || !TerramapServer.getServer().isInstalledOnServer()) && this.genSettings != null) {
-			lines.add(I18n.format("terramap.mapgui.information.projection", this.genSettings.settings.projection));
-			lines.add(I18n.format("terramap.mapgui.information.orientation", this.genSettings.settings.orentation));
+		if((this.debug || !TerramapServer.getServer().isInstalledOnServer()) && TerramapServer.getServer().getGeneratorSettings() != null) {
+			lines.add(I18n.format("terramap.mapgui.information.projection", TerramapServer.getServer().getGeneratorSettings().settings.projection));
+			lines.add(I18n.format("terramap.mapgui.information.orientation", TerramapServer.getServer().getGeneratorSettings().settings.orentation));
 		}
 		if(this.debug) {
 			String mapLa = GeoServices.formatGeoCoordForDisplay(this.focusLatitude);
@@ -627,6 +631,8 @@ public class GuiTiledMap extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
+		TerramapServer.getServer().setSavedMap(new SavedMapState(this.zoomLevel, this.focusLongitude, this.focusLatitude));
+		TerramapServer.getServer().saveSettings();
 		super.onGuiClosed();
 		this.map.unloadAll();
 	}
@@ -820,20 +826,50 @@ public class GuiTiledMap extends GuiScreen {
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2)
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
 	}
-
-	public EarthGeneratorSettings getGenerationSettings() {
-		return genSettings;
+	
+	protected void setFromSavedState(SavedMapState state) {
+		this.focusLatitude = state.centerLatitude;
+		this.focusLongitude = state.centerLongitude;
+		this.zoomLevel = state.zoomLevel;
 	}
-
-	public void setGenerationSettings(EarthGeneratorSettings genSettings) {
-		this.genSettings = genSettings;
+	
+	public void focusOn(PointOfInterest poi) {
+		this.focusLatitude = poi.getLatitude();
+		this.focusLongitude = poi.getLongitude();
 	}
-
-
-
-}
-
-//Thrown when trying to call a method which needs the projection but it is null
-class NoProjection extends Exception {
-	private static final long serialVersionUID = 5954255037351370636L;
+	
+	public static class SavedMapState {
+		
+		double centerLongitude = 0d;
+		double centerLatitude = 0d;
+		int zoomLevel = 0;
+		
+		public SavedMapState(String str) {
+			if(str.length() == 0) return;
+			SavedMapState svd = new Gson().fromJson(str, this.getClass());
+			this.centerLatitude = svd.centerLatitude;
+			this.centerLongitude = svd.centerLongitude;
+			this.zoomLevel = svd.zoomLevel;
+		}
+		
+		public SavedMapState(int z, double lon, double lat) {
+			this.centerLongitude = lon;
+			this.centerLatitude = lat;
+			this.zoomLevel = z;
+			//TODO Followed entity
+			//TODO Map style
+		}
+		
+		@Override
+		public String toString() {
+			try {
+				return new Gson().toJson(this);
+			}catch(Exception e) {
+				TerramapMod.logger.error("Failed to generate map state json!");
+				TerramapMod.logger.catching(e);
+				return "";
+			}
+		}
+		
+	}
 }

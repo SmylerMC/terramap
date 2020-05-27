@@ -21,12 +21,28 @@ public class TerramapServerPreferences {
 	private static File file = null;
 
 	private static final String GEN_SETTINGS_KEY = "genSettings";
+	private static final String MAP_STATE_KEY = "mapState";
 
 	public static String getServerGenSettings(String serverId) {
 		return preferences.getOrDefault(serverId, new HashMap<String, String>())
 				.getOrDefault(GEN_SETTINGS_KEY, "");
 	}
+	
+	public static String getServerMapState(String serverId) {
+		String state = preferences.getOrDefault(serverId, new HashMap<String, String>())
+				.getOrDefault(MAP_STATE_KEY, "");
+		return state;
+	}
 
+	public static void setServerMapState(String serverId, String mapState) {
+		Map<String, String> serv = preferences.get(serverId);
+		if(serv == null) {
+			serv =  new HashMap<String, String>();
+			preferences.put(serverId, serv);
+		}
+		serv.put(MAP_STATE_KEY, mapState);
+	}
+	
 	public static void setServerGenSettings(String serverId, String genSettings) {
 		Map<String, String> serv = preferences.get(serverId);
 		if(serv == null) {

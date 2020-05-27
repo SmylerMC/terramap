@@ -1,5 +1,6 @@
 package fr.smyler.terramap.gui.widgets.poi;
 
+import fr.smyler.terramap.TerramapUtils;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.entity.Entity;
 
@@ -15,7 +16,7 @@ public class EntityPOI extends PointOfInterest {
 	public void updatePosition(GeographicProjection projection) {
 		double x = this.entity.posX;
 		double z = this.entity.posZ;
-		double coords[] = projection.toGeo(x, z);
+		double coords[] = TerramapUtils.toGeo(projection, x, z);
 		this.longitude = coords[0];
 		this.latitude = coords[1];
 	}
