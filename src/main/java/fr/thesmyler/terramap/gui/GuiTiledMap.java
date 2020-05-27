@@ -99,7 +99,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.entityPOIs = new HashMap<UUID, EntityPOI>();
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
 		this.thePlayerPOI = new PlayerPOI(new TerramapLocalPlayer(player));
-		this.updatePOIs();
+		if(this.projection != null) this.updatePOIs();
 		if(serv.hasSavedMap()) {
 			this.setFromSavedState(serv.getSavedMap());
 			TerramapMod.logger.debug("Restored saved map state");

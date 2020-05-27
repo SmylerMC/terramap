@@ -70,6 +70,10 @@ public class TerramapServer {
 	public boolean arePlayersSynchronized() {
 		return this.syncPlayers;
 	}
+	
+	public boolean areSpectatorsSynchronized() {
+		return this.syncSpectators;
+	}
 
 	public Collection<TerramapPlayer> getPlayers() {
 		Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
@@ -128,10 +132,6 @@ public class TerramapServer {
 		}
 		for(UUID uid: toRemove) this.remotePlayers.remove(uid);
 		for(TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
-	}
-
-	public boolean syncSpectators() {
-		return this.syncSpectators; //TODO Move and rename
 	}
 
 
