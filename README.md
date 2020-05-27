@@ -8,7 +8,7 @@ Terramap will work best if it is installed both on the server and the client. Th
 
 Terramap is still in beta, si it's likely to have a few bugs and still lacks intended features. It also has no translation yet.
 
-If you have any questions, suggestions or bugs to report, feel free to stop by the [Terramap Discord](https://discord.gg/zSMq3GN"Terramap Discord").
+If you have any questions, suggestions or bugs to report, feel free to stop by the [Terramap Discord](https://discord.gg/zSMq3GN "Terramap Discord").
 
 Logo by [@DropeArt](https://twitter.com/DropeArt)
 
