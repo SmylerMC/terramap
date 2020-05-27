@@ -1,13 +1,9 @@
 package fr.smyler.terramap.network;
 
-import java.util.Map;
 import java.util.UUID;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -20,6 +16,7 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	protected double posX;
 	protected double posZ;
 	protected boolean isSpectator;
+	protected NetworkPlayerInfo playerInfo;
 	
 	public TerramapRemotePlayer(UUID uuid, String name, double x, double z, boolean isSpectator) {
 		this.uuid = uuid;
@@ -64,11 +61,10 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getSkin() {
-		GameProfile profile = new GameProfile(this.getUUID(), displayName);
-		Minecraft minecraft = Minecraft.getMinecraft();
-        Map<Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(profile);
-        if (map.containsKey(Type.SKIN)) return minecraft.getSkinManager().loadSkin(map.get(Type.SKIN), Type.SKIN);
-        else return DefaultPlayerSkin.getDefaultSkin(this.getUUID());
+		if(this.playerInfo == null) {
+			this.playerInfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(this.getUUID());
+		}
+		return this.playerInfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUUID()) : this.playerInfo.getLocationSkin();
 	}
 
 	@Override
