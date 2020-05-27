@@ -48,7 +48,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-//TODO Save map state when closing
 public class GuiTiledMap extends GuiScreen {
 
 	public static final ResourceLocation WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
@@ -102,9 +101,16 @@ public class GuiTiledMap extends GuiScreen {
 			this.setFromSavedState(serv.getSavedMap());
 			TerramapMod.logger.debug("Restored saved map state");
 		} else if(this.projection != null){
-			TerramapMod.logger.debug("Focused map on player");
-			this.focusOn(this.thePlayerPOI); //TODO Make sure it's on the map
-			this.setZoom(17);
+			if(Double.isNaN(this.thePlayerPOI.getLatitude()) || Double.isNaN(this.thePlayerPOI.getLongitude())) {
+				this.focusLatitude = 0;
+				this.focusLongitude = 0;
+				this.map.getMinZoom();
+				TerramapMod.logger.debug("Did not center on player as it's outside the map");
+			} else {
+				this.focusOn(this.thePlayerPOI);
+				this.setZoom(17);
+				TerramapMod.logger.debug("Focused map on player");
+			}
 		} else {
 			TerramapMod.logger.debug("Focused map to origine as no projection or saved state was available");
 			this.focusLatitude=0;
@@ -298,6 +304,29 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.followedPOI != null) {
 			lines.add(I18n.format("terramap.mapgui.information.followed", this.followedPOI.getDisplayName()));
 		}
+		if(this.projection != null) {
+			if(this.followedPOI == null) {
+				double playerLon = this.thePlayerPOI.getLongitude();
+				double playerLat = this.thePlayerPOI.getLatitude();
+				if(Double.isNaN(playerLon) || Double.isNaN(playerLat)) {
+					lines.add(I18n.format("terramap.mapgui.information.playeroutsidemap"));
+				} else {
+					String dispLo = GeoServices.formatGeoCoordForDisplay(playerLon);
+					String dispLa = GeoServices.formatGeoCoordForDisplay(playerLat);
+					lines.add(I18n.format("terramap.mapgui.information.playergeo", dispLo, dispLa));
+				}
+			} else {
+				double followedLon = this.followedPOI.getLongitude();
+				double followedLat = this.followedPOI.getLatitude();
+				if(Double.isNaN(followedLon) || Double.isNaN(followedLat)) {
+					lines.add(I18n.format("terramap.mapgui.information.followedoutsidemap", this.followedPOI.getDisplayName()));
+				} else {
+					String dispLo = GeoServices.formatGeoCoordForDisplay(followedLon);
+					String dispLa = GeoServices.formatGeoCoordForDisplay(followedLat);
+					lines.add(I18n.format("terramap.mapgui.information.followedgeo", this.followedPOI.getDisplayName(), dispLo, dispLa));
+				}
+			}
+		}
 		if((this.debug || !TerramapServer.getServer().isInstalledOnServer()) && TerramapServer.getServer().getGeneratorSettings() != null) {
 			lines.add(I18n.format("terramap.mapgui.information.projection", TerramapServer.getServer().getGeneratorSettings().settings.projection));
 			lines.add(I18n.format("terramap.mapgui.information.orientation", TerramapServer.getServer().getGeneratorSettings().settings.orentation));
@@ -314,7 +343,7 @@ public class GuiTiledMap extends GuiScreen {
 					" ePOIs: " + this.lastEntityPoiRenderedCount +"/" + this.entityPOIs.size() +
 					" pPOIs: " + this.lastPlayerPoiRenderedCount +"/" + playerPOICount);
 		}
-		Gui.drawRect(0, 0, 220, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
+		Gui.drawRect(0, 0, 230, lines.size() * (this.fontRenderer.FONT_HEIGHT + 10) + 10 , 0x80000000);
 		int i = 0;
 		for(String line: lines) this.drawString(this.fontRenderer, line, 10, 10*i++ + this.fontRenderer.FONT_HEIGHT * i, 0xFFFFFF);
 		Gui.drawRect(this.width - 30 , 30, this.width - 15, 30 + this.fontRenderer.FONT_HEIGHT + 10 , 0x80000000);
@@ -324,7 +353,7 @@ public class GuiTiledMap extends GuiScreen {
 		String lengthstr = "-";
 		int barwidth = 75;
 		if(Math.abs(latAtScreenBottom) < 85) {
-			
+
 			double circAtLat = TerramapUtils.EARTH_CIRCUMFERENCE * Math.cos(Math.toRadians(latAtScreenBottom));
 			double scale = circAtLat / WebMercatorUtils.getMapDimensionInPixel(this.zoomLevel) * barwidth;
 			String[] units = {"m", "km"};
@@ -371,14 +400,17 @@ public class GuiTiledMap extends GuiScreen {
 		int hoverPOIX = 0;
 		int hoverPOIY = 0;
 		PointOfInterest hoveredPOI = null;
-		if(this.thePlayerPOI != null) {
+		if(this.thePlayerPOI != null && !Double.isNaN(this.thePlayerPOI.getLatitude()) && !Double.isNaN(this.thePlayerPOI.getLongitude())) {
 			playerX = (long) this.getScreenX(this.thePlayerPOI.getLongitude());
 			playerY = (long) this.getScreenY(this.thePlayerPOI.getLatitude());
 			mainPlayerRendered = this.isPoiBBOnScreen(playerX, playerY, this.thePlayerPOI);
 		}
 		for(EntityPOI poi: this.entityPOIs.values()) {
-			long lx = (long) this.getScreenX(poi.getLongitude());
-			long ly = (long) this.getScreenY(poi.getLatitude());
+			double lon = poi.getLongitude();
+			double lat = poi.getLatitude();
+			if(lon == Double.NaN || lat == Double.NaN) continue;
+			long lx = (long) this.getScreenX(lon);
+			long ly = (long) this.getScreenY(lat);
 			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
 			int ix = (int)lx;
 			int iy = (int)ly;
@@ -393,8 +425,11 @@ public class GuiTiledMap extends GuiScreen {
 			}
 		}
 		for(PlayerPOI poi: this.playerPOIs.values()) {
-			long lx = (long) this.getScreenX(poi.getLongitude());
-			long ly = (long) this.getScreenY(poi.getLatitude());
+			double lon = poi.getLongitude();
+			double lat = poi.getLatitude();
+			if(lon == Double.NaN || lat == Double.NaN) continue;
+			long lx = (long) this.getScreenX(lon);
+			long ly = (long) this.getScreenY(lat);
 			if(!this.isPoiBBOnScreen(lx, ly, poi)) continue;
 			int ix = (int)lx;
 			int iy = (int)ly;
@@ -421,7 +456,6 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void updatePOIs() {
-		//We will have a problem if a local player goes remote
 		Set<UUID> toUntrackEntities = new HashSet<UUID>();
 		toUntrackEntities.addAll(this.entityPOIs.keySet()); //The key set is backed by the map, we can't mute it while iterating
 		Set<UUID> toUntrackPlayers = new HashSet<UUID>();
@@ -456,7 +490,7 @@ public class GuiTiledMap extends GuiScreen {
 			poi.updatePosition(this.projection);
 		}
 		if(this.thePlayerPOI != null) this.thePlayerPOI.updatePosition(this.projection);
-
+		if(this.followedPOI != null && (Double.isNaN(this.followedPOI.getLatitude()) || Double.isNaN(this.followedPOI.getLongitude()))) this.followedPOI = null;
 	}
 
 	@Override
@@ -826,24 +860,24 @@ public class GuiTiledMap extends GuiScreen {
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2)
 				|| this.isPointOverPOI(x2, y2, x1 + poi1.getXOffset() + poi1.getWidth(), y1 + poi1.getYOffset() + poi1.getHeight(), poi2);
 	}
-	
+
 	protected void setFromSavedState(SavedMapState state) {
 		this.focusLatitude = state.centerLatitude;
 		this.focusLongitude = state.centerLongitude;
 		this.zoomLevel = state.zoomLevel;
 	}
-	
+
 	public void focusOn(PointOfInterest poi) {
 		this.focusLatitude = poi.getLatitude();
 		this.focusLongitude = poi.getLongitude();
 	}
-	
+
 	public static class SavedMapState {
-		
+
 		double centerLongitude = 0d;
 		double centerLatitude = 0d;
 		int zoomLevel = 0;
-		
+
 		public SavedMapState(String str) {
 			if(str.length() == 0) return;
 			SavedMapState svd = new Gson().fromJson(str, this.getClass());
@@ -851,7 +885,7 @@ public class GuiTiledMap extends GuiScreen {
 			this.centerLongitude = svd.centerLongitude;
 			this.zoomLevel = svd.zoomLevel;
 		}
-		
+
 		public SavedMapState(int z, double lon, double lat) {
 			this.centerLongitude = lon;
 			this.centerLatitude = lat;
@@ -859,7 +893,7 @@ public class GuiTiledMap extends GuiScreen {
 			//TODO Followed entity
 			//TODO Map style
 		}
-		
+
 		@Override
 		public String toString() {
 			try {
@@ -870,6 +904,6 @@ public class GuiTiledMap extends GuiScreen {
 				return "";
 			}
 		}
-		
+
 	}
 }
