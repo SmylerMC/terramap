@@ -168,7 +168,7 @@ public class TerramapServer {
 	}
 	
 	public String getTpCommand() {
-		if(this.tpCommand != null) return TerramapConfiguration.tpllcmd;
+		if(this.tpCommand == null) return TerramapConfiguration.tpllcmd;
 		else return this.tpCommand;
 	}
 	
