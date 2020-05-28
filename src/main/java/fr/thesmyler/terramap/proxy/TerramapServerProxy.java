@@ -33,7 +33,7 @@ public class TerramapServerProxy extends TerramapProxy{
 	}
 
 	@Override
-	public float getDefaultGuiSize() {
+	public double getDefaultGuiSize() {
 		// Don't care on server, this is just for the client config
 		return 0;
 	}

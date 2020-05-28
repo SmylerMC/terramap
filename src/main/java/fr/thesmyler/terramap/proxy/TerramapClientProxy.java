@@ -83,7 +83,8 @@ public class TerramapClientProxy extends TerramapProxy {
 		List<TiledMap<?>> maps = new ArrayList<TiledMap<?>>();
 		if(TerramapUtils.isPirate()) {
 			maps.add(TiledMaps.WATERCOLOR);
-		} if(TerramapUtils.isBaguette()){
+		}
+		if(TerramapUtils.isBaguette()){
 			maps.add(TiledMaps.OSM_FRANCE);
 		}
 		maps.add(TiledMaps.OSM);
@@ -97,9 +98,14 @@ public class TerramapClientProxy extends TerramapProxy {
 	}
 
 	@Override
-	public float getDefaultGuiSize() {
+	public double getDefaultGuiSize() {
+		double[] acceptableFactors = {2.0, 1.0, 0.5, 0.25, 0.125};
+		double bestFactor = acceptableFactors[0];
 		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-		return 1f/scaledRes.getScaleFactor(); //FIXME Make sure this value is good
+		double computedFactor = 1f/scaledRes.getScaleFactor();
+		for(double factor: acceptableFactors)
+			if(Math.abs(computedFactor - factor) < Math.abs(bestFactor - computedFactor)) bestFactor = factor;
+		return bestFactor;
 	}
 
 }
