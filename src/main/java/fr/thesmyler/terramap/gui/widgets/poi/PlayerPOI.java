@@ -7,8 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
-//TODO Smaller head size option
-//TODO Render spectators differently
 public class PlayerPOI extends PointOfInterest {
 
 	private TerramapPlayer player;
@@ -23,9 +21,11 @@ public class PlayerPOI extends PointOfInterest {
 		GlStateManager.enableAlpha();
 		if(hovered) Gui.drawRect(x - 7, y - 7, x + 9, y + 9, 0x50000000);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
-		GlStateManager.color(255, 255, 255, 255);
+		if(this.player.isSpectator()) GlStateManager.color(1, 1, 1, 0.6f);
+		else GlStateManager.color(1, 1, 1, 1);
 		Gui.drawModalRectWithCustomSizedTexture(x - 8, y - 8, 16, 16, 16, 16, 128, 128);
 		Gui.drawModalRectWithCustomSizedTexture(x - 8, y - 8, 80, 16, 16, 16, 128, 128);
+		GlStateManager.color(1, 1, 1, 1);
 	}
 	
 	@Override
