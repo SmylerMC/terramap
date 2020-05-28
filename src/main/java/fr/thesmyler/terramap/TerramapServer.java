@@ -144,7 +144,6 @@ public class TerramapServer {
 			return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@localhost";
 		} else {
 			ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
-			if(servData == null) return "wip@locahost"; //TODO Find something for single player
 			return servData.serverName + "@" + servData.serverIP;
 		}
 	}

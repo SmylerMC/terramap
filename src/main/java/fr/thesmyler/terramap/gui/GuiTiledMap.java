@@ -669,7 +669,7 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
-		TerramapServer.getServer().setSavedMap(new SavedMapState(this.zoomLevel, this.focusLongitude, this.focusLatitude));
+		TerramapServer.getServer().setSavedMap(new SavedMapState(this.zoomLevel, this.focusLongitude, this.focusLatitude, this.map.getName()));
 		TerramapServer.getServer().saveSettings();
 		super.onGuiClosed();
 		this.map.unloadAll();
@@ -870,6 +870,14 @@ public class GuiTiledMap extends GuiScreen {
 		this.focusLatitude = state.centerLatitude;
 		this.focusLongitude = state.centerLongitude;
 		this.zoomLevel = state.zoomLevel;
+		for(TiledMap<?> map: this.availableMaps) {
+			if(map.getName().equals(state.mapStyle)) { 
+				this.map = map;
+				break;
+			}
+		}
+		if(this.map == null) this.map = this.availableMaps[0];
+		
 	}
 
 	public void focusOn(PointOfInterest poi) {
@@ -882,6 +890,7 @@ public class GuiTiledMap extends GuiScreen {
 		double centerLongitude = 0d;
 		double centerLatitude = 0d;
 		int zoomLevel = 0;
+		String mapStyle = "";
 
 		public SavedMapState(String str) {
 			if(str.length() == 0) return;
@@ -889,14 +898,15 @@ public class GuiTiledMap extends GuiScreen {
 			this.centerLatitude = svd.centerLatitude;
 			this.centerLongitude = svd.centerLongitude;
 			this.zoomLevel = svd.zoomLevel;
+			this.mapStyle = svd.mapStyle;
 		}
 
-		public SavedMapState(int z, double lon, double lat) {
+		public SavedMapState(int z, double lon, double lat, String mapStyle) {
 			this.centerLongitude = lon;
 			this.centerLatitude = lat;
 			this.zoomLevel = z;
+			this.mapStyle = mapStyle;
 			//TODO Followed entity
-			//TODO Map style
 		}
 
 		@Override
