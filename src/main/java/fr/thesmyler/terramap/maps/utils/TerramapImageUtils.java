@@ -8,8 +8,7 @@ import java.awt.image.BufferedImage;
  * @author SmylerMC
  *
  */
-//FIXME It conflicts with java  built ins
-public class ImageUtils {
+public class TerramapImageUtils {
 
 	/**
 	 * Converts an integer representing a pixel value to an array

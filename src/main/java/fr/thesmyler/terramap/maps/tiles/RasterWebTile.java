@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.caching.Cachable;
-import fr.thesmyler.terramap.maps.utils.ImageUtils;
+import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -87,7 +87,7 @@ public abstract class RasterWebTile implements Cachable {
 
 	private void loadImageFomFile(File f) throws IOException {
 		if(!f.exists() || !f.isFile()) {
-			this.image = ImageUtils.imageFromColor(this.size, this.size, this.defaultPixel);
+			this.image = TerramapImageUtils.imageFromColor(this.size, this.size, this.defaultPixel);
 		} else {
 			this.image = ImageIO.read(f);
 		}
@@ -101,7 +101,7 @@ public abstract class RasterWebTile implements Cachable {
 	 * @throws IOException 
 	 */
 	public int[] getPixel(int x, int y) throws IOException {
-		return ImageUtils.decodeRGBA2Array(this.getImage().getRGB(x, y));
+		return TerramapImageUtils.decodeRGBA2Array(this.getImage().getRGB(x, y));
 	}
 
 
@@ -178,7 +178,7 @@ public abstract class RasterWebTile implements Cachable {
 	public static void registerErrorTexture() {
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 		int color[] = {175, 175, 175};
-		RasterWebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(ImageUtils.imageFromColor(256,  256, color)));
+		RasterWebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
 
 	}
 

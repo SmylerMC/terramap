@@ -25,7 +25,7 @@ public class TerramapConfiguration{
 	@Config.Name("tpll_command")
 	@Config.LangKey("terramap.config.tpllcmd")
 	@Config.Comment("The base tpll command to use")
-	public static String tpllcmd = "/tpll {latitude} {longitude}"; //TODO Save per server
+	public static String tpllcmd = "/tpll {latitude} {longitude}";
 	
 	@Config.Name("force_client_tp_cmd")
 	@Config.LangKey("terramap.config.forcetpllcmd")
