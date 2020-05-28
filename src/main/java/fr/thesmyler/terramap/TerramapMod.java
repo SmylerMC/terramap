@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.caching.CacheManager;
@@ -10,6 +12,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = TerramapMod.MODID, name = TerramapMod.NAME, acceptableRemoteVersions = "*")
 public class TerramapMod {
@@ -51,14 +54,15 @@ public class TerramapMod {
     }
     
     @NetworkCheckHandler
-    public boolean isRemoteCompatible(String remoteVersion) {
-    	logger.info("Checking compatibility with remote version: " + remoteVersion); //TODO Remove debug statement
+    public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
+    	String remoteVersion = remote.get(TerramapMod.MODID);
+    	if(remoteVersion == null) return true; //Terramap is not installed on remote, this is fine
     	//Version prior to 1.0.0-beta5 do not have hello packet but projection sync packet
     	if(remoteVersion.contains("1.0.0-beta4")) return false;
     	if(remoteVersion.contains("1.0.0-beta3")) return false;
     	if(remoteVersion.contains("1.0.0-beta2")) return false;
     	if(remoteVersion.contains("1.0.0-beta1")) return false;
-    	return true; //Vanilla is compatible
+    	return true; //Anything else should be ok
     }
     
         
