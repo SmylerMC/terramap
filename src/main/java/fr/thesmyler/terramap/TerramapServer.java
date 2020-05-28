@@ -16,7 +16,7 @@ import fr.thesmyler.terramap.forgeessentials.FeWarp;
 import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
 import fr.thesmyler.terramap.network.C2SRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.TerramapLocalPlayer;
-import fr.thesmyler.terramap.network.TerramapPacketHandlers;
+import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.TerramapPlayer;
 import fr.thesmyler.terramap.network.TerramapRemotePlayer;
 import io.github.terra121.EarthGeneratorSettings;
@@ -159,7 +159,11 @@ public class TerramapServer {
 
 	public void registerForUpdates(boolean yesNo) {
 		this.isRegisteredForUpdates = yesNo;
-		if(this.isInstalledOnServer())TerramapPacketHandlers.INSTANCE.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+		if(this.isInstalledOnServer())TerramapNetworkManager.CHANNEL.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+	}
+	
+	public boolean needsUpdate() {
+		return this.isRegisteredForUpdates;
 	}
 
 	public static TerramapServer getServer() {

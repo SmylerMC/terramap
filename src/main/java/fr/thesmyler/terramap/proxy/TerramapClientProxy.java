@@ -17,7 +17,7 @@ import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.TiledMaps;
 import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
-import fr.thesmyler.terramap.network.TerramapPacketHandlers;
+import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -34,7 +34,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client pre-init");
-		TerramapPacketHandlers.registerHandlers(Side.CLIENT);
+		TerramapNetworkManager.registerHandlers(Side.CLIENT);
 		try {
 			TerramapMod.cacheManager = new CacheManager(TerramapConfiguration.cachingDir);
 			TerramapMod.cacheManager.createDirectory();

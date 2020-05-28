@@ -73,6 +73,12 @@ public class TerramapConfiguration{
 	@Config.LangKey("terramap.config.sync_spec")
 	@Config.Comment("Synchronize spectator players or not")
 	public static boolean syncSpectators = true;
+	
+	@Config.Name("sync_hearthbeet_timeout")
+	@Config.LangKey("terramap.config.sync_heartbeet")
+	@Config.RangeInt(min=20000)
+	@Config.Comment("If a client keep its map open more than this time, the server asks the client to confirm that it still needs map update. This is in milliseconds")
+	public static int syncHeartbeatTimeout = 120000;
 
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	

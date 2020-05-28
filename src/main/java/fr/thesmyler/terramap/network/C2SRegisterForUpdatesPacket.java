@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.network;
 
-import fr.thesmyler.terramap.TerramapEventHandler;
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.network.TerramapNetworkManager.RegisteredForUpdatePlayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
@@ -42,12 +42,12 @@ public class C2SRegisterForUpdatesPacket implements IMessage {
 		
 		public void registerPlayer(EntityPlayerMP player) {
 			TerramapMod.logger.debug("Registering player for map updates: " + player.getDisplayNameString()); //TODO Set to debug
-			TerramapEventHandler.playersToUpdate.put(player.getPersistentID(), player);
+			TerramapNetworkManager.playersToUpdate.put(player.getPersistentID(), new RegisteredForUpdatePlayer(player, System.currentTimeMillis()));
 		}
 		
 		public void unregisterPlayer(EntityPlayerMP player) {
-			TerramapMod.logger.debug("Unregistering player for map updates: " + player.getDisplayNameString()); //TODO Set to debug
-			TerramapEventHandler.playersToUpdate.remove(player.getPersistentID());
+			TerramapMod.logger.info("Unregistering player for map updates: " + player.getDisplayNameString()); //TODO Set to debug
+			TerramapNetworkManager.playersToUpdate.remove(player.getPersistentID());
 		}
 		
 	}
