@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 
 @Mod(modid = TerramapMod.MODID, name = TerramapMod.NAME, acceptableRemoteVersions = "*")
 public class TerramapMod {
@@ -47,6 +48,17 @@ public class TerramapMod {
     public static String getUserAgent() {
     	return "Terramap for the BTE project v" + TerramapMod.getVersion() +
     			" at https://github.com/SmylerMC/terramap by " + AUTHOR_EMAIL;
+    }
+    
+    @NetworkCheckHandler
+    public boolean isRemoteCompatible(String remoteVersion) {
+    	logger.info("Checking compatibility with remote version: " + remoteVersion); //TODO Remove debug statement
+    	//Version prior to 1.0.0-beta5 do not have hello packet but projection sync packet
+    	if(remoteVersion.contains("1.0.0-beta4")) return false;
+    	if(remoteVersion.contains("1.0.0-beta3")) return false;
+    	if(remoteVersion.contains("1.0.0-beta2")) return false;
+    	if(remoteVersion.contains("1.0.0-beta1")) return false;
+    	return true; //Vanilla is compatible
     }
     
         
