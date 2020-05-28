@@ -46,6 +46,7 @@ public abstract class TerramapUtils {
 	
 	public static boolean isBaguette() {
 		try {
+			if(Minecraft.getMinecraft().gameSettings.language.equalsIgnoreCase("fr_fr")) return true;
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(Minecraft.getMinecraft().getCurrentServerData().serverIP.getBytes());
 			byte[] theBaguette = {88, 65, -17, 73, 13, 8, 81, 32, 53, 2, 27, 14, 2, -3, -36, 11, -75, 79, 60, -103, -62, 80, 99, 30, 102, -84, 89, 44, 112, 53, 94, 36};
