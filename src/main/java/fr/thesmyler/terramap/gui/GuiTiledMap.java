@@ -31,8 +31,8 @@ import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
 import fr.thesmyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
-import fr.thesmyler.terramap.network.TerramapLocalPlayer;
-import fr.thesmyler.terramap.network.TerramapPlayer;
+import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
+import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
@@ -755,7 +755,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void teleportPlayerTo(double longitude, double latitude) {
-		String cmd = TerramapConfiguration.tpllcmd.replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
+		String cmd = TerramapServer.getServer().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
 		if(this.projection != null) {
 			double[] xz = projection.fromGeo(longitude, latitude);
 			cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);

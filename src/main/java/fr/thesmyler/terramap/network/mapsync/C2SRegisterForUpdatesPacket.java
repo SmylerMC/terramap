@@ -1,6 +1,7 @@
-package fr.thesmyler.terramap.network;
+package fr.thesmyler.terramap.network.mapsync;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.TerramapNetworkManager.RegisteredForUpdatePlayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;

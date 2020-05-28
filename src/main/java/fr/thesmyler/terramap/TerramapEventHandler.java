@@ -2,6 +2,7 @@ package fr.thesmyler.terramap;
 
 import fr.thesmyler.terramap.config.TerramapConfiguration;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
+import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.EarthWorldType;
@@ -39,6 +40,7 @@ public final class TerramapEventHandler {
 		if(settings == null) return;
 		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfiguration.synchronizePlayers, TerramapConfiguration.syncSpectators, false);
 		TerramapNetworkManager.CHANNEL.sendTo(data, player);
+		if(TerramapConfiguration.forceClientTpCmd) TerramapNetworkManager.CHANNEL.sendTo(new S2CTpCommandSyncPacket(TerramapConfiguration.tpllcmd), player);
 	}
 
 	@SubscribeEvent

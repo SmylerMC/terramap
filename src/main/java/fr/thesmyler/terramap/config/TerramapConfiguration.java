@@ -26,6 +26,11 @@ public class TerramapConfiguration{
 	@Config.LangKey("terramap.config.tpllcmd")
 	@Config.Comment("The base tpll command to use")
 	public static String tpllcmd = "/tpll {latitude} {longitude}"; //TODO Save per server
+	
+	@Config.Name("force_client_tp_cmd")
+	@Config.LangKey("terramap.config.forcetpllcmd")
+	@Config.Comment("If set to true, the server will force clients to use its own tp command, if false, client will use their own configuration")
+	public static boolean forceClientTpCmd = false;
 
 	@Config.Name("tile_scaling")
 	@Config.LangKey("terramap.config.tile_scaling")

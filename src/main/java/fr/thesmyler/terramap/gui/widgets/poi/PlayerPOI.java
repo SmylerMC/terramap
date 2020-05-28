@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.poi;
 
 import fr.thesmyler.terramap.TerramapUtils;
-import fr.thesmyler.terramap.network.TerramapPlayer;
+import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

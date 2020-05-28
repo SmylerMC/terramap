@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.network;
+package fr.thesmyler.terramap.network.mapsync;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;

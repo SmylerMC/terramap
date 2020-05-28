@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.network;
+package fr.thesmyler.terramap.network.mapsync;
 
 import java.nio.charset.Charset;
 import java.util.UUID;

@@ -11,14 +11,15 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.terramap.config.TerramapConfiguration;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.forgeessentials.FeWarp;
 import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
-import fr.thesmyler.terramap.network.C2SRegisterForUpdatesPacket;
-import fr.thesmyler.terramap.network.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
-import fr.thesmyler.terramap.network.TerramapPlayer;
-import fr.thesmyler.terramap.network.TerramapRemotePlayer;
+import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
+import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
+import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
+import fr.thesmyler.terramap.network.mapsync.TerramapRemotePlayer;
 import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
@@ -42,6 +43,7 @@ public class TerramapServer {
 	private String serverVersion = null;
 	private EarthGeneratorSettings genSettings = null;
 	private boolean isRegisteredForUpdates = false;
+	private String tpCommand = null;
 
 
 	public TerramapServer(String serverVersion, boolean syncPlayers, boolean syncSpectators, boolean hasFe, @Nullable EarthGeneratorSettings genSettings) {
@@ -163,6 +165,16 @@ public class TerramapServer {
 	public void registerForUpdates(boolean yesNo) {
 		this.isRegisteredForUpdates = yesNo;
 		if(this.isInstalledOnServer())TerramapNetworkManager.CHANNEL.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+	}
+	
+	public String getTpCommand() {
+		if(this.tpCommand != null) return TerramapConfiguration.tpllcmd;
+		else return this.tpCommand;
+	}
+	
+	public void setTpCommand(String tpCmd) {
+		TerramapMod.logger.info("Setting tp command defined by server");
+		this.tpCommand = tpCmd;
 	}
 	
 	public boolean needsUpdate() {

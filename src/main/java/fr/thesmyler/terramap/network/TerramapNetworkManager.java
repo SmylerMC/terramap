@@ -8,12 +8,21 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfiguration;
-import fr.thesmyler.terramap.network.S2CRegistrationExpiresPacket.S2CRegistrationExpiresPacketHandler;
+import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
+import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket.S2CTpCommandSyncPacketHandler;
+import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
+import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket.C2SRegisterForUpdatesPacketHandler;
+import fr.thesmyler.terramap.network.mapsync.S2CPlayerSyncPacket;
+import fr.thesmyler.terramap.network.mapsync.S2CPlayerSyncPacket.S2CPlayerSyncPacketHandler;
+import fr.thesmyler.terramap.network.mapsync.S2CRegistrationExpiresPacket;
+import fr.thesmyler.terramap.network.mapsync.S2CRegistrationExpiresPacket.S2CRegistrationExpiresPacketHandler;
+import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -33,10 +42,19 @@ public abstract class TerramapNetworkManager {
 	 * @param side
 	 */
 	public static void registerHandlers(Side side){
-		CHANNEL.registerMessage(S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class, discriminator++, Side.CLIENT);
-		CHANNEL.registerMessage(S2CPlayerSyncPacket.S2CPlayerSyncPacketHandler.class, S2CPlayerSyncPacket.class, discriminator++, Side.CLIENT);
-		CHANNEL.registerMessage(C2SRegisterForUpdatesPacket.C2SRegisterForUpdatesPacketHandler.class, C2SRegisterForUpdatesPacket.class, discriminator++, Side.SERVER);
-		CHANNEL.registerMessage(S2CRegistrationExpiresPacketHandler.class, S2CRegistrationExpiresPacket.class, discriminator++, Side.CLIENT);
+		registerS2C(S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
+		registerS2C(S2CPlayerSyncPacketHandler.class, S2CPlayerSyncPacket.class);
+		registerS2C(S2CRegistrationExpiresPacketHandler.class, S2CRegistrationExpiresPacket.class);
+		registerS2C(S2CTpCommandSyncPacketHandler.class, S2CTpCommandSyncPacket.class);
+		registerC2S(C2SRegisterForUpdatesPacketHandler.class, C2SRegisterForUpdatesPacket.class);
+	}
+	
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerS2C(Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL.registerMessage(handlerclass, msgclass, discriminator++, Side.CLIENT);
+	}
+	
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerC2S(Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL.registerMessage(handlerclass, msgclass, discriminator++, Side.SERVER);
 	}
 	
 	public static void syncPlayers(World world) {
