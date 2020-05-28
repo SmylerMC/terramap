@@ -41,12 +41,12 @@ public class C2SRegisterForUpdatesPacket implements IMessage {
 		}
 		
 		public void registerPlayer(EntityPlayerMP player) {
-			TerramapMod.logger.debug("Registering player for map updates: " + player.getDisplayNameString()); //TODO Set to debug
+			TerramapMod.logger.debug("Registering player for map updates: " + player.getDisplayNameString());
 			TerramapNetworkManager.playersToUpdate.put(player.getPersistentID(), new RegisteredForUpdatePlayer(player, System.currentTimeMillis()));
 		}
 		
 		public void unregisterPlayer(EntityPlayerMP player) {
-			TerramapMod.logger.info("Unregistering player for map updates: " + player.getDisplayNameString()); //TODO Set to debug
+			TerramapMod.logger.debug("Unregistering player for map updates: " + player.getDisplayNameString());
 			TerramapNetworkManager.playersToUpdate.remove(player.getPersistentID());
 		}
 		

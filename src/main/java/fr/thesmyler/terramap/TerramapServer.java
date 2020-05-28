@@ -140,9 +140,13 @@ public class TerramapServer {
 	}
 
 	public String getCurrentServerIdentifer() {
-		ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
-		if(servData == null) return "wip@locahost"; //TODO Find something for single player
-		return servData.serverName + "@" + servData.serverIP;
+		if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
+			return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@localhost";
+		} else {
+			ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+			if(servData == null) return "wip@locahost"; //TODO Find something for single player
+			return servData.serverName + "@" + servData.serverIP;
+		}
 	}
 
 	public SavedMapState getSavedMap() {

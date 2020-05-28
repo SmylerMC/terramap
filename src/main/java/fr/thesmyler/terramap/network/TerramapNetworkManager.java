@@ -25,7 +25,7 @@ public abstract class TerramapNetworkManager {
 	// Packet discriminator counter, should be increased for each packet type.
 	private static int discriminator = 0;
 	
-	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate= new HashMap<UUID, RegisteredForUpdatePlayer>(); //TODO Remove player after some time
+	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate= new HashMap<UUID, RegisteredForUpdatePlayer>();
 	
 	/**
 	 * Registers the handlers
