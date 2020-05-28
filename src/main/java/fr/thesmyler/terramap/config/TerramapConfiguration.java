@@ -54,7 +54,7 @@ public class TerramapConfiguration{
 
 	@Config.Name("ignore_projection_warning")
 	@Config.LangKey("terramap.config.ignore_projection_warning")
-	@Config.Comment("Show a warning on the map if the projection was not available and allows to manually set one")
+	@Config.Comment("Do not show a warning when the projection is not available")
 	public static boolean ignoreProjectionWarning = false;
 	
 	@Config.Name("synchronize_players")
@@ -64,20 +64,20 @@ public class TerramapConfiguration{
 	
 	@Config.Name("sync_interval")
 	@Config.LangKey("terramap.config.sync_interval")
-	@Config.Comment("Synchronization time interval, int ticks, higher means better perfomance but a map which lacks behind a bit more, effective on server-side only")
+	@Config.Comment("Synchronization time interval, int ticks, higher means better server perfomance but a map which lags behind a bit more")
 	@Config.RangeInt(min=1, max=100)
 	@Config.SlidingOption
 	public static int syncInterval = 10;
 	
 	@Config.Name("sync_spectators")
 	@Config.LangKey("terramap.config.sync_spec")
-	@Config.Comment("Synchronize spectator players or not")
+	@Config.Comment("Synchronize spectator players or not (players still need to be synchronized)")
 	public static boolean syncSpectators = true;
 	
 	@Config.Name("sync_hearthbeet_timeout")
 	@Config.LangKey("terramap.config.sync_heartbeet")
 	@Config.RangeInt(min=20000)
-	@Config.Comment("If a client keep its map open more than this time, the server asks the client to confirm that it still needs map update. This is in milliseconds")
+	@Config.Comment("If a client keeps its map open more than this time, the server asks the client to confirm that it still needs map updates. This is in milliseconds")
 	public static int syncHeartbeatTimeout = 120000;
 
 	public static void sync() {
