@@ -71,5 +71,9 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	public boolean isSpectator() {
 		return this.isSpectator;
 	}
+	
+	public void setIsSpectator(boolean yesNo) {
+		this.isSpectator = yesNo;
+	}
 
 }

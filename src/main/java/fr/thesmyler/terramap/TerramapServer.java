@@ -130,6 +130,7 @@ public class TerramapServer {
 				savedPlayer.setDisplayName(player.getDisplayName());
 				savedPlayer.setPosX(player.getPosX());
 				savedPlayer.setPosZ(player.getPosZ());
+				savedPlayer.setIsSpectator(player.isSpectator());
 			} else toAdd.add(player);
 		}
 		for(UUID uid: toRemove) this.remotePlayers.remove(uid);
