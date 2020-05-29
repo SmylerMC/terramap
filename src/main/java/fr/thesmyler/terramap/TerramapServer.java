@@ -142,11 +142,14 @@ public class TerramapServer {
 	}
 
 	public String getCurrentServerIdentifer() {
+		ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
 		if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
 			return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@localhost";
-		} else {
-			ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+		} else if(servData != null){
 			return servData.serverName + "@" + servData.serverIP;
+		} else {
+			TerramapMod.logger.warn("Trying to get server identifier but no server is currently accessible, returning noserver");
+			return "noserver";
 		}
 	}
 
