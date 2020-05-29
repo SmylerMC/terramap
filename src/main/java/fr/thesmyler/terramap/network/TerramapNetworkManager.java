@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.network;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import fr.thesmyler.terramap.network.mapsync.S2CPlayerSyncPacket.S2CPlayerSyncPa
 import fr.thesmyler.terramap.network.mapsync.S2CRegistrationExpiresPacket;
 import fr.thesmyler.terramap.network.mapsync.S2CRegistrationExpiresPacket.S2CRegistrationExpiresPacketHandler;
 import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
@@ -30,6 +32,7 @@ public abstract class TerramapNetworkManager {
 
 	// The channel instance
 	public static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID);
+	public static final Charset CHARSET = Charset.forName("utf-8");
 
 	// Packet discriminator counter, should be increased for each packet type.
 	private static int discriminator = 0;
@@ -83,6 +86,16 @@ public abstract class TerramapNetworkManager {
 				CHANNEL.sendTo(new S2CRegistrationExpiresPacket(), player.player);
 			}
 		}
+	}
+	
+	public static void encodeStringToByteBuf(String str, ByteBuf buf) {
+		byte[] strBytes = str.getBytes(CHARSET);
+		buf.writeInt(strBytes.length);
+		buf.writeBytes(strBytes);
+	}
+	
+	public static String decodeStringFromByteBuf(ByteBuf buf) {
+		return buf.readCharSequence(buf.readInt(), CHARSET).toString();
 	}
 	
 	public static class RegisteredForUpdatePlayer {

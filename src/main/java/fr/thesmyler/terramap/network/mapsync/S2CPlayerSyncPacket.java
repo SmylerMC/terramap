@@ -1,9 +1,9 @@
 package fr.thesmyler.terramap.network.mapsync;
 
-import java.nio.charset.Charset;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -22,7 +22,7 @@ public class S2CPlayerSyncPacket implements IMessage {
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) {
+	public void fromBytes(ByteBuf buf) { //FIXME DO NOT ASSUME EACH CHARACTER TAKES A SINGLE BYTE
 		this.remotePlayers = new TerramapRemotePlayer[buf.readInt()];
 		for(int i=0; i<this.remotePlayers.length; i++) {
 			long leastUUID = buf.readLong();
@@ -31,14 +31,13 @@ public class S2CPlayerSyncPacket implements IMessage {
 			double x = buf.readDouble();
 			double z = buf.readDouble();
 			boolean spec = buf.readBoolean();
-			int nameLen = buf.readInt();
-			String name = buf.readCharSequence(nameLen, Charset.forName("utf-8")).toString();
+			String name = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 			this.remotePlayers[i] = new TerramapRemotePlayer(uuid, name, x, z, spec);
 		}
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf) { //FIXME DO NOT ASSUME EACH CHARACTER TAKES A SINGLE BYTE
 		buf.writeInt(this.localPlayers.length);
 		for(TerramapPlayer player: this.localPlayers) {
 			buf.writeLong(player.getUUID().getLeastSignificantBits());
@@ -47,8 +46,7 @@ public class S2CPlayerSyncPacket implements IMessage {
 			buf.writeDouble(player.getPosZ());
 			buf.writeBoolean(player.isSpectator());
 			String playerDisplayName = player.getDisplayName();
-			buf.writeInt(playerDisplayName.length());
-			buf.writeCharSequence(playerDisplayName, Charset.forName("utf-8"));
+			TerramapNetworkManager.encodeStringToByteBuf(playerDisplayName, buf);
 		}
 	}
 
