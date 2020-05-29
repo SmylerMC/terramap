@@ -1,7 +1,5 @@
 package fr.thesmyler.terramap.network;
 
-import java.nio.charset.Charset;
-
 import fr.thesmyler.terramap.TerramapMod;
 import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
 import io.github.terra121.EarthGeneratorSettings;
@@ -34,26 +32,22 @@ public class S2CTerramapHelloPacket implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		int vlen = buf.readInt();
-		this.serverVersion = buf.readCharSequence(vlen, Charset.forName("utf-8")).toString();
+		this.serverVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		this.syncPlayers = buf.readBoolean();
 		this.syncSpectators = buf.readBoolean();
 		this.hasFe = buf.readBoolean();
-		int nl = buf.readInt();
-		String settings = buf.readCharSequence(nl, Charset.forName("utf-8")).toString();
+		String settings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		this.settings = new EarthGeneratorSettings(settings);
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) {
+	public void toBytes(ByteBuf buf) { 
 		String settingsStr = this.settings.toString();
-		buf.writeInt(this.serverVersion.length());
-		buf.writeCharSequence(this.serverVersion, Charset.forName("utf-8"));
+		TerramapNetworkManager.encodeStringToByteBuf(this.serverVersion, buf);
 		buf.writeBoolean(this.syncPlayers);
 		buf.writeBoolean(this.syncSpectators);
 		buf.writeBoolean(this.hasFe);
-		buf.writeInt(settingsStr.length());
-		buf.writeCharSequence(settingsStr, Charset.forName("utf-8"));
+		TerramapNetworkManager.encodeStringToByteBuf(settingsStr, buf);
 	}
 	
 	public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {

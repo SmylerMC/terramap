@@ -1,7 +1,5 @@
 package fr.thesmyler.terramap.network;
 
-import java.nio.charset.Charset;
-
 import fr.thesmyler.terramap.TerramapServer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -21,14 +19,12 @@ public class S2CTpCommandSyncPacket implements IMessage {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		int cmdlen = buf.readInt();
-		this.cmd = buf.readCharSequence(cmdlen, Charset.forName("utf-8")).toString();
+		this.cmd = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		buf.writeInt(this.cmd.length());
-		buf.writeCharSequence(this.cmd, Charset.forName("utf-8"));
+		TerramapNetworkManager.encodeStringToByteBuf(this.cmd, buf);
 	}
 	
 	public static class S2CTpCommandSyncPacketHandler implements IMessageHandler<S2CTpCommandSyncPacket, IMessage> {

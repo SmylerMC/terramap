@@ -22,7 +22,7 @@ public class S2CPlayerSyncPacket implements IMessage {
 	}
 
 	@Override
-	public void fromBytes(ByteBuf buf) { //FIXME DO NOT ASSUME EACH CHARACTER TAKES A SINGLE BYTE
+	public void fromBytes(ByteBuf buf) {
 		this.remotePlayers = new TerramapRemotePlayer[buf.readInt()];
 		for(int i=0; i<this.remotePlayers.length; i++) {
 			long leastUUID = buf.readLong();
@@ -37,7 +37,7 @@ public class S2CPlayerSyncPacket implements IMessage {
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) { //FIXME DO NOT ASSUME EACH CHARACTER TAKES A SINGLE BYTE
+	public void toBytes(ByteBuf buf) {
 		buf.writeInt(this.localPlayers.length);
 		for(TerramapPlayer player: this.localPlayers) {
 			buf.writeLong(player.getUUID().getLeastSignificantBits());
