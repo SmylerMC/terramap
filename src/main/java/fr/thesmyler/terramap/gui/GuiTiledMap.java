@@ -439,7 +439,7 @@ public class GuiTiledMap extends GuiScreen {
 			if(mainPlayerRendered && this.poiBBCollide(ix, iy, poi, (int)playerX, (int)playerY, this.thePlayerPOI)) continue; 
 			boolean h = this.isPointOverPOI(ix, iy, mouseX, mouseY, poi);
 			poi.draw(ix, iy, h);
-			if(!poi.getPlayer().isSpectator() && !h) poi.drawName(ix, iy, h);
+			if(!poi.getPlayer().isSpectator() || h) poi.drawName(ix, iy, h);
 		}
 		if(hoveredPOI != null) hoveredPOI.drawName(hoverPOIX, hoverPOIY, true);
 		if(mainPlayerRendered) {
