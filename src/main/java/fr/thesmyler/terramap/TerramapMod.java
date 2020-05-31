@@ -5,16 +5,18 @@ import java.util.Map;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.caching.CacheManager;
+import fr.thesmyler.terramap.command.TerrashowCommand;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = TerramapMod.MODID, name = TerramapMod.NAME, acceptableRemoteVersions = "*")
+@Mod(modid = TerramapMod.MODID, name = TerramapMod.NAME)
 public class TerramapMod {
 	
     public static final String MODID = "terramap";
@@ -63,6 +65,11 @@ public class TerramapMod {
     	if(remoteVersion.contains("1.0.0-beta2")) return false;
     	if(remoteVersion.contains("1.0.0-beta1")) return false;
     	return true; //Anything else should be ok
+    }
+    
+    @EventHandler
+    public void onServerStarts(FMLServerStartingEvent event) {
+    	event.registerServerCommand(new TerrashowCommand());
     }
     
         

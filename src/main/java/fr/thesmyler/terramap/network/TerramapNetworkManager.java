@@ -37,7 +37,8 @@ public abstract class TerramapNetworkManager {
 	// Packet discriminator counter, should be increased for each packet type.
 	private static int discriminator = 0;
 	
-	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate= new HashMap<UUID, RegisteredForUpdatePlayer>();
+	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<UUID, RegisteredForUpdatePlayer>();
+	public static Map<UUID, Boolean> playersWithDisplayPreferences = new HashMap<UUID, Boolean>();
 	
 	/**
 	 * Registers the handlers
@@ -64,6 +65,7 @@ public abstract class TerramapNetworkManager {
 		long ctime = System.currentTimeMillis();
 		List<TerramapLocalPlayer> players = new ArrayList<TerramapLocalPlayer>();
 		for(EntityPlayer player: world.playerEntities) {
+			if(playersWithDisplayPreferences.getOrDefault(player.getUniqueID(), TerramapConfiguration.playersOptInToDisplayDefault)) continue;
 			TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
 			if(terraPlayer.isSpectator() && !TerramapConfiguration.syncSpectators) continue;
 			players.add(terraPlayer);
@@ -108,6 +110,7 @@ public abstract class TerramapNetworkManager {
 			this.player = player;
 			this.lastRegisterTime = time;
 		}
+		
 	}
 	
 }

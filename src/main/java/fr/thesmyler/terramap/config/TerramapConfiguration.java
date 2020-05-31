@@ -84,6 +84,11 @@ public class TerramapConfiguration{
 	@Config.RangeInt(min=20000)
 	@Config.Comment("If a client keeps its map open more than this time, the server asks the client to confirm that it still needs map updates. This is in milliseconds")
 	public static int syncHeartbeatTimeout = 120000;
+	
+	@Config.Name("players_opt_in_to_display_default")
+	@Config.LangKey("terramap.config.players_opt_in_to_display_default") //TODO translation
+	@Config.Comment("If player sync is enabled, sould players be displayed by default (true) or should they opt-in (false)")
+	public static boolean playersOptInToDisplayDefault = true;
 
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
