@@ -32,6 +32,7 @@ terramap.mapgui.rclickmenu.center=Center la carte ici
 terramap.mapgui.rclickmenu.copy_geo=Copier les coordonées GPS
 terramap.mapgui.rclickmenu.copy_mc=Copier les coordonées Minecraft
 terramap.mapgui.rclickmenu.open_osm=Ouvrir avec OpenStreetMap
+terramap.mapgui.rclickmenu.open_bte=Ouvrir avec le site web de BTE
 terramap.mapgui.rclickmenu.open_gmaps=Ouvrir avec Google Maps
 terramap.mapgui.rclickmenu.open_gearth_web=Ouvrir avec Google Earth web
 terramap.mapgui.rclickmenu.open_gearth_pro=Ouvrir avec Google Earth pro

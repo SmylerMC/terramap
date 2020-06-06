@@ -32,6 +32,7 @@ terramap.mapgui.rclickmenu.center=以这里为地图中心
 terramap.mapgui.rclickmenu.copy_geo=复制地点到粘贴板
 terramap.mapgui.rclickmenu.copy_mc=复制Minecraft坐标到粘贴板
 terramap.mapgui.rclickmenu.open_osm=在OpenStreetMaps中查看该地点
+terramap.mapgui.rclickmenu.open_bte=在BTE的网站中查看该地点
 terramap.mapgui.rclickmenu.open_gmaps=在谷歌地图中查看该地点
 terramap.mapgui.rclickmenu.open_gearth_web=在谷歌地球网页中查看该地点
 terramap.mapgui.rclickmenu.open_gearth_pro=在谷歌地球Pro中查看该地点

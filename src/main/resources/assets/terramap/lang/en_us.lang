@@ -32,6 +32,7 @@ terramap.mapgui.rclickmenu.center=Center map here
 terramap.mapgui.rclickmenu.copy_geo=Copy location to clipboard
 terramap.mapgui.rclickmenu.copy_mc=Copy Minecraft coordinates to clipboard
 terramap.mapgui.rclickmenu.open_osm=Open location in OpenStreetMaps
+terramap.mapgui.rclickmenu.open_bte=Open location on the BTE website
 terramap.mapgui.rclickmenu.open_gmaps=Open location in Google Maps
 terramap.mapgui.rclickmenu.open_gearth_web=Open location in Google Earth web
 terramap.mapgui.rclickmenu.open_gearth_pro=Open location in Google Earth Pro

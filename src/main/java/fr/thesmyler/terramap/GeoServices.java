@@ -11,6 +11,7 @@ public abstract class GeoServices {
 	public static final String GMAPS_BASE_URL = "https://www.google.com/maps/@{latitude},{longitude},{zoom}z";
 	public static final String OSM_SITE_BASE_URL = "https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}";
 	public static final String GEARTH_WEB_BASE_URL = "https://earth.google.com/web/@{latitude},{longitude},0a,10000d,1y,-0h,0t,0r";
+	public static final String BTE_SITE_BASE_URL = "https://buildtheearth.net/map?lat={latitude}&lon={longitude}&z={zoom}";
 	
 	public static final String OSM_CR_LINK = "https://www.openstreetmap.org/copyright";
 	
@@ -32,6 +33,11 @@ public abstract class GeoServices {
 	
 	public static void openInGoogleMaps(int zoom, double lon, double lat) {
 		GeoServices.openURI(GeoServices.formatStringWithCoords(GMAPS_BASE_URL, zoom, lon, lat));
+	}
+	
+	public static void openInBTEMap(int zoom, double lon, double lat) {
+		int z = Math.min(zoom, 18);
+		GeoServices.openURI(GeoServices.formatStringWithCoords(BTE_SITE_BASE_URL, z, lon, lat));
 	}
 	
 	public static void opentInGoogleEarthWeb(double longitude, double latitude) {

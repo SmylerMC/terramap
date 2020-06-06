@@ -16,11 +16,10 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = TerramapMod.MODID, name = TerramapMod.NAME)
+@Mod(modid = TerramapMod.MODID, useMetadata=true)
 public class TerramapMod {
 	
     public static final String MODID = "terramap";
-    public static final String NAME = "Terramap";
     private static  String version;
 	public static final String AUTHOR_EMAIL = "smyler at mail dot com";
 			

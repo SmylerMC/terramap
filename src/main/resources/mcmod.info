@@ -8,7 +8,7 @@
   "url": "https://www.curseforge.com/minecraft/mc-mods/terramap",
   "updateUrl": "",
   "authorList": ["TheSmyler"],
-  "credits": "All the Terra121 team for this amazing mod, there would of course be no Terramap without Terra121. Drope for the cool logo. Nalili for helping breaking the mod so I could repare it. qsefthuopq for the Chinese translation. OpenStreetMap contributors for the map data.",
+  "credits": "All the Terra121 team for this amazing mod, there would of course be no Terramap without Terra121. Drope for the cool logo. Nalili for helping breaking the mod so I could repare it. qsefthuopq for the Chinese translation. Xesau for adapting the bte website to interface with Terramap. OpenStreetMap contributors for the map data.",
   "logoFile": "terramap.png",
   "screenshots": [],
   "dependencies": ["terra121"]
