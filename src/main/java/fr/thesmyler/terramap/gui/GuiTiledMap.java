@@ -317,7 +317,7 @@ public class GuiTiledMap extends GuiScreen {
 				} else {
 					String dispLo = GeoServices.formatGeoCoordForDisplay(playerLon);
 					String dispLa = GeoServices.formatGeoCoordForDisplay(playerLat);
-					lines.add(I18n.format("terramap.mapgui.information.playergeo", dispLo, dispLa));
+					lines.add(I18n.format("terramap.mapgui.information.playergeo", dispLa, dispLo));
 				}
 			} else {
 				double followedLon = this.followedPOI.getLongitude();
@@ -327,7 +327,7 @@ public class GuiTiledMap extends GuiScreen {
 				} else {
 					String dispLo = GeoServices.formatGeoCoordForDisplay(followedLon);
 					String dispLa = GeoServices.formatGeoCoordForDisplay(followedLat);
-					lines.add(I18n.format("terramap.mapgui.information.followedgeo", this.followedPOI.getDisplayName(), dispLo, dispLa));
+					lines.add(I18n.format("terramap.mapgui.information.followedgeo", this.followedPOI.getDisplayName(), dispLa, dispLo));
 				}
 			}
 		}
@@ -338,7 +338,7 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.debug) {
 			String mapLa = GeoServices.formatGeoCoordForDisplay(this.focusLatitude);
 			String mapLo = GeoServices.formatGeoCoordForDisplay(this.focusLongitude);
-			lines.add("Map location: " + mapLo + " " + mapLa); //Not translated, that's debug
+			lines.add("Map location: " + mapLa + " " + mapLo); //Not translated, that's debug
 			lines.add("Cache queue: " + TerramapMod.cacheManager.getQueueSize());
 			lines.add("Loaded tiles: " + this.map.getLoadedCount() + "/" + this.map.getMaxLoad());
 			int playerPOICount = this.playerPOIs.size();
