@@ -5,7 +5,6 @@ import java.util.Map;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.caching.CacheManager;
-import fr.thesmyler.terramap.command.TerrashowCommand;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -68,7 +67,7 @@ public class TerramapMod {
     
     @EventHandler
     public void onServerStarts(FMLServerStartingEvent event) {
-    	event.registerServerCommand(new TerrashowCommand());
+    	//event.registerServerCommand(new TerrashowCommand());
     }
     
         
