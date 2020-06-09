@@ -1,16 +1,20 @@
 package fr.thesmyler.terramap.command;
 
+import java.util.List;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import fr.thesmyler.terramap.config.TerramapConfiguration;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 
-//TODO Tab completion
 //TODO Save on disk
 public class TerrashowCommand extends CommandBase {
 
@@ -32,8 +36,8 @@ public class TerrashowCommand extends CommandBase {
 		else if(args.length > 2) throw new CommandException("Too many parameters: " + USAGE);
 		else if(args.length == 2) player = server.getPlayerList().getPlayerByUsername(args[1]);
 		else if(sender instanceof EntityPlayerMP)player = (EntityPlayerMP)sender;
-		else throw new CommandException("Player name is required when executing from the server console: " + USAGE);
-		if(player == null) throw new CommandException("Player does not exist: " + USAGE);
+		else throw new PlayerNotFoundException("Player name is required when executing from the server console: " + USAGE);
+		if(player == null) throw new PlayerNotFoundException("Player does not exist: " + USAGE);
 		UUID uuid = player.getPersistentID();
 		switch(args[0]) {
 		case "status":
@@ -53,5 +57,15 @@ public class TerrashowCommand extends CommandBase {
 		}
 
 	}
+	
+	@Override
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+		String[] s = {"show", "hide", "status"};
+        if (args.length == 1) {
+            return getListOfStringsMatchingLastWord(args, s);
+        } else {
+            return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
+        }
+    }
 
 }
