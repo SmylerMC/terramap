@@ -12,7 +12,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.terramap.config.TerramapConfiguration;
-import fr.thesmyler.terramap.config.TerramapServerPreferences;
+import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.forgeessentials.FeWarp;
 import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
@@ -53,7 +53,7 @@ public class TerramapServer {
 		this.serverHasFe = hasFe;
 		this.genSettings = genSettings;
 		if(this.genSettings == null) {
-			String sttgStr = TerramapServerPreferences.getServerGenSettings(this.getCurrentServerIdentifer());
+			String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getCurrentServerIdentifer());
 			if(sttgStr.length() > 0) {
 				this.genSettings = new EarthGeneratorSettings(sttgStr);
 				TerramapMod.logger.info("Got generator settings from server preferences file");
@@ -104,8 +104,8 @@ public class TerramapServer {
 
 	public void saveSettings() {
 		try {
-			TerramapServerPreferences.setServerGenSettings(this.getCurrentServerIdentifer(), this.genSettings.toString());
-			TerramapServerPreferences.save();
+			TerramapClientPreferences.setServerGenSettings(this.getCurrentServerIdentifer(), this.genSettings.toString());
+			TerramapClientPreferences.save();
 		} catch(Exception e) {
 			TerramapMod.logger.info("Failed to save server preference file");
 			TerramapMod.logger.catching(e);
@@ -155,15 +155,15 @@ public class TerramapServer {
 	}
 
 	public SavedMapState getSavedMap() {
-		return new SavedMapState(TerramapServerPreferences.getServerMapState(this.getCurrentServerIdentifer()));
+		return new SavedMapState(TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer()));
 	}
 
 	public boolean hasSavedMap() {
-		return TerramapServerPreferences.getServerMapState(this.getCurrentServerIdentifer()).length() != 0;
+		return TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer()).length() != 0;
 	}
 
 	public void setSavedMap(SavedMapState svd) {
-		TerramapServerPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd.toString());
+		TerramapClientPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd.toString());
 	}
 
 	public void registerForUpdates(boolean yesNo) {

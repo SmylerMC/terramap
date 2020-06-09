@@ -14,7 +14,12 @@ import com.google.gson.reflect.TypeToken;
 
 import fr.thesmyler.terramap.TerramapMod;
 
-public class TerramapServerPreferences {
+/**
+ * 
+ * Preferences setting the client needs to store about servers
+ *
+ */
+public class TerramapClientPreferences {
 
 	public static final String FILENAME = "terramapserver.json";
 	private static Map<String, Map<String, String>> preferences = new HashMap<String, Map<String, String>>();
@@ -81,8 +86,8 @@ public class TerramapServerPreferences {
 	}
 	
 	public static void setFile(File file) {
-		if(TerramapServerPreferences.file == null) {
-			TerramapServerPreferences.file = file;
+		if(TerramapClientPreferences.file == null) {
+			TerramapClientPreferences.file = file;
 		} else {
 			TerramapMod.logger.error("Tried to set server preference file but it was already");
 		}

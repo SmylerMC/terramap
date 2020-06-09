@@ -10,7 +10,7 @@ import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapConfiguration;
-import fr.thesmyler.terramap.config.TerramapServerPreferences;
+import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.gui.GuiTiledMap;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
@@ -47,9 +47,9 @@ public class TerramapClientProxy extends TerramapProxy {
 		}
 		TerramapMod.cacheManager.startWorker();
 
-		File servPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapServerPreferences.FILENAME);
-		TerramapServerPreferences.setFile(servPrefs);
-		TerramapServerPreferences.load();
+		File servPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapClientPreferences.FILENAME);
+		TerramapClientPreferences.setFile(servPrefs);
+		TerramapClientPreferences.load();
 	}
 
 	@Override
