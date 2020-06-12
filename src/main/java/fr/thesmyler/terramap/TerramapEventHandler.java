@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap;
 
 import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
@@ -8,6 +9,7 @@ import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.EarthWorldType;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -69,6 +71,11 @@ public final class TerramapEventHandler {
 			TerramapNetworkManager.syncPlayers(world);
 		}
 		tickCounter = (tickCounter+1) % TerramapConfiguration.syncInterval;
+	}
+	
+	@SubscribeEvent
+	public static void onWorldSave(WorldEvent.Save event) {
+		TerramapServerPreferences.save();
 	}
 
 }

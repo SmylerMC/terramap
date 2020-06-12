@@ -10,11 +10,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 /**
  * @author SmylerMC
  * 
- * IRLW's config
+ * Terramap's config
  *
  */
 @Config(modid = TerramapMod.MODID)
-public class TerramapConfiguration{
+public class TerramapConfiguration {
 
 	@Config.Name("cache_directory")
 	@Config.LangKey("terramap.config.cache_dir")
@@ -88,10 +88,10 @@ public class TerramapConfiguration{
 	@Config.Name("players_opt_in_to_display_default")
 	@Config.LangKey("terramap.config.players_opt_in_to_display_default") //TODO translation
 	@Config.Comment("If player sync is enabled, sould players be displayed by default (true) or should they opt-in (false)")
-	public static boolean playersOptInToDisplayDefault = true;
+	public static boolean playersDisplayDefault = true;
 
 	public static void sync() {
-		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);	
+		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);
 	}
 
 	@Mod.EventBusSubscriber(modid = TerramapMod.MODID)

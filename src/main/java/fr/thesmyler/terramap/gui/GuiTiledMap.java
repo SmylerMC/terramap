@@ -893,6 +893,8 @@ public class GuiTiledMap extends GuiScreen {
 		int zoomLevel = 0;
 		String mapStyle = "";
 
+		public SavedMapState() {}
+		
 		public SavedMapState(String str) {
 			if(str.length() == 0) return;
 			SavedMapState svd = new Gson().fromJson(str, this.getClass());
