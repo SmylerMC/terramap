@@ -9,8 +9,9 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.caching.CacheManager;
-import fr.thesmyler.terramap.config.TerramapConfiguration;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
+import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.GuiTiledMap;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
@@ -20,16 +21,17 @@ import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy {
 
-	private static GuiTiledMap tiledMap = null;
-
+	@Override
+	public Side getSide() {
+		return Side.CLIENT;
+	}
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
@@ -55,6 +57,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client init");
+		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();
 		RasterWebTile.registerErrorTexture();
 	}
@@ -66,20 +69,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		TerramapServer.setServer(new TerramapServer(pkt.serverVersion, pkt.syncPlayers, pkt.syncSpectators, pkt.hasFe, pkt.settings));
 	}
 
-	@Override
-	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-	}
-
-	@Override
-	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-	}
-
-	public static GuiTiledMap getTiledMap() {
-		if(TerramapClientProxy.tiledMap == null) TerramapClientProxy.setTiledMap();
-		return TerramapClientProxy.tiledMap;
-	}
-
-	private static void setTiledMap() {
+	public static GuiTiledMap getTiledMapGui() {
 		List<TiledMap<?>> maps = new ArrayList<TiledMap<?>>();
 		if(TerramapUtils.isPirate()) {
 			maps.add(TiledMaps.WATERCOLOR);
@@ -90,11 +80,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		maps.add(TiledMaps.OSM);
 		maps.add(TiledMaps.OSM_HUMANITARIAN);
 		maps.add(TiledMaps.TERRAIN);
-		TerramapClientProxy.tiledMap = new GuiTiledMap(maps.toArray(new TiledMap[maps.size()]));
-	}
-
-	public static void resetTiledMap() {
-		TerramapClientProxy.tiledMap = null;
+		return new GuiTiledMap(maps.toArray(new TiledMap[maps.size()]));
 	}
 
 	@Override
