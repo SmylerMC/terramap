@@ -10,9 +10,8 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
 
 /**
  * 
@@ -21,40 +20,28 @@ import fr.thesmyler.terramap.TerramapMod;
  */
 public class TerramapClientPreferences {
 
-	public static final String FILENAME = "terramapserver.json";
-	private static Map<String, Map<String, String>> preferences = new HashMap<String, Map<String, String>>();
+	public static final String FILENAME = "terramap_client_preferences.json";
 	private static File file = null;
-
-	private static final String GEN_SETTINGS_KEY = "genSettings";
-	private static final String MAP_STATE_KEY = "mapState";
+	private static Preferences preferences = new Preferences();
 
 	public static String getServerGenSettings(String serverId) {
-		return preferences.getOrDefault(serverId, new HashMap<String, String>())
-				.getOrDefault(GEN_SETTINGS_KEY, "");
+		return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).genSettings: "";
 	}
 	
-	public static String getServerMapState(String serverId) {
-		String state = preferences.getOrDefault(serverId, new HashMap<String, String>())
-				.getOrDefault(MAP_STATE_KEY, "");
-		return state;
+	public static SavedMapState getServerMapState(String serverId) {
+		return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).mapState: null;
 	}
 
-	public static void setServerMapState(String serverId, String mapState) {
-		Map<String, String> serv = preferences.get(serverId);
-		if(serv == null) {
-			serv =  new HashMap<String, String>();
-			preferences.put(serverId, serv);
-		}
-		serv.put(MAP_STATE_KEY, mapState);
+	public static void setServerMapState(String serverId, SavedMapState mapState) {
+		ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
+		serv.mapState = mapState;
+		if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
 	}
 	
 	public static void setServerGenSettings(String serverId, String genSettings) {
-		Map<String, String> serv = preferences.get(serverId);
-		if(serv == null) {
-			serv =  new HashMap<String, String>();
-			preferences.put(serverId, serv);
-		}
-		serv.put(GEN_SETTINGS_KEY, genSettings);
+		ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
+		serv.genSettings = genSettings;
+		if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
 	}
 
 	public static void save() {
@@ -63,24 +50,24 @@ public class TerramapClientPreferences {
 		try {
 			Files.write(str, file, Charset.defaultCharset());
 		} catch (IOException e) {
-			TerramapMod.logger.error("Failed to write server preferences to " + file.getAbsolutePath());
+			TerramapMod.logger.error("Failed to write client preferences to " + file.getAbsolutePath());
 			e.printStackTrace();
 		}
 	}
 
 	public static void load() {
 		if(!file.exists()) {
-			preferences = new HashMap<String, Map<String, String>>();
-			TerramapMod.logger.info("Server preference file did not exist, used default");
+			preferences = new Preferences();
+			TerramapMod.logger.info("Client preference file did not exist, used default");
 		} else {
 			try {
 				String text = String.join("\n", Files.readLines(file, Charset.defaultCharset()));
 				Gson gson = new Gson();
-				preferences = gson.fromJson(text, new TypeToken<Map<String, Map<String, String>>>(){}.getType());
+				preferences = gson.fromJson(text, Preferences.class);
 			} catch (IOException | JsonSyntaxException e) {
-				TerramapMod.logger.error("Failed to load server preference file, setting to default");
+				TerramapMod.logger.error("Failed to load client preference file, setting to default");
 				TerramapMod.logger.catching(e);
-				preferences = new HashMap<String, Map<String, String>>();
+				preferences = new Preferences();
 			}
 		}
 	}
@@ -89,7 +76,17 @@ public class TerramapClientPreferences {
 		if(TerramapClientPreferences.file == null) {
 			TerramapClientPreferences.file = file;
 		} else {
-			TerramapMod.logger.error("Tried to set server preference file but it was already");
+			TerramapMod.logger.error("Tried to set client preference file but it was already");
 		}
 	}
+	
+	private static class Preferences {
+		Map<String, ServerPreferences> servers = new HashMap<String, ServerPreferences>();
+	}
+	
+	private static class ServerPreferences {
+		public String genSettings = "";
+		public SavedMapState mapState = new SavedMapState();
+	}
+	
 }

@@ -5,8 +5,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.terramap.config.TerramapConfiguration;
-import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -41,15 +40,15 @@ public class TerrashowCommand extends CommandBase {
 		UUID uuid = player.getPersistentID();
 		switch(args[0]) {
 		case "status":
-			boolean status = TerramapNetworkManager.playersWithDisplayPreferences.getOrDefault(uuid, TerramapConfiguration.playersOptInToDisplayDefault);
+			boolean status = TerramapServerPreferences.shouldDisplayPlayer(uuid);
 			sender.sendMessage(player.getDisplayName().appendText(" is currently " + (status ? "visible": "hidden") + " on the map."));
 			break;
 		case "show":
-			TerramapNetworkManager.playersWithDisplayPreferences.put(uuid, true);
+			TerramapServerPreferences.setShouldDisplayPlayer(uuid, true);
 			sender.sendMessage(player.getDisplayName().appendText(" is now visible on the map."));
 			break;
 		case "hide":
-			TerramapNetworkManager.playersWithDisplayPreferences.put(uuid, false);
+			TerramapServerPreferences.setShouldDisplayPlayer(uuid, false);
 			sender.sendMessage(player.getDisplayName().appendText(" is now hidden on the map."));
 			break;
 		default:

@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket.S2CTpCommandSyncPacketHandler;
 import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
@@ -38,7 +39,6 @@ public abstract class TerramapNetworkManager {
 	private static int discriminator = 0;
 	
 	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<UUID, RegisteredForUpdatePlayer>();
-	public static Map<UUID, Boolean> playersWithDisplayPreferences = new HashMap<UUID, Boolean>();
 	
 	/**
 	 * Registers the handlers
@@ -65,7 +65,7 @@ public abstract class TerramapNetworkManager {
 		long ctime = System.currentTimeMillis();
 		List<TerramapLocalPlayer> players = new ArrayList<TerramapLocalPlayer>();
 		for(EntityPlayer player: world.playerEntities) {
-			if(playersWithDisplayPreferences.getOrDefault(player.getUniqueID(), !TerramapConfiguration.playersOptInToDisplayDefault)) continue;
+			if(!TerramapServerPreferences.shouldDisplayPlayer(player.getPersistentID())) continue;
 			TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
 			if(terraPlayer.isSpectator() && !TerramapConfiguration.syncSpectators) continue;
 			players.add(terraPlayer);

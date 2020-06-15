@@ -155,15 +155,15 @@ public class TerramapServer {
 	}
 
 	public SavedMapState getSavedMap() {
-		return new SavedMapState(TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer()));
+		return TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer());
 	}
 
 	public boolean hasSavedMap() {
-		return TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer()).length() != 0;
+		return TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer()) != null;
 	}
 
 	public void setSavedMap(SavedMapState svd) {
-		TerramapClientPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd.toString());
+		TerramapClientPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd);
 	}
 
 	public void registerForUpdates(boolean yesNo) {

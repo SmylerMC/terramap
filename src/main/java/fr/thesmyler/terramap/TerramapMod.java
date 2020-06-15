@@ -1,11 +1,14 @@
 package fr.thesmyler.terramap;
 
+import java.io.File;
 import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
+import fr.thesmyler.terramap.command.TerrashowCommand;
+import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -39,6 +42,11 @@ public class TerramapMod {
     	logger = event.getModLog();
     	TerramapMod.version = event.getModMetadata().version;
     	TerramapMod.proxy.preInit(event);
+    	
+    	//TODO Have this in a proxy
+    	File clientPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapServerPreferences.FILENAME);
+    	TerramapServerPreferences.setFile(clientPrefs);
+    	TerramapServerPreferences.load();
     }
 
     @EventHandler
@@ -70,7 +78,7 @@ public class TerramapMod {
     
     @EventHandler
     public void onServerStarts(FMLServerStartingEvent event) {
-    	//event.registerServerCommand(new TerrashowCommand());
+    	event.registerServerCommand(new TerrashowCommand()); //TODO Only register on dedicated server
     }
     
         
