@@ -1,16 +1,21 @@
 package fr.thesmyler.terramap.proxy;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.eventhandlers.ServerTerramapEventHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class TerramapServerProxy extends TerramapProxy{
+public class TerramapServerProxy extends TerramapProxy {
 
+	@Override
+	public Side getSide() {
+		return Side.SERVER;
+	}
+	
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		TerramapNetworkManager.registerHandlers(Side.SERVER);
@@ -20,6 +25,8 @@ public class TerramapServerProxy extends TerramapProxy{
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap server init");
+		MinecraftForge.EVENT_BUS.register(new ServerTerramapEventHandler());
+
 	}
 
 	@Override
@@ -28,18 +35,9 @@ public class TerramapServerProxy extends TerramapProxy{
 	}
 
 	@Override
-	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-		// We don't care about that on servers
-	}
-
-	@Override
 	public double getDefaultGuiSize() {
 		// Don't care on server, this is just for the client config
 		return 0;
-	}
-
-	@Override
-	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 	}
 
 }

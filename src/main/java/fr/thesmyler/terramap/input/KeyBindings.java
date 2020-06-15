@@ -6,12 +6,7 @@ import fr.thesmyler.terramap.proxy.TerramapClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber(Side.CLIENT)
 public abstract class KeyBindings {
 
 	private static final String KEY_CATEGORY = "terramap.binding.category";
@@ -25,11 +20,8 @@ public abstract class KeyBindings {
 	}
 	
 	public static void checkBindings() {
-		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player.dimension == 0) Minecraft.getMinecraft().displayGuiScreen(TerramapClientProxy.getTiledMap());
+		//TODO Only open the map on earth worlds
+		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player.dimension == 0) Minecraft.getMinecraft().displayGuiScreen(TerramapClientProxy.getTiledMapGui());
 	}
-	
-    @SubscribeEvent
-    public static void onKeyInput(InputEvent.KeyInputEvent event) {
-    	KeyBindings.checkBindings();
-    }
+
 }

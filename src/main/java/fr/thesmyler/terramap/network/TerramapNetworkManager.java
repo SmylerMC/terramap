@@ -65,7 +65,7 @@ public abstract class TerramapNetworkManager {
 		long ctime = System.currentTimeMillis();
 		List<TerramapLocalPlayer> players = new ArrayList<TerramapLocalPlayer>();
 		for(EntityPlayer player: world.playerEntities) {
-			if(playersWithDisplayPreferences.getOrDefault(player.getUniqueID(), TerramapConfiguration.playersOptInToDisplayDefault)) continue;
+			if(playersWithDisplayPreferences.getOrDefault(player.getUniqueID(), !TerramapConfiguration.playersOptInToDisplayDefault)) continue;
 			TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
 			if(terraPlayer.isSpectator() && !TerramapConfiguration.syncSpectators) continue;
 			players.add(terraPlayer);
