@@ -25,7 +25,7 @@ public class CopyrightNoticeWidget extends GuiButton {
 		FontRenderer f = Minecraft.getMinecraft().fontRenderer;
 		if(mouseX >= this.x && mouseX <= this.x + width
 				&& mouseY >= this.y && mouseY <= this.y + height
-				&& this.map.getCopyRightURL().length() > 0)
+				&& this.map.getCopyrightURL().length() > 0)
 			color = 0xA0A0FF;
 		f.drawString(this.map.getCopyright(), this.x + 5, this.y + 5, color);
 	}

@@ -655,8 +655,8 @@ public class GuiTiledMap extends GuiScreen {
 			this.zoom(-1);
 		} else if(button.id == this.centerOnPlayerButton.id) {
 			this.setPosition(this.thePlayerPOI.getLongitude(), this.thePlayerPOI.getLatitude());
-		} else if(button.id == this.copyright.id && this.map.getCopyRightURL().length() > 0) {
-			GeoServices.openURI(this.map.getCopyRightURL());
+		} else if(button.id == this.copyright.id && this.map.getCopyrightURL().length() > 0) {
+			GeoServices.openURI(this.map.getCopyrightURL());
 		} else if(button.id == this.tilesetButton.id) {
 			this.mapVelocityX = 0;
 			this.mapVelocityY = 0;

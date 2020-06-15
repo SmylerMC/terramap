@@ -159,7 +159,7 @@ public class TiledMap<T extends RasterWebTile> {
 		return this.copyright;
 	}
 	
-	public String getCopyRightURL() {
+	public String getCopyrightURL() {
 		return this.copyrightURL;
 	}
 	
