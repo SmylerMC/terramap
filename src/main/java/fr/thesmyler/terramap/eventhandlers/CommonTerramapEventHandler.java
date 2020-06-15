@@ -1,13 +1,13 @@
 package fr.thesmyler.terramap.eventhandlers;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.config.TerramapConfiguration;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import io.github.terra121.EarthGeneratorSettings;
-import io.github.terra121.EarthWorldType;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
@@ -27,7 +27,7 @@ public class CommonTerramapEventHandler {
 		//Send world data to the client
 		EntityPlayerMP player = (EntityPlayerMP)event.player;
 		World world = player.getEntityWorld();
-		if(!(world.getWorldType() instanceof EarthWorldType)) return;
+		if(!TerramapUtils.isEarthWorld(world)) return;
 		EarthGeneratorSettings settings = S2CTerramapHelloPacket.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
 		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfiguration.synchronizePlayers, TerramapConfiguration.syncSpectators, false);
@@ -46,9 +46,7 @@ public class CommonTerramapEventHandler {
 		if(event.phase.equals(TickEvent.Phase.END)) return;
 		World world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
 		//TODO Use a sync manager class
-		if(TerramapConfiguration.synchronizePlayers
-				&& world.getWorldType() instanceof EarthWorldType
-				&& this.tickCounter == 0) {
+		if(TerramapConfiguration.synchronizePlayers && TerramapUtils.isEarthWorld(world) && this.tickCounter == 0) {
 			TerramapNetworkManager.syncPlayers(world);
 		}
 		this.tickCounter = (this.tickCounter+1) % TerramapConfiguration.syncInterval;

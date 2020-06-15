@@ -3,8 +3,10 @@ package fr.thesmyler.terramap;
 import java.security.MessageDigest;
 import java.util.Random;
 
+import io.github.terra121.EarthWorldType;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.World;
 
 /**
  * @author SmylerMC
@@ -83,6 +85,10 @@ public abstract class TerramapUtils {
 	
 	public static double[] fromGeo(GeographicProjection proj, double longitude, double latitude) {
 		return proj.fromGeo(longitude, latitude);
+	}
+	
+	public static boolean isEarthWorld(World world) {
+		return world.getWorldType() instanceof EarthWorldType;
 	}
 	
 }

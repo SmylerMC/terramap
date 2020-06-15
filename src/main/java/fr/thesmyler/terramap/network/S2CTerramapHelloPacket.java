@@ -1,10 +1,10 @@
 package fr.thesmyler.terramap.network;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.TerramapUtils;
 import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.EarthTerrainProcessor;
-import io.github.terra121.EarthWorldType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
@@ -52,7 +52,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 	
 	public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {
 
-		//Required by forge ?
+		//Required by forge
 		public S2CTerramapHelloPacketHandler(){}
 		
 		@Override
@@ -65,7 +65,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 	}
 	
 	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
-		if(world.getWorldType() instanceof EarthWorldType) {
+		if(TerramapUtils.isEarthWorld(world)) {
 			return ((EarthTerrainProcessor)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
 		} else return null;
 	}
