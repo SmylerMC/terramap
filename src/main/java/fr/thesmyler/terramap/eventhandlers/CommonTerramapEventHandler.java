@@ -7,14 +7,15 @@ import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import fr.thesmyler.terramap.network.mapsync.RemoteSynchronizer;
 import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -37,7 +38,7 @@ public class CommonTerramapEventHandler {
 
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-		TerramapNetworkManager.playersToUpdate.remove(event.player.getPersistentID());
+		RemoteSynchronizer.playersToUpdate.remove(event.player.getPersistentID());
 	}
 
 
@@ -47,7 +48,7 @@ public class CommonTerramapEventHandler {
 		World world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
 		//TODO Use a sync manager class
 		if(TerramapConfiguration.synchronizePlayers && TerramapUtils.isEarthWorld(world) && this.tickCounter == 0) {
-			TerramapNetworkManager.syncPlayers(world);
+			RemoteSynchronizer.syncPlayers(world);
 		}
 		this.tickCounter = (this.tickCounter+1) % TerramapConfiguration.syncInterval;
 	}
