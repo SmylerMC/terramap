@@ -1,8 +1,8 @@
-package fr.thesmyler.smylibgui.widget;
+package fr.thesmyler.smylibgui.widgets;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.Screen;
+import fr.thesmyler.smylibgui.screen.Screen;
 
 public interface IWidget {
 
@@ -39,9 +39,10 @@ public interface IWidget {
 	 * @param y the y position where to draw the widget on the screen, can be different than this.getY()
 	 * @param mouseX the mouse's x position on the screen
 	 * @param mouseY the mouse's y position on the screen
+	 * @param focused indicates whether or not this widget has its parent's focus (it will get keystrokes and so on)
 	 * @param parent the parent Screen
 	 */
-	public void draw(int x, int y, int mouseX, int mouseY, Screen parent);
+	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, @Nullable Screen parent);
 	
 	/**
 	 * If this returns false, this widget will not be rendered and or notified of user actions
@@ -68,8 +69,13 @@ public interface IWidget {
 	 * @param mouseX mouse x position relative to the widget's origin
 	 * @param mouseY mouse y position relative to the widget's origin
 	 * @param mouseButton
+	 * @param parent screen
+	 * 
+	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default void onClick(int mouseX, int mouseY, int mouseButton) {}
+	public default boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+		return true;
+	}
 	
 	/**
 	 * Called when the user clicks anywhere else on the parent of this widget
@@ -79,10 +85,11 @@ public interface IWidget {
 	 * @param mouseY mouse y position relative to the parent's origin
 	 * @param mouseButton
 	 * @param parent the containing screen that was clicked. It may not be the direct parent
+	 * @param parent screen
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default boolean onParentClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public default boolean onParentClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 		return true;
 	}
 	
@@ -93,8 +100,13 @@ public interface IWidget {
 	 * @param mouseX mouse x position relative to the widget's origin
 	 * @param mouseY mouse y position relative to the widget's origin
 	 * @param mouseButton
+	 * @param parent screen
+	 * 
+	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default void onDoubleClick(int mouseX, int mouseY, int mouseButton) {}
+	public default boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+		return true;
+	}
 	
 	/**
 	 * Called when the user double clicks anywhere else on the parent of this widget
@@ -104,10 +116,11 @@ public interface IWidget {
 	 * @param mouseY position relative to the parent's origin
 	 * @param mouseButton
 	 * @param parent the containing screen that was clicked. It may not be the direct parent
+	 * @param parent screen
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default boolean onParentDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public default boolean onParentDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 		return true;
 	}
 	
@@ -117,8 +130,9 @@ public interface IWidget {
 	 * @param dX
 	 * @param dY
 	 * @param mouseButton
+	 * @param parent screen
 	 */
-	public default void onMouseDragged(int dX, int dY, int mouseButton) {}
+	public default void onMouseDragged(int dX, int dY, int mouseButton, @Nullable Screen parent) {}
 
 	/**
 	 * Called when the mouse is released over this widget
@@ -127,31 +141,56 @@ public interface IWidget {
 	 * @param mouseY position relative to the parent's origin
 	 * @param button
 	 * @param draggedWidget the widget the user was dragging and drop on this widget
+	 * @param parent screen
+	 * 
 	 */
 	public default void onMouseReleased(int mouseX, int mouseY, int button, @Nullable IWidget draggedWidget) {}
 	
 	/**
-	 * Called before input events are processed and the screen is drawn
+	 * Called between the time the events are processed and the screen is drawn
+	 * 
+	 * @param parent screen
 	 */
-	public default void onUpdate() {} //TODO Call
+	public default void onUpdate(@Nullable Screen parent) {}
 	
 	/**
 	 * Called when a key is typed
 	 * 
 	 * @param typedChar
 	 * @param keyCode
+	 * @param parent screen
 	 */
-	public default void onKeyTyped(char typedChar, int keyCode) {} //TODO Call
+	public default void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {}
 	
 	/**
 	 * Called when the mouse is over this widget and the wheel is turned
 	 * 
 	 * @param mouseX position relative to the widget
 	 * @param mouseY position relative to the widget
-	 * 
+	 * @param parent screen
 	 * @param amount
 	 */
-	public default void onMouseWheeled(int mouseX, int mouseY, int amount) {} //TODO Call
+	public default void onMouseWheeled(int mouseX, int mouseY, int amount, @Nullable Screen parent) {} //TODO Call
+	
+	/**
+	 * @return the text to draw as a tooltip when this widget is hovered, or null if no tooltip should be displayed
+	 */
+	@Nullable public default String getTooltipText() { //TODO Implement in Screen
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @return the delay for which the mouse needs to stay over the widget without moving before the tooltip is displayed in milliseconds
+	 */
+	public default long getTooltipDelay() { //TODO Implement in Screen
+		return 750;
+	}
+	
+	/**
+	 * Called when the screen is closed or this widget is removed from the screen
+	 */
+	public default void onRemoved() {} //TODO Implement in Screen
 	
 	
 }
