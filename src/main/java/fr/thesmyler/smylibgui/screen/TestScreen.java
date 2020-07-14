@@ -78,7 +78,7 @@ public class TestScreen extends Screen {
 		this.drawString(this.fontRenderer, "FPS: " + Minecraft.getDebugFPS(), 20, 20, 0xFFFFFFFF);
 		this.drawString(this.fontRenderer, "Focused: " + this.getFocusedWidget(), 20, 50, 0xFFFFFFFF);
 		this.drawString(this.fontRenderer, "Hovered: " + this.hoveredWidget, 20, 70, 0xFFFFFFFF);
-		this.drawCenteredString(this.fontRenderer, "LOLCATS ARE THE BESTS!", this.width/2, this.getHeight() - 80, animation.rainbowColor());
+		this.drawCenteredString(this.fontRenderer, "Color animated text!", this.width/2, this.getHeight() - 80, animation.rainbowColor());
 		this.fontRenderer.drawString("Test!", this.width/2, this.getHeight() - 100, 0xFFFFFFFF, true);
 	}
 	
