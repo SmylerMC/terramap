@@ -22,8 +22,8 @@ Terramap on BTE-France, with player synchronization enabled:
 ![terramap screenshot server](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tiledmap_server.png)
 
 
-Terramap on BTE UK/Ireland:
-![terramap screenshot uk](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tilermap_server_uk.png)
+Terramap on BTE Italia:
+![terramap screenshot italia](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tilermap_server_italia.png)
 
 ## How to use:
 Add the mod to your mods folder along with Terra1:1 and the other mods of you modpack.
@@ -31,7 +31,7 @@ In game, press m to open the map (by default, but it can be changed in the confi
 Drag it, zoom, and explore the world just like with any other digital map.
 Right-click somwhere to get a menu with various usefull tools (see the screenshots).
 Additionally, you can: press p to toggle debug mod, enable entity rendering in the mod config.
-If the map looks too pixelated, you can lower the tile scaling option in the config gui. Powers of two work best., but do not go lower than  0.125.
+If the map looks too pixelated, you can lower the tile scaling option in the config gui. Powers of two work best, but do not go lower than  0.125.
 
 ## How to setup on servers:
 Add Terramap to your server's mod folder and restart the server to generate the config file.
@@ -54,8 +54,11 @@ You probably don't need to touch that, read the comment and make sure you unders
 You can set this to true if you want clients to use a specific command when teleporting from the map. You then need to change the tpll_command config value to the command you want. You can use {longitude}, {latitude}, {x} and {z} in the said command, they will be replaced by the corresponding value when executed.
 
 ### `players_opt_in_to_display_default`
-There is currently a bug in beta5.2, this needs to be set to false so player synchronization works. It will be fixed in the future.
+Set this to false if you want players to need to do /terrashow show to be visible on the map
 
+There are also to permission nodes related to /terrashow:
+### `terramap.commands.terrashow.others` allows to change anyone's visibility
+### `terramap.commands.terrashow.self` allows to change the visibility of the current players
 ## Contributing:
 In case you want to contribute, please make sure you join the Discord. You will get a contributor role there.
 
