@@ -86,7 +86,7 @@ public class TerramapConfig {
 	public static int syncHeartbeatTimeout = 120000;
 	
 	@Config.Name("players_opt_in_to_display_default")
-	@Config.LangKey("terramap.config.players_opt_in_to_display_default") //TODO translation
+	@Config.LangKey("terramap.config.players_opt_in_to_display_default")
 	@Config.Comment("If player sync is enabled, sould players be displayed by default (true) or should they opt-in (false)")
 	public static boolean playersDisplayDefault = true;
 

@@ -44,25 +44,28 @@ public class TerramapServer {
 	private EarthGeneratorSettings genSettings = null;
 	private boolean isRegisteredForUpdates = false;
 	private String tpCommand = null;
+	
+	private String serverIdentifier = "noserver";
 
 
 	public TerramapServer(String serverVersion, boolean syncPlayers, boolean syncSpectators, boolean hasFe, @Nullable EarthGeneratorSettings genSettings) {
+		this();
 		this.serverVersion = serverVersion;
 		this.syncPlayers = syncPlayers;
 		this.syncSpectators = syncSpectators;
 		this.serverHasFe = hasFe;
 		this.genSettings = genSettings;
 		if(this.genSettings == null) {
-			String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getCurrentServerIdentifer());
+			String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getServerIdentifier());
 			if(sttgStr.length() > 0) {
 				this.genSettings = new EarthGeneratorSettings(sttgStr);
-				TerramapMod.logger.info("Got generator settings from server preferences file");
+				TerramapMod.logger.info("Got generator settings from client preferences file");
 			}
 		}
 	}
 
 	public TerramapServer() {
-
+		this.serverIdentifier = this.buildCurrentServerIdentifer();
 	}
 
 	public boolean isInstalledOnServer() {
@@ -104,7 +107,7 @@ public class TerramapServer {
 
 	public void saveSettings() {
 		try {
-			TerramapClientPreferences.setServerGenSettings(this.getCurrentServerIdentifer(), this.genSettings.toString());
+			TerramapClientPreferences.setServerGenSettings(this.getServerIdentifier(), this.genSettings.toString());
 			TerramapClientPreferences.save();
 		} catch(Exception e) {
 			TerramapMod.logger.info("Failed to save server preference file");
@@ -142,28 +145,27 @@ public class TerramapServer {
 		return Minecraft.getMinecraft().world.loadedEntityList;
 	}
 
-	public String getCurrentServerIdentifer() {
+	private String buildCurrentServerIdentifer() {
 		ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
 		if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
-			return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@localhost";
+			return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@integrated_server@localhost";
 		} else if(servData != null){
 			return servData.serverName + "@" + servData.serverIP;
 		} else {
-			TerramapMod.logger.warn("Trying to get server identifier but no server is currently accessible, returning noserver");
 			return "noserver";
 		}
 	}
 
 	public SavedMapState getSavedMap() {
-		return TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer());
+		return TerramapClientPreferences.getServerMapState(this.getServerIdentifier());
 	}
 
 	public boolean hasSavedMap() {
-		return TerramapClientPreferences.getServerMapState(this.getCurrentServerIdentifer()) != null;
+		return TerramapClientPreferences.getServerMapState(this.getServerIdentifier()) != null;
 	}
 
 	public void setSavedMap(SavedMapState svd) {
-		TerramapClientPreferences.setServerMapState(this.getCurrentServerIdentifer(), svd);
+		TerramapClientPreferences.setServerMapState(this.getServerIdentifier(), svd);
 	}
 
 	public void registerForUpdates(boolean yesNo) {
@@ -183,6 +185,10 @@ public class TerramapServer {
 	
 	public boolean needsUpdate() {
 		return this.isRegisteredForUpdates;
+	}
+	
+	public String getServerIdentifier() {
+		return this.serverIdentifier;
 	}
 
 	public static TerramapServer getServer() {

@@ -21,7 +21,6 @@ public class ClientTerramapEventHandler {
     	KeyBindings.checkBindings();
     }
     
-	//TODO This is too late
 	@SubscribeEvent
 	public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
 		TerramapServer.resetServer();
