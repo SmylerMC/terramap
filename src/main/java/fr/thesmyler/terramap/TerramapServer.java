@@ -11,7 +11,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.forgeessentials.FeWarp;
 import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
@@ -172,7 +172,7 @@ public class TerramapServer {
 	}
 	
 	public String getTpCommand() {
-		if(this.tpCommand == null) return TerramapConfiguration.tpllcmd;
+		if(this.tpCommand == null) return TerramapConfig.tpllcmd;
 		else return this.tpCommand;
 	}
 	

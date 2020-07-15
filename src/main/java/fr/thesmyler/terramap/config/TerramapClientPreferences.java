@@ -10,14 +10,18 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
  * Preferences setting the client needs to store about servers
  *
  */
+@SideOnly(Side.CLIENT)
 public class TerramapClientPreferences {
 
 	public static final String FILENAME = "terramap_client_preferences.json";

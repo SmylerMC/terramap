@@ -63,7 +63,7 @@ public class TerrashowCommand extends CommandBase {
 			sender.sendMessage(player.getDisplayName().appendText(" is now hidden on the map.")); //TODO Localize
 			break;
 		default:
-			new CommandException("Invalid action: " + USAGE); //TODO Localize
+			throw new CommandException("Invalid action: " + USAGE); //TODO Localize
 		}
 
 	}

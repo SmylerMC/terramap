@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  *
  */
 @Config(modid = TerramapMod.MODID)
-public class TerramapConfiguration {
+public class TerramapConfig {
 
 	@Config.Name("cache_directory")
 	@Config.LangKey("terramap.config.cache_dir")
@@ -105,7 +105,7 @@ public class TerramapConfiguration {
 		@SubscribeEvent
 		public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
 			if (event.getModID().equals(TerramapMod.MODID)) {
-				TerramapConfiguration.sync();
+				TerramapConfig.sync();
 			}
 		}
 		
