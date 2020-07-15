@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
+import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.command.TerrashowCommand;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
@@ -53,6 +54,7 @@ public class TerramapMod {
     public void init(FMLInitializationEvent event) {
     	MinecraftForge.EVENT_BUS.register(new CommonTerramapEventHandler());
     	TerramapMod.proxy.init(event);
+    	PermissionManager.registerNodes();
     }
     
     public static String getVersion() {
