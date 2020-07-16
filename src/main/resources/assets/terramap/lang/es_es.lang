@@ -10,9 +10,7 @@ terramap.config.sync_players=Sincronizar jugadores
 terramap.config.sync_interval=Intervalo de tiempo de sincronización del mapa (en ticks)
 terramap.config.sync_spec=Sincronizar jugadores con clientes
 terramap.config.sync_heartbeet=Tiempo de espera de sincronización agotado
-
-TODO_terramap.config.players_opt_in_to_display_default=Default player display
-
+terramap.config.players_opt_in_to_display_default=Vista predeterminada
 terramap.maps.name.wikimedia=Mapa de Wikimedia
 terramap.maps.copyright.wikimedia=Wikimedia Foundation, © Contribuidores de OpenStreetMap
 terramap.maps.name.osm=OpenStreetMap
