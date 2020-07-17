@@ -4,6 +4,9 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.init.SoundEvents;
 
 //TODO Add the possibility to bind a keybinding to a button
 public abstract class AbstractButtonWidget implements IWidget {
@@ -37,9 +40,9 @@ public abstract class AbstractButtonWidget implements IWidget {
 	
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
-		//TODO Play a sound
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		if(parent != null && parent.getFocusedWidget() != null && parent.getFocusedWidget().equals(this)) {
-			parent.setFocus(null);
+			parent.setFocus(null); //We don't want to keep the focus
 		}
 		if(this.onClick != null) {
 			this.onClick.run();
@@ -51,7 +54,7 @@ public abstract class AbstractButtonWidget implements IWidget {
 	
 	@Override
 	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
-		//TODO Play a sound
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		if(parent != null && parent.getFocusedWidget() != null && parent.getFocusedWidget().equals(this)) {
 			parent.setFocus(null);
 		}

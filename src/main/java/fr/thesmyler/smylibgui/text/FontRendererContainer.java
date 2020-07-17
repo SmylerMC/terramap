@@ -21,7 +21,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * A: Ok, I admit it, I wanted to experiment with ObfuscationReflectionHelper. I know, right?
  *
  */
-//FIXME fix the shadows
 public class FontRendererContainer {
 
 	private static final String SRG_renderStringAtPos = "renderStringAtPos";
@@ -82,7 +81,7 @@ public class FontRendererContainer {
 	
 	public void drawCenteredString(float x, float y, String str, int color, boolean shadow) {
 		int w = this.getStringWidth(str);
-		this.drawString(str, x - w/2, y, color, false);
+		this.drawString(str, x - w/2, y, color, shadow);
 	}
 
 	/**
@@ -111,11 +110,17 @@ public class FontRendererContainer {
 			if (this.font.getBidiFlag()) {
 				t = this.bidiReorder(text);
 			}
+			
+			int shadowedColor = color;
+			
+            if (dropShadow) {
+            	shadowedColor = (color & 16579836) >> 2 | color & -16777216;
+            }
 
-			float red = (float)(color >> 16 & 255) / 255.0F;
-			float green = (float)(color >> 8 & 255) / 255.0F;
-			float blue = (float)(color & 255) / 255.0F;
-			float alpha = (float)(color >> 24 & 255) / 255.0F;
+			float red = (float)(shadowedColor >> 16 & 255) / 255.0F;
+			float green = (float)(shadowedColor >> 8 & 255) / 255.0F;
+			float blue = (float)(shadowedColor & 255) / 255.0F;
+			float alpha = (float)(shadowedColor >> 24 & 255) / 255.0F;
 			this.setRed(red);
 			this.setGreen(green);
 			this.setBlue(blue);

@@ -6,6 +6,7 @@ import fr.thesmyler.smylibgui.text.TextAlignment;
 import fr.thesmyler.smylibgui.text.TextWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.TextFieldWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.terramap.gui.GuiTiledMap;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,8 @@ public class TestScreen extends Screen {
 	private TextWidget focus;
 	private TextWidget hovered;
 	private TextWidget colored;
-	
+	private TextButtonWidget testButton;
+
 
 	public TestScreen(GuiScreen parent) {
 		super(Screen.BackgroundType.DIRT);
@@ -31,7 +33,7 @@ public class TestScreen extends Screen {
 	public void initScreen() { //Called at normal gui init, when screen opens or resizes
 		this.removeAllWidgets(); //Remove the widgets that were already there
 		this.cancellAllScheduled(); //Cancell all callbacks that were already there
-		
+
 		MenuWidget rcm = new MenuWidget(50, this.getFont()); //This will be used as our right click menu, the following are it's sub menus
 		MenuWidget animationMenu = new MenuWidget(1, this.getFont());
 		MenuWidget here = new MenuWidget(50, this.getFont());
@@ -59,18 +61,19 @@ public class TestScreen extends Screen {
 		rcm.addEntry("Animation", animationMenu);
 		rcm.useAsRightClick(); //Calling this tells the menu to open whenever it's parent screen is right clicked
 		this.addWidget(rcm);
-		
+
 		//We will use an animation to set the color of one of the displayed strings
 		this.animation  = new Animation(5000);
 		this.animation.start(AnimationState.CONTINUOUS_ENTER);
-		
+
 		TextWidget title = new TextWidget("SmyguiLib demo test screen", this.width/2, 20, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget feedback = new TextWidget("", this.width/2, this.getHeight() - 60, 10, TextAlignment.CENTER, this.getFont());
-		this.fpsCounter = new TextWidget("FPS: ", 20, 40, 10, this.getFont());
-		this.focus = new TextWidget("Focused: ", 20, 60, 10, this.getFont());
-		this.hovered = new TextWidget("Hovered: ", 20, 80, 10, this.getFont());
-		TextWidget counterStr = new TextWidget("FPS", 20, 160, 10, this.getFont());
+		TextWidget feedback = new TextWidget(this.width/2, this.getHeight() - 60, 10, TextAlignment.CENTER, this.getFont());
+		this.fpsCounter = new TextWidget("FPS: 0", 20, 40, 10, this.getFont());
+		this.focus = new TextWidget("Focused: null", 20, 60, 10, this.getFont());
+		this.hovered = new TextWidget("Hovered: null", 20, 80, 10, this.getFont());
+		TextWidget counterStr = new TextWidget(20, 160, 10, this.getFont());
 		this.colored = new TextWidget("Color animated text", 20, 180, 10, this.getFont());
+		this.colored.setColor(animation.rainbowColor());
 		this.addWidget(title);
 		this.addWidget(fpsCounter);
 		this.addWidget(focus);
@@ -78,31 +81,32 @@ public class TestScreen extends Screen {
 		this.addWidget(counterStr);
 		this.addWidget(colored);
 		this.addWidget(feedback);
-		
+
 		//Text field widgets
 		this.addWidget(new TextFieldWidget(20, 100, 150, 1));
 		this.addWidget(new TextFieldWidget(20, 130, 150, 1));
-		
+
+		this.testButton = new TextButtonWidget(20, 200, 150, "Click me!", 1,
+				() -> {
+					this.testButton.setText("Nice, double click me now!");
+				},
+				() -> {
+					this.testButton.setText("I'm done now :(");
+					this.testButton.disable();
+				}
+				);
+		this.addWidget(testButton);
 		this.addWidget(
-			new TexturedButtonWidget(this.width/2 - 7, this.height/2 - 7, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES,
-					()-> {
-						feedback.setText("Clicked!");
-						this.scheduleWithDelay(()->{feedback.setText("");}, 1000);
-					},
-					()-> {
-						feedback.setText("Double Clicked!");
-						this.scheduleWithDelay(()->{feedback.setText("");}, 1000);
-					}
-		));
+				new TexturedButtonWidget(this.width - 20, 5, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES));
 		this.addWidget(
-				new TexturedButtonWidget(this.width/2 - 7, this.height - 40, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES,
+				new TextButtonWidget(this.width/2 - 50, this.height - 40, 100, "Reset screen", 1,
 						()-> {Minecraft.getMinecraft().displayGuiScreen(this.parent);}
-		));
-		
+						));
+
 		//Same as Javascript's setInterval
 		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback has been called " + this.counter++);}, 1000);
 	}
-	
+
 	@Override
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
