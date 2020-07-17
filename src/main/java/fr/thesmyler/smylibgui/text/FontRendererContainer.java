@@ -18,19 +18,20 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * A: I didn't want to just extend FontRenderer as I prefer to use the vanilla Mincraft::fontRenderer
  * 
  * Q: Still, why?
- * A: Ok, I admit, I wanted to experiment with ObfuscationReflectionHelper. I know, right?
+ * A: Ok, I admit it, I wanted to experiment with ObfuscationReflectionHelper. I know, right?
  *
  */
+//FIXME fix the shadows
 public class FontRendererContainer {
 
 	private static final String SRG_renderStringAtPos = "renderStringAtPos";
-	private static  Method renderStringAtPos;
+	private static Method renderStringAtPos;
 	private static final String SRG_bidiReorder = "bidiReorder";
-	private static  Method bidiReorder;
+	private static Method bidiReorder;
 	private static final String SRG_resetStyles = "resetStyles";
-	private static  Method resetStyles;
+	private static Method resetStyles;
 	private static final String SRG_trimStringNewline = "trimStringNewline";
-	private static  Method trimStringNewline;
+	private static Method trimStringNewline;
 	private static final String SRG_posX = "posX";
 	private static final String SRG_posY = "posY";
 	private static final String SRG_red = "red";
@@ -77,6 +78,11 @@ public class FontRendererContainer {
 			}
 			return this.font.drawString(text, x, y, color, dropShadow);
 		}
+	}
+	
+	public void drawCenteredString(float x, float y, String str, int color, boolean shadow) {
+		int w = this.getStringWidth(str);
+		this.drawString(str, x - w/2, y, color, false);
 	}
 
 	/**

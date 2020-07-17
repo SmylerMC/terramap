@@ -2,6 +2,8 @@ package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
+import fr.thesmyler.smylibgui.text.TextAlignment;
+import fr.thesmyler.smylibgui.text.TextWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
@@ -12,8 +14,13 @@ import net.minecraft.client.gui.GuiScreen;
 public class TestScreen extends Screen {
 
 	private GuiScreen parent;
-	private String testString = "";
 	private Animation animation = new Animation(10000);
+	private int counter = 0;
+	private TextWidget fpsCounter;
+	private TextWidget focus;
+	private TextWidget hovered;
+	private TextWidget colored;
+	
 
 	public TestScreen(GuiScreen parent) {
 		super(Screen.BackgroundType.DIRT);
@@ -25,11 +32,18 @@ public class TestScreen extends Screen {
 		this.removeAllWidgets();
 		MenuWidget rcm = new MenuWidget(50, this.getFont());
 		MenuWidget animationMenu = new MenuWidget(1, this.getFont());
-		MenuWidget here = new MenuWidget(1, this.getFont());
-		MenuWidget is = new MenuWidget(1, this.getFont());
-		MenuWidget a = new MenuWidget(1, this.getFont());
-		MenuWidget very = new MenuWidget(1, this.getFont());
-		MenuWidget nested = new MenuWidget(1, this.getFont());
+		MenuWidget here = new MenuWidget(50, this.getFont());
+		MenuWidget is = new MenuWidget(50, this.getFont());
+		MenuWidget a = new MenuWidget(50, this.getFont());
+		MenuWidget very = new MenuWidget(50, this.getFont());
+		MenuWidget nested = new MenuWidget(50, this.getFont());
+		TextWidget title = new TextWidget("SmyguiLib demo test screen", this.width/2, 20, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget feedback = new TextWidget("", this.width/2, this.getHeight() - 60, 10, TextAlignment.CENTER, this.getFont());
+		this.fpsCounter = new TextWidget("FPS: ", 20, 40, 10, this.getFont());
+		this.focus = new TextWidget("Focused: ", 20, 60, 10, this.getFont());
+		this.hovered = new TextWidget("Hovered: ", 20, 80, 10, this.getFont());
+		TextWidget counterStr = new TextWidget("FPS", 20, 160, 10, this.getFont());
+		this.colored = new TextWidget("Color animated text", 20, 180, 10, this.getFont());
 		animationMenu.addEntry("Show", ()-> {animation.start(AnimationState.ENTER);});
 		animationMenu.addEntry("Hide", ()-> {animation.start(AnimationState.LEAVE);});
 		animationMenu.addEntry("Continuous", ()-> {animation.start(AnimationState.CONTINUOUS_ENTER);});
@@ -53,12 +67,12 @@ public class TestScreen extends Screen {
 		this.addWidget(
 			new TexturedButtonWidget(this.width/2 - 7, this.height/2 - 7, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES,
 					()-> {
-						this.testString = "Clicked!";
-						this.scheduleWithDelay(()->{this.testString = "";}, 1000);
+						feedback.setText("Clicked!");
+						this.scheduleWithDelay(()->{feedback.setText("");}, 1000);
 					},
 					()-> {
-						this.testString = "Double clicked!";
-						this.scheduleWithDelay(()->{this.testString = "";}, 1000);
+						feedback.setText("Double Clicked!");
+						this.scheduleWithDelay(()->{feedback.setText("");}, 1000);
 					}
 		));
 		this.addWidget(
@@ -67,25 +81,26 @@ public class TestScreen extends Screen {
 		));
 		this.animation  = new Animation(5000);
 		this.animation.start(AnimationState.CONTINUOUS_ENTER);
-		this.addWidget(new TextFieldWidget(20, 90, 150, 1));
-		this.addWidget(new TextFieldWidget(20, 120, 150, 1));
-	}
-	
-	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, Screen parent) {
-		super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
-		this.drawCenteredString(this.fontRenderer, this.testString, this.width/2, this.getHeight() - 60, 0xFFFFFFFF);
-		this.drawString(this.fontRenderer, "FPS: " + Minecraft.getDebugFPS(), 20, 20, 0xFFFFFFFF);
-		this.drawString(this.fontRenderer, "Focused: " + this.getFocusedWidget(), 20, 50, 0xFFFFFFFF);
-		this.drawString(this.fontRenderer, "Hovered: " + this.hoveredWidget, 20, 70, 0xFFFFFFFF);
-		this.drawCenteredString(this.fontRenderer, "Color animated text!", this.width/2, this.getHeight() - 80, animation.rainbowColor());
-		this.fontRenderer.drawString("Test!", this.width/2, this.getHeight() - 100, 0xFFFFFFFF, true);
+		this.addWidget(new TextFieldWidget(20, 100, 150, 1));
+		this.addWidget(new TextFieldWidget(20, 130, 150, 1));
+		this.addWidget(title);
+		this.addWidget(fpsCounter);
+		this.addWidget(focus);
+		this.addWidget(hovered);
+		this.addWidget(counterStr);
+		this.addWidget(colored);
+		this.addWidget(feedback);
+		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback has been called " + ++this.counter);}, 1000);
 	}
 	
 	@Override
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
 		this.animation.update();
+		this.fpsCounter.setText("FPS: " + Minecraft.getDebugFPS());
+		this.focus.setText("Focused: " + this.getFocusedWidget());
+		this.hovered.setText("Hovered: " + this.hoveredWidget);
+		this.colored.setColor(animation.rainbowColor());
 	}
 
 }
