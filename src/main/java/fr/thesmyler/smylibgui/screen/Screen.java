@@ -402,13 +402,22 @@ public class Screen extends GuiScreen implements IWidget{
 	}
 
 	public void scheduleAtInterval(Runnable run, long delay) {
-		Runnable task = () -> {
-			run.run();
-			this.scheduleWithDelay(run, delay);
+		Runnable task = new Runnable() {
+
+			@Override
+			public void run() {
+				run.run();
+				Screen.this.scheduleWithDelay(this, delay);
+			}
+		
 		};
 		this.scheduledForNextUpdate.add(new ScheduledTask(System.currentTimeMillis(), task));
 	}
 
+	public void cancellAllScheduled() {
+		this.scheduledForNextUpdate.clear();
+	}
+	
 	public FontRendererContainer getFont() {
 		return this.font;
 	}

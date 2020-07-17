@@ -28,22 +28,17 @@ public class TestScreen extends Screen {
 	}
 
 	@Override
-	public void initScreen() {
-		this.removeAllWidgets();
-		MenuWidget rcm = new MenuWidget(50, this.getFont());
+	public void initScreen() { //Called at normal gui init, when screen opens or resizes
+		this.removeAllWidgets(); //Remove the widgets that were already there
+		this.cancellAllScheduled(); //Cancell all callbacks that were already there
+		
+		MenuWidget rcm = new MenuWidget(50, this.getFont()); //This will be used as our right click menu, the following are it's sub menus
 		MenuWidget animationMenu = new MenuWidget(1, this.getFont());
 		MenuWidget here = new MenuWidget(50, this.getFont());
 		MenuWidget is = new MenuWidget(50, this.getFont());
 		MenuWidget a = new MenuWidget(50, this.getFont());
 		MenuWidget very = new MenuWidget(50, this.getFont());
 		MenuWidget nested = new MenuWidget(50, this.getFont());
-		TextWidget title = new TextWidget("SmyguiLib demo test screen", this.width/2, 20, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget feedback = new TextWidget("", this.width/2, this.getHeight() - 60, 10, TextAlignment.CENTER, this.getFont());
-		this.fpsCounter = new TextWidget("FPS: ", 20, 40, 10, this.getFont());
-		this.focus = new TextWidget("Focused: ", 20, 60, 10, this.getFont());
-		this.hovered = new TextWidget("Hovered: ", 20, 80, 10, this.getFont());
-		TextWidget counterStr = new TextWidget("FPS", 20, 160, 10, this.getFont());
-		this.colored = new TextWidget("Color animated text", 20, 180, 10, this.getFont());
 		animationMenu.addEntry("Show", ()-> {animation.start(AnimationState.ENTER);});
 		animationMenu.addEntry("Hide", ()-> {animation.start(AnimationState.LEAVE);});
 		animationMenu.addEntry("Continuous", ()-> {animation.start(AnimationState.CONTINUOUS_ENTER);});
@@ -62,8 +57,32 @@ public class TestScreen extends Screen {
 		nested.addEntry("menu");
 		rcm.addSeparator();
 		rcm.addEntry("Animation", animationMenu);
-		rcm.useAsRightClick();
+		rcm.useAsRightClick(); //Calling this tells the menu to open whenever it's parent screen is right clicked
 		this.addWidget(rcm);
+		
+		//We will use an animation to set the color of one of the displayed strings
+		this.animation  = new Animation(5000);
+		this.animation.start(AnimationState.CONTINUOUS_ENTER);
+		
+		TextWidget title = new TextWidget("SmyguiLib demo test screen", this.width/2, 20, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget feedback = new TextWidget("", this.width/2, this.getHeight() - 60, 10, TextAlignment.CENTER, this.getFont());
+		this.fpsCounter = new TextWidget("FPS: ", 20, 40, 10, this.getFont());
+		this.focus = new TextWidget("Focused: ", 20, 60, 10, this.getFont());
+		this.hovered = new TextWidget("Hovered: ", 20, 80, 10, this.getFont());
+		TextWidget counterStr = new TextWidget("FPS", 20, 160, 10, this.getFont());
+		this.colored = new TextWidget("Color animated text", 20, 180, 10, this.getFont());
+		this.addWidget(title);
+		this.addWidget(fpsCounter);
+		this.addWidget(focus);
+		this.addWidget(hovered);
+		this.addWidget(counterStr);
+		this.addWidget(colored);
+		this.addWidget(feedback);
+		
+		//Text field widgets
+		this.addWidget(new TextFieldWidget(20, 100, 150, 1));
+		this.addWidget(new TextFieldWidget(20, 130, 150, 1));
+		
 		this.addWidget(
 			new TexturedButtonWidget(this.width/2 - 7, this.height/2 - 7, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES,
 					()-> {
@@ -79,18 +98,9 @@ public class TestScreen extends Screen {
 				new TexturedButtonWidget(this.width/2 - 7, this.height - 40, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES,
 						()-> {Minecraft.getMinecraft().displayGuiScreen(this.parent);}
 		));
-		this.animation  = new Animation(5000);
-		this.animation.start(AnimationState.CONTINUOUS_ENTER);
-		this.addWidget(new TextFieldWidget(20, 100, 150, 1));
-		this.addWidget(new TextFieldWidget(20, 130, 150, 1));
-		this.addWidget(title);
-		this.addWidget(fpsCounter);
-		this.addWidget(focus);
-		this.addWidget(hovered);
-		this.addWidget(counterStr);
-		this.addWidget(colored);
-		this.addWidget(feedback);
-		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback has been called " + ++this.counter);}, 1000);
+		
+		//Same as Javascript's setInterval
+		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback has been called " + this.counter++);}, 1000);
 	}
 	
 	@Override
