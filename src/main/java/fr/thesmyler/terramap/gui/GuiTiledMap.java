@@ -63,7 +63,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected double mapVelocityX, mapVelocityY = 0;
 	protected GeographicProjection projection;
 
-	protected boolean debug = false; //Show tiles borders or not
+	protected boolean debug = false; // Show tiles borders or not
 	protected PointOfInterest followedPOI = null;
 	private long lastClickTime = 0;
 	private boolean buttonWasClicked = false; // Used to know when handling mouse if super has triggered a button
@@ -125,7 +125,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.init(fontRenderer);
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.teleport"), () -> {this.teleportPlayerTo(this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.center"), () -> {this.setPosition(this.mouseLong, this.mouseLat);});
-		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_geo"), () -> {GuiScreen.setClipboardString("" + this.mouseLong + " " + this.mouseLat);});
+		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_geo"), () -> {GuiScreen.setClipboardString("" + this.mouseLat + " " + this.mouseLong);});
 		if(this.projection != null) {
 			this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_mc"), ()->{
 				double[] coords = TerramapUtils.fromGeo(this.projection, this.mouseLong, this.mouseLat);
