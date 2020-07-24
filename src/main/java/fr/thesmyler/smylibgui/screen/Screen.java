@@ -9,8 +9,8 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Mouse;
 
-import fr.thesmyler.smylibgui.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
+import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -37,6 +37,7 @@ public class Screen extends GuiScreen implements IWidget{
 
 	protected int x, y, z;
 
+	private int lastMouseX, lastMouseY;
 	private int[] lastClickX = new int[Mouse.getButtonCount()];
 	private int[] lastClickY = new int[Mouse.getButtonCount()];
 	private long[] lastClickTime = new long[Mouse.getButtonCount()];
@@ -129,6 +130,9 @@ public class Screen extends GuiScreen implements IWidget{
 						break;
 					case RELEASE:
 						widget.onMouseReleased(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this.draggedWidget[event.button]);
+						if(widget.equals(this.draggedWidget[event.button])) {
+							this.draggedWidget[event.button] = null;
+						}
 						break;
 					default:
 						break;
@@ -150,7 +154,8 @@ public class Screen extends GuiScreen implements IWidget{
 							this.draggedWidget[event.button] = null;
 						}
 						break;
-					default:
+					case SCROLL:
+						propagate = widget.onMouseWheeled(event.mouseX, event.mouseY, event.button, this);
 						break;
 					}
 				}
@@ -165,7 +170,7 @@ public class Screen extends GuiScreen implements IWidget{
 		}
 		for(int i=0; i < this.draggedWidget.length; i++) {
 			if(this.draggedWidget[i] != null) {
-				this.draggedWidget[i].onMouseDragged(this.dClickX[i], this.dClickY[i], i, this);
+				this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this);
 				this.dClickX[i] = 0;
 				this.dClickY[i] = 0;
 			}
@@ -250,11 +255,11 @@ public class Screen extends GuiScreen implements IWidget{
 		}
 		this.lastClickX[button] = mouseX;
 		this.lastClickY[button] = mouseY;
-		this.onMouseDragged(dX, dY, button, null);
+		this.onMouseDragged(mouseX, mouseY, dX, dY, button, null);
 	}
 	
 	@Override
-	public void onMouseDragged(int dX, int dY, int button, @Nullable Screen parent) {
+	public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int button, @Nullable Screen parent) {
 		if(this.draggedWidget[button] == null) {
 			this.dClickX[button] = 0; //TODO
 			this.dClickY[button] = 0;
@@ -292,6 +297,18 @@ public class Screen extends GuiScreen implements IWidget{
 				&& widget.isVisible();
 	}
 	
+	@Override
+	public void handleMouseInput() throws IOException {
+		
+		this.lastMouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
+		this.lastMouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+		
+		super.handleMouseInput();
+
+		int scroll = Mouse.getDWheel();
+		if(scroll != 0) this.delayedActions.add(new MouseAction(MouseActionType.SCROLL, scroll, this.lastMouseX, this.lastMouseY));
+	}
+	
 	/**
 	 * Register the given widget to gain focus at the next screen update
 	 * 
@@ -323,7 +340,7 @@ public class Screen extends GuiScreen implements IWidget{
 	}
 
 	private enum MouseActionType {
-		CLICK, RELEASE, DOUBLE_CLICK;
+		CLICK, RELEASE, DOUBLE_CLICK, SCROLL;
 	}
 
 	public enum BackgroundType {

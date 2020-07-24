@@ -132,7 +132,7 @@ public interface IWidget {
 	 * @param mouseButton
 	 * @param parent screen
 	 */
-	public default void onMouseDragged(int dX, int dY, int mouseButton, @Nullable Screen parent) {}
+	public default void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, @Nullable Screen parent) {}
 
 	/**
 	 * Called when the mouse is released over this widget
@@ -170,7 +170,9 @@ public interface IWidget {
 	 * @param parent screen
 	 * @param amount
 	 */
-	public default void onMouseWheeled(int mouseX, int mouseY, int amount, @Nullable Screen parent) {} //TODO Call
+	public default boolean onMouseWheeled(int mouseX, int mouseY, int amount, @Nullable Screen parent) {
+		return true;
+	}
 	
 	/**
 	 * @return the text to draw as a tooltip when this widget is hovered, or null if no tooltip should be displayed

@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.widgets;
+package fr.thesmyler.smylibgui.widgets.text;
 
 import javax.annotation.Nullable;
 
@@ -7,17 +7,18 @@ import org.lwjgl.input.Keyboard;
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.text.FontRendererContainer;
+import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 
 //TODO Selection
 //TODO Copy/Cut/Paste
+//TODO Support alternate input methods
 public class TextFieldWidget implements IWidget {
 
 	private String text;
 	private int x, y, width, height, z;
 	private int cursorIndex, deltaIndex;
-	private Animation cursorAnimation = new Animation(1500);
+	private Animation cursorAnimation = new Animation(750);
 
 	public TextFieldWidget(int x, int y, int width, int z) {
 		this(x, y, width, z, "");
@@ -31,7 +32,7 @@ public class TextFieldWidget implements IWidget {
 		this.height = Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 10;
 		this.text = defaultText;
 		this.cursorIndex = this.text.length();
-		this.cursorAnimation.start(AnimationState.BACK_AND_FORTH);
+		this.cursorAnimation.start(AnimationState.FLASH);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		String displayedString = parent.getFont().trimStringToWidth(this.text.substring(this.deltaIndex), this.width);
 		int start = 0;
 		int end = displayedString.length() + 1;
@@ -115,7 +116,7 @@ public class TextFieldWidget implements IWidget {
 		}
 
 		if(!ignore) {
-			this.cursorAnimation.start(AnimationState.BACK_AND_FORTH);
+			this.cursorAnimation.start(AnimationState.FLASH);
 		}
 	}
 

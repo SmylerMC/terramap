@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.text;
+package fr.thesmyler.smylibgui.widgets.text;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;

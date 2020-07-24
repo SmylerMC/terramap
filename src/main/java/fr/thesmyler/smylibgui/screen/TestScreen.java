@@ -1,16 +1,18 @@
 package fr.thesmyler.smylibgui.screen;
 
+import java.io.IOException;
+
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
-import fr.thesmyler.smylibgui.text.TextAlignment;
-import fr.thesmyler.smylibgui.text.TextWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
-import fr.thesmyler.smylibgui.widgets.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.terramap.gui.GuiTiledMap;
+import fr.thesmyler.smylibgui.widgets.sliders.IntegerSliderWidget;
+import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
+import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
+import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 
 public class TestScreen extends Screen {
 
@@ -22,6 +24,8 @@ public class TestScreen extends Screen {
 	private TextWidget hovered;
 	private TextWidget colored;
 	private TextButtonWidget testButton;
+	
+	private GuiTextField testGuiTextField; //TODO TEST CODE
 
 
 	public TestScreen(GuiScreen parent) {
@@ -68,11 +72,11 @@ public class TestScreen extends Screen {
 
 		TextWidget title = new TextWidget("SmyguiLib demo test screen", this.width/2, 20, 10, TextAlignment.CENTER, this.getFont());
 		TextWidget feedback = new TextWidget(this.width/2, this.getHeight() - 60, 10, TextAlignment.CENTER, this.getFont());
-		this.fpsCounter = new TextWidget("FPS: 0", 20, 40, 10, this.getFont());
-		this.focus = new TextWidget("Focused: null", 20, 60, 10, this.getFont());
-		this.hovered = new TextWidget("Hovered: null", 20, 80, 10, this.getFont());
-		TextWidget counterStr = new TextWidget(20, 160, 10, this.getFont());
-		this.colored = new TextWidget("Color animated text", 20, 180, 10, this.getFont());
+		this.fpsCounter = new TextWidget("FPS: 0", this.width/2 - 170, 40, 10, this.getFont());
+		this.focus = new TextWidget("Focused: null", this.width/2 - 170, 60, 10, this.getFont());
+		this.hovered = new TextWidget("Hovered: null", this.width/2 - 170, 80, 10, this.getFont());
+		TextWidget counterStr = new TextWidget(this.width/2 - 170, 160, 10, this.getFont());
+		this.colored = new TextWidget("Color animated text", this.width/2 - 170, 180, 10, this.getFont());
 		this.colored.setColor(animation.rainbowColor());
 		this.addWidget(title);
 		this.addWidget(fpsCounter);
@@ -83,10 +87,9 @@ public class TestScreen extends Screen {
 		this.addWidget(feedback);
 
 		//Text field widgets
-		this.addWidget(new TextFieldWidget(20, 100, 150, 1));
-		this.addWidget(new TextFieldWidget(20, 130, 150, 1));
+		this.addWidget(new TextFieldWidget(this.width/2 - 170, 100, 150, 1));
 
-		this.testButton = new TextButtonWidget(20, 200, 150, "Click me!", 1,
+		this.testButton = new TextButtonWidget(this.width/2 - 170, 130, 150, "Click me!", 1,
 				() -> {
 					this.testButton.setText("Nice, double click me now!");
 				},
@@ -96,15 +99,18 @@ public class TestScreen extends Screen {
 				}
 				);
 		this.addWidget(testButton);
-		this.addWidget(
-				new TexturedButtonWidget(this.width - 20, 5, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES));
+//		this.addWidget(
+//				new TexturedButtonWidget(this.width - 20, 5, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES));
 		this.addWidget(
 				new TextButtonWidget(this.width/2 - 50, this.height - 40, 100, "Reset screen", 1,
 						()-> {Minecraft.getMinecraft().displayGuiScreen(this.parent);}
 						));
 
+		this.addWidget(new IntegerSliderWidget(this.width/2 + 20, 130, 1, 150, 0, 100, 50));
+		
 		//Same as Javascript's setInterval
-		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback has been called " + this.counter++);}, 1000);
+		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback called " + this.counter++);}, 1000);
+		this.testGuiTextField = new GuiTextField(2, this.fontRenderer, this.width/2 + 20, 100, 150, 20);
 	}
 
 	@Override
@@ -115,6 +121,26 @@ public class TestScreen extends Screen {
 		this.focus.setText("Focused: " + this.getFocusedWidget());
 		this.hovered.setText("Hovered: " + this.hoveredWidget);
 		this.colored.setColor(animation.rainbowColor());
+		this.testGuiTextField.updateCursorCounter();
 	}
+	
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) {
+		super.keyTyped(typedChar, keyCode);
+        this.testGuiTextField.textboxKeyTyped(typedChar, keyCode);
+	}
+	
+	
+    @Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        this.testGuiTextField.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+    
+    @Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    	super.drawScreen(mouseX, mouseY, partialTicks);
+        this.testGuiTextField.drawTextBox();
+    }
 
 }

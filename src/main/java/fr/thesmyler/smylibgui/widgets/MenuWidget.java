@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.text.FontRendererContainer;
+import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 

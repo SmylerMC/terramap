@@ -23,6 +23,7 @@ public class Animation {
 	public void update() {
 		this.updated = System.currentTimeMillis();
 		long age = this.getAge();
+		long halfDuration = this.duration/2;
 		if(this.duration == 0) {
 			this.progress = 1f;
 		} else {
@@ -37,6 +38,10 @@ public class Animation {
 				this.progress = 1 - Utils.saturate(g);
 				if(this.progress == 0f) this.state = AnimationState.STOPPED;
 				break;
+			case FLASH:
+				float k = 2 * Utils.saturate(Math.abs(((float)(age % this.duration) - halfDuration)/(float)halfDuration));
+				this.progress = (int)k;
+				break;
 			case CONTINUOUS_ENTER:
 				float h = (float)(age % this.duration)/(float)this.duration;
 				this.progress = Utils.saturate(h);
@@ -46,11 +51,12 @@ public class Animation {
 				this.progress = 1 - Utils.saturate(i);
 				break;
 			case BACK_AND_FORTH:
-				long halfDuration = this.duration/2;
 				float j = ((float)(age % this.duration) - halfDuration)/(float)halfDuration;
 				this.progress = Utils.saturate(Math.abs(j));
 				break;
 			case STOPPED:
+				break;
+			default:
 				break;
 			}
 		}
@@ -79,6 +85,6 @@ public class Animation {
 	}
 	
 	public enum AnimationState {
-		ENTER, LEAVE, CONTINUOUS_ENTER, CONTINUOUS_LEAVE, BACK_AND_FORTH, STOPPED;
+		ENTER, LEAVE, FLASH, CONTINUOUS_ENTER, CONTINUOUS_LEAVE, BACK_AND_FORTH, STOPPED;
 	}
 }

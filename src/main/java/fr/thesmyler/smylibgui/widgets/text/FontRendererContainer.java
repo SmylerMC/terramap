@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.text;
+package fr.thesmyler.smylibgui.widgets.text;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
