@@ -6,6 +6,7 @@ import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
+import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.IntegerSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
@@ -107,6 +108,7 @@ public class TestScreen extends Screen {
 						));
 
 		this.addWidget(new IntegerSliderWidget(this.width/2 + 20, 130, 1, 150, 0, 100, 50));
+		this.addWidget(new FloatSliderWidget(this.width/2 + 20, 160, 1, 150, 0, 1, 0.5));
 		
 		//Same as Javascript's setInterval
 		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback called " + this.counter++);}, 1000);

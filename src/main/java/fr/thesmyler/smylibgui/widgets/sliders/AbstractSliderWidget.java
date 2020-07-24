@@ -22,18 +22,12 @@ import net.minecraft.client.renderer.GlStateManager;
 public abstract class AbstractSliderWidget implements IWidget {
 
 	private int x, y, z, width;
-	private boolean enabled;
-
-	public AbstractSliderWidget(int x, int y, int z, int width, boolean enabled) {
+	
+	public AbstractSliderWidget(int x, int y, int z, int width) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.width = width;
-		this.enabled = enabled;
-	}
-	
-	public AbstractSliderWidget(int x, int y, int z, int width) {
-		this(x, y, z, width, true);
 	}
 	
 	/**
@@ -156,22 +150,5 @@ public abstract class AbstractSliderWidget implements IWidget {
 	public int getHeight() {
 		return 20;
 	}	
-	
-	public void setEnblabled(boolean yesNo) {
-		this.enabled = yesNo;
-	}
-	
-	public void enable() {
-		this.setEnblabled(true);
-	}
-	
-	public void disable() {
-		this.setEnblabled(false);
-	}
-	
-	@Override
-	public boolean isEnabled() {
-		return this.enabled;
-	}
 
 }
