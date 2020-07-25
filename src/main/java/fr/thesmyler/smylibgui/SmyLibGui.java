@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui;
 
 import org.apache.logging.log4j.Logger;
 
+import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
@@ -12,13 +13,14 @@ public abstract class SmyLibGui {
 	public static Logger logger;
 	public static boolean debug;
 	
-	public static final ResourceLocation BUTTON_TEXTURES, OPTIONS_BACKGROUND, STAT_ICONS, ICONS;
+	public static final ResourceLocation BUTTON_TEXTURES, OPTIONS_BACKGROUND, STAT_ICONS, ICONS, WIDGET_TEXTURES;
 	
 	static {
 		BUTTON_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(GuiButton.class, null, "BUTTON_TEXTURES");
 		OPTIONS_BACKGROUND = Gui.OPTIONS_BACKGROUND;
 		STAT_ICONS = Gui.STAT_ICONS;
 		ICONS = Gui.ICONS;
+		WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/widgets.png");
 	}
 	
 	public static void init(Logger logger, boolean debug) {

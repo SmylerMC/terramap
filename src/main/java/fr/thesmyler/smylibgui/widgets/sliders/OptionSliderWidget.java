@@ -18,7 +18,6 @@ public class OptionSliderWidget extends AbstractSliderWidget {
 	@Override
 	protected void setValueFromPos(float sliderPosition) {
 		this.option = Math.round((this.options.length - 1)* sliderPosition);
-
 	}
 
 	@Override
