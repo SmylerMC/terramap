@@ -10,7 +10,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
 	//Vanilla texture
 	protected static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation("textures/gui/widgets.png");
 
-	private String str;
+	protected String str;
 
 	public TextButtonWidget(int x, int y, int width, String str, int z, Runnable onClick, Runnable onDoubleClick) {
 		super(x, y, width, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 11, z, onClick, onDoubleClick);
@@ -50,7 +50,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
 		parent.drawTexturedModalRect(x, y, 0, 46 + textureDelta * 20, this.width / 2, this.height);
 		parent.drawTexturedModalRect(x + this.width / 2, y, 200 - this.width / 2, 46 + textureDelta * 20, this.width / 2, this.height);
 
-		parent.getFont().drawCenteredString(x + this.width / 2, y + (this.height - 8) / 2, this.str, textColor, true);
+		parent.getFont().drawCenteredString(x + this.width / 2, y + (this.height - 8) / 2, this.getText(), textColor, true);
 
 	}
 

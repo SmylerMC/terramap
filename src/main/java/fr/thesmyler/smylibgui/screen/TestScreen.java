@@ -5,6 +5,7 @@ import java.io.IOException;
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.OptionButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
@@ -111,10 +112,11 @@ public class TestScreen extends Screen {
 
 		this.addWidget(new IntegerSliderWidget(this.width/2 + 20, 130, 1, 150, 0, 100, 50));
 		this.addWidget(new FloatSliderWidget(this.width/2 + 20, 160, 1, 150, 0, 1, 0.5));
-		this.addWidget(new OptionSliderWidget(this.width/2 + 20, 190, 1, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
+		this.addWidget(new OptionSliderWidget<String>(this.width/2 + 20, 190, 1, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
 		ToggleButtonWidget tb1 = new ToggleButtonWidget(this.width/2 - 170, 200, 1, true);
 		this.addWidget(tb1);
 		this.addWidget(new ToggleButtonWidget(this.width/2 - 140, 200, 1, true, () -> {tb1.enable();}, () -> {tb1.disable();}));
+		this.addWidget(new OptionButtonWidget<String>(this.width/2 + 20, 220, 150,  2, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
 
 		
 		//Same as Javascript's setInterval

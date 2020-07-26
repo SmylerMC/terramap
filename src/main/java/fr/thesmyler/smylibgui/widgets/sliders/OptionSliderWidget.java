@@ -1,18 +1,26 @@
 package fr.thesmyler.smylibgui.widgets.sliders;
 
-public class OptionSliderWidget extends AbstractSliderWidget {
+import java.util.function.Consumer;
 
-	protected String[] options;
+public class OptionSliderWidget<T> extends AbstractSliderWidget {
+
+	protected T[] options;
 	protected int option;
+	protected Consumer<T> onCycle;
 	
-	public OptionSliderWidget(int x, int y, int z, int width, String[] options, int startOption) {
+	public OptionSliderWidget(int x, int y, int z, int width, T[] options, int startOption, Consumer<T> onCycle) {
 		super(x, y, z, width);
 		this.options = options;
 		this.option = startOption;
+		this.onCycle = onCycle;
 	}
 	
-	public OptionSliderWidget(int x, int y, int z, int width, String[] options) {
-		this(x, y, z, width, options, 0);
+	public OptionSliderWidget(int x, int y, int z, int width, T[] options, Consumer<T> onCycle) {
+		this(x, y, z, width, options, 0, onCycle);
+	}
+	
+	public OptionSliderWidget(int x, int y, int z, int width, T[] options) {
+		this(x, y, z, width, options, null);
 	}
 
 	@Override
@@ -27,17 +35,27 @@ public class OptionSliderWidget extends AbstractSliderWidget {
 
 	@Override
 	protected String getDisplayString() {
-		return this.options[option];
+		return this.options[option].toString();
+	}
+	
+	public T getCurrentOption() {
+		return this.options[this.option];
 	}
 
 	@Override
 	public void goToNext() {
 		this.option = (this.option + 1) % this.options.length;
+		this.onCycle();
 	}
 
 	@Override
 	public void goToPrevious() {
 		this.option = Math.floorMod((this.option - 1), this.options.length);
+		this.onCycle();
+	}
+	
+	protected void onCycle() {
+		if(this.onCycle != null) this.onCycle.accept(this.getCurrentOption());
 	}
 
 }
