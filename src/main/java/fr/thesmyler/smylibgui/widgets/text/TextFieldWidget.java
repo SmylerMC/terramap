@@ -20,11 +20,7 @@ public class TextFieldWidget implements IWidget {
 	private int cursorIndex, deltaIndex;
 	private Animation cursorAnimation = new Animation(750);
 
-	public TextFieldWidget(int x, int y, int width, int z) {
-		this(x, y, width, z, "");
-	}
-
-	public TextFieldWidget(int x, int y, int width, int z, String defaultText) {
+	public TextFieldWidget(int x, int y, int z, int width, String defaultText) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -33,6 +29,18 @@ public class TextFieldWidget implements IWidget {
 		this.text = defaultText;
 		this.cursorIndex = this.text.length();
 		this.cursorAnimation.start(AnimationState.FLASH);
+	}
+	
+	public TextFieldWidget(int x, int y, int z, int width) {
+		this(x, y, z, width, "");
+	}
+	
+	public TextFieldWidget(int z, String defaultText) {
+		this(0, 0, z, 50, defaultText);
+	}
+	
+	public TextFieldWidget(int z) {
+		this(z, "");
 	}
 
 	@Override
@@ -175,5 +183,30 @@ public class TextFieldWidget implements IWidget {
 	public int getHeight() {
 		return this.height;
 	}
+
+	public String getText() {
+		return text;
+	}
+
+	public TextFieldWidget setText(String text) {
+		this.text = text; //TODO Update the cursor
+		return this;
+	}
+
+	public TextFieldWidget setX(int x) {
+		this.x = x;
+		return this;
+	}
+
+	public TextFieldWidget setY(int y) {
+		this.y = y;
+		return this;
+	}
+
+	public TextFieldWidget setWidth(int width) {
+		this.width = width;
+		return this;
+	}
+	
 
 }

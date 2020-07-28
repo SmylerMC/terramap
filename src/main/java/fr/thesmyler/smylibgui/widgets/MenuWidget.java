@@ -59,16 +59,16 @@ public class MenuWidget implements IWidget {
 		int textColor = this.mainAnimation.fadeColor(this.textColor);
 		int disabledTextColor = this.mainAnimation.fadeColor(this.disabledTextColor);
 		int hoveredTextColor = this.mainAnimation.fadeColor(this.hoveredTextColor);
-		Gui.drawRect(this.x, this.y, this.x + width, this.y + height, backgroundColor);
-		Gui.drawRect(this.x, this.y, this.x + 1, this.y + height, borderColor);
-		Gui.drawRect(this.x + width, this.y, this.x + width + 1, this.y + height, borderColor);
-		Gui.drawRect(this.x, this.y, this.x + width, this.y+1, borderColor);
-		Gui.drawRect(this.x, this.y + height, this.x + width, this.y + height + 1, borderColor);
+		Gui.drawRect(x, y, x + width, y + height, backgroundColor);
+		Gui.drawRect(x, y, x + 1, y + height, borderColor);
+		Gui.drawRect(x + width, y, x + width + 1, y + height, borderColor);
+		Gui.drawRect(x, y, x + width, y+1, borderColor);
+		Gui.drawRect(x, y + height, x + width, y + height + 1, borderColor);
 		int ty = y;
 		for(MenuEntry entry: this.entries) {
 			int tx = 0;
 			if(entry.text != null) {
-				boolean hovered = mouseX >= x && mouseX <= this.x + width && mouseY >= ty && mouseY <= ty + lh - 1;
+				boolean hovered = mouseX >= x && mouseX <= x + width && mouseY >= ty && mouseY <= ty + lh - 1;
 				int c = textColor;
 				if(!entry.enabled) c = disabledTextColor;
 				else if(hovered || (entry.getSubMenu() != null && entry.getSubMenu().equals(this.displayedSubMenu))) {
@@ -80,7 +80,7 @@ public class MenuWidget implements IWidget {
 					}
 					tx += 3 * this.hoverAnimation.getProgress();
 					c = hoveredTextColor;
-					Gui.drawRect(this.x+1, ty+1, this.x + width, ty + fh + padding*2 -1, hoveredColor);
+					Gui.drawRect(x+1, ty+1, x + width, ty + fh + padding*2 -1, hoveredColor);
 				}
 				MenuWidget subMenu = entry.getSubMenu();
 				if(this.displayedSubMenu != null && mouseHoverMenu && this.displayedSubMenu.equals(subMenu) && !hovered) {
@@ -100,7 +100,7 @@ public class MenuWidget implements IWidget {
 				if(subMenu != null) this.font.drawString(" >", x + width - dw - padding, ty + padding, c);
 				ty += lh;
 			} else {
-				Gui.drawRect(this.x + 1, ty + sh/2, this.x + width, ty + sh/2 + 1, separatorColor);
+				Gui.drawRect(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
 				ty += sh;
 			}
 		}

@@ -149,6 +149,21 @@ public abstract class AbstractSliderWidget implements IWidget {
 	@Override
 	public int getHeight() {
 		return 20;
-	}	
+	}
+
+	public AbstractSliderWidget setX(int x) {
+		this.x = x;
+		return this;
+	}
+
+	public AbstractSliderWidget setY(int y) {
+		this.y = y;
+		return this;
+	}
+
+	public AbstractSliderWidget setWidth(int width) {
+		this.width = width;
+		return this;
+	}
 
 }

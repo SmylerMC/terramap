@@ -63,6 +63,50 @@ public class TextWidget implements IWidget {
 		this("", anchorX, anchorY, z, TextAlignment.RIGHT, 0xFFFFFFFF, true, font);
 	}
 	
+	public TextWidget(String text, int z, TextAlignment alignment, int color, boolean shadow, FontRendererContainer font) {
+		this(text, 0, 0, z, alignment, color, shadow, font);
+	}
+	
+	public TextWidget(String text, int z, TextAlignment alignment, boolean shadow, FontRendererContainer font) {
+		this(text, z, alignment, 0xFFFFFFFF, shadow, font);
+	}
+	
+	public TextWidget(String text, int z, TextAlignment alignment, FontRendererContainer font) {
+		this(text, z, alignment, 0xFFFFFFFF, true, font);
+	}
+	
+	public TextWidget(String text, int z, int color, boolean shadow, FontRendererContainer font) {
+		this(text, z, TextAlignment.RIGHT, color, shadow, font);
+	}
+	
+	public TextWidget(String text, int z, boolean shadow, FontRendererContainer font) {
+		this(text, z, TextAlignment.RIGHT, 0xFFFFFFFF, shadow, font);
+	}
+	
+	public TextWidget(String text, int z, FontRendererContainer font) {
+		this(text, z, TextAlignment.RIGHT, 0xFFFFFFFF, true, font);
+	}
+	
+	public TextWidget(int z, TextAlignment alignment, boolean shadow, FontRendererContainer font) {
+		this("", z, alignment, 0xFFFFFFFF, shadow, font);
+	}
+	
+	public TextWidget(int z, TextAlignment alignment, FontRendererContainer font) {
+		this("", z, alignment, 0xFFFFFFFF, true, font);
+	}
+	
+	public TextWidget(int z, int color, boolean shadow, FontRendererContainer font) {
+		this("", z, TextAlignment.RIGHT, color, shadow, font);
+	}
+	
+	public TextWidget(int z, boolean shadow, FontRendererContainer font) {
+		this("", z, TextAlignment.RIGHT, 0xFFFFFFFF, shadow, font);
+	}
+	
+	public TextWidget(int z, FontRendererContainer font) {
+		this("", z, TextAlignment.RIGHT, 0xFFFFFFFF, true, font);
+	}
+	
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 //		this.font.drawString(this.getText(), x, y, this.getColor(), this.hasShadow()); //TODO Until shadows are fixed
@@ -115,52 +159,60 @@ public class TextWidget implements IWidget {
 		return anchorX;
 	}
 
-	public void setAnchorX(int anchorX) {
+	public TextWidget setAnchorX(int anchorX) {
 		this.anchorX = anchorX;
 		this.updateCoords();
+		return this;
 	}
 
 	public int getAnchorY() {
 		return anchorY;
 	}
 
-	public void setAnchorY(int anchorY) {
+	public TextWidget setAnchorY(int anchorY) {
 		this.anchorY = anchorY;
 		this.updateCoords();
+		return this;
 	}
 
 	public int getColor() {
 		return color;
 	}
 
-	public void setColor(int color) {
+	public TextWidget setColor(int color) {
 		this.color = color;
+		return this;
 	}
 
 	public boolean hasShadow() {
 		return shadow;
 	}
 
-	public void setShadow(boolean shadow) {
+	public TextWidget setShadow(boolean shadow) {
 		this.shadow = shadow;
+		return this;
 	}
 
 	public String getText() {
 		return text;
 	}
 
-	public void setText(String text) {
+	public TextWidget setText(String text) {
 		this.text = text;
 		this.updateCoords();
+		return this;
 	}
 
 	public TextAlignment getAlignment() {
 		return alignment;
 	}
 
-	public void setAlignment(TextAlignment alignment) {
+	public TextWidget setAlignment(TextAlignment alignment) {
 		this.alignment = alignment;
 		this.updateCoords();
-	}	
+		return this;
+	}
+	
+	
 	
 }

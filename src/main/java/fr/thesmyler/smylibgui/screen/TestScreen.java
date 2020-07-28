@@ -1,12 +1,12 @@
 package fr.thesmyler.smylibgui.screen;
 
-import java.io.IOException;
-
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.OptionButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.IntegerSliderWidget;
@@ -16,7 +16,6 @@ import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 
 public class TestScreen extends Screen {
 
@@ -28,20 +27,31 @@ public class TestScreen extends Screen {
 	private TextWidget hovered;
 	private TextWidget colored;
 	private TextButtonWidget testButton;
+	private Screen[] subScreens;
+	private int currentSubScreen = 0;
 	
-	private GuiTextField testGuiTextField; //TODO TEST CODE
-
-
+	private TexturedButtonWidget previous, next;
+	
 	public TestScreen(GuiScreen parent) {
-		super(Screen.BackgroundType.DIRT);
+		super(Screen.BackgroundType.DEFAULT);
 		this.parent = parent;
+		this.animation  = new Animation(5000);
+		this.animation.start(AnimationState.CONTINUOUS_ENTER);
+		this.next = new TexturedButtonWidget(10, IncludedTexturedButtons.RIGHT, this::nextPage);
+		this.previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
 	}
 
 	@Override
 	public void initScreen() { //Called at normal gui init, when screen opens or resizes
 		this.removeAllWidgets(); //Remove the widgets that were already there
 		this.cancellAllScheduled(); //Cancell all callbacks that were already there
-
+		
+		Screen textScreen = new Screen(20, 50, 1, this.width - 40, this.height - 40, BackgroundType.NONE);
+		Screen buttonScreen = new Screen(20, 50, 1, this.width - 40, this.height - 40, BackgroundType.NONE);
+		Screen sliderScreen = new Screen(20, 50, 1, this.width - 40, this.height - 40, BackgroundType.NONE);
+		Screen menuScreen = new Screen(20, 50, 1, this.width - 40, this.height - 40, BackgroundType.NONE);
+		this.subScreens = new Screen[] { textScreen, buttonScreen, sliderScreen, menuScreen};
+		
 		MenuWidget rcm = new MenuWidget(50, this.getFont()); //This will be used as our right click menu, the following are it's sub menus
 		MenuWidget animationMenu = new MenuWidget(1, this.getFont());
 		MenuWidget here = new MenuWidget(50, this.getFont());
@@ -68,32 +78,38 @@ public class TestScreen extends Screen {
 		rcm.addSeparator();
 		rcm.addEntry("Animation", animationMenu);
 		rcm.useAsRightClick(); //Calling this tells the menu to open whenever it's parent screen is right clicked
-		this.addWidget(rcm);
+		menuScreen.addWidget(rcm);
 
 		//We will use an animation to set the color of one of the displayed strings
-		this.animation  = new Animation(5000);
-		this.animation.start(AnimationState.CONTINUOUS_ENTER);
 
 		TextWidget title = new TextWidget("SmyguiLib demo test screen", this.width/2, 20, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget feedback = new TextWidget(this.width/2, this.getHeight() - 60, 10, TextAlignment.CENTER, this.getFont());
-		this.fpsCounter = new TextWidget("FPS: 0", this.width/2 - 170, 40, 10, this.getFont());
-		this.focus = new TextWidget("Focused: null", this.width/2 - 170, 60, 10, this.getFont());
-		this.hovered = new TextWidget("Hovered: null", this.width/2 - 170, 80, 10, this.getFont());
-		TextWidget counterStr = new TextWidget(this.width/2 - 170, 160, 10, this.getFont());
-		this.colored = new TextWidget("Color animated text", this.width/2 - 170, 180, 10, this.getFont());
-		this.colored.setColor(animation.rainbowColor());
 		this.addWidget(title);
-		this.addWidget(fpsCounter);
-		this.addWidget(focus);
-		this.addWidget(hovered);
-		this.addWidget(counterStr);
-		this.addWidget(colored);
-		this.addWidget(feedback);
+		this.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, null));
+		this.addWidget(next.setX(this.width - 20).setY(this.height - 20));
+		this.addWidget(previous.setX(5).setY(this.height - 20));
+		this.addWidget(
+				new TextButtonWidget(13, 13, 10, 100, "Reset screen",
+						()-> {Minecraft.getMinecraft().displayGuiScreen(new TestScreen(this.parent));}
+				)
+		);
+		
+
+		this.fpsCounter = new TextWidget("FPS: 0", textScreen.width/2 - 170, 10, 10, this.getFont());
+		this.focus = new TextWidget("Focused: null", textScreen.width/2 - 170, 30, 10, this.getFont());
+		this.hovered = new TextWidget("Hovered: null", textScreen.width/2 - 170, 50, 10, this.getFont());
+		TextWidget counterStr = new TextWidget(textScreen.width/2 - 170, 160, 10, this.getFont());
+		this.colored = new TextWidget("Color animated text", textScreen.width/2 - 170, 180, 10, this.getFont());
+		this.colored.setColor(animation.rainbowColor());
+		textScreen.addWidget(fpsCounter);
+		textScreen.addWidget(focus);
+		textScreen.addWidget(hovered);
+		textScreen.addWidget(counterStr);
+		textScreen.addWidget(colored);
 
 		//Text field widgets
-		this.addWidget(new TextFieldWidget(this.width/2 - 170, 100, 150, 1));
+		textScreen.addWidget(new TextFieldWidget(textScreen.width/2 - 170, 100, 1, 150));
 
-		this.testButton = new TextButtonWidget(this.width/2 - 170, 130, 150, "Click me!", 1,
+		this.testButton = new TextButtonWidget(buttonScreen.width/2 - 170, 130, 1, 150, "Click me!",
 				() -> {
 					this.testButton.setText("Nice, double click me now!");
 				},
@@ -102,56 +118,50 @@ public class TestScreen extends Screen {
 					this.testButton.disable();
 				}
 				);
-		this.addWidget(testButton);
-//		this.addWidget(
-//				new TexturedButtonWidget(this.width - 20, 5, 0, 15, 15, 40, 0, GuiTiledMap.WIDGET_TEXTURES));
-		this.addWidget(
-				new TextButtonWidget(this.width/2 - 50, this.height - 40, 100, "Reset screen", 1,
-						()-> {Minecraft.getMinecraft().displayGuiScreen(this.parent);}
-						));
+		buttonScreen.addWidget(testButton);
 
-		this.addWidget(new IntegerSliderWidget(this.width/2 + 20, 130, 1, 150, 0, 100, 50));
-		this.addWidget(new FloatSliderWidget(this.width/2 + 20, 160, 1, 150, 0, 1, 0.5));
-		this.addWidget(new OptionSliderWidget<String>(this.width/2 + 20, 190, 1, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
+		sliderScreen.addWidget(new IntegerSliderWidget(this.width/2 + 20, 130, 1, 150, 0, 100, 50));
+		sliderScreen.addWidget(new FloatSliderWidget(this.width/2 + 20, 160, 1, 150, 0, 1, 0.5));
+		sliderScreen.addWidget(new OptionSliderWidget<String>(this.width/2 + 20, 190, 1, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
 		ToggleButtonWidget tb1 = new ToggleButtonWidget(this.width/2 - 170, 200, 1, true);
-		this.addWidget(tb1);
-		this.addWidget(new ToggleButtonWidget(this.width/2 - 140, 200, 1, true, () -> {tb1.enable();}, () -> {tb1.disable();}));
-		this.addWidget(new OptionButtonWidget<String>(this.width/2 + 20, 220, 150,  2, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
+		buttonScreen.addWidget(tb1);
+		buttonScreen.addWidget(new ToggleButtonWidget(this.width/2 - 140, 200, 1, true, () -> {tb1.enable();}, () -> {tb1.disable();}));
+		buttonScreen.addWidget(new OptionButtonWidget<String>(this.width/2 + 20, 220, 150,  2, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
 
+		this.addWidget(subScreens[this.currentSubScreen]); //A screen is also a widget, that allows for a lot of flexibility
 		
 		//Same as Javascript's setInterval
 		this.scheduleAtInterval(() -> {counterStr.setText("Scheduled callback called " + this.counter++);}, 1000);
-		this.testGuiTextField = new GuiTextField(2, this.fontRenderer, this.width/2 + 20, 100, 150, 20);
-	}
-
-	@Override
-	public void onUpdate(Screen parent) {
-		super.onUpdate(parent);
-		this.animation.update();
-		this.fpsCounter.setText("FPS: " + Minecraft.getDebugFPS());
-		this.focus.setText("Focused: " + this.getFocusedWidget());
-		this.hovered.setText("Hovered: " + this.hoveredWidget);
-		this.colored.setColor(animation.rainbowColor());
-		this.testGuiTextField.updateCursorCounter();
+		
+		this.scheduleAtUpdate(() -> {
+			this.animation.update();
+			this.fpsCounter.setText("FPS: " + Minecraft.getDebugFPS());
+			this.focus.setText("Focused: " + this.getFocusedWidget());
+			this.hovered.setText("Hovered: " + this.getHoveredWidget());
+			this.colored.setColor(animation.rainbowColor());
+		});
+		this.updateButtons();
 	}
 	
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) {
-		super.keyTyped(typedChar, keyCode);
-        this.testGuiTextField.textboxKeyTyped(typedChar, keyCode);
+	private void nextPage() {
+		this.removeWidget(this.subScreens[this.currentSubScreen]);
+		this.currentSubScreen++;
+		this.addWidget(this.subScreens[this.currentSubScreen]);
+		this.updateButtons();
 	}
 	
+	private void previousPage() {
+		this.removeWidget(this.subScreens[this.currentSubScreen]);
+		this.currentSubScreen--;
+		this.addWidget(this.subScreens[this.currentSubScreen]);
+		this.updateButtons();
+	}
 	
-    @Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        this.testGuiTextField.mouseClicked(mouseX, mouseY, mouseButton);
-    }
-    
-    @Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-    	super.drawScreen(mouseX, mouseY, partialTicks);
-        this.testGuiTextField.drawTextBox();
-    }
+	private void updateButtons() {
+		if(this.currentSubScreen <= 0) this.previous.disable();
+		else this.previous.enable();
+		if(this.currentSubScreen >= this.subScreens.length - 1) this.next.disable();
+		else this.next.enable();
+	}
 
 }

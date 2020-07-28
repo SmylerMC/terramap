@@ -9,14 +9,16 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Mouse;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-//TODO Keyboard events
-//TODO Mouse wheel
-//TODO Propagate events to child screens
 public class Screen extends GuiScreen implements IWidget{
 
 	public static final long DOUBLE_CLICK_DELAY = 500; //TODO get that from the system
@@ -30,7 +32,7 @@ public class Screen extends GuiScreen implements IWidget{
 				int r = w1.getZ() - w2.getZ();
 				return r == 0? 1: r;
 			}
-		);
+			);
 	protected List<ScheduledTask> scheduledForNextUpdate = new ArrayList<ScheduledTask>();
 	private BackgroundType background;
 	private FontRendererContainer font;
@@ -45,13 +47,12 @@ public class Screen extends GuiScreen implements IWidget{
 	private IWidget[] draggedWidget = new IWidget[Mouse.getButtonCount()];
 	private int[] dClickX = new int[Mouse.getButtonCount()];
 	private int[] dClickY = new int[Mouse.getButtonCount()];
-	
+
 	private IWidget focusedWidget;
 
 	private List<MouseAction> delayedActions = new ArrayList<MouseAction>();
 
-	//TODO That should be private
-	protected IWidget hoveredWidget = null; //Used when drawing to check if a widget has already been considered as hovered
+	private IWidget hoveredWidget = null; //Used when drawing to check if a widget has already been considered as hovered
 
 	public Screen(int x, int y, int z, int width, int height, BackgroundType bg) {
 		for(int i=0; i<this.lastClickTime.length; i++) this.lastClickTime[i] = Long.MIN_VALUE;
@@ -99,11 +100,11 @@ public class Screen extends GuiScreen implements IWidget{
 	public void updateScreen() {
 		this.onUpdate(null);
 	}
-	
+
 	@Override
 	public void onUpdate(@Nullable Screen parent) {
 		super.updateScreen();
-		
+
 		long ctime = System.currentTimeMillis();
 		int j = 0;
 		while(j < this.scheduledForNextUpdate.size()) {
@@ -115,7 +116,7 @@ public class Screen extends GuiScreen implements IWidget{
 				j++;
 			}
 		}
-		
+
 		for(MouseAction event: this.delayedActions) {
 			boolean processed = false;
 			for(IWidget widget: this.widgets) {
@@ -155,7 +156,7 @@ public class Screen extends GuiScreen implements IWidget{
 						}
 						break;
 					case SCROLL:
-						propagate = widget.onMouseWheeled(event.mouseX, event.mouseY, event.button, this);
+						propagate = widget.onMouseWheeled(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
 						break;
 					}
 				}
@@ -198,12 +199,12 @@ public class Screen extends GuiScreen implements IWidget{
 		this.lastClickX[mouseButton] = mouseX - this.getX();
 		this.lastClickY[mouseButton] = mouseY - this.getY();
 	}
-	
+
 	@Override //From GuiScreen
 	protected void keyTyped(char typedChar, int keyCode) {
 		this.onKeyTyped(typedChar, keyCode, null);
 	}
-	
+
 	@Override //From IWidget
 	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
 		//TODO Use tab to change the focused widget
@@ -211,7 +212,7 @@ public class Screen extends GuiScreen implements IWidget{
 			this.focusedWidget.onKeyTyped(typedChar, keyCode, this);
 		}
 	}
-	
+
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 		long ctime = System.currentTimeMillis();
@@ -221,7 +222,7 @@ public class Screen extends GuiScreen implements IWidget{
 		this.lastClickY[mouseButton] = mouseY;
 		return false;
 	}
-	
+
 	@Override
 	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 		long ctime = System.currentTimeMillis();
@@ -237,7 +238,7 @@ public class Screen extends GuiScreen implements IWidget{
 		super.mouseReleased(mouseX, mouseY, mouseButton);
 		this.onMouseReleased(mouseX - this.getX(), mouseY - this.getY(), mouseButton, null);
 	}
-	
+
 	@Override
 	public void onMouseReleased(int mouseX, int mouseY, int mouseButton, @Nullable IWidget draggedWidget) {
 		this.delayedActions.add(new MouseAction(MouseActionType.RELEASE, mouseButton, mouseX, mouseY));
@@ -248,22 +249,18 @@ public class Screen extends GuiScreen implements IWidget{
 		super.mouseClickMove(mouseX, mouseY, button, timeSinceLastClick);
 		int dX = mouseX - this.lastClickX[button];
 		int dY = mouseY - this.lastClickY[button];
-		if(this.draggedWidget[button] == null) {
-			this.dClickX[button] = 0;
-			this.dClickY[button] = 0;
-			this.draggedWidget[button] = this.getWidgetUnder(mouseX - this.getX(), mouseY - this.getY());
-		}
-		this.lastClickX[button] = mouseX;
-		this.lastClickY[button] = mouseY;
-		this.onMouseDragged(mouseX, mouseY, dX, dY, button, null);
+		this.onMouseDragged(mouseX - this.getX(), mouseY - this.getY(), dX, dY, button, null);
 	}
-	
+
 	@Override
 	public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int button, @Nullable Screen parent) {
 		if(this.draggedWidget[button] == null) {
-			this.dClickX[button] = 0; //TODO
+			this.dClickX[button] = 0;
 			this.dClickY[button] = 0;
+			this.draggedWidget[button] = this.getWidgetUnder(mouseX, mouseY);
 		}
+		this.lastClickX[button] = mouseX;
+		this.lastClickY[button] = mouseY;
 		this.dClickX[button] += dX;
 		this.dClickY[button] += dY;
 	}
@@ -296,19 +293,25 @@ public class Screen extends GuiScreen implements IWidget{
 				&& widget.getY() + widget.getHeight() >= y
 				&& widget.isVisible();
 	}
-	
+
 	@Override
 	public void handleMouseInput() throws IOException {
-		
+
 		this.lastMouseX = Mouse.getEventX() * this.width / this.mc.displayWidth;
 		this.lastMouseY = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-		
+
 		super.handleMouseInput();
 
 		int scroll = Mouse.getDWheel();
-		if(scroll != 0) this.delayedActions.add(new MouseAction(MouseActionType.SCROLL, scroll, this.lastMouseX, this.lastMouseY));
+		if(scroll != 0) this.onMouseWheeled(this.lastMouseX, this.lastMouseY, scroll, null);
 	}
-	
+
+	@Override
+	public boolean onMouseWheeled(int mouseX, int mouseY, int amount, @Nullable Screen parent) {
+		this.delayedActions.add(new MouseAction(MouseActionType.SCROLL, amount, mouseX, mouseY));
+		return false;
+	}
+
 	/**
 	 * Register the given widget to gain focus at the next screen update
 	 * 
@@ -319,7 +322,7 @@ public class Screen extends GuiScreen implements IWidget{
 			this.focusedWidget = widget;
 		});
 	}
-	
+
 	public IWidget getFocusedWidget() {
 		return this.focusedWidget;
 	}
@@ -377,13 +380,13 @@ public class Screen extends GuiScreen implements IWidget{
 		switch(this.background) {
 		case NONE: break;
 		case DEFAULT:
-			this.drawDefaultBackground(); //TODO Re-implement
+			this.drawDefaultBackground();
 			break;
 		case DIRT:
-			this.drawBackground(0); //TODO Re-implement
+			this.drawBackground(0);
 			break;
 		case OVERLAY:
-			this.drawGradientRect(this.x, this.y, this.x + this.width, this.y + this.height, 0x101010c0, 0x101010d0);
+			this.drawGradientRect(x, y, x + this.width, y + this.height, 0x101010c0, 0x101010d0);
 			break;
 		}
 		this.hoveredWidget = null;
@@ -426,17 +429,42 @@ public class Screen extends GuiScreen implements IWidget{
 				run.run();
 				Screen.this.scheduleWithDelay(this, delay);
 			}
-		
+
 		};
 		this.scheduledForNextUpdate.add(new ScheduledTask(System.currentTimeMillis(), task));
+	}
+	
+	public void scheduleAtUpdate(Runnable run) {
+		this.scheduleAtInterval(run, 0);
 	}
 
 	public void cancellAllScheduled() {
 		this.scheduledForNextUpdate.clear();
 	}
-	
+
 	public FontRendererContainer getFont() {
 		return this.font;
 	}
+
+	@Nullable public IWidget getHoveredWidget() {
+		return hoveredWidget;
+	}
+
+	@Override
+	public void drawBackground(int tint) {
+		GlStateManager.disableLighting();
+		GlStateManager.disableFog();
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferBuilder = tessellator.getBuffer();
+		Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.OPTIONS_BACKGROUND);
+		GlStateManager.color(1, 1, 1, 1);
+		bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+		bufferBuilder.pos(x, y + this.height, 0).tex(0, (float)this.height / 32 + tint).color(64, 64, 64, 255).endVertex();
+		bufferBuilder.pos(x + this.width, y + this.height, 0).tex((float)this.width / 32, (float)this.height / 32 + tint).color(64, 64, 64, 255).endVertex();
+		bufferBuilder.pos(x + this.width, y, 0).tex((float)this.width / 32, tint).color(64, 64, 64, 255).endVertex();
+		bufferBuilder.pos(x, y, 0).tex(0, tint).color(64, 64, 64, 255).endVertex();
+		tessellator.draw();
+	}
+
 
 }

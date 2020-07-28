@@ -16,7 +16,7 @@ public abstract class AbstractButtonWidget implements IWidget {
 	protected Runnable onDoubleClick;
 	protected boolean enabled = true;
 	
-	public AbstractButtonWidget(int x, int y, int width, int height, int z, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
+	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -26,12 +26,12 @@ public abstract class AbstractButtonWidget implements IWidget {
 		this.onDoubleClick = onDoubleClick;
 	}
 	
-	public AbstractButtonWidget(int x, int y, int width, int height, int z, @Nullable Runnable onClick) {
-		this(x, y, width, height, z, onClick, null);
+	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick) {
+		this(x, y, z, width, height, onClick, onClick);
 	}
 	
-	public AbstractButtonWidget(int x, int y, int width, int height, int z) {
-		this(x, y, width, height, z, null, null);
+	public AbstractButtonWidget(int x, int y, int z, int width, int height) {
+		this(x, y, z, width, height, null);
 		this.disable();
 	}
 
@@ -91,21 +91,52 @@ public abstract class AbstractButtonWidget implements IWidget {
 		return this.height;
 	}
 	
+	public Runnable getOnClick() {
+		return onClick;
+	}
+
+	public AbstractButtonWidget setOnClick(Runnable onClick) {
+		this.onClick = onClick;
+		return this;
+	}
+
+	public Runnable getOnDoubleClick() {
+		return onDoubleClick;
+	}
+
+	public AbstractButtonWidget setOnDoubleClick(Runnable onDoubleClick) {
+		this.onDoubleClick = onDoubleClick;
+		return this;
+	}
+
+	public AbstractButtonWidget setX(int x) {
+		this.x = x;
+		return this;
+	}
+
+	public AbstractButtonWidget setY(int y) {
+		this.y = y;
+		return this;
+	}
+
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
 	}
 	
-	public void setEnabled(boolean yesNo) {
+	public AbstractButtonWidget setEnabled(boolean yesNo) {
 		this.enabled = yesNo;
+		return this;
 	}
 	
-	public void enable() {
+	public AbstractButtonWidget enable() {
 		this.setEnabled(true);
+		return this;
 	}
 	
-	public void disable() {
+	public AbstractButtonWidget disable() {
 		this.setEnabled(false);
+		return this;
 	}
 
 }

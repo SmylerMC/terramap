@@ -14,6 +14,10 @@ public class FloatSliderWidget extends AbstractSliderWidget {
 		this.value = startValue;
 		this.resolution = (int) Math.pow(10, Math.max(1, Math.ceil(Math.log10((float)width / (max - min)))));
 	}
+	
+	public FloatSliderWidget(int z, double min, double max, double startValue) {
+		this(0, 0, z, 50, min, max, startValue);
+	}
 
 	@Override
 	protected void setValueFromPos(float sliderPosition) {

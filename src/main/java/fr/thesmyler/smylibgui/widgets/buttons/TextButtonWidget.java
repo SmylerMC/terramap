@@ -1,28 +1,38 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 
 public class TextButtonWidget extends AbstractButtonWidget {
 
-	//Vanilla texture
-	protected static final ResourceLocation BUTTON_TEXTURES = new ResourceLocation("textures/gui/widgets.png");
-
 	protected String str;
 
-	public TextButtonWidget(int x, int y, int width, String str, int z, Runnable onClick, Runnable onDoubleClick) {
-		super(x, y, width, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 11, z, onClick, onDoubleClick);
+	public TextButtonWidget(int x, int y, int z, int width, String str, Runnable onClick, Runnable onDoubleClick) {
+		super(x, y, z, width, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 11, onClick, onDoubleClick);
 		this.str = str;
 	}
 
-	public TextButtonWidget(int x, int y, int width, String str, int z, Runnable onClick) {
-		this(x, y, width, str, z, onClick, null);
+	public TextButtonWidget(int x, int y, int z, int width, String str, Runnable onClick) {
+		this(x, y, z, width, str, onClick, null);
 	}
 
-	public TextButtonWidget(int x, int y, int width, String str, int z) {
-		this(x, y, width, str, z, null, null);
+	public TextButtonWidget(int x, int y, int z, int width, String str) {
+		this(x, y, z, width, str, null, null);
+		this.enabled = false;
+	}
+	
+	public TextButtonWidget(int z, String str, Runnable onClick, Runnable onDoubleClick) {
+		this(0, 0, z, Minecraft.getMinecraft().fontRenderer.getStringWidth(str) + 20, str, onClick, onDoubleClick);
+	}
+
+	public TextButtonWidget(int z, String str, Runnable onClick) {
+		this(z, str, onClick, null);
+	}
+
+	public TextButtonWidget(int z, String str) {
+		this(z, str, null, null);
 		this.enabled = false;
 	}
 
@@ -30,7 +40,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean hasFocus, Screen parent) {
 
 		Minecraft mc = Minecraft.getMinecraft();
-		mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
+		mc.getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
 		GlStateManager.color(1, 1, 1, 1); //White, non transparent
 
 		int textureDelta = 1;
@@ -43,7 +53,6 @@ public class TextButtonWidget extends AbstractButtonWidget {
 			textureDelta = 2;
 			textColor = 0xFFFFFFA0;
 		}
-
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -62,5 +71,8 @@ public class TextButtonWidget extends AbstractButtonWidget {
 		this.str = str;
 	}
 	
-	
+	public TextButtonWidget setWidth(int width) {
+		this.width = width;
+		return this;
+	}
 }

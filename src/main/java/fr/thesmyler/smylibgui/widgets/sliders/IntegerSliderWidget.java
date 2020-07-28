@@ -12,6 +12,10 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
 		this.max = max;
 		this.value = startValue;
 	}
+	
+	public IntegerSliderWidget(int z, int min, int max, int startValue) {
+		this(0, 0, z, 50, min, max, startValue);
+	}
 
 	@Override
 	protected void setValueFromPos(float sliderPosition) {

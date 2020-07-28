@@ -13,12 +13,12 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	protected Runnable onEnable, onDisable;
 	
 	public ToggleButtonWidget(
-			int x, int y, int width, int height, int z,
+			int x, int y, int z, int width, int height,
 			int onEnableU, int onEnableV, int offEnableU, int offEnableV,
 			int onDisableU, int onDisableV, int offDisableU, int offDisableV,
 			int onEnableUFocus, int onEnableVFocus, int offEnableUFocus, int offEnableVFocus,
 			boolean startValue, Runnable onEnable, Runnable onDisable) {
-		super(x, y, width, height, z, null);
+		super(x, y, z, width, height, null);
 		this.onClick = this::toggle;
 		this.onDoubleClick = this::toggle;
 		this.value = startValue;
@@ -39,11 +39,33 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	}
 	
 	public ToggleButtonWidget(int x, int y, int z, boolean startValue, Runnable onEnable, Runnable onDisable) {
-		this(x, y, 25, 15, z, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onEnable,  onDisable);
+		this(x, y, z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onEnable,  onDisable);
 	}
 	
 	public ToggleButtonWidget(int x, int y, int z, boolean startValue) {
-		this(x, y, 25, 15, z, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null,  null);
+		this(x, y, z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null,  null);
+	}
+	
+	public ToggleButtonWidget(
+			int z, int width, int height,
+			int onEnableU, int onEnableV, int offEnableU, int offEnableV,
+			int onDisableU, int onDisableV, int offDisableU, int offDisableV,
+			int onEnableUFocus, int onEnableVFocus, int offEnableUFocus, int offEnableVFocus,
+			boolean startValue, Runnable onEnable, Runnable onDisable) {
+		this(
+			0, 0, z, width, height,
+			onEnableU, onEnableV, offEnableU, offEnableV,
+			onDisableU, onDisableV, offDisableU, offDisableV,
+			onEnableUFocus, onEnableVFocus, offEnableUFocus, offEnableVFocus,
+			startValue, onEnable, onDisable);
+	}
+	
+	public ToggleButtonWidget(int z, boolean startValue, Runnable onEnable, Runnable onDisable) {
+		this(z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onEnable,  onDisable);
+	}
+	
+	public ToggleButtonWidget(int z, boolean startValue) {
+		this(z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null,  null);
 	}
 
 	@Override
