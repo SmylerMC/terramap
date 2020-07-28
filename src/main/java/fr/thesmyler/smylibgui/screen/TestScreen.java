@@ -59,7 +59,7 @@ public class TestScreen extends Screen {
 
 		TextWidget title = new TextWidget("SmyguiLib demo test screen", this.width/2, 20, 10, TextAlignment.CENTER, this.getFont());
 		this.addWidget(title);
-		this.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, null));
+		this.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> {Minecraft.getMinecraft().displayGuiScreen(this.parent);}));
 		this.addWidget(next.setX(this.width - 20).setY(this.height - 20));
 		this.addWidget(previous.setX(5).setY(this.height - 20));
 		this.addWidget(

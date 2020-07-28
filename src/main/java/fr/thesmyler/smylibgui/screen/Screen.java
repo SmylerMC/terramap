@@ -207,7 +207,6 @@ public class Screen extends GuiScreen implements IWidget{
 
 	@Override //From IWidget
 	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
-		//TODO Use tab to change the focused widget
 		if(this.focusedWidget != null) {
 			this.focusedWidget.onKeyTyped(typedChar, keyCode, this);
 		}
@@ -383,7 +382,7 @@ public class Screen extends GuiScreen implements IWidget{
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, @Nullable Screen parent) { //TODO Draw vanilla widgets
+	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, @Nullable Screen parent) {
 		switch(this.background) {
 		case NONE: break;
 		case DEFAULT:
