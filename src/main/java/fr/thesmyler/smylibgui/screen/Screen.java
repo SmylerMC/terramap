@@ -392,7 +392,7 @@ public class Screen extends GuiScreen implements IWidget{
 		this.hoveredWidget = null;
 		if(screenHovered) {
 			for(IWidget widget: this.widgets) {
-				if(!widget.isVisible()) continue;
+				if(!widget.isVisible() || this.isOutsideScreen(widget)) continue;
 				if(widget.isVisible() && this.isOverWidget(mouseX - x, mouseY - y, widget)) {
 					this.hoveredWidget = widget;
 					break;
@@ -400,10 +400,25 @@ public class Screen extends GuiScreen implements IWidget{
 			}
 		}
 		this.widgets.descendingIterator().forEachRemaining((widget) -> {
-			if(!widget.isVisible()) return;
+			if(!widget.isVisible() || this.isOutsideScreen(widget)) return;
 			widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
 		}); {
 		}
+	}
+	
+	/**
+	 * Indicates whether or not the widget is worth rendering
+	 * 
+	 * @param widget
+	 * 
+	 * @return false if the widget overlaps with the screen, true otherwise
+	 */
+	protected boolean isOutsideScreen(IWidget widget) {
+		int minX = widget.getX();
+		int minY = widget.getY();
+		int maxX = minX + widget.getWidth();
+		int maxY = minY + widget.getHeight();
+		return maxX < 0 || minX > this.getWidth() || maxY < 0 || minY > this.getHeight();
 	}
 
 	/**
