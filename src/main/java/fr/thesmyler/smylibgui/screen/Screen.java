@@ -323,7 +323,14 @@ public class Screen extends GuiScreen implements IWidget{
 		});
 	}
 
+	/**
+	 * 
+	 * @return the current focused widget, goes recursive if it is a screen
+	 * 
+	 */
 	public IWidget getFocusedWidget() {
+		if(this.focusedWidget instanceof Screen)
+			return ((Screen) this.focusedWidget).getFocusedWidget();
 		return this.focusedWidget;
 	}
 
@@ -462,7 +469,9 @@ public class Screen extends GuiScreen implements IWidget{
 	}
 
 	@Nullable public IWidget getHoveredWidget() {
-		return hoveredWidget;
+		if(this.hoveredWidget instanceof Screen)
+			return ((Screen) this.hoveredWidget).getHoveredWidget();
+		return this.hoveredWidget;
 	}
 
 	@Override
