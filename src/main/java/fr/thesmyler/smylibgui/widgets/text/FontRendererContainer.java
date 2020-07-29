@@ -23,27 +23,27 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  */
 public class FontRendererContainer {
 
-	private static final String SRG_renderStringAtPos = "renderStringAtPos";
+	private static final String SRG_renderStringAtPos = "func_78255_a";
 	private static Method renderStringAtPos;
-	private static final String SRG_bidiReorder = "bidiReorder";
+	private static final String SRG_bidiReorder = "func_147647_b";
 	private static Method bidiReorder;
-	private static final String SRG_resetStyles = "resetStyles";
+	private static final String SRG_resetStyles = "func_78265_b";
 	private static Method resetStyles;
-	private static final String SRG_trimStringNewline = "trimStringNewline";
+	private static final String SRG_trimStringNewline = "func_78273_d";
 	private static Method trimStringNewline;
-	private static final String SRG_posX = "posX";
-	private static final String SRG_posY = "posY";
-	private static final String SRG_red = "red";
-	private static final String SRG_green = "green";
-	private static final String SRG_blue = "blue";
-	private static final String SRG_alpha = "apha";
-	private static final String SRG_textColor = "textColor";
-	private static final String SRG_randomStyle = "randomStyle";
-	private static final String SRG_boldStyle = "boldStyle";
-	private static final String SRG_strikethroughStyle = "strikethroughStyle";
-	private static final String SRG_underlineStyle = "underlineStyle";
-	private static final String SRG_italicStyle = "italicStyle";
-	private static final String SRG_colorCode = "colorCode";
+	private static final String SRG_posX = "field_78295_j";
+	private static final String SRG_posY = "field_78296_k";
+	private static final String SRG_red = "field_78291_n";
+	private static final String SRG_green = "field_78306_p";
+	private static final String SRG_blue = "field_78292_o";
+	private static final String SRG_alpha = "field_78305_q";
+	private static final String SRG_textColor = "field_78304_r";
+	private static final String SRG_randomStyle = "field_78303_s";
+	private static final String SRG_boldStyle = "field_78302_t";
+	private static final String SRG_strikethroughStyle = "field_78299_w";
+	private static final String SRG_underlineStyle = "field_78300_v";
+	private static final String SRG_italicStyle = "field_78301_u";
+	private static final String SRG_colorCode = "field_78285_g";
 
 	public final int FONT_HEIGHT;
 

@@ -19,7 +19,7 @@ public abstract class SmyLibGui {
 	public static final ResourceLocation BUTTON_TEXTURES, OPTIONS_BACKGROUND, STAT_ICONS, ICONS, WIDGET_TEXTURES;
 	
 	static {
-		BUTTON_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(GuiButton.class, null, "BUTTON_TEXTURES");
+		BUTTON_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(GuiButton.class, null, "field_146122_a");
 		OPTIONS_BACKGROUND = Gui.OPTIONS_BACKGROUND;
 		STAT_ICONS = Gui.STAT_ICONS;
 		ICONS = Gui.ICONS;
