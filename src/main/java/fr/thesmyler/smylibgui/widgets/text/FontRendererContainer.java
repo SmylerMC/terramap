@@ -3,8 +3,6 @@ package fr.thesmyler.smylibgui.widgets.text;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import org.objectweb.asm.Type;
-
 import fr.thesmyler.smylibgui.SmyLibGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -165,7 +163,7 @@ public class FontRendererContainer {
     
 	protected void renderStringAtPos(String text, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(renderStringAtPos == null) 
-			renderStringAtPos = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_renderStringAtPos, Type.VOID_TYPE.getClass(), String.class, Boolean.TYPE);
+			renderStringAtPos = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_renderStringAtPos, Void.TYPE, String.class, Boolean.TYPE);
 		renderStringAtPos.invoke(this.font, text, shadow);
 	}
     
@@ -177,13 +175,13 @@ public class FontRendererContainer {
 	
 	protected void resetStyles() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(resetStyles == null)
-			resetStyles = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_resetStyles, Type.VOID_TYPE.getClass());
+			resetStyles = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_resetStyles, Void.TYPE);
 		resetStyles.invoke(this.font);
 	}
 
 	protected String bidiReorder(String text) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(bidiReorder == null)
-			bidiReorder = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_bidiReorder, null, String.class);
+			bidiReorder = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_bidiReorder, String.class, String.class);
 		return (String) bidiReorder.invoke(this.font, text);
 	}
 
