@@ -89,9 +89,12 @@ public class MenuWidget implements IWidget {
 				if(subMenu != null && hovered && this.displayedSubMenu == null) {
 					this.displayedSubMenu = subMenu;
 					parent.scheduleForNextScreenUpdate(()->{parent.addWidget(subMenu);});
-					//TODO Adapt to the border of the screen
 					int subX = x + width - parent.getX();
 					int subY = ty - parent.getY();
+					int subH = subMenu.getHeight();
+					int subW = subMenu.getWidth();
+					if(subY + subH > parent.height) subY = parent.height - subH;
+					if(subX + subH > parent.width) subX = subX -= subW + width;
 					subMenu.z = this.z + 1;
 					subMenu.openOnClick = false;
 					subMenu.show(subX, subY);
