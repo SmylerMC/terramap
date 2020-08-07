@@ -50,6 +50,7 @@ public class TiledMapWidget extends MapLayerWidget {
 				try {
 					tile = map.getTile((int)this.zoom, TerramapUtils.modulus(tileX, maxTileXY), tileY);
 				} catch(InvalidTileCoordinatesException e) { continue ;}
+				
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				RasterWebTile bestTile = tile;
 				boolean lowerResRender = false;

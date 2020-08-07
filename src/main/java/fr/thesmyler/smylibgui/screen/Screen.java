@@ -194,8 +194,8 @@ public class Screen extends GuiScreen implements IWidget{
 			this.delayedActions.add(new MouseAction(MouseActionType.DOUBLE_CLICK, mouseButton, mouseX - this.getX(), mouseY - this.getY()));
 		} else {
 			this.delayedActions.add(new MouseAction(MouseActionType.CLICK, mouseButton, mouseX - this.getX(), mouseY - this.getY()));
+			this.lastClickTime[mouseButton] = ctime;
 		}
-		this.lastClickTime[mouseButton] = ctime;
 		this.lastClickX[mouseButton] = mouseX - this.getX();
 		this.lastClickY[mouseButton] = mouseY - this.getY();
 	}

@@ -26,6 +26,7 @@ public class TestScreen extends Screen {
 	private TextWidget focus;
 	private TextWidget hovered;
 	private TextWidget colored;
+	private TextFieldWidget textField;
 	private TextButtonWidget testButton;
 	private Screen[] subScreens;
 	private int currentSubScreen = 0;
@@ -43,6 +44,7 @@ public class TestScreen extends Screen {
 		this.fpsCounter = new TextWidget("FPS: 0", 10, this.getFont());
 		this.focus = new TextWidget("Focused: null", 10, this.getFont());
 		this.hovered = new TextWidget("Hovered: null", 10, this.getFont());
+		this.textField = new TextFieldWidget(1, "Text field", this.getFont());
 	}
 
 	@Override
@@ -70,17 +72,15 @@ public class TestScreen extends Screen {
 		
 
 		// === Text related stuff and general features examples === /
-		
-		this.fpsCounter.setAnchorX(0).setAnchorY(10);
-		this.focus.setAnchorX(0).setAnchorY(30);
 		this.hovered = new TextWidget("Hovered: null", 0, 50, 10, this.getFont());
-		textScreen.addWidget(new TextFieldWidget(0, 70, 1, 150, "Text field")); //TODO Class field
+		
 		TextWidget counterStr = new TextWidget(0, 100, 10, this.getFont());
 		this.colored = new TextWidget("Color animated text", 0, 120, 10, this.getFont());
 		this.colored.setColor(animation.rainbowColor());
-		textScreen.addWidget(fpsCounter);
-		textScreen.addWidget(focus);
+		textScreen.addWidget(fpsCounter.setAnchorX(0).setAnchorY(10));
+		textScreen.addWidget(focus.setAnchorX(0).setAnchorY(30));
 		textScreen.addWidget(hovered);
+		textScreen.addWidget(this.textField.setX(0).setY(70).setWidth(150).setOnPressEnterCallback(s -> {this.textField.setText("You pressed enter :)"); return true;}));
 		textScreen.addWidget(counterStr);
 		textScreen.addWidget(colored);
 		
