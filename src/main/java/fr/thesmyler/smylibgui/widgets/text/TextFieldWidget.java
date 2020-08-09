@@ -11,6 +11,7 @@ import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
+import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -34,11 +35,12 @@ public class TextFieldWidget implements IWidget {
 	private int selectionStart, selectionEnd, firstCharacterIndex, maxLength;
 	private int enabledTextColor, disabledTextColor;
 	private boolean hasBackground, selecting;
-	private boolean enabled, visible;
+	private boolean enabled, visible, menuEnabled;
 	private Animation cursorAnimation = new Animation(600);
 	private FontRendererContainer font;
 	private Predicate<String> textValidator, onPressEnterCallback;
 	private Consumer<String> onChangeCallback;
+	private MenuWidget rightClickMenu;
 
 	public TextFieldWidget(int x, int y, int z, int width, String defaultText,
 			Consumer<String> onChange, Predicate<String> onPressEnter, Predicate<String> textValidator,
@@ -62,6 +64,13 @@ public class TextFieldWidget implements IWidget {
 		this.cursorAnimation.start(AnimationState.FLASH);
 		this.enabled = true;
 		this.visible = true;
+		this.menuEnabled = true;
+		this.rightClickMenu = new MenuWidget(10, this.font);
+		this.rightClickMenu.addEntry("Copy", () -> {this.copySelectionToClipboard();});
+		this.rightClickMenu.addEntry("Cut", () -> {this.cutSelectionToClipboard();});
+		this.rightClickMenu.addEntry("Paste", () -> {this.pasteIn();});
+		this.rightClickMenu.addSeparator();
+		this.rightClickMenu.addEntry("Select all", () -> {this.selectAll();});
 		this.setCursorToEnd();
 	}
 
@@ -178,6 +187,8 @@ public class TextFieldWidget implements IWidget {
 			if (this.hasBackground) mPos -= 4;
 			String string = this.getVisibleText();
 			this.setCursor(this.font.trimStringToWidth(string, mPos).length() + this.firstCharacterIndex);
+		} else if(mouseButton == 1 && this.menuEnabled) {
+			parent.showMenu(mouseX + this.x, mouseY + this.y, this.rightClickMenu);
 		}
 		return false;
 	}
@@ -199,7 +210,7 @@ public class TextFieldWidget implements IWidget {
 		} else if (Screen.isKeyComboCtrlC(keyCode)) {
 			this.copySelectionToClipboard();
 		} else if (Screen.isKeyComboCtrlV(keyCode)) {
-			this.pasteOn();
+			this.pasteIn();
 		} else if (Screen.isKeyComboCtrlX(keyCode)) {
 			this.cutSelectionToClipboard();
 		} else {
@@ -435,7 +446,7 @@ public class TextFieldWidget implements IWidget {
 		this.write("");
 	}
 
-	public void pasteOn() {
+	public void pasteIn() {
 		this.write(GuiScreen.getClipboardString());
 	}
 
@@ -555,17 +566,22 @@ public class TextFieldWidget implements IWidget {
 		return hasBackground;
 	}
 
-	public static boolean isValidChar(char chr) {
-		return chr != '§' && chr >= ' ' && chr != 127;
-	}
-
 	@Override
 	public boolean isEnabled() {
 		return this.enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public TextFieldWidget setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		return this;
+	}
+	
+	public TextFieldWidget enable() {
+		return this.setEnabled(true);
+	}
+	
+	public TextFieldWidget disable() {
+		return this.setEnabled(false);
 	}
 
 	@Override
@@ -573,8 +589,38 @@ public class TextFieldWidget implements IWidget {
 		return this.visible;
 	}
 
-	public void setVisible(boolean visible) {
+	public TextFieldWidget setVisible(boolean visible) {
 		this.visible = visible;
+		return this;
+	}
+	
+	public TextFieldWidget show() {
+		return this.setVisible(true);
+	}
+	
+	public TextFieldWidget hide() {
+		return this.setVisible(false);
+	}
+	
+	public boolean isRightClickMenuEnabled() {
+		return this.menuEnabled;
+	}
+	
+	public TextFieldWidget setRightClickMenuEnabled(boolean yesNo) {
+		this.menuEnabled = yesNo;
+		return this;
+	}
+	
+	public TextFieldWidget enableRightClickMenu() {
+		return this.setRightClickMenuEnabled(true);
+	}
+	
+	public TextFieldWidget disableRightClickMenu() {
+		return this.setRightClickMenuEnabled(false);
+	}
+	
+	public static boolean isValidChar(char chr) {
+		return chr != '§' && chr >= ' ' && chr != 127;
 	}
 
 	public static String stripInvalidChars(String str) {

@@ -26,7 +26,7 @@ public class MenuWidget implements IWidget {
 	protected int padding = 4;
 	protected int separatorColor = 0x50FFFFFF;
 	protected int borderColor = 0xA0FFFFFF;
-	protected int backgroundColor = 0xA0000000;
+	protected int backgroundColor = 0xE0000000;
 	protected int hoveredColor = 0x40C0C0C0;
 	protected int textColor = 0xFFFFFFFF;
 	protected int disabledTextColor = 0xFF808080;
@@ -63,7 +63,7 @@ public class MenuWidget implements IWidget {
 		Gui.drawRect(x, y, x + 1, y + height, borderColor);
 		Gui.drawRect(x + width, y, x + width + 1, y + height, borderColor);
 		Gui.drawRect(x, y, x + width, y+1, borderColor);
-		Gui.drawRect(x, y + height, x + width, y + height + 1, borderColor);
+		Gui.drawRect(x, y + height, x + width + 1, y + height + 1, borderColor);
 		int ty = y;
 		for(MenuEntry entry: this.entries) {
 			int tx = 0;
@@ -146,7 +146,7 @@ public class MenuWidget implements IWidget {
 
 	@Override
 	public boolean onParentClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
-		if(!this.openOnClick) return true;
+		if(!this.openOnClick && !this.visible) return true;
 		if(this.isVisible()) {
 			this.hide(parent);
 			return false;
@@ -263,7 +263,8 @@ public class MenuWidget implements IWidget {
 	public void show(int x, int y) {
 		this.x = x;
 		this.y = y;
-		if(!this.visible) this.mainAnimation.start(AnimationState.ENTER);
+		if(!this.visible)
+			this.mainAnimation.start(AnimationState.ENTER);
 		this.hoveredEntry = null;
 		this.visible = true;
 	}

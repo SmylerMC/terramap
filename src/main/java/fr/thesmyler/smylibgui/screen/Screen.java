@@ -11,6 +11,7 @@ import org.lwjgl.input.Mouse;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.IWidget;
+import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -48,12 +49,14 @@ public class Screen extends GuiScreen implements IWidget{
 	private int[] dClickX = new int[Mouse.getButtonCount()];
 	private int[] dClickY = new int[Mouse.getButtonCount()];
 
-	private IWidget focusedWidget;
-
 	private List<MouseAction> delayedActions = new ArrayList<MouseAction>();
 
+	private IWidget focusedWidget;
 	private IWidget hoveredWidget = null; //Used when drawing to check if a widget has already been considered as hovered
-
+	private MenuWidget menuToShow = null;
+	private int menuToShowX;
+	private int menuToShowY;
+	
 	public Screen(int x, int y, int z, int width, int height, BackgroundType bg) {
 		for(int i=0; i<this.lastClickTime.length; i++) this.lastClickTime[i] = Long.MIN_VALUE;
 		this.background = bg;
@@ -178,6 +181,21 @@ public class Screen extends GuiScreen implements IWidget{
 		}
 		this.delayedActions.clear();
 		for(IWidget w: this.widgets) w.onUpdate(this);
+		
+		if(this.menuToShow != null) {
+			if(parent != null) parent.showMenu(this.x + this.menuToShowX, this.y + this.menuToShowY, this.menuToShow);
+			else {
+				this.addWidget(this.menuToShow);
+				int w = this.menuToShow.getWidth();
+				int h = this.menuToShow.getHeight();
+				if(this.menuToShowX + w > this.getWidth()) this.menuToShowX -= w;
+				if(this.menuToShowY + h > this.getHeight()) this.menuToShowY -= h;
+				this.menuToShow.show(this.menuToShowX, this.menuToShowY);
+			}
+			this.menuToShow = null;
+			this.menuToShowX = 0;
+			this.menuToShowY = 0;
+		}
 	}
 
 	@Override
@@ -320,6 +338,19 @@ public class Screen extends GuiScreen implements IWidget{
 		this.scheduleForNextScreenUpdate(() -> {
 			this.focusedWidget = widget;
 		});
+	}
+	
+	/**
+	 * Show that menu at next update, pass recursively to parent screen
+	 * 
+	 * @param x
+	 * @param y
+	 * @param menu
+	 */
+	public void showMenu(int x, int y, MenuWidget menu) {
+		this.menuToShow = menu;
+		this.menuToShowX = x;
+		this.menuToShowY = y;
 	}
 
 	/**
