@@ -122,7 +122,8 @@ public class FontRendererContainer {
 			this.setRed(red);
 			this.setGreen(green);
 			this.setBlue(blue);
-			this.setColor(red, green, blue, alpha); //TODO Make sure this works right, colors are inverted in vanilla
+			this.setAlpha(alpha);
+			this.setColor(red, green, blue, alpha);
 			this.setPosX(x);
 			this.setPosY(y);
 			this.renderStringAtPos(t, dropShadow);
