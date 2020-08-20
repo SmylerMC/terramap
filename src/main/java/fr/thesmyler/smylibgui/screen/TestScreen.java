@@ -129,13 +129,13 @@ public class TestScreen extends Screen {
 		MenuWidget a = new MenuWidget(50, this.getFont());
 		MenuWidget very = new MenuWidget(50, this.getFont());
 		MenuWidget nested = new MenuWidget(50, this.getFont());
-		animationMenu.addEntry("Show", ()-> {animation.start(AnimationState.ENTER);});
-		animationMenu.addEntry("Hide", ()-> {animation.start(AnimationState.LEAVE);});
-		animationMenu.addEntry("Flash", ()-> {animation.start(AnimationState.FLASH);});
+		animationMenu.addEntry("Show", () -> {animation.start(AnimationState.ENTER);});
+		animationMenu.addEntry("Hide", () -> {animation.start(AnimationState.LEAVE);});
+		animationMenu.addEntry("Flash", () -> {animation.start(AnimationState.FLASH);});
 		animationMenu.addEntry("Continuous", ()-> {animation.start(AnimationState.CONTINUOUS_ENTER);});
-		animationMenu.addEntry("Continuous backward", ()-> {animation.start(AnimationState.CONTINUOUS_LEAVE);});
-		animationMenu.addEntry("Back and forth", ()-> {animation.start(AnimationState.BACK_AND_FORTH);});
-		animationMenu.addEntry("Stop", ()-> {animation.start(AnimationState.STOPPED);});
+		animationMenu.addEntry("Continuous backward", () -> {animation.start(AnimationState.CONTINUOUS_LEAVE);});
+		animationMenu.addEntry("Back and forth", () -> {animation.start(AnimationState.BACK_AND_FORTH);});
+		animationMenu.addEntry("Stop", () -> {animation.start(AnimationState.STOPPED);});
 		rcm.addEntry("Close", () -> {
 			Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		});

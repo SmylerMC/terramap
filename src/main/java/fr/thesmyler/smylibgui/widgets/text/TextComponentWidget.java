@@ -68,7 +68,7 @@ public class TextComponentWidget implements IWidget {
 		this.hovered = this.getComponentUnder(mouseX - x, mouseY - y);
 	}
 
-	public void updateCoords() {
+	protected void updateCoords() {
 		this.lines = GuiUtilRenderComponents.splitText(this.component, this.maxWidth, this.font.font, true, false).toArray(new ITextComponent[] {});
 		this.height = this.lines.length * (this.font.FONT_HEIGHT + 5) - 5;
 		int w = 0;
@@ -124,6 +124,16 @@ public class TextComponentWidget implements IWidget {
 		}
 		parent.setFocus(null); //We don't want to retain focus
 		return false;
+	}
+	
+	public ITextComponent getComponent() {
+		return this.component;
+	}
+	
+	public TextComponentWidget setComponent(ITextComponent component) {
+		this.component = component;
+		this.updateCoords();
+		return this;
 	}
 	
 	@Override
@@ -190,12 +200,22 @@ public class TextComponentWidget implements IWidget {
 		return this;
 	}
 	
-	public boolean getShadow() {
+	public boolean hasShadow() {
 		return this.shadow;
 	}
 	
 	public TextComponentWidget setShadow(boolean shadow) {
 		this.shadow = shadow;
+		return this;
+	}
+	
+	public TextAlignment getAlignment() {
+		return this.alignment;
+	}
+	
+	public TextComponentWidget setAlignment(TextAlignment alignment) {
+		this.alignment = alignment;
+		this.updateCoords();
 		return this;
 	}
 
