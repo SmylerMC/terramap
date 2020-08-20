@@ -12,10 +12,12 @@ import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.IntegerSliderWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.OptionSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
+import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.text.ITextComponent;
 
 public class TestScreen extends Screen {
 
@@ -69,9 +71,8 @@ public class TestScreen extends Screen {
 						()-> {Minecraft.getMinecraft().displayGuiScreen(new TestScreen(this.parent));}
 				)
 		);
-		
 
-		// === Text related stuff and general features examples === /
+		// === Text related stuff and general features examples === //
 		this.hovered = new TextWidget("Hovered: null", 0, 50, 10, this.getFont());
 		
 		TextWidget counterStr = new TextWidget(0, 100, 10, this.getFont());
@@ -83,8 +84,10 @@ public class TestScreen extends Screen {
 		textScreen.addWidget(this.textField.setX(0).setY(70).setWidth(150).setOnPressEnterCallback(s -> {this.textField.setText("You pressed enter :)"); return true;}));
 		textScreen.addWidget(counterStr);
 		textScreen.addWidget(colored);
+		ITextComponent compo = ITextComponent.Serializer.jsonToComponent("[\"\",{\"text\":\"This is red, with a hover event,\",\"color\":\"dark_red\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"I said it's red\"}},{\"text\":\" \"},{\"text\":\"and this is green with an other hover event.\",\"color\":\"dark_green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Don't you trust me? This is green!\"}},{\"text\":\"\\n\"},{\"text\":\"And this is blue, with a click event!\",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://example.com\"}},{\"text\":\"\\n\"},{\"text\":\"And finally, this is \",\"color\":\"white\"},{\"text\":\"black\",\"strikethrough\":true,\"color\":\"white\"},{\"text\":\" white, \",\"color\":\"white\"},{\"text\":\"with\",\"underlined\":true,\"color\":\"white\"},{\"text\":\" various\",\"italic\":true,\"color\":\"white\"},{\"text\":\" styles \",\"bold\":true,\"color\":\"white\"},{\"text\":\"and I bet you can't read that.\",\"obfuscated\":true,\"color\":\"white\"}]");
+		textScreen.addWidget(new TextComponentWidget(textScreen.width/2, 140, 1, compo, TextAlignment.CENTER, this.getFont()).setMaxWidth(textScreen.getWidth()));
 		
-		// === Button screen: examples on how to use button widgets === /
+		// === Button screen: examples on how to use button widgets === //
 		
 		this.testButton = new TextButtonWidget(0, 0, 1, 150, "Click me!",
 				() -> {
@@ -110,14 +113,14 @@ public class TestScreen extends Screen {
 		buttonScreen.addWidget(new OptionButtonWidget<String>(0, 90, 2, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
 
 		
-		// === Slider screen: examples on how to use slider widgets === /
+		// === Slider screen: examples on how to use slider widgets === //
 		
 		sliderScreen.addWidget(new IntegerSliderWidget(0, 0, 1, 150, 0, 100, 50));
 		sliderScreen.addWidget(new FloatSliderWidget(0, 30, 1, 150, 0, 1, 0.5));
 		sliderScreen.addWidget(new OptionSliderWidget<String>(0, 60, 1, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
 
 		
-		// === Menu screen: example on how to use menu widgets === /
+		// === Menu screen: example on how to use menu widgets === //
 		
 		MenuWidget rcm = new MenuWidget(50, this.getFont()); //This will be used as our right click menu, the following are it's sub menus
 		MenuWidget animationMenu = new MenuWidget(1, this.getFont());
@@ -150,7 +153,7 @@ public class TestScreen extends Screen {
 		menuScreen.addWidget(rcm);
 		
 		
-		// ==== Getting everything ready and setting up scheduled tasks === /
+		// ==== Getting everything ready and setting up scheduled tasks === //
 		
 		this.addWidget(subScreens[this.currentSubScreen]); //A screen is also a widget, that allows for a lot of flexibility
 		

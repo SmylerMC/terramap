@@ -53,6 +53,8 @@ public class Screen extends GuiScreen implements IWidget{
 
 	private IWidget focusedWidget;
 	private IWidget hoveredWidget = null; //Used when drawing to check if a widget has already been considered as hovered
+	private long startHoverTime;
+	
 	private MenuWidget menuToShow = null;
 	private int menuToShowX;
 	private int menuToShowY;
@@ -66,6 +68,7 @@ public class Screen extends GuiScreen implements IWidget{
 		this.width = width;
 		this.height = height;
 		this.font = new FontRendererContainer(Minecraft.getMinecraft().fontRenderer);
+		this.mc = Minecraft.getMinecraft();
 	}
 
 	public Screen(BackgroundType bg) {
@@ -414,6 +417,7 @@ public class Screen extends GuiScreen implements IWidget{
 
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, @Nullable Screen parent) {
+		boolean mouseMoved = mouseX - x != this.lastMouseX && mouseY - y != this.lastMouseY;
 		switch(this.background) {
 		case NONE: break;
 		case DEFAULT:
@@ -426,21 +430,37 @@ public class Screen extends GuiScreen implements IWidget{
 			this.drawGradientRect(x, y, x + this.width, y + this.height, 0x101010c0, 0x101010d0);
 			break;
 		}
-		this.hoveredWidget = null;
+		IWidget lastHoveredWidget = this.getHoveredWidget();
+		IWidget wf = null;
 		if(screenHovered) {
 			for(IWidget widget: this.widgets) {
 				if(!widget.isVisible() || this.isOutsideScreen(widget)) continue;
 				if(widget.isVisible() && this.isOverWidget(mouseX - x, mouseY - y, widget)) {
-					this.hoveredWidget = widget;
+					wf = widget;
 					break;
 				}
 			}
 		}
+		this.hoveredWidget = wf;
 		this.widgets.descendingIterator().forEachRemaining((widget) -> {
 			if(!widget.isVisible() || this.isOutsideScreen(widget)) return;
 			widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
-		}); {
+		});
+		IWidget w = this.getHoveredWidget();
+		if(mouseMoved || (w != null && !w.equals(lastHoveredWidget))) {
+			this.startHoverTime = System.currentTimeMillis();
 		}
+		if(
+			   parent == null
+			&& w != null
+			&& w.getTooltipText() != null
+			&& !w.getTooltipText().isEmpty()
+			&& this.startHoverTime + w.getTooltipDelay() <= System.currentTimeMillis()
+		) {
+			this.drawHoveringText(w.getTooltipText(), mouseX, mouseY);
+		}
+		this.lastMouseX = mouseX - x;
+		this.lastMouseY = mouseY - y;
 	}
 	
 	/**

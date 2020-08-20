@@ -105,7 +105,7 @@ public interface IWidget {
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
 	public default boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
-		return true;
+		return this.onClick(mouseX, mouseY, mouseButton, parent);
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public interface IWidget {
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
 	public default boolean onParentDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
-		return true;
+		return this.onParentClick(mouseX, mouseY, mouseButton, parent);
 	}
 	
 	/**
