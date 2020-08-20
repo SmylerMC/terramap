@@ -21,6 +21,7 @@ public class MenuWidget implements IWidget {
 	protected boolean visible = false;
 	protected int x, y, z = 0;
 	protected FontRendererContainer font;
+	private boolean isSubMenu = false;
 	private boolean openOnClick = false;
 
 	protected int padding = 4;
@@ -96,7 +97,7 @@ public class MenuWidget implements IWidget {
 					if(subY + subH > parent.height) subY = parent.height - subH;
 					if(subX + subH > parent.width) subX = subX -= subW + width;
 					subMenu.z = this.z + 1;
-					subMenu.openOnClick = false;
+					subMenu.isSubMenu = true;
 					subMenu.show(subX, subY);
 				}
 				this.font.drawString(entry.getText(), x + padding*2 + tx, ty + padding, c);
@@ -125,7 +126,7 @@ public class MenuWidget implements IWidget {
 					if(entry.text != null && entry.enabled && entry.action != null ) {
 						entry.exec();
 						this.hide(parent);
-						if(!this.openOnClick) {
+						if(this.isSubMenu) {
 							return true;
 						}
 					}
@@ -146,7 +147,7 @@ public class MenuWidget implements IWidget {
 
 	@Override
 	public boolean onParentClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
-		if(!this.openOnClick && !this.visible) return true;
+		if(this.isSubMenu) return true;
 		if(this.isVisible()) {
 			this.hide(parent);
 			return false;
