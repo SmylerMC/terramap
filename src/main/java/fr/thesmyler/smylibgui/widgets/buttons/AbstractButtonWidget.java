@@ -42,29 +42,23 @@ public abstract class AbstractButtonWidget implements IWidget {
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-		if(parent != null && parent.getFocusedWidget() != null && parent.getFocusedWidget().equals(this)) {
-			parent.setFocus(null); //We don't want to keep the focus
-		}
+		parent.setFocus(null); //We don't want to keep the focus
 		if(this.onClick != null) {
 			this.onClick.run();
-			parent.setFocus(null);
-			return false;
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
 	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-		if(parent != null && parent.getFocusedWidget() != null && parent.getFocusedWidget().equals(this)) {
-			parent.setFocus(null);
-		}
+		parent.setFocus(null);
 		if(this.onDoubleClick != null) {
 			this.onDoubleClick.run();
-			parent.setFocus(null);
-			return false;
+		} else {
+			this.onClick.run();
 		}
-		return true;
+		return false;
 	}
 	
 	@Override
