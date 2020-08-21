@@ -15,6 +15,7 @@ public abstract class AbstractButtonWidget implements IWidget {
 	protected Runnable onClick;
 	protected Runnable onDoubleClick;
 	protected boolean enabled = true;
+	protected String tooltip = "";
 	
 	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
 		this.x = x;
@@ -66,6 +67,21 @@ public abstract class AbstractButtonWidget implements IWidget {
 		return true;
 	}
 	
+	@Override
+	public String getTooltipText() {
+		return this.tooltip;
+	}
+
+	@Override
+	public long getTooltipDelay() {
+		return 750;
+	}
+	
+	public AbstractButtonWidget setTooltip(String tooltip) {
+		this.tooltip = tooltip;
+		return this;
+	}
+
 	@Override
 	public int getX() {
 		return this.x;
