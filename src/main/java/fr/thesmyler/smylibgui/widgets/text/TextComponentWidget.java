@@ -5,7 +5,9 @@ import javax.annotation.Nullable;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 
 public class TextComponentWidget implements IWidget {
@@ -16,6 +18,8 @@ public class TextComponentWidget implements IWidget {
 	protected int width, height, maxWidth;
 	protected int baseColor;
 	protected boolean shadow;
+	protected int backgroundColor = 0x00000000;
+	protected int padding = 0;
 	protected FontRendererContainer font;
 	protected ITextComponent hovered;
 	protected TextAlignment alignment;
@@ -47,7 +51,12 @@ public class TextComponentWidget implements IWidget {
 
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-		int drawY = y;
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+		int w = this.getWidth();
+		int h = this.getHeight();
+		GuiScreen.drawRect(x, y, x + w, y + h, this.backgroundColor);
+		int drawY = y + this.padding;
 		for(ITextComponent line: this.lines) {
 			String ft = line.getFormattedText();
 			int lineWidth = this.font.getStringWidth(ft);
@@ -63,26 +72,27 @@ public class TextComponentWidget implements IWidget {
 				break;
 			}
 			this.font.drawString(ft, lx, drawY, this.baseColor, this.shadow);
-			drawY += this.font.FONT_HEIGHT + 5;
+			drawY += this.font.FONT_HEIGHT + this.padding;
 		}
 		this.hovered = this.getComponentUnder(mouseX - x, mouseY - y);
 	}
 
 	protected void updateCoords() {
 		this.lines = GuiUtilRenderComponents.splitText(this.component, this.maxWidth, this.font.font, true, false).toArray(new ITextComponent[] {});
-		this.height = this.lines.length * (this.font.FONT_HEIGHT + 5) - 5;
+		this.height = this.lines.length * (this.font.FONT_HEIGHT + this.padding) + this.padding ;
 		int w = 0;
 		for(ITextComponent line: this.lines) {
 			String ft = line.getFormattedText();
 			w = Math.max(w, this.font.getStringWidth(ft));
 		}
-		this.width = w;
+		this.width = w + this.padding * 2;
 		this.x = this.anchorX;
 		switch(this.alignment) {
 		case RIGHT:
+			this.x -= this.padding;
 			break;
 		case LEFT:
-			this.x -= this.width;
+			this.x -= this.width - this.padding;
 			break;
 		case CENTER:
 			this.x -= this.width/2;
@@ -92,12 +102,12 @@ public class TextComponentWidget implements IWidget {
 	}
 
 	protected ITextComponent getComponentUnder(int x, int y) {
-		if(x < 0 || x > this.width) return null;
-		int lineIndex = (int) Math.floor(y / (this.font.FONT_HEIGHT + 5));
+		if(x < this.padding || x > this.width - this.padding) return null;
+		int lineIndex = (int) Math.floor((float)(y - this.padding) / (this.font.FONT_HEIGHT + this.padding));
 		if(lineIndex < 0 || lineIndex >= this.lines.length) return null;
-		if(y - lineIndex*(this.font.FONT_HEIGHT + 5) > this.font.FONT_HEIGHT) return null;
+		if(y - this.padding - lineIndex*(this.font.FONT_HEIGHT + this.padding) > this.font.FONT_HEIGHT) return null;
 		ITextComponent line = this.lines[lineIndex];
-		int pos = 0;
+		int pos = this.padding;
 		int lineWidth = this.font.getStringWidth(line.getFormattedText());
 		switch(this.alignment) {
 		case RIGHT:
@@ -233,5 +243,26 @@ public class TextComponentWidget implements IWidget {
 			return null;
 		}
 	}
+	
+	public int getBackgroundColor() {
+		return this.backgroundColor;
+	}
+	
+	public TextComponentWidget setBackgroundColor(int color) {
+		this.backgroundColor = color;
+		return this;
+	}
+
+	public int getPadding() {
+		return padding;
+	}
+
+	public TextComponentWidget setPadding(int padding) {
+		this.padding = padding;
+		this.updateCoords();
+		return this;
+	}
+	
+	
 
 }
