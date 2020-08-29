@@ -12,12 +12,15 @@ import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
+import fr.thesmyler.terramap.TerramapMod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -41,6 +44,7 @@ public class TextFieldWidget implements IWidget {
 	private Predicate<String> textValidator, onPressEnterCallback;
 	private Consumer<String> onChangeCallback;
 	private MenuWidget rightClickMenu;
+	private boolean isSearchBar;
 
 	public TextFieldWidget(int x, int y, int z, int width, String defaultText,
 			Consumer<String> onChange, Predicate<String> onPressEnter, Predicate<String> textValidator,
@@ -65,7 +69,7 @@ public class TextFieldWidget implements IWidget {
 		this.enabled = true;
 		this.visible = true;
 		this.menuEnabled = true;
-		this.rightClickMenu = new MenuWidget(10, this.font);
+		this.rightClickMenu = new MenuWidget(5000, this.font);
 		this.rightClickMenu.addEntry("Copy", () -> {this.copySelectionToClipboard();});
 		this.rightClickMenu.addEntry("Cut", () -> {this.cutSelectionToClipboard();});
 		this.rightClickMenu.addEntry("Paste", () -> {this.pasteIn();});
@@ -100,12 +104,20 @@ public class TextFieldWidget implements IWidget {
 			if(focused) textColor = this.enabledTextColor; else textColor = 0xFFB0B0B0;
 		}
 
-		if (this.hasBackground) {
+		if(this.hasBackground) {
 			Gui.drawRect(x, y, x + this.width, y + this.height, backgroundColor);
 			Gui.drawRect(x - 1, y - 1, x + this.width + 1, y, borderColor);
 			Gui.drawRect(x - 1, y + this.height, x + this.width + 1, y + this.height + 1, borderColor);
 			Gui.drawRect(x - 1, y - 1, x, y + this.height + 1, borderColor);
 			Gui.drawRect(x + this.width, y - 1, x + this.width + 1, y + this.height + 1, borderColor);
+		}
+		
+		if(this.isSearchBar) {
+			GlStateManager.color(1, 1, 1, 1);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png"));
+			GlStateManager.enableAlpha();
+			GlStateManager.enableBlend();
+			GuiScreen.drawModalRectWithCustomSizedTexture(x + this.width - 17, y + 2, 131, 0, 15, 15, 256, 256);
 		}
 
 
@@ -523,6 +535,15 @@ public class TextFieldWidget implements IWidget {
 
 	public TextFieldWidget setEnabledTextColor(int enabledTextColor) {
 		this.enabledTextColor = enabledTextColor;
+		return this;
+	}
+	
+	public boolean isSearchBar() {
+		return this.isSearchBar;
+	}
+	
+	public TextFieldWidget setIsSearchBar(boolean yesNo) {
+		this.isSearchBar = yesNo;
 		return this;
 	}
 
