@@ -32,7 +32,7 @@ public class MenuWidget implements IWidget {
 	protected int textColor = 0xFFFFFFFF;
 	protected int disabledTextColor = 0xFF808080;
 	protected int hoveredTextColor = 0xFF8080FF;
-	
+
 	protected Animation mainAnimation = new Animation(150);
 	protected Animation hoverAnimation = new Animation(150);
 
@@ -139,7 +139,7 @@ public class MenuWidget implements IWidget {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		return false; //We want to intercept double clicks
@@ -165,13 +165,13 @@ public class MenuWidget implements IWidget {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean onParentDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		if(mouseButton == 1) return this.onParentClick(mouseX, mouseY, mouseButton, parent);
 		return true;
 	}
-	
+
 	@Override
 	public void onUpdate(Screen parent) {
 	}
@@ -254,9 +254,11 @@ public class MenuWidget implements IWidget {
 		MenuWidget m = this.displayedSubMenu;
 		if(m != null) {
 			m.hide(parent);
-			parent.scheduleForNextScreenUpdate(()->{
-				parent.removeWidget(m);
-			});
+			if(parent != null) {
+				parent.scheduleForNextScreenUpdate(()->{
+					parent.removeWidget(m);
+				});
+			}
 		}
 		this.displayedSubMenu = null;
 	}
@@ -273,7 +275,7 @@ public class MenuWidget implements IWidget {
 	public void useAsRightClick() {
 		this.openOnClick = true;
 	}
-	
+
 	@Override
 	public boolean isVisible() {
 		return this.visible;
