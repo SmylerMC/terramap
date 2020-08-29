@@ -3,7 +3,10 @@ package fr.thesmyler.smylibgui.widgets;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 
 public class Scrollbar extends Screen {
@@ -33,6 +36,7 @@ public class Scrollbar extends Screen {
 	
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		int i = 4;
 		int y = this.drag.getY();
 		if(mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.downButton.getHeight()) {
@@ -132,7 +136,7 @@ public class Scrollbar extends Screen {
 		
 		@Override
 		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			int bgcolor = hovered ? DRAG_BG_COLOR: DRAG_BG_COLOR_HOVER;
+			int bgcolor = hovered || focused ? DRAG_BG_COLOR: DRAG_BG_COLOR_HOVER;
 			int height = this.getHeight();
 			GuiScreen.drawRect(x, y, x + this.getWidth(), y + height, bgcolor);
 			
