@@ -136,8 +136,8 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 		PAPER(15, 15, 195, 0, 195, 15, 195, 30, SmyLibGui.WIDGET_TEXTURES),
 		
 		// 21x21
-		BLANK_BIG(21, 21, 60, 45, 60, 66, 60, 81, SmyLibGui.WIDGET_TEXTURES),
-		SEARCH(21, 21, 81, 45, 81, 66, 81, 81, SmyLibGui.WIDGET_TEXTURES);
+		BLANK_BIG(21, 21, 60, 45, 60, 66, 60, 87, SmyLibGui.WIDGET_TEXTURES),
+		SEARCH(21, 21, 81, 45, 81, 66, 81, 87, SmyLibGui.WIDGET_TEXTURES);
 		
 		int width, height, u, v, hoverU, hoverV, disabledU, disabledV;
 		ResourceLocation texture;
