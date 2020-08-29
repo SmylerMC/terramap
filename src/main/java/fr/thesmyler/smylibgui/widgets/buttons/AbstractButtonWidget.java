@@ -10,13 +10,13 @@ import net.minecraft.init.SoundEvents;
 
 //TODO Add the possibility to bind a keybinding to a button
 public abstract class AbstractButtonWidget implements IWidget {
-	
+
 	protected int x, y, z, width, height;
 	protected Runnable onClick;
 	protected Runnable onDoubleClick;
 	protected boolean enabled = true;
 	protected String tooltip = "";
-	
+
 	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
 		this.x = x;
 		this.y = y;
@@ -26,11 +26,11 @@ public abstract class AbstractButtonWidget implements IWidget {
 		this.onClick = onClick;
 		this.onDoubleClick = onDoubleClick;
 	}
-	
+
 	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick) {
 		this(x, y, z, width, height, onClick, onClick);
 	}
-	
+
 	public AbstractButtonWidget(int x, int y, int z, int width, int height) {
 		this(x, y, z, width, height, null);
 		this.disable();
@@ -38,29 +38,31 @@ public abstract class AbstractButtonWidget implements IWidget {
 
 	@Override
 	public abstract void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean hasFocus, Screen parent);
-	
+
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		parent.setFocus(null); //We don't want to keep the focus
-		if(this.onClick != null) {
+		if(this.onClick != null && mouseButton == 0) {
 			this.onClick.run();
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		parent.setFocus(null);
-		if(this.onDoubleClick != null) {
-			this.onDoubleClick.run();
-		} else {
-			this.onClick.run();
+		if(mouseButton == 0) {
+			if(this.onDoubleClick != null) {
+				this.onDoubleClick.run();
+			} else if(this.onClick != null && mouseButton == 0){
+				this.onClick.run();
+			}
 		}
 		return false;
 	}
-	
+
 	@Override
 	public String getTooltipText() {
 		return this.tooltip;
@@ -70,7 +72,7 @@ public abstract class AbstractButtonWidget implements IWidget {
 	public long getTooltipDelay() {
 		return 750;
 	}
-	
+
 	public AbstractButtonWidget setTooltip(String tooltip) {
 		this.tooltip = tooltip;
 		return this;
@@ -100,7 +102,7 @@ public abstract class AbstractButtonWidget implements IWidget {
 	public int getHeight() {
 		return this.height;
 	}
-	
+
 	public Runnable getOnClick() {
 		return onClick;
 	}
@@ -133,17 +135,17 @@ public abstract class AbstractButtonWidget implements IWidget {
 	public boolean isEnabled() {
 		return this.enabled;
 	}
-	
+
 	public AbstractButtonWidget setEnabled(boolean yesNo) {
 		this.enabled = yesNo;
 		return this;
 	}
-	
+
 	public AbstractButtonWidget enable() {
 		this.setEnabled(true);
 		return this;
 	}
-	
+
 	public AbstractButtonWidget disable() {
 		this.setEnabled(false);
 		return this;
