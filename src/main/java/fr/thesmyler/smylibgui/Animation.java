@@ -62,6 +62,10 @@ public class Animation {
 		}
 	}
 	
+	public int between(int x1, int x2) {
+		return Math.round((x1 - x2) * this.progress + x2);
+	}
+	
 	public int fadeColor(int color) {
 		return Utils.adaptAlpha(color, this.getProgress());
 	}
