@@ -20,7 +20,7 @@ public class Scrollbar extends Screen {
 	protected TexturedButtonWidget upButton = new TexturedButtonWidget(1, IncludedTexturedButtons.UP);
 	protected TexturedButtonWidget downButton = new TexturedButtonWidget(1, IncludedTexturedButtons.DOWN);
 	protected Draggable drag = new Draggable();
-	protected double progress = 0.5;
+	protected double progress = 0;
 	protected double viewPort = 0.1;
 	
 	public Scrollbar(int x, int y, int z, int height) {
@@ -32,6 +32,10 @@ public class Scrollbar extends Screen {
 		this.downButton.enable();
 		this.addWidget(this.upButton).addWidget(this.downButton);
 		this.addWidget(drag);
+	}
+	
+	public Scrollbar(int z) {
+		this(0, 0, z, 50);
 	}
 	
 	@Override
@@ -69,6 +73,11 @@ public class Scrollbar extends Screen {
 		this.progress = Math.min(1, this.progress + this.viewPort * 0.5);
 	}
 	
+	public Scrollbar setX(int x) {
+		this.x = x;
+		return this;
+	}
+	
 	public Scrollbar setY(int y) {
 		this.y = y;
 		return this;
@@ -76,6 +85,7 @@ public class Scrollbar extends Screen {
 	
 	public Scrollbar setHeight(int height) {
 		this.height = height;
+		this.downButton.setY(this.height - this.downButton.getHeight());
 		return this;
 	}
 	
@@ -95,6 +105,11 @@ public class Scrollbar extends Screen {
 	public Scrollbar setViewPort(double viewPort) {
 		this.viewPort = viewPort;
 		return this;
+	}
+	
+	@Override
+	public boolean isVisible() {
+		return this.viewPort < 1;
 	}
 
 	private class Draggable implements IWidget {
@@ -123,7 +138,7 @@ public class Scrollbar extends Screen {
 
 		@Override
 		public int getHeight() {
-			return (int) Math.round(Scrollbar.this.viewPort * (Scrollbar.this.height - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight()));
+			return (int) Math.round(Math.min(Scrollbar.this.viewPort, 1) * (Scrollbar.this.height - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight()));
 		}
 
 		@Override
