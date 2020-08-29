@@ -125,7 +125,7 @@ public class TerramapScreen extends Screen {
 		// Style pannel
 		this.stylePannel.setWidth(200).setHeight(this.getHeight());
 		this.stylePannel.setHiddenX(this.getWidth()).setHiddenY(0).setShowX(this.getWidth() - this.stylePannel.getWidth()).setShowY(0);
-		this.stylePannel.setCloseOnClickOther(true);
+		this.stylePannel.setCloseOnClickOther(false);
 		this.stylePannel.removeAllWidgets();
 		this.styleScrollbar.setX(this.stylePannel.width - 15).setY(0).setHeight(this.getHeight());
 		this.stylePannel.addWidget(this.styleScrollbar);
@@ -251,6 +251,7 @@ public class TerramapScreen extends Screen {
 			this.setInteractive(false);
 			this.setRightClickMenuEnabled(false);
 			this.setCopyrightVisibility(false);
+			this.setScaleVisibility(false);
 		}
 
 		@Override

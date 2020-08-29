@@ -15,6 +15,7 @@ import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.EarthMapConfigGui;
+import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
 import fr.thesmyler.terramap.maps.TiledMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -26,9 +27,7 @@ public class MapWidget extends Screen {
 	private boolean interactive = true;
 	private boolean focusedZoom = true; //Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
 	private boolean enableRightClickMenu = true;
-	private boolean enableScaleIndicator = true; //TODO Implement scale indicator
-	private boolean showCopyright = true; //TODO Accessors
-	private boolean debug; // Draw additional debug info if true //TODO Implement
+	private boolean showCopyright = true;
 
 	private ControllerMapLayer controller = new ControllerMapLayer();
 	protected RasterMapLayerWidget background;
@@ -40,6 +39,7 @@ public class MapWidget extends Screen {
 	private MenuEntry copyMcMenuEntry;
 	private MenuEntry setProjectionMenuEntry;
 	private TextComponentWidget copyright;
+	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
@@ -96,6 +96,8 @@ public class MapWidget extends Screen {
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.set_proj"), ()-> {
 			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
 		});
+		this.scale.setX(15).setY(this.height - 5);
+		this.addWidget(scale);
 		this.updateRightClickMenuEntries();
 		this.updateMouseGeoPos(this.width/2, this.height/2);
 	}
@@ -105,7 +107,6 @@ public class MapWidget extends Screen {
 	}
 
 	/**
-	 * //TODO addMapLayer doc
 	 * 
 	 * @param layer
 	 * @return this
@@ -160,7 +161,6 @@ public class MapWidget extends Screen {
 		return this;
 	}
 
-	//TODO Map onUpdate
 	@Override
 	public void onUpdate(@Nullable Screen parent) {
 		super.onUpdate(parent);
@@ -200,7 +200,6 @@ public class MapWidget extends Screen {
 			//Literally nothing to do here, this is strictly used to handle user input
 		}
 
-		//TODO Map controller onClick
 		@Override
 		public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 			if(MapWidget.this.enableRightClickMenu && mouseButton == 1) {
@@ -209,7 +208,6 @@ public class MapWidget extends Screen {
 			return false;
 		}
 
-		//TODO Map controller onDoubleClick
 		@Override
 		public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 
@@ -222,7 +220,6 @@ public class MapWidget extends Screen {
 			return false;
 		}
 
-		//TODO Map controller onMouseDragged
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, @Nullable Screen parent) {
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
@@ -230,7 +227,6 @@ public class MapWidget extends Screen {
 			}
 		}
 
-		//TODO Map controller onKeyTyped
 		@Override
 		public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
 			if(MapWidget.this.isInteractive()) {
@@ -242,7 +238,6 @@ public class MapWidget extends Screen {
 			}
 		}
 
-		//TODO Map controller onMouseWheeled
 		@Override
 		public boolean onMouseWheeled(int mouseX, int mouseY, int amount, @Nullable Screen parent) {
 			if(MapWidget.this.isInteractive()) {
@@ -394,6 +389,7 @@ public class MapWidget extends Screen {
 
 	public MapWidget setHeight(int height) {
 		this.height = height;
+		this.scale.setY(this.height - 20);
 		return this;
 	}
 
@@ -429,6 +425,62 @@ public class MapWidget extends Screen {
 	
 	public MapWidget setCopyrightVisibility(boolean yesNo) {
 		this.showCopyright = yesNo;
+		return this;
+	}
+
+	public void moveMap(int dX, int dY) {
+		controller.moveMap(dX, dY);
+	}
+
+	public double getScreenX(double longitude) {
+		return this.background.getScreenX(longitude);
+	}
+
+	public double getScreenY(double latitude) {
+		return this.background.getScreenY(latitude);
+	}
+	
+	public double getScreenLongitude(double xOnScreen) {
+		return this.background.getScreenLongitude(xOnScreen);
+	}
+
+	public double getScreenLatitude(double yOnScreen) {
+		return this.background.getScreenLatitude(yOnScreen);
+	}
+	
+	public int getScaleX() {
+		return this.scale.getX();
+	}
+	
+	public MapWidget setScaleX(int x) {
+		this.scale.setX(x);
+		return this;
+	}
+	
+	public int getScaleY() {
+		return this.scale.getY();
+	}
+	
+	public MapWidget setScaleY(int y) {
+		this.scale.setY(y);
+		return this;
+	}
+	
+	public int getScaleWidth() {
+		return this.scale.getWidth();
+	}
+	
+	public MapWidget setScaleWidth(int width) {
+		this.scale.setWidth(width);
+		return this;
+	}
+	
+	public boolean getScaleVisibility() {
+		return this.scale.isVisible();
+	}
+	
+	public MapWidget setScaleVisibility(boolean yesNo) {
+		this.scale.setVisibility(yesNo);
 		return this;
 	}
 
