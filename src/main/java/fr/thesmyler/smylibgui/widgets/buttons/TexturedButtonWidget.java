@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -119,13 +118,12 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		Gui.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xFFFFFFFF); //TODO REMOVE DEBUG CODE
 		parent.drawTexturedModalRect(x, y, u, v, this.getWidth(), this.getHeight());
-//		Gui.drawScaledCustomSizeModalRect(x, y, u, v, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), 32, 32);
 	}
 	
 	public static enum IncludedTexturedButtons {
 		
+		// 15x15
 		BLANK(15, 15, 60, 0, 60, 15, 60, 30, SmyLibGui.WIDGET_TEXTURES),
 		PLUS(15, 15, 75, 0, 75, 15, 75, 30, SmyLibGui.WIDGET_TEXTURES),
 		MINUS(15, 15, 90, 0, 90, 15, 90, 30, SmyLibGui.WIDGET_TEXTURES),
@@ -133,7 +131,13 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 		RIGHT(15, 15, 120, 0, 120, 15, 120, 30, SmyLibGui.WIDGET_TEXTURES),
 		UP(15, 15, 135, 0, 135, 15, 135, 30, SmyLibGui.WIDGET_TEXTURES),
 		DOWN(15, 15, 150, 0, 150, 15, 150, 30, SmyLibGui.WIDGET_TEXTURES),
-		CROSS(15, 15, 165, 0, 165, 15, 165, 30, SmyLibGui.WIDGET_TEXTURES);
+		CROSS(15, 15, 165, 0, 165, 15, 165, 30, SmyLibGui.WIDGET_TEXTURES),
+		CENTER(15, 15, 180, 0, 180, 15, 180, 30, SmyLibGui.WIDGET_TEXTURES),
+		PAPER(15, 15, 195, 0, 195, 15, 195, 30, SmyLibGui.WIDGET_TEXTURES),
+		
+		// 21x21
+		BLANK_BIG(21, 21, 60, 45, 60, 66, 60, 81, SmyLibGui.WIDGET_TEXTURES),
+		SEARCH(21, 21, 81, 45, 81, 66, 81, 81, SmyLibGui.WIDGET_TEXTURES);
 		
 		int width, height, u, v, hoverU, hoverV, disabledU, disabledV;
 		ResourceLocation texture;
