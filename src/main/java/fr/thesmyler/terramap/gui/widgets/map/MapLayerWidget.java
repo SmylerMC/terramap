@@ -1,12 +1,12 @@
-package fr.thesmyler.terramap.gui.widgets;
+package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.config.TerramapConfiguration;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 
-public abstract class MapLayerWidget implements IWidget {
+abstract class MapLayerWidget implements IWidget {
 	
-	protected int x, y, z, width, height;
+	protected int  z, width, height;
 	protected double centerLatitude, centerLongitude, zoom;
 
 	protected double getMapX(double longitude) {
@@ -32,15 +32,25 @@ public abstract class MapLayerWidget implements IWidget {
 	protected double getUpperLeftY() {
 		return this.getMapY(this.centerLatitude) - (double)this.height / 2;
 	}
+	
+	protected double getScreenLongitude(double xOnScreen) {
+		double xOnMap = (this.getUpperLeftX() + xOnScreen) / TerramapConfiguration.tileScaling;
+		return WebMercatorUtils.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoom));
+	}
+
+	protected double getScreenLatitude(double yOnScreen) {
+		double yOnMap = (this.getUpperLeftY() + yOnScreen) / TerramapConfiguration.tileScaling;
+		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoom);
+	}
 
 	@Override
 	public int getX() {
-		return this.x;
+		return 0;
 	}
 
 	@Override
 	public int getY() {
-		return this.y;
+		return 0;
 	}
 
 	@Override
@@ -80,14 +90,6 @@ public abstract class MapLayerWidget implements IWidget {
 
 	public void setZoom(double zoom) {
 		this.zoom = zoom;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public void setY(int y) {
-		this.y = y;
 	}
 
 	public void setZ(int z) {

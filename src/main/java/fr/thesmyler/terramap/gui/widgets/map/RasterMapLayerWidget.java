@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets;
+package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapMod;
@@ -14,12 +14,16 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 
 //TODO Fractional zoom
-public class TiledMapWidget extends MapLayerWidget {
+public class RasterMapLayerWidget extends MapLayerWidget {
 
 	protected TiledMap<?> map;
 
-	public TiledMapWidget(TiledMap<?> map) {
+	public RasterMapLayerWidget(TiledMap<?> map) {
 		this.map = map;
+	}
+	
+	public TiledMap<?> getMap() {
+		return this.map;
 	}
 
 	@Override
@@ -27,7 +31,6 @@ public class TiledMapWidget extends MapLayerWidget {
 
 		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
 		
-
 		long upperLeftX = (long) this.getUpperLeftX();
 		long upperLeftY = (long) this.getUpperLeftY();
 
@@ -99,6 +102,7 @@ public class TiledMapWidget extends MapLayerWidget {
 					dY += (int) (factorY * renderSizedSize);
 				}
 
+				GlStateManager.color(1, 1, 1, 1);
 				textureManager.bindTexture(tile.getTexture());
 				Gui.drawModalRectWithCustomSizedTexture(
 						x + dispX,
