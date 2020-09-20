@@ -1,0 +1,41 @@
+package fr.thesmyler.terramap.gui.widgets.markers.markers;
+
+import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+
+public class RightClickMarker extends FixedMapMarker {
+
+	public RightClickMarker(MarkerController<?> controller) {
+		super(controller, 15, 23, 0, 0);
+	}
+
+	@Override
+	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+		Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.WIDGET_TEXTURES);
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+		GlStateManager.color(1f, 1f, 1f);
+		parent.drawTexturedModalRect(x, y, 11, hovered? 101:69, 15, 27);
+	}
+
+	@Override
+	public int getDeltaX() {
+		return -8;
+	}
+
+	@Override
+	public int getDeltaY() {
+		return -23;
+	}
+
+	@Override
+	public void update(MapWidget map) {
+		this.setLongitude(map.getMouseLongitude());
+		this.setLatitude(map.getMouseLatitude());
+	}
+
+}

@@ -1,0 +1,18 @@
+package fr.thesmyler.terramap.gui.widgets.markers.controllers;
+
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.RightClickMarker;
+
+public class RightClickMarkerController extends MarkerController<RightClickMarker> {
+
+	public RightClickMarkerController() {
+		super("right_click_marker", 1000, RightClickMarker.class);
+	}
+
+	@Override
+	public RightClickMarker[] getNewMarkers(MapMarker[] existingMarkers) {
+		if(existingMarkers.length > 0) return new RightClickMarker[] {};
+		return new RightClickMarker[] { new RightClickMarker(this)};
+	}
+
+}
