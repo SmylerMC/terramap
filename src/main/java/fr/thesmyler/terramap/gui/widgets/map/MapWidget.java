@@ -76,7 +76,7 @@ public class MapWidget extends Screen {
 		super.addWidget(this.controller);
 		this.rightClickMenu = new MenuWidget(100, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.teleport"), () -> {
-			//			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
+			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
 		});
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.center"), () -> {
 			this.setCenterPosition(this.mouseLongitude, this.mouseLatitude);
@@ -85,10 +85,10 @@ public class MapWidget extends Screen {
 			GuiScreen.setClipboardString("" + this.mouseLatitude + " " + this.mouseLongitude);
 		});
 		this.copyMcMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_mc"), ()->{
-			//				double[] coords = TerramapUtils.fromGeo(this.projection, this.mouseLong, this.mouseLat);
-			//				String dispX = "" + Math.round(coords[0]);
-			//				String dispY = "" + Math.round(coords[1]);
-			//				GuiScreen.setClipboardString(dispX + " " + dispY);
+			double[] coords = TerramapServer.getServer().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+			String dispX = "" + Math.round(coords[0]);
+			String dispY = "" + Math.round(coords[1]);
+			GuiScreen.setClipboardString(dispX + " " + dispY);
 		});
 		this.rightClickMenu.addSeparator();
 		MenuWidget openSubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
@@ -353,9 +353,21 @@ public class MapWidget extends Screen {
 	}
 
 	private void updateRightClickMenuEntries() {
-		this.teleportMenuEntry.enabled = false;
-		this.copyMcMenuEntry.enabled = false;
+		boolean hasProjection = TerramapServer.getServer().getProjection() != null;
+		this.teleportMenuEntry.enabled = hasProjection;
+		this.copyMcMenuEntry.enabled = hasProjection;
 		this.setProjectionMenuEntry.enabled = !TerramapServer.getServer().isInstalledOnServer();
+	}
+	
+	private void teleportPlayerTo(double longitude, double latitude) {
+		String cmd = TerramapServer.getServer().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
+		if(TerramapServer.getServer().getProjection() != null) {
+			double[] xz = TerramapServer.getServer().getProjection().fromGeo(longitude, latitude);
+			cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
+		} else {
+			TerramapMod.logger.error("Tried to teleport from the map but the projection was null!");
+		}
+		this.sendChatMessage(cmd, false);
 	}
 
 	public double getZoom() {

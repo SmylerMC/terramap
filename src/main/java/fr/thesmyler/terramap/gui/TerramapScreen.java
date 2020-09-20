@@ -16,8 +16,10 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.TiledMap;
+import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -140,6 +142,9 @@ public class TerramapScreen extends Screen {
 	@Override
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
+		
+		GeographicProjection projection = TerramapServer.getServer().getProjection();
+		
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
 		this.zoomText.setText("" + Math.round(this.map.getZoom()));
@@ -148,18 +153,25 @@ public class TerramapScreen extends Screen {
 		double mouseLon = this.map.getMouseLongitude();
 		String displayLat = GeoServices.formatGeoCoordForDisplay(mouseLat);
 		String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
-		if(mouseLat > LIMIT_LATITUDE || mouseLat < -LIMIT_LATITUDE) {
+		if(Math.abs(mouseLat) > LIMIT_LATITUDE) {
 			displayLat = "-";
 			displayLon = "-";
 		}
 		String formatX = "-";
 		String formatZ = "-";
+		
+		if(projection != null) {
+			double[] pos = projection.fromGeo(this.map.getMouseLongitude(), this.map.getMouseLongitude());
+			formatX = "" + Math.round(pos[0]);
+			formatZ = "" + Math.round(pos[1]);
+		}
+		
 		String playerFormatLon = "-";
 		String playerFormatLat = "-";
 
 		//TODO Localize
 		this.mouseGeoLocationText.setText("Mouse location: " + displayLat + "° " + displayLon + "°");
-		this.mouseMCLocationText.setText("X:" + formatX + " Z:" + formatZ);
+		this.mouseMCLocationText.setText("X: " + formatX + " Z: " + formatZ);
 		this.playerGeoLocationText.setText("Player position: " + playerFormatLat + "° " + playerFormatLon + "°");
 		this.distortionText.setText("Distortion: -");
 	}

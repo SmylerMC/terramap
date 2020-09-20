@@ -11,8 +11,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.forgeessentials.FeWarp;
 import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
@@ -21,6 +21,7 @@ import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
 import fr.thesmyler.terramap.network.mapsync.TerramapRemotePlayer;
 import io.github.terra121.EarthGeneratorSettings;
+import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.entity.Entity;
@@ -42,6 +43,7 @@ public class TerramapServer {
 	private boolean serverHasFe = false;
 	private String serverVersion = null;
 	private EarthGeneratorSettings genSettings = null;
+	private GeographicProjection projection = null;
 	private boolean isRegisteredForUpdates = false;
 	private String tpCommand = null;
 	
@@ -100,9 +102,17 @@ public class TerramapServer {
 	public EarthGeneratorSettings getGeneratorSettings() {
 		return this.genSettings;
 	}
+	
+	public GeographicProjection getProjection() {
+		if(this.projection == null && this.genSettings != null) {
+			this.projection = this.genSettings.getProjection();
+		}
+		return this.projection;
+	}
 
 	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
 		this.genSettings = genSettings;
+		this.projection = null;
 	}
 
 	public void saveSettings() {
