@@ -10,6 +10,7 @@ terramap.config.sync_players=同步玩家
 terramap.config.sync_interval=地图同步时间间隔 (单位为刻)
 terramap.config.sync_spec=同步客户端观察者
 terramap.config.sync_heartbeet=同步超时
+terramap.config.players_opt_in_to_display_default=默认显示玩家
 terramap.maps.name.wikimedia=Wikimedia地图
 terramap.maps.copyright.wikimedia=Wikimedia Foundation, © OpenStreetMap 贡献者
 terramap.maps.name.osm=OpenStreetMap

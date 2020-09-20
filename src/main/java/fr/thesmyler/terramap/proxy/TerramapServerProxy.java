@@ -1,12 +1,14 @@
 package fr.thesmyler.terramap.proxy;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.command.TerrashowCommand;
 import fr.thesmyler.terramap.eventhandlers.ServerTerramapEventHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapServerProxy extends TerramapProxy {
@@ -38,6 +40,11 @@ public class TerramapServerProxy extends TerramapProxy {
 	public double getDefaultGuiSize() {
 		// Don't care on server, this is just for the client config
 		return 0;
+	}
+
+	@Override
+	public void onServerStarting(FMLServerStartingEvent event) {
+    	event.registerServerCommand(new TerrashowCommand());
 	}
 
 }

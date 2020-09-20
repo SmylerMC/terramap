@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  *
  */
 @Config(modid = TerramapMod.MODID)
-public class TerramapConfiguration {
+public class TerramapConfig {
 
 	@Config.Name("cache_directory")
 	@Config.LangKey("terramap.config.cache_dir")
@@ -86,7 +86,7 @@ public class TerramapConfiguration {
 	public static int syncHeartbeatTimeout = 120000;
 	
 	@Config.Name("players_opt_in_to_display_default")
-	@Config.LangKey("terramap.config.players_opt_in_to_display_default") //TODO translation
+	@Config.LangKey("terramap.config.players_opt_in_to_display_default")
 	@Config.Comment("If player sync is enabled, sould players be displayed by default (true) or should they opt-in (false)")
 	public static boolean playersDisplayDefault = true;
 
@@ -105,7 +105,7 @@ public class TerramapConfiguration {
 		@SubscribeEvent
 		public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
 			if (event.getModID().equals(TerramapMod.MODID)) {
-				TerramapConfiguration.sync();
+				TerramapConfig.sync();
 			}
 		}
 		

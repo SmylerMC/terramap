@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +25,7 @@ public abstract class RemoteSynchronizer {
 		for(EntityPlayer player: world.playerEntities) {
 			if(!TerramapServerPreferences.shouldDisplayPlayer(player.getPersistentID())) continue;
 			TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
-			if(terraPlayer.isSpectator() && !TerramapConfiguration.syncSpectators) continue;
+			if(terraPlayer.isSpectator() && !TerramapConfig.syncSpectators) continue;
 			players.add(terraPlayer);
 		}
 		IMessage pkt = new S2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));
@@ -33,14 +33,14 @@ public abstract class RemoteSynchronizer {
 			TerramapNetworkManager.CHANNEL.sendTo(pkt, player.player);
 		}
 		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
-			if(ctime - player.lastRegisterTime > TerramapConfiguration.syncHeartbeatTimeout - 10000 && !player.noticeSent) {
+			if(ctime - player.lastRegisterTime > TerramapConfig.syncHeartbeatTimeout - 10000 && !player.noticeSent) {
 				TerramapMod.logger.debug("Sending registration expires notice to " + player.player.getName());
 				TerramapNetworkManager.CHANNEL.sendTo(new S2CRegistrationExpiresPacket(), player.player);
 				player.noticeSent = true;
 			}
 		}
 		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
-			if(ctime - player.lastRegisterTime > TerramapConfiguration.syncHeartbeatTimeout) {
+			if(ctime - player.lastRegisterTime > TerramapConfig.syncHeartbeatTimeout) {
 				TerramapMod.logger.debug("Unregistering " + player.player.getName() + "from map update as it did not renew its registration");
 				RemoteSynchronizer.playersToUpdate.remove(player.player.getPersistentID());
 				TerramapNetworkManager.CHANNEL.sendTo(new S2CRegistrationExpiresPacket(), player.player);

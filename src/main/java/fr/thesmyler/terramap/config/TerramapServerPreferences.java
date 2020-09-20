@@ -14,7 +14,11 @@ import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapMod;
 
-//TODO Use this
+/**
+ * 
+ * @author SmylerMC
+ *
+ */
 public class TerramapServerPreferences {
 
 	public static final String FILENAME = "terramap_server_preferences.json";
@@ -23,7 +27,7 @@ public class TerramapServerPreferences {
 	public static Preferences preferences = new Preferences();
 
 	public static boolean shouldDisplayPlayer(UUID uuid) {
-		return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfiguration.playersDisplayDefault;
+		return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.playersDisplayDefault;
 	}
 	
 	public static void setShouldDisplayPlayer(UUID uuid, boolean yesNo) {
@@ -33,6 +37,10 @@ public class TerramapServerPreferences {
 	}
 	
 	public static void save() {
+		if(file == null) {
+			TerramapMod.logger.warn("Trying to save server preferences to a null file, aborting");
+			return;
+		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String str = gson.toJson(preferences);
 		try {
@@ -61,11 +69,7 @@ public class TerramapServerPreferences {
 	}
 	
 	public static void setFile(File file) {
-		if(TerramapServerPreferences.file == null) {
-			TerramapServerPreferences.file = file;
-		} else {
-			TerramapMod.logger.error("Tried to set server preference file but it was already");
-		}
+		TerramapServerPreferences.file = file;
 	}
 	
 	private static class Preferences {
@@ -73,7 +77,7 @@ public class TerramapServerPreferences {
 	}
 	
 	private static class PlayerPreferences {
-		public boolean display = TerramapConfiguration.playersDisplayDefault;
+		public boolean display = TerramapConfig.playersDisplayDefault;
 	}
 	
 }

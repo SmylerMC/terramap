@@ -11,7 +11,7 @@ import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
-import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
@@ -24,6 +24,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy {
@@ -38,7 +39,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		TerramapMod.logger.debug("Terramap client pre-init");
 		TerramapNetworkManager.registerHandlers(Side.CLIENT);
 		try {
-			TerramapMod.cacheManager = new CacheManager(TerramapConfiguration.cachingDir);
+			TerramapMod.cacheManager = new CacheManager(TerramapConfig.cachingDir);
 			TerramapMod.cacheManager.createDirectory();
 		} catch (IOException e) {
 			TerramapMod.logger.catching(e);
@@ -96,6 +97,11 @@ public class TerramapClientProxy extends TerramapProxy {
 		for(double factor: acceptableFactors)
 			if(Math.abs(computedFactor - factor) < Math.abs(bestFactor - computedFactor)) bestFactor = factor;
 		return bestFactor;
+	}
+
+	@Override
+	public void onServerStarting(FMLServerStartingEvent event) {
+		//Nothing to do here
 	}
 
 }

@@ -18,11 +18,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Event handler for the physical client
  *
  */
+@SideOnly(Side.CLIENT)
 public class ClientTerramapEventHandler {
 	
 	private boolean testScreenWasShown = false;
@@ -32,7 +35,6 @@ public class ClientTerramapEventHandler {
     	KeyBindings.checkBindings();
     }
     
-	//TODO This is too late
 	@SubscribeEvent
 	public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
 		TerramapServer.resetServer();
