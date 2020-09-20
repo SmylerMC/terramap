@@ -104,7 +104,7 @@ public class Screen extends GuiScreen implements IWidget{
 
 	@Override
 	public void updateScreen() {
-		this.onUpdate(null);
+		//this.onUpdate(null);
 	}
 
 	@Override
@@ -203,6 +203,7 @@ public class Screen extends GuiScreen implements IWidget{
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.onUpdate(null);
 		this.draw(this.x, this.y, mouseX, mouseY, true, true, null);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

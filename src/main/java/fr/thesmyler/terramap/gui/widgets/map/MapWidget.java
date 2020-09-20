@@ -1,5 +1,10 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
@@ -12,10 +17,15 @@ import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.terramap.GeoServices;
+import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.EarthMapConfigGui;
 import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -31,6 +41,8 @@ public class MapWidget extends Screen {
 
 	private ControllerMapLayer controller = new ControllerMapLayer();
 	protected RasterMapLayerWidget background;
+	private final List<MarkerController<?>> markerControllers = new ArrayList<MarkerController<?>>();
+	private RightClickMarkerController rcmMarkerController;
 
 	private double mouseLongitude, mouseLatitude;
 
@@ -40,12 +52,15 @@ public class MapWidget extends Screen {
 	private MenuEntry setProjectionMenuEntry;
 	private TextComponentWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
+	
+	private final MapContext context;
 
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
 
-	public MapWidget(int x, int y, int z, int width, int height, TiledMap<?> map) {
+	public MapWidget(int x, int y, int z, int width, int height, TiledMap<?> map, MapContext context) {
 		super(x, y, z, width, height, BackgroundType.NONE);
+		this.context = context;
 		FontRendererContainer font = new FontRendererContainer(Minecraft.getMinecraft().fontRenderer);
 		this.copyright = new TextComponentWidget(CONTROLLER_Z - 1, new TextComponentString(""), font) {
 			@Override
@@ -100,10 +115,18 @@ public class MapWidget extends Screen {
 		this.addWidget(scale);
 		this.updateRightClickMenuEntries();
 		this.updateMouseGeoPos(this.width/2, this.height/2);
+		
+		for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
+			if(controller instanceof RightClickMarkerController) {
+				this.rcmMarkerController = (RightClickMarkerController) controller;
+			}
+			this.markerControllers.add(controller);
+		}
+		
 	}
 
-	public MapWidget(int z, TiledMap<?> map) {
-		this(0, 0, z, 50, 50, map);
+	public MapWidget(int z, TiledMap<?> map, MapContext context) {
+		this(0, 0, z, 50, 50, map, context);
 	}
 
 	/**
@@ -164,18 +187,7 @@ public class MapWidget extends Screen {
 	@Override
 	public void onUpdate(@Nullable Screen parent) {
 		super.onUpdate(parent);
-		for(IWidget widget: this.widgets) {
-			if(widget instanceof MapLayerWidget) {
-				MapLayerWidget layer = (MapLayerWidget) widget;
-				layer.width = this.width;
-				layer.height = this.height;
-				if(!layer.equals(this.controller)) {
-					layer.centerLongitude = this.controller.centerLongitude;
-					layer.centerLatitude = this.controller.centerLatitude;
-					layer.zoom = this.controller.zoom;
-				}
-			}
-		}
+		
 	}
 
 	@Override
@@ -186,6 +198,45 @@ public class MapWidget extends Screen {
 			int relativeMouseY = mouseY - y;
 			this.updateMouseGeoPos(relativeMouseX, relativeMouseY);
 		}
+		Map<Class<?>, List<MapMarker>> markers = new HashMap<Class<?>, List<MapMarker>>();
+		for(MarkerController<?> controller: this.markerControllers) {
+			markers.put(controller.getMarkerType(), new ArrayList<MapMarker>());
+		}
+		for(IWidget widget: this.widgets) {
+			if(widget instanceof MapLayerWidget) {
+				MapLayerWidget layer = (MapLayerWidget) widget;
+				layer.width = this.width;
+				layer.height = this.height;
+				if(!layer.equals(this.controller)) {
+					layer.centerLongitude = this.controller.centerLongitude;
+					layer.centerLatitude = this.controller.centerLatitude;
+					layer.zoom = this.controller.zoom;
+				}
+			} else if(widget instanceof MapMarker) {
+				for(Class<?> clazz: markers.keySet()) {
+					if(clazz.isInstance(widget)) {
+						markers.get(clazz).add((MapMarker)widget);
+					}
+				}
+			}
+		}
+		for(MarkerController<?> controller: this.markerControllers) {
+			MapMarker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new MapMarker[] {});
+			for(MapMarker markerToAdd: controller.getNewMarkers(existingMarkers)) {
+				this.addWidget(markerToAdd);
+			}
+		}
+		
+		/* The map markers have a higher priority than the background since they are on top,
+		 * which means that they are updated before it moves,
+		 * so they lag behind when the map moves fast if they are not updated again
+		 */
+		for(IWidget w: this.widgets) {
+			if(w instanceof MapMarker) {
+				w.onUpdate(this); 
+			}
+		}
+		if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible());
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 	}
 
@@ -482,6 +533,10 @@ public class MapWidget extends Screen {
 	public MapWidget setScaleVisibility(boolean yesNo) {
 		this.scale.setVisibility(yesNo);
 		return this;
+	}
+	
+	public MapContext getContext() {
+		return this.context;
 	}
 
 }

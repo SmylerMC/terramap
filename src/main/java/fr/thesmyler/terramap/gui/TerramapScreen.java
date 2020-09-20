@@ -14,6 +14,7 @@ import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
+import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.TiledMap;
@@ -49,7 +50,7 @@ public class TerramapScreen extends Screen {
 	public TerramapScreen(GuiScreen parent, TiledMap<?>[] maps) {
 		this.parent = parent;
 		this.backgrounds = maps;
-		this.map = new MapWidget(10, this.backgrounds[0]);
+		this.map = new MapWidget(10, this.backgrounds[0], MapContext.FULLSCREEN);
 	}
 
 	@Override
@@ -247,7 +248,7 @@ public class TerramapScreen extends Screen {
 	private class MapPreview extends MapWidget {
 
 		public MapPreview(int z, TiledMap<?> map) {
-			super(z, map);
+			super(z, map, MapContext.PREVIEW);
 			this.setInteractive(false);
 			this.setRightClickMenuEnabled(false);
 			this.setCopyrightVisibility(false);
