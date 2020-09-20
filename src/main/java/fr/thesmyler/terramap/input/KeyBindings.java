@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.input;
 
 import org.lwjgl.input.Keyboard;
 
+import fr.thesmyler.terramap.gui.TerramapScreen;
 import fr.thesmyler.terramap.proxy.TerramapClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -21,7 +22,11 @@ public abstract class KeyBindings {
 	
 	public static void checkBindings() {
 		//TODO Only open the map on earth worlds
-		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player.dimension == 0) Minecraft.getMinecraft().displayGuiScreen(TerramapClientProxy.getTiledMapGui());
+//		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player.dimension == 0) Minecraft.getMinecraft().displayGuiScreen(new GuiTiledMap(TerramapClientProxy.getTiledMaps()));
+		if(OPEN_MAP.isPressed() && Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().player.dimension == 0) {
+			Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen,TerramapClientProxy.getTiledMaps()));
+		}
+
 	}
 
 }

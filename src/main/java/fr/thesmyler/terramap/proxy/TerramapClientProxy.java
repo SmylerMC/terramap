@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.TerramapUtils;
@@ -12,7 +13,6 @@ import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfiguration;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
-import fr.thesmyler.terramap.gui.GuiTiledMap;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.TiledMaps;
@@ -57,6 +57,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client init");
+		SmyLibGui.init(TerramapMod.logger, true); //TODO Unset gui lib debug mode
 		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();
 		RasterWebTile.registerErrorTexture();
@@ -69,7 +70,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		TerramapServer.setServer(new TerramapServer(pkt.serverVersion, pkt.syncPlayers, pkt.syncSpectators, pkt.hasFe, pkt.settings));
 	}
 
-	public static GuiTiledMap getTiledMapGui() {
+	public static TiledMap<?>[] getTiledMaps() {
 		List<TiledMap<?>> maps = new ArrayList<TiledMap<?>>();
 		if(TerramapUtils.isPirate()) {
 			maps.add(TiledMaps.WATERCOLOR);
@@ -80,7 +81,10 @@ public class TerramapClientProxy extends TerramapProxy {
 		maps.add(TiledMaps.OSM);
 		maps.add(TiledMaps.OSM_HUMANITARIAN);
 		maps.add(TiledMaps.TERRAIN);
-		return new GuiTiledMap(maps.toArray(new TiledMap[maps.size()]));
+//		maps.add(TiledMaps.OPEN_TOPO);
+//		maps.add(TiledMaps.OSM_FRANCE);
+//		maps.add(TiledMaps.WATERCOLOR);
+		return maps.toArray(new TiledMap[maps.size()]);
 	}
 
 	@Override
