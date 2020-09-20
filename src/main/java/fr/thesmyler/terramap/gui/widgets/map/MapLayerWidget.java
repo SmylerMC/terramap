@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 
 abstract class MapLayerWidget implements IWidget {
@@ -10,11 +10,11 @@ abstract class MapLayerWidget implements IWidget {
 	protected double centerLatitude, centerLongitude, zoom;
 
 	protected double getMapX(double longitude) {
-		return WebMercatorUtils.getXFromLongitude(longitude, this.zoom) * TerramapConfiguration.tileScaling;
+		return WebMercatorUtils.getXFromLongitude(longitude, this.zoom) * TerramapConfig.tileScaling;
 	}
 
 	protected double getMapY(double latitude) {
-		return WebMercatorUtils.getYFromLatitude(latitude, this.zoom) * TerramapConfiguration.tileScaling;
+		return WebMercatorUtils.getYFromLatitude(latitude, this.zoom) * TerramapConfig.tileScaling;
 	}
 
 	protected double getScreenX(double longitude) {
@@ -34,12 +34,12 @@ abstract class MapLayerWidget implements IWidget {
 	}
 	
 	protected double getScreenLongitude(double xOnScreen) {
-		double xOnMap = (this.getUpperLeftX() + xOnScreen) / TerramapConfiguration.tileScaling;
+		double xOnMap = (this.getUpperLeftX() + xOnScreen) / TerramapConfig.tileScaling;
 		return WebMercatorUtils.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoom));
 	}
 
 	protected double getScreenLatitude(double yOnScreen) {
-		double yOnMap = (this.getUpperLeftY() + yOnScreen) / TerramapConfiguration.tileScaling;
+		double yOnMap = (this.getUpperLeftY() + yOnScreen) / TerramapConfig.tileScaling;
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoom);
 	}
 

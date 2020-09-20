@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapUtils;
-import fr.thesmyler.terramap.config.TerramapConfiguration;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
 import fr.thesmyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
@@ -29,7 +29,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 
-		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfiguration.tileScaling);
+		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfig.tileScaling);
 		
 		long upperLeftX = (long) this.getUpperLeftX();
 		long upperLeftY = (long) this.getUpperLeftY();
