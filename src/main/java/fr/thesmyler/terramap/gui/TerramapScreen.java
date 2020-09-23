@@ -153,17 +153,20 @@ public class TerramapScreen extends Screen {
 		double mouseLon = this.map.getMouseLongitude();
 		String displayLat = GeoServices.formatGeoCoordForDisplay(mouseLat);
 		String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
+		String formatX = "-";
+		String formatZ = "-";
+		String formatScale = "-";
+		String formatOrientation = "-";
 		if(Math.abs(mouseLat) > LIMIT_LATITUDE) {
 			displayLat = "-";
 			displayLon = "-";
-		}
-		String formatX = "-";
-		String formatZ = "-";
-		
-		if(projection != null) {
-			double[] pos = projection.fromGeo(this.map.getMouseLongitude(), this.map.getMouseLongitude());
+		} else if(projection != null) {
+			double[] pos = projection.fromGeo(mouseLon, mouseLat);
 			formatX = "" + Math.round(pos[0]);
 			formatZ = "" + Math.round(pos[1]);
+			double[] dist = projection.tissot(mouseLon, mouseLat, 0.0000001f);
+			formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
+			formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(dist[1]*180.0/Math.PI);
 		}
 		
 		String playerFormatLon = "-";
@@ -173,7 +176,7 @@ public class TerramapScreen extends Screen {
 		this.mouseGeoLocationText.setText("Mouse location: " + displayLat + "° " + displayLon + "°");
 		this.mouseMCLocationText.setText("X: " + formatX + " Z: " + formatZ);
 		this.playerGeoLocationText.setText("Player position: " + playerFormatLat + "° " + playerFormatLon + "°");
-		this.distortionText.setText("Distortion: -");
+		this.distortionText.setText("Distortion: " + formatScale + " blocks/m ; ±" + formatOrientation + "°");
 	}
 
 	private void toggleInfoPannel() {
