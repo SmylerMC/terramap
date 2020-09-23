@@ -82,13 +82,21 @@ public class TerramapServer {
 		return this.syncSpectators;
 	}
 
-	public Collection<TerramapPlayer> getPlayers() {
+	public Map<UUID, TerramapPlayer> getPlayerMap() {
 		Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
 		if(this.isInstalledOnServer()) {
 			players.putAll(this.remotePlayers);
 		}
 		players.putAll(this.getLocalPlayers());
-		return players.values();
+		return players;
+	}
+	
+	public Collection<TerramapPlayer> getPlayers() {
+		return this.getPlayerMap().values();
+	}
+	
+	public boolean hasPlayer(UUID uuid) {
+		return this.remotePlayers.containsKey(uuid) || this.getLocalPlayers().containsKey(uuid);
 	}
 
 	private Map<UUID, TerramapPlayer> getLocalPlayers() {
@@ -141,8 +149,8 @@ public class TerramapServer {
 			if(toRemove.remove(player.getUUID())) {
 				TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
 				savedPlayer.setDisplayName(player.getDisplayName());
-				savedPlayer.setPosX(player.getPosX());
-				savedPlayer.setPosZ(player.getPosZ());
+				savedPlayer.setLongitude(player.getLongitude());
+				savedPlayer.setLatitude(player.getLatitude());
 				savedPlayer.setIsSpectator(player.isSpectator());
 			} else toAdd.add(player);
 		}

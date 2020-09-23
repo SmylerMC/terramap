@@ -42,8 +42,8 @@ public class S2CPlayerSyncPacket implements IMessage {
 		for(TerramapPlayer player: this.localPlayers) {
 			buf.writeLong(player.getUUID().getLeastSignificantBits());
 			buf.writeLong(player.getUUID().getMostSignificantBits());
-			buf.writeDouble(player.getPosX());
-			buf.writeDouble(player.getPosZ());
+			buf.writeDouble(player.getLongitude());
+			buf.writeDouble(player.getLatitude());
 			buf.writeBoolean(player.isSpectator());
 			String playerDisplayName = player.getDisplayName();
 			TerramapNetworkManager.encodeStringToByteBuf(playerDisplayName, buf);

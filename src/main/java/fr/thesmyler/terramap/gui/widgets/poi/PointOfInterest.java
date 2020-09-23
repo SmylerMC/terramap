@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
+@Deprecated
 public abstract class PointOfInterest extends Gui {
 
 	protected double longitude;

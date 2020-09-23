@@ -12,9 +12,9 @@ public abstract class TerramapPlayer {
 
 	public abstract String getDisplayName();
 
-	public abstract double getPosX();
+	public abstract double getLongitude();
 
-	public abstract double getPosZ();
+	public abstract double getLatitude();
 	
 	public abstract boolean isSpectator();
 	

@@ -119,12 +119,12 @@ public class SlidingPannelWidget extends Screen {
 	
 	@Override
 	public int getX() {
-		return this.mainAnimation.between(this.showX, this.hiddenX);
+		return this.mainAnimation.blend(this.showX, this.hiddenX);
 	}
 	
 	@Override
 	public int getY() {
-		return this.mainAnimation.between(this.showY, this.hiddenY);
+		return this.mainAnimation.blend(this.showY, this.hiddenY);
 	}
 	
 	public int getBackroundColor() {

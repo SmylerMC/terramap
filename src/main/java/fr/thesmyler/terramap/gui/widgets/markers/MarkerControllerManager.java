@@ -7,6 +7,7 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 
 public abstract class MarkerControllerManager {
@@ -20,6 +21,8 @@ public abstract class MarkerControllerManager {
 		}
 		
 		MarkerControllerManager.registerController(RightClickMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(PlayerMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(PlayerMarkerController.class, MapContext.MINIMAP);
 	}
 	
 	public static void registerController(Class<? extends MarkerController<?>> controller, MapContext context) {

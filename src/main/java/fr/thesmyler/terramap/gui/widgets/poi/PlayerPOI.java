@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
+@Deprecated
 public class PlayerPOI extends PointOfInterest {
 
 	private TerramapPlayer player;
@@ -58,8 +59,8 @@ public class PlayerPOI extends PointOfInterest {
 	}
 
 	public void updatePosition(GeographicProjection projection) {
-		double x = this.player.getPosX();
-		double z = this.player.getPosZ();
+		double x = this.player.getLongitude();
+		double z = this.player.getLatitude();
 		double coords[] = TerramapUtils.toGeo(projection, x, z);
 		this.longitude = coords[0];
 		this.latitude = coords[1];

@@ -13,16 +13,16 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	
 	protected UUID uuid;
 	protected String displayName;
-	protected double posX;
-	protected double posZ;
+	protected double longitude;
+	protected double latitude;
 	protected boolean isSpectator;
 	protected NetworkPlayerInfo playerInfo;
 	
-	public TerramapRemotePlayer(UUID uuid, String name, double x, double z, boolean isSpectator) {
+	public TerramapRemotePlayer(UUID uuid, String name, double longitude, double latitude, boolean isSpectator) {
 		this.uuid = uuid;
 		this.displayName = name;
-		this.posX = x;
-		this.posZ = z;
+		this.longitude = longitude;
+		this.latitude = latitude;
 		this.isSpectator = isSpectator;
 	}
 
@@ -41,21 +41,21 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	}
 
 	@Override
-	public double getPosX() {
-		return posX;
+	public double getLongitude() {
+		return longitude;
 	}
 
-	public void setPosX(double posX) {
-		this.posX = posX;
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 
 	@Override
-	public double getPosZ() {
-		return posZ;
+	public double getLatitude() {
+		return latitude;
 	}
 
-	public void setPosZ(double posZ) {
-		this.posZ = posZ;
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
 	}
 
 	@Override

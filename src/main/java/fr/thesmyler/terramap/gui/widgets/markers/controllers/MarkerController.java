@@ -9,7 +9,7 @@ public abstract class MarkerController<T extends MapMarker> {
 	private final String id;
 	private final Class<T> clazz;
 	
-	protected MarkerController(String id, int zLayer, Class<T> clazz) {
+	public MarkerController(String id, int zLayer, Class<T> clazz) {
 		this.zLayer = zLayer;
 		this.id = id;
 		this.clazz = clazz;
