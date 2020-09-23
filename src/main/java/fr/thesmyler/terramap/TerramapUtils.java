@@ -3,6 +3,9 @@ package fr.thesmyler.terramap;
 import java.security.MessageDigest;
 import java.util.Random;
 
+import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
+import io.github.terra121.EarthGeneratorSettings;
+import io.github.terra121.EarthTerrainProcessor;
 import io.github.terra121.EarthWorldType;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
@@ -89,6 +92,12 @@ public abstract class TerramapUtils {
 	
 	public static boolean isEarthWorld(World world) {
 		return world.getWorldType() instanceof EarthWorldType;
+	}
+	
+	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
+		if(TerramapUtils.isEarthWorld(world)) {
+			return ((EarthTerrainProcessor)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
+		} else return null;
 	}
 	
 }

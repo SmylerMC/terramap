@@ -32,7 +32,7 @@ public class CommonTerramapEventHandler {
 		EntityPlayerMP player = (EntityPlayerMP)event.player;
 		World world = player.getEntityWorld();
 		if(!TerramapUtils.isEarthWorld(world)) return;
-		EarthGeneratorSettings settings = S2CTerramapHelloPacket.getEarthGeneratorSettingsFromWorld(world);
+		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
 		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfig.synchronizePlayers, TerramapConfig.syncSpectators, false);
 		TerramapNetworkManager.CHANNEL.sendTo(data, player);

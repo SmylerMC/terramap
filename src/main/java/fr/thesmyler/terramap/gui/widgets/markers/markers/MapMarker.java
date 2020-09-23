@@ -71,4 +71,15 @@ public abstract class MapMarker implements IWidget {
 		return this.controller.getId();
 	}
 	
+	@Override
+	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		return true; //TODO do not prevent the map from being dragged if clicked
+	}
+	
+	@Override
+	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		//TODO Track the marker if it enables it
+		return false;
+	}
+	
 }

@@ -1,13 +1,9 @@
 package fr.thesmyler.terramap.network;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapUtils;
-import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
 import io.github.terra121.EarthGeneratorSettings;
-import io.github.terra121.EarthTerrainProcessor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -18,7 +14,9 @@ public class S2CTerramapHelloPacket implements IMessage {
 	public String serverVersion;
 	public boolean syncPlayers;
 	public boolean syncSpectators;
-	public boolean hasFe; //Forge essentials
+	
+	@Deprecated
+	public boolean unused; //TODO Forge essentials - We are breaking backward compat anyway, let's remove this
 	
 	public S2CTerramapHelloPacket() {}
 	
@@ -27,7 +25,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		this.serverVersion = serverVersion;
 		this.syncPlayers = syncPlayers;
 		this.syncSpectators = syncSpectators;
-		this.hasFe = hasFe;
+		this.unused = hasFe;
 	}
 
 	@Override
@@ -35,7 +33,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		this.serverVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		this.syncPlayers = buf.readBoolean();
 		this.syncSpectators = buf.readBoolean();
-		this.hasFe = buf.readBoolean();
+		this.unused = buf.readBoolean();
 		String settings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		this.settings = new EarthGeneratorSettings(settings);
 	}
@@ -46,7 +44,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		TerramapNetworkManager.encodeStringToByteBuf(this.serverVersion, buf);
 		buf.writeBoolean(this.syncPlayers);
 		buf.writeBoolean(this.syncSpectators);
-		buf.writeBoolean(this.hasFe);
+		buf.writeBoolean(this.unused);
 		TerramapNetworkManager.encodeStringToByteBuf(settingsStr, buf);
 	}
 	
@@ -62,12 +60,6 @@ public class S2CTerramapHelloPacket implements IMessage {
 		}
 		
 
-	}
-	
-	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
-		if(TerramapUtils.isEarthWorld(world)) {
-			return ((EarthTerrainProcessor)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
-		} else return null;
 	}
 	
 }

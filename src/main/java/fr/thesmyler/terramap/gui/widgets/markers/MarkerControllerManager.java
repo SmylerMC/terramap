@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.SelfPlayerMarkerController;
 
 public abstract class MarkerControllerManager {
 	
@@ -20,9 +22,6 @@ public abstract class MarkerControllerManager {
 			CONTROLLER_CLASSES.put(c, new ArrayList<Class<? extends MarkerController<?>>>());
 		}
 		
-		MarkerControllerManager.registerController(RightClickMarkerController.class, MapContext.FULLSCREEN);
-		MarkerControllerManager.registerController(PlayerMarkerController.class, MapContext.FULLSCREEN);
-		MarkerControllerManager.registerController(PlayerMarkerController.class, MapContext.MINIMAP);
 	}
 	
 	public static void registerController(Class<? extends MarkerController<?>> controller, MapContext context) {
@@ -35,15 +34,21 @@ public abstract class MarkerControllerManager {
 		for(Class<? extends MarkerController<?>> clazz: CONTROLLER_CLASSES.get(context)) {
 			try {
 				controllers[i++] = clazz.newInstance();
-			} catch (InstantiationException e) {
-				// TODO Bloc catch généré automatiquement
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Bloc catch généré automatiquement
-				e.printStackTrace();
+			} catch (InstantiationException | IllegalAccessException e) {
+				TerramapMod.logger.error("Failed to create a marker controller, things will be unstable!");
+				TerramapMod.logger.error("Failed to instantiate " + clazz.getCanonicalName());
+				TerramapMod.logger.catching(e);
 			}
 		}
 		return controllers;
+	}
+	
+	public static void registerBuiltInControllers() {
+		MarkerControllerManager.registerController(RightClickMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(SelfPlayerMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(SelfPlayerMarkerController.class, MapContext.MINIMAP);
+		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.MINIMAP);
 	}
 
 }

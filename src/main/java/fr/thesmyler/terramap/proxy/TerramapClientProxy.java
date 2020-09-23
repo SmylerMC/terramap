@@ -13,6 +13,7 @@ import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
+import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.TiledMaps;
@@ -62,13 +63,14 @@ public class TerramapClientProxy extends TerramapProxy {
 		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();
 		RasterWebTile.registerErrorTexture();
+		MarkerControllerManager.registerBuiltInControllers();
 	}
 
 	@Override
 	public void onServerHello(S2CTerramapHelloPacket pkt) {
 		TerramapMod.logger.info("Got server hello, remote version is " + pkt.serverVersion);
-		TerramapMod.logger.debug("sync players: " + pkt.syncPlayers + " sync spec: " + pkt.syncSpectators + " hasFe: " + pkt.hasFe);
-		TerramapServer.setServer(new TerramapServer(pkt.serverVersion, pkt.syncPlayers, pkt.syncSpectators, pkt.hasFe, pkt.settings));
+		TerramapMod.logger.debug("sync players: " + pkt.syncPlayers + " sync spec: " + pkt.syncSpectators + " hasFe: " + pkt.unused);
+		TerramapServer.setServer(new TerramapServer(pkt.serverVersion, pkt.syncPlayers, pkt.syncSpectators, pkt.unused, pkt.settings));
 	}
 
 	public static TiledMap<?>[] getTiledMaps() {
