@@ -64,7 +64,7 @@ public abstract class MapMarker implements IWidget {
 	
 	@Override
 	public boolean isVisible() {
-		return this.controller.areMakersVisible();
+		return this.controller.areMakersVisible() && !Double.isNaN(this.getLatitude()) && !Double.isNaN(this.getLongitude());
 	}
 	
 	public String getControllerId() {

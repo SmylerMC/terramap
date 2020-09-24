@@ -65,5 +65,15 @@ public class SelfPlayerMarker extends AbstractPlayerMarker {
 	protected float getTransparency() {
 		return 1f;
 	}
+
+	@Override
+	protected String getName() {
+		return Minecraft.getMinecraft().player.getDisplayNameString();
+	}
+
+	@Override
+	protected boolean showName(boolean hovered) {
+		return true;
+	}
 	
 }

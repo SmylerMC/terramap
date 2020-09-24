@@ -62,4 +62,14 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 		return this.player.isSpectator() ? 0.6f: 1f;
 	}
 
+	@Override
+	protected String getName() {
+		return this.player.getDisplayName();
+	}
+
+	@Override
+	protected boolean showName(boolean hovered) {
+		return !this.player.isSpectator() || hovered;
+	}
+
 }
