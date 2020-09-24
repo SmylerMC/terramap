@@ -119,5 +119,15 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	public void setState(boolean state) {
 		this.value = state;
 	}
+	
+	public ToggleButtonWidget setOnActivate(Runnable action) {
+		this.onEnable = action;
+		return this;
+	}
+	
+	public ToggleButtonWidget setOnDeactivate(Runnable action) {
+		this.onDisable = action;
+		return this;
+	}
 
 }

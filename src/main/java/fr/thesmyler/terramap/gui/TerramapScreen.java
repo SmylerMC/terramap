@@ -9,6 +9,7 @@ import fr.thesmyler.smylibgui.widgets.SlidingPannelWidget;
 import fr.thesmyler.smylibgui.widgets.SlidingPannelWidget.PannelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
@@ -18,6 +19,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.maps.TiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
@@ -112,7 +114,25 @@ public class TerramapScreen extends Screen {
 		this.distortionText = new TextWidget(49, this.getFont());
 		this.distortionText.setAnchorX(5).setAnchorY(this.playerGeoLocationText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setAlignment(TextAlignment.RIGHT);
 		this.infoPannel.addWidget(this.distortionText);
-		this.searchBox.setX(5).setY(this.distortionText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setWidth(167);
+		int y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
+		int lineHeight = 0;
+		int x = 5;
+		for(MarkerController<?> controller: this.map.getMarkerControllers()) {
+			if(!controller.showToggleButton()) continue;
+			ToggleButtonWidget button = controller.getToggleButton();
+			if(button == null) continue;
+			if(x + button.getWidth() > this.infoPannel.getWidth() - 20) {
+				x = 5;
+				y += lineHeight + 3;
+				lineHeight = 0;
+			}
+			lineHeight = Math.max(lineHeight, button.getHeight());
+			button.setX(x);
+			x += button.getWidth() + 3;
+			button.setY(y);
+			this.infoPannel.addWidget(button);
+		}
+		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(167);
 		this.searchBox.enableRightClickMenu();
 		this.searchBox.setText("Work in progress").disable();
 		this.searchBox.setOnPressEnterCallback(this::search);

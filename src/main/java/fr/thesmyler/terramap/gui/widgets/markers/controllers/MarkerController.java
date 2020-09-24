@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
+import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
 
 public abstract class MarkerController<T extends MapMarker> {
@@ -27,10 +28,12 @@ public abstract class MarkerController<T extends MapMarker> {
 	
 	public void setVisibility(boolean yesNo) {
 		this.visibility = yesNo;
+		ToggleButtonWidget b = this.getToggleButton();
+		if(b != null) b.setState(this.visibility);
 	}
 	
 	public void toggleVisibility() {
-		this.visibility = !this.visibility;
+		this.setVisibility(!this.visibility);
 	}
 	
 	public String getId() {
@@ -40,5 +43,9 @@ public abstract class MarkerController<T extends MapMarker> {
 	public Class<T> getMarkerType() {
 		return this.clazz;
 	}
+	
+	public abstract boolean showToggleButton();
+	
+	public abstract ToggleButtonWidget getToggleButton();
 
 }

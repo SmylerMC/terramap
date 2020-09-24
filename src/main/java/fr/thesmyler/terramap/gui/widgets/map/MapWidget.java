@@ -369,6 +369,10 @@ public class MapWidget extends Screen {
 		}
 		this.sendChatMessage(cmd, false);
 	}
+	
+	public MarkerController<?>[] getMarkerControllers() {
+		return this.markerControllers.toArray(new MarkerController<?>[0]);
+	}
 
 	public double getZoom() {
 		return this.controller.getZoom();

@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
+import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.RightClickMarker;
 
@@ -13,6 +14,16 @@ public class RightClickMarkerController extends MarkerController<RightClickMarke
 	public RightClickMarker[] getNewMarkers(MapMarker[] existingMarkers) {
 		if(existingMarkers.length > 0) return new RightClickMarker[] {};
 		return new RightClickMarker[] { new RightClickMarker(this)};
+	}
+
+	@Override
+	public boolean showToggleButton() {
+		return false;
+	}
+
+	@Override
+	public ToggleButtonWidget getToggleButton() {
+		return null;
 	}
 
 }
