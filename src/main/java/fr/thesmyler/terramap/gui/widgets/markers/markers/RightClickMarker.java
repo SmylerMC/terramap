@@ -19,7 +19,7 @@ public class RightClickMarker extends FixedMapMarker {
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		GlStateManager.color(1f, 1f, 1f);
-		parent.drawTexturedModalRect(x, y, 11, hovered? 101:69, 15, 27);
+		parent.drawTexturedModalRect(x, y, 0, hovered? 126:94, 15, 27);
 	}
 
 	@Override
