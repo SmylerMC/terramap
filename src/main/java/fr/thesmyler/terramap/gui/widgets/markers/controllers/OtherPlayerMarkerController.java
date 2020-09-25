@@ -20,7 +20,7 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 			this.areMakersVisible(), null, null);
 
 	public OtherPlayerMarkerController() {
-		super("other_players", 400, OtherPlayerMarker.class);
+		super("other_players", 800, OtherPlayerMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
 		this.button.setTooltip("Toggle other players visibility"); //TODO Localization

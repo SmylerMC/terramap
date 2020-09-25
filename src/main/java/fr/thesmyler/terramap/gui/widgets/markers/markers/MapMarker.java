@@ -7,7 +7,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 
 public abstract class MapMarker implements IWidget {
 	
-	private int width, height;
+	protected int width, height;
 	private int x, y;
 	private MarkerController<?> controller;
 
