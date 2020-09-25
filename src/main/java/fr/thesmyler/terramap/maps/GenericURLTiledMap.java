@@ -1,7 +1,5 @@
-package fr.thesmyler.terramap.maps.utils;
+package fr.thesmyler.terramap.maps;
 
-import fr.thesmyler.terramap.maps.TileFactory;
-import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.tiles.GenericURLRasterWebTile;
 
 public class GenericURLTiledMap extends TiledMap<GenericURLRasterWebTile> {

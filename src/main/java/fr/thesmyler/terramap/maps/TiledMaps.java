@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.maps;
 
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.maps.utils.GenericURLTiledMap;
 import net.minecraft.client.resources.I18n;
 
 //FIXME Localization on class load is bad
