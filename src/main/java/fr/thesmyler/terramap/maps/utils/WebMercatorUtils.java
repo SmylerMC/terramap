@@ -9,9 +9,11 @@ package fr.thesmyler.terramap.maps.utils;
  */
 public class WebMercatorUtils {
 
-	
 	/* Constants */
 	public static final int TILE_DIMENSIONS = 256;
+	public static final double LIMIT_LATITUDE_RADIANS = 2 * Math.atan(Math.pow(Math.E, Math.PI)) - Math.PI/2;
+	public static final double LIMIT_LATITUDE = Math.toDegrees(LIMIT_LATITUDE_RADIANS);
+
 	
 	/**
 	 * 

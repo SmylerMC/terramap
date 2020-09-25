@@ -27,6 +27,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -253,7 +254,7 @@ public class MapWidget extends Screen {
 
 		@Override
 		public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
-			if(MapWidget.this.enableRightClickMenu && mouseButton == 1) {
+			if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && Math.abs(MapWidget.this.getMouseLatitude()) <= WebMercatorUtils.LIMIT_LATITUDE) {
 				parent.showMenu(mouseX, mouseY, MapWidget.this.rightClickMenu);
 			}
 			return false;

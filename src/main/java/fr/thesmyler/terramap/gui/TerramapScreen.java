@@ -21,13 +21,12 @@ import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class TerramapScreen extends Screen {
-
-	private static final double LIMIT_LATITUDE = Math.toDegrees(2 * Math.atan(Math.pow(Math.E, Math.PI)) - Math.PI/2);
 
 	private GuiScreen parent;
 	private TiledMap<?>[] backgrounds;
@@ -177,7 +176,7 @@ public class TerramapScreen extends Screen {
 		String formatZ = "-";
 		String formatScale = "-";
 		String formatOrientation = "-";
-		if(Math.abs(mouseLat) > LIMIT_LATITUDE) {
+		if(Math.abs(mouseLat) > WebMercatorUtils.LIMIT_LATITUDE) {
 			displayLat = "-";
 			displayLon = "-";
 		} else if(projection != null) {
