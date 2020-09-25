@@ -7,6 +7,7 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.AgressiveMobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
@@ -25,7 +26,14 @@ public abstract class MarkerControllerManager {
 	}
 	
 	public static void registerController(Class<? extends MarkerController<?>> controller, MapContext context) {
-		CONTROLLER_CLASSES.get(context).add(controller);
+		try {
+			controller.newInstance();
+			CONTROLLER_CLASSES.get(context).add(controller);
+		} catch(Exception e) {
+			TerramapMod.logger.error("Failed to create a test marker controller instance for " + controller.getCanonicalName());
+			TerramapMod.logger.error("This marker controller class will not be registered. See stack trace for details.");
+			TerramapMod.logger.catching(e);
+		}
 	}
 	
 	public static MarkerController<?>[] createControllers(MapContext context) {
@@ -49,6 +57,8 @@ public abstract class MarkerControllerManager {
 		MarkerControllerManager.registerController(SelfPlayerMarkerController.class, MapContext.MINIMAP);
 		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.FULLSCREEN);
 		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.MINIMAP);
+		MarkerControllerManager.registerController(AgressiveMobMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(AgressiveMobMarkerController.class, MapContext.MINIMAP);
 	}
 
 }
