@@ -26,12 +26,12 @@ public class Screen extends GuiScreen implements IWidget{
 
 	protected TreeSet<IWidget> widgets = new TreeSet<IWidget>(
 			(w2, w1) -> {
-				if(w1 != null && w1.equals(w2)) return 0;
+				if(w2 != null && w2.equals(w1)) return 0;
 				if(w1 == null && w2 == null) return 0;
 				if(w1 == null) return Integer.MIN_VALUE;
 				if(w2 == null) return Integer.MAX_VALUE;
 				int r = w1.getZ() - w2.getZ();
-				return r == 0? 1: r;
+				return r == 0? w1.hashCode() - w2.hashCode(): r;
 			}
 			);
 	protected List<ScheduledTask> scheduledForNextUpdate = new ArrayList<ScheduledTask>();

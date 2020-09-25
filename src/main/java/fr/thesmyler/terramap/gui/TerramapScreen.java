@@ -257,8 +257,6 @@ public class TerramapScreen extends Screen {
 			super.onUpdate(parent);
 		}
 
-
-
 		@Override
 		public boolean onMouseWheeled(int mouseX, int mouseY, int amount, Screen parent) {
 			if(TerramapScreen.this.styleScrollbar.getViewPort() < 1) {
