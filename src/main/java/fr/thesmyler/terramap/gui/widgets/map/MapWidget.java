@@ -249,7 +249,7 @@ public class MapWidget extends Screen {
 
 		@Override
 		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			//Literally nothing to do here, this is strictly used to handle user input
+			// Literally nothing to do here, this is strictly used to handle user input
 		}
 
 		@Override
@@ -264,7 +264,7 @@ public class MapWidget extends Screen {
 		public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 
 			// We don't care about double right clicks
-			if(mouseButton == 1) this.onClick(mouseX, mouseY, mouseButton, parent);
+			if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
 
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.zoom(mouseX, mouseY, 1);
