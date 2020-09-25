@@ -9,12 +9,17 @@ import net.minecraft.client.entity.EntityPlayerSP;
 
 public class SelfPlayerMarkerController extends MarkerController<SelfPlayerMarker> {
 	
-	protected ToggleButtonWidget button = new ToggleButtonWidget(10, this.areMakersVisible());
+	protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
+			74, 108, 74, 122,
+			74, 108, 74, 122,
+			74, 136, 74, 150,
+			this.areMakersVisible(), null, null);
 
 	public SelfPlayerMarkerController() {
 		super("self_player_marker", 900, SelfPlayerMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
+		this.button.setTooltip("Toggle main player visibility"); //TODO Localization
 	}
 
 	@Override

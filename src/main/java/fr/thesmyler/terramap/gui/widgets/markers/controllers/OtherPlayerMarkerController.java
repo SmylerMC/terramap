@@ -13,12 +13,17 @@ import net.minecraft.client.entity.EntityPlayerSP;
 
 public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMarker> {
 	
-	protected ToggleButtonWidget button = new ToggleButtonWidget(10, this.areMakersVisible());
+	protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
+			88, 108, 88, 122,
+			88, 108, 88, 122,
+			88, 136, 88, 150,
+			this.areMakersVisible(), null, null);
 
 	public OtherPlayerMarkerController() {
 		super("other_players", 400, OtherPlayerMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
+		this.button.setTooltip("Toggle other players visibility"); //TODO Localization
 	}
 
 	@Override
