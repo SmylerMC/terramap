@@ -7,8 +7,9 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.AgressiveMobMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.SelfPlayerMarkerController;
@@ -57,8 +58,10 @@ public abstract class MarkerControllerManager {
 		MarkerControllerManager.registerController(SelfPlayerMarkerController.class, MapContext.MINIMAP);
 		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.FULLSCREEN);
 		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.MINIMAP);
-		MarkerControllerManager.registerController(AgressiveMobMarkerController.class, MapContext.FULLSCREEN);
-		MarkerControllerManager.registerController(AgressiveMobMarkerController.class, MapContext.MINIMAP);
+		MarkerControllerManager.registerController(AnimalMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(AnimalMarkerController.class, MapContext.MINIMAP);
+		MarkerControllerManager.registerController(MobMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(MobMarkerController.class, MapContext.MINIMAP);
 	}
 
 }

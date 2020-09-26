@@ -3,6 +3,8 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -14,6 +16,7 @@ import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.monster.EntityGuardian;
 import net.minecraft.entity.monster.EntityHusk;
 import net.minecraft.entity.monster.EntityMagmaCube;
+import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityShulker;
 import net.minecraft.entity.monster.EntitySilverfish;
 import net.minecraft.entity.monster.EntitySkeleton;
@@ -28,10 +31,17 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.util.ResourceLocation;
 
-public class AgressiveMobMarker extends AbstractCreatureMarker {
+/**
+ * Map marker for any entity that implements IMob
+ * The corresponding controller is MobMarkerController
+ * 
+ * @author SmylerMC
+ *
+ */
+public class MobMarker extends AbstractLivingMarker {
 
-	public AgressiveMobMarker(MarkerController<?> controller, Entity entity) {
-		super(controller, 0, 0, null, 0, 0, entity);
+	public MobMarker(MarkerController<?> controller, Entity entity) {
+		super(controller, 10, 10, SmyLibGui.WIDGET_TEXTURES, 22, 69, 256, 256, entity);
 		if(entity instanceof EntityBlaze) {
 			this.width = this.height = 8;
 			this.u = this.v = 8;
@@ -46,16 +56,16 @@ public class AgressiveMobMarker extends AbstractCreatureMarker {
 			this.texture = CREEPER_TEXTURE;
 		} else if(entity instanceof EntityElderGuardian) {
 			this.width = this.height = 12;
-			this.u = this.v = 16;
-			this.textureWidth = 64;
-			this.textureHeight = 64;
-			this.texture = GUARDIAN_ELDER_TEXTURE; //TODO The eye is missing
-		} else if(entity instanceof EntityEnderman) { //TODO TEST
-			this.texture = SmyLibGui.WIDGET_TEXTURES;
+			this.u = 1;
+			this.v = 10;
+			this.textureWidth = this.textureHeight = 256;
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
+		} else if(entity instanceof EntityEnderman) {
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
 			this.width = 8;
 			this.height = 8;
-			this.u = 16;
-			this.v = 94;
+			this.u = 1;
+			this.v = 1;
 			this.textureHeight = this.textureWidth = 256;
 		} else if(entity instanceof EntityEndermite) {
 			this.width = 4;
@@ -79,19 +89,20 @@ public class AgressiveMobMarker extends AbstractCreatureMarker {
 			this.texture = GHAST_TEXTURE;
 		} else if(entity instanceof EntityGuardian) {
 			this.width = this.height = 12;
-			this.u = this.v = 16;
-			this.textureWidth = this.textureHeight = 64;
-			this.texture = GUARDIAN_TEXTURE; //TODO The eye is missing
+			this.u = 14;
+			this.v = 10;
+			this.textureWidth = this.textureHeight = 256;
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
 		} else if(entity instanceof EntityHusk) {
 			this.width = this.height = 8;
 			this.u = this.v = 8;
 			this.textureWidth = this.textureHeight = 64;
 			this.texture = HUSK_ZOMBIE_TEXTURE;
-		} else if(entity instanceof EntityMagmaCube) { //TODO Test
-			this.texture = SmyLibGui.WIDGET_TEXTURES;
+		} else if(entity instanceof EntityMagmaCube) {
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
 			this.width = this.height = 8;
-			this.u = 34;
-			this.v = 94;
+			this.u = 19;
+			this.v = 1;
 			this.textureHeight = this.textureWidth = 256;
 		} else if(entity instanceof EntityShulker) {
 			this.width = this.height = 6;
@@ -112,13 +123,13 @@ public class AgressiveMobMarker extends AbstractCreatureMarker {
 			this.textureWidth = 64;
 			this.textureHeight = 32;
 			this.texture = SKELETON_TEXTURE;
-		} else if(entity instanceof EntitySlime) { //TODO Test
-			this.texture = SmyLibGui.WIDGET_TEXTURES;
+		} else if(entity instanceof EntitySlime) {
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
 			this.width = this.height = 8;
-			this.u = 25;
-			this.v = 94;
+			this.u = 10;
+			this.v = 1;
 			this.textureHeight = this.textureWidth = 256;
-		} else if(entity instanceof EntityCaveSpider) { //TODO Test
+		} else if(entity instanceof EntityCaveSpider) {
 			this.width = 8;
 			this.height = 8;
 			this.u = 40;
@@ -153,12 +164,12 @@ public class AgressiveMobMarker extends AbstractCreatureMarker {
 			this.textureHeight = 64;
 			this.texture = VINDICATOR_TEXTURE;
 		} else if(entity instanceof EntityWitch) {
-			this.width = 8;
-			this.height = 12;
-			this.u = this.v = 8;
-			this.textureWidth = 64;
-			this.textureHeight = 128;
-			this.texture = WITCH_TEXTURE; //TODO missing hat
+			this.width = 10;
+			this.height = 21;
+			this.u = 1;
+			this.v = 23;
+			this.textureWidth = this.textureHeight = 256;
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
 		} else if(entity instanceof EntityWitherSkeleton) {
 			this.width = this.height = 8;
 			this.u = this.v = 8;
@@ -167,34 +178,45 @@ public class AgressiveMobMarker extends AbstractCreatureMarker {
 			this.texture = WITHER_SKELETON_TEXTURE;
 		} else if(entity instanceof EntityZombieVillager) {
 			this.width = 8;
-			this.height = 12;
-			this.u = this.v = 8;
-			this.textureWidth = 64;
-			this.textureHeight = 64;
-			this.texture = ZOMBIE_VILLAGER_TEXTURE;
+			this.height = 11;
+			this.u = 49;
+			this.v = 10;
+			this.textureWidth = this.textureHeight = 256;
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
+		} else if(entity instanceof EntityPigZombie) {
+			this.width = this.height = 8;
+			this.u = 37;
+			this.v = 1;
+			this.textureWidth = this.textureHeight = 256;
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
 		} else if(entity instanceof EntityZombie) {
 			this.width = this.height = 8;
 			this.u = this.v = 8;
 			this.textureWidth = this.textureHeight = 64;
 			this.texture = ZOMBIE_TEXTURE;
-		} else {
-			this.texture = SmyLibGui.WIDGET_TEXTURES;
-			this.width = 10;
-			this.height = 10;
-			this.u = 22;
-			this.v = 69;
-			this.textureHeight = this.textureWidth = 256;
+		} else if(entity instanceof EntityDragon) {
+			this.width = 16;
+			this.height = 20;
+			this.u = 12;
+			this.v = 23;
+			this.textureWidth = this.textureHeight = 256;
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
+		} else if(entity instanceof EntityWither) {
+			this.width = 26;
+			this.height = 18;
+			this.u = 29;
+			this.v = 23;
+			this.textureWidth = this.textureHeight = 256;
+			this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
 		}
 	}
 	
 	private static final ResourceLocation BLAZE_TEXTURE = new ResourceLocation("textures/entity/blaze.png");
     private static final ResourceLocation CAVE_SPIDER_TEXTURE = new ResourceLocation("textures/entity/spider/cave_spider.png");
 	private static final ResourceLocation CREEPER_TEXTURE = new ResourceLocation("textures/entity/creeper/creeper.png");
-    private static final ResourceLocation GUARDIAN_ELDER_TEXTURE = new ResourceLocation("textures/entity/guardian_elder.png");
     private static final ResourceLocation ENDERMITE_TEXTURE = new ResourceLocation("textures/entity/endermite.png");
     private static final ResourceLocation EVOKER_TEXTURE = new ResourceLocation("textures/entity/illager/evoker.png");
     private static final ResourceLocation GHAST_TEXTURE = new ResourceLocation("textures/entity/ghast/ghast.png");
-    private static final ResourceLocation GUARDIAN_TEXTURE = new ResourceLocation("textures/entity/guardian.png");
     private static final ResourceLocation HUSK_ZOMBIE_TEXTURE = new ResourceLocation("textures/entity/zombie/husk.png");
     private static final ResourceLocation SHULKER_TEXTURE = new ResourceLocation("textures/entity/shulker/shulker_purple.png");
     private static final ResourceLocation SILVERFISH_TEXTURE = new ResourceLocation("textures/entity/silverfish.png");
@@ -203,9 +225,7 @@ public class AgressiveMobMarker extends AbstractCreatureMarker {
     private static final ResourceLocation STRAY_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeleton/stray.png");
     private static final ResourceLocation VEX_TEXTURE = new ResourceLocation("textures/entity/illager/vex.png");
     private static final ResourceLocation VINDICATOR_TEXTURE = new ResourceLocation("textures/entity/illager/vindicator.png");
-    private static final ResourceLocation WITCH_TEXTURE = new ResourceLocation("textures/entity/witch.png");
     private static final ResourceLocation WITHER_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeleton/wither_skeleton.png");
     private static final ResourceLocation ZOMBIE_TEXTURE = new ResourceLocation("textures/entity/zombie/zombie.png");
-    private static final ResourceLocation ZOMBIE_VILLAGER_TEXTURE = new ResourceLocation("textures/entity/zombie_villager/zombie_villager.png");
 
 }

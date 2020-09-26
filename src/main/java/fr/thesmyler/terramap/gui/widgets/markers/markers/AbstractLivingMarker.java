@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
@@ -12,18 +13,22 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public abstract class AbstractCreatureMarker extends MovingMapMarkers {
+public abstract class AbstractLivingMarker extends MovingMapMarkers {
+	
+	protected static final ResourceLocation ENTITY_MARKERS_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/entity_markers.png");
 	
 	protected ResourceLocation texture;
 	protected int u, v, textureWidth, textureHeight;
 	protected Entity entity;
 	protected double actualLongitude, actualLatitude;
 
-	public AbstractCreatureMarker(MarkerController<?> controller, int width, int height, ResourceLocation texture, int u, int v, Entity entity) {
+	public AbstractLivingMarker(MarkerController<?> controller, int width, int height, ResourceLocation texture, int u, int v, int textureWidth, int textureHeight, Entity entity) {
 		super(controller, width, height);
 		this.texture = texture;
 		this.u = u;
 		this.v = v;
+		this.textureWidth = textureWidth;
+		this.textureHeight = textureHeight;
 		this.entity = entity;
 	}
 
