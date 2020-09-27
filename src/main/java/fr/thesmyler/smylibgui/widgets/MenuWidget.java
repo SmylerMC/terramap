@@ -148,7 +148,7 @@ public class MenuWidget implements IWidget {
 	@Override
 	public boolean onParentClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		if(this.isSubMenu) return true;
-		if(this.isVisible()) {
+		if(this.isVisible(parent)) {
 			this.hide(parent);
 			return false;
 		}
@@ -277,7 +277,7 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean isVisible() {
+	public boolean isVisible(Screen parent) {
 		return this.visible;
 	}
 

@@ -68,7 +68,7 @@ public class MapWidget extends Screen {
 		FontRendererContainer font = new FontRendererContainer(Minecraft.getMinecraft().fontRenderer);
 		this.copyright = new TextComponentWidget(CONTROLLER_Z - 1, new TextComponentString(""), font) {
 			@Override
-			public boolean isVisible() {
+			public boolean isVisible(Screen parent) {
 				return MapWidget.this.showCopyright;
 			}
 		};
@@ -191,7 +191,7 @@ public class MapWidget extends Screen {
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight());
-		if(!this.rightClickMenu.isVisible()) {
+		if(!this.rightClickMenu.isVisible(this)) {
 			int relativeMouseX = mouseX - x;
 			int relativeMouseY = mouseY - y;
 			this.updateMouseGeoPos(relativeMouseX, relativeMouseY);
@@ -238,7 +238,7 @@ public class MapWidget extends Screen {
 				w.onUpdate(this); 
 			}
 		}
-		if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible());
+		if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 	}
 	
@@ -557,7 +557,7 @@ public class MapWidget extends Screen {
 	}
 	
 	public boolean getScaleVisibility() {
-		return this.scale.isVisible();
+		return this.scale.isVisible(this);
 	}
 	
 	public MapWidget setScaleVisibility(boolean yesNo) {

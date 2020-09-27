@@ -64,7 +64,7 @@ public class ScaleIndicatorWidget implements IWidget {
 	}
 
 	@Override
-	public boolean isVisible() {
+	public boolean isVisible(Screen parent) {
 		return this.visible;
 	}
 	

@@ -108,7 +108,7 @@ public class Scrollbar extends Screen {
 	}
 	
 	@Override
-	public boolean isVisible() {
+	public boolean isVisible(Screen parent) {
 		return this.viewPort < 1;
 	}
 

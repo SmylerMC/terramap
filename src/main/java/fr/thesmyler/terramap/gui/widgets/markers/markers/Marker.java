@@ -64,7 +64,7 @@ public abstract class Marker implements IWidget {
 	public void update(MapWidget map) {}
 	
 	@Override
-	public boolean isVisible() {
+	public boolean isVisible(Screen parent) {
 		return this.controller.areMakersVisible() && !Double.isNaN(this.getLatitude()) && !Double.isNaN(this.getLongitude());
 	}
 	

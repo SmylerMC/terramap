@@ -145,7 +145,7 @@ public class Screen extends GuiScreen implements IWidget{
 						break;
 					}
 				} else {
-					if(!(widget.isEnabled() && widget.isVisible())) continue;
+					if(!(widget.isEnabled() && widget.isVisible(this))) continue;
 					switch(event.type) {
 					case CLICK:
 						propagate = widget.onClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
@@ -312,7 +312,7 @@ public class Screen extends GuiScreen implements IWidget{
 				&& widget.getX() + widget.getWidth() >= x
 				&& widget.getY() <= y
 				&& widget.getY() + widget.getHeight() >= y
-				&& widget.isVisible();
+				&& widget.isVisible(this);
 	}
 
 	@Override
@@ -435,8 +435,8 @@ public class Screen extends GuiScreen implements IWidget{
 		IWidget wf = null;
 		if(screenHovered) {
 			for(IWidget widget: this.widgets) {
-				if(!widget.isVisible() || this.isOutsideScreen(widget)) continue;
-				if(widget.isVisible() && this.isOverWidget(mouseX - x, mouseY - y, widget)) {
+				if(!widget.isVisible(this) || this.isOutsideScreen(widget)) continue;
+				if(widget.isVisible(this) && this.isOverWidget(mouseX - x, mouseY - y, widget)) {
 					wf = widget;
 					break;
 				}
@@ -444,7 +444,7 @@ public class Screen extends GuiScreen implements IWidget{
 		}
 		this.hoveredWidget = wf;
 		this.widgets.descendingIterator().forEachRemaining((widget) -> {
-			if(!widget.isVisible() || this.isOutsideScreen(widget)) return;
+			if(!widget.isVisible(this) || this.isOutsideScreen(widget)) return;
 			widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
 		});
 		IWidget w = this.getHoveredWidget();

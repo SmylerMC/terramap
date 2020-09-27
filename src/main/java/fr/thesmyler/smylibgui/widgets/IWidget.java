@@ -47,9 +47,11 @@ public interface IWidget {
 	/**
 	 * If this returns false, this widget will not be rendered and or notified of user actions
 	 * 
+	 * @param parent screen
+	 * 
 	 * @return true if the widget is visible
 	 */
-	public default boolean isVisible() {
+	public default boolean isVisible(Screen parent) {
 		return true;
 	}
 	
@@ -177,7 +179,7 @@ public interface IWidget {
 	/**
 	 * @return the text to draw as a tooltip when this widget is hovered, or null if no tooltip should be displayed
 	 */
-	@Nullable public default String getTooltipText() { //TODO Implement in Screen
+	@Nullable public default String getTooltipText() {
 		return null;
 	}
 	
@@ -185,7 +187,7 @@ public interface IWidget {
 	 * 
 	 * @return the delay for which the mouse needs to stay over the widget without moving before the tooltip is displayed in milliseconds
 	 */
-	public default long getTooltipDelay() { //TODO Implement in Screen
+	public default long getTooltipDelay() {
 		return 750;
 	}
 	
