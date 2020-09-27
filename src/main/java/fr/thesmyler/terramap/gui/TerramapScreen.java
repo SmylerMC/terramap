@@ -6,7 +6,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
-import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PannelTarget;
+import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
@@ -232,7 +232,7 @@ public class TerramapScreen extends Screen {
 		int y = this.panelButton.getY();
 		int z = this.panelButton.getZ();
 		TexturedButtonWidget newButton;
-		if(this.infoPanel.getTarget().equals(PannelTarget.OPENNED)) {
+		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
 			this.infoPanel.hide();
 			newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
 		} else {

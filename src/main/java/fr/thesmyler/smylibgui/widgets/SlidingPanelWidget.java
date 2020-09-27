@@ -34,20 +34,20 @@ public class SlidingPanelWidget extends Screen {
 		this.mainAnimation.update();
 	}
 	
-	public PannelTarget getTarget() {
+	public PanelTarget getTarget() {
 		switch(this.mainAnimation.getState()) {
 		case LEAVE:
-			return PannelTarget.CLOSED;
+			return PanelTarget.CLOSED;
 		case ENTER:
-			return PannelTarget.OPENNED;
+			return PanelTarget.OPENED;
 		default:
-			return this.mainAnimation.getProgress() < 0.5 ? PannelTarget.CLOSED: PannelTarget.OPENNED;
+			return this.mainAnimation.getProgress() < 0.5 ? PanelTarget.CLOSED: PanelTarget.OPENED;
 		}
 	}
 	
 	@Override
 	public boolean onParentClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
-		if(this.closeOnClickOther && !this.getTarget().equals(PannelTarget.CLOSED)) {
+		if(this.closeOnClickOther && !this.getTarget().equals(PanelTarget.CLOSED)) {
 			this.hide();
 			return false;
 		}
@@ -136,8 +136,8 @@ public class SlidingPanelWidget extends Screen {
 		return this;
 	}
 	
-	public enum PannelTarget {
-		OPENNED, CLOSED;
+	public enum PanelTarget {
+		OPENED, CLOSED;
 	}
 	
 }
