@@ -15,11 +15,11 @@ import net.minecraft.util.text.TextComponentString;
  * @author SmylerMC
  *
  */
-public class SelfPlayerMarker extends AbstractPlayerMarker {
+public class MainPlayerMarker extends AbstractPlayerMarker {
 	
 	private double playerLongitude, playerLatitude;
 
-	public SelfPlayerMarker(MarkerController<?> controller) {
+	public MainPlayerMarker(MarkerController<?> controller) {
 		super(controller, null);
 	}
 	

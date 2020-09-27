@@ -6,13 +6,13 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.util.text.ITextComponent;
 
-public abstract class MapMarker implements IWidget {
+public abstract class Marker implements IWidget {
 	
 	protected int width, height;
 	private int x, y;
 	private MarkerController<?> controller;
 
-	public MapMarker(MarkerController<?> controller, int width, int height) {
+	public Marker(MarkerController<?> controller, int width, int height) {
 		this.controller = controller;
 		this.width = width;
 		this.height = height;

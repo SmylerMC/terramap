@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-public class RightClickMarker extends FixedMapMarker {
+public class RightClickMarker extends AbstractFixedMarker {
 
 	public RightClickMarker(MarkerController<?> controller) {
 		super(controller, 15, 23, 0, 0);

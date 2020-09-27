@@ -2,12 +2,12 @@ package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapServer;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.SelfPlayerMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 
-public class SelfPlayerMarkerController extends MarkerController<SelfPlayerMarker> {
+public class MainPlayerMarkerController extends MarkerController<MainPlayerMarker> {
 	
 	protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
 			74, 108, 74, 122,
@@ -15,20 +15,20 @@ public class SelfPlayerMarkerController extends MarkerController<SelfPlayerMarke
 			74, 136, 74, 150,
 			this.areMakersVisible(), null, null);
 
-	public SelfPlayerMarkerController() {
-		super("self_player_marker", 900, SelfPlayerMarker.class);
+	public MainPlayerMarkerController() {
+		super("self_player_marker", 900, MainPlayerMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
 		this.button.setTooltip("Toggle main player visibility"); //TODO Localization
 	}
 
 	@Override
-	public SelfPlayerMarker[] getNewMarkers(MapMarker[] existingMarkers) {
+	public MainPlayerMarker[] getNewMarkers(Marker[] existingMarkers) {
 		EntityPlayerSP self = Minecraft.getMinecraft().player;
 		if(existingMarkers.length < 1 && self != null && TerramapServer.getServer().getProjection() != null) {
-			return new SelfPlayerMarker[] { new SelfPlayerMarker(this) };
+			return new MainPlayerMarker[] { new MainPlayerMarker(this) };
 		}
-		return new SelfPlayerMarker[0];
+		return new MainPlayerMarker[0];
 	}
 
 	@Override

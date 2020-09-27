@@ -14,7 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public abstract class AbstractLivingMarker extends MovingMapMarkers {
+public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	
 	protected static final ResourceLocation ENTITY_MARKERS_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/entity_markers.png");
 	

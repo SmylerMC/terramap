@@ -25,8 +25,8 @@ import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.SelfPlayerMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
@@ -45,8 +45,8 @@ public class MapWidget extends Screen {
 	protected RasterMapLayerWidget background;
 	private final List<MarkerController<?>> markerControllers = new ArrayList<MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
-	private SelfPlayerMarker mainPlayerMarker;
-	private MapMarker trackingMarker;
+	private MainPlayerMarker mainPlayerMarker;
+	private Marker trackingMarker;
 
 	private double mouseLongitude, mouseLatitude;
 
@@ -196,9 +196,9 @@ public class MapWidget extends Screen {
 			int relativeMouseY = mouseY - y;
 			this.updateMouseGeoPos(relativeMouseX, relativeMouseY);
 		}
-		Map<Class<?>, List<MapMarker>> markers = new HashMap<Class<?>, List<MapMarker>>();
+		Map<Class<?>, List<Marker>> markers = new HashMap<Class<?>, List<Marker>>();
 		for(MarkerController<?> controller: this.markerControllers) {
-			markers.put(controller.getMarkerType(), new ArrayList<MapMarker>());
+			markers.put(controller.getMarkerType(), new ArrayList<Marker>());
 		}
 		for(IWidget widget: this.widgets) {
 			if(widget instanceof MapLayerWidget) {
@@ -210,22 +210,22 @@ public class MapWidget extends Screen {
 					layer.centerLatitude = this.controller.centerLatitude;
 					layer.zoom = this.controller.zoom;
 				}
-			} else if(widget instanceof MapMarker) {
+			} else if(widget instanceof Marker) {
 				for(Class<?> clazz: markers.keySet()) {
 					if(clazz.isInstance(widget)) {
-						markers.get(clazz).add((MapMarker)widget);
+						markers.get(clazz).add((Marker)widget);
 					}
 				}
 			}
 		}
 		for(MarkerController<?> controller: this.markerControllers) {
-			MapMarker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new MapMarker[] {});
-			MapMarker[] newMarkers = controller.getNewMarkers(existingMarkers);
-			for(MapMarker markerToAdd: newMarkers) {
+			Marker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new Marker[] {});
+			Marker[] newMarkers = controller.getNewMarkers(existingMarkers);
+			for(Marker markerToAdd: newMarkers) {
 				this.addWidget(markerToAdd);
 			}
-			if(controller.getMarkerType().equals(SelfPlayerMarker.class) && newMarkers.length > 0) {
-				this.mainPlayerMarker = (SelfPlayerMarker) newMarkers[0];
+			if(controller.getMarkerType().equals(MainPlayerMarker.class) && newMarkers.length > 0) {
+				this.mainPlayerMarker = (MainPlayerMarker) newMarkers[0];
 			}
 		}
 		
@@ -234,7 +234,7 @@ public class MapWidget extends Screen {
 		 * so they lag behind when the map moves fast if they are not updated again
 		 */
 		for(IWidget w: this.widgets) {
-			if(w instanceof MapMarker) {
+			if(w instanceof Marker) {
 				w.onUpdate(this); 
 			}
 		}
@@ -573,16 +573,16 @@ public class MapWidget extends Screen {
 		return this.trackingMarker != null;
 	}
 	
-	public MapMarker getTracking() {
+	public Marker getTracking() {
 		return this.trackingMarker;
 	}
 	
-	public void track(MapMarker marker) {
+	public void track(Marker marker) {
 		TerramapMod.logger.debug("Started tracking " + marker.getDisplayName().getFormattedText());
 		this.trackingMarker = marker;
 	}
 	
-	public SelfPlayerMarker getMainPlayerMarker() {
+	public MainPlayerMarker getMainPlayerMarker() {
 		return this.mainPlayerMarker;
 	}
 

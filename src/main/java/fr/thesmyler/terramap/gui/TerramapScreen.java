@@ -20,8 +20,8 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.SelfPlayerMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
@@ -171,7 +171,7 @@ public class TerramapScreen extends Screen {
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
 		this.zoomText.setText("" + Math.round(this.map.getZoom()));
-		this.centerButton.setEnabled(!(this.map.getTracking() instanceof SelfPlayerMarker));
+		this.centerButton.setEnabled(!(this.map.getTracking() instanceof MainPlayerMarker));
 
 		double mouseLat = this.map.getMouseLatitude();
 		double mouseLon = this.map.getMouseLongitude();
@@ -197,7 +197,7 @@ public class TerramapScreen extends Screen {
 		String trackFormatLon = "-";
 		String trackFormatLat = "-";
 		if(this.map.isTracking()) {
-			MapMarker marker = this.map.getTracking();
+			Marker marker = this.map.getTracking();
 			double markerLong = marker.getLongitude();
 			double markerLat = marker.getLatitude();
 			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
@@ -208,7 +208,7 @@ public class TerramapScreen extends Screen {
 				trackFormatLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
 			}
 		} else if(this.map.getMainPlayerMarker() != null){
-			MapMarker marker = this.map.getMainPlayerMarker();
+			Marker marker = this.map.getMainPlayerMarker();
 			double markerLong = marker.getLongitude();
 			double markerLat = marker.getLatitude();
 			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {

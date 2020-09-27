@@ -4,14 +4,14 @@ import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 
-public abstract class MovingMapMarkers extends MapMarker {
+public abstract class AbstractMovingMarkers extends Marker {
 	
 	protected Animation movingAnimation;
 	
 	protected double longitude, latitude;
 	protected double oldLongitude, oldLatitude;
 
-	public MovingMapMarkers(MarkerController<?> controller, int width, int height) {
+	public AbstractMovingMarkers(MarkerController<?> controller, int width, int height) {
 		super(controller, width, height);
 		this.movingAnimation = new Animation(10000);
 	}

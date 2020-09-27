@@ -2,11 +2,11 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 
-public abstract class FixedMapMarker extends MapMarker {
+public abstract class AbstractFixedMarker extends Marker {
 	
 	private double longitude, latitude;
 
-	public FixedMapMarker(MarkerController<?> controller, int width, int height, double longitude, double latitude) {
+	public AbstractFixedMarker(MarkerController<?> controller, int width, int height, double longitude, double latitude) {
 		super(controller, width, height);
 		this.longitude = longitude;
 		this.latitude = latitude;

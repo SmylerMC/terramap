@@ -12,7 +12,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.SelfPlayerMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
 
 public abstract class MarkerControllerManager {
 	
@@ -54,8 +54,8 @@ public abstract class MarkerControllerManager {
 	
 	public static void registerBuiltInControllers() {
 		MarkerControllerManager.registerController(RightClickMarkerController.class, MapContext.FULLSCREEN);
-		MarkerControllerManager.registerController(SelfPlayerMarkerController.class, MapContext.FULLSCREEN);
-		MarkerControllerManager.registerController(SelfPlayerMarkerController.class, MapContext.MINIMAP);
+		MarkerControllerManager.registerController(MainPlayerMarkerController.class, MapContext.FULLSCREEN);
+		MarkerControllerManager.registerController(MainPlayerMarkerController.class, MapContext.MINIMAP);
 		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.FULLSCREEN);
 		MarkerControllerManager.registerController(OtherPlayerMarkerController.class, MapContext.MINIMAP);
 		MarkerControllerManager.registerController(AnimalMarkerController.class, MapContext.FULLSCREEN);

@@ -10,7 +10,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public abstract class AbstractPlayerMarker extends MovingMapMarkers {
+public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 
 	public AbstractPlayerMarker(MarkerController<?> controller, TerramapPlayer player) {
 		super(controller, 16, 16);
