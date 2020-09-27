@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
-import fr.thesmyler.smylibgui.widgets.SlidingPannelWidget;
-import fr.thesmyler.smylibgui.widgets.SlidingPannelWidget.PannelTarget;
+import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
+import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PannelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
@@ -41,14 +41,14 @@ public class TerramapScreen extends Screen {
 	private TexturedButtonWidget centerButton = new TexturedButtonWidget(50, IncludedTexturedButtons.CENTER);
 	private TexturedButtonWidget styleButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PAPER);
 	private TextWidget zoomText;
-	private SlidingPannelWidget infoPannel = new SlidingPannelWidget(70, 200);
-	private TexturedButtonWidget pannelButton = new TexturedButtonWidget(200, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
+	private SlidingPanelWidget infoPanel = new SlidingPanelWidget(70, 200);
+	private TexturedButtonWidget panelButton = new TexturedButtonWidget(200, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
 	private TextWidget mouseGeoLocationText;
 	private TextWidget mouseMCLocationText;
 	private TextWidget distortionText;
 	private TextWidget playerGeoLocationText;
 	private TextFieldWidget searchBox = new TextFieldWidget(10, new FontRendererContainer(Minecraft.getMinecraft().fontRenderer));
-	private SlidingPannelWidget stylePannel = new SlidingPannelWidget(80, 200); 
+	private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200); 
 	private Scrollbar styleScrollbar = new Scrollbar(100);
 
 
@@ -93,30 +93,30 @@ public class TerramapScreen extends Screen {
 		this.centerButton.setTooltip("Track player"); //TODO Localize
 		this.addWidget(this.centerButton);
 		this.styleButton.setX(this.centerButton.getX()).setY(this.centerButton.getY() + this.centerButton.getHeight() + 5);
-		this.styleButton.setOnClick(() -> this.stylePannel.show());
+		this.styleButton.setOnClick(() -> this.stylePanel.show());
 		this.styleButton.setTooltip("Change map style"); //TODO Localize
 		this.styleButton.enable();
 		this.addWidget(this.styleButton);
 
 		// Info pannel
-		this.infoPannel.removeAllWidgets();
-		this.infoPannel.setWidth(220).setHeight(this.getHeight());
-		this.infoPannel.setShowX(0).setShowY(0).setHiddenX(-infoPannel.getWidth() + 25).setHiddenY(0);
-		this.pannelButton.setTooltip("Collapse information and search pannel"); //TODO Localize
-		this.infoPannel.addWidget(pannelButton);
+		this.infoPanel.removeAllWidgets();
+		this.infoPanel.setWidth(220).setHeight(this.getHeight());
+		this.infoPanel.setShowX(0).setShowY(0).setHiddenX(-infoPanel.getWidth() + 25).setHiddenY(0);
+		this.panelButton.setTooltip("Collapse information and search pannel"); //TODO Localize
+		this.infoPanel.addWidget(panelButton);
 		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
 		this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
-		this.infoPannel.addWidget(this.mouseGeoLocationText);
+		this.infoPanel.addWidget(this.mouseGeoLocationText);
 		this.mouseMCLocationText = new TextWidget(49, this.getFont());
 		this.mouseMCLocationText.setAnchorX(5).setAnchorY(this.mouseGeoLocationText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setAlignment(TextAlignment.RIGHT);
-		this.infoPannel.addWidget(this.mouseMCLocationText);
+		this.infoPanel.addWidget(this.mouseMCLocationText);
 		this.playerGeoLocationText = new TextWidget(49, this.getFont());
 		this.playerGeoLocationText = new TextWidget(49, this.getFont());
 		this.playerGeoLocationText.setAnchorX(5).setAnchorY(this.mouseMCLocationText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setAlignment(TextAlignment.RIGHT);
-		this.infoPannel.addWidget(this.playerGeoLocationText);
+		this.infoPanel.addWidget(this.playerGeoLocationText);
 		this.distortionText = new TextWidget(49, this.getFont());
 		this.distortionText.setAnchorX(5).setAnchorY(this.playerGeoLocationText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setAlignment(TextAlignment.RIGHT);
-		this.infoPannel.addWidget(this.distortionText);
+		this.infoPanel.addWidget(this.distortionText);
 		int y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
 		int lineHeight = 0;
 		int x = 5;
@@ -124,7 +124,7 @@ public class TerramapScreen extends Screen {
 			if(!controller.showToggleButton()) continue;
 			ToggleButtonWidget button = controller.getToggleButton();
 			if(button == null) continue;
-			if(x + button.getWidth() > this.infoPannel.getWidth() - 20) {
+			if(x + button.getWidth() > this.infoPanel.getWidth() - 20) {
 				x = 5;
 				y += lineHeight + 3;
 				lineHeight = 0;
@@ -133,33 +133,33 @@ public class TerramapScreen extends Screen {
 			button.setX(x);
 			x += button.getWidth() + 3;
 			button.setY(y);
-			this.infoPannel.addWidget(button);
+			this.infoPanel.addWidget(button);
 		}
 		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(167);
 		this.searchBox.enableRightClickMenu();
 		this.searchBox.setText("Work in progress").disable();
 		this.searchBox.setOnPressEnterCallback(this::search);
-		this.infoPannel.addWidget(this.searchBox);
+		this.infoPanel.addWidget(this.searchBox);
 		TexturedButtonWidget searchButton = new TexturedButtonWidget(50, IncludedTexturedButtons.SEARCH);
 		searchButton.setX(this.searchBox.getX() + this.searchBox.getWidth() + 2).setY(this.searchBox.getY() - 1);
 		searchButton.setOnClick(() -> this.search(this.searchBox.getText()));
 //		searchButton.enable();
-		this.infoPannel.addWidget(searchButton);
-		this.infoPannel.setHeight(this.searchBox.getY() + this.searchBox.getHeight() + 5);
-		this.addWidget(this.infoPannel);
+		this.infoPanel.addWidget(searchButton);
+		this.infoPanel.setHeight(this.searchBox.getY() + this.searchBox.getHeight() + 5);
+		this.addWidget(this.infoPanel);
 
-		// Style pannel
-		this.stylePannel.setWidth(200).setHeight(this.getHeight());
-		this.stylePannel.setHiddenX(this.getWidth()).setHiddenY(0).setShowX(this.getWidth() - this.stylePannel.getWidth()).setShowY(0);
-		this.stylePannel.setCloseOnClickOther(false);
-		this.stylePannel.removeAllWidgets();
-		this.styleScrollbar.setX(this.stylePannel.width - 15).setY(0).setHeight(this.getHeight());
-		this.stylePannel.addWidget(this.styleScrollbar);
+		// Style panel
+		this.stylePanel.setWidth(200).setHeight(this.getHeight());
+		this.stylePanel.setHiddenX(this.getWidth()).setHiddenY(0).setShowX(this.getWidth() - this.stylePanel.getWidth()).setShowY(0);
+		this.stylePanel.setCloseOnClickOther(false);
+		this.stylePanel.removeAllWidgets();
+		this.styleScrollbar.setX(this.stylePanel.width - 15).setY(0).setHeight(this.getHeight());
+		this.stylePanel.addWidget(this.styleScrollbar);
 		StyleScreen s = new StyleScreen();
 		this.styleScrollbar.setViewPort((double) this.height / (s.getHeight() - 10));
 		if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
-		this.stylePannel.addWidget(s);
-		this.addWidget(this.stylePannel);
+		this.stylePanel.addWidget(s);
+		this.addWidget(this.stylePanel);
 	}
 
 	@Override
@@ -228,21 +228,21 @@ public class TerramapScreen extends Screen {
 	}
 
 	private void toggleInfoPannel() {
-		int x = this.pannelButton.getX();
-		int y = this.pannelButton.getY();
-		int z = this.pannelButton.getZ();
+		int x = this.panelButton.getX();
+		int y = this.panelButton.getY();
+		int z = this.panelButton.getZ();
 		TexturedButtonWidget newButton;
-		if(this.infoPannel.getTarget().equals(PannelTarget.OPENNED)) {
-			this.infoPannel.hide();
+		if(this.infoPanel.getTarget().equals(PannelTarget.OPENNED)) {
+			this.infoPanel.hide();
 			newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
 		} else {
-			this.infoPannel.show();
+			this.infoPanel.show();
 			newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPannel);
 		}
-		newButton.setTooltip(this.pannelButton.getTooltipText());
-		this.infoPannel.removeWidget(this.pannelButton);
-		this.pannelButton = newButton;
-		this.infoPannel.addWidget(this.pannelButton);
+		newButton.setTooltip(this.panelButton.getTooltipText());
+		this.infoPanel.removeWidget(this.panelButton);
+		this.panelButton = newButton;
+		this.infoPanel.addWidget(this.panelButton);
 	}
 
 	private boolean search(String text) {
@@ -334,7 +334,7 @@ public class TerramapScreen extends Screen {
 		public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 			if(mouseButton == 0) {
 				TerramapScreen.this.map.setBackground(this.background.getMap());
-				TerramapScreen.this.stylePannel.hide();
+				TerramapScreen.this.stylePanel.hide();
 			}
 			return false;
 		}

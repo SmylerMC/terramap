@@ -7,14 +7,14 @@ import fr.thesmyler.smylibgui.Animation.AnimationState;
 import fr.thesmyler.smylibgui.screen.Screen;
 import net.minecraft.client.gui.GuiScreen;
 
-public class SlidingPannelWidget extends Screen {
+public class SlidingPanelWidget extends Screen {
 	
 	protected int showX, hiddenX, showY, hiddenY;
 	protected int bgColor = 0xA0000000;
 	protected Animation mainAnimation;
 	protected boolean closeOnClickOther = false;
 	
-	public SlidingPannelWidget(int showX, int hiddenX, int showY, int hiddenY, int z, int width, int height, long delay) {
+	public SlidingPanelWidget(int showX, int hiddenX, int showY, int hiddenY, int z, int width, int height, long delay) {
 		super(hiddenX, hiddenY, z, width, height, BackgroundType.NONE);
 		this.showX = showX;
 		this.showY = showY;
@@ -23,7 +23,7 @@ public class SlidingPannelWidget extends Screen {
 		this.mainAnimation = new Animation(delay);
 	}
 	
-	public SlidingPannelWidget(int z, long delay) {
+	public SlidingPanelWidget(int z, long delay) {
 		this(0, 0, 0, 0, z, 50, 50, delay);
 	}
 	
@@ -66,7 +66,7 @@ public class SlidingPannelWidget extends Screen {
 		return this.showX;
 	}
 	
-	public SlidingPannelWidget setShowX(int x) {
+	public SlidingPanelWidget setShowX(int x) {
 		this.showX = x;
 		return this;
 	}
@@ -75,7 +75,7 @@ public class SlidingPannelWidget extends Screen {
 		return this.hiddenX;
 	}
 	
-	public SlidingPannelWidget setHiddenX(int x) {
+	public SlidingPanelWidget setHiddenX(int x) {
 		this.hiddenX = x;
 		return this;
 	}
@@ -84,7 +84,7 @@ public class SlidingPannelWidget extends Screen {
 		return this.showY;
 	}
 	
-	public SlidingPannelWidget setShowY(int y) {
+	public SlidingPanelWidget setShowY(int y) {
 		this.showY = y;
 		return this;
 	}
@@ -93,17 +93,17 @@ public class SlidingPannelWidget extends Screen {
 		return this.hiddenY;
 	}
 	
-	public SlidingPannelWidget setHiddenY(int y) {
+	public SlidingPanelWidget setHiddenY(int y) {
 		this.hiddenY = y;
 		return this;
 	}
 	
-	public SlidingPannelWidget setWidth(int width) {
+	public SlidingPanelWidget setWidth(int width) {
 		this.width = width;
 		return this;
 	}
 	
-	public SlidingPannelWidget setHeight(int height) {
+	public SlidingPanelWidget setHeight(int height) {
 		this.height = height;
 		return this;
 	}
@@ -112,7 +112,7 @@ public class SlidingPannelWidget extends Screen {
 		return this.closeOnClickOther;
 	}
 	
-	public SlidingPannelWidget setCloseOnClickOther(boolean yesNo) {
+	public SlidingPanelWidget setCloseOnClickOther(boolean yesNo) {
 		this.closeOnClickOther = yesNo;
 		return this;
 	}
@@ -131,7 +131,7 @@ public class SlidingPannelWidget extends Screen {
 		return this.bgColor;
 	}
 	
-	public SlidingPannelWidget setBackgroundColor(int color) {
+	public SlidingPanelWidget setBackgroundColor(int color) {
 		this.bgColor = color;
 		return this;
 	}
