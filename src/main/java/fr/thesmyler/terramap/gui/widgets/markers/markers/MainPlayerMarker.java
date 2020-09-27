@@ -81,5 +81,14 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 			return new TextComponentString("Missing main player");
 		}
 	}
+
+	@Override
+	public String getIdentifier() {
+		String uuid = null;
+		if(Minecraft.getMinecraft().player != null) {
+			uuid = Minecraft.getMinecraft().player.getUniqueID().toString();
+		}
+		return this.getControllerId() + ":" + uuid;
+	}
 	
 }

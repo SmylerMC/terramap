@@ -16,7 +16,7 @@ public class MainPlayerMarkerController extends MarkerController<MainPlayerMarke
 			this.areMakersVisible(), null, null);
 
 	public MainPlayerMarkerController() {
-		super("self_player_marker", 900, MainPlayerMarker.class);
+		super("main_player_marker", 900, MainPlayerMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
 		this.button.setTooltip("Toggle main player visibility"); //TODO Localization

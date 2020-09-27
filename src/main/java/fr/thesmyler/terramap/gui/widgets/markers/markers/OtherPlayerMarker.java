@@ -73,4 +73,9 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 		return this.player.getDisplayName();
 	}
 
+	@Override
+	public String getIdentifier() {
+		return this.getControllerId() + ":" + this.player.getUUID().toString();
+	}
+
 }

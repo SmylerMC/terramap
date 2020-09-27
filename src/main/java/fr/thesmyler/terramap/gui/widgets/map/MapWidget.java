@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +26,8 @@ import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
@@ -43,10 +44,11 @@ public class MapWidget extends Screen {
 
 	private ControllerMapLayer controller = new ControllerMapLayer();
 	protected RasterMapLayerWidget background;
-	private final List<MarkerController<?>> markerControllers = new ArrayList<MarkerController<?>>();
+	private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
 	private MainPlayerMarker mainPlayerMarker;
 	private Marker trackingMarker;
+	private String restoreTrackingId;
 
 	private double mouseLongitude, mouseLatitude;
 
@@ -124,7 +126,7 @@ public class MapWidget extends Screen {
 			if(controller instanceof RightClickMarkerController) {
 				this.rcmMarkerController = (RightClickMarkerController) controller;
 			}
-			this.markerControllers.add(controller);
+			this.markerControllers.put(controller.getId(), controller);
 		}
 		
 	}
@@ -197,7 +199,7 @@ public class MapWidget extends Screen {
 			this.updateMouseGeoPos(relativeMouseX, relativeMouseY);
 		}
 		Map<Class<?>, List<Marker>> markers = new HashMap<Class<?>, List<Marker>>();
-		for(MarkerController<?> controller: this.markerControllers) {
+		for(MarkerController<?> controller: this.markerControllers.values()) {
 			markers.put(controller.getMarkerType(), new ArrayList<Marker>());
 		}
 		for(IWidget widget: this.widgets) {
@@ -218,7 +220,7 @@ public class MapWidget extends Screen {
 				}
 			}
 		}
-		for(MarkerController<?> controller: this.markerControllers) {
+		for(MarkerController<?> controller: this.markerControllers.values()) {
 			Marker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new Marker[] {});
 			Marker[] newMarkers = controller.getNewMarkers(existingMarkers);
 			for(Marker markerToAdd: newMarkers) {
@@ -226,6 +228,16 @@ public class MapWidget extends Screen {
 			}
 			if(controller.getMarkerType().equals(MainPlayerMarker.class) && newMarkers.length > 0) {
 				this.mainPlayerMarker = (MainPlayerMarker) newMarkers[0];
+			}
+			if(this.restoreTrackingId != null) {
+				for(Marker markerToAdd: newMarkers) {
+					String id = markerToAdd.getIdentifier();
+					if(id != null && id.equals(this.restoreTrackingId)) {
+						this.track(markerToAdd);
+						this.restoreTrackingId = null;
+						TerramapMod.logger.debug("Restored tracking with " + id);
+					}
+				}
 			}
 		}
 		
@@ -385,7 +397,7 @@ public class MapWidget extends Screen {
 	}
 	
 	public MarkerController<?>[] getMarkerControllers() {
-		return this.markerControllers.toArray(new MarkerController<?>[0]);
+		return this.markerControllers.values().toArray(new MarkerController<?>[0]);
 	}
 
 	public double getZoom() {
@@ -583,6 +595,33 @@ public class MapWidget extends Screen {
 	
 	public MainPlayerMarker getMainPlayerMarker() {
 		return this.mainPlayerMarker;
+	}
+	
+	public TiledMap<?> getBackgroundStyle() {
+		return this.background.getMap();
+	}
+	
+	public Map<String, Boolean> getMarkersVisibility() {
+		Map<String, Boolean> outMap = new HashMap<String, Boolean>();
+		for(MarkerController<?> controller: this.markerControllers.values()) {
+			outMap.put(controller.getId(), controller.areMakersVisible());
+		}
+		return outMap;
+	}
+	
+	public MapWidget setMarkersVisibility(Map<String, Boolean> m) {
+		for(String key: m.keySet()) {
+			if(this.markerControllers.containsKey(key)) {
+				this.markerControllers.get(key).setVisibility(m.get(key));
+			} else {
+				TerramapMod.logger.warn("Was not able to restore marker visibility for marker type " + key);
+			}
+		}
+		return this;
+	}
+	
+	public void restoreTracking(String markerId) {
+		this.restoreTrackingId = markerId;
 	}
 
 }

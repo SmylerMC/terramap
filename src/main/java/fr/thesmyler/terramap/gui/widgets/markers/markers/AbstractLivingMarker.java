@@ -107,5 +107,10 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	public ITextComponent getDisplayName() {
 		return this.entity.getDisplayName();
 	}
+	
+	@Override
+	public String getIdentifier() {
+		return this.getControllerId() + ":" + this.entity.getUniqueID().toString();
+	}
 
 }

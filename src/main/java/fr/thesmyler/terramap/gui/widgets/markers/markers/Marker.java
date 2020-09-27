@@ -106,4 +106,12 @@ public abstract class Marker implements IWidget {
 	
 	public abstract ITextComponent getDisplayName();
 	
+	/**
+	 * This identifier shall be used to resume tracking this marker is the map is saved and closed then opened again
+	 * So it cannot depend on runtime and should be unique. The convention is markertype:uuid
+	 * 
+	 * @return a String uniquely identify this marker
+	 */
+	public abstract String getIdentifier();
+	
 }

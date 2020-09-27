@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.forgeessentials.FeWarp;
-import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
+import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
@@ -30,7 +30,7 @@ import net.minecraft.entity.player.EntityPlayer;
 /**
  * Used to represent the server from the client
  * 
- * @author hector
+ * @author SmylerMC
  *
  */
 public class TerramapServer {
@@ -174,16 +174,16 @@ public class TerramapServer {
 		}
 	}
 
-	public SavedMapState getSavedMap() {
-		return TerramapClientPreferences.getServerMapState(this.getServerIdentifier());
+	public TerramapScreenSavedState getSavedScreenState() {
+		return TerramapClientPreferences.getServerSavedScreen(this.getServerIdentifier());
 	}
 
-	public boolean hasSavedMap() {
-		return TerramapClientPreferences.getServerMapState(this.getServerIdentifier()) != null;
+	public boolean hasSavedScreenState() {
+		return TerramapClientPreferences.getServerSavedScreen(this.getServerIdentifier()) != null;
 	}
 
-	public void setSavedMap(SavedMapState svd) {
-		TerramapClientPreferences.setServerMapState(this.getServerIdentifier(), svd);
+	public void setSavedScreenState(TerramapScreenSavedState svd) {
+		TerramapClientPreferences.setServerSavedScreen(this.getServerIdentifier(), svd);
 	}
 
 	public void registerForUpdates(boolean yesNo) {

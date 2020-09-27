@@ -50,4 +50,9 @@ public class RightClickMarker extends AbstractFixedMarker {
 		return new TextComponentString("Right click marker");
 	}
 
+	@Override
+	public String getIdentifier() {
+		return this.getControllerId() + ":0";
+	}
+
 }

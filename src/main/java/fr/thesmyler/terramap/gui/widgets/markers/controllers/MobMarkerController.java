@@ -6,9 +6,8 @@ import java.util.UUID;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapServer;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MobMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import net.minecraft.client.Minecraft;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MobMarker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 
@@ -31,7 +30,7 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 	public MobMarker[] getNewMarkers(Marker[] existingMarkers) {
 		if(TerramapServer.getServer().getProjection() == null) return new MobMarker[0];
 		Map<UUID, Entity> entities = new HashMap<UUID, Entity>();
-		for(Entity entity: Minecraft.getMinecraft().world.loadedEntityList) {
+		for(Entity entity: TerramapServer.getServer().getEntities()) {
 			if(entity instanceof IMob) {
 				entities.put(entity.getPersistentID(), entity);
 			}

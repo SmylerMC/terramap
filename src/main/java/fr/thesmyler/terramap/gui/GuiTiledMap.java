@@ -100,8 +100,8 @@ public class GuiTiledMap extends GuiScreen {
 		this.playerPOIs = new HashMap<UUID, PlayerPOI>();
 		this.thePlayerPOI = new PlayerPOI(new TerramapLocalPlayer(player));
 		if(this.projection != null) this.updatePOIs();
-		if(serv.hasSavedMap()) {
-			this.setFromSavedState(serv.getSavedMap());
+		if(serv.hasSavedScreenState()) {
+			//this.setFromSavedState(serv.getSavedMap()); //Removed on favor of new GUI
 			TerramapMod.logger.debug("Restored saved map state");
 		} else if(this.projection != null){
 			if(Double.isNaN(this.thePlayerPOI.getLatitude()) || Double.isNaN(this.thePlayerPOI.getLongitude())) {
@@ -670,8 +670,9 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
-		TerramapServer.getServer().setSavedMap(new SavedMapState(this.zoomLevel, this.focusLongitude, this.focusLatitude, this.map.getName()));
-		TerramapServer.getServer().saveSettings();
+		//Removed in favor of new GUI
+		//TerramapServer.getServer().setSavedMap(new SavedMapState(this.zoomLevel, this.focusLongitude, this.focusLatitude, this.map.getName()));
+		//TerramapServer.getServer().saveSettings();
 		super.onGuiClosed();
 		this.map.unloadAll();
 		TerramapServer.getServer().registerForUpdates(false);
@@ -886,6 +887,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.focusLongitude = poi.getLongitude();
 	}
 
+	@Deprecated
 	public static class SavedMapState {
 
 		double centerLongitude = 0d;

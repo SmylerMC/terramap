@@ -22,9 +22,9 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
@@ -59,6 +59,7 @@ public class TerramapScreen extends Screen {
 		this.parent = parent;
 		this.backgrounds = maps;
 		this.map = new MapWidget(10, this.backgrounds[0], MapContext.FULLSCREEN);
+		this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
 	}
 
 	@Override
@@ -259,6 +260,32 @@ public class TerramapScreen extends Screen {
 		if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		super.onKeyTyped(typedChar, keyCode, parent);
 	}
+	
+	public TerramapScreenSavedState saveToState() {
+		String tracking = null;
+		Marker trackingMarker = this.map.getTracking();
+		if(trackingMarker != null) {
+			tracking = trackingMarker.getIdentifier();
+		}
+		return new TerramapScreenSavedState(
+				this.map.getZoom(),
+				this.map.getCenterLongitude(),
+				this.map.getCenterLatitude(),
+				this.map.getBackgroundStyle().getName(),
+				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
+				false, //TODO Save debug
+				false, //TODO Save f11
+				this.map.getMarkersVisibility(), tracking);
+	}
+	
+	public void resumeFromSavedState(TerramapScreenSavedState state) {
+		this.map.setZoom(state.zoomLevel);
+		this.map.setCenterLongitude(state.centerLongitude);
+		this.map.setCenterLatitude(state.centerLatitude);
+		this.map.restoreTracking(state.trackedMarker);
+		this.map.setMarkersVisibility(state.markerSettings);
+		this.infoPanel.setVisibilityNoAnimation(state.infoPannel);
+	}
 
 	private boolean search(String text) {
 		TerramapMod.logger.info("Geo search: " + text);
@@ -319,6 +346,12 @@ public class TerramapScreen extends Screen {
 			return 5 - (int) Math.round((this.height - TerramapScreen.this.getHeight()) * TerramapScreen.this.styleScrollbar.getProgress());
 		}
 
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		TerramapServer.getServer().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
+		TerramapServer.getServer().saveSettings();
 	}
 
 	private class MapPreview extends MapWidget {
