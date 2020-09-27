@@ -2,6 +2,8 @@ package fr.thesmyler.terramap.gui;
 
 import javax.annotation.Nullable;
 
+import org.lwjgl.input.Keyboard;
+
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
@@ -21,6 +23,7 @@ import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
@@ -243,6 +246,18 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.removeWidget(this.panelButton);
 		this.panelButton = newButton;
 		this.infoPanel.addWidget(this.panelButton);
+	}
+	
+	@Override
+	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
+//		if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug; //TODO Debug
+		//TODO F11 mode
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.map.moveMap(0, 10);
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) this.map.moveMap(0, -10);
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) this.map.moveMap(-10, 0);
+		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || keyCode == Keyboard.KEY_LEFT) this.map.moveMap(10, 0);
+		if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
+		super.onKeyTyped(typedChar, keyCode, parent);
 	}
 
 	private boolean search(String text) {
