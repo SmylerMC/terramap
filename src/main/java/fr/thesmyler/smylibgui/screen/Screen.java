@@ -30,7 +30,13 @@ public class Screen extends GuiScreen implements IWidget{
 				if(w1 == null && w2 == null) return 0;
 				if(w1 == null) return Integer.MIN_VALUE;
 				if(w2 == null) return Integer.MAX_VALUE;
-				int r = w1.getZ() - w2.getZ();
+				int z1 = w1.getZ();
+				int z2 = w2.getZ();
+				if(z1 == Integer.MAX_VALUE) return Integer.MAX_VALUE;
+				if(z1 == Integer.MIN_VALUE) return Integer.MIN_VALUE;
+				if(z2 == Integer.MAX_VALUE) return Integer.MIN_VALUE;
+				if(z2 == Integer.MIN_VALUE) return Integer.MAX_VALUE;
+				int r = z1 - z2;
 				return r == 0? w1.hashCode() - w2.hashCode(): r;
 			}
 			);
