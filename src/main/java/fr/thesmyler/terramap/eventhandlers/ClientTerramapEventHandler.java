@@ -6,13 +6,10 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapServer;
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMaps;
-import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -62,14 +59,11 @@ public class ClientTerramapEventHandler {
 			map.setHeight(200);
 			map.setZoom(18);
 			map.setCopyrightVisibility(false);
+			map.setScaleVisibility(false);
 			screen.addWidget(map);
-			screen.scheduleAtUpdate(() -> { //TODO Map tracking mode
+			screen.scheduleAtUpdate(() -> {
 				if(TerramapServer.getServer().isInstalledOnServer()) {
-					GeographicProjection proj = TerramapServer.getServer().getGeneratorSettings().getProjection();
-					EntityPlayerSP p = Minecraft.getMinecraft().player;
-					double[] geo = TerramapUtils.toGeo(proj, p.posX, p.posZ);
-					map.setCenterLatitude(geo[1]);
-					map.setCenterLongitude(geo[0]);
+					map.track(map.getMainPlayerMarker());
 				}
 			});
 		}

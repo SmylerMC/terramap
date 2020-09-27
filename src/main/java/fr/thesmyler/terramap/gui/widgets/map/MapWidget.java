@@ -578,7 +578,6 @@ public class MapWidget extends Screen {
 	}
 	
 	public void track(Marker marker) {
-		TerramapMod.logger.debug("Started tracking " + marker.getDisplayName().getFormattedText());
 		this.trackingMarker = marker;
 	}
 	
