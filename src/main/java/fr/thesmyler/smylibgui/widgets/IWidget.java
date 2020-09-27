@@ -194,7 +194,7 @@ public interface IWidget {
 	/**
 	 * Called when the screen is closed or this widget is removed from the screen
 	 */
-	public default void onRemoved() {} //TODO Implement in Screen
+	public default void onRemoved() {}
 	
 	
 }

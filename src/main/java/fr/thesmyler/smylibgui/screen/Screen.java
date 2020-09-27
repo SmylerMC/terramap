@@ -93,11 +93,15 @@ public class Screen extends GuiScreen implements IWidget{
 	}
 
 	public Screen removeWidget(IWidget widget) {
+		if(this.widgets.contains(widget)) {
+			widget.onRemoved();
+		}
 		this.widgets.remove(widget);
 		return this;
 	}
 
 	public Screen removeAllWidgets() {
+		for(IWidget widget: this.widgets) widget.onRemoved();
 		this.widgets.clear();
 		return this;
 	}
