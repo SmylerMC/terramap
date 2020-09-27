@@ -11,9 +11,13 @@ public abstract class AbstractMovingMarkers extends Marker {
 	protected double longitude, latitude;
 	protected double oldLongitude, oldLatitude;
 
-	public AbstractMovingMarkers(MarkerController<?> controller, int width, int height) {
-		super(controller, width, height);
+	public AbstractMovingMarkers(MarkerController<?> controller, int width, int height, int minZoom, int maxZoom) {
+		super(controller, width, height, minZoom, maxZoom);
 		this.movingAnimation = new Animation(10000);
+	}
+	
+	public AbstractMovingMarkers(MarkerController<?> controller, int width, int height) {
+		this(controller, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 	
 	@Override

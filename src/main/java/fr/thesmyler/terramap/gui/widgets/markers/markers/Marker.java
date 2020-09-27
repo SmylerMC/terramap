@@ -4,18 +4,27 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class Marker implements IWidget {
 	
 	protected int width, height;
+	protected int minZoom;
+	protected int maxZoom;
 	private int x, y;
 	private MarkerController<?> controller;
 
-	public Marker(MarkerController<?> controller, int width, int height) {
+	public Marker(MarkerController<?> controller, int width, int height, int minZoom, int maxZoom) {
 		this.controller = controller;
 		this.width = width;
 		this.height = height;
+		this.minZoom = minZoom;
+		this.maxZoom = maxZoom;
+	}
+	
+	public Marker(MarkerController<?> controller, int width, int height) {
+		this(controller, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
 	@Override
@@ -65,7 +74,14 @@ public abstract class Marker implements IWidget {
 	
 	@Override
 	public boolean isVisible(Screen parent) {
-		return this.controller.areMakersVisible() && !Double.isNaN(this.getLatitude()) && !Double.isNaN(this.getLongitude());
+		if(!this.controller.areMakersVisible()) return false;
+		if(!WebMercatorUtils.isPositionOnMap(this.getLongitude(), this.getLatitude())) return false;
+		if(parent instanceof MapWidget) {
+			MapWidget map = (MapWidget)parent;
+			double zoom = map.getZoom();
+			return this.minZoom <= zoom && zoom <= this.maxZoom;
+		}
+		return true;
 	}
 	
 	public String getControllerId() {

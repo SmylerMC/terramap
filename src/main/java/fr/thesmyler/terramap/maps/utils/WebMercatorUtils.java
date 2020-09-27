@@ -188,4 +188,8 @@ public class WebMercatorUtils {
 		return l;
 	}
 	
+	public static boolean isPositionOnMap(double longitude, double latitude) {
+		return !Double.isNaN(longitude) && !Double.isNaN(latitude) && Math.abs(latitude) <= LIMIT_LATITUDE;
+	}
+	
 }

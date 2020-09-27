@@ -24,7 +24,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	protected double actualLongitude, actualLatitude;
 
 	public AbstractLivingMarker(MarkerController<?> controller, int width, int height, ResourceLocation texture, int u, int v, int textureWidth, int textureHeight, Entity entity) {
-		super(controller, width, height);
+		super(controller, width, height, 16, Integer.MAX_VALUE);
 		this.texture = texture;
 		this.u = u;
 		this.v = v;
