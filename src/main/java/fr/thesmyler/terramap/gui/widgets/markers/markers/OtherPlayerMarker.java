@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public class OtherPlayerMarker extends AbstractPlayerMarker {
 	
@@ -63,13 +64,13 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	protected String getName() {
-		return this.player.getDisplayName();
-	}
-
-	@Override
 	protected boolean showName(boolean hovered) {
 		return !this.player.isSpectator() || hovered;
+	}
+	
+	@Override
+	public ITextComponent getDisplayName() {
+		return this.player.getDisplayName();
 	}
 
 }

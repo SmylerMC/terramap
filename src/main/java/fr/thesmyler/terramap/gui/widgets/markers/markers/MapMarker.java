@@ -4,6 +4,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class MapMarker implements IWidget {
 	
@@ -71,6 +72,8 @@ public abstract class MapMarker implements IWidget {
 		return this.controller.getId();
 	}
 	
+	public abstract boolean canBeTracked();
+	
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
 		return true; //TODO do not prevent the map from being dragged if clicked
@@ -78,8 +81,13 @@ public abstract class MapMarker implements IWidget {
 	
 	@Override
 	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
-		//TODO Track the marker if it enables it
+		if(this.canBeTracked() && parent instanceof MapWidget) {
+			MapWidget map = (MapWidget) parent;
+			map.track(this);
+		}
 		return false;
 	}
+	
+	public abstract ITextComponent getDisplayName();
 	
 }

@@ -51,7 +51,7 @@ public class PlayerPOI extends PointOfInterest {
 
 	@Override
 	public String getDisplayName() {
-		return player.getDisplayName();
+		return player.getDisplayName().getFormattedText();
 	}
 	
 	public TerramapPlayer getPlayer() {

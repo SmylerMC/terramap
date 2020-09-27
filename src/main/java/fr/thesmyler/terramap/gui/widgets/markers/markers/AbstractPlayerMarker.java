@@ -31,7 +31,7 @@ public abstract class AbstractPlayerMarker extends MovingMapMarkers {
 		Gui.drawModalRectWithCustomSizedTexture(x, y, 80, 16, 16, 16, 128, 128);
 
 		if(drawName) {
-			String name = this.getName();
+			String name = this.getDisplayName().getFormattedText();
 			int strWidth = parent.getFont().getStringWidth(name);
 			int nameY = y - parent.getFont().FONT_HEIGHT - 2;
 			Gui.drawRect(x + 8 - strWidth / 2 - 2, y - parent.getFont().FONT_HEIGHT - 4, x + strWidth / 2 + 10, y - 1, 0x50000000);
@@ -45,8 +45,11 @@ public abstract class AbstractPlayerMarker extends MovingMapMarkers {
 
 	protected abstract float getTransparency();
 
-	protected abstract String getName();
-
 	protected abstract boolean showName(boolean hovered);
+	
+	@Override
+	public boolean canBeTracked() {
+		return true;
+	}
 
 }

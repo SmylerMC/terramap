@@ -6,6 +6,8 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 public class RightClickMarker extends FixedMapMarker {
 
@@ -36,6 +38,16 @@ public class RightClickMarker extends FixedMapMarker {
 	public void update(MapWidget map) {
 		this.setLongitude(map.getMouseLongitude());
 		this.setLatitude(map.getMouseLatitude());
+	}
+
+	@Override
+	public boolean canBeTracked() {
+		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TextComponentString("Right click marker");
 	}
 
 }

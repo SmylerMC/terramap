@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class AbstractLivingMarker extends MovingMapMarkers {
 	
@@ -95,6 +96,16 @@ public abstract class AbstractLivingMarker extends MovingMapMarkers {
 	
 	public Entity getEntity() {
 		return this.entity;
+	}
+	
+	@Override
+	public boolean canBeTracked() {
+		return true;
+	}
+	
+	@Override
+	public ITextComponent getDisplayName() {
+		return this.entity.getDisplayName();
 	}
 
 }

@@ -20,6 +20,8 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.SelfPlayerMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
@@ -86,7 +88,9 @@ public class TerramapScreen extends Screen {
 		this.zoomOutButton.enable();
 		this.addWidget(this.zoomOutButton);
 		this.centerButton.setX(this.zoomOutButton.getX()).setY(this.zoomOutButton.getY() + this.zoomOutButton.getHeight() + 15);
-		this.centerButton.setTooltip("Center on player"); //TODO Localize
+		this.centerButton.setOnClick(() -> map.track(this.map.getMainPlayerMarker()));
+		this.centerButton.enable();
+		this.centerButton.setTooltip("Track player"); //TODO Localize
 		this.addWidget(this.centerButton);
 		this.styleButton.setX(this.centerButton.getX()).setY(this.centerButton.getY() + this.centerButton.getHeight() + 5);
 		this.styleButton.setOnClick(() -> this.stylePannel.show());
@@ -167,6 +171,7 @@ public class TerramapScreen extends Screen {
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
 		this.zoomText.setText("" + Math.round(this.map.getZoom()));
+		this.centerButton.setEnabled(!(this.map.getTracking() instanceof SelfPlayerMarker));
 
 		double mouseLat = this.map.getMouseLatitude();
 		double mouseLon = this.map.getMouseLongitude();
@@ -188,13 +193,37 @@ public class TerramapScreen extends Screen {
 			formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(dist[1]*180.0/Math.PI);
 		}
 		
-		String playerFormatLon = "-";
-		String playerFormatLat = "-";
+		String trackString = "Player position: ";
+		String trackFormatLon = "-";
+		String trackFormatLat = "-";
+		if(this.map.isTracking()) {
+			MapMarker marker = this.map.getTracking();
+			double markerLong = marker.getLongitude();
+			double markerLat = marker.getLatitude();
+			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
+				trackString = marker.getDisplayName().getFormattedText() + "The tracked marker is outside the projected area.";
+			} else {
+				trackString = "Tracked position: ";
+				trackFormatLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
+				trackFormatLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
+			}
+		} else if(this.map.getMainPlayerMarker() != null){
+			MapMarker marker = this.map.getMainPlayerMarker();
+			double markerLong = marker.getLongitude();
+			double markerLat = marker.getLatitude();
+			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
+				trackString = "You are outside the projected area.";
+			} else {
+				trackString = "Player position: ";
+				trackFormatLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
+				trackFormatLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
+			}
+		}
 
 		//TODO Localize
 		this.mouseGeoLocationText.setText("Mouse location: " + displayLat + "° " + displayLon + "°");
 		this.mouseMCLocationText.setText("X: " + formatX + " Z: " + formatZ);
-		this.playerGeoLocationText.setText("Player position: " + playerFormatLat + "° " + playerFormatLon + "°");
+		this.playerGeoLocationText.setText(trackString + trackFormatLat + "° " + trackFormatLon + "°");
 		this.distortionText.setText("Distortion: " + formatScale + " blocks/m ; ±" + formatOrientation + "°");
 	}
 

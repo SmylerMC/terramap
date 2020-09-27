@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -31,7 +32,7 @@ public class S2CPlayerSyncPacket implements IMessage {
 			double x = buf.readDouble();
 			double z = buf.readDouble();
 			boolean spec = buf.readBoolean();
-			String name = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+			ITextComponent name = ITextComponent.Serializer.jsonToComponent(TerramapNetworkManager.decodeStringFromByteBuf(buf));
 			this.remotePlayers[i] = new TerramapRemotePlayer(uuid, name, x, z, spec);
 		}
 	}
@@ -45,7 +46,7 @@ public class S2CPlayerSyncPacket implements IMessage {
 			buf.writeDouble(player.getLongitude());
 			buf.writeDouble(player.getLatitude());
 			buf.writeBoolean(player.isSpectator());
-			String playerDisplayName = player.getDisplayName();
+			String playerDisplayName = ITextComponent.Serializer.componentToJson(player.getDisplayName());
 			TerramapNetworkManager.encodeStringToByteBuf(playerDisplayName, buf);
 		}
 	}

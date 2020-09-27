@@ -26,6 +26,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MapMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.SelfPlayerMarker;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
@@ -44,6 +45,8 @@ public class MapWidget extends Screen {
 	protected RasterMapLayerWidget background;
 	private final List<MarkerController<?>> markerControllers = new ArrayList<MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
+	private SelfPlayerMarker mainPlayerMarker;
+	private MapMarker trackingMarker;
 
 	private double mouseLongitude, mouseLatitude;
 
@@ -186,12 +189,6 @@ public class MapWidget extends Screen {
 	}
 
 	@Override
-	public void onUpdate(@Nullable Screen parent) {
-		super.onUpdate(parent);
-		
-	}
-
-	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight());
 		if(!this.rightClickMenu.isVisible()) {
@@ -223,8 +220,12 @@ public class MapWidget extends Screen {
 		}
 		for(MarkerController<?> controller: this.markerControllers) {
 			MapMarker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new MapMarker[] {});
-			for(MapMarker markerToAdd: controller.getNewMarkers(existingMarkers)) {
+			MapMarker[] newMarkers = controller.getNewMarkers(existingMarkers);
+			for(MapMarker markerToAdd: newMarkers) {
 				this.addWidget(markerToAdd);
+			}
+			if(controller.getMarkerType().equals(SelfPlayerMarker.class) && newMarkers.length > 0) {
+				this.mainPlayerMarker = (SelfPlayerMarker) newMarkers[0];
 			}
 		}
 		
@@ -239,6 +240,19 @@ public class MapWidget extends Screen {
 		}
 		if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible());
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+	}
+	
+	@Override
+	public void onUpdate(Screen parent) {
+		super.onUpdate(parent);
+		if(this.trackingMarker != null) {
+			if(this.widgets.contains(this.trackingMarker)) {
+				this.setCenterLongitude(this.trackingMarker.getLongitude());
+				this.setCenterLatitude(this.trackingMarker.getLatitude());
+			} else {
+				this.trackingMarker = null;
+			}
+		}
 	}
 
 	private class ControllerMapLayer extends MapLayerWidget {
@@ -338,8 +352,7 @@ public class MapWidget extends Screen {
 		}
 
 		public void moveMap(int dX, int dY) {
-			//			this.closeRightClickMenu();
-			//			this.followedPOI = null;
+			MapWidget.this.trackingMarker = null;
 			double nlon = this.getScreenLongitude((double)this.width/2 - dX);
 			double nlat = this.getScreenLatitude((double)this.height/2 - dY);
 			this.setCenterLongitude(nlon);
@@ -554,6 +567,23 @@ public class MapWidget extends Screen {
 	
 	public MapContext getContext() {
 		return this.context;
+	}
+	
+	public boolean isTracking() {
+		return this.trackingMarker != null;
+	}
+	
+	public MapMarker getTracking() {
+		return this.trackingMarker;
+	}
+	
+	public void track(MapMarker marker) {
+		TerramapMod.logger.debug("Started tracking " + marker.getDisplayName().getFormattedText());
+		this.trackingMarker = marker;
+	}
+	
+	public SelfPlayerMarker getMainPlayerMarker() {
+		return this.mainPlayerMarker;
 	}
 
 }

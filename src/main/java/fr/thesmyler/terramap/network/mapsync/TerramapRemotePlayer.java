@@ -6,19 +6,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TerramapRemotePlayer extends TerramapPlayer {
 	
 	protected UUID uuid;
-	protected String displayName;
+	protected ITextComponent displayName;
 	protected double longitude;
 	protected double latitude;
 	protected boolean isSpectator;
 	protected NetworkPlayerInfo playerInfo;
 	
-	public TerramapRemotePlayer(UUID uuid, String name, double longitude, double latitude, boolean isSpectator) {
+	public TerramapRemotePlayer(UUID uuid, ITextComponent name, double longitude, double latitude, boolean isSpectator) {
 		this.uuid = uuid;
 		this.displayName = name;
 		this.longitude = longitude;
@@ -32,11 +33,11 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	}
 
 	@Override
-	public String getDisplayName() {
+	public ITextComponent getDisplayName() {
 		return displayName;
 	}
 
-	public void setDisplayName(String displayName) {
+	public void setDisplayName(ITextComponent displayName) {
 		this.displayName = displayName;
 	}
 

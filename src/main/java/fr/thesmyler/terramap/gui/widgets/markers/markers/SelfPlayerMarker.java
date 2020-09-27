@@ -6,6 +6,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * This class represents a marker for the actual player corresponding to this client
@@ -67,13 +69,17 @@ public class SelfPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	protected String getName() {
-		return Minecraft.getMinecraft().player.getDisplayNameString();
-	}
-
-	@Override
 	protected boolean showName(boolean hovered) {
 		return true;
+	}
+	
+	@Override
+	public ITextComponent getDisplayName() {
+		if(Minecraft.getMinecraft().player != null) {
+		return Minecraft.getMinecraft().player.getDisplayName();
+		} else {
+			return new TextComponentString("Missing main player");
+		}
 	}
 	
 }

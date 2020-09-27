@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.TerramapServer;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,8 +24,8 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 	}
 
 	@Override
-	public String getDisplayName() {
-		return this.player.getDisplayNameString();
+	public ITextComponent getDisplayName() {
+		return this.player.getDisplayName();
 	}
 
 	//TODO This could be optimized
