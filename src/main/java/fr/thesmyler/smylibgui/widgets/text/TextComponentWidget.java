@@ -16,6 +16,7 @@ public class TextComponentWidget implements IWidget {
 	protected ITextComponent[] lines;
 	protected int anchorX, x, anchorY, y, z;
 	protected int width, height, maxWidth;
+	protected boolean visible = true;
 	protected int baseColor;
 	protected boolean shadow;
 	protected int backgroundColor = 0x00000000;
@@ -263,6 +264,22 @@ public class TextComponentWidget implements IWidget {
 		return this;
 	}
 	
+	@Override
+	public boolean isVisible(Screen parent) {
+		return this.visible;
+	}
 	
+	public TextComponentWidget setVisibility(boolean yesNo) {
+		this.visible = yesNo;
+		return this;
+	}
+	
+	public TextComponentWidget show() {
+		return this.setVisibility(true);
+	}
+	
+	public TextComponentWidget hide() {
+		return this.setVisibility(false);
+	}
 
 }

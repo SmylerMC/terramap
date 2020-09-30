@@ -610,17 +610,17 @@ public class TextFieldWidget implements IWidget {
 		return this.visible;
 	}
 
-	public TextFieldWidget setVisible(boolean visible) {
+	public TextFieldWidget setVisibility(boolean visible) {
 		this.visible = visible;
 		return this;
 	}
 	
 	public TextFieldWidget show() {
-		return this.setVisible(true);
+		return this.setVisibility(true);
 	}
 	
 	public TextFieldWidget hide() {
-		return this.setVisible(false);
+		return this.setVisibility(false);
 	}
 	
 	public boolean isRightClickMenuEnabled() {

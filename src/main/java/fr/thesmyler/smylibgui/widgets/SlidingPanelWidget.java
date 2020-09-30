@@ -13,6 +13,7 @@ public class SlidingPanelWidget extends Screen {
 	protected int bgColor = 0xA0000000;
 	protected Animation mainAnimation;
 	protected boolean closeOnClickOther = false;
+	protected boolean visible = true;
 
 	public SlidingPanelWidget(int showX, int hiddenX, int showY, int hiddenY, int z, int width, int height, long delay) {
 		super(hiddenX, hiddenY, z, width, height, BackgroundType.NONE);
@@ -48,58 +49,58 @@ public class SlidingPanelWidget extends Screen {
 	@Override
 	public boolean onParentClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 		if(this.closeOnClickOther && !this.getTarget().equals(PanelTarget.CLOSED)) {
-			this.hide();
+			this.close();
 			return false;
 		}
 		return true;
 	}
 
-	public void show() {
+	public void open() {
 		this.mainAnimation.start(AnimationState.ENTER);
 	}
 
-	public void hide() {
+	public void close() {
 		this.mainAnimation.start(AnimationState.LEAVE);
 	}
 
-	public SlidingPanelWidget setVisibilityNoAnimation(boolean opened) {
+	public SlidingPanelWidget setStateNoAnimation(boolean opened) {
 		this.mainAnimation.start(opened? AnimationState.LEAVE: AnimationState.ENTER);
 		this.mainAnimation.stop();
 		return this;
 	}
 
-	public int getShowX() {
+	public int getOpenX() {
 		return this.showX;
 	}
 
-	public SlidingPanelWidget setShowX(int x) {
+	public SlidingPanelWidget setOpenX(int x) {
 		this.showX = x;
 		return this;
 	}
 
-	public int getHiddenX() {
+	public int getClosedX() {
 		return this.hiddenX;
 	}
 
-	public SlidingPanelWidget setHiddenX(int x) {
+	public SlidingPanelWidget setClosedX(int x) {
 		this.hiddenX = x;
 		return this;
 	}
 
-	public int getShowY() {
+	public int getOpenY() {
 		return this.showY;
 	}
 
-	public SlidingPanelWidget setShowY(int y) {
+	public SlidingPanelWidget setOpenY(int y) {
 		this.showY = y;
 		return this;
 	}
 
-	public int getHiddenY() {
+	public int getClosedY() {
 		return this.hiddenY;
 	}
 
-	public SlidingPanelWidget setHiddenY(int y) {
+	public SlidingPanelWidget setClosedY(int y) {
 		this.hiddenY = y;
 		return this;
 	}
@@ -140,6 +141,24 @@ public class SlidingPanelWidget extends Screen {
 	public SlidingPanelWidget setBackgroundColor(int color) {
 		this.bgColor = color;
 		return this;
+	}
+	
+	@Override
+	public boolean isVisible(Screen parent) {
+		return this.visible;
+	}
+	
+	public SlidingPanelWidget setVisibility(boolean yesNo) {
+		this.visible = yesNo;
+		return this;
+	}
+	
+	public SlidingPanelWidget show() {
+		return this.setVisibility(true);
+	}
+	
+	public SlidingPanelWidget hide() {
+		return this.setVisibility(false);
 	}
 
 	public enum PanelTarget {

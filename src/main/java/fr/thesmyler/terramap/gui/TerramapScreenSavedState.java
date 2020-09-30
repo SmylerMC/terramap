@@ -16,7 +16,7 @@ public class TerramapScreenSavedState {
 	
 	public boolean infoPannel = false;
 	public boolean debug = false;
-	public boolean f11 = false;
+	public boolean f1 = false;
 	public Map<String, Boolean> markerSettings = new HashMap<String, Boolean>();
 	public String trackedMarker = null;
 	
@@ -27,7 +27,7 @@ public class TerramapScreenSavedState {
 			String mapStyle,
 			boolean infoPannel,
 			boolean debug,
-			boolean f11,
+			boolean f1,
 			Map<String, Boolean> markerSettings,
 			String trackedMarker) {
 		super();
@@ -37,7 +37,7 @@ public class TerramapScreenSavedState {
 		this.mapStyle = mapStyle;
 		this.infoPannel = infoPannel;
 		this.debug = debug;
-		this.f11 = f11;
+		this.f1 = f1;
 		this.markerSettings = markerSettings;
 		this.trackedMarker = trackedMarker;
 	}

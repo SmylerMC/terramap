@@ -53,6 +53,9 @@ public class TerramapScreen extends Screen {
 	private TextFieldWidget searchBox = new TextFieldWidget(10, new FontRendererContainer(Minecraft.getMinecraft().fontRenderer));
 	private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200); 
 	private Scrollbar styleScrollbar = new Scrollbar(100);
+	
+	private boolean f1Mode = false;
+	private boolean debugMode = false; //TODO Implement
 
 
 	public TerramapScreen(GuiScreen parent, TiledMap<?>[] maps) {
@@ -85,6 +88,7 @@ public class TerramapScreen extends Screen {
 		this.zoomText = new TextWidget(49, this.getFont());
 		this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
 		this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(0xA0000000).setPadding(3);
+		this.zoomText.setVisibility(! this.f1Mode);
 		this.addWidget(this.zoomText);
 		this.zoomOutButton.setX(this.zoomInButton.getX()).setY(this.zoomText.getY() + zoomText.getHeight() + 2);
 		this.zoomOutButton.setOnClick(() -> this.map.zoom(-1));
@@ -97,7 +101,7 @@ public class TerramapScreen extends Screen {
 		this.centerButton.setTooltip("Track player"); //TODO Localize
 		this.addWidget(this.centerButton);
 		this.styleButton.setX(this.centerButton.getX()).setY(this.centerButton.getY() + this.centerButton.getHeight() + 5);
-		this.styleButton.setOnClick(() -> this.stylePanel.show());
+		this.styleButton.setOnClick(() -> this.stylePanel.open());
 		this.styleButton.setTooltip("Change map style"); //TODO Localize
 		this.styleButton.enable();
 		this.addWidget(this.styleButton);
@@ -105,7 +109,7 @@ public class TerramapScreen extends Screen {
 		// Info pannel
 		this.infoPanel.removeAllWidgets();
 		this.infoPanel.setWidth(220).setHeight(this.getHeight());
-		this.infoPanel.setShowX(0).setShowY(0).setHiddenX(-infoPanel.getWidth() + 25).setHiddenY(0);
+		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip("Collapse information and search pannel"); //TODO Localize
 		this.infoPanel.addWidget(panelButton);
 		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
@@ -154,7 +158,7 @@ public class TerramapScreen extends Screen {
 
 		// Style panel
 		this.stylePanel.setWidth(200).setHeight(this.getHeight());
-		this.stylePanel.setHiddenX(this.getWidth()).setHiddenY(0).setShowX(this.getWidth() - this.stylePanel.getWidth()).setShowY(0);
+		this.stylePanel.setClosedX(this.getWidth()).setClosedY(0).setOpenX(this.getWidth() - this.stylePanel.getWidth()).setOpenY(0);
 		this.stylePanel.setCloseOnClickOther(false);
 		this.stylePanel.removeAllWidgets();
 		this.styleScrollbar.setX(this.stylePanel.width - 15).setY(0).setHeight(this.getHeight());
@@ -237,10 +241,10 @@ public class TerramapScreen extends Screen {
 		int z = this.panelButton.getZ();
 		TexturedButtonWidget newButton;
 		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
-			this.infoPanel.hide();
+			this.infoPanel.close();
 			newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
 		} else {
-			this.infoPanel.show();
+			this.infoPanel.open();
 			newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPannel);
 		}
 		newButton.setTooltip(this.panelButton.getTooltipText());
@@ -252,7 +256,7 @@ public class TerramapScreen extends Screen {
 	@Override
 	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
 //		if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug; //TODO Debug
-		//TODO F11 mode
+		if(keyCode == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.map.moveMap(0, 10);
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) this.map.moveMap(0, -10);
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) this.map.moveMap(-10, 0);
@@ -273,8 +277,8 @@ public class TerramapScreen extends Screen {
 				this.map.getCenterLatitude(),
 				this.map.getBackgroundStyle().getName(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
-				false, //TODO Save debug
-				false, //TODO Save f11
+				this.debugMode,
+				this.f1Mode,
 				this.map.getMarkersVisibility(), tracking);
 	}
 	
@@ -284,7 +288,8 @@ public class TerramapScreen extends Screen {
 		this.map.setCenterLatitude(state.centerLatitude);
 		this.map.restoreTracking(state.trackedMarker);
 		this.map.setMarkersVisibility(state.markerSettings);
-		this.infoPanel.setVisibilityNoAnimation(state.infoPannel);
+		this.infoPanel.setStateNoAnimation(state.infoPannel);
+		this.setF1Mode(state.f1);
 	}
 
 	private boolean search(String text) {
@@ -353,6 +358,19 @@ public class TerramapScreen extends Screen {
 		TerramapServer.getServer().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
 		TerramapServer.getServer().saveSettings();
 	}
+	
+	public void setF1Mode(boolean yesNo) {
+		this.f1Mode = yesNo;
+		this.infoPanel.setVisibility(yesNo);
+		this.stylePanel.setVisibility(yesNo);
+		this.closeButton.setVisibility(yesNo);
+		this.zoomInButton.setVisibility(yesNo);
+		this.zoomOutButton.setVisibility(yesNo);
+		this.styleButton.setVisibility(yesNo);
+		this.centerButton.setVisibility(yesNo);
+		if(this.zoomText != null) this.zoomText.setVisibility(yesNo);
+		this.map.setScaleVisibility(yesNo);
+	}
 
 	private class MapPreview extends MapWidget {
 
@@ -382,7 +400,7 @@ public class TerramapScreen extends Screen {
 		public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
 			if(mouseButton == 0) {
 				TerramapScreen.this.map.setBackground(this.background.getMap());
-				TerramapScreen.this.stylePanel.hide();
+				TerramapScreen.this.stylePanel.close();
 			}
 			return false;
 		}

@@ -3,26 +3,21 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 
 //TODO Add the possibility to bind a keybinding to a button
-public abstract class AbstractButtonWidget implements IWidget {
+public abstract class AbstractButtonWidget extends AbstractWidget {
 
-	protected int x, y, z, width, height;
 	protected Runnable onClick;
 	protected Runnable onDoubleClick;
 	protected boolean enabled = true;
 	protected String tooltip = "";
 
 	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.width = width;
-		this.height = height;
+		super(x, y, z, width, height);
 		this.onClick = onClick;
 		this.onDoubleClick = onDoubleClick;
 	}
@@ -76,31 +71,6 @@ public abstract class AbstractButtonWidget implements IWidget {
 	public AbstractButtonWidget setTooltip(String tooltip) {
 		this.tooltip = tooltip;
 		return this;
-	}
-
-	@Override
-	public int getX() {
-		return this.x;
-	}
-
-	@Override
-	public int getY() {
-		return this.y;
-	}
-
-	@Override
-	public int getZ() {
-		return this.z;
-	}
-
-	@Override
-	public int getWidth() {
-		return this.width;
-	}
-
-	@Override
-	public int getHeight() {
-		return this.height;
 	}
 
 	public Runnable getOnClick() {

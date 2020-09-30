@@ -7,7 +7,7 @@ import org.lwjgl.input.Keyboard;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.Utils;
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -19,15 +19,10 @@ import net.minecraft.client.renderer.GlStateManager;
  * @author SmylerMC
  *
  */
-public abstract class AbstractSliderWidget implements IWidget {
-
-	private int x, y, z, width;
+public abstract class AbstractSliderWidget extends AbstractWidget {
 	
 	public AbstractSliderWidget(int x, int y, int z, int width) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.width = width;
+		super(x, y, z, width, 20);
 	}
 	
 	/**
@@ -125,32 +120,6 @@ public abstract class AbstractSliderWidget implements IWidget {
 	 * Triggered when the mouse is wheeled
 	 */
 	public abstract void goToPrevious();
-	
-	@Override
-	public int getX() {
-		return this.x;
-	}
-
-	@Override
-	public int getY() {
-		return this.y;
-	}
-
-	@Override
-	public int getZ() {
-		return this.z;
-	}
-
-	@Override
-	public int getWidth() {
-		return this.width;
-	}
-
-	@Override
-	public int getHeight() {
-		return 20;
-	}
-
 	public AbstractSliderWidget setX(int x) {
 		this.x = x;
 		return this;
