@@ -49,13 +49,14 @@ public class TerramapScreen extends Screen {
 	private TextWidget mouseGeoLocationText;
 	private TextWidget mouseMCLocationText;
 	private TextWidget distortionText;
+	private TextWidget debugText;
 	private TextWidget playerGeoLocationText;
 	private TextFieldWidget searchBox = new TextFieldWidget(10, new FontRendererContainer(Minecraft.getMinecraft().fontRenderer));
 	private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200); 
 	private Scrollbar styleScrollbar = new Scrollbar(100);
 	
 	private boolean f1Mode = false;
-	private boolean debugMode = false; //TODO Implement
+	private boolean debugMode = false;
 
 
 	public TerramapScreen(GuiScreen parent, TiledMap<?>[] maps) {
@@ -88,7 +89,7 @@ public class TerramapScreen extends Screen {
 		this.zoomText = new TextWidget(49, this.getFont());
 		this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
 		this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(0xA0000000).setPadding(3);
-		this.zoomText.setVisibility(! this.f1Mode);
+		this.zoomText.setVisibility(this.f1Mode);
 		this.addWidget(this.zoomText);
 		this.zoomOutButton.setX(this.zoomInButton.getX()).setY(this.zoomText.getY() + zoomText.getHeight() + 2);
 		this.zoomOutButton.setOnClick(() -> this.map.zoom(-1));
@@ -105,6 +106,11 @@ public class TerramapScreen extends Screen {
 		this.styleButton.setTooltip("Change map style"); //TODO Localize
 		this.styleButton.enable();
 		this.addWidget(this.styleButton);
+		this.debugText = new TextWidget(49, this.getFont());
+		this.debugText.setAnchorX(2).setAnchorY(0);
+		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(0xA0000000).setPadding(3);
+		this.debugText.setVisibility(this.debugMode);
+		this.addWidget(this.debugText);
 
 		// Info pannel
 		this.infoPanel.removeAllWidgets();
@@ -158,6 +164,7 @@ public class TerramapScreen extends Screen {
 
 		// Style panel
 		this.stylePanel.setWidth(200).setHeight(this.getHeight());
+		//FIXME The style panel is being drawn no matter if it is on screen or not
 		this.stylePanel.setClosedX(this.getWidth()).setClosedY(0).setOpenX(this.getWidth() - this.stylePanel.getWidth()).setOpenY(0);
 		this.stylePanel.setCloseOnClickOther(false);
 		this.stylePanel.removeAllWidgets();
@@ -233,6 +240,24 @@ public class TerramapScreen extends Screen {
 		this.mouseMCLocationText.setText("X: " + formatX + " Z: " + formatZ);
 		this.playerGeoLocationText.setText(trackString + trackFormatLat + "° " + trackFormatLon + "°");
 		this.distortionText.setText("Distortion: " + formatScale + " blocks/m ; ±" + formatOrientation + "°");
+		
+		if(this.debugMode) {
+			String dbText = "";
+			dbText += "Version: " + TerramapMod.getVersion();
+			dbText += "\nFPS: " + Minecraft.getDebugFPS();
+			dbText += "\nServer: " + TerramapServer.getServer().isInstalledOnServer();
+			dbText += "\nProjection: " + TerramapServer.getServer().getGeneratorSettings().settings.projection;
+			dbText += "\nOrientation: " + TerramapServer.getServer().getGeneratorSettings().settings.orentation;
+			dbText += "\nCache queue: " + TerramapMod.cacheManager.getQueueSize();
+			dbText += "\nMap: " + this.map.getBackgroundStyle().getName();
+			this.debugText.setText(dbText);
+		}
+	}
+	
+	@Override
+	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, @Nullable Screen parent) {
+		this.debugText.setAnchorY(this.getHeight() - this.debugText.getHeight());
+		super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
 	}
 
 	private void toggleInfoPannel() {
@@ -255,7 +280,7 @@ public class TerramapScreen extends Screen {
 	
 	@Override
 	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
-//		if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.debug = !this.debug; //TODO Debug
+		if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
 		if(keyCode == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.map.moveMap(0, 10);
 		if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) this.map.moveMap(0, -10);
@@ -290,6 +315,8 @@ public class TerramapScreen extends Screen {
 		this.map.setMarkersVisibility(state.markerSettings);
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
 		this.setF1Mode(state.f1);
+		this.setDebugMode(state.debug);
+		//FIXME Map style is not restored
 	}
 
 	private boolean search(String text) {
@@ -370,6 +397,12 @@ public class TerramapScreen extends Screen {
 		this.centerButton.setVisibility(yesNo);
 		if(this.zoomText != null) this.zoomText.setVisibility(yesNo);
 		this.map.setScaleVisibility(yesNo);
+	}
+	
+	public void setDebugMode(boolean yesNo) {
+		this.debugMode = yesNo;
+		if(this.debugText != null) this.debugText.setVisibility(yesNo);
+		this.map.setDebugMode(yesNo);
 	}
 
 	private class MapPreview extends MapWidget {

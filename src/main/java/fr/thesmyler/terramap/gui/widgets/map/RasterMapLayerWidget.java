@@ -28,6 +28,11 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+		
+		boolean debug = false;
+		if(parent instanceof MapWidget) {
+			debug = ((MapWidget) parent).isDebugMode();
+		}
 
 		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfig.tileScaling);
 		
@@ -113,31 +118,30 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 						renderSizedSize,
 						renderSizedSize);
 				
-				//TODO Add map debug back
-				//				if(this.debug) {
-				//					final int RED = 0xFFFF0000;
-				//					final int WHITE = 0xFFFFFFFF;
-				//					this.drawHorizontalLine(
-				//							dispX,
-				//							dispX + displayWidth - 1,
-				//							dispY,
-				//							lowerResRender? RED : WHITE);
-				//					this.drawHorizontalLine(
-				//							dispX,
-				//							dispX + displayWidth - 1,
-				//							dispY + displayHeight - 1,
-				//							lowerResRender? RED : WHITE);
-				//					this.drawVerticalLine(
-				//							dispX,
-				//							dispY,
-				//							dispY + displayHeight - 1,
-				//							lowerResRender? RED : WHITE);
-				//					this.drawVerticalLine(
-				//							dispX + displayWidth - 1,
-				//							dispY,
-				//							dispY + displayHeight - 1,
-				//							lowerResRender? RED : WHITE);
-				//				}
+				if(debug) {
+					final int RED = 0xFFFF0000;
+					final int WHITE = 0xFFFFFFFF;
+					parent.drawHorizontalLine(
+							dispX,
+							dispX + displayWidth - 1,
+							dispY,
+							lowerResRender? RED : WHITE);
+					parent.drawHorizontalLine(
+							dispX,
+							dispX + displayWidth - 1,
+							dispY + displayHeight - 1,
+							lowerResRender? RED : WHITE);
+					parent.drawVerticalLine(
+							dispX,
+							dispY,
+							dispY + displayHeight - 1,
+							lowerResRender? RED : WHITE);
+					parent.drawVerticalLine(
+							dispX + displayWidth - 1,
+							dispY,
+							dispY + displayHeight - 1,
+							lowerResRender? RED : WHITE);
+				}
 				GlStateManager.color(1, 1, 1, 1);
 
 			}

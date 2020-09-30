@@ -41,6 +41,7 @@ public class MapWidget extends Screen {
 	private boolean focusedZoom = true; //Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
 	private boolean enableRightClickMenu = true;
 	private boolean showCopyright = true;
+	private boolean debugMode = false;
 
 	private ControllerMapLayer controller = new ControllerMapLayer();
 	protected RasterMapLayerWidget background;
@@ -622,6 +623,14 @@ public class MapWidget extends Screen {
 	
 	public void restoreTracking(String markerId) {
 		this.restoreTrackingId = markerId;
+	}
+
+	public boolean isDebugMode() {
+		return debugMode;
+	}
+
+	public void setDebugMode(boolean debugMode) {
+		this.debugMode = debugMode;
 	}
 
 }
