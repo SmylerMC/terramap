@@ -13,6 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Terramap's config
  *
  */
+//TODO Enable / Disable auto tile scaling
+//TODO Auto update old tile scaling configs
 @Config(modid = TerramapMod.MODID)
 public class TerramapConfig {
 

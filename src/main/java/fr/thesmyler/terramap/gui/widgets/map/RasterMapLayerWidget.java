@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapUtils;
-import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
 import fr.thesmyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
@@ -18,7 +17,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 	protected TiledMap<?> map;
 
-	public RasterMapLayerWidget(TiledMap<?> map) {
+	public RasterMapLayerWidget(TiledMap<?> map, double tileScaling) {
+		super(tileScaling);
 		this.map = map;
 	}
 	
@@ -34,7 +34,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 			debug = ((MapWidget) parent).isDebugMode();
 		}
 
-		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfig.tileScaling);
+		//TODO Remove the lines when tile scaling is not a power of 2
+		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling;
 		
 		long upperLeftX = (long) this.getUpperLeftX();
 		long upperLeftY = (long) this.getUpperLeftY();
@@ -72,16 +73,16 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					}
 				}
 
-				int dispX = Math.round(tileX * renderSize - upperLeftX);
-				int dispY = Math.round(tileY * renderSize - upperLeftY);
+				int dispX = (int) Math.round(tileX * renderSize - upperLeftX);
+				int dispY = (int) Math.round(tileY * renderSize - upperLeftY);
 
-				int renderSizedSize = renderSize;
+				int renderSizedSize = (int) Math.round(renderSize);
 
 				int dX = 0;
 				int dY = 0;
 
-				int displayWidth = (int) Math.min(renderSize, maxX - tileX * renderSize);
-				int displayHeight = (int) Math.min(renderSize, maxY - tileY * renderSize);
+				int displayWidth = (int) Math.round(Math.min(renderSize, maxX - tileX * renderSize));
+				int displayHeight = (int) Math.round(Math.min(renderSize, maxY - tileY * renderSize));
 				
 				if(tileX == lowerTileX) {
 					dX -= dispX;

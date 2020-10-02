@@ -5,6 +5,7 @@ import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.input.KeyBindings;
@@ -51,7 +52,7 @@ public class ClientTerramapEventHandler {
 			HudScreen screen = (HudScreen) event.getGui();
 			screen.removeAllWidgets();
 			screen.cancellAllScheduled();
-			MapWidget map = new MapWidget(10, TiledMaps.OSM, MapContext.MINIMAP);
+			MapWidget map = new MapWidget(10, TiledMaps.OSM, MapContext.MINIMAP, TerramapMod.proxy.getDefaultGuiSize());
 			map.setInteractive(false);
 			map.setX(5);
 			map.setY(5);

@@ -62,7 +62,7 @@ public class TerramapScreen extends Screen {
 	public TerramapScreen(GuiScreen parent, TiledMap<?>[] maps) {
 		this.parent = parent;
 		this.backgrounds = maps;
-		this.map = new MapWidget(10, this.backgrounds[0], MapContext.FULLSCREEN);
+		this.map = new MapWidget(10, this.backgrounds[0], MapContext.FULLSCREEN, TerramapMod.proxy.getDefaultGuiSize());
 		this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
 	}
 
@@ -71,6 +71,7 @@ public class TerramapScreen extends Screen {
 
 		this.removeAllWidgets();
 		this.map.setX(0).setY(0).setWidth(this.getWidth()).setHeight(this.getHeight());
+		this.map.setTileScaling(TerramapMod.proxy.getDefaultGuiSize());
 		this.addWidget(this.map);
 
 		// Map control buttons
@@ -408,7 +409,7 @@ public class TerramapScreen extends Screen {
 	private class MapPreview extends MapWidget {
 
 		public MapPreview(int z, TiledMap<?> map) {
-			super(z, map, MapContext.PREVIEW);
+			super(z, map, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
 			this.setInteractive(false);
 			this.setRightClickMenuEnabled(false);
 			this.setCopyrightVisibility(false);

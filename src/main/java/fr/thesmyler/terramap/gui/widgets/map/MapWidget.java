@@ -43,7 +43,7 @@ public class MapWidget extends Screen {
 	private boolean showCopyright = true;
 	private boolean debugMode = false;
 
-	private ControllerMapLayer controller = new ControllerMapLayer();
+	private ControllerMapLayer controller;
 	protected RasterMapLayerWidget background;
 	private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
@@ -60,14 +60,17 @@ public class MapWidget extends Screen {
 	private TextComponentWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 	
+	protected double tileScaling;
+	
 	private final MapContext context;
 
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
 
-	public MapWidget(int x, int y, int z, int width, int height, TiledMap<?> map, MapContext context) {
+	public MapWidget(int x, int y, int z, int width, int height, TiledMap<?> map, MapContext context, double tileScaling) {
 		super(x, y, z, width, height, BackgroundType.NONE);
 		this.context = context;
+		this.tileScaling = tileScaling;
 		FontRendererContainer font = new FontRendererContainer(Minecraft.getMinecraft().fontRenderer);
 		this.copyright = new TextComponentWidget(CONTROLLER_Z - 1, new TextComponentString(""), font) {
 			@Override
@@ -78,8 +81,9 @@ public class MapWidget extends Screen {
 		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setBaseColor(0xFFA0A0FF).setShadow(false);
 		super.addWidget(this.copyright);
 		
-		this.setMapBackgroud(new RasterMapLayerWidget(map));
+		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 		
+		this.controller = new ControllerMapLayer(this.tileScaling);
 		super.addWidget(this.controller);
 		this.rightClickMenu = new MenuWidget(100, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.teleport"), () -> {
@@ -132,8 +136,8 @@ public class MapWidget extends Screen {
 		
 	}
 
-	public MapWidget(int z, TiledMap<?> map, MapContext context) {
-		this(0, 0, z, 50, 50, map, context);
+	public MapWidget(int z, TiledMap<?> map, MapContext context, double tileScaling) {
+		this(0, 0, z, 50, 50, map, context, tileScaling);
 	}
 
 	/**
@@ -155,6 +159,7 @@ public class MapWidget extends Screen {
 
 	private MapWidget setMapBackgroud(RasterMapLayerWidget background) {
 		background.z = BACKGROUND_Z;
+		background.tileScaling = this.tileScaling;
 		super.removeWidget(this.background);
 		super.addWidget(background);
 		this.background = background;
@@ -163,7 +168,7 @@ public class MapWidget extends Screen {
 	}
 	
 	public void setBackground(TiledMap<?> map) {
-		this.setMapBackgroud(new RasterMapLayerWidget(map));
+		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 	}
 
 	/**
@@ -208,6 +213,7 @@ public class MapWidget extends Screen {
 				MapLayerWidget layer = (MapLayerWidget) widget;
 				layer.width = this.width;
 				layer.height = this.height;
+				layer.tileScaling = this.tileScaling;
 				if(!layer.equals(this.controller)) {
 					layer.centerLongitude = this.controller.centerLongitude;
 					layer.centerLatitude = this.controller.centerLatitude;
@@ -270,7 +276,8 @@ public class MapWidget extends Screen {
 
 	private class ControllerMapLayer extends MapLayerWidget {
 
-		public ControllerMapLayer() {
+		public ControllerMapLayer(double tileScaling) {
+			super(tileScaling);
 			this.z = CONTROLLER_Z;
 		}
 
@@ -631,6 +638,14 @@ public class MapWidget extends Screen {
 
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
+	}
+	
+	public double getTileScaling() {
+		return this.tileScaling;
+	}
+	
+	public void setTileScaling(double tileScaling) {
+		this.tileScaling = tileScaling;
 	}
 
 }

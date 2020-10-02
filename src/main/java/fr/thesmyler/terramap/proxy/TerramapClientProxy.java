@@ -92,10 +92,10 @@ public class TerramapClientProxy extends TerramapProxy {
 
 	@Override
 	public double getDefaultGuiSize() {
-		double[] acceptableFactors = {2.0, 1.0, 0.5, 0.25, 0.125};
+		double[] acceptableFactors = {0.5d, 1.0d, 2.0d, 4.0d, 8.0d};
 		double bestFactor = acceptableFactors[0];
 		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-		double computedFactor = 1f/scaledRes.getScaleFactor();
+		double computedFactor = scaledRes.getScaleFactor();
 		for(double factor: acceptableFactors)
 			if(Math.abs(computedFactor - factor) < Math.abs(bestFactor - computedFactor)) bestFactor = factor;
 		return bestFactor;

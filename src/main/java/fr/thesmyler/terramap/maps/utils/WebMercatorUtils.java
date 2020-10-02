@@ -118,7 +118,7 @@ public class WebMercatorUtils {
 	 * @return the x coordinate of the tile at the given x position in the world, assuming map is scaled at zoom level zoomLevel
 	 */
 	public static long getTileXAt(long x){
-		return (long) Math.floor((float)x / WebMercatorUtils.TILE_DIMENSIONS);
+		return (long) Math.floor((double)x / WebMercatorUtils.TILE_DIMENSIONS);
 	}
 	
 	/**
@@ -127,7 +127,7 @@ public class WebMercatorUtils {
 	 * @return the y coordinate of the tile at the given z position in the world, assuming map is scaled at zoom level zoomLevel
 	 */
 	public static long getTileYAt(long y){
-		return (long) Math.floor((float)y / WebMercatorUtils.TILE_DIMENSIONS);
+		return (long) Math.floor((double)y / WebMercatorUtils.TILE_DIMENSIONS);
 	}
 	
 	
@@ -141,7 +141,7 @@ public class WebMercatorUtils {
 	public static boolean isInWorld(long x, long z, int zoom){
 		long tX = getTileXAt(x);
 		long tY = getTileYAt(z);
-		int mS = 1 << zoom;
+		double mS = Math.pow(2, zoom);
 		return tX >= 0 && tX < mS && tY >= 0 && tY < mS;
 	}
 	
@@ -182,6 +182,7 @@ public class WebMercatorUtils {
 	}
 	
 	public static double getLongitudeInRange(double longitude) {
+		if(!Double.isFinite(longitude)) throw new RuntimeException("longitude cannot be infinite");
 		double l = longitude;
 		while(l> 180d) l -= 360d;
 		while(l<-180d) l += 360d;
