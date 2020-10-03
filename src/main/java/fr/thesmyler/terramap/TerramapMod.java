@@ -5,8 +5,8 @@ import java.util.Map;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.caching.CacheManager;
-import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.command.PermissionManager;
+import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;

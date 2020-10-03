@@ -20,6 +20,7 @@ import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
@@ -62,7 +63,7 @@ public class TerramapScreen extends Screen {
 	public TerramapScreen(GuiScreen parent, TiledMap<?>[] maps) {
 		this.parent = parent;
 		this.backgrounds = maps;
-		this.map = new MapWidget(10, this.backgrounds[0], MapContext.FULLSCREEN, TerramapMod.proxy.getDefaultGuiSize());
+		this.map = new MapWidget(10, this.backgrounds[0], MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
 		this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
 	}
 
@@ -71,7 +72,7 @@ public class TerramapScreen extends Screen {
 
 		this.removeAllWidgets();
 		this.map.setX(0).setY(0).setWidth(this.getWidth()).setHeight(this.getHeight());
-		this.map.setTileScaling(TerramapMod.proxy.getDefaultGuiSize());
+		this.map.setTileScaling(TerramapConfig.getEffectiveTileScaling());
 		this.addWidget(this.map);
 
 		// Map control buttons

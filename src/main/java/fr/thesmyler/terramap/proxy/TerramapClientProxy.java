@@ -91,7 +91,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	}
 
 	@Override
-	public double getDefaultGuiSize() {
+	public double getGuiScaleForConfig() {
 		double[] acceptableFactors = {0.5d, 1.0d, 2.0d, 4.0d, 8.0d};
 		double bestFactor = acceptableFactors[0];
 		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());

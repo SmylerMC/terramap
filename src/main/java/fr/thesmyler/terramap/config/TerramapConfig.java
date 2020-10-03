@@ -1,6 +1,10 @@
 package fr.thesmyler.terramap.config;
 
+import java.util.ArrayList;
+
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -13,8 +17,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Terramap's config
  *
  */
-//TODO Enable / Disable auto tile scaling
-//TODO Auto update old tile scaling configs
 @Config(modid = TerramapMod.MODID)
 public class TerramapConfig {
 
@@ -37,8 +39,13 @@ public class TerramapConfig {
 	@Config.Name("tile_scaling")
 	@Config.LangKey("terramap.config.tile_scaling")
 	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
-	@Config.RangeDouble(min=0.125, max=4)
-	public static double tileScaling = TerramapMod.proxy.getDefaultGuiSize();
+	@Config.RangeDouble(min=1.0, max=8.0)
+	public static double tileScaling = TerramapMod.proxy.getGuiScaleForConfig();
+	
+	@Config.Name("auto_tile_scaling")
+	//@Config.LangKey("") //TODO Localize
+	@Config.Comment("If this is set to true, tile scaling will be automatically adjusted to counter Minecraft GUI scaling.")
+	public static boolean autoTileScaling = true;
 
 	@Config.Name("max_tile_load")
 	@Config.LangKey("terramap.config.max_tile_load")
@@ -67,7 +74,7 @@ public class TerramapConfig {
 	@Config.Name("synchronize_players")
 	@Config.LangKey("terramap.config.sync_players")
 	@Config.Comment("Wether or not to synchronize players from server to client so everyone appears on the map, no matter the distance")
-	public static boolean synchronizePlayers = false;
+	public static boolean synchronizePlayers = true;
 	
 	@Config.Name("sync_interval")
 	@Config.LangKey("terramap.config.sync_interval")
@@ -91,6 +98,31 @@ public class TerramapConfig {
 	@Config.LangKey("terramap.config.players_opt_in_to_display_default")
 	@Config.Comment("If player sync is enabled, sould players be displayed by default (true) or should they opt-in (false)")
 	public static boolean playersDisplayDefault = true;
+	
+	public static double getEffectiveTileScaling() {
+		if(autoTileScaling) {
+			return SmyLibGui.getMinecraftGuiScale();
+		} else {
+			return tileScaling;
+		}
+	}
+	
+	public static void update() {
+		boolean sync = false;
+		if(tileScaling < 1) {
+			tileScaling = 1.0d / tileScaling;
+			TerramapMod.logger.debug("Updated tile scaling from an invalid value that was probably left over by an old version of the mod");
+			sync = true;
+		}
+		if(sync) {
+			sync();
+			TerramapMod.logger.info("Synchronized configuration after incorrect values were updated");
+		}
+	}
+	
+	public static void override() {
+		
+	}
 
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);
@@ -108,6 +140,10 @@ public class TerramapConfig {
 		public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
 			if (event.getModID().equals(TerramapMod.MODID)) {
 				TerramapConfig.sync();
+				if(TerramapMod.proxy.isClient() && SmyLibGui.getHudScreen() != null) {
+					// If we are in game, let our hud screen re-init it's minimap
+			        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
+				}
 			}
 		}
 		

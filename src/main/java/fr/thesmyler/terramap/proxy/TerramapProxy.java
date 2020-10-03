@@ -13,7 +13,7 @@ public abstract class TerramapProxy {
 	public abstract void init(FMLInitializationEvent event);
 	public abstract void onServerStarting(FMLServerStartingEvent event);
 	public abstract void onServerHello(S2CTerramapHelloPacket pkt);
-	public abstract double getDefaultGuiSize();
+	public abstract double getGuiScaleForConfig();
 	
 	public boolean isClient() {
 		return this.getSide().equals(Side.CLIENT);

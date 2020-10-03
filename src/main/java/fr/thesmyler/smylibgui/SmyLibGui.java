@@ -4,8 +4,10 @@ import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.TerramapMod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -35,5 +37,15 @@ public abstract class SmyLibGui {
 	
 	public static HudScreen getHudScreen() {
 		return hudScreen;
+	}
+	
+	public static double getMinecraftGuiScale() {
+		double[] acceptableFactors = {0.5d, 1.0d, 2.0d, 4.0d, 8.0d};
+		double bestFactor = acceptableFactors[0];
+		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
+		double computedFactor = scaledRes.getScaleFactor();
+		for(double factor: acceptableFactors)
+			if(Math.abs(computedFactor - factor) < Math.abs(bestFactor - computedFactor)) bestFactor = factor;
+		return bestFactor;
 	}
 }
