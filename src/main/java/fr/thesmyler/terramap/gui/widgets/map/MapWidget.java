@@ -28,6 +28,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
@@ -288,6 +289,12 @@ public class MapWidget extends Screen {
 
 		@Override
 		public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+			if(isShortcutEnabled()) {
+				MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLongitude, MapWidget.this.mouseLatitude);
+				if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
+					Minecraft.getMinecraft().displayGuiScreen(null);
+				}
+			}
 			if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && Math.abs(MapWidget.this.getMouseLatitude()) <= WebMercatorUtils.LIMIT_LATITUDE) {
 				parent.showMenu(mouseX, mouseY, MapWidget.this.rightClickMenu);
 			}
@@ -315,13 +322,6 @@ public class MapWidget extends Screen {
 
 		@Override
 		public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
-			if(MapWidget.this.isInteractive()) {
-				switch(keyCode) {
-				case Keyboard.KEY_ESCAPE:
-					Minecraft.getMinecraft().displayGuiScreen(null); //FIXME NOT HERE
-					break;
-				}
-			}
 		}
 
 		@Override
@@ -377,6 +377,16 @@ public class MapWidget extends Screen {
 			double nlat = this.getScreenLatitude((double)this.height/2 - dY);
 			this.setCenterLongitude(nlon);
 			this.setCenterLatitude(nlat);
+		}
+
+		@Override
+		public String getTooltipText() {
+			return isShortcutEnabled() ? "Click to teleport": ""; //TODO Localize
+		}
+
+		@Override
+		public long getTooltipDelay() {
+			return 0;
 		}
 
 	}
@@ -646,6 +656,10 @@ public class MapWidget extends Screen {
 	
 	public void setTileScaling(double tileScaling) {
 		this.tileScaling = tileScaling;
+	}
+	
+	private boolean isShortcutEnabled() {
+		return this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
 	}
 
 }
