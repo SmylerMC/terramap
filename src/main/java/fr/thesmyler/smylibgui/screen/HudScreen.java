@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class HudScreen extends Screen {
@@ -15,7 +16,8 @@ public class HudScreen extends Screen {
 	}
 	
 	@SubscribeEvent
-	public void onRenderHUD(RenderGameOverlayEvent.Post e) {
+	public void onRenderHUD(RenderGameOverlayEvent.Pre e) {
+		if(!e.getType().equals(ElementType.HOTBAR)) return;
 		ScaledResolution res = e.getResolution();
 		int width = res.getScaledWidth();
 		int height = res.getScaledHeight();

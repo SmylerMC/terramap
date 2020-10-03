@@ -166,8 +166,7 @@ public class TerramapScreen extends Screen {
 
 		// Style panel
 		this.stylePanel.setWidth(200).setHeight(this.getHeight());
-		//FIXME The style panel is being drawn no matter if it is on screen or not
-		this.stylePanel.setClosedX(this.getWidth()).setClosedY(0).setOpenX(this.getWidth() - this.stylePanel.getWidth()).setOpenY(0);
+		this.stylePanel.setClosedX(this.getWidth() + 1).setClosedY(0).setOpenX(this.getWidth() - this.stylePanel.getWidth()).setOpenY(0);
 		this.stylePanel.setCloseOnClickOther(false);
 		this.stylePanel.removeAllWidgets();
 		this.styleScrollbar.setX(this.stylePanel.width - 15).setY(0).setHeight(this.getHeight());

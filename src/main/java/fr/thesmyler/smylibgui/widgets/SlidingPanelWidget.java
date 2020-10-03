@@ -34,6 +34,12 @@ public class SlidingPanelWidget extends Screen {
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 		this.mainAnimation.update();
 	}
+	
+	@Override
+	public void onUpdate(Screen parent) {
+		this.mainAnimation.update();
+		super.onUpdate(parent);
+	}
 
 	public PanelTarget getTarget() {
 		switch(this.mainAnimation.getState()) {
