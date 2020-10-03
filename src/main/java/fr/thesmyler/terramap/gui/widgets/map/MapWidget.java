@@ -68,12 +68,12 @@ public class MapWidget extends Screen {
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
 
-	public MapWidget(int x, int y, int z, int width, int height, TiledMap<?> map, MapContext context, double tileScaling) {
+	public MapWidget(int x, int y, int z, int width, int height, TiledMap map, MapContext context, double tileScaling) {
 		super(x, y, z, width, height, BackgroundType.NONE);
 		this.context = context;
 		this.tileScaling = tileScaling;
 		FontRendererContainer font = new FontRendererContainer(Minecraft.getMinecraft().fontRenderer);
-		this.copyright = new TextComponentWidget(CONTROLLER_Z - 1, new TextComponentString(""), font) {
+		this.copyright = new TextComponentWidget(CONTROLLER_Z + 1, new TextComponentString(""), font) {
 			@Override
 			public boolean isVisible(Screen parent) {
 				return MapWidget.this.showCopyright;
@@ -137,7 +137,7 @@ public class MapWidget extends Screen {
 		
 	}
 
-	public MapWidget(int z, TiledMap<?> map, MapContext context, double tileScaling) {
+	public MapWidget(int z, TiledMap map, MapContext context, double tileScaling) {
 		this(0, 0, z, 50, 50, map, context, tileScaling);
 	}
 
@@ -164,11 +164,11 @@ public class MapWidget extends Screen {
 		super.removeWidget(this.background);
 		super.addWidget(background);
 		this.background = background;
-		this.copyright.setComponent(new TextComponentString(background.map.getCopyright())); //TODO parse the component
+		this.copyright.setComponent(background.map.getCopyright());
 		return this;
 	}
 	
-	public void setBackground(TiledMap<?> map) {
+	public void setBackground(TiledMap map) {
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 	}
 
@@ -615,7 +615,7 @@ public class MapWidget extends Screen {
 		return this.mainPlayerMarker;
 	}
 	
-	public TiledMap<?> getBackgroundStyle() {
+	public TiledMap getBackgroundStyle() {
 		return this.background.getMap();
 	}
 	

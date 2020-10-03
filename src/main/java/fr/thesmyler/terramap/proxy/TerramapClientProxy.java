@@ -2,22 +2,18 @@ package fr.thesmyler.terramap.proxy;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapServer;
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.TiledMap;
-import fr.thesmyler.terramap.maps.TiledMaps;
-import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
+import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.WebTile;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
@@ -62,8 +58,9 @@ public class TerramapClientProxy extends TerramapProxy {
 		SmyLibGui.init(TerramapMod.logger, true); //TODO Unset gui lib debug mode
 		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();
-		RasterWebTile.registerErrorTexture();
+		WebTile.registerErrorTexture();
 		MarkerControllerManager.registerBuiltInControllers();
+		MapStyleRegistry.loadBuiltIns();
 	}
 
 	@Override
@@ -71,23 +68,6 @@ public class TerramapClientProxy extends TerramapProxy {
 		TerramapMod.logger.info("Got server hello, remote version is " + pkt.serverVersion);
 		TerramapMod.logger.debug("sync players: " + pkt.syncPlayers + " sync spec: " + pkt.syncSpectators + " hasFe: " + pkt.unused);
 		TerramapServer.setServer(new TerramapServer(pkt.serverVersion, pkt.syncPlayers, pkt.syncSpectators, pkt.unused, pkt.settings));
-	}
-
-	public static TiledMap<?>[] getTiledMaps() {
-		List<TiledMap<?>> maps = new ArrayList<TiledMap<?>>();
-		if(TerramapUtils.isPirate()) {
-			maps.add(TiledMaps.WATERCOLOR);
-		}
-		if(TerramapUtils.isBaguette()){
-			maps.add(TiledMaps.OSM_FRANCE);
-		}
-		maps.add(TiledMaps.OSM);
-		maps.add(TiledMaps.OSM_HUMANITARIAN);
-		maps.add(TiledMaps.TERRAIN);
-//		maps.add(TiledMaps.OPEN_TOPO);
-//		maps.add(TiledMaps.OSM_FRANCE);
-//		maps.add(TiledMaps.WATERCOLOR);
-		return maps.toArray(new TiledMap[maps.size()]);
 	}
 
 	@Override

@@ -1,9 +1,13 @@
 package fr.thesmyler.terramap.gui;
 
+import java.util.Collection;
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
@@ -35,7 +39,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class TerramapScreen extends Screen {
 
 	private GuiScreen parent;
-	private TiledMap<?>[] backgrounds;
+	private Map<String, TiledMap> backgrounds;
 
 	// Widgets
 	private MapWidget map; 
@@ -60,10 +64,12 @@ public class TerramapScreen extends Screen {
 	private boolean debugMode = false;
 
 
-	public TerramapScreen(GuiScreen parent, TiledMap<?>[] maps) {
+	public TerramapScreen(GuiScreen parent, Map<String, TiledMap> maps) {
 		this.parent = parent;
 		this.backgrounds = maps;
-		this.map = new MapWidget(10, this.backgrounds[0], MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
+		Collection<TiledMap> tiledMaps = this.backgrounds.values();
+		TiledMap bg = tiledMaps.toArray(new TiledMap[0])[0];
+		this.map = new MapWidget(10, bg, MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
 		this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
 	}
 
@@ -250,7 +256,7 @@ public class TerramapScreen extends Screen {
 			dbText += "\nProjection: " + TerramapServer.getServer().getGeneratorSettings().settings.projection;
 			dbText += "\nOrientation: " + TerramapServer.getServer().getGeneratorSettings().settings.orentation;
 			dbText += "\nCache queue: " + TerramapMod.cacheManager.getQueueSize();
-			dbText += "\nMap: " + this.map.getBackgroundStyle().getName();
+			dbText += "\nMap: " + this.map.getBackgroundStyle().getId();
 			this.debugText.setText(dbText);
 		}
 	}
@@ -301,7 +307,7 @@ public class TerramapScreen extends Screen {
 				this.map.getZoom(),
 				this.map.getCenterLongitude(),
 				this.map.getCenterLatitude(),
-				this.map.getBackgroundStyle().getName(),
+				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
 				this.debugMode,
 				this.f1Mode,
@@ -333,7 +339,7 @@ public class TerramapScreen extends Screen {
 		StyleScreen() {
 			super(0, 0, 0, 0, 0, BackgroundType.NONE);
 			MapWidget lw = null;
-			for(TiledMap<?> map: TerramapScreen.this.backgrounds) {
+			for(TiledMap map: TerramapScreen.this.backgrounds.values()) {
 				MapWidget w = new MapPreview(50, map);
 				w.setWidth(mapsSize).setHeight(mapsSize);
 				if(lw == null) {
@@ -408,7 +414,7 @@ public class TerramapScreen extends Screen {
 
 	private class MapPreview extends MapWidget {
 
-		public MapPreview(int z, TiledMap<?> map) {
+		public MapPreview(int z, TiledMap map) {
 			super(z, map, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
 			this.setInteractive(false);
 			this.setRightClickMenuEnabled(false);
@@ -421,7 +427,7 @@ public class TerramapScreen extends Screen {
 			super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 			int color = 0xFF808080;
 			int textColor = hovered? 0xFFC0C0FF: 0xFFFFFFFF;
-			String text = this.background.getMap().getName();
+			String text = this.background.getMap().getLocalizedName(SmyLibGui.getLanguage());
 			GuiScreen.drawRect(x, y, x + this.width, y + 4, color);
 			GuiScreen.drawRect(x, y + this.height - parent.getFont().FONT_HEIGHT - 4, x + this.width, y + this.height, color);
 			GuiScreen.drawRect(x, y, x + 4, y + this.height, color);
@@ -441,7 +447,7 @@ public class TerramapScreen extends Screen {
 
 		@Override
 		public String getTooltipText() {
-			return this.background.getMap().getName();
+			return this.background.getMap().getId();
 		}
 
 		@Override

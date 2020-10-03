@@ -1,8 +1,9 @@
-package fr.thesmyler.terramap.maps.tiles;
+package fr.thesmyler.terramap.maps;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -20,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
-public abstract class RasterWebTile implements Cachable {
+public class WebTile implements Cachable {
 
 	protected long x;
 	protected long y;
@@ -29,16 +30,17 @@ public abstract class RasterWebTile implements Cachable {
 	protected int size;
 	protected BufferedImage image;
 	protected ResourceLocation texture = null;
+	private String urlPattern;
 	
 	private static ResourceLocation errorTileTexture = null;
 
 
-	public RasterWebTile(int size, int zoom, long x, long y) {
-
+	public WebTile(String urlPattern, int zoom, long x, long y) {
+		this.urlPattern = urlPattern;
 		this.x = x;
 		this.y = y;
 		this.zoom = zoom;
-		this.size = size;
+		this.size = 256;
 
 		if(!WebMercatorUtils.isTileInWorld(zoom, x, y))
 			throw new InvalidTileCoordinatesException(this);
@@ -46,21 +48,33 @@ public abstract class RasterWebTile implements Cachable {
 	}
 
 
-	public RasterWebTile(int size, int zoom, long x, long y, int[] defaultPixel) {
-
-		this(size, zoom, x, y);
+	public WebTile(String urlPattern, int zoom, long x, long y, int[] defaultPixel) {
+		this(urlPattern, zoom, x, y);
 		this.defaultPixel = defaultPixel;
-
 	}
 
 
 	@Override
-	public abstract URL getURL();
+	public URL getURL() {
+		try {
+			return new URL(
+					this.urlPattern
+						.replace("{x}", ""+this.getX())
+						.replace("{y}", ""+this.getY())
+						.replace("{z}", ""+this.getZoom()));
+		} catch (MalformedURLException e) {
+			TerramapMod.logger.error("Failed to craft url for a raster tile. URL pattern is " + this.urlPattern);
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 
 	@Override
 	public String getFileName(){
-		return this.getClass().getName() + "_" + this.getZoom() + "_" + this.getX() + "_" + this.getY() + ".png";
+		URL u = this.getURL();
+		u.getPath();
+		return u.getHost() + u.getPath().replace('/', '.'); //TODO Make sure this is always a valid file name
 	}
 
 
@@ -116,7 +130,7 @@ public abstract class RasterWebTile implements Cachable {
 				TerramapMod.logger.catching(e);
 				TerramapMod.cacheManager.reportError(this);
 				TerramapMod.cacheManager.cacheAsync(this);
-				return RasterWebTile.errorTileTexture;
+				return WebTile.errorTileTexture;
 			}
 		}
 		return this.texture;
@@ -163,7 +177,7 @@ public abstract class RasterWebTile implements Cachable {
 		/**
 		 * @param string
 		 */
-		public InvalidTileCoordinatesException(RasterWebTile t) {
+		public InvalidTileCoordinatesException(WebTile t) {
 			super("Invalid tile coordinates: " + t.zoom + "/" + t.x + "/" + t.y);
 		}
 
@@ -178,7 +192,7 @@ public abstract class RasterWebTile implements Cachable {
 	public static void registerErrorTexture() {
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 		int color[] = {175, 175, 175};
-		RasterWebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
+		WebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
 
 	}
 

@@ -4,8 +4,8 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.maps.TiledMap;
-import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
-import fr.thesmyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
+import fr.thesmyler.terramap.maps.WebTile;
+import fr.thesmyler.terramap.maps.WebTile.InvalidTileCoordinatesException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -15,14 +15,14 @@ import net.minecraft.client.renderer.texture.TextureManager;
 //TODO Fractional zoom
 public class RasterMapLayerWidget extends MapLayerWidget {
 
-	protected TiledMap<?> map;
+	protected TiledMap map;
 
-	public RasterMapLayerWidget(TiledMap<?> map, double tileScaling) {
+	public RasterMapLayerWidget(TiledMap map, double tileScaling) {
 		super(tileScaling);
 		this.map = map;
 	}
 	
-	public TiledMap<?> getMap() {
+	public TiledMap getMap() {
 		return this.map;
 	}
 
@@ -54,14 +54,14 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 			for(int tileY = lowerTileY; tileY * renderSize < maxY; tileY++) {
 
-				RasterWebTile tile;
+				WebTile tile;
 
 				try {
 					tile = map.getTile((int)this.zoom, TerramapUtils.modulus(tileX, maxTileXY), tileY);
 				} catch(InvalidTileCoordinatesException e) { continue ;}
 				
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
-				RasterWebTile bestTile = tile;
+				WebTile bestTile = tile;
 				boolean lowerResRender = false;
 
 				if(!TerramapMod.cacheManager.isCached(tile)) {

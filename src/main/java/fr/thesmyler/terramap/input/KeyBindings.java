@@ -4,7 +4,7 @@ import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.gui.TerramapScreen;
-import fr.thesmyler.terramap.proxy.TerramapClientProxy;
+import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.client.settings.IKeyConflictContext;
@@ -44,7 +44,7 @@ public abstract class KeyBindings {
 				  && Minecraft.getMinecraft().player.dimension == 0
 				  && TerramapUtils.isEarthWorld(Minecraft.getMinecraft().world)
 			) {
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen,TerramapClientProxy.getTiledMaps()));
+        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, MapStyleRegistry.getTiledMaps()));
     }
 	}
 

@@ -28,8 +28,8 @@ import fr.thesmyler.terramap.gui.widgets.poi.PlayerPOI;
 import fr.thesmyler.terramap.gui.widgets.poi.PointOfInterest;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
-import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
-import fr.thesmyler.terramap.maps.tiles.RasterWebTile.InvalidTileCoordinatesException;
+import fr.thesmyler.terramap.maps.WebTile;
+import fr.thesmyler.terramap.maps.WebTile.InvalidTileCoordinatesException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
@@ -52,8 +52,8 @@ import net.minecraft.util.ResourceLocation;
 public class GuiTiledMap extends GuiScreen {
 
 	public static final ResourceLocation WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png");
-	protected TiledMap<?> map;
-	protected TiledMap<?>[] availableMaps;
+	protected TiledMap map;
+	protected TiledMap[] availableMaps;
 
 	protected double focusLatitude = 0; //Center of the screen
 	protected double focusLongitude = 0;
@@ -83,7 +83,7 @@ public class GuiTiledMap extends GuiScreen {
 	protected int lastEntityPoiRenderedCount = 0; //Used for debug output
 	protected int lastPlayerPoiRenderedCount = 0;
 
-	public GuiTiledMap(TiledMap<?>[] maps) {
+	public GuiTiledMap(TiledMap[] maps) {
 		this.map = maps[0];
 		this.availableMaps = maps;
 	}
@@ -146,8 +146,8 @@ public class GuiTiledMap extends GuiScreen {
 		}
 		this.tilesetMenu = new RightClickMenu();
 		this.tilesetMenu.init(this.fontRenderer);
-		for(TiledMap<?> map: this.availableMaps) {
-			this.tilesetMenu.addEntry(map.getName(), () -> {this.setMap(map);});
+		for(TiledMap map: this.availableMaps) {
+			this.tilesetMenu.addEntry(map.getId(), () -> {this.setMap(map);});
 		}
 		this.closeRightClickMenu();
 		this.zoomInButton = new GuiTexturedButton(buttonId++, this.width - 30, 15, 15, 15, 40, 0, 40, 15, 40, 30, GuiTiledMap.WIDGET_TEXTURES);
@@ -196,13 +196,13 @@ public class GuiTiledMap extends GuiScreen {
 
 			for(int tY = lowerTY; tY * renderSize < maxY; tY++) {
 
-				RasterWebTile tile;
+				WebTile tile;
 
 				try {
 					tile = map.getTile(this.zoomLevel, TerramapUtils.modulus(tX, maxTileXY), tY);
 				} catch(InvalidTileCoordinatesException e) { continue ;}
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
-				RasterWebTile bestTile = tile;
+				WebTile bestTile = tile;
 				boolean lowerResRender = false;
 
 				if(!TerramapMod.cacheManager.isCached(tile)) {
@@ -655,8 +655,8 @@ public class GuiTiledMap extends GuiScreen {
 			this.zoom(-1);
 		} else if(button.id == this.centerOnPlayerButton.id) {
 			this.setPosition(this.thePlayerPOI.getLongitude(), this.thePlayerPOI.getLatitude());
-		} else if(button.id == this.copyright.id && this.map.getCopyrightURL().length() > 0) {
-			GeoServices.openURI(this.map.getCopyrightURL());
+		} else if(button.id == this.copyright.id) {
+//			GeoServices.openURI(this.map.getCopyrightURL());
 		} else if(button.id == this.tilesetButton.id) {
 			this.mapVelocityX = 0;
 			this.mapVelocityY = 0;
@@ -683,7 +683,7 @@ public class GuiTiledMap extends GuiScreen {
 		return false;
 	}
 
-	private void setMap(TiledMap<?> map) {
+	private void setMap(TiledMap map) {
 		TerramapMod.logger.debug("Changing map");
 		TerramapMod.cacheManager.clearQueue();
 		this.map.unloadAll();
@@ -872,8 +872,8 @@ public class GuiTiledMap extends GuiScreen {
 		this.focusLatitude = state.centerLatitude;
 		this.focusLongitude = state.centerLongitude;
 		this.zoomLevel = state.zoomLevel;
-		for(TiledMap<?> map: this.availableMaps) {
-			if(map.getName().equals(state.mapStyle)) { 
+		for(TiledMap map: this.availableMaps) {
+			if(map.getId().equals(state.mapStyle)) { 
 				this.map = map;
 				break;
 			}

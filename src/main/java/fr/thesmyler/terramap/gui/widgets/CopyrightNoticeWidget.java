@@ -8,9 +8,9 @@ import net.minecraft.client.gui.GuiButton;
 
 public class CopyrightNoticeWidget extends GuiButton {
 
-	public TiledMap<?> map;
+	public TiledMap map;
 
-	public CopyrightNoticeWidget(int buttonId, int x, int y, TiledMap<?> map) {
+	public CopyrightNoticeWidget(int buttonId, int x, int y, TiledMap map) {
 		super(buttonId, x, y, "");
 		this.map = map;
 	}
@@ -24,15 +24,14 @@ public class CopyrightNoticeWidget extends GuiButton {
 		int color = 0xFFFFFF;
 		FontRenderer f = Minecraft.getMinecraft().fontRenderer;
 		if(mouseX >= this.x && mouseX <= this.x + width
-				&& mouseY >= this.y && mouseY <= this.y + height
-				&& this.map.getCopyrightURL().length() > 0)
+				&& mouseY >= this.y && mouseY <= this.y + height)
 			color = 0xA0A0FF;
-		f.drawString(this.map.getCopyright(), this.x + 5, this.y + 5, color);
+		f.drawString(this.map.getCopyright().getFormattedText(), this.x + 5, this.y + 5, color);
 	}
 
 	public int getWidth() {
 		FontRenderer f = Minecraft.getMinecraft().fontRenderer;
-		return f.getStringWidth(this.map.getCopyright()) + 10; 
+		return f.getStringWidth(this.map.getCopyright().getFormattedText()) + 10; 
 	}
 
 	public int getHeight() {

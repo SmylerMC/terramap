@@ -1,0 +1,12 @@
+{
+	"osm": {
+		"url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+		"name": {
+            "en_us": "Open Street Map",
+            "fr_fr": "Open Street Map"
+		},
+		"copyright": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
+		"min_zoom": 0,
+		"max_zoom": 19
+	}
+}

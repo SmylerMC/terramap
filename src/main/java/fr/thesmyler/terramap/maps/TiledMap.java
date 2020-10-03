@@ -2,42 +2,42 @@ package fr.thesmyler.terramap.maps;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import net.minecraft.util.text.ITextComponent;
 
 
-public class TiledMap<T extends RasterWebTile> {
+public class TiledMap {
 
-	protected TileFactory<T> factory;
-	protected LinkedList<T> tiles;
+	protected String urlPattern;
+	protected LinkedList<WebTile> tiles;
 	protected int maxLoaded;
 	protected int maxZoom = 19;
 	protected int minZoom = 0;
 	
-	protected String name;
-	protected String copyright;
-	protected String copyrightURL;
+	protected String id;
+	protected TiledMapProvider provider;
+	protected Map<String, String> names; // A map of language key => name
+	protected String copyrightJson;
+	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 	
 	protected boolean smartLoadEnable = false;
 	
-	public TiledMap(TileFactory<T> fact, int minZoom, int maxZoom, int maxLoaded, String name, String copyright, String copyrightURL) {
-		this.factory = fact;
-		this.tiles = new LinkedList<T>();
+	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, String copyright, TiledMapProvider provider) {
+		this.urlPattern = urlPattern;
+		this.tiles = new LinkedList<WebTile>();
 		this.maxLoaded = maxLoaded;
 		this.maxZoom = maxZoom;
 		this.minZoom = minZoom;
-		this.name = name;
-		this.copyright = copyright;
-		this.copyrightURL = copyrightURL;
+		this.id = id;
+		this.copyrightJson = copyright;
+		this.names = names;
+		this.provider = provider;
 	}
 	
-	public TiledMap(TileFactory<T> fact) {
-		this(fact, 0, 19, 120, "", "", "");
-	}	
-	
-	protected void loadTile(T tile) {
+	protected void loadTile(WebTile tile) {
 		this.tiles.add(0, tile);
 		if(this.isSmartLoadingEnabled()) {
 			TerramapMod.cacheManager.cacheAsync(tile);
@@ -47,7 +47,7 @@ public class TiledMap<T extends RasterWebTile> {
 					if(x == 0 && y == 0) continue;
 					try {
 						TerramapMod.cacheManager.cacheAsync(this.getTile(tile.getZoom(), tile.getX()+x, tile.getY()+y));
-					} catch (RasterWebTile.InvalidTileCoordinatesException e) {}
+					} catch (WebTile.InvalidTileCoordinatesException e) {}
 				}
 			}
 			this.enableSmartLoading();
@@ -55,25 +55,25 @@ public class TiledMap<T extends RasterWebTile> {
 		this.unloadToMaxLoad();
 	}
 	
-	public T getTile(int zoom, long x, long y) {
-		for(T tile: this.tiles)
+	public WebTile getTile(int zoom, long x, long y) {
+		for(WebTile tile: this.tiles)
 			if(tile.getX() == x && tile.getY() == y && tile.getZoom() == zoom) {
 				this.needTile(tile);
 				return tile;
 			}
-		T tile = this.factory.getInstance(zoom, x, y);
+		WebTile tile = new WebTile(this.urlPattern, zoom, x, y);
 		this.loadTile(tile);
 		return tile;
 	}
 	
 	
-	public T getTileAt(int zoom, long x, long y) {
+	public WebTile getTileAt(int zoom, long x, long y) {
 		long tileX = WebMercatorUtils.getTileXAt(x);
 		long tileY = WebMercatorUtils.getTileYAt(y);
 		return this.getTile(zoom, tileX, tileY);
 	}
 	
-	public void unloadTile(T tile) {
+	public void unloadTile(WebTile tile) {
 		tile.unloadTexture();
 	}
 	
@@ -112,7 +112,7 @@ public class TiledMap<T extends RasterWebTile> {
 		return this.tiles.size();
 	}
 	
-	public void needTile(T tile) {
+	public void needTile(WebTile tile) {
 		if(this.tiles.contains(tile)) {
 			this.tiles.remove(tile);
 		}
@@ -151,16 +151,25 @@ public class TiledMap<T extends RasterWebTile> {
 		return this.maxZoom;
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getId() {
+		return this.id;
 	}
 	
-	public String getCopyright() {
-		return this.copyright;
+	public ITextComponent getCopyright() {
+		try {
+			return ITextComponent.Serializer.jsonToComponent(this.copyrightJson);
+		} catch (Exception e) {
+			return FALLBACK_COPYRIGHT;
+		}
 	}
 	
-	public String getCopyrightURL() {
-		return this.copyrightURL;
+	public String getLocalizedName(String localeKey) {
+		String result = this.names.getOrDefault(localeKey, this.names.get("en_us"));
+		if(result != null) {
+			return result;
+		} else {
+			return this.id;
+		}
 	}
 	
 }

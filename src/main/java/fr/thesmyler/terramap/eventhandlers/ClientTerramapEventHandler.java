@@ -9,7 +9,8 @@ import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.TiledMaps;
+import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.TiledMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -66,7 +67,7 @@ public class ClientTerramapEventHandler {
 			HudScreen screen = (HudScreen) event.getGui();
 			screen.removeAllWidgets();
 			screen.cancellAllScheduled();
-			MapWidget map = new MapWidget(10, TiledMaps.OSM, MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
+			MapWidget map = new MapWidget(10, MapStyleRegistry.getTiledMaps().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
 			map.setInteractive(false);
 			map.setX(5);
 			map.setY(5);
