@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.widgets.IWidget;
+import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 
 abstract class MapLayerWidget implements IWidget {
@@ -40,7 +41,7 @@ abstract class MapLayerWidget implements IWidget {
 	
 	protected double getScreenLongitude(double xOnScreen) {
 		double xOnMap = (this.getUpperLeftX() + xOnScreen) * this.tileScaling;
-		return WebMercatorUtils.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoom));
+		return GeoServices.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoom));
 	}
 
 	protected double getScreenLatitude(double yOnScreen) {

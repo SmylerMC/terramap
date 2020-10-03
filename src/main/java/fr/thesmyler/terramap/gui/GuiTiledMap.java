@@ -500,7 +500,7 @@ public class GuiTiledMap extends GuiScreen {
 	@Override
 	public void updateScreen(){
 
-		this.focusLongitude = WebMercatorUtils.getLongitudeInRange(this.focusLongitude);
+		this.focusLongitude = GeoServices.getLongitudeInRange(this.focusLongitude);
 		if(!this.isPositionValid(this.zoomLevel, this.focusLongitude, this.focusLatitude)) {
 			TerramapMod.logger.error("Map is in an invalid state! Reseting!");
 			this.setZoomToMinimum();
@@ -748,7 +748,7 @@ public class GuiTiledMap extends GuiScreen {
 
 	private double getScreenLong(double xOnScreen) {
 		double xOnMap = (this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfig.tileScaling;
-		return WebMercatorUtils.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel));
+		return GeoServices.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel));
 	}
 
 	private double getScreenLat(double yOnScreen) {

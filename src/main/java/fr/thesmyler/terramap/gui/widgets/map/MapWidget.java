@@ -110,7 +110,7 @@ public class MapWidget extends Screen {
 			GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
 		});
 		openSubMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gmaps"), () -> {
-			GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+			GeoServices.openPlaceInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
 		});
 		openSubMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gearth_web"), () -> {
 			GeoServices.opentInGoogleEarthWeb(this.getMouseLongitude(), this.getMouseLatitude());

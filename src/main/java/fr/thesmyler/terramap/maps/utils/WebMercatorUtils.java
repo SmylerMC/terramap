@@ -181,14 +181,6 @@ public class WebMercatorUtils {
 		return 1 << zoomlvl;
 	}
 	
-	public static double getLongitudeInRange(double longitude) {
-		if(!Double.isFinite(longitude)) throw new RuntimeException("longitude cannot be infinite");
-		double l = longitude;
-		while(l> 180d) l -= 360d;
-		while(l<-180d) l += 360d;
-		return l;
-	}
-	
 	public static boolean isPositionOnMap(double longitude, double latitude) {
 		return !Double.isNaN(longitude) && !Double.isNaN(latitude) && Math.abs(latitude) <= LIMIT_LATITUDE;
 	}
