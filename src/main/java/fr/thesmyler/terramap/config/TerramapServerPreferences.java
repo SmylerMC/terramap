@@ -22,23 +22,36 @@ import fr.thesmyler.terramap.TerramapMod;
 public class TerramapServerPreferences {
 
 	public static final String FILENAME = "terramap_server_preferences.json";
-	
+
 	private static File file = null;
-	public static Preferences preferences = new Preferences();
+	private static Preferences preferences = new Preferences();
 
 	public static boolean shouldDisplayPlayer(UUID uuid) {
-		return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.playersDisplayDefault;
+		try {
+			return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.playersDisplayDefault;
+		} catch(Exception e) {
+			return false;
+		}
 	}
-	
+
 	public static void setShouldDisplayPlayer(UUID uuid, boolean yesNo) {
-		PlayerPreferences pp = preferences.players.getOrDefault(uuid, new PlayerPreferences());
-		pp.display = yesNo;
-		if(!preferences.players.containsKey(uuid)) preferences.players.put(uuid, pp);
+		try {
+			PlayerPreferences pp = preferences.players.getOrDefault(uuid, new PlayerPreferences());
+			pp.display = yesNo;
+			if(!preferences.players.containsKey(uuid)) preferences.players.put(uuid, pp);
+		} catch(Exception e) {
+			TerramapMod.logger.error("Failed to set player display preferences! See stack trace:");
+			TerramapMod.logger.catching(e);
+		}
 	}
-	
+
 	public static void save() {
 		if(file == null) {
 			TerramapMod.logger.warn("Trying to save server preferences to a null file, aborting");
+			return;
+		}
+		if(preferences == null) {
+			TerramapMod.logger.error("Trying to save null server preferences, this is not normal, aborting!");
 			return;
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -67,17 +80,17 @@ public class TerramapServerPreferences {
 			}
 		}
 	}
-	
+
 	public static void setFile(File file) {
 		TerramapServerPreferences.file = file;
 	}
-	
+
 	private static class Preferences {
 		public Map<UUID, PlayerPreferences> players = new HashMap<UUID, PlayerPreferences>();
 	}
-	
+
 	private static class PlayerPreferences {
 		public boolean display = TerramapConfig.playersDisplayDefault;
 	}
-	
+
 }
