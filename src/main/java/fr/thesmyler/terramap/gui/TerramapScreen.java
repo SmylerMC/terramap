@@ -69,7 +69,7 @@ public class TerramapScreen extends Screen {
 		this.backgrounds = maps;
 		Collection<TiledMap> tiledMaps = this.backgrounds.values();
 		TiledMap bg = tiledMaps.toArray(new TiledMap[0])[0];
-		this.map = new MapWidget(10, bg, MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
+		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
 		this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
 	}
 
@@ -325,7 +325,7 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
 		this.setF1Mode(state.f1);
 		this.setDebugMode(state.debug);
-		//FIXME Map style is not restored
+		this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
 	}
 
 	private boolean search(String text) {
