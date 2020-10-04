@@ -267,7 +267,7 @@ public class MapWidget extends Screen {
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
 		if(this.trackingMarker != null) {
-			if(this.widgets.contains(this.trackingMarker)) {
+			if(this.widgets.contains(this.trackingMarker) && Double.isFinite(this.trackingMarker.getLongitude()) && Double.isFinite(this.trackingMarker.getLatitude())) {
 				this.setCenterLongitude(this.trackingMarker.getLongitude());
 				this.setCenterLatitude(this.trackingMarker.getLatitude());
 			} else {

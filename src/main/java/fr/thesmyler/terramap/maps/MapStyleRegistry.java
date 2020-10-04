@@ -1,12 +1,22 @@
 package fr.thesmyler.terramap.maps;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.InitialDirContext;
 
 import com.google.gson.Gson;
 
@@ -16,7 +26,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 public class MapStyleRegistry {
 
 	private static final String BUILT_IN_MAPS = "/assets/terramap/mapstyles.json";
-	private static Map<String, TiledMap> builtins = new HashMap<String, TiledMap>();
+	private static Map<String, TiledMap> builtinsAndOnline = new HashMap<String, TiledMap>();
 
 	public static Map<String, TiledMap> getTiledMaps() {
 		Map<String, TiledMap> map = new LinkedHashMap<String, TiledMap>();
@@ -25,7 +35,7 @@ public class MapStyleRegistry {
 	}
 
 	private static Map<String, TiledMap> getBuiltIns() {
-		return builtins;
+		return builtinsAndOnline;
 	}
 
 	public static void loadBuiltIns() {
@@ -38,7 +48,7 @@ public class MapStyleRegistry {
 					json += line;
 					line = txtReader.readLine();
 				}
-				builtins = loadFromJson(json, TiledMapProvider.BUILT_IN);
+				builtinsAndOnline = loadFromJson(json, TiledMapProvider.BUILT_IN);
 			}
 		} catch(Exception e) {
 			TerramapMod.logger.fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
@@ -71,11 +81,42 @@ public class MapStyleRegistry {
 		return styles;
 	}
 	
+	public static void loadFromOnline(String hostname) {
+		File file = new File(TerramapMod.cacheManager.getCachingPath() + "/mapstyles.json");
+		try {
+			URL url = resolveUpdateURL(hostname);
+			TerramapMod.cacheManager.downloadUrlToFile(url, file);
+		} catch (NamingException | IOException e) {
+			TerramapMod.logger.error("Failed to download updated map style file, let's hope the cache has a good version!");
+			TerramapMod.logger.catching(e);
+		}
+		try {
+			String json = String.join("", Files.readAllLines(file.toPath()));
+			Map<String, TiledMap> maps =  loadFromJson(json, TiledMapProvider.ONLINE);
+			builtinsAndOnline.putAll(maps);
+		} catch (IOException e) {
+			TerramapMod.logger.error("Failed to load updated map styles, will fallback to built-ins");
+			TerramapMod.logger.catching(e);
+		}
+	}
+
+	private static URL resolveUpdateURL(String hostname) throws UnknownHostException, NamingException, MalformedURLException {
+		InetAddress inetAddress = InetAddress.getByName(hostname);
+		InitialDirContext iDirC = new InitialDirContext();
+		Attributes attributes = iDirC.getAttributes("dns:/" + inetAddress.getHostName(), new String[] {"TXT"});
+		String attribute =  attributes.get("TXT").get().toString();
+		try {
+			return new URL(attribute.split("\\|")[1]);
+		} catch(IndexOutOfBoundsException e) {
+			throw new UnknownHostException("TXT record was malformatted");
+		}
+	}
+
 	static class MapStyleFile {
-		
+
 		Map<String, SavedMapStyle> maps;
 		MapFileMetadata metadata;
-		
+
 	}
 
 	static class SavedMapStyle {
@@ -87,12 +128,11 @@ public class MapStyleRegistry {
 		int max_zoom;
 
 	}
-	
+
 	static class MapFileMetadata {
-		
+
 		long version;
 		String comment;
-		
-	}
 
+	}
 }

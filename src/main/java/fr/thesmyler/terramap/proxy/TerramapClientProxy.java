@@ -61,6 +61,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		WebTile.registerErrorTexture();
 		MarkerControllerManager.registerBuiltInControllers();
 		MapStyleRegistry.loadBuiltIns();
+		MapStyleRegistry.loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
 	}
 
 	@Override

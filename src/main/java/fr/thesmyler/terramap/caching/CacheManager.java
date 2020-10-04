@@ -145,7 +145,7 @@ public class CacheManager implements Runnable {
 	}
 
 	/**
-	 * @return The path to the directory where cached files are saved as a File string
+	 * @return The absolute path to the directory where cached files are saved as a File string
 	 */
 	public String getCachingPath() {
 		return cachingDirectory.getAbsolutePath();

@@ -24,6 +24,7 @@ public class TerramapMod {
     public static final String MODID = "terramap";
     private static  String version;
 	public static final String AUTHOR_EMAIL = "smyler at mail dot com";
+	public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
 
 
     public static Logger logger;
