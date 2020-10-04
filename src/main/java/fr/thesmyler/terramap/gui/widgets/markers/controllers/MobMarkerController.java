@@ -13,6 +13,8 @@ import net.minecraft.entity.monster.IMob;
 
 public class MobMarkerController extends MarkerController<MobMarker> {
 	
+	public static final String ID = "mobs";
+	
 	protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
 			102, 108, 102, 122,
 			102, 108, 102, 122,
@@ -20,7 +22,7 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 			this.areMakersVisible(), null, null);
 
 	public MobMarkerController() {
-		super("mobs", 700, MobMarker.class);
+		super(ID, 700, MobMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
 		this.button.setTooltip("Toggle agressive creatures visibility"); //TODO Localize

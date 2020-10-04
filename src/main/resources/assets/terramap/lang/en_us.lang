@@ -1,3 +1,4 @@
+terramap.config.general.name
 terramap.config.cache_dir=Cache directory
 terramap.config.tpllcmd=tpll command
 terramap.config.forcetpllcmd=Force tp command

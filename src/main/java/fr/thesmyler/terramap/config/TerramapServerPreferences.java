@@ -28,7 +28,7 @@ public class TerramapServerPreferences {
 
 	public static boolean shouldDisplayPlayer(UUID uuid) {
 		try {
-			return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.playersDisplayDefault;
+			return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.ServerConfig.playersDisplayDefault;
 		} catch(Exception e) {
 			return false;
 		}
@@ -90,7 +90,7 @@ public class TerramapServerPreferences {
 	}
 
 	private static class PlayerPreferences {
-		public boolean display = TerramapConfig.playersDisplayDefault;
+		public boolean display = TerramapConfig.ServerConfig.playersDisplayDefault;
 	}
 
 }

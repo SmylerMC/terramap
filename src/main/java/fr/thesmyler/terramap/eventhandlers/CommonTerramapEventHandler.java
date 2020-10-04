@@ -34,9 +34,9 @@ public class CommonTerramapEventHandler {
 		if(!TerramapUtils.isEarthWorld(world)) return;
 		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
-		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfig.synchronizePlayers, TerramapConfig.syncSpectators, false);
+		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfig.ServerConfig.synchronizePlayers, TerramapConfig.ServerConfig.syncSpectators, false);
 		TerramapNetworkManager.CHANNEL.sendTo(data, player);
-		if(TerramapConfig.forceClientTpCmd) TerramapNetworkManager.CHANNEL.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
+		if(TerramapConfig.ServerConfig.forceClientTpCmd) TerramapNetworkManager.CHANNEL.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
 	}
 
 	@SubscribeEvent
@@ -49,10 +49,10 @@ public class CommonTerramapEventHandler {
 	public void onWorldTick(WorldTickEvent event) {
 		if(event.phase.equals(TickEvent.Phase.END)) return;
 		World world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
-		if(TerramapConfig.synchronizePlayers && TerramapUtils.isEarthWorld(world) && this.tickCounter == 0) {
+		if(TerramapConfig.ServerConfig.synchronizePlayers && TerramapUtils.isEarthWorld(world) && this.tickCounter == 0) {
 			RemoteSynchronizer.syncPlayers(world);
 		}
-		this.tickCounter = (this.tickCounter+1) % TerramapConfig.syncInterval;
+		this.tickCounter = (this.tickCounter+1) % TerramapConfig.ServerConfig.syncInterval;
 	}
 	
 	@SubscribeEvent

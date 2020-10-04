@@ -170,14 +170,14 @@ public class GuiTiledMap extends GuiScreen {
 		if(this.projection != null) this.drawPOIs(mouseX, mouseY, partialTicks);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		this.drawInformation(mouseX, mouseY, partialTicks);
-		if(this.projection == null && !TerramapConfig.ignoreProjectionWarning) this.drawProjectionWarning(mouseX, mouseY, partialTicks);
+		if(this.projection == null) this.drawProjectionWarning(mouseX, mouseY, partialTicks);
 		this.rclickMenu.draw(mouseX, mouseY, partialTicks);
 		this.tilesetMenu.draw(mouseX, mouseY, partialTicks);
 	}
 
 	private void drawMap(int mouseX, int mouseY, float partialTicks) {
 
-		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfig.tileScaling);
+		int renderSize = (int) (WebMercatorUtils.TILE_DIMENSIONS * TerramapConfig.ClientAdvanced.tileScaling);
 
 		long upperLeftX = (long) this.getUpperLeftX(this.focusLongitude);
 		long upperLeftY = (long) this.getUpperLeftY(this.focusLatitude);
@@ -554,7 +554,7 @@ public class GuiTiledMap extends GuiScreen {
 				this.closeRightClickMenu();
 			}
 			long ctime = System.currentTimeMillis();
-			if(ctime - this.lastClickTime < TerramapConfig.doubleClickDelay && mouseButton == 0) this.mouseDoubleClick(mouseX, mouseY);
+			if(ctime - this.lastClickTime < TerramapConfig.ClientAdvanced.doubleClickDelay && mouseButton == 0) this.mouseDoubleClick(mouseX, mouseY);
 			this.lastClickTime = ctime;
 			break;
 		case 1: //Right click
@@ -743,16 +743,16 @@ public class GuiTiledMap extends GuiScreen {
 
 	private boolean shouldTrackEntity(Entity entity) {
 		if(entity instanceof EntityItem) return false;
-		return TerramapConfig.showEntities && entity instanceof EntityLiving;
+		return entity instanceof EntityLiving;
 	}
 
 	private double getScreenLong(double xOnScreen) {
-		double xOnMap = (this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfig.tileScaling;
+		double xOnMap = (this.getUpperLeftX(this.zoomLevel, this.focusLongitude) + xOnScreen) / TerramapConfig.ClientAdvanced.tileScaling;
 		return GeoServices.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(xOnMap, this.zoomLevel));
 	}
 
 	private double getScreenLat(double yOnScreen) {
-		double yOnMap = (this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfig.tileScaling;
+		double yOnMap = (this.getUpperLeftY(this.zoomLevel, this.focusLatitude) + yOnScreen) / TerramapConfig.ClientAdvanced.tileScaling;
 		return WebMercatorUtils.getLatitudeFromY(yOnMap, this.zoomLevel);
 	}
 
@@ -808,11 +808,11 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	protected double getMapX(int zoomLevel, double longitude) {
-		return WebMercatorUtils.getXFromLongitude(longitude, zoomLevel) * TerramapConfig.tileScaling;
+		return WebMercatorUtils.getXFromLongitude(longitude, zoomLevel) * TerramapConfig.ClientAdvanced.tileScaling;
 	}
 
 	protected double getMapY(int zoomLevel, double latitude) {
-		return WebMercatorUtils.getYFromLatitude(latitude, zoomLevel) * TerramapConfig.tileScaling;
+		return WebMercatorUtils.getYFromLatitude(latitude, zoomLevel) * TerramapConfig.ClientAdvanced.tileScaling;
 	}
 
 	protected double getScreenX(double longitude) {

@@ -5,9 +5,11 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.RightClickMarker;
 
 public class RightClickMarkerController extends MarkerController<RightClickMarker> {
+	
+	public static final String ID = "right_click_marker";
 
 	public RightClickMarkerController() {
-		super("right_click_marker", 1000, RightClickMarker.class);
+		super(ID, 1000, RightClickMarker.class);
 	}
 
 	@Override

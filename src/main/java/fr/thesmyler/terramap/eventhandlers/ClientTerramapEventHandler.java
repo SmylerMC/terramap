@@ -1,5 +1,8 @@
 package fr.thesmyler.terramap.eventhandlers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
@@ -8,6 +11,9 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapServer;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
@@ -67,21 +73,36 @@ public class ClientTerramapEventHandler {
 			HudScreen screen = (HudScreen) event.getGui();
 			screen.removeAllWidgets();
 			screen.cancellAllScheduled();
-			MapWidget map = new MapWidget(10, MapStyleRegistry.getTiledMaps().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
-			map.setInteractive(false);
-			map.setX(5);
-			map.setY(5);
-			map.setWidth(300);
-			map.setHeight(200);
-			map.setZoom(18);
-			map.setCopyrightVisibility(false);
-			map.setScaleVisibility(false);
-			screen.addWidget(map);
-			screen.scheduleAtUpdate(() -> {
-				if(TerramapServer.getServer().isInstalledOnServer()) {
-					map.track(map.getMainPlayerMarker());
-				}
-			});
+			
+			if(TerramapConfig.Minimap.enable) {
+				MapWidget map = new MapWidget(10, MapStyleRegistry.getTiledMaps().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
+				map.setInteractive(false);
+				map.setX((int) (TerramapConfig.Minimap.posX * 0.01 * screen.getWidth()));
+				map.setY((int) (TerramapConfig.Minimap.posX * 0.01 * screen.getWidth()));
+				map.setWidth((int) (TerramapConfig.Minimap.width * 0.01 * screen.getWidth()));
+				map.setHeight((int) (TerramapConfig.Minimap.height * 0.01 * screen.getWidth()));
+				Map<String, Boolean> markerVisibility = new HashMap<String, Boolean>();
+				markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.Minimap.showEntities);
+				markerVisibility.put(MobMarkerController.ID, TerramapConfig.Minimap.showEntities);
+				markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.Minimap.showOtherPlayers);
+				map.setMarkersVisibility(markerVisibility);
+				Map<String, TiledMap> styles = MapStyleRegistry.getTiledMaps();
+				TiledMap bg = styles.getOrDefault(TerramapConfig.Minimap.style, styles.get("osm"));
+				map.setBackground(bg);
+				int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.Minimap.zoomLevel);
+				zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.Minimap.zoomLevel);
+				map.setZoom(zoomLevel);
+				map.setZoom(TerramapConfig.Minimap.zoomLevel);
+				map.setCopyrightVisibility(false);
+				map.setScaleVisibility(false);
+				screen.addWidget(map);
+				screen.scheduleAtUpdate(() -> {
+					if(TerramapServer.getServer().isInstalledOnServer()) {
+						map.track(map.getMainPlayerMarker());
+					}
+				});
+			}
+			
 		}
 	}
 	

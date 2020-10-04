@@ -69,8 +69,9 @@ public class TerramapScreen extends Screen {
 		this.backgrounds = maps;
 		Collection<TiledMap> tiledMaps = this.backgrounds.values();
 		TiledMap bg = tiledMaps.toArray(new TiledMap[0])[0];
-		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
-		this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
+		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
+		TerramapScreenSavedState state = TerramapServer.getServer().getSavedScreenState();
+		if(state != null) this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
 	}
 
 	@Override
@@ -78,7 +79,7 @@ public class TerramapScreen extends Screen {
 
 		this.removeAllWidgets();
 		this.map.setX(0).setY(0).setWidth(this.getWidth()).setHeight(this.getHeight());
-		this.map.setTileScaling(TerramapConfig.getEffectiveTileScaling());
+		this.map.setTileScaling(TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
 		this.addWidget(this.map);
 
 		// Map control buttons
@@ -234,7 +235,7 @@ public class TerramapScreen extends Screen {
 			double markerLong = marker.getLongitude();
 			double markerLat = marker.getLatitude();
 			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
-				trackString = "You are outside the projected area.";
+				trackString = "You are outside the projected area."; //TODO To long
 			} else {
 				trackString = "Player position: ";
 				trackFormatLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());

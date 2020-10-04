@@ -14,6 +14,8 @@ import net.minecraft.entity.passive.IAnimals;
 
 public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 	
+	public static final String ID = "creatures";
+	
 	protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
 			116, 108, 116, 122,
 			116, 108, 116, 122,
@@ -21,7 +23,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 			this.areMakersVisible(), null, null);
 
 	public AnimalMarkerController() {
-		super("creatures", 700, AnimalMarker.class);
+		super(ID, 700, AnimalMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
 		this.button.setTooltip("Toggle neutral creatures visibility"); //TODO Localize
