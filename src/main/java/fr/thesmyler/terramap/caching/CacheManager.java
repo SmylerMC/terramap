@@ -18,7 +18,6 @@ import fr.thesmyler.terramap.TerramapMod;
 
 //FIXME If we loose Internet access, the thread just gets stuck...
 
-
 /**
  * @author Smyler
  * 
@@ -189,7 +188,6 @@ public class CacheManager implements Runnable {
 		if(this.isCached(toCache)) return;
 
 		if(!this.shouldCache(toCache)) {
-			TerramapMod.logger.error("Will not attempt to cache " + toCache.getURL() + ", too many failed attempts");
 			return;
 		}
 		if(!this.isCallingFromWorker()) 
@@ -328,6 +326,9 @@ public class CacheManager implements Runnable {
 		URL url = c.getURL();
 		if(this.faultyUrls.containsKey(url)) {
 			this.faultyUrls.put(url, this.faultyUrls.get(url) + 1);
+			if(this.faultyUrls.get(url) >= this.getMaxCacheTries()) {
+				TerramapMod.logger.error("Will not attempt to cache " + url + " anymore, too many failed attempts");
+			}
 		} else {
 			this.faultyUrls.put(url, 1);
 		}
