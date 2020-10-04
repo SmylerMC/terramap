@@ -183,12 +183,20 @@ public class TiledMap {
 		}
 	}
 	
-	protected String getUrlPattern() {
+	public String getUrlPattern() {
 		return this.urlPattern;
 	}
 	
-	protected String getComment() {
+	public String getComment() {
 		return this.comment;
+	}
+	
+	public TiledMapProvider getProvider() {
+		return this.provider;
+	}
+	
+	public long getProviderVersion() {
+		return this.version;
 	}
 
 }

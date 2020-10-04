@@ -115,7 +115,7 @@ public class TerramapScreen extends Screen {
 		this.styleButton.enable();
 		this.addWidget(this.styleButton);
 		this.debugText = new TextWidget(49, this.getFont());
-		this.debugText.setAnchorX(2).setAnchorY(0);
+		this.debugText.setAnchorX(3).setAnchorY(0);
 		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(0xA0000000).setPadding(3);
 		this.debugText.setVisibility(this.debugMode);
 		this.addWidget(this.debugText);
@@ -256,7 +256,9 @@ public class TerramapScreen extends Screen {
 			dbText += "\nProjection: " + TerramapServer.getServer().getGeneratorSettings().settings.projection;
 			dbText += "\nOrientation: " + TerramapServer.getServer().getGeneratorSettings().settings.orentation;
 			dbText += "\nCache queue: " + TerramapMod.cacheManager.getQueueSize();
-			dbText += "\nMap: " + this.map.getBackgroundStyle().getId();
+			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
+			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
+			dbText += "\nMap url: " + this.map.getBackgroundStyle().getUrlPattern();
 			this.debugText.setText(dbText);
 		}
 	}
