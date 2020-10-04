@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap;
 
+import java.io.File;
 import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
@@ -7,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
+import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +43,8 @@ public class TerramapMod {
     	logger = event.getModLog();
     	TerramapMod.version = event.getModMetadata().version;
     	TerramapMod.proxy.preInit(event);
+    	File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
+    	MapStyleRegistry.setConfigMapFile(mapStyleFile);
     }
 
     @EventHandler
@@ -48,6 +52,7 @@ public class TerramapMod {
     	MinecraftForge.EVENT_BUS.register(new CommonTerramapEventHandler());
     	TerramapMod.proxy.init(event);
     	PermissionManager.registerNodes();
+    	MapStyleRegistry.loadFromConfigFile();
     }
     
     public static String getVersion() {
