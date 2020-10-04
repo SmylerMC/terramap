@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.maps.TiledMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -26,12 +27,12 @@ public class CopyrightNoticeWidget extends GuiButton {
 		if(mouseX >= this.x && mouseX <= this.x + width
 				&& mouseY >= this.y && mouseY <= this.y + height)
 			color = 0xA0A0FF;
-		f.drawString(this.map.getCopyright().getFormattedText(), this.x + 5, this.y + 5, color);
+		f.drawString(this.map.getCopyright(SmyLibGui.getLanguage()).getFormattedText(), this.x + 5, this.y + 5, color);
 	}
 
 	public int getWidth() {
 		FontRenderer f = Minecraft.getMinecraft().fontRenderer;
-		return f.getStringWidth(this.map.getCopyright().getFormattedText()) + 10; 
+		return f.getStringWidth(this.map.getCopyright(SmyLibGui.getLanguage()).getFormattedText()) + 10; 
 	}
 
 	public int getHeight() {

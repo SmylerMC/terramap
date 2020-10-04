@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 
 import fr.thesmyler.terramap.TerramapMod;
@@ -50,11 +49,10 @@ public class MapStyleRegistry {
 
 	public static Map<String, TiledMap> loadFromJson(String json, TiledMapProvider provider) {
 		Gson gson = new Gson();
-		@SuppressWarnings("serial")
-		Map<String, SavedMapStyle> savedStyles = gson.fromJson(json, new TypeToken<Map<String, SavedMapStyle>>() {}.getType());
+		MapStyleFile savedStyles = gson.fromJson(json, MapStyleFile.class);
 		Map<String, TiledMap> styles = new HashMap<String, TiledMap>();
-		for(String id: savedStyles.keySet()) {
-			SavedMapStyle savedStyle = savedStyles.get(id);
+		for(String id: savedStyles.maps.keySet()) {
+			SavedMapStyle savedStyle = savedStyles.maps.get(id);
 			TiledMap style = new TiledMap(
 					savedStyle.url,
 					savedStyle.min_zoom,
@@ -63,23 +61,38 @@ public class MapStyleRegistry {
 					id,
 					savedStyle.name,
 					savedStyle.copyright,
-					provider
+					provider,
+					savedStyles.metadata.version,
+					savedStyles.metadata.comment
 					);
 			styles.put(id, style);
 			//TODO Do some checks to make sure the parsed map styles are right
 		}
 		return styles;
 	}
+	
+	static class MapStyleFile {
+		
+		Map<String, SavedMapStyle> maps;
+		MapFileMetadata metadata;
+		
+	}
 
-	public static class SavedMapStyle {
+	static class SavedMapStyle {
 
-		//TODO Priority
-		public String url;
-		public Map<String, String> name;
-		public String copyright;
+		String url;
+		Map<String, String> name;
+		Map<String, String> copyright;
 		int min_zoom;
 		int max_zoom;
 
+	}
+	
+	static class MapFileMetadata {
+		
+		long version;
+		String comment;
+		
 	}
 
 }

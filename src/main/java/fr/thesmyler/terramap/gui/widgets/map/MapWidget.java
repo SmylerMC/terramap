@@ -10,6 +10,7 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
@@ -164,7 +165,7 @@ public class MapWidget extends Screen {
 		super.removeWidget(this.background);
 		super.addWidget(background);
 		this.background = background;
-		this.copyright.setComponent(background.map.getCopyright());
+		this.copyright.setComponent(background.map.getCopyright(SmyLibGui.getLanguage()));
 		return this;
 	}
 	
