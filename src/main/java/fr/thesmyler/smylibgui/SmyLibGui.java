@@ -1,7 +1,5 @@
 package fr.thesmyler.smylibgui;
 
-import net.minecraft.client.resources.Locale;
-
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
@@ -10,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -30,8 +27,6 @@ public abstract class SmyLibGui {
 		ICONS = Gui.ICONS;
 		WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/widgets.png");
 	}
-	
-	private static final String I18_LOCALE_IN_SRG = "field_135054_a";
 	
 	public static void init(Logger logger, boolean debug) {
 		SmyLibGui.logger = logger;

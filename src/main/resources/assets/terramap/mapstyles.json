@@ -1,14 +1,17 @@
 {
     "metadata": {
-        "version": 2,
-        "comment": "This file contains the tile servers included by default in Terramap's jar, and is maintained by SmylerMC."
+        "version": 3,
+        "comment": "This file contains the tile servers included by default in Terramap, and is maintained by SmylerMC."
     },
     "maps": {
         "osm": {
             "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             "name": {
-                "en_us": "Open Street Map",
-                "fr_fr": "Open Street Map"
+                "en_us": "OpenStreetMap",
+                "fr_fr": "OpenStreetMap",
+                "es_es": "OpenStreetMap",
+                "de_de": "OpenStreetMap",
+                "zh_cn": "OpenStreetMap"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
@@ -17,18 +20,38 @@
             "min_zoom": 0,
             "max_zoom": 19
         },
-	"osm_fr_hot": {
+        "osm_fr_hot": {
             "url": "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
             "name": {
-                "en_us": "OpenStreetMap Humanitarian",
-                "fr_fr": "OpenStreetMap Humanitaire"
+                "en_us": "Humanitarian",
+                "fr_fr": "Humanitaire",
+                "es_es": "Humanitario",
+                "de_de": "Humanitär",
+                "zh_cn": "Humanitarian"
             },
             "copyright": {
-                "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
-                "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
+                "en_us": "[\"\",{\"text\":\"© \"},{\"text\":\"OpenStreetMap contributors\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org/copyright\"}},{\"text\":\". Tiles style by \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.hotosm.org/\"}},{\"text\":\" hosted by \"},{\"text\":\"OpenStreetMap France\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.fr/\"}}]",
+                "fr_fr": "[\"\",{\"text\":\"Données ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Tiles courtesy of \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]"
+            },
+            "min_zoom": 0,
+            "max_zoom": 19
+        },
+        "stamen_terrain": {
+            "url": "http://tile.stamen.com/terrain/{z}/{x}/{y}.png",
+            "name": {
+                "en_us": "Terrain",
+                "fr_fr": "Terrain",
+                "es_es": "Terreno",
+                "de_de": "Terrain",
+                "zh_cn": "地形"
+            },
+            "copyright": {
+                "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"Map tiles by \"},{\"text\":\"Stamen Design\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://stamen.com/\"}},{\"text\":\", under \"},{\"text\":\"CC BY 3.0\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://creativecommons.org/licenses/by/3.0\"}},{\"text\":\".\",\"underlined\":true,\"color\":\"aqua\"},{\"text\":\" Data by \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://openstreetmap.org/\"}},{\"text\":\", under \"},{\"text\":\"ODbL\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright\"}}]"
             },
             "min_zoom": 0,
             "max_zoom": 19
         }
     }
+    
 }
+

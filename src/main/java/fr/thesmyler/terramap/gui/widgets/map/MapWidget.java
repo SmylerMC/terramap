@@ -80,7 +80,7 @@ public class MapWidget extends Screen {
 				return MapWidget.this.showCopyright;
 			}
 		};
-		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setBaseColor(0xFFA0A0FF).setShadow(false);
+		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
 		super.addWidget(this.copyright);
 		
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
