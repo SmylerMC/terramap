@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": 1,
+        "version": 2,
         "comment": "This file contains the tile servers included by default in Terramap's jar, and is maintained by SmylerMC."
     },
     "maps": {
@@ -16,6 +16,19 @@
             },
             "min_zoom": 0,
             "max_zoom": 19
+        },
+	"osm_fr_hot": {
+            "url": "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+            "name": {
+                "en_us": "OpenStreetMap Humanitarian",
+                "fr_fr": "OpenStreetMap Humanitaire"
+            },
+            "copyright": {
+                "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
+                "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
+            },
+            "min_zoom": 0,
+            "max_zoom": 19
         }
-	}
+    }
 }
