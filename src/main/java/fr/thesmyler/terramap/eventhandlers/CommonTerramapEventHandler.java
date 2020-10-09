@@ -35,8 +35,8 @@ public class CommonTerramapEventHandler {
 		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
 		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfig.ServerConfig.synchronizePlayers, TerramapConfig.ServerConfig.syncSpectators, false);
-		TerramapNetworkManager.CHANNEL.sendTo(data, player);
-		if(TerramapConfig.ServerConfig.forceClientTpCmd) TerramapNetworkManager.CHANNEL.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
+		TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(data, player);
+		if(TerramapConfig.ServerConfig.forceClientTpCmd) TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
 	}
 
 	@SubscribeEvent

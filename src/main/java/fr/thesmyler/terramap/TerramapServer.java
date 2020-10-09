@@ -188,7 +188,7 @@ public class TerramapServer {
 
 	public void registerForUpdates(boolean yesNo) {
 		this.isRegisteredForUpdates = yesNo;
-		if(this.isInstalledOnServer())TerramapNetworkManager.CHANNEL.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+		if(this.isInstalledOnServer())TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
 	}
 	
 	public String getTpCommand() {

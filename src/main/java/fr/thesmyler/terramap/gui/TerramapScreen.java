@@ -72,6 +72,7 @@ public class TerramapScreen extends Screen {
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
 		TerramapScreenSavedState state = TerramapServer.getServer().getSavedScreenState();
 		if(state != null) this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
+		TerramapServer.getServer().registerForUpdates(true);
 	}
 
 	@Override
@@ -394,6 +395,8 @@ public class TerramapScreen extends Screen {
 	public void onGuiClosed() {
 		TerramapServer.getServer().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
 		TerramapServer.getServer().saveSettings();
+		TerramapServer.getServer().registerForUpdates(false);
+
 	}
 	
 	public void setF1Mode(boolean yesNo) {

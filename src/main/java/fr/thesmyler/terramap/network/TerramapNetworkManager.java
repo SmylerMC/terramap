@@ -19,12 +19,12 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public abstract class TerramapNetworkManager {
 
-	// The channel instance
-	public static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID);
+	// The channel instances
+	public static final SimpleNetworkWrapper CHANNEL_TERRAMAP = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID + ":terramap");
+	public static final SimpleNetworkWrapper CHANNEL_MAPSYNC = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID + ":mapsync");
+	public static final SimpleNetworkWrapper CHANNEL_SLEDGEHAMMER = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID + ":sledgehammer");
+	
 	public static final Charset CHARSET = Charset.forName("utf-8");
-
-	// Packet discriminator counter, should be increased for each packet type.
-	private static int discriminator = 0;
 		
 	/**
 	 * Registers the handlers
@@ -32,19 +32,45 @@ public abstract class TerramapNetworkManager {
 	 * @param side
 	 */
 	public static void registerHandlers(Side side){
-		registerS2C(S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
-		registerS2C(S2CPlayerSyncPacketHandler.class, S2CPlayerSyncPacket.class);
-		registerS2C(S2CRegistrationExpiresPacketHandler.class, S2CRegistrationExpiresPacket.class);
-		registerS2C(S2CTpCommandSyncPacketHandler.class, S2CTpCommandSyncPacket.class);
-		registerC2S(C2SRegisterForUpdatesPacketHandler.class, C2SRegisterForUpdatesPacket.class);
+		registerTerramapS2C(S2C_TERRAMAP_HELLO_DISCRIMINATOR, S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
+		registerTerramapS2C(S2C_TERRAMAP_TPCMD_DISCRIMINATOR, S2CTpCommandSyncPacketHandler.class, S2CTpCommandSyncPacket.class);
+
+		registerMapsyncCP2S(CP2S_MAPSYNC_REGISTER_DISCRIMINATOR, C2SRegisterForUpdatesPacketHandler.class, C2SRegisterForUpdatesPacket.class);
+		registerMapsyncSP2C(SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR, S2CPlayerSyncPacketHandler.class, S2CPlayerSyncPacket.class);
+		registerMapsyncSP2C(SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR, S2CRegistrationExpiresPacketHandler.class, S2CRegistrationExpiresPacket.class);
 	}
 	
-	private static <REQ extends IMessage, REPLY extends IMessage> void registerS2C(Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
-		CHANNEL.registerMessage(handlerclass, msgclass, discriminator++, Side.CLIENT);
+	// terramap:terramap
+	private static final int S2C_TERRAMAP_HELLO_DISCRIMINATOR = 0;
+	private static final int S2C_TERRAMAP_TPCMD_DISCRIMINATOR = 1;
+	
+	// terramap:mapsync
+	private static final int CP2S_MAPSYNC_REGISTER_DISCRIMINATOR = 0;
+	private static final int SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR = 1;
+	private static final int SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR = 2;
+	
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerTerramapS2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL_TERRAMAP.registerMessage(handlerclass, msgclass, discriminator, Side.CLIENT);
 	}
 	
-	private static <REQ extends IMessage, REPLY extends IMessage> void registerC2S(Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
-		CHANNEL.registerMessage(handlerclass, msgclass, discriminator++, Side.SERVER);
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerTerramapC2S(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL_TERRAMAP.registerMessage(handlerclass, msgclass, discriminator, Side.SERVER);
+	}
+	
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerMapsyncSP2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL_MAPSYNC.registerMessage(handlerclass, msgclass, discriminator, Side.CLIENT);
+	}
+	
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerMapsyncCP2S(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL_MAPSYNC.registerMessage(handlerclass, msgclass, discriminator, Side.SERVER);
+	}
+	
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerSledgehammerP2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL_SLEDGEHAMMER.registerMessage(handlerclass, msgclass, discriminator, Side.CLIENT);
+	}
+	
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerSledgehammerCS2P(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
+		CHANNEL_SLEDGEHAMMER.registerMessage(handlerclass, msgclass, discriminator, Side.SERVER);
 	}
 	
 	public static void encodeStringToByteBuf(String str, ByteBuf buf) {
