@@ -159,7 +159,7 @@ public class TerramapConfig {
 		@Config.Name("sync_spectators")
 		@Config.LangKey("terramap.config.sync_spec")
 		@Config.Comment("Synchronize spectator players or not (players still need to be synchronized)")
-		public static boolean syncSpectators = true;
+		public static boolean synchronizeSpectators = true;
 		
 		@Config.Name("sync_hearthbeet_timeout")
 		@Config.LangKey("terramap.config.sync_heartbeet")

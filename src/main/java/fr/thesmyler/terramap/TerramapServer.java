@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,12 +8,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.forgeessentials.FeWarp;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
+import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
@@ -38,48 +35,19 @@ public class TerramapServer {
 	private static TerramapServer instance;
 
 	private Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<UUID, TerramapRemotePlayer>();
-	private boolean syncPlayers = false;
-	private boolean syncSpectators = false;
-	private boolean serverHasFe = false;
+	private PlayerSyncStatus syncPlayers = PlayerSyncStatus.DISABLED;
+	private PlayerSyncStatus syncSpectators = PlayerSyncStatus.DISABLED;
 	private String serverVersion = null;
+	private String sledgehammerVersion = null;
 	private EarthGeneratorSettings genSettings = null;
 	private GeographicProjection projection = null;
 	private boolean isRegisteredForUpdates = false;
 	private String tpCommand = null;
-	
-	private String serverIdentifier = "noserver";
 
-
-	public TerramapServer(String serverVersion, boolean syncPlayers, boolean syncSpectators, boolean hasFe, @Nullable EarthGeneratorSettings genSettings) {
-		this();
-		this.serverVersion = serverVersion;
-		this.syncPlayers = syncPlayers;
-		this.syncSpectators = syncSpectators;
-		this.serverHasFe = hasFe;
-		this.genSettings = genSettings;
-		if(this.genSettings == null) {
-			String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getServerIdentifier());
-			if(sttgStr.length() > 0) {
-				this.genSettings = new EarthGeneratorSettings(sttgStr);
-				TerramapMod.logger.info("Got generator settings from client preferences file");
-			}
-		}
-	}
-
-	public TerramapServer() {
-		this.serverIdentifier = this.buildCurrentServerIdentifer();
-	}
+	private String serverIdentifier = "genericserver";
 
 	public boolean isInstalledOnServer() {
 		return this.serverVersion != null; 
-	}
-
-	public boolean arePlayersSynchronized() {
-		return this.syncPlayers;
-	}
-	
-	public boolean areSpectatorsSynchronized() {
-		return this.syncSpectators;
 	}
 
 	public Map<UUID, TerramapPlayer> getPlayerMap() {
@@ -90,11 +58,11 @@ public class TerramapServer {
 		players.putAll(this.getLocalPlayers());
 		return players;
 	}
-	
+
 	public Collection<TerramapPlayer> getPlayers() {
 		return this.getPlayerMap().values();
 	}
-	
+
 	public boolean hasPlayer(UUID uuid) {
 		return this.remotePlayers.containsKey(uuid) || this.getLocalPlayers().containsKey(uuid);
 	}
@@ -110,7 +78,7 @@ public class TerramapServer {
 	public EarthGeneratorSettings getGeneratorSettings() {
 		return this.genSettings;
 	}
-	
+
 	public GeographicProjection getProjection() {
 		if(this.projection == null && this.genSettings != null) {
 			this.projection = this.genSettings.getProjection();
@@ -131,14 +99,6 @@ public class TerramapServer {
 			TerramapMod.logger.info("Failed to save server preference file");
 			TerramapMod.logger.catching(e);
 		}
-	}
-
-	public boolean doesSyncFeStuff() {
-		return this.serverHasFe;
-	}
-
-	public List<FeWarp> getFeWarps() {
-		return new ArrayList<FeWarp>(); //TODO getFeWarps
 	}
 
 	public void syncPlayers(TerramapRemotePlayer[] players) {
@@ -190,23 +150,68 @@ public class TerramapServer {
 		this.isRegisteredForUpdates = yesNo;
 		if(this.isInstalledOnServer())TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
 	}
-	
+
 	public String getTpCommand() {
 		if(this.tpCommand == null) return TerramapConfig.tpllcmd;
 		else return this.tpCommand;
 	}
-	
+
 	public void setTpCommand(String tpCmd) {
 		TerramapMod.logger.info("Setting tp command defined by server");
 		this.tpCommand = tpCmd;
 	}
-	
+
 	public boolean needsUpdate() {
 		return this.isRegisteredForUpdates;
 	}
-	
+
 	public String getServerIdentifier() {
 		return this.serverIdentifier;
+	}
+
+	public void guessServerIdentifier() {
+		this.setServerIdentifier(this.buildCurrentServerIdentifer());
+	}
+
+	public void setServerIdentifier(String identifier) {
+		this.serverIdentifier = identifier;
+		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getServerIdentifier());
+		if(sttgStr.length() > 0) {
+			this.genSettings = new EarthGeneratorSettings(sttgStr);
+			TerramapMod.logger.info("Got generator settings from client preferences file");
+		}
+	}
+
+	public PlayerSyncStatus arePlayersSynchronized() {
+		return this.syncPlayers;
+	}
+
+	public PlayerSyncStatus areSpectatorsSynchronized() {
+		return this.syncSpectators;
+	}
+
+	public void setPlayersSynchronized(PlayerSyncStatus status) {
+		this.syncPlayers = status;
+	}
+
+	public void setSpectatorsSynchronized(PlayerSyncStatus status) {
+		this.syncSpectators = status;
+	}
+
+	public void setServerVersion(String version) {
+		this.serverVersion = version;
+	}
+
+	public void setSledgehammerVersion(String version) {
+		this.sledgehammerVersion = version;
+	}
+
+	public boolean hasSledgehammer() {
+		return this.sledgehammerVersion != null;
+	}
+
+	public String getSledgehammerVersion() {
+		return this.sledgehammerVersion;
 	}
 
 	public static TerramapServer getServer() {
@@ -217,10 +222,6 @@ public class TerramapServer {
 	public static void resetServer() {
 		TerramapMod.logger.info("Reseting server information");
 		TerramapServer.instance = new TerramapServer();
-	}
-
-	public static void setServer(TerramapServer server) {
-		TerramapServer.instance = server;
 	}
 
 }

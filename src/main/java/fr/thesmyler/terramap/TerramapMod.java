@@ -68,7 +68,8 @@ public class TerramapMod {
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
     	String remoteVersion = remote.get(TerramapMod.MODID);
     	if(remoteVersion == null) return true; //Terramap is not installed on remote, this is fine
-    	//Version prior to 1.0.0-beta5 do not have hello packet but projection sync packet
+    	//Lots of change in beta6, incompatible
+    	if(remoteVersion.contains("1.0.0-beta5")) return false;
     	if(remoteVersion.contains("1.0.0-beta4")) return false;
     	if(remoteVersion.contains("1.0.0-beta3")) return false;
     	if(remoteVersion.contains("1.0.0-beta2")) return false;

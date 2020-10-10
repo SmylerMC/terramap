@@ -1,12 +1,14 @@
 package fr.thesmyler.terramap.eventhandlers;
 
 import java.io.File;
+import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
+import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.mapsync.RemoteSynchronizer;
@@ -34,7 +36,17 @@ public class CommonTerramapEventHandler {
 		if(!TerramapUtils.isEarthWorld(world)) return;
 		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
 		if(settings == null) return;
-		IMessage data = new S2CTerramapHelloPacket(TerramapMod.getVersion(), settings, TerramapConfig.ServerConfig.synchronizePlayers, TerramapConfig.ServerConfig.syncSpectators, false);
+		IMessage data = new S2CTerramapHelloPacket(
+				TerramapMod.getVersion(),
+				settings,
+				new UUID(0, 0), //TODO Implement world uuids
+				PlayerSyncStatus.getFromBoolean(TerramapConfig.ServerConfig.synchronizePlayers),
+				PlayerSyncStatus.getFromBoolean(TerramapConfig.ServerConfig.synchronizeSpectators),
+				//TODO Implement radar permissions
+				true,
+				true,
+				true,
+				true);
 		TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(data, player);
 		if(TerramapConfig.ServerConfig.forceClientTpCmd) TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
 	}

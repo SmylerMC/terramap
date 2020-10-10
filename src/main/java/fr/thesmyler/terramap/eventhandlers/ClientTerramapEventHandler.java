@@ -49,6 +49,7 @@ public class ClientTerramapEventHandler {
 
 	@SubscribeEvent
 	public void onClientConnected(ClientConnectedToServerEvent event) {
+		TerramapServer.getServer().guessServerIdentifier();
 	}
 	
 	@SubscribeEvent

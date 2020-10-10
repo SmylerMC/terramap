@@ -25,7 +25,7 @@ public abstract class RemoteSynchronizer {
 		for(EntityPlayer player: world.playerEntities) {
 			if(!TerramapServerPreferences.shouldDisplayPlayer(player.getPersistentID())) continue;
 			TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
-			if(terraPlayer.isSpectator() && !TerramapConfig.ServerConfig.syncSpectators) continue;
+			if(terraPlayer.isSpectator() && !TerramapConfig.ServerConfig.synchronizeSpectators) continue;
 			players.add(terraPlayer);
 		}
 		IMessage pkt = new S2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));

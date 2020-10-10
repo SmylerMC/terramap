@@ -55,7 +55,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client init");
-		SmyLibGui.init(TerramapMod.logger, true); //TODO Unset gui lib debug mode
+		SmyLibGui.init(TerramapMod.logger, false);
 		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();
 		WebTile.registerErrorTexture();
@@ -67,8 +67,27 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void onServerHello(S2CTerramapHelloPacket pkt) {
 		TerramapMod.logger.info("Got server hello, remote version is " + pkt.serverVersion);
-		TerramapMod.logger.debug("sync players: " + pkt.syncPlayers + " sync spec: " + pkt.syncSpectators + " hasFe: " + pkt.unused);
-		TerramapServer.setServer(new TerramapServer(pkt.serverVersion, pkt.syncPlayers, pkt.syncSpectators, pkt.unused, pkt.settings));
+		TerramapMod.logger.debug(
+				"Server version: " + pkt.serverVersion + "\t" +
+				"Server worldSettings: " + pkt.worldSettings.toString() + "\t" +
+				"Server UUID: " + pkt.worldUUID + "\t" +
+				"Sync players: " + pkt.syncPlayers + "\t" +
+				"Sync spectators: " + pkt.syncSpectators + "\t" +
+				"Enable player radar: " + pkt.enablePlayerRadar + "\t" +
+				"Enable animal radar: " + pkt.enableAnimalRadar + "\t" +
+				"Enable mob radar: " + pkt.enableMobRadar + "\t" +
+				"Enable deco radar: " + pkt.enableDecoRadar + "\t"
+			);
+		TerramapServer srv = TerramapServer.getServer();
+		srv.setServerVersion(pkt.serverVersion);
+		srv.setGeneratorSettings(pkt.worldSettings);
+		if(pkt.worldUUID.getLeastSignificantBits() != 0 && pkt.worldUUID.getMostSignificantBits() != 0) {
+			srv.guessServerIdentifier();
+			srv.setServerIdentifier(srv.getServerIdentifier() + pkt.worldUUID.toString());
+		}
+		srv.setPlayersSynchronized(pkt.syncPlayers);
+		srv.setSpectatorsSynchronized(pkt.syncSpectators);
+		//TODO Take advantage of the radar enable fields
 	}
 
 	@Override

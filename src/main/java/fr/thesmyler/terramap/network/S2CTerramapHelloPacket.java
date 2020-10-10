@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.network;
 
+import java.util.UUID;
+
 import fr.thesmyler.terramap.TerramapMod;
 import io.github.terra121.EarthGeneratorSettings;
 import io.netty.buffer.ByteBuf;
@@ -10,42 +12,66 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class S2CTerramapHelloPacket implements IMessage {
 
-	public EarthGeneratorSettings settings;
 	public String serverVersion;
-	public boolean syncPlayers;
-	public boolean syncSpectators;
-	
-	@Deprecated
-	public boolean unused; //TODO Forge essentials - We are breaking backward compat anyway, let's remove this
-	
+	public EarthGeneratorSettings worldSettings;
+	public UUID worldUUID;
+	public PlayerSyncStatus syncPlayers;
+	public PlayerSyncStatus syncSpectators;
+	public boolean enablePlayerRadar;
+	public boolean enableAnimalRadar;
+	public boolean enableMobRadar;
+	public boolean enableDecoRadar;
+		
 	public S2CTerramapHelloPacket() {}
 	
-	public S2CTerramapHelloPacket(String serverVersion, EarthGeneratorSettings settings, boolean syncPlayers, boolean syncSpectators, boolean hasFe) {
-		this.settings = settings;
+	public S2CTerramapHelloPacket(
+			String serverVersion,
+			EarthGeneratorSettings settings,
+			UUID worldUUID,
+			PlayerSyncStatus syncPlayers,
+			PlayerSyncStatus syncSpectators,
+			boolean enablePlayerRadar,
+			boolean enableAnimalRadar,
+			boolean enableMobRadar,
+			boolean enableDecoRadar) {
+		this.worldSettings = settings;
 		this.serverVersion = serverVersion;
+		this.worldUUID = worldUUID;
 		this.syncPlayers = syncPlayers;
 		this.syncSpectators = syncSpectators;
-		this.unused = hasFe;
+		this.enableAnimalRadar = enablePlayerRadar;
+		this.enablePlayerRadar = enablePlayerRadar;
+		this.enableMobRadar = enableMobRadar;
+		this.enableDecoRadar = enableDecoRadar;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.serverVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		this.syncPlayers = buf.readBoolean();
-		this.syncSpectators = buf.readBoolean();
-		this.unused = buf.readBoolean();
-		String settings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		this.settings = new EarthGeneratorSettings(settings);
+		this.worldSettings = new EarthGeneratorSettings(TerramapNetworkManager.decodeStringFromByteBuf(buf));
+		long leastUUID = buf.readLong();
+		long mostUUID = buf.readLong();
+		this.worldUUID = new UUID(mostUUID, leastUUID);
+		this.syncPlayers = PlayerSyncStatus.getFromNetworkCode(buf.readByte());
+		this.syncSpectators = PlayerSyncStatus.getFromNetworkCode(buf.readByte());
+		this.enablePlayerRadar = buf.readBoolean();
+		this.enableAnimalRadar = buf.readBoolean();
+		this.enableMobRadar = buf.readBoolean();
+		this.enableDecoRadar = buf.readBoolean();
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) { 
-		String settingsStr = this.settings.toString();
+	public void toBytes(ByteBuf buf) {
 		TerramapNetworkManager.encodeStringToByteBuf(this.serverVersion, buf);
-		buf.writeBoolean(this.syncPlayers);
-		buf.writeBoolean(this.syncSpectators);
-		buf.writeBoolean(this.unused);
-		TerramapNetworkManager.encodeStringToByteBuf(settingsStr, buf);
+		TerramapNetworkManager.encodeStringToByteBuf(this.worldSettings.toString(), buf);
+		buf.writeLong(this.worldUUID.getLeastSignificantBits());
+		buf.writeLong(this.worldUUID.getMostSignificantBits());
+		buf.writeByte(this.syncPlayers.VALUE);
+		buf.writeByte(this.syncSpectators.VALUE);
+		buf.writeBoolean(this.enablePlayerRadar);
+		buf.writeBoolean(this.enableAnimalRadar);
+		buf.writeBoolean(this.enableMobRadar);
+		buf.writeBoolean(this.enableDecoRadar);
 	}
 	
 	public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {
@@ -60,6 +86,30 @@ public class S2CTerramapHelloPacket implements IMessage {
 		}
 		
 
+	}
+	
+	public static enum PlayerSyncStatus {
+		
+		ENABLED((byte) 0x01),
+		DISABLED((byte) 0x00),
+		UNKNOWN((byte) 0x02); //Either there was an error, or the server does not want us to know
+		
+		public final int VALUE;
+		
+		PlayerSyncStatus(byte value) {
+			this.VALUE = value;
+		}
+		
+		public static PlayerSyncStatus getFromNetworkCode(byte code) {
+			for(PlayerSyncStatus s: PlayerSyncStatus.values()) {
+				if(s.VALUE == code) return s;
+			}
+			return UNKNOWN;
+		}
+		
+		public static PlayerSyncStatus getFromBoolean(boolean bool) {
+			return bool? ENABLED: DISABLED;
+		}
 	}
 	
 }
