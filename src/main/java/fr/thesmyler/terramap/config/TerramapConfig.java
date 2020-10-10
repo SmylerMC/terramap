@@ -1,12 +1,7 @@
 package fr.thesmyler.terramap.config;
 
-import java.util.ArrayList;
-
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -207,10 +202,6 @@ public class TerramapConfig {
 		public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
 			if (event.getModID().equals(TerramapMod.MODID)) {
 				TerramapConfig.sync();
-				if(TerramapMod.proxy.isClient() && SmyLibGui.getHudScreen() != null) {
-					// If we are in game, let our hud screen re-init it's minimap
-			        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
-				}
 			}
 		}
 		
