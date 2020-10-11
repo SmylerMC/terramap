@@ -10,7 +10,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
@@ -50,12 +50,12 @@ public class ClientTerramapEventHandler {
     
 	@SubscribeEvent
 	public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
-		TerramapServer.resetServer();
+		TerramapRemote.resetRemote();
 	}
 
 	@SubscribeEvent
 	public void onClientConnected(ClientConnectedToServerEvent event) {
-		TerramapServer.getServer().guessServerIdentifier();
+		TerramapRemote.getRemote().guessRemoteIdentifier();
 	}
 	
 	@SubscribeEvent
@@ -114,7 +114,7 @@ public class ClientTerramapEventHandler {
 				map.setScaleVisibility(false);
 				screen.addWidget(map);
 				screen.scheduleAtUpdate(() -> {
-					if(TerramapServer.getServer().isInstalledOnServer()) {
+					if(TerramapRemote.getRemote().isInstalledOnServer()) {
 						map.track(map.getMainPlayerMarker());
 					}
 				});

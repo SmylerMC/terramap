@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AnimalMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import net.minecraft.entity.Entity;
@@ -31,9 +31,9 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
 	@Override
 	public AnimalMarker[] getNewMarkers(Marker[] existingMarkers) {
-		if(TerramapServer.getServer().getProjection() == null) return new AnimalMarker[0];
+		if(TerramapRemote.getRemote().getProjection() == null) return new AnimalMarker[0];
 		Map<UUID, Entity> entities = new HashMap<UUID, Entity>();
-		for(Entity entity: TerramapServer.getServer().getEntities()) {
+		for(Entity entity: TerramapRemote.getRemote().getEntities()) {
 			if(entity instanceof IAnimals && !(entity instanceof IMob)) {
 				entities.put(entity.getPersistentID(), entity);
 			}

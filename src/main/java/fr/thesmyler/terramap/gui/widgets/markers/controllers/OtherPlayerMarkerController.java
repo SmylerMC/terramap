@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.OtherPlayerMarker;
 import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
@@ -31,9 +31,9 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 	@Override
 	public OtherPlayerMarker[] getNewMarkers(Marker[] existingMarkers) {
 		
-		if(TerramapServer.getServer().getProjection() != null) {
+		if(TerramapRemote.getRemote().getProjection() != null) {
 			
-			Map<UUID, TerramapPlayer> players = TerramapServer.getServer().getPlayerMap();
+			Map<UUID, TerramapPlayer> players = TerramapRemote.getRemote().getPlayerMap();
 			
 			for(Marker marker: existingMarkers) {
 				TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();

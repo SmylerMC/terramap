@@ -23,7 +23,7 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
@@ -70,9 +70,9 @@ public class TerramapScreen extends Screen {
 		Collection<TiledMap> tiledMaps = this.backgrounds.values();
 		TiledMap bg = tiledMaps.toArray(new TiledMap[0])[0];
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
-		TerramapScreenSavedState state = TerramapServer.getServer().getSavedScreenState();
-		if(state != null) this.resumeFromSavedState(TerramapServer.getServer().getSavedScreenState());
-		TerramapServer.getServer().registerForUpdates(true);
+		TerramapScreenSavedState state = TerramapRemote.getRemote().getSavedScreenState();
+		if(state != null) this.resumeFromSavedState(TerramapRemote.getRemote().getSavedScreenState());
+		TerramapRemote.getRemote().registerForUpdates(true);
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class TerramapScreen extends Screen {
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
 		
-		GeographicProjection projection = TerramapServer.getServer().getProjection();
+		GeographicProjection projection = TerramapRemote.getRemote().getProjection();
 		
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
@@ -252,12 +252,19 @@ public class TerramapScreen extends Screen {
 		
 		if(this.debugMode) {
 			String dbText = "";
+			TerramapRemote srv = TerramapRemote.getRemote();
 			dbText += "FPS: " + Minecraft.getDebugFPS();
 			dbText += "\nClient: " + TerramapMod.getVersion();
-			dbText += "\nServer: " + TerramapServer.getServer().getServerVersion();
-			dbText += "\nSledgehammer: " + TerramapServer.getServer().getSledgehammerVersion();
-			dbText += "\nProjection: " + TerramapServer.getServer().getGeneratorSettings().settings.projection;
-			dbText += "\nOrientation: " + TerramapServer.getServer().getGeneratorSettings().settings.orentation;
+			dbText += "\nServer: " + srv.getServerVersion();
+			dbText += "\nSledgehammer: " + srv.getSledgehammerVersion();
+			String proj = null;
+			String orientation = null;
+			if(srv != null && srv.getGeneratorSettings() != null) {
+				proj = srv.getGeneratorSettings().settings.projection;
+				orientation = srv.getGeneratorSettings().settings.orentation.name();
+			}
+			dbText += "\nProjection: " + proj;
+			dbText += "\nOrientation: " + orientation;
 			dbText += "\nCache queue: " + TerramapMod.cacheManager.getQueueSize();
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
@@ -394,9 +401,9 @@ public class TerramapScreen extends Screen {
 	
 	@Override
 	public void onGuiClosed() {
-		TerramapServer.getServer().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
-		TerramapServer.getServer().saveSettings();
-		TerramapServer.getServer().registerForUpdates(false);
+		TerramapRemote.getRemote().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
+		TerramapRemote.getRemote().saveSettings();
+		TerramapRemote.getRemote().registerForUpdates(false);
 
 	}
 	

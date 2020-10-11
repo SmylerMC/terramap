@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.network;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.network.mapsync.PlayerSyncStatus;
 import io.github.terra121.EarthGeneratorSettings;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -88,28 +89,6 @@ public class S2CTerramapHelloPacket implements IMessage {
 
 	}
 	
-	public static enum PlayerSyncStatus {
-		
-		ENABLED((byte) 0x01),
-		DISABLED((byte) 0x00),
-		UNKNOWN((byte) 0x02); //Either there was an error, or the server does not want us to know
-		
-		public final int VALUE;
-		
-		PlayerSyncStatus(byte value) {
-			this.VALUE = value;
-		}
-		
-		public static PlayerSyncStatus getFromNetworkCode(byte code) {
-			for(PlayerSyncStatus s: PlayerSyncStatus.values()) {
-				if(s.VALUE == code) return s;
-			}
-			return UNKNOWN;
-		}
-		
-		public static PlayerSyncStatus getFromBoolean(boolean bool) {
-			return bool? ENABLED: DISABLED;
-		}
-	}
+	
 	
 }

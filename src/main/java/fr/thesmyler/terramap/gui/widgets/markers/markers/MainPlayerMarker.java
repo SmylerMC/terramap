@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -29,9 +29,9 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 			parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
 			return;
 		}
-		if(TerramapServer.getServer().getProjection() == null) return;
+		if(TerramapRemote.getRemote().getProjection() == null) return;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		double[] lola = TerramapServer.getServer().getProjection().toGeo(player.posX, player.posZ);
+		double[] lola = TerramapRemote.getRemote().getProjection().toGeo(player.posX, player.posZ);
 		this.playerLongitude = lola[0];
 		this.playerLatitude = lola[1];
 		super.onUpdate(parent);

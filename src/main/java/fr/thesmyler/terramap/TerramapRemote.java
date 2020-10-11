@@ -11,9 +11,9 @@ import java.util.UUID;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
-import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
+import fr.thesmyler.terramap.network.mapsync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
 import fr.thesmyler.terramap.network.mapsync.TerramapRemotePlayer;
@@ -30,13 +30,15 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author SmylerMC
  *
  */
-public class TerramapServer {
+public class TerramapRemote {
 
-	private static TerramapServer instance;
+	private static TerramapRemote instance;
 
 	private Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<UUID, TerramapRemotePlayer>();
-	private PlayerSyncStatus syncPlayers = PlayerSyncStatus.DISABLED;
-	private PlayerSyncStatus syncSpectators = PlayerSyncStatus.DISABLED;
+	private PlayerSyncStatus serverSyncPlayers = PlayerSyncStatus.DISABLED;
+	private PlayerSyncStatus serverSyncSpectators = PlayerSyncStatus.DISABLED;
+	private PlayerSyncStatus proxySyncPlayers = PlayerSyncStatus.DISABLED;
+	private PlayerSyncStatus proxySyncSpectators = PlayerSyncStatus.DISABLED;
 	private String serverVersion = null;
 	private String sledgehammerVersion = null;
 	private EarthGeneratorSettings genSettings = null;
@@ -87,13 +89,18 @@ public class TerramapServer {
 	}
 
 	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
+		if(this.hasSledgehammer() && !TerramapUtils.isBteCompatible(genSettings)) {
+			TerramapMod.logger.error("Terrramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
+			TerramapMod.logger.error("The proxy will be assuming a BTE projection, things will not work!");
+			//TODO Waring on the GUI
+		}
 		this.genSettings = genSettings;
 		this.projection = null;
 	}
 
 	public void saveSettings() {
 		try {
-			TerramapClientPreferences.setServerGenSettings(this.getServerIdentifier(), this.genSettings.toString());
+			TerramapClientPreferences.setServerGenSettings(this.getRemoteIdentifier(), this.genSettings.toString());
 			TerramapClientPreferences.save();
 		} catch(Exception e) {
 			TerramapMod.logger.info("Failed to save server preference file");
@@ -135,20 +142,20 @@ public class TerramapServer {
 	}
 
 	public TerramapScreenSavedState getSavedScreenState() {
-		return TerramapClientPreferences.getServerSavedScreen(this.getServerIdentifier());
+		return TerramapClientPreferences.getServerSavedScreen(this.getRemoteIdentifier());
 	}
 
 	public boolean hasSavedScreenState() {
-		return TerramapClientPreferences.getServerSavedScreen(this.getServerIdentifier()) != null;
+		return TerramapClientPreferences.getServerSavedScreen(this.getRemoteIdentifier()) != null;
 	}
 
 	public void setSavedScreenState(TerramapScreenSavedState svd) {
-		TerramapClientPreferences.setServerSavedScreen(this.getServerIdentifier(), svd);
+		TerramapClientPreferences.setServerSavedScreen(this.getRemoteIdentifier(), svd);
 	}
 
 	public void registerForUpdates(boolean yesNo) {
 		this.isRegisteredForUpdates = yesNo;
-		if(this.isInstalledOnServer())TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+		if(this.isInstalledOnServer() && this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
 	}
 
 	public String getTpCommand() {
@@ -165,37 +172,61 @@ public class TerramapServer {
 		return this.isRegisteredForUpdates;
 	}
 
-	public String getServerIdentifier() {
+	public String getRemoteIdentifier() {
 		return this.serverIdentifier;
 	}
 
-	public void guessServerIdentifier() {
-		this.setServerIdentifier(this.buildCurrentServerIdentifer());
+	public void guessRemoteIdentifier() {
+		this.setRemoteIdentifier(this.buildCurrentServerIdentifer());
 	}
 
-	public void setServerIdentifier(String identifier) {
+	public void setRemoteIdentifier(String identifier) {
 		this.serverIdentifier = identifier;
-		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getServerIdentifier());
+		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getRemoteIdentifier());
 		if(sttgStr.length() > 0) {
 			this.genSettings = new EarthGeneratorSettings(sttgStr);
 			TerramapMod.logger.info("Got generator settings from client preferences file");
 		}
 	}
 
-	public PlayerSyncStatus arePlayersSynchronized() {
-		return this.syncPlayers;
+	public boolean arePlayersSynchronized() {
+		return this.proxySyncPlayers.equals(PlayerSyncStatus.ENABLED) || this.serverSyncPlayers.equals(PlayerSyncStatus.ENABLED);
 	}
 
-	public PlayerSyncStatus areSpectatorsSynchronized() {
-		return this.syncSpectators;
+	public boolean areSpectatorsSynchronized() {
+		return this.proxySyncSpectators.equals(PlayerSyncStatus.ENABLED) || this.proxySyncPlayers.equals(PlayerSyncStatus.ENABLED);
+	}
+	
+	public PlayerSyncStatus doesServerSyncPlayers() {
+		return this.serverSyncPlayers;
+	}
+	
+	public PlayerSyncStatus doesServerSyncSpectators() {
+		return this.serverSyncSpectators;
+	}
+	
+	public PlayerSyncStatus doesProxySyncPlayers() {
+		return this.proxySyncPlayers;
+	}
+	
+	public PlayerSyncStatus doesProxySyncSpectators() {
+		return this.proxySyncSpectators;
 	}
 
-	public void setPlayersSynchronized(PlayerSyncStatus status) {
-		this.syncPlayers = status;
+	public void setPlayersSynchronizedByServer(PlayerSyncStatus status) {
+		this.serverSyncPlayers = status;
 	}
 
-	public void setSpectatorsSynchronized(PlayerSyncStatus status) {
-		this.syncSpectators = status;
+	public void setSpectatorsSynchronizedByServer(PlayerSyncStatus status) {
+		this.serverSyncSpectators = status;
+	}
+	
+	public void setPlayersSynchronizedByProxy(PlayerSyncStatus status) {
+		this.proxySyncPlayers = status;
+	}
+
+	public void setSpectatorsSynchronizedByProxy(PlayerSyncStatus status) {
+		this.proxySyncPlayers = status;
 	}
 
 	public void setServerVersion(String version) {
@@ -218,14 +249,14 @@ public class TerramapServer {
 		return this.sledgehammerVersion;
 	}
 
-	public static TerramapServer getServer() {
-		if(TerramapServer.instance == null) TerramapServer.resetServer();
-		return TerramapServer.instance;
+	public static TerramapRemote getRemote() {
+		if(TerramapRemote.instance == null) TerramapRemote.resetRemote();
+		return TerramapRemote.instance;
 	}
 
-	public static void resetServer() {
+	public static void resetRemote() {
 		TerramapMod.logger.info("Reseting server information");
-		TerramapServer.instance = new TerramapServer();
+		TerramapRemote.instance = new TerramapRemote();
 	}
 
 }

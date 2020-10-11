@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import io.github.terra121.projection.GeographicProjection;
@@ -64,7 +64,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 		double x = this.entity.posX;
 		double z = this.entity.posZ;
 		double[] lola = {Double.NaN, Double.NaN};
-		GeographicProjection proj = TerramapServer.getServer().getProjection();
+		GeographicProjection proj = TerramapRemote.getRemote().getProjection();
 		if(proj != null) {
 			lola = proj.toGeo(x, z);
 		}

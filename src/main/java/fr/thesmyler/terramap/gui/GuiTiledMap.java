@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.CopyrightNoticeWidget;
@@ -92,7 +92,7 @@ public class GuiTiledMap extends GuiScreen {
 	public void initGui() {
 		Keyboard.enableRepeatEvents(true);
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		TerramapServer serv = TerramapServer.getServer();
+		TerramapRemote serv = TerramapRemote.getRemote();
 		serv.registerForUpdates(true);
 		EarthGeneratorSettings genSettings = serv.getGeneratorSettings();
 		if(genSettings != null) this.projection = genSettings.getProjection();
@@ -139,7 +139,7 @@ public class GuiTiledMap extends GuiScreen {
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gmaps"), () -> {GeoServices.openInGoogleMaps(this.zoomLevel, this.mouseLong, this.mouseLat);});
 		this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gearth_web"), () -> {GeoServices.opentInGoogleEarthWeb(this.mouseLong, this.mouseLat);});
 		//TODO Open in google Earth pro
-		if(!TerramapServer.getServer().isInstalledOnServer()) {
+		if(!TerramapRemote.getRemote().isInstalledOnServer()) {
 			this.rclickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.set_proj"), ()-> {
 				Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(this, Minecraft.getMinecraft()));	
 			});
@@ -331,9 +331,9 @@ public class GuiTiledMap extends GuiScreen {
 				}
 			}
 		}
-		if((this.debug || !TerramapServer.getServer().isInstalledOnServer()) && TerramapServer.getServer().getGeneratorSettings() != null) {
-			lines.add(I18n.format("terramap.mapgui.information.projection", TerramapServer.getServer().getGeneratorSettings().settings.projection));
-			lines.add(I18n.format("terramap.mapgui.information.orientation", TerramapServer.getServer().getGeneratorSettings().settings.orentation));
+		if((this.debug || !TerramapRemote.getRemote().isInstalledOnServer()) && TerramapRemote.getRemote().getGeneratorSettings() != null) {
+			lines.add(I18n.format("terramap.mapgui.information.projection", TerramapRemote.getRemote().getGeneratorSettings().settings.projection));
+			lines.add(I18n.format("terramap.mapgui.information.orientation", TerramapRemote.getRemote().getGeneratorSettings().settings.orentation));
 		}
 		if(this.debug) {
 			String mapLa = GeoServices.formatGeoCoordForDisplay(this.focusLatitude);
@@ -466,14 +466,14 @@ public class GuiTiledMap extends GuiScreen {
 		toUntrackPlayers.addAll(this.playerPOIs.keySet());
 		Set<Entity> toTrackEntities = new HashSet<Entity>();
 		Set<TerramapPlayer> toTrackPlayers = new HashSet<TerramapPlayer>();
-		for(Entity entity: TerramapServer.getServer().getEntities()) {
+		for(Entity entity: TerramapRemote.getRemote().getEntities()) {
 			if(!toUntrackEntities.remove(entity.getPersistentID())
 					&& this.shouldTrackEntity(entity)
 					&& !(entity instanceof EntityPlayer)) {
 				toTrackEntities.add(entity);
 			}
 		}
-		for(TerramapPlayer player: TerramapServer.getServer().getPlayers()) {
+		for(TerramapPlayer player: TerramapRemote.getRemote().getPlayers()) {
 			if(!toUntrackPlayers.remove(player.getUUID())
 					&& !player.getUUID().equals(this.thePlayerPOI.getPlayer().getUUID())){
 				toTrackPlayers.add(player);
@@ -675,7 +675,7 @@ public class GuiTiledMap extends GuiScreen {
 		//TerramapServer.getServer().saveSettings();
 		super.onGuiClosed();
 		this.map.unloadAll();
-		TerramapServer.getServer().registerForUpdates(false);
+		TerramapRemote.getRemote().registerForUpdates(false);
 	}
 
 	@Override
@@ -757,7 +757,7 @@ public class GuiTiledMap extends GuiScreen {
 	}
 
 	private void teleportPlayerTo(double longitude, double latitude) {
-		String cmd = TerramapServer.getServer().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
+		String cmd = TerramapRemote.getRemote().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
 		if(this.projection != null) {
 			double[] xz = projection.fromGeo(longitude, latitude);
 			cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);

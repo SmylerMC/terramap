@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -78,15 +78,15 @@ public class TerramapClientProxy extends TerramapProxy {
 				"Enable mob radar: " + pkt.enableMobRadar + "\t" +
 				"Enable deco radar: " + pkt.enableDecoRadar + "\t"
 			);
-		TerramapServer srv = TerramapServer.getServer();
+		TerramapRemote srv = TerramapRemote.getRemote();
 		srv.setServerVersion(pkt.serverVersion);
 		srv.setGeneratorSettings(pkt.worldSettings);
 		if(pkt.worldUUID.getLeastSignificantBits() != 0 && pkt.worldUUID.getMostSignificantBits() != 0) {
-			srv.guessServerIdentifier();
-			srv.setServerIdentifier(srv.getServerIdentifier() + pkt.worldUUID.toString());
+			srv.guessRemoteIdentifier();
+			srv.setRemoteIdentifier(srv.getRemoteIdentifier() + pkt.worldUUID.toString());
 		}
-		srv.setPlayersSynchronized(pkt.syncPlayers);
-		srv.setSpectatorsSynchronized(pkt.syncSpectators);
+		srv.setPlayersSynchronizedByServer(pkt.syncPlayers);
+		srv.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
 		//TODO Take advantage of the radar enable fields
 	}
 

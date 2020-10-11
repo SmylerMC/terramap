@@ -21,7 +21,7 @@ import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.EarthMapConfigGui;
 import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
@@ -98,7 +98,7 @@ public class MapWidget extends Screen {
 			GuiScreen.setClipboardString("" + this.mouseLatitude + " " + this.mouseLongitude);
 		});
 		this.copyMcMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_mc"), ()->{
-			double[] coords = TerramapServer.getServer().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 			String dispX = "" + Math.round(coords[0]);
 			String dispY = "" + Math.round(coords[1]);
 			GuiScreen.setClipboardString(dispX + " " + dispY);
@@ -398,16 +398,16 @@ public class MapWidget extends Screen {
 	}
 
 	private void updateRightClickMenuEntries() {
-		boolean hasProjection = TerramapServer.getServer().getProjection() != null;
+		boolean hasProjection = TerramapRemote.getRemote().getProjection() != null;
 		this.teleportMenuEntry.enabled = hasProjection;
 		this.copyMcMenuEntry.enabled = hasProjection;
-		this.setProjectionMenuEntry.enabled = !TerramapServer.getServer().isInstalledOnServer();
+		this.setProjectionMenuEntry.enabled = !TerramapRemote.getRemote().isInstalledOnServer();
 	}
 	
 	private void teleportPlayerTo(double longitude, double latitude) {
-		String cmd = TerramapServer.getServer().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
-		if(TerramapServer.getServer().getProjection() != null) {
-			double[] xz = TerramapServer.getServer().getProjection().fromGeo(longitude, latitude);
+		String cmd = TerramapRemote.getRemote().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
+		if(TerramapRemote.getRemote().getProjection() != null) {
+			double[] xz = TerramapRemote.getRemote().getProjection().fromGeo(longitude, latitude);
 			cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
 		} else {
 			TerramapMod.logger.error("Tried to teleport from the map but the projection was null!");

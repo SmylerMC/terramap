@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.network.mapsync;
 
 import java.util.UUID;
 
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -31,12 +31,12 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 	//TODO This could be optimized
 	@Override
 	public double getLongitude() {
-		return TerramapServer.getServer().getProjection().toGeo(this.player.posX, this.player.posZ)[0];
+		return TerramapRemote.getRemote().getProjection().toGeo(this.player.posX, this.player.posZ)[0];
 	}
 
 	@Override
 	public double getLatitude() {
-		return TerramapServer.getServer().getProjection().toGeo(this.player.posX, this.player.posZ)[1];
+		return TerramapRemote.getRemote().getProjection().toGeo(this.player.posX, this.player.posZ)[1];
 	}
 
 	@Override

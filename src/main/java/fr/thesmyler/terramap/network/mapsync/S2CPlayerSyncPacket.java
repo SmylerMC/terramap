@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.network.mapsync;
 
 import java.util.UUID;
 
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -58,7 +58,7 @@ public class S2CPlayerSyncPacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(S2CPlayerSyncPacket message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(()->{TerramapServer.getServer().syncPlayers(message.remotePlayers);});
+			Minecraft.getMinecraft().addScheduledTask(()->{TerramapRemote.getRemote().syncPlayers(message.remotePlayers);});
 			return null;
 		}
 

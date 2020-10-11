@@ -20,6 +20,7 @@ public abstract class TerramapUtils {
 	
 	private static Random random = new Random();
 	
+	public static final EarthGeneratorSettings BTE_GENERATOR_SETTINGS = new EarthGeneratorSettings("{\"projection\":\"bteairocean\",\"orentation\":\"upright\",\"scaleX\":7318261.522857145,\"scaleY\":7318261.522857145,\"smoothblend\":true,\"roads\":true,\"customcubic\":\"\",\"dynamicbaseheight\":true,\"osmwater\":true,\"buildings\":true}");
 	public static final long EARTH_CIRCUMFERENCE = 40075017;
 	
 	public static int modulus(int a, int b) {
@@ -98,6 +99,14 @@ public abstract class TerramapUtils {
 		if(TerramapUtils.isEarthWorld(world)) {
 			return ((EarthTerrainProcessor)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
 		} else return null;
+	}
+	
+	public static boolean isBteCompatible(EarthGeneratorSettings gen) {
+		return 
+				gen.settings.projection.equals(BTE_GENERATOR_SETTINGS.settings.projection) &&
+				gen.settings.orentation.equals(BTE_GENERATOR_SETTINGS.settings.orentation) &&
+				gen.settings.scaleX.equals(BTE_GENERATOR_SETTINGS.settings.scaleX) &&
+				gen.settings.scaleY.equals(BTE_GENERATOR_SETTINGS.settings.scaleY);
 	}
 	
 }
