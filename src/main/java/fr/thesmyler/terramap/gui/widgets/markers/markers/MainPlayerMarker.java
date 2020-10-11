@@ -29,6 +29,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 			parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
 			return;
 		}
+		if(TerramapServer.getServer().getProjection() == null) return;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		double[] lola = TerramapServer.getServer().getProjection().toGeo(player.posX, player.posZ);
 		this.playerLongitude = lola[0];

@@ -201,6 +201,10 @@ public class TerramapServer {
 	public void setServerVersion(String version) {
 		this.serverVersion = version;
 	}
+	
+	public String getServerVersion() {
+		return this.serverVersion;
+	}
 
 	public void setSledgehammerVersion(String version) {
 		this.sledgehammerVersion = version;

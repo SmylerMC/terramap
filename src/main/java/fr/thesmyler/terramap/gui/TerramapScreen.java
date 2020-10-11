@@ -118,7 +118,7 @@ public class TerramapScreen extends Screen {
 		this.addWidget(this.styleButton);
 		this.debugText = new TextWidget(49, this.getFont());
 		this.debugText.setAnchorX(3).setAnchorY(0);
-		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(0xA0000000).setPadding(3);
+		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(0xC0000000).setPadding(3);
 		this.debugText.setVisibility(this.debugMode);
 		this.addWidget(this.debugText);
 
@@ -252,9 +252,10 @@ public class TerramapScreen extends Screen {
 		
 		if(this.debugMode) {
 			String dbText = "";
-			dbText += "Version: " + TerramapMod.getVersion();
-			dbText += "\nFPS: " + Minecraft.getDebugFPS();
-			dbText += "\nServer: " + TerramapServer.getServer().isInstalledOnServer();
+			dbText += "FPS: " + Minecraft.getDebugFPS();
+			dbText += "\nClient: " + TerramapMod.getVersion();
+			dbText += "\nServer: " + TerramapServer.getServer().getServerVersion();
+			dbText += "\nSledgehammer: " + TerramapServer.getServer().getSledgehammerVersion();
 			dbText += "\nProjection: " + TerramapServer.getServer().getGeneratorSettings().settings.projection;
 			dbText += "\nOrientation: " + TerramapServer.getServer().getGeneratorSettings().settings.orentation;
 			dbText += "\nCache queue: " + TerramapMod.cacheManager.getQueueSize();
