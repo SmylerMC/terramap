@@ -6,12 +6,12 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.network.P2CSledgehammerHelloPacket.P2CSledgehammerHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket.S2CTpCommandSyncPacketHandler;
-import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
-import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket.C2SRegisterForUpdatesPacketHandler;
-import fr.thesmyler.terramap.network.mapsync.S2CPlayerSyncPacket;
-import fr.thesmyler.terramap.network.mapsync.S2CPlayerSyncPacket.S2CPlayerSyncPacketHandler;
-import fr.thesmyler.terramap.network.mapsync.S2CRegistrationExpiresPacket;
-import fr.thesmyler.terramap.network.mapsync.S2CRegistrationExpiresPacket.S2CRegistrationExpiresPacketHandler;
+import fr.thesmyler.terramap.network.mapsync.C2SPRegisterForUpdatesPacket;
+import fr.thesmyler.terramap.network.mapsync.C2SPRegisterForUpdatesPacket.C2SRegisterForUpdatesPacketHandler;
+import fr.thesmyler.terramap.network.mapsync.SP2CPlayerSyncPacket;
+import fr.thesmyler.terramap.network.mapsync.SP2CPlayerSyncPacket.S2CPlayerSyncPacketHandler;
+import fr.thesmyler.terramap.network.mapsync.SP2CRegistrationExpiresPacket;
+import fr.thesmyler.terramap.network.mapsync.SP2CRegistrationExpiresPacket.S2CRegistrationExpiresPacketHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -36,9 +36,9 @@ public abstract class TerramapNetworkManager {
 		registerTerramapS2C(S2C_TERRAMAP_HELLO_DISCRIMINATOR, S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
 		registerTerramapS2C(S2C_TERRAMAP_TPCMD_DISCRIMINATOR, S2CTpCommandSyncPacketHandler.class, S2CTpCommandSyncPacket.class);
 
-		registerMapsyncCP2S(C2SP_MAPSYNC_REGISTER_DISCRIMINATOR, C2SRegisterForUpdatesPacketHandler.class, C2SRegisterForUpdatesPacket.class);
-		registerMapsyncSP2C(SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR, S2CPlayerSyncPacketHandler.class, S2CPlayerSyncPacket.class);
-		registerMapsyncSP2C(SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR, S2CRegistrationExpiresPacketHandler.class, S2CRegistrationExpiresPacket.class);
+		registerMapsyncCP2S(C2SP_MAPSYNC_REGISTER_DISCRIMINATOR, C2SRegisterForUpdatesPacketHandler.class, C2SPRegisterForUpdatesPacket.class);
+		registerMapsyncSP2C(SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR, S2CPlayerSyncPacketHandler.class, SP2CPlayerSyncPacket.class);
+		registerMapsyncSP2C(SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR, S2CRegistrationExpiresPacketHandler.class, SP2CRegistrationExpiresPacket.class);
 		
 		registerSledgehammerP2C(P2C_SLEDGEHAMMER_HELLO_DISCRIMINATOR, P2CSledgehammerHelloPacketHandler.class, P2CSledgehammerHelloPacket.class);
 	}

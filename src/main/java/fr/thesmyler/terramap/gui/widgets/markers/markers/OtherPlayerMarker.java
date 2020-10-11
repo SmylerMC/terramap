@@ -49,16 +49,6 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	protected double getActualLongitude() {
-		return this.player.getLongitude();
-	}
-
-	@Override
-	protected double getActualLatitude() {
-		return this.player.getLatitude();
-	}
-
-	@Override
 	protected float getTransparency() {
 		return this.player.isSpectator() ? 0.6f: 1f;
 	}
@@ -76,6 +66,11 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	@Override
 	public String getIdentifier() {
 		return this.getControllerId() + ":" + this.player.getUUID().toString();
+	}
+
+	@Override
+	protected double[] getActualCoordinates() {
+		return this.player.getGeoCoordinates();
 	}
 
 }

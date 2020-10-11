@@ -59,11 +59,11 @@ public class PlayerPOI extends PointOfInterest {
 	}
 
 	public void updatePosition(GeographicProjection projection) {
-		double x = this.player.getLongitude();
-		double z = this.player.getLatitude();
-		double coords[] = TerramapUtils.toGeo(projection, x, z);
-		this.longitude = coords[0];
-		this.latitude = coords[1];
+//		double x = this.player.getLongitude();
+//		double z = this.player.getLatitude();
+//		double coords[] = TerramapUtils.toGeo(projection, x, z);
+//		this.longitude = coords[0];
+//		this.latitude = coords[1];
 	}
 
 }

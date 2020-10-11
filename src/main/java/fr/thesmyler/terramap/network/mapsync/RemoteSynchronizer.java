@@ -28,14 +28,14 @@ public abstract class RemoteSynchronizer {
 			if(terraPlayer.isSpectator() && !TerramapConfig.ServerConfig.synchronizeSpectators) continue;
 			players.add(terraPlayer);
 		}
-		IMessage pkt = new S2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));
+		IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));
 		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
 			TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(pkt, player.player);
 		}
 		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
 			if(ctime - player.lastRegisterTime > TerramapConfig.ServerConfig.syncHeartbeatTimeout - 10000 && !player.noticeSent) {
 				TerramapMod.logger.debug("Sending registration expires notice to " + player.player.getName());
-				TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new S2CRegistrationExpiresPacket(), player.player);
+				TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
 				player.noticeSent = true;
 			}
 		}
@@ -43,7 +43,7 @@ public abstract class RemoteSynchronizer {
 			if(ctime - player.lastRegisterTime > TerramapConfig.ServerConfig.syncHeartbeatTimeout) {
 				TerramapMod.logger.debug("Unregistering " + player.player.getName() + "from map update as it did not renew its registration");
 				RemoteSynchronizer.playersToUpdate.remove(player.player.getPersistentID());
-				TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new S2CRegistrationExpiresPacket(), player.player);
+				TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
 			}
 		}
 	}

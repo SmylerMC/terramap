@@ -2,11 +2,14 @@ package fr.thesmyler.terramap.network.mapsync;
 
 import java.util.UUID;
 
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.TerramapUtils;
+import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -28,15 +31,11 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 		return this.player.getDisplayName();
 	}
 
-	//TODO This could be optimized
 	@Override
-	public double getLongitude() {
-		return TerramapRemote.getRemote().getProjection().toGeo(this.player.posX, this.player.posZ)[0];
-	}
-
-	@Override
-	public double getLatitude() {
-		return TerramapRemote.getRemote().getProjection().toGeo(this.player.posX, this.player.posZ)[1];
+	public double[] getGeoCoordinates() {
+		GeographicProjection proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+		if(proj == null) return new double[] {Double.NaN, Double.NaN};
+		return proj.toGeo(this.player.posX, this.player.posZ);
 	}
 
 	@Override
@@ -44,14 +43,22 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 	public ResourceLocation getSkin() {
 		return ((AbstractClientPlayer)this.player).getLocationSkin();
 	}
-
-	@Override
-	public boolean isSpectator() {
-		return this.player.isSpectator();
-	}
 	
 	public EntityPlayer getPlayer() {
 		return this.player;
+	}
+
+	@Override
+	public GameType getGamemode() {
+		return TerramapMod.proxy.getGameMode(this.player);
+	}
+
+	@Override
+	public float getAzimut() {
+		GeographicProjection proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+		if(proj == null) return Float.NaN;
+		//TODO Implement TerramapLocalPlayer::getAzimut
+		return 0;
 	}
 
 }

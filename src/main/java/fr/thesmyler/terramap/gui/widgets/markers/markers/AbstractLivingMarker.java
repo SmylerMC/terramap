@@ -75,13 +75,8 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	}
 
 	@Override
-	protected double getActualLongitude() {
-		return this.actualLongitude;
-	}
-
-	@Override
-	protected double getActualLatitude() {
-		return this.actualLatitude;
+	protected double[] getActualCoordinates() {
+		return new double[] {this.actualLongitude, this.actualLatitude};
 	}
 	
 	@Override

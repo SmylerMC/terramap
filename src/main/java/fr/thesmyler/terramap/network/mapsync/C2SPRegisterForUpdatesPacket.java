@@ -9,13 +9,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class C2SRegisterForUpdatesPacket implements IMessage {
+public class C2SPRegisterForUpdatesPacket implements IMessage {
 
 	public boolean update = false;
 	
-	public C2SRegisterForUpdatesPacket() {}
+	public C2SPRegisterForUpdatesPacket() {}
 	
-	public C2SRegisterForUpdatesPacket(boolean update) {
+	public C2SPRegisterForUpdatesPacket(boolean update) {
 		this.update = update;
 	}
 	
@@ -29,10 +29,10 @@ public class C2SRegisterForUpdatesPacket implements IMessage {
 		buf.writeBoolean(this.update);
 	}
 	
-	public static class C2SRegisterForUpdatesPacketHandler implements IMessageHandler<C2SRegisterForUpdatesPacket, IMessage>{
+	public static class C2SRegisterForUpdatesPacketHandler implements IMessageHandler<C2SPRegisterForUpdatesPacket, IMessage>{
 
 		@Override
-		public C2SRegisterForUpdatesPacket onMessage(C2SRegisterForUpdatesPacket message, MessageContext ctx) {
+		public C2SPRegisterForUpdatesPacket onMessage(C2SPRegisterForUpdatesPacket message, MessageContext ctx) {
 			EntityPlayerMP player = ctx.getServerHandler().player;
 			WorldServer world = player.getServerWorld();
 			if(message.update) world.addScheduledTask(()->{registerPlayer(player);});

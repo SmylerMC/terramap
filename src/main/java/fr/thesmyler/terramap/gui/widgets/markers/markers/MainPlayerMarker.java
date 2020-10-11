@@ -55,13 +55,8 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	protected double getActualLongitude() {
-		return this.playerLongitude;
-	}
-
-	@Override
-	protected double getActualLatitude() {
-		return this.playerLatitude;
+	protected double[] getActualCoordinates() {
+		return new double[] {this.playerLongitude, this.playerLatitude};
 	}
 
 	@Override

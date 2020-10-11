@@ -6,6 +6,9 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ServerTerramapEventHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.GameType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -56,6 +59,12 @@ public class TerramapServerProxy extends TerramapProxy {
 	    TerramapConfig.update(); // Update if invalid values were left by old versions
 	    
     	event.registerServerCommand(new TerrashowCommand());
+	}
+
+	@Override
+	public GameType getGameMode(EntityPlayer e) {
+		EntityPlayerMP player = (EntityPlayerMP)e;
+		return player.interactionManager.getGameType();
 	}
 
 }

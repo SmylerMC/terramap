@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class S2CRegistrationExpiresPacket implements IMessage {
+public class SP2CRegistrationExpiresPacket implements IMessage {
 
-	public S2CRegistrationExpiresPacket() {}
+	public SP2CRegistrationExpiresPacket() {}
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
@@ -19,13 +19,13 @@ public class S2CRegistrationExpiresPacket implements IMessage {
 	public void toBytes(ByteBuf buf) {
 	}
 
-	public static class S2CRegistrationExpiresPacketHandler implements IMessageHandler<S2CRegistrationExpiresPacket, C2SRegisterForUpdatesPacket> {
+	public static class S2CRegistrationExpiresPacketHandler implements IMessageHandler<SP2CRegistrationExpiresPacket, C2SPRegisterForUpdatesPacket> {
 
 		@Override
-		public C2SRegisterForUpdatesPacket onMessage(S2CRegistrationExpiresPacket message, MessageContext ctx) {
+		public C2SPRegisterForUpdatesPacket onMessage(SP2CRegistrationExpiresPacket message, MessageContext ctx) {
 			if(TerramapRemote.getRemote().needsUpdate()) {
 				TerramapMod.logger.debug("Renewing registration for map update to server");
-				return new C2SRegisterForUpdatesPacket(true);
+				return new C2SPRegisterForUpdatesPacket(true);
 			}
 			return null;
 		}

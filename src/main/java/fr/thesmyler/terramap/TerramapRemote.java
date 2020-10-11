@@ -12,7 +12,7 @@ import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
-import fr.thesmyler.terramap.network.mapsync.C2SRegisterForUpdatesPacket;
+import fr.thesmyler.terramap.network.mapsync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.mapsync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
@@ -118,7 +118,7 @@ public class TerramapRemote {
 				savedPlayer.setDisplayName(player.getDisplayName());
 				savedPlayer.setLongitude(player.getLongitude());
 				savedPlayer.setLatitude(player.getLatitude());
-				savedPlayer.setIsSpectator(player.isSpectator());
+				savedPlayer.setGamemode(player.getGamemode());
 			} else toAdd.add(player);
 		}
 		for(UUID uid: toRemove) this.remotePlayers.remove(uid);
@@ -155,7 +155,7 @@ public class TerramapRemote {
 
 	public void registerForUpdates(boolean yesNo) {
 		this.isRegisteredForUpdates = yesNo;
-		if(this.isInstalledOnServer() && this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+		if(this.isInstalledOnServer() && this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
 	}
 
 	public String getTpCommand() {

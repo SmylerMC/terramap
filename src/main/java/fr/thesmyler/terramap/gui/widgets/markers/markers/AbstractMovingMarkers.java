@@ -24,16 +24,15 @@ public abstract class AbstractMovingMarkers extends Marker {
 	public void update(MapWidget map) {
 		
 		//TODO Animate for smoother movements
-		double realLo = this.getActualLongitude();
-		double realLa = this.getActualLatitude();
+		double[] coordinates = this.getActualCoordinates();
+		double realLo = coordinates[0];
+		double realLa = coordinates[1];
 		this.longitude = realLo;
 		this.latitude = realLa;
 		
 	}
 	
-	protected abstract double getActualLongitude();
-	
-	protected abstract double getActualLatitude();
+	protected abstract double[] getActualCoordinates();
 
 	@Override
 	public double getLongitude() {

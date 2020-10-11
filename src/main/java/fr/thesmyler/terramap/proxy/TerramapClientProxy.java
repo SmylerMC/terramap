@@ -17,7 +17,12 @@ import fr.thesmyler.terramap.maps.WebTile;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.GameType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -104,6 +109,20 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void onServerStarting(FMLServerStartingEvent event) {
 		//Nothing to do here
+	}
+
+	@Override
+	public GameType getGameMode(EntityPlayer e) {
+		if(e instanceof AbstractClientPlayer) {
+			NetworkPlayerInfo i = Minecraft.getMinecraft().getConnection().getPlayerInfo(e.getUniqueID());
+			if(i != null) return i.getGameType();
+		}
+		if(e instanceof EntityPlayerMP) {
+			EntityPlayerMP player = (EntityPlayerMP)e;
+			return player.interactionManager.getGameType();
+		}
+		TerramapMod.logger.error("Failed to determine player gamemode.");
+		return GameType.SURVIVAL;
 	}
 
 }

@@ -7,6 +7,7 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -16,15 +17,17 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	protected ITextComponent displayName;
 	protected double longitude;
 	protected double latitude;
-	protected boolean isSpectator;
+	protected float azimut;
+	protected GameType gamemode;
 	protected NetworkPlayerInfo playerInfo;
 	
-	public TerramapRemotePlayer(UUID uuid, ITextComponent name, double longitude, double latitude, boolean isSpectator) {
+	public TerramapRemotePlayer(UUID uuid, ITextComponent name, double longitude, double latitude, float azimut, GameType gameMode) {
 		this.uuid = uuid;
 		this.displayName = name;
 		this.longitude = longitude;
 		this.latitude = latitude;
-		this.isSpectator = isSpectator;
+		this.azimut = azimut;
+		this.gamemode = gameMode;
 	}
 
 	@Override
@@ -41,7 +44,6 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 		this.displayName = displayName;
 	}
 
-	@Override
 	public double getLongitude() {
 		return longitude;
 	}
@@ -50,13 +52,21 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 		this.longitude = longitude;
 	}
 
-	@Override
 	public double getLatitude() {
 		return latitude;
 	}
 
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
+	}
+	
+	@Override
+	public float getAzimut() {
+		return this.azimut;
+	}
+	
+	public void setAzimut(float azimut) {
+		this.azimut = azimut;
 	}
 
 	@Override
@@ -67,14 +77,19 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 		}
 		return this.playerInfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUUID()) : this.playerInfo.getLocationSkin();
 	}
+	
+	public void setGamemode(GameType mode) {
+		this.gamemode = mode;
+	}
 
 	@Override
-	public boolean isSpectator() {
-		return this.isSpectator;
+	public double[] getGeoCoordinates() {
+		return new double[] {this.longitude, this.latitude};
 	}
-	
-	public void setIsSpectator(boolean yesNo) {
-		this.isSpectator = yesNo;
+
+	@Override
+	public GameType getGamemode() {
+		return this.gamemode;
 	}
 
 }
