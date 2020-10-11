@@ -203,6 +203,7 @@ public class TerramapConfig {
 			if (event.getModID().equals(TerramapMod.MODID)) {
 				TerramapConfig.sync();
 			}
+			TerramapMod.proxy.onConfigChanged(event);
 		}
 		
 	}

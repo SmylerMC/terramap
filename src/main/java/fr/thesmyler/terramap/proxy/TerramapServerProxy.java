@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -65,6 +66,10 @@ public class TerramapServerProxy extends TerramapProxy {
 	public GameType getGameMode(EntityPlayer e) {
 		EntityPlayerMP player = (EntityPlayerMP)e;
 		return player.interactionManager.getGameType();
+	}
+
+	@Override
+	public void onConfigChanged(OnConfigChangedEvent event) {
 	}
 
 }

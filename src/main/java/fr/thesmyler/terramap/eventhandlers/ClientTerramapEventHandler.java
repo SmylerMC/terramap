@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.eventhandlers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
@@ -20,12 +18,8 @@ import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
@@ -56,16 +50,6 @@ public class ClientTerramapEventHandler {
 	@SubscribeEvent
 	public void onClientConnected(ClientConnectedToServerEvent event) {
 		TerramapRemote.getRemote().guessRemoteIdentifier();
-	}
-	
-	@SubscribeEvent
-	public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
-		if (event.getModID().equals(TerramapMod.MODID)) {
-			if(TerramapMod.proxy.isClient() && SmyLibGui.getHudScreen() != null) {
-				// If we are in game, let our hud screen re-init it's minimap
-		        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
-			}
-		}
 	}
 	
 	@SubscribeEvent
