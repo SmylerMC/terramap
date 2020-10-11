@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.network.mapsync;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.TerramapUtils;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -33,7 +34,12 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 
 	@Override
 	public double[] getGeoCoordinates() {
-		GeographicProjection proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+		GeographicProjection proj;
+		if(this.player.world.isRemote) {
+			proj = TerramapRemote.getRemote().getProjection();
+		} else {
+			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+		}
 		if(proj == null) return new double[] {Double.NaN, Double.NaN};
 		return proj.toGeo(this.player.posX, this.player.posZ);
 	}
