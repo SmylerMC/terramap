@@ -7,6 +7,7 @@ import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
+import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -17,9 +18,11 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerCo
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
+import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
@@ -36,6 +39,25 @@ public class ClientTerramapEventHandler {
 	
 	private boolean testScreenWasShown = false;
 	private boolean configWasFixed = false;
+	
+	@SubscribeEvent
+	public void onRenderHUD(RenderGameOverlayEvent.Text e) {
+		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
+			GeographicProjection proj = TerramapRemote.getRemote().getProjection();
+			if(proj != null) {
+				e.getLeft().add("");
+				double x = Minecraft.getMinecraft().player.posX;
+				double z = Minecraft.getMinecraft().player.posZ;
+				double[] coords = proj.toGeo(x, z);
+				if(Double.isFinite(coords[0]) && Double.isFinite(coords[1])) {
+					String lon = GeoServices.formatGeoCoordForDisplay(coords[0]);
+					String lat = GeoServices.formatGeoCoordForDisplay(coords[1]);
+					e.getLeft().add("Position: " + lat + "° " + lon + "°");
+				}
+				
+			}
+		}
+	}
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
