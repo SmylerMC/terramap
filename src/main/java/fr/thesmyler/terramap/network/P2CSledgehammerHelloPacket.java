@@ -15,6 +15,8 @@ public class P2CSledgehammerHelloPacket implements IMessage {
 	public PlayerSyncStatus syncSpectators = PlayerSyncStatus.DISABLED;
 	public boolean globalMap = true; // Can we open the map on non-terra worlds?
 	public boolean globalSettings = false; // Should settings and preferences be saved for the whole network (true) or per server (false)
+	
+	//TODO Warp support
 
 	@Override
 	public void fromBytes(ByteBuf buf) {

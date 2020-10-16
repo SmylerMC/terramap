@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": 3,
+        "version": 4,
         "comment": "This file contains the tile servers included by default in Terramap, and is maintained by SmylerMC."
     },
     "maps": {
@@ -18,7 +18,9 @@
                 "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
             },
             "min_zoom": 0,
-            "max_zoom": 19
+            "max_zoom": 19,
+            "display_priority": 2147483647,
+            "allow_on_minimap": true
         },
         "osm_fr_hot": {
             "url": "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
@@ -34,7 +36,9 @@
                 "fr_fr": "[\"\",{\"text\":\"Données ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Tiles courtesy of \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]"
             },
             "min_zoom": 0,
-            "max_zoom": 19
+            "max_zoom": 19,
+            "display_priority": 1073741823,
+            "allow_on_minimap": true
         },
         "stamen_terrain": {
             "url": "http://tile.stamen.com/terrain/{z}/{x}/{y}.png",
@@ -49,7 +53,9 @@
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"Map tiles by \"},{\"text\":\"Stamen Design\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://stamen.com/\"}},{\"text\":\", under \"},{\"text\":\"CC BY 3.0\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://creativecommons.org/licenses/by/3.0\"}},{\"text\":\".\",\"underlined\":true,\"color\":\"aqua\"},{\"text\":\" Data by \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://openstreetmap.org/\"}},{\"text\":\", under \"},{\"text\":\"ODbL\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright\"}}]"
             },
             "min_zoom": 0,
-            "max_zoom": 19
+            "max_zoom": 19,
+            "display_priority": 1073741823,
+            "allow_on_minimap": true
         }
     }
     

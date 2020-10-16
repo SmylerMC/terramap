@@ -9,13 +9,15 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.util.text.ITextComponent;
 
 
-public class TiledMap {
+public class TiledMap implements Comparable<TiledMap> {
 
 	protected String urlPattern;
 	protected LinkedList<WebTile> tiles;
 	protected int maxLoaded;
 	protected int maxZoom = 19;
 	protected int minZoom = 0;
+	protected int displayPriority = 0;
+	protected boolean allowOnMinimap = true;
 
 	protected String id;
 	protected TiledMapProvider provider;
@@ -27,7 +29,7 @@ public class TiledMap {
 
 	protected boolean smartLoadEnable = false;
 
-	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, Map<String, String> copyright, TiledMapProvider provider, long version, String comment) {
+	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, Map<String, String> copyright, int displayPriority, boolean allowOnMinimap, TiledMapProvider provider, long version, String comment) {
 		this.urlPattern = urlPattern;
 		this.tiles = new LinkedList<WebTile>();
 		this.maxLoaded = maxLoaded;
@@ -39,6 +41,8 @@ public class TiledMap {
 		this.provider = provider;
 		this.version = version;
 		this.comment = comment;
+		this.allowOnMinimap = allowOnMinimap;
+		this.displayPriority = displayPriority;
 	}
 
 	protected void loadTile(WebTile tile) {
@@ -197,6 +201,14 @@ public class TiledMap {
 	
 	public long getProviderVersion() {
 		return this.version;
+	}
+
+	@Override
+	public int compareTo(TiledMap o) {
+		if(o == null) return 1;
+		if(this.displayPriority > o.displayPriority) return 1;
+		else if(this.displayPriority == o.displayPriority) return 0;
+		else return -1;
 	}
 
 }

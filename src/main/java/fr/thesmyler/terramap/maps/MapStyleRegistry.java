@@ -113,6 +113,8 @@ public class MapStyleRegistry {
 				id,
 				saved.name,
 				saved.copyright,
+				saved.display_priority,
+				saved.allow_on_minimap,
 				provider,
 				version,
 				comment
@@ -159,6 +161,8 @@ public class MapStyleRegistry {
 		Map<String, String> copyright;
 		int min_zoom;
 		int max_zoom;
+		int display_priority;
+		boolean allow_on_minimap;
 
 	}
 

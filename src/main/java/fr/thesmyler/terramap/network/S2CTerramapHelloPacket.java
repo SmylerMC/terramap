@@ -22,6 +22,8 @@ public class S2CTerramapHelloPacket implements IMessage {
 	public boolean enableAnimalRadar;
 	public boolean enableMobRadar;
 	public boolean enableDecoRadar;
+	
+	//TODO Warp support
 		
 	public S2CTerramapHelloPacket() {}
 	
