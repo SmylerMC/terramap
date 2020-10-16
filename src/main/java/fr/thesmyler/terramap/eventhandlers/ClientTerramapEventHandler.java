@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.eventhandlers;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,7 +112,12 @@ public class ClientTerramapEventHandler {
 				markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.Minimap.showOtherPlayers);
 				map.setMarkersVisibility(markerVisibility);
 				Map<String, TiledMap> styles = MapStyleRegistry.getTiledMaps();
-				TiledMap bg = styles.getOrDefault(TerramapConfig.Minimap.style, styles.get("osm"));
+				TiledMap bg = styles.get(TerramapConfig.Minimap.style);
+				if(bg == null || ! bg.isAllowedOnMinimap()) {
+					ArrayList<TiledMap> maps = new ArrayList<TiledMap>(styles.values());
+					Collections.sort(maps, Collections.reverseOrder());
+					bg = maps.get(0);
+				}
 				map.setBackground(bg);
 				int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.Minimap.zoomLevel);
 				zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.Minimap.zoomLevel);

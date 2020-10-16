@@ -210,5 +210,9 @@ public class TiledMap implements Comparable<TiledMap> {
 		else if(this.displayPriority == o.displayPriority) return 0;
 		else return -1;
 	}
+	
+	public boolean isAllowedOnMinimap() {
+		return this.allowOnMinimap;
+	}
 
 }

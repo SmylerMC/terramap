@@ -1,6 +1,8 @@
 package fr.thesmyler.terramap.gui;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -351,7 +353,9 @@ public class TerramapScreen extends Screen {
 		StyleScreen() {
 			super(0, 0, 0, 0, 0, BackgroundType.NONE);
 			MapWidget lw = null;
-			for(TiledMap map: TerramapScreen.this.backgrounds.values()) {
+			ArrayList<TiledMap> maps = new ArrayList<TiledMap>(TerramapScreen.this.backgrounds.values());
+			Collections.sort(maps, Collections.reverseOrder());
+			for(TiledMap map: maps) {
 				MapWidget w = new MapPreview(50, map);
 				w.setWidth(mapsSize).setHeight(mapsSize);
 				if(lw == null) {
