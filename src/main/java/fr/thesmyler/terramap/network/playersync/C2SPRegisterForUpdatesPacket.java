@@ -1,7 +1,8 @@
-package fr.thesmyler.terramap.network.mapsync;
+package fr.thesmyler.terramap.network.playersync;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.network.mapsync.RemoteSynchronizer.RegisteredForUpdatePlayer;
+import fr.thesmyler.terramap.network.RemoteSynchronizer;
+import fr.thesmyler.terramap.network.RemoteSynchronizer.RegisteredForUpdatePlayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;

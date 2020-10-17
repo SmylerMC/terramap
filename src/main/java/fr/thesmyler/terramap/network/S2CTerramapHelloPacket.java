@@ -2,8 +2,7 @@ package fr.thesmyler.terramap.network;
 
 import java.util.UUID;
 
-import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.network.mapsync.PlayerSyncStatus;
+import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import io.github.terra121.EarthGeneratorSettings;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -51,7 +50,12 @@ public class S2CTerramapHelloPacket implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.serverVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		this.worldSettings = new EarthGeneratorSettings(TerramapNetworkManager.decodeStringFromByteBuf(buf));
+		String jsonWorldSettings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+		if(jsonWorldSettings.length() > 0) {
+			this.worldSettings = new EarthGeneratorSettings(jsonWorldSettings);
+		} else {
+			this.worldSettings = null;
+		}
 		long leastUUID = buf.readLong();
 		long mostUUID = buf.readLong();
 		this.worldUUID = new UUID(mostUUID, leastUUID);
@@ -84,7 +88,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(()->{TerramapMod.proxy.onServerHello(message);});
+			Minecraft.getMinecraft().addScheduledTask(()->{RemoteSynchronizer.onServerHello(message);});
 			return null;
 		}
 		

@@ -94,7 +94,9 @@ public class ClientTerramapEventHandler {
 			Minecraft.getMinecraft().displayGuiScreen(new TestScreen(event.getGui()));
 			this.testScreenWasShown = true;
 		} else if(event.getGui() instanceof HudScreen) {
-			//TODO Customizable minimap
+			
+			//TODO Only show the minimap on overworld earth worlds
+			
 			HudScreen screen = (HudScreen) event.getGui();
 			screen.removeAllWidgets();
 			screen.cancellAllScheduled();

@@ -12,11 +12,11 @@ import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
-import fr.thesmyler.terramap.network.mapsync.C2SPRegisterForUpdatesPacket;
-import fr.thesmyler.terramap.network.mapsync.PlayerSyncStatus;
-import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
-import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
-import fr.thesmyler.terramap.network.mapsync.TerramapRemotePlayer;
+import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
+import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
+import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
+import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
+import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
@@ -89,10 +89,10 @@ public class TerramapRemote {
 	}
 
 	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
-		if(this.hasSledgehammer() && !TerramapUtils.isBteCompatible(genSettings)) {
+		if(genSettings != null && this.hasSledgehammer() && !TerramapUtils.isBteCompatible(genSettings)) {
 			TerramapMod.logger.error("Terrramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
 			TerramapMod.logger.error("The proxy will be assuming a BTE projection, things will not work!");
-			//TODO Waring on the GUI
+			//TODO Warning on the GUI
 		}
 		this.genSettings = genSettings;
 		this.projection = null;

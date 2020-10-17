@@ -43,9 +43,9 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 
 	private EarthGeneratorSettings cfg;
 
-	GuiTiledMap parent;
+	GuiScreen parent;
 
-	public EarthMapConfigGui(GuiTiledMap parent, Minecraft mc) {
+	public EarthMapConfigGui(GuiScreen parent, Minecraft mc) {
 
 		EarthGeneratorSettings parentCfg = TerramapRemote.getRemote().getGeneratorSettings();
 		if(parentCfg == null) cfg = new EarthGeneratorSettings("");

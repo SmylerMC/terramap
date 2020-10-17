@@ -3,8 +3,8 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.network.mapsync.TerramapLocalPlayer;
-import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
+import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
+import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 

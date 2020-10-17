@@ -4,7 +4,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.network.mapsync.TerramapPlayer;
+import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;

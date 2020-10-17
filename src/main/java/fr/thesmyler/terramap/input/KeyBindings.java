@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.input;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.gui.TerramapScreen;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import net.minecraft.client.Minecraft;
@@ -41,9 +40,7 @@ public abstract class KeyBindings {
 	public static void checkBindings() {
 		if(OPEN_MAP.isPressed()
 				  && Minecraft.getMinecraft().world != null
-				  && Minecraft.getMinecraft().player.dimension == 0
-				  && TerramapUtils.isEarthWorld(Minecraft.getMinecraft().world)
-			) {
+				  && Minecraft.getMinecraft().player.dimension == 0) { //TODO Follow Sledgehammer preferences
         Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, MapStyleRegistry.getTiledMaps()));
     }
 	}

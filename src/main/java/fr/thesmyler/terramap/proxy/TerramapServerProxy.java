@@ -4,7 +4,6 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.TerrashowCommand;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ServerTerramapEventHandler;
-import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,11 +33,6 @@ public class TerramapServerProxy extends TerramapProxy {
 		TerramapMod.logger.debug("Terramap server init");
 		MinecraftForge.EVENT_BUS.register(new ServerTerramapEventHandler());
 
-	}
-
-	@Override
-	public void onServerHello(S2CTerramapHelloPacket s) {
-		// Should never be called on server
 	}
 
 	@Override

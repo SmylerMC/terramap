@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.network;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
-import fr.thesmyler.terramap.network.mapsync.PlayerSyncStatus;
+import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

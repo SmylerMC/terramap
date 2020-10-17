@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.network.mapsync;
+package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
 

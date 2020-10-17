@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -15,7 +14,6 @@ import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.WebTile;
-import fr.thesmyler.terramap.network.S2CTerramapHelloPacket;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -71,32 +69,6 @@ public class TerramapClientProxy extends TerramapProxy {
 		MarkerControllerManager.registerBuiltInControllers();
 		MapStyleRegistry.loadBuiltIns();
 		MapStyleRegistry.loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
-	}
-
-	@Override
-	public void onServerHello(S2CTerramapHelloPacket pkt) {
-		TerramapMod.logger.info("Got server hello, remote version is " + pkt.serverVersion);
-		TerramapMod.logger.debug(
-				"Server version: " + pkt.serverVersion + "\t" +
-				"Server worldSettings: " + pkt.worldSettings.toString() + "\t" +
-				"Server UUID: " + pkt.worldUUID + "\t" +
-				"Sync players: " + pkt.syncPlayers + "\t" +
-				"Sync spectators: " + pkt.syncSpectators + "\t" +
-				"Enable player radar: " + pkt.enablePlayerRadar + "\t" +
-				"Enable animal radar: " + pkt.enableAnimalRadar + "\t" +
-				"Enable mob radar: " + pkt.enableMobRadar + "\t" +
-				"Enable deco radar: " + pkt.enableDecoRadar + "\t"
-			);
-		TerramapRemote srv = TerramapRemote.getRemote();
-		srv.setServerVersion(pkt.serverVersion);
-		srv.setGeneratorSettings(pkt.worldSettings);
-		if(pkt.worldUUID.getLeastSignificantBits() != 0 && pkt.worldUUID.getMostSignificantBits() != 0) {
-			srv.guessRemoteIdentifier();
-			srv.setRemoteIdentifier(srv.getRemoteIdentifier() + pkt.worldUUID.toString());
-		}
-		srv.setPlayersSynchronizedByServer(pkt.syncPlayers);
-		srv.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
-		//TODO Take advantage of the radar enable fields
 	}
 
 	@Override
