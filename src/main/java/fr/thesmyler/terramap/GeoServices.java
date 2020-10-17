@@ -11,6 +11,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
+//TODO Open places on services other than gmaps
 public abstract class GeoServices {
 
 	public static final String GMAPS_BASE_URL = "https://www.google.com/maps/@{latitude},{longitude},{zoom}z";
@@ -57,6 +58,7 @@ public abstract class GeoServices {
 	}
 
 	public static void openPlaceInGoogleMaps(int zoom, double lon, double lat) {
+		//TODO Open the place where the player is instead of where the map was clicked
 		GeoServices.openURI(GeoServices.formatStringWithCoords(GMAPS_PLACE_URL, zoom, lon, lat));
 	}
 

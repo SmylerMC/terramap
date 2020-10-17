@@ -26,6 +26,7 @@ public abstract class RemoteSynchronizer {
 	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<UUID, RegisteredForUpdatePlayer>();
 
 	public static void syncPlayers(World world) {
+		if(playersToUpdate.size() <= 0) return;
 		long ctime = System.currentTimeMillis();
 		List<TerramapLocalPlayer> players = new ArrayList<TerramapLocalPlayer>();
 		for(EntityPlayer player: world.playerEntities) {
@@ -54,8 +55,18 @@ public abstract class RemoteSynchronizer {
 		}
 	}
 	
+	public static void registerPlayerForUpdates(EntityPlayerMP player) {
+		TerramapMod.logger.debug("Registering player for map updates: " + player.getDisplayNameString());
+		RemoteSynchronizer.playersToUpdate.put(player.getPersistentID(), new RegisteredForUpdatePlayer(player, System.currentTimeMillis()));
+	}
+	
+	public static void unregisterPlayerForUpdates(EntityPlayerMP player) {
+		TerramapMod.logger.debug("Unregistering player for map updates: " + player.getDisplayNameString());
+		RemoteSynchronizer.playersToUpdate.remove(player.getPersistentID());
+	}
+	
 	public static void sendHelloToClient(EntityPlayerMP player) {
-		//Send world data to the client
+		// Send world data to the client
 		World world = player.getEntityWorld();
 		if(!TerramapUtils.isServerEarthWorld(world)) return;
 		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);

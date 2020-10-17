@@ -32,7 +32,6 @@ public class TerramapServerProxy extends TerramapProxy {
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap server init");
 		MinecraftForge.EVENT_BUS.register(new ServerTerramapEventHandler());
-
 	}
 
 	@Override

@@ -1,8 +1,6 @@
 package fr.thesmyler.terramap.network.playersync;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.network.RemoteSynchronizer;
-import fr.thesmyler.terramap.network.RemoteSynchronizer.RegisteredForUpdatePlayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
@@ -36,19 +34,9 @@ public class C2SPRegisterForUpdatesPacket implements IMessage {
 		public C2SPRegisterForUpdatesPacket onMessage(C2SPRegisterForUpdatesPacket message, MessageContext ctx) {
 			EntityPlayerMP player = ctx.getServerHandler().player;
 			WorldServer world = player.getServerWorld();
-			if(message.update) world.addScheduledTask(()->{registerPlayer(player);});
-			else world.addScheduledTask(()->{unregisterPlayer(player);});
+			if(message.update) world.addScheduledTask(()->{RemoteSynchronizer.registerPlayerForUpdates(player);});
+			else world.addScheduledTask(()->{RemoteSynchronizer.unregisterPlayerForUpdates(player);});
 			return null;
-		}
-		
-		public void registerPlayer(EntityPlayerMP player) {
-			TerramapMod.logger.debug("Registering player for map updates: " + player.getDisplayNameString());
-			RemoteSynchronizer.playersToUpdate.put(player.getPersistentID(), new RegisteredForUpdatePlayer(player, System.currentTimeMillis()));
-		}
-		
-		public void unregisterPlayer(EntityPlayerMP player) {
-			TerramapMod.logger.debug("Unregistering player for map updates: " + player.getDisplayNameString());
-			RemoteSynchronizer.playersToUpdate.remove(player.getPersistentID());
 		}
 		
 	}

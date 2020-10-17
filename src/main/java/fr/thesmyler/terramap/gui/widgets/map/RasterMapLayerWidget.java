@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.WebTile;
 import fr.thesmyler.terramap.maps.WebTile.InvalidTileCoordinatesException;
@@ -57,7 +56,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				WebTile tile;
 
 				try {
-					tile = map.getTile((int)this.zoom, TerramapUtils.modulus(tileX, maxTileXY), tileY);
+					tile = map.getTile((int)this.zoom, Math.floorMod(tileX, maxTileXY), tileY);
 				} catch(InvalidTileCoordinatesException e) { continue ;}
 				
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet

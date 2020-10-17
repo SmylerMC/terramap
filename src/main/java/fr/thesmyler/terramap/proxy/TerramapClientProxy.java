@@ -84,7 +84,7 @@ public class TerramapClientProxy extends TerramapProxy {
 
 	@Override
 	public void onServerStarting(FMLServerStartingEvent event) {
-		//Nothing to do here
+		// Nothing to do here
 	}
 
 	@Override

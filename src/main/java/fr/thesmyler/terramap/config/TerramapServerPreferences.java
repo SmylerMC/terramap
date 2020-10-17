@@ -19,6 +19,7 @@ import fr.thesmyler.terramap.TerramapMod;
  * @author SmylerMC
  *
  */
+//FIXME Find why the file often contains "null"
 public class TerramapServerPreferences {
 
 	public static final String FILENAME = "terramap_server_preferences.json";

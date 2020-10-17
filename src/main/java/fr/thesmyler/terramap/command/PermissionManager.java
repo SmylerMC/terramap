@@ -11,7 +11,9 @@ import net.minecraftforge.server.permission.PermissionAPI;
  * The goal in the long run is to support both Forge and Bukkit permissions
  * This is intended to provide an abstraction layer
  * 
- *TODO Support Bukkit permissions
+ * TODO Support Bukkit permissions
+ * 
+ * TODO Player sync node
  *
  * @author SmylerMC
  *

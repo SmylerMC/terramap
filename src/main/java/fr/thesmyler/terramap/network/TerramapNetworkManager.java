@@ -1,16 +1,14 @@
 package fr.thesmyler.terramap.network;
 
-import java.nio.charset.Charset;
-
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.network.P2CSledgehammerHelloPacket.P2CSledgehammerHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket.S2CTpCommandSyncPacketHandler;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
-import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
-import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket.C2SRegisterForUpdatesPacketHandler;
+import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket.S2CPlayerSyncPacketHandler;
+import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket.S2CRegistrationExpiresPacketHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
@@ -52,7 +50,7 @@ public abstract class TerramapNetworkManager {
 	private static final int SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR = 1;
 	private static final int SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR = 2;
 	
-	//terramap:sledgehammer
+	//terramap:sh
 	private static final int P2C_SLEDGEHAMMER_HELLO_DISCRIMINATOR = 0;
 	
 	private static <REQ extends IMessage, REPLY extends IMessage> void registerTerramapS2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
