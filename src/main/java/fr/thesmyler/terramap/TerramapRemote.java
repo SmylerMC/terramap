@@ -11,6 +11,8 @@ import java.util.UUID;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
+import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -45,6 +47,8 @@ public class TerramapRemote {
 	private GeographicProjection projection = null;
 	private boolean isRegisteredForUpdates = false;
 	private String tpCommand = null;
+	private Map<String, TiledMap> serverMaps = new HashMap<String, TiledMap>();
+	private Map<String, TiledMap> proxyMaps = new HashMap<String, TiledMap>();
 
 	private String serverIdentifier = "genericserver";
 
@@ -139,6 +143,26 @@ public class TerramapRemote {
 		} else {
 			return "noserver";
 		}
+	}
+	
+	public void addServerMapStyle(TiledMap map) {
+		this.serverMaps.put(map.getId(), map);
+	}
+	
+	public void addProxyMapStyle(TiledMap map) {
+		this.proxyMaps.put(map.getId(), map);
+	}
+	
+	public void resetServerMapStyles() {
+		this.serverMaps.clear();
+	}
+	
+	public Map<String, TiledMap> getMapStyles() {
+		Map<String, TiledMap> maps = new HashMap<String, TiledMap>();
+		maps.putAll(MapStyleRegistry.getTiledMaps());
+		maps.putAll(this.proxyMaps);
+		maps.putAll(this.serverMaps);
+		return maps;
 	}
 
 	public TerramapScreenSavedState getSavedScreenState() {

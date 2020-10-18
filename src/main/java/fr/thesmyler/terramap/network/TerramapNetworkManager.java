@@ -33,17 +33,20 @@ public abstract class TerramapNetworkManager {
 	public static void registerHandlers(Side side){
 		registerTerramapS2C(S2C_TERRAMAP_HELLO_DISCRIMINATOR, S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
 		registerTerramapS2C(S2C_TERRAMAP_TPCMD_DISCRIMINATOR, S2CTpCommandSyncPacketHandler.class, S2CTpCommandSyncPacket.class);
+		registerTerramapS2C(S2C_TERRAMAP_MAPSTYLE_DISCRIMINATOR, SP2CMapStylePacket.SP2CMapStylePacketTerramapHandler.class, SP2CMapStylePacket.class);
 
 		registerMapsyncCP2S(C2SP_MAPSYNC_REGISTER_DISCRIMINATOR, C2SRegisterForUpdatesPacketHandler.class, C2SPRegisterForUpdatesPacket.class);
 		registerMapsyncSP2C(SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR, S2CPlayerSyncPacketHandler.class, SP2CPlayerSyncPacket.class);
 		registerMapsyncSP2C(SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR, S2CRegistrationExpiresPacketHandler.class, SP2CRegistrationExpiresPacket.class);
 		
-		registerSledgehammerP2C(P2C_SLEDGEHAMMER_HELLO_DISCRIMINATOR, P2CSledgehammerHelloPacketHandler.class, P2CSledgehammerHelloPacket.class);
+		registerSledgehammerP2C(P2C_SH_HELLO_DISCRIMINATOR, P2CSledgehammerHelloPacketHandler.class, P2CSledgehammerHelloPacket.class);
+		registerSledgehammerP2C(P2C_SH_MAPSTYLE_DISCRIMINATOR, SP2CMapStylePacket.SP2CMapStylePacketSledgehammerHandler.class, SP2CMapStylePacket.class);
 	}
 	
 	// terramap:terramap
 	private static final int S2C_TERRAMAP_HELLO_DISCRIMINATOR = 0;
 	private static final int S2C_TERRAMAP_TPCMD_DISCRIMINATOR = 1;
+	private static final int S2C_TERRAMAP_MAPSTYLE_DISCRIMINATOR = 2;
 	
 	// terramap:mapsync
 	private static final int C2SP_MAPSYNC_REGISTER_DISCRIMINATOR = 0;
@@ -51,7 +54,8 @@ public abstract class TerramapNetworkManager {
 	private static final int SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR = 2;
 	
 	//terramap:sh
-	private static final int P2C_SLEDGEHAMMER_HELLO_DISCRIMINATOR = 0;
+	private static final int P2C_SH_HELLO_DISCRIMINATOR = 0;
+	private static final int P2C_SH_MAPSTYLE_DISCRIMINATOR = 1;
 	
 	private static <REQ extends IMessage, REPLY extends IMessage> void registerTerramapS2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
 		CHANNEL_TERRAMAP.registerMessage(handlerclass, msgclass, discriminator, Side.CLIENT);

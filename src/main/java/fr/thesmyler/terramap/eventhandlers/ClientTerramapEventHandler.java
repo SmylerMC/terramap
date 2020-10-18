@@ -18,7 +18,6 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerControl
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
@@ -27,6 +26,7 @@ import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -77,6 +77,12 @@ public class ClientTerramapEventHandler {
 	}
 	
 	@SubscribeEvent
+	public void onChangeDimension(PlayerChangedDimensionEvent event) {
+		if(event.player.world.isRemote)
+			TerramapRemote.getRemote().resetServerMapStyles();
+	}
+	
+	@SubscribeEvent
 	public void onGuiScreenInit(InitGuiEvent event) {
 		if(event.getGui() instanceof GuiMainMenu && !configWasFixed) {
 			/* 
@@ -102,7 +108,7 @@ public class ClientTerramapEventHandler {
 			screen.cancellAllScheduled();
 			
 			if(TerramapConfig.Minimap.enable) {
-				MapWidget map = new MapWidget(10, MapStyleRegistry.getTiledMaps().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
+				MapWidget map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
 				map.setInteractive(false);
 				map.setX((int) (TerramapConfig.Minimap.posX * 0.01 * screen.getWidth()));
 				map.setY((int) (TerramapConfig.Minimap.posX * 0.01 * screen.getWidth()));
@@ -113,7 +119,7 @@ public class ClientTerramapEventHandler {
 				markerVisibility.put(MobMarkerController.ID, TerramapConfig.Minimap.showEntities);
 				markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.Minimap.showOtherPlayers);
 				map.setMarkersVisibility(markerVisibility);
-				Map<String, TiledMap> styles = MapStyleRegistry.getTiledMaps();
+				Map<String, TiledMap> styles = TerramapRemote.getRemote().getMapStyles();
 				TiledMap bg = styles.get(TerramapConfig.Minimap.style);
 				if(bg == null || ! bg.isAllowedOnMinimap()) {
 					ArrayList<TiledMap> maps = new ArrayList<TiledMap>(styles.values());

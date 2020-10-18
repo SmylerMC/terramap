@@ -177,6 +177,10 @@ public class TiledMap implements Comparable<TiledMap> {
 			}
 		}
 	}
+	
+	public Map<String, String> getUnlocalizedCopyrights() {
+		return this.copyrightJsons;
+	}
 
 	public String getLocalizedName(String localeKey) {
 		String result = this.names.getOrDefault(localeKey, this.names.get("en_us"));
@@ -185,6 +189,10 @@ public class TiledMap implements Comparable<TiledMap> {
 		} else {
 			return this.id;
 		}
+	}
+	
+	public Map<String, String> getUnlocalizedNames() {
+		return this.names;
 	}
 	
 	public String getUrlPattern() {
@@ -201,6 +209,10 @@ public class TiledMap implements Comparable<TiledMap> {
 	
 	public long getProviderVersion() {
 		return this.version;
+	}
+	
+	public int getDisplayPriority() {
+		return this.displayPriority;
 	}
 
 	@Override
