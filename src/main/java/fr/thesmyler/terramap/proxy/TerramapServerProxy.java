@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.proxy;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.TerrashowCommand;
+import fr.thesmyler.terramap.command.TilesetReloadCommand;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ServerTerramapEventHandler;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
@@ -53,6 +54,7 @@ public class TerramapServerProxy extends TerramapProxy {
 	    TerramapConfig.update(); // Update if invalid values were left by old versions
 	    
     	event.registerServerCommand(new TerrashowCommand());
+    	event.registerServerCommand(new TilesetReloadCommand());
 	}
 
 	@Override

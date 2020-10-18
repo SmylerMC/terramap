@@ -11,7 +11,11 @@ public enum Permission {
 	UPDATE_PLAYER_VISIBILITY_OTHER(
 			"terramap.commands.terrashow.others",
 			DefaultPermissionLevel.OP,
-			"Lets players hide or show others on the map with /terrashow");
+			"Lets players hide or show others on the map with /terrashow"),
+	RELOAD_MAP_STYLES(
+			"terramap.commands.reloadmapstyles",
+			DefaultPermissionLevel.OP,
+			"Allows server admins to reload the map server map styles without restarting");
 	
 	private final String node;
 	private final DefaultPermissionLevel lvl;

@@ -104,7 +104,7 @@ public class MapStyleRegistry {
 	}
 	
 	private static TiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
-		//TODO Do some checks to make sure the parsed map styles are right
+		//TODO Do some checks to make sure the parsed map styles are right (only on client)
 		return new TiledMap(
 				saved.url,
 				saved.min_zoom,

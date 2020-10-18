@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 public class TerrashowCommand extends CommandBase {
 
 	public static final String USAGE = "/terrashow <show|hide|status> [playername (optional)]";
+	
 	@Override
 	public String getName() {
 		return "terrashow";
