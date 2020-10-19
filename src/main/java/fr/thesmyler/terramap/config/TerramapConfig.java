@@ -14,11 +14,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Terramap's config
  *
  */
-@Config(modid=TerramapMod.MODID, name="General")
+@Config(modid=TerramapMod.MODID, category="General")
 @Config.LangKey("General category") //TODO Localize
 public class TerramapConfig {
 	
-	@Config(modid=TerramapMod.MODID, category="Minimap", name="Minimap")
+	@Config(modid=TerramapMod.MODID, category="Minimap")
 	@Config.LangKey("Minimap configuration") //TODO Localize
 	public static class Minimap {
 		
@@ -80,7 +80,7 @@ public class TerramapConfig {
 		
 	}
 
-	@Config(modid=TerramapMod.MODID, category="Client Advanced", name="Client Advanced")
+	@Config(modid=TerramapMod.MODID, category="Client Advanced")
 	@Config.LangKey("Advanced client configuration") //TODO Localize
 	public static class ClientAdvanced {
 		
@@ -130,7 +130,7 @@ public class TerramapConfig {
 	@Config.Comment("The base tpll command to use")
 	public static String tpllcmd = "/tpll {latitude} {longitude}";
 	
-	@Config(modid=TerramapMod.MODID, category="Server", name="Server")
+	@Config(modid=TerramapMod.MODID, category="Server")
 	@Config.LangKey("Server configuration") //TODO Localize
 	public static class ServerConfig {
 		
