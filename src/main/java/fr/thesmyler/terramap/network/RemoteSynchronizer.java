@@ -34,7 +34,7 @@ public abstract class RemoteSynchronizer {
 		for(EntityPlayer player: world.playerEntities) {
 			if(!TerramapServerPreferences.shouldDisplayPlayer(player.getPersistentID())) continue;
 			TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
-			if(terraPlayer.isSpectator() && !TerramapConfig.ServerConfig.synchronizeSpectators) continue;
+			if(terraPlayer.isSpectator() && !TerramapConfig.synchronizeSpectators) continue;
 			players.add(terraPlayer);
 		}
 		IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));
@@ -42,14 +42,14 @@ public abstract class RemoteSynchronizer {
 			TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(pkt, player.player);
 		}
 		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
-			if(ctime - player.lastRegisterTime > TerramapConfig.ServerConfig.syncHeartbeatTimeout - 10000 && !player.noticeSent) {
+			if(ctime - player.lastRegisterTime > TerramapConfig.syncHeartbeatTimeout - 10000 && !player.noticeSent) {
 				TerramapMod.logger.debug("Sending registration expires notice to " + player.player.getName());
 				TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
 				player.noticeSent = true;
 			}
 		}
 		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
-			if(ctime - player.lastRegisterTime > TerramapConfig.ServerConfig.syncHeartbeatTimeout) {
+			if(ctime - player.lastRegisterTime > TerramapConfig.syncHeartbeatTimeout) {
 				TerramapMod.logger.debug("Unregistering " + player.player.getName() + "from map update as it did not renew its registration");
 				RemoteSynchronizer.playersToUpdate.remove(player.player.getPersistentID());
 				TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
@@ -76,8 +76,8 @@ public abstract class RemoteSynchronizer {
 				TerramapMod.getVersion(),
 				settings,
 				new UUID(0, 0), //TODO Implement world uuids
-				PlayerSyncStatus.getFromBoolean(TerramapConfig.ServerConfig.synchronizePlayers),
-				PlayerSyncStatus.getFromBoolean(TerramapConfig.ServerConfig.synchronizeSpectators),
+				PlayerSyncStatus.getFromBoolean(TerramapConfig.synchronizePlayers),
+				PlayerSyncStatus.getFromBoolean(TerramapConfig.synchronizeSpectators),
 				//TODO Implement radar permissions
 				true,
 				true,
@@ -89,12 +89,12 @@ public abstract class RemoteSynchronizer {
 	}
 	
 	public static void sendTpCommandToClient(EntityPlayerMP player) {
-		if(TerramapConfig.ServerConfig.forceClientTpCmd)
+		if(TerramapConfig.forceClientTpCmd)
 			TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
 	}
 	
 	public static void sendMapStylesToClient(EntityPlayerMP player) {
-		if(TerramapConfig.ServerConfig.sendCusomMapsToClient) {
+		if(TerramapConfig.sendCusomMapsToClient) {
 			for(TiledMap map: MapStyleRegistry.getTiledMaps().values()) {
 				SP2CMapStylePacket pkt = new SP2CMapStylePacket(map);
 				TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(pkt, player);

@@ -109,7 +109,7 @@ public class MapStyleRegistry {
 				saved.url,
 				saved.min_zoom,
 				saved.max_zoom,
-				TerramapConfig.ClientAdvanced.maxTileLoad,
+				TerramapConfig.maxTileLoad,
 				id,
 				saved.name,
 				saved.copyright,

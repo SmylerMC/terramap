@@ -107,34 +107,35 @@ public class ClientTerramapEventHandler {
 			screen.removeAllWidgets();
 			screen.cancellAllScheduled();
 			
-			if(TerramapConfig.Minimap.enable) {
-				MapWidget map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.ClientAdvanced.getEffectiveTileScaling());
+			if(TerramapConfig.enable) {
+				MapWidget map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
 				map.setInteractive(false);
-				map.setX((int) (TerramapConfig.Minimap.posX * 0.01 * screen.getWidth()));
-				map.setY((int) (TerramapConfig.Minimap.posX * 0.01 * screen.getWidth()));
-				map.setWidth((int) (TerramapConfig.Minimap.width * 0.01 * screen.getWidth()));
-				map.setHeight((int) (TerramapConfig.Minimap.height * 0.01 * screen.getWidth()));
+				map.setX((int) (TerramapConfig.posX * 0.01 * screen.getWidth()));
+				map.setY((int) (TerramapConfig.posX * 0.01 * screen.getWidth()));
+				map.setWidth((int) (TerramapConfig.width * 0.01 * screen.getWidth()));
+				map.setHeight((int) (TerramapConfig.height * 0.01 * screen.getWidth()));
 				Map<String, Boolean> markerVisibility = new HashMap<String, Boolean>();
-				markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.Minimap.showEntities);
-				markerVisibility.put(MobMarkerController.ID, TerramapConfig.Minimap.showEntities);
-				markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.Minimap.showOtherPlayers);
+				markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.showEntities);
+				markerVisibility.put(MobMarkerController.ID, TerramapConfig.showEntities);
+				markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.showOtherPlayers);
 				map.setMarkersVisibility(markerVisibility);
 				Map<String, TiledMap> styles = TerramapRemote.getRemote().getMapStyles();
-				TiledMap bg = styles.get(TerramapConfig.Minimap.style);
+				TiledMap bg = styles.get(TerramapConfig.style);
 				if(bg == null || ! bg.isAllowedOnMinimap()) {
 					ArrayList<TiledMap> maps = new ArrayList<TiledMap>(styles.values());
 					Collections.sort(maps, Collections.reverseOrder());
 					bg = maps.get(0);
 				}
 				map.setBackground(bg);
-				int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.Minimap.zoomLevel);
-				zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.Minimap.zoomLevel);
+				int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.zoomLevel);
+				zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.zoomLevel);
 				map.setZoom(zoomLevel);
-				map.setZoom(TerramapConfig.Minimap.zoomLevel);
+				map.setZoom(TerramapConfig.zoomLevel);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
 				screen.addWidget(map);
 				screen.scheduleAtUpdate(() -> {
+					//TODO Should just check is a projection is available instead
 					if(TerramapRemote.getRemote().isInstalledOnServer()) {
 						map.track(map.getMainPlayerMarker());
 					}

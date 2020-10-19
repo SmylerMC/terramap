@@ -43,7 +43,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		TerramapMod.logger.debug("Terramap client pre-init");
 		TerramapNetworkManager.registerHandlers(Side.CLIENT);
 		try {
-			TerramapMod.cacheManager = new CacheManager(TerramapConfig.ClientAdvanced.cachingDir);
+			TerramapMod.cacheManager = new CacheManager(TerramapConfig.cachingDir);
 			TerramapMod.cacheManager.createDirectory();
 		} catch (IOException e) {
 			TerramapMod.logger.catching(e);

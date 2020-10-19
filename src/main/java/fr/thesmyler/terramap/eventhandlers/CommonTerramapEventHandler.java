@@ -46,10 +46,10 @@ public class CommonTerramapEventHandler {
 	public void onWorldTick(WorldTickEvent event) {
 		if(event.phase.equals(TickEvent.Phase.END) || event.world.isRemote) return;
 		World world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
-		if(TerramapConfig.ServerConfig.synchronizePlayers && TerramapUtils.isServerEarthWorld(world) && this.tickCounter == 0) {
+		if(TerramapConfig.synchronizePlayers && TerramapUtils.isServerEarthWorld(world) && this.tickCounter == 0) {
 			RemoteSynchronizer.syncPlayers(world);
 		}
-		this.tickCounter = (this.tickCounter+1) % TerramapConfig.ServerConfig.syncInterval;
+		this.tickCounter = (this.tickCounter+1) % TerramapConfig.syncInterval;
 	}
 	
 	@SubscribeEvent
