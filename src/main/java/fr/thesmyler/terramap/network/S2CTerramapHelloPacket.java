@@ -21,6 +21,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 	public boolean enableAnimalRadar;
 	public boolean enableMobRadar;
 	public boolean enableDecoRadar;
+	public boolean hasWarpSupport;
 	
 	//TODO Warp support
 		
@@ -35,7 +36,8 @@ public class S2CTerramapHelloPacket implements IMessage {
 			boolean enablePlayerRadar,
 			boolean enableAnimalRadar,
 			boolean enableMobRadar,
-			boolean enableDecoRadar) {
+			boolean enableDecoRadar,
+			boolean warpSupport) {
 		this.worldSettings = settings;
 		this.serverVersion = serverVersion;
 		this.worldUUID = worldUUID;
@@ -45,6 +47,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		this.enablePlayerRadar = enablePlayerRadar;
 		this.enableMobRadar = enableMobRadar;
 		this.enableDecoRadar = enableDecoRadar;
+		this.hasWarpSupport = warpSupport;
 	}
 
 	@Override
@@ -65,6 +68,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		this.enableAnimalRadar = buf.readBoolean();
 		this.enableMobRadar = buf.readBoolean();
 		this.enableDecoRadar = buf.readBoolean();
+		this.hasWarpSupport = buf.readBoolean();
 	}
 
 	@Override
@@ -79,6 +83,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		buf.writeBoolean(this.enableAnimalRadar);
 		buf.writeBoolean(this.enableMobRadar);
 		buf.writeBoolean(this.enableDecoRadar);
+		buf.writeBoolean(this.hasWarpSupport);
 	}
 	
 	public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {

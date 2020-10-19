@@ -68,12 +68,12 @@ public class ClientTerramapEventHandler {
     
 	@SubscribeEvent
 	public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
-		TerramapRemote.resetRemote();
+		Minecraft.getMinecraft().addScheduledTask(TerramapRemote::resetRemote); // This event is called from the network thread
 	}
 
 	@SubscribeEvent
 	public void onClientConnected(ClientConnectedToServerEvent event) {
-		TerramapRemote.getRemote().guessRemoteIdentifier();
+		Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().guessRemoteIdentifier()); // This event is called from the network thread
 	}
 	
 	@SubscribeEvent

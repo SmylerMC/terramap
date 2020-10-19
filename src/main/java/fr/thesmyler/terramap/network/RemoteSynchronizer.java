@@ -82,7 +82,9 @@ public abstract class RemoteSynchronizer {
 				true,
 				true,
 				true,
-				true);
+				true,
+				//TODO Implement warps
+				false);
 		TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(data, player);
 	}
 	
@@ -120,7 +122,7 @@ public abstract class RemoteSynchronizer {
 		TerramapRemote srv = TerramapRemote.getRemote();
 		srv.setServerVersion(pkt.serverVersion);
 		srv.setGeneratorSettings(pkt.worldSettings);
-		if(pkt.worldUUID.getLeastSignificantBits() != 0 && pkt.worldUUID.getMostSignificantBits() != 0) {
+		if(pkt.worldUUID.getLeastSignificantBits() != 0 || pkt.worldUUID.getMostSignificantBits() != 0) {
 			srv.guessRemoteIdentifier();
 			srv.setRemoteIdentifier(srv.getRemoteIdentifier() + pkt.worldUUID.toString());
 		}
