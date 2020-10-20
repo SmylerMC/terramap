@@ -107,30 +107,30 @@ public class ClientTerramapEventHandler {
 			screen.removeAllWidgets();
 			screen.cancellAllScheduled();
 			
-			if(TerramapConfig.enable) {
+			if(TerramapConfig.minimapEnable) {
 				MapWidget map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
 				map.setInteractive(false);
-				map.setX((int) (TerramapConfig.posX * 0.01 * screen.getWidth()));
-				map.setY((int) (TerramapConfig.posX * 0.01 * screen.getWidth()));
-				map.setWidth((int) (TerramapConfig.width * 0.01 * screen.getWidth()));
-				map.setHeight((int) (TerramapConfig.height * 0.01 * screen.getWidth()));
+				map.setX((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
+				map.setY((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
+				map.setWidth((int) (TerramapConfig.minimapWidth * 0.01 * screen.getWidth()));
+				map.setHeight((int) (TerramapConfig.minimapHeight * 0.01 * screen.getWidth()));
 				Map<String, Boolean> markerVisibility = new HashMap<String, Boolean>();
 				markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.showEntities);
 				markerVisibility.put(MobMarkerController.ID, TerramapConfig.showEntities);
-				markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.showOtherPlayers);
+				markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
 				map.setMarkersVisibility(markerVisibility);
 				Map<String, TiledMap> styles = TerramapRemote.getRemote().getMapStyles();
-				TiledMap bg = styles.get(TerramapConfig.style);
+				TiledMap bg = styles.get(TerramapConfig.minimapStyle);
 				if(bg == null || ! bg.isAllowedOnMinimap()) {
 					ArrayList<TiledMap> maps = new ArrayList<TiledMap>(styles.values());
 					Collections.sort(maps, Collections.reverseOrder());
 					bg = maps.get(0);
 				}
 				map.setBackground(bg);
-				int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.zoomLevel);
-				zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.zoomLevel);
+				int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.minimapZoomLevel);
+				zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.minimapZoomLevel);
 				map.setZoom(zoomLevel);
-				map.setZoom(TerramapConfig.zoomLevel);
+				map.setZoom(TerramapConfig.minimapZoomLevel);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
 				screen.addWidget(map);
