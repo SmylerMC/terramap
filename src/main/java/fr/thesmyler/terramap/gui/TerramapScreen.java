@@ -96,12 +96,12 @@ public class TerramapScreen extends Screen {
 		this.closeButton.setOnClick(() -> {
 			Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		});
-		this.closeButton.setTooltip("Close map"); //TODO Localize
+		this.closeButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.close.tooltip"));
 		this.closeButton.enable();
 		this.addWidget(this.closeButton);
 		this.zoomInButton.setX(this.closeButton.getX()).setY(this.closeButton.getY() + closeButton.getHeight() + 15);
 		this.zoomInButton.setOnClick(() -> this.map.zoom(1));
-		this.zoomInButton.setTooltip("Zoom in"); //TODO Localize
+		this.zoomInButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomin.tooltip"));
 		this.zoomInButton.enable();
 		this.addWidget(this.zoomInButton);
 		this.zoomText = new TextWidget(49, this.getFont());
@@ -111,17 +111,17 @@ public class TerramapScreen extends Screen {
 		this.addWidget(this.zoomText);
 		this.zoomOutButton.setX(this.zoomInButton.getX()).setY(this.zoomText.getY() + zoomText.getHeight() + 2);
 		this.zoomOutButton.setOnClick(() -> this.map.zoom(-1));
-		this.zoomOutButton.setTooltip("Zoom out"); //TODO Localize
+		this.zoomOutButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomout.tooltip"));
 		this.zoomOutButton.enable();
 		this.addWidget(this.zoomOutButton);
 		this.centerButton.setX(this.zoomOutButton.getX()).setY(this.zoomOutButton.getY() + this.zoomOutButton.getHeight() + 15);
 		this.centerButton.setOnClick(() -> map.track(this.map.getMainPlayerMarker()));
 		this.centerButton.enable();
-		this.centerButton.setTooltip("Track player"); //TODO Localize
+		this.centerButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.track.tooltip"));
 		this.addWidget(this.centerButton);
 		this.styleButton.setX(this.centerButton.getX()).setY(this.centerButton.getY() + this.centerButton.getHeight() + 5);
 		this.styleButton.setOnClick(() -> this.stylePanel.open());
-		this.styleButton.setTooltip("Change map style"); //TODO Localize
+		this.styleButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.style.tooltip"));
 		this.styleButton.enable();
 		this.addWidget(this.styleButton);
 		this.debugText = new TextWidget(49, this.getFont());
@@ -134,7 +134,7 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.removeAllWidgets();
 		this.infoPanel.setWidth(220).setHeight(this.getHeight());
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
-		this.panelButton.setTooltip("Collapse information and search pannel"); //TODO Localize
+		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
 		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
 		this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
@@ -169,7 +169,7 @@ public class TerramapScreen extends Screen {
 		}
 		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(167);
 		this.searchBox.enableRightClickMenu();
-		this.searchBox.setText("Work in progress").disable();
+		this.searchBox.setText(I18n.format("terramap.terramapscreen.search.wip")).disable();
 		this.searchBox.setOnPressEnterCallback(this::search);
 		this.infoPanel.addWidget(this.searchBox);
 		TexturedButtonWidget searchButton = new TexturedButtonWidget(50, IncludedTexturedButtons.SEARCH);
@@ -195,9 +195,9 @@ public class TerramapScreen extends Screen {
 		
 		if(!TerramapRemote.getRemote().isInstalledOnServer() && TerramapRemote.getRemote().getProjection() == null) {
 			String warning = "";
-			for(int i=1; I18n.hasKey("terramap.mapgui.projection_warning.line" + i); i++) {
-				if(warning != "") warning += "\n";
-				warning += I18n.format("terramap.mapgui.projection_warning.line" + i);
+			for(int i=1; I18n.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
+				if(warning.length() > 0) warning += "\n";
+				warning += I18n.format("terramap.terramapscreen.projection_warning.line" + i);
 			}
 			ITextComponent c = new TextComponentString(warning);
 			Style style = new Style();
@@ -226,7 +226,7 @@ public class TerramapScreen extends Screen {
 		String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
 		String formatX = "-";
 		String formatZ = "-";
-		String formatScale = "-";
+		String formatScale = "-"; 
 		String formatOrientation = "-";
 		if(Math.abs(mouseLat) > WebMercatorUtils.LIMIT_LATITUDE) {
 			displayLat = "-";
@@ -240,38 +240,36 @@ public class TerramapScreen extends Screen {
 			formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(dist[1]*180.0/Math.PI);
 		}
 		
-		String trackString = "Player position: ";
-		String trackFormatLon = "-";
-		String trackFormatLat = "-";
 		if(this.map.isTracking()) {
 			Marker marker = this.map.getTracking();
-			double markerLong = marker.getLongitude();
+			double markerLon = marker.getLongitude();
 			double markerLat = marker.getLatitude();
-			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
-				trackString = marker.getDisplayName().getFormattedText() + "The tracked marker is outside the projected area.";
+			String markerName = marker.getDisplayName().getFormattedText();
+			if(!Double.isFinite(markerLon) || !Double.isFinite(markerLat)) {
+				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.trackedoutsidemap", markerName));
 			} else {
-				trackString = "Tracked position: ";
-				trackFormatLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
-				trackFormatLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
+				String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLon);
+				String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLat);
+				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
 			}
 		} else if(this.map.getMainPlayerMarker() != null){
 			Marker marker = this.map.getMainPlayerMarker();
 			double markerLong = marker.getLongitude();
 			double markerLat = marker.getLatitude();
 			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
-				trackString = "You are outside the projected area."; //TODO To long
+				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.playerout"));
 			} else {
-				trackString = "Player position: ";
-				trackFormatLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
-				trackFormatLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
+				String formatedLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
+				String formatedLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
+				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.playergeo", formatedLon, formatedLat));
 			}
+		} else {
+			this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.noplayer"));
 		}
 
-		//TODO Localize
-		this.mouseGeoLocationText.setText("Mouse location: " + displayLat + "° " + displayLon + "°");
-		this.mouseMCLocationText.setText("X: " + formatX + " Z: " + formatZ);
-		this.playerGeoLocationText.setText(trackString + trackFormatLat + "° " + trackFormatLon + "°");
-		this.distortionText.setText("Distortion: " + formatScale + " blocks/m ; ±" + formatOrientation + "°");
+		this.mouseGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_geo", displayLat, displayLon));
+		this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
+		this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
 		
 		if(this.debugMode) {
 			String dbText = "";

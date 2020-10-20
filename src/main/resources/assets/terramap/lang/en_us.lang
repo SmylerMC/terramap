@@ -47,19 +47,29 @@ terramap.mapwidget.rclickmenu.set_proj=Set projection
 
 terramap.mapwidget.shortcuts.tp=Click to teleport
 
-terramap.mapwidget.projection_warning.unused_comment=Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
-terramap.mapwidget.projection_warning.line1=Terramap is not installed on the server!!
-terramap.mapwidget.projection_warning.line2=There is no way to identify the projection used.
-terramap.mapwidget.projection_warning.line3=Elements from the Minecraft world will not be displayed on the map.
-terramap.mapwidget.projection_warning.line4=You can ask the server administrator to install Terramap,
-terramap.mapwidget.projection_warning.line5=or you can manually set the projection used in the right click menu.
+terramap.terramapscreen.projection_warning.unused_comment=Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
+terramap.terramapscreen.projection_warning.line1=Terramap is not installed on the server!!
+terramap.terramapscreen.projection_warning.line2=There is no way to identify the projection used.
+terramap.terramapscreen.projection_warning.line3=Elements from the Minecraft world will not be displayed on the map.
+terramap.terramapscreen.projection_warning.line4=You can ask the server administrator to install Terramap,
+terramap.terramapscreen.projection_warning.line5=or you can manually set the projection used in the right click menu.
 
-terramap.mapgui.information.mouse_geo=Mouse position: %1$s° %2$s°
-terramap.mapgui.information.mouse_mc=X: %1$s Z: %2$s
-terramap.mapgui.information.playeroutsidemap=Your player is outside the projected area
-terramap.mapgui.information.playergeo=Player position: %1$s° %2$s°
-terramap.mapgui.information.followedoutsidemap=%s is outside the projected area
-terramap.mapgui.information.followedgeo=%1$s's position: %2$s° %3$s°
-terramap.mapgui.information.followed=Tracking %s
-terramap.mapgui.information.projection=Projection: %s
-terramap.mapgui.information.orientation=Orientation: %s
+terramap.terramapscreen.buttons.close.tooltip=Close map
+terramap.terramapscreen.buttons.zoomin.tooltip=Zoom in
+terramap.terramapscreen.buttons.zoomout.tooltip=Zoom out
+terramap.terramapscreen.buttons.track.tooltip=Track player
+terramap.terramapscreen.buttons.style.tooltip=Change map style
+terramap.terramapscreen.buttons.info.tooltip=Collapse information and search pannel
+terramap.terramapscreen.search.wip=Work in progress
+
+terramap.terramapscreen.information.mouse_geo=Mouse position: %1$s° %2$s°
+terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
+terramap.terramapscreen.information.trackedoutsidemap=%1$s is outside the projection
+terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°
+terramap.terramapscreen.information.playerout=You are outside the projection
+terramap.terramapscreen.information.playergeo=Player position: %1$s° %2$s°
+terramap.terramapscreen.information.noplayer=Player position: -° -°
+terramap.terramapscreen.information.distortion=Distortion: %1$s blocks/m ; ±%2$s°
+
+
+
