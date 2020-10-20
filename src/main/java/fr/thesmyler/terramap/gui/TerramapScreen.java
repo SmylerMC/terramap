@@ -107,7 +107,7 @@ public class TerramapScreen extends Screen {
 		this.zoomText = new TextWidget(49, this.getFont());
 		this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
 		this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(0xA0000000).setPadding(3);
-		this.zoomText.setVisibility(this.f1Mode);
+		this.zoomText.setVisibility(!this.f1Mode);
 		this.addWidget(this.zoomText);
 		this.zoomOutButton.setX(this.zoomInButton.getX()).setY(this.zoomText.getY() + zoomText.getHeight() + 2);
 		this.zoomOutButton.setOnClick(() -> this.map.zoom(-1));
@@ -434,15 +434,15 @@ public class TerramapScreen extends Screen {
 	
 	public void setF1Mode(boolean yesNo) {
 		this.f1Mode = yesNo;
-		this.infoPanel.setVisibility(yesNo);
-		this.stylePanel.setVisibility(yesNo);
-		this.closeButton.setVisibility(yesNo);
-		this.zoomInButton.setVisibility(yesNo);
-		this.zoomOutButton.setVisibility(yesNo);
-		this.styleButton.setVisibility(yesNo);
-		this.centerButton.setVisibility(yesNo);
-		if(this.zoomText != null) this.zoomText.setVisibility(yesNo);
-		this.map.setScaleVisibility(yesNo);
+		this.infoPanel.setVisibility(!yesNo);
+		this.stylePanel.setVisibility(!yesNo);
+		this.closeButton.setVisibility(!yesNo);
+		this.zoomInButton.setVisibility(!yesNo);
+		this.zoomOutButton.setVisibility(!yesNo);
+		this.styleButton.setVisibility(!yesNo);
+		this.centerButton.setVisibility(!yesNo);
+		if(this.zoomText != null) this.zoomText.setVisibility(!yesNo);
+		this.map.setScaleVisibility(!yesNo);
 	}
 	
 	public void setDebugMode(boolean yesNo) {
