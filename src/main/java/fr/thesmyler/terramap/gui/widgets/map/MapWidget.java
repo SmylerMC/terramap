@@ -137,19 +137,39 @@ public class MapWidget extends Screen {
 		this.rightClickMenu.addSeparator();
 		MenuWidget openSubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
 		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_osm"), () -> {
-			GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+			GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
 		});
 		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bte"), () -> {
-			GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+			GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
 		});
 		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gmaps"), () -> {
-			GeoServices.openPlaceInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+			if(this.getMainPlayerMarker() != null) {
+				double markerLon = this.getMainPlayerMarker().getLongitude();
+				double markerLat = this.getMainPlayerMarker().getLatitude();
+				if(Double.isFinite(markerLon) && Double.isFinite(markerLat)) {
+					GeoServices.openPlaceInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude(), markerLon, markerLat);
+				} else {
+					GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+				}
+			} else {
+				GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+			}
+			
 		});
 		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_web"), () -> {
-			GeoServices.opentInGoogleEarthWeb(this.getMouseLongitude(), this.getMouseLatitude());
+			GeoServices.opentInGoogleEarthWeb(this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
 		});
 		//TODO Open in google Earth pro
 		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_pro"));
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bing"), () -> {
+			GeoServices.openInBingMaps((int) this.getZoom(), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+		});
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_wikimapia"), () -> {
+			GeoServices.openInWikimapia((int) this.getZoom(), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+		});
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_yandex"), () -> {
+			GeoServices.openInYandex((int) this.getZoom(), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+		});
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {

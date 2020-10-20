@@ -19,6 +19,10 @@ public abstract class GeoServices {
 	public static final String OSM_SITE_BASE_URL = "https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}";
 	public static final String GEARTH_WEB_BASE_URL = "https://earth.google.com/web/@{latitude},{longitude},0a,10000d,1y,-0h,0t,0r";
 	public static final String BTE_SITE_BASE_URL = "https://buildtheearth.net/map?lat={latitude}&lon={longitude}&z={zoom}";
+	
+	public static final String BING_SITE_BASE_URL = "https://www.bing.com/maps?cp={latitude}~{longitude}&lvl={zoom}";
+	public static final String WIKIMAPIA_SITE_BASE_URL = "https://wikimapia.org/#lat={latitude}&lon={longitude}&z={zoom}";
+	public static final String YANDEX_SITE_BASE_URL = "https://yandex.com/maps/?ll={longitude}%2C{latitude}&z={zoom}";
 
 	public static final String OSM_CR_LINK = "https://www.openstreetmap.org/copyright";
 
@@ -32,12 +36,12 @@ public abstract class GeoServices {
 		decFormat1.setDecimalFormatSymbols(usSymbols);
 	}
 
-	public static String formatStringWithCoords(String str, int zoomLevel, double longitude, double latitude) {
+	public static String formatStringWithCoords(String str, int zoomLevel, double longitude, double latitude, double placeLongitude, double placeLatitude) {
 		try {
 			String dispLong = GeoServices.formatGeoCoordForDisplay(longitude);
 			String dispLat = GeoServices.formatGeoCoordForDisplay(latitude);
 			String dispPlace;
-			dispPlace = URLEncoder.encode(GeoServices.numeric2NSEW(longitude, latitude), StandardCharsets.UTF_8.toString());
+			dispPlace = URLEncoder.encode(GeoServices.numeric2NSEW(placeLongitude, placeLatitude), StandardCharsets.UTF_8.toString());
 			return str.replace("{zoom}", "" + zoomLevel)
 					.replace("{latitude}", dispLat)
 					.replace("{longitude}", dispLong)
@@ -49,26 +53,40 @@ public abstract class GeoServices {
 		return str;
 	}
 
-	public static void openInOSMWeb(int zoom, double lon, double lat) {
-		GeoServices.openURI(GeoServices.formatStringWithCoords(OSM_SITE_BASE_URL, zoom, lon, lat));
+	public static void openInOSMWeb(int zoom, double lon, double lat, double markerLon, double markerLat) {
+		GeoServices.openURI(GeoServices.formatStringWithCoords(OSM_SITE_BASE_URL, zoom, lon, lat, markerLon, markerLat));
 	}
 
 	public static void openInGoogleMaps(int zoom, double lon, double lat) {
-		GeoServices.openURI(GeoServices.formatStringWithCoords(GMAPS_BASE_URL, zoom, lon, lat));
+		GeoServices.openURI(GeoServices.formatStringWithCoords(GMAPS_BASE_URL, zoom, lon, lat, lon, lat));
 	}
 
-	public static void openPlaceInGoogleMaps(int zoom, double lon, double lat) {
-		//TODO Open the place where the player is instead of where the map was clicked
-		GeoServices.openURI(GeoServices.formatStringWithCoords(GMAPS_PLACE_URL, zoom, lon, lat));
+	public static void openPlaceInGoogleMaps(int zoom, double centerLon, double centerLat, double markerLon, double markerLat) {
+		GeoServices.openURI(GeoServices.formatStringWithCoords(GMAPS_PLACE_URL, zoom, centerLon, centerLat, markerLon, markerLat));
 	}
 
-	public static void openInBTEMap(int zoom, double lon, double lat) {
+	public static void openInBTEMap(int zoom, double lon, double lat, double markerLon, double markerLat) {
 		int z = Math.min(zoom, 18);
-		GeoServices.openURI(GeoServices.formatStringWithCoords(BTE_SITE_BASE_URL, z, lon, lat));
+		GeoServices.openURI(GeoServices.formatStringWithCoords(BTE_SITE_BASE_URL, z, lon, lat, markerLon, markerLat));
 	}
 
-	public static void opentInGoogleEarthWeb(double longitude, double latitude) {
-		GeoServices.openURI(GeoServices.formatStringWithCoords(GEARTH_WEB_BASE_URL, 0, longitude, latitude));
+	public static void opentInGoogleEarthWeb(double longitude, double latitude, double markerLon, double markerLat) {
+		GeoServices.openURI(GeoServices.formatStringWithCoords(GEARTH_WEB_BASE_URL, 0, longitude, latitude, markerLon, markerLat));
+	}
+	
+	public static void openInBingMaps(int zoom, double lon, double lat, double markerLon, double markerLat) {
+		int z = Math.min(zoom, 18);
+		GeoServices.openURI(GeoServices.formatStringWithCoords(BING_SITE_BASE_URL, z, lon, lat, markerLon, markerLat));
+	}
+	
+	public static void openInWikimapia(int zoom, double lon, double lat, double markerLon, double markerLat) {
+		int z = Math.min(zoom, 18);
+		GeoServices.openURI(GeoServices.formatStringWithCoords(WIKIMAPIA_SITE_BASE_URL, z, lon, lat, markerLon, markerLat));
+	}
+	
+	public static void openInYandex(int zoom, double lon, double lat, double markerLon, double markerLat) {
+		int z = Math.min(zoom, 18);
+		GeoServices.openURI(GeoServices.formatStringWithCoords(YANDEX_SITE_BASE_URL, z, lon, lat, markerLon, markerLat));
 	}
 
 	public static void openURI(String uriStr) {

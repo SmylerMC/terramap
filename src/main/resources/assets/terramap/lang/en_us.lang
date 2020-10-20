@@ -43,6 +43,9 @@ terramap.mapwidget.rclickmenu.open_bte=BTE website
 terramap.mapwidget.rclickmenu.open_gmaps=Google Maps
 terramap.mapwidget.rclickmenu.open_gearth_web=Google Earth web
 terramap.mapwidget.rclickmenu.open_gearth_pro=Google Earth Pro
+terramap.mapwidget.rclickmenu.open_bing=Bing Maps
+terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
+terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Set projection
 
 terramap.mapwidget.shortcuts.tp=Click to teleport
