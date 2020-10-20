@@ -20,6 +20,7 @@ import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTextu
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
+import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
@@ -37,6 +38,11 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 
 public class TerramapScreen extends Screen {
 
@@ -186,6 +192,21 @@ public class TerramapScreen extends Screen {
 		if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
 		this.stylePanel.addWidget(s);
 		this.addWidget(this.stylePanel);
+		
+		if(!TerramapRemote.getRemote().isInstalledOnServer() && TerramapRemote.getRemote().getProjection() == null) {
+			String warning = "";
+			for(int i=1; I18n.hasKey("terramap.mapgui.projection_warning.line" + i); i++) {
+				if(warning != "") warning += "\n";
+				warning += I18n.format("terramap.mapgui.projection_warning.line" + i);
+			}
+			ITextComponent c = new TextComponentString(warning);
+			Style style = new Style();
+			style.setColor(TextFormatting.YELLOW);
+			c.setStyle(style);
+			TextComponentWidget warningWidget = new TextComponentWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, 0xFFFFFFFF, true, this.getFont());
+			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
+			this.addWidget(warningWidget);
+		}
 	}
 
 	@Override

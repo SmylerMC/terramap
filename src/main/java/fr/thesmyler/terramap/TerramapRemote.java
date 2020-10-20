@@ -104,8 +104,10 @@ public class TerramapRemote {
 
 	public void saveSettings() {
 		try {
-			TerramapClientPreferences.setServerGenSettings(this.getRemoteIdentifier(), this.genSettings.toString());
-			TerramapClientPreferences.save();
+			if(this.genSettings != null) {
+				TerramapClientPreferences.setServerGenSettings(this.getRemoteIdentifier(), this.genSettings.toString());
+				TerramapClientPreferences.save();
+			}
 		} catch(Exception e) {
 			TerramapMod.logger.info("Failed to save server preference file");
 			TerramapMod.logger.catching(e);

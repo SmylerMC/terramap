@@ -409,10 +409,10 @@ public class MapWidget extends Screen {
 		if(TerramapRemote.getRemote().getProjection() != null) {
 			double[] xz = TerramapRemote.getRemote().getProjection().fromGeo(longitude, latitude);
 			cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
+			this.sendChatMessage(cmd, false);
 		} else {
 			TerramapMod.logger.error("Tried to teleport from the map but the projection was null!");
 		}
-		this.sendChatMessage(cmd, false);
 	}
 	
 	public MarkerController<?>[] getMarkerControllers() {
@@ -660,7 +660,7 @@ public class MapWidget extends Screen {
 	}
 	
 	private boolean isShortcutEnabled() {
-		return this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
+		return TerramapRemote.getRemote().getProjection() != null && this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
 	}
 
 }

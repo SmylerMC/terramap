@@ -135,8 +135,7 @@ public class ClientTerramapEventHandler {
 				map.setScaleVisibility(false);
 				screen.addWidget(map);
 				screen.scheduleAtUpdate(() -> {
-					//TODO Should just check is a projection is available instead
-					if(TerramapRemote.getRemote().isInstalledOnServer()) {
+					if(TerramapRemote.getRemote().getProjection() != null) {
 						map.track(map.getMainPlayerMarker());
 					}
 				});
