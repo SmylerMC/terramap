@@ -28,23 +28,32 @@ terramap.binding.shortcuts=Map shortcuts
 terramap.binding.copy_geo=Copy geographic coordinates
 terramap.binding.copy_mc=Copy minecraft coordinates
 
-terramap.mapgui.rclickmenu.teleport=Teleport here
-terramap.mapgui.rclickmenu.center=Center map here
-terramap.mapgui.rclickmenu.copy_geo=Copy coordinates
-terramap.mapgui.rclickmenu.copy_mc=Copy Minecraft coordinates
-terramap.mapgui.rclickmenu.open=Show in
-terramap.mapgui.rclickmenu.open_osm=OpenStreetMaps
-terramap.mapgui.rclickmenu.open_bte=BTE website
-terramap.mapgui.rclickmenu.open_gmaps=Google Maps
-terramap.mapgui.rclickmenu.open_gearth_web=Google Earth web
-terramap.mapgui.rclickmenu.open_gearth_pro=Google Earth Pro
-terramap.mapgui.rclickmenu.set_proj=Set projection
-terramap.mapgui.projection_warning.unused_comment=You can add as many lines as you need for your language here
-terramap.mapgui.projection_warning.line1=Terramap is not installed on the server!!
-terramap.mapgui.projection_warning.line2=There is no way to identify the projection used.
-terramap.mapgui.projection_warning.line3=Elements from the Minecraft world will not be displayed on the map.
-terramap.mapgui.projection_warning.line4=You can ask the server administrator to install Terramap,
-terramap.mapgui.projection_warning.line5=or you can manually set the projection used in the right click menu.
+terramap.mapwidget.rclickmenu.teleport=Teleport here
+terramap.mapwidget.rclickmenu.center=Center map here
+terramap.mapwidget.rclickmenu.copy=Copy
+terramap.mapwidget.rclickmenu.copy.geo=Geographic coordinates
+terramap.mapwidget.rclickmenu.copy.block=Block coordinates
+terramap.mapwidget.rclickmenu.copy.chunk=Chunk coordinates
+terramap.mapwidget.rclickmenu.copy.region=Vanilla region file name
+terramap.mapwidget.rclickmenu.copy.3dr=Y=0 3D region file name
+terramap.mapwidget.rclickmenu.copy.2dr=2D region file name
+terramap.mapwidget.rclickmenu.open=Show in
+terramap.mapwidget.rclickmenu.open_osm=OpenStreetMaps
+terramap.mapwidget.rclickmenu.open_bte=BTE website
+terramap.mapwidget.rclickmenu.open_gmaps=Google Maps
+terramap.mapwidget.rclickmenu.open_gearth_web=Google Earth web
+terramap.mapwidget.rclickmenu.open_gearth_pro=Google Earth Pro
+terramap.mapwidget.rclickmenu.set_proj=Set projection
+
+terramap.mapwidget.shortcuts.tp=Click to teleport
+
+terramap.mapwidget.projection_warning.unused_comment=Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
+terramap.mapwidget.projection_warning.line1=Terramap is not installed on the server!!
+terramap.mapwidget.projection_warning.line2=There is no way to identify the projection used.
+terramap.mapwidget.projection_warning.line3=Elements from the Minecraft world will not be displayed on the map.
+terramap.mapwidget.projection_warning.line4=You can ask the server administrator to install Terramap,
+terramap.mapwidget.projection_warning.line5=or you can manually set the projection used in the right click menu.
+
 terramap.mapgui.information.mouse_geo=Mouse position: %1$s° %2$s°
 terramap.mapgui.information.mouse_mc=X: %1$s Z: %2$s
 terramap.mapgui.information.playeroutsidemap=Your player is outside the projected area

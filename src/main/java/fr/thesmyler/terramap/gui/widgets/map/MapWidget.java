@@ -57,7 +57,12 @@ public class MapWidget extends Screen {
 
 	private MenuWidget rightClickMenu;
 	private MenuEntry teleportMenuEntry;
-	private MenuEntry copyMcMenuEntry;
+	private MenuEntry copyBlockMenuEntry;
+	private MenuEntry copyChunkMenuEntry;
+	private MenuEntry copyRegionMenuEntry;
+	private MenuEntry copy3drMenuEntry;
+	private MenuEntry copy2drMenuEntry;
+
 	private MenuEntry setProjectionMenuEntry;
 	private TextComponentWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
@@ -88,40 +93,66 @@ public class MapWidget extends Screen {
 		this.controller = new ControllerMapLayer(this.tileScaling);
 		super.addWidget(this.controller);
 		this.rightClickMenu = new MenuWidget(100, font);
-		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.teleport"), () -> {
+		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
 			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
 		});
-		this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.center"), () -> {
+		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.center"), () -> {
 			this.setCenterPosition(this.mouseLongitude, this.mouseLatitude);
 		});
-		this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_geo"), () -> {
+		MenuWidget copySubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
+		copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.geo"), () -> {
 			GuiScreen.setClipboardString("" + this.mouseLatitude + " " + this.mouseLongitude);
 		});
-		this.copyMcMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.copy_mc"), ()->{
+		this.copyBlockMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
 			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 			String dispX = "" + Math.round(coords[0]);
 			String dispY = "" + Math.round(coords[1]);
 			GuiScreen.setClipboardString(dispX + " " + dispY);
+		});	
+		this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
+			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
+			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
+			GuiScreen.setClipboardString(dispX + " " + dispY);
 		});
+		this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
+			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
+			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
+			GuiScreen.setClipboardString("r." + dispX + "." + dispY + ".mca");
+		});
+		this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
+			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
+			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
+			GuiScreen.setClipboardString(dispX + ".0." + dispY + ".3dr");
+		});
+		this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
+			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
+			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
+			GuiScreen.setClipboardString(dispX + "." + dispY + ".2dr");
+		});
+		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy"), copySubMenu);
 		this.rightClickMenu.addSeparator();
 		MenuWidget openSubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
-		openSubMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_osm"), () -> {
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_osm"), () -> {
 			GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
 		});
-		openSubMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_bte"), () -> {
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bte"), () -> {
 			GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
 		});
-		openSubMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gmaps"), () -> {
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gmaps"), () -> {
 			GeoServices.openPlaceInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
 		});
-		openSubMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gearth_web"), () -> {
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_web"), () -> {
 			GeoServices.opentInGoogleEarthWeb(this.getMouseLongitude(), this.getMouseLatitude());
 		});
 		//TODO Open in google Earth pro
-		openSubMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open_gearth_pro"));
-		this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.open"), openSubMenu);
+		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_pro"));
+		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
-		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapgui.rclickmenu.set_proj"), ()-> {
+		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
 			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
 		});
 		this.scale.setX(15).setY(this.height - 5);
@@ -382,7 +413,7 @@ public class MapWidget extends Screen {
 
 		@Override
 		public String getTooltipText() {
-			return isShortcutEnabled() ? "Click to teleport": ""; //TODO Localize
+			return isShortcutEnabled() ? I18n.format("terramap.mapwidget.shortcuts.tp"): "";
 		}
 
 		@Override
@@ -400,7 +431,11 @@ public class MapWidget extends Screen {
 	private void updateRightClickMenuEntries() {
 		boolean hasProjection = TerramapRemote.getRemote().getProjection() != null;
 		this.teleportMenuEntry.enabled = hasProjection;
-		this.copyMcMenuEntry.enabled = hasProjection;
+		this.copyBlockMenuEntry.enabled = hasProjection;
+		this.copyChunkMenuEntry.enabled = hasProjection;
+		this.copyRegionMenuEntry.enabled = hasProjection;
+		this.copy3drMenuEntry.enabled = hasProjection;
+		this.copy2drMenuEntry.enabled = hasProjection;
 		this.setProjectionMenuEntry.enabled = !TerramapRemote.getRemote().isInstalledOnServer();
 	}
 	

@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author SmylerMC
  * 
  * Terramap's config
- *
+ * FIXME Format error because of % sign
  */
 @Config(modid=TerramapMod.MODID)
 public class TerramapConfig {
