@@ -53,16 +53,16 @@ public abstract class KeyBindings {
 			EntityPlayerSP player = Minecraft.getMinecraft().player;
 			GeographicProjection projection = TerramapRemote.getRemote().getProjection();
 			if(player == null) {
-				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("Could not copy coordinates: no player")); //TODO Localize
+				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
 			} else if(projection == null) {
-				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("Could not copy coordinates: no projection")); //TODO Localize
+				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noproj"));
 			} else {
 				double[] projectedCoords = projection.toGeo(player.posX, player.posZ);
 				if(!Double.isFinite(projectedCoords[0]) || !Double.isFinite(projectedCoords[1])) {
-					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("Could not copy coordinates: you are outside the projection")); //TODO Localize
+					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.outproj"));
 				} else {
 					GuiScreen.setClipboardString("" + projectedCoords[1] + " " + projectedCoords[0]);
-					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("Copied geographic coordinates to clipboard")); //TOOD Localize
+					Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.geo"));
 				}
 			}
 		}
@@ -70,10 +70,10 @@ public abstract class KeyBindings {
 		if(COPY_MC_COORDS.isPressed()) {
 			EntityPlayerSP player = Minecraft.getMinecraft().player;
 			if(player == null) {
-				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("Could not copy coordinates: no player")); //TODO Localize
+				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
 			} else {
 				GuiScreen.setClipboardString("" + player.posX + " " + player.posY + " " + player.posZ);
-				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("Copied minecraft coordinates to clipboard")); //TODO Localize
+				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.mc"));
 			}
 		}
 	}

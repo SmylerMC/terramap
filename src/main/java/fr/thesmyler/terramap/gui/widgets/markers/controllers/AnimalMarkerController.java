@@ -8,6 +8,7 @@ import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AnimalMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
@@ -26,7 +27,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 		super(ID, 700, AnimalMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
-		this.button.setTooltip("Toggle neutral creatures visibility"); //TODO Localize
+		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.animals"));
 	}
 
 	@Override

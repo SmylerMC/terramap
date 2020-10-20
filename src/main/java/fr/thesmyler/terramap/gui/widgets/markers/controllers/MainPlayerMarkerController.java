@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.resources.I18n;
 
 public class MainPlayerMarkerController extends MarkerController<MainPlayerMarker> {
 	
@@ -21,7 +22,7 @@ public class MainPlayerMarkerController extends MarkerController<MainPlayerMarke
 		super(ID, 900, MainPlayerMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
-		this.button.setTooltip("Toggle main player visibility"); //TODO Localization
+		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
 	}
 
 	@Override

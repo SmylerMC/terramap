@@ -10,6 +10,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.OtherPlayerMarker;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.resources.I18n;
 
 public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMarker> {
 	
@@ -25,7 +26,7 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 		super(ID, 800, OtherPlayerMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
-		this.button.setTooltip("Toggle other players visibility"); //TODO Localization
+		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
 	}
 
 	@Override

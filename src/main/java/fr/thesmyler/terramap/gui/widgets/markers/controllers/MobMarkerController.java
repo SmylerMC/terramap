@@ -8,6 +8,7 @@ import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MobMarker;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 
@@ -25,7 +26,7 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 		super(ID, 700, MobMarker.class);
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
-		this.button.setTooltip("Toggle agressive creatures visibility"); //TODO Localize
+		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.mobs"));
 	}
 
 	@Override

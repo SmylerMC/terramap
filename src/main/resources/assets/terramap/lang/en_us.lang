@@ -21,7 +21,7 @@ terramap.config.sync_heartbeet=Sync timeout
 terramap.config.players_opt_in_to_display_default=Default player display
 terramap.config.sync_custom_maps=Send custom maps to client
 
-terramap.binding.category=Terramap key bindings
+terramap.binding.category=Terramap
 terramap.binding.open_map=Open map
 terramap.binding.toggle_debug=Toggle Terramap debug mod
 terramap.binding.shortcuts=Map shortcuts
@@ -71,5 +71,15 @@ terramap.terramapscreen.information.playergeo=Player position: %1$s° %2$s°
 terramap.terramapscreen.information.noplayer=Player position: -° -°
 terramap.terramapscreen.information.distortion=Distortion: %1$s blocks/m ; ±%2$s°
 
+terramap.terramapscreen.markercontrollers.buttons.mainplayer=Toggle main player visibility
+terramap.terramapscreen.markercontrollers.buttons.otherplayer=Toggle other players visibility
+terramap.terramapscreen.markercontrollers.buttons.animals=Toggle animals visibility
+terramap.terramapscreen.markercontrollers.buttons.mobs=Toggle mobs visibility
+
+terramap.ingameactions.copy.noplayer=Could not copy coordinates: no player
+terramap.ingameactions.copy.noproj=Could not copy coordinates: no projection
+terramap.ingameactions.copy.outproj=Could not copy coordinates: you are outside the projection
+terramap.ingameactions.copy.mc=Copied Minecraft coordinates to clipboard
+terramap.ingameactions.copy.geo=Copied geographic coordinates to clipboard
 
 
