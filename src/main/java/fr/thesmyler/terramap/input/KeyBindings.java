@@ -19,11 +19,9 @@ public abstract class KeyBindings {
 	
 	public static final KeyBinding OPEN_MAP = new KeyBinding("terramap.binding.open_map", Keyboard.KEY_M, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding TOGGLE_DEBUG = new KeyBinding("terramap.binding.toggle_debug", Keyboard.KEY_P, KeyBindings.KEY_CATEGORY);
-	
-	//TODO Localize
-	public static final KeyBinding MAP_SHORTCUT = new KeyBinding("Map shortcuts", Keyboard.KEY_LCONTROL, KeyBindings.KEY_CATEGORY);
-	public static final KeyBinding COPY_GEO_COORDS = new KeyBinding("Copy geographic coordinates", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
-	public static final KeyBinding COPY_MC_COORDS = new KeyBinding("Copy minecraft coordinates", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
+	public static final KeyBinding MAP_SHORTCUT = new KeyBinding("terramap.binding.shortcuts", Keyboard.KEY_LCONTROL, KeyBindings.KEY_CATEGORY);
+	public static final KeyBinding COPY_GEO_COORDS = new KeyBinding("terramap.binding.copy_geo", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
+	public static final KeyBinding COPY_MC_COORDS = new KeyBinding("terramap.binding.copy_mc", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
 	
 	private static final IKeyConflictContext TERRAMAP_SCREEN_CONTEXT = new IKeyConflictContext() {
 		@Override
