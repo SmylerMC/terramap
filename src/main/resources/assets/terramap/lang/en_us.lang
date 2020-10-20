@@ -1,9 +1,9 @@
 terramap.config.minimap.enable=Minimap:enable
 terramap.config.minimap.style=Minimap: style
-terramap.config.minimap.pos_x=Minimap: X position (%)
-terramap.config.minimap.pos_y=Minimap: Y position (%)
-terramap.config.minimap.width=Minimap width (%)
-terramap.config.minimap.height=Minimap height (%)
+terramap.config.minimap.pos_x=Minimap: X position (%%)
+terramap.config.minimap.pos_y=Minimap: Y position (%%)
+terramap.config.minimap.width=Minimap width (%%)
+terramap.config.minimap.height=Minimap height (%%)
 terramap.config.minimap.zoom=Minimap zoom
 terramap.config.minimap.show_entities=Minimap: show entities
 terramap.config.minimap.show_players=Minimap: show other players
