@@ -101,7 +101,7 @@ public class TerramapConfig {
 	@Config.Comment("Double click delay to use in guis, in milliscondes")
 	@Config.RangeInt(min=10, max=1000)
 	@Config.SlidingOption
-	public static int doubleClickDelay = 500; //TODO use
+	public static int doubleClickDelay = 500;
 
 	@Config.Name("tpll_command")
 	@Config.LangKey("terramap.config.tpllcmd")

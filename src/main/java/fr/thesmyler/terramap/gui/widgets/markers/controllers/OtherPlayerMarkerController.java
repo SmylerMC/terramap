@@ -60,12 +60,19 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 
 	@Override
 	public boolean showToggleButton() {
-		return true;
+		return TerramapRemote.getRemote().allowsPlayerRadar();
 	}
 
 	@Override
 	public ToggleButtonWidget getToggleButton() {
 		return this.button;
 	}
+
+	@Override
+	public boolean areMakersVisible() {
+		return super.areMakersVisible() && TerramapRemote.getRemote().allowsPlayerRadar();
+	}
+	
+	
 
 }

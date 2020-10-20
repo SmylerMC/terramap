@@ -45,4 +45,5 @@ public abstract class PermissionManager {
 	public static boolean hasPermission(UUID uuid, Permission perm) {
 		return PermissionAPI.hasPermission(new GameProfile(uuid, null), perm.getNodeName(), null);
 	}
+	
 }

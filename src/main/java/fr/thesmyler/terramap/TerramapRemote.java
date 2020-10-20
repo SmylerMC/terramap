@@ -49,6 +49,12 @@ public class TerramapRemote {
 	private String tpCommand = null;
 	private Map<String, TiledMap> serverMaps = new HashMap<String, TiledMap>();
 	private Map<String, TiledMap> proxyMaps = new HashMap<String, TiledMap>();
+	private boolean proxyHasWarpSupport = false;
+	private boolean serverHasWarpSupport = false;
+	private boolean allowPlayerRadar = true;
+	private boolean allowAnimalRadar = true;
+	private boolean allowMobRadar = true;
+	private boolean allowDecoRadar = true;
 
 	private String serverIdentifier = "genericserver";
 
@@ -273,6 +279,54 @@ public class TerramapRemote {
 
 	public String getSledgehammerVersion() {
 		return this.sledgehammerVersion;
+	}
+
+	public boolean doesProxyHaveWarpSupport() {
+		return proxyHasWarpSupport;
+	}
+
+	public void setProxyWarpSupport(boolean proxyHasWarpSupport) {
+		this.proxyHasWarpSupport = proxyHasWarpSupport;
+	}
+
+	public boolean doesServerHaveWarpSupport() {
+		return serverHasWarpSupport;
+	}
+
+	public void setServerWarpSupport(boolean serverHasWarpSupport) {
+		this.serverHasWarpSupport = serverHasWarpSupport;
+	}
+
+	public boolean allowsPlayerRadar() {
+		return allowPlayerRadar;
+	}
+
+	public void setAllowsPlayerRadar(boolean allowPlayerRadar) {
+		this.allowPlayerRadar = allowPlayerRadar;
+	}
+
+	public boolean allowsAnimalRadar() {
+		return allowAnimalRadar;
+	}
+
+	public void setAllowsAnimalRadar(boolean allowAnimalRadar) {
+		this.allowAnimalRadar = allowAnimalRadar;
+	}
+
+	public boolean allowsMobRadar() {
+		return allowMobRadar;
+	}
+
+	public void setAllowsMobRadar(boolean allowMobRadar) {
+		this.allowMobRadar = allowMobRadar;
+	}
+
+	public boolean allowsDecoRadar() {
+		return allowDecoRadar;
+	}
+
+	public void setAllowsDecoRadar(boolean allowDecoRadar) {
+		this.allowDecoRadar = allowDecoRadar;
 	}
 
 	public static TerramapRemote getRemote() {

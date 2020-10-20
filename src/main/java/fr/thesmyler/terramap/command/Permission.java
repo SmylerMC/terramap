@@ -15,7 +15,19 @@ public enum Permission {
 	RELOAD_MAP_STYLES(
 			"terramap.commands.reloadmapstyles",
 			DefaultPermissionLevel.OP,
-			"Allows server admins to reload the map server map styles without restarting");
+			"Allows server admins to reload the map server map styles without restarting"),
+	RADAR_PLAYERS(
+			"terramap.radar.players",
+			DefaultPermissionLevel.ALL,
+			"Allows players to see other players on the map"),
+	RADAR_ANIMALS(
+			"terramap.radar.animals",
+			DefaultPermissionLevel.ALL,
+			"Allows players to see animals on the map"),
+	RADAR_MOBS(
+			"terramap.radar.mobs",
+			DefaultPermissionLevel.ALL,
+			"Allows players to see mobs on the map");
 	
 	private final String node;
 	private final DefaultPermissionLevel lvl;

@@ -45,7 +45,7 @@ public class MenuWidget implements IWidget {
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean mouseHoverMenu, boolean hasFocus, Screen parent) {
 		this.mainAnimation.update();
-		this.hoverAnimation.update(); //TODO
+		this.hoverAnimation.update();
 		int width = this.getWidth();
 		int height = this.getHeight();
 		int fh = this.font.FONT_HEIGHT;

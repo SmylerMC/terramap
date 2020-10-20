@@ -13,6 +13,7 @@ import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -21,8 +22,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class Screen extends GuiScreen implements IWidget{
-
-	public static final long DOUBLE_CLICK_DELAY = 500; //TODO get that from the system
 
 	protected TreeSet<IWidget> widgets = new TreeSet<IWidget>(
 			(w2, w1) -> {
@@ -222,7 +221,7 @@ public class Screen extends GuiScreen implements IWidget{
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		long ctime = System.currentTimeMillis();
-		if(ctime - this.lastClickTime[mouseButton] <= DOUBLE_CLICK_DELAY && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
+		if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.doubleClickDelay && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
 			this.delayedActions.add(new MouseAction(MouseActionType.DOUBLE_CLICK, mouseButton, mouseX - this.getX(), mouseY - this.getY()));
 		} else {
 			this.delayedActions.add(new MouseAction(MouseActionType.CLICK, mouseButton, mouseX - this.getX(), mouseY - this.getY()));

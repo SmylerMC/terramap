@@ -53,12 +53,17 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
 	@Override
 	public boolean showToggleButton() {
-		return true;
+		return TerramapRemote.getRemote().allowsAnimalRadar();
 	}
 
 	@Override
 	public ToggleButtonWidget getToggleButton() {
 		return this.button;
+	}
+	
+	@Override
+	public boolean areMakersVisible() {
+		return super.areMakersVisible() && TerramapRemote.getRemote().allowsAnimalRadar();
 	}
 
 }

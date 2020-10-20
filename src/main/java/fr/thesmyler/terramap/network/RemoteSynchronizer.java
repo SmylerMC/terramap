@@ -9,10 +9,12 @@ import java.util.UUID;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.TerramapUtils;
+import fr.thesmyler.terramap.command.Permission;
+import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
-import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
@@ -78,10 +80,9 @@ public abstract class RemoteSynchronizer {
 				new UUID(0, 0), //TODO Implement world uuids
 				PlayerSyncStatus.getFromBoolean(TerramapConfig.synchronizePlayers),
 				PlayerSyncStatus.getFromBoolean(TerramapConfig.synchronizeSpectators),
-				//TODO Implement radar permissions
-				true,
-				true,
-				true,
+				PermissionManager.hasPermission(player, Permission.RADAR_PLAYERS),
+				PermissionManager.hasPermission(player, Permission.RADAR_ANIMALS),
+				PermissionManager.hasPermission(player, Permission.RADAR_MOBS),
 				true,
 				//TODO Implement warps
 				false);
@@ -117,7 +118,8 @@ public abstract class RemoteSynchronizer {
 				"Enable player radar: " + pkt.enablePlayerRadar + "\t" +
 				"Enable animal radar: " + pkt.enableAnimalRadar + "\t" +
 				"Enable mob radar: " + pkt.enableMobRadar + "\t" +
-				"Enable deco radar: " + pkt.enableDecoRadar + "\t"
+				"Enable deco radar: " + pkt.enableDecoRadar + "\t" +
+				"Warp support: " + pkt.hasWarpSupport + "\t"
 			);
 		TerramapRemote srv = TerramapRemote.getRemote();
 		srv.setServerVersion(pkt.serverVersion);
@@ -128,7 +130,11 @@ public abstract class RemoteSynchronizer {
 		}
 		srv.setPlayersSynchronizedByServer(pkt.syncPlayers);
 		srv.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
-		//TODO Take advantage of the radar enable fields
+		srv.setAllowsPlayerRadar(pkt.enablePlayerRadar);
+		srv.setAllowsAnimalRadar(pkt.enableAnimalRadar);
+		srv.setAllowsMobRadar(pkt.enableMobRadar);
+		srv.setAllowsDecoRadar(pkt.enableDecoRadar);
+		srv.setServerWarpSupport(pkt.hasWarpSupport);
 	}
 
 	public static class RegisteredForUpdatePlayer {
