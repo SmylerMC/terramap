@@ -58,17 +58,19 @@ public abstract class RemoteSynchronizer {
 			}
 		}
 	}
-	
+
 	public static void registerPlayerForUpdates(EntityPlayerMP player) {
-		TerramapMod.logger.debug("Registering player for map updates: " + player.getDisplayNameString());
-		RemoteSynchronizer.playersToUpdate.put(player.getPersistentID(), new RegisteredForUpdatePlayer(player, System.currentTimeMillis()));
+		if(PermissionManager.hasPermission(player, Permission.RADAR_PLAYERS)) {
+			TerramapMod.logger.debug("Registering player for map updates: " + player.getDisplayNameString());
+			RemoteSynchronizer.playersToUpdate.put(player.getPersistentID(), new RegisteredForUpdatePlayer(player, System.currentTimeMillis()));
+		}
 	}
-	
+
 	public static void unregisterPlayerForUpdates(EntityPlayerMP player) {
 		TerramapMod.logger.debug("Unregistering player for map updates: " + player.getDisplayNameString());
 		RemoteSynchronizer.playersToUpdate.remove(player.getPersistentID());
 	}
-	
+
 	public static void sendHelloToClient(EntityPlayerMP player) {
 		// Send world data to the client
 		World world = player.getEntityWorld();
@@ -88,12 +90,12 @@ public abstract class RemoteSynchronizer {
 				false);
 		TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(data, player);
 	}
-	
+
 	public static void sendTpCommandToClient(EntityPlayerMP player) {
 		if(TerramapConfig.forceClientTpCmd)
 			TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
 	}
-	
+
 	public static void sendMapStylesToClient(EntityPlayerMP player) {
 		if(TerramapConfig.sendCusomMapsToClient) {
 			for(TiledMap map: MapStyleRegistry.getTiledMaps().values()) {
@@ -102,7 +104,7 @@ public abstract class RemoteSynchronizer {
 			}
 		}
 	}
-	
+
 	public static void onServerHello(S2CTerramapHelloPacket pkt) {
 		TerramapMod.logger.info("Got server hello, remote version is " + pkt.serverVersion);
 		String jsonWorldSettings = null;
@@ -111,16 +113,16 @@ public abstract class RemoteSynchronizer {
 		}
 		TerramapMod.logger.debug(
 				"Server version: " + pkt.serverVersion + "\t" +
-				"Server worldSettings: " + jsonWorldSettings + "\t" +
-				"Server UUID: " + pkt.worldUUID + "\t" +
-				"Sync players: " + pkt.syncPlayers + "\t" +
-				"Sync spectators: " + pkt.syncSpectators + "\t" +
-				"Enable player radar: " + pkt.enablePlayerRadar + "\t" +
-				"Enable animal radar: " + pkt.enableAnimalRadar + "\t" +
-				"Enable mob radar: " + pkt.enableMobRadar + "\t" +
-				"Enable deco radar: " + pkt.enableDecoRadar + "\t" +
-				"Warp support: " + pkt.hasWarpSupport + "\t"
-			);
+						"Server worldSettings: " + jsonWorldSettings + "\t" +
+						"Server UUID: " + pkt.worldUUID + "\t" +
+						"Sync players: " + pkt.syncPlayers + "\t" +
+						"Sync spectators: " + pkt.syncSpectators + "\t" +
+						"Enable player radar: " + pkt.enablePlayerRadar + "\t" +
+						"Enable animal radar: " + pkt.enableAnimalRadar + "\t" +
+						"Enable mob radar: " + pkt.enableMobRadar + "\t" +
+						"Enable deco radar: " + pkt.enableDecoRadar + "\t" +
+						"Warp support: " + pkt.hasWarpSupport + "\t"
+				);
 		TerramapRemote srv = TerramapRemote.getRemote();
 		srv.setServerVersion(pkt.serverVersion);
 		srv.setGeneratorSettings(pkt.worldSettings);
