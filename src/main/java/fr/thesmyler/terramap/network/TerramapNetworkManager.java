@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.network;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.network.P2CSledgehammerHelloPacket.P2CSledgehammerHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
-import fr.thesmyler.terramap.network.S2CTpCommandSyncPacket.S2CTpCommandSyncPacketHandler;
+import fr.thesmyler.terramap.network.S2CTpCommandPacket.S2CTpCommandPacketHandler;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket.SP2CMapStylePacketSledgehammerHandler;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket.SP2CMapStylePacketTerramapHandler;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
@@ -29,6 +29,9 @@ import fr.thesmyler.terramap.network.warps.SP2CEditWarpConfirmationPacket.SP2CEd
 import fr.thesmyler.terramap.network.warps.SP2CMultiWarpPacket;
 import fr.thesmyler.terramap.network.warps.SP2CMultiWarpPacket.SP2CMultiWarpPacketProxyHandler;
 import fr.thesmyler.terramap.network.warps.SP2CMultiWarpPacket.SP2CMultiWarpPacketServerHandler;
+import fr.thesmyler.terramap.network.warps.SP2CWarpCommandPacket;
+import fr.thesmyler.terramap.network.warps.SP2CWarpCommandPacket.SP2CWarpCommandPacketProxyHandler;
+import fr.thesmyler.terramap.network.warps.SP2CWarpCommandPacket.SP2CWarpCommandPacketServerHandler;
 import fr.thesmyler.terramap.network.warps.SP2CWarpPacket;
 import fr.thesmyler.terramap.network.warps.SP2CWarpPacket.SP2CWarpPacketProxyHandler;
 import fr.thesmyler.terramap.network.warps.SP2CWarpPacket.SP2CWarpPacketServerHandler;
@@ -55,7 +58,7 @@ public abstract class TerramapNetworkManager {
 	 */
 	public static void registerHandlers(Side side){
 		registerTerramapS2C(S2C_TERRAMAP_HELLO_DISCRIMINATOR, S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
-		registerTerramapS2C(S2C_TERRAMAP_TPCMD_DISCRIMINATOR, S2CTpCommandSyncPacketHandler.class, S2CTpCommandSyncPacket.class);
+		registerTerramapS2C(S2C_TERRAMAP_TPCMD_DISCRIMINATOR, S2CTpCommandPacketHandler.class, S2CTpCommandPacket.class);
 		registerTerramapS2C(S2C_TERRAMAP_MAPSTYLE_DISCRIMINATOR, SP2CMapStylePacketTerramapHandler.class, SP2CMapStylePacket.class);
 		registerTerramapC2S(C2S_TERRAMAP_REQUEST_WARP_DISCRIMINATOR, C2SPRequestWarpPacketHandler.class, C2SPRequestWarpPacket.class);
 		registerTerramapS2C(S2C_TERRAMAP_WARP_DISCRIMINATOR, SP2CWarpPacketServerHandler.class, SP2CWarpPacket.class);
@@ -65,6 +68,7 @@ public abstract class TerramapNetworkManager {
 		registerTerramapS2C(S2C_TERRAMAP_CREATE_WARP_CONFIRMATION_DISCRIMINATOR, SP2CCreateWarpConfirmationPacketServerHandler.class, SP2CCreateWarpConfirmationPacket.class);
 		registerTerramapC2S(C2S_TERRAMAP_EDIT_WARP_DISCRIMINATOR, C2SPEditWarpPacketHandler.class, C2SPEditWarpPacket.class);
 		registerTerramapS2C(S2C_TERRAMAP_EDIT_WARP_CONFIRMATION_DISCRIMINATOR, SP2CEditWarpConfirmationPacketServerHandler.class, SP2CEditWarpConfirmationPacket.class);
+		registerTerramapS2C(S2C_TERRAMAP_WARP_COMMAND_DISCRIMINATOR, SP2CWarpCommandPacketServerHandler.class, SP2CWarpCommandPacket.class);
 
 		registerMapsyncCP2S(C2SP_MAPSYNC_REGISTER_DISCRIMINATOR, C2SRegisterForUpdatesPacketHandler.class, C2SPRegisterForUpdatesPacket.class);
 		registerMapsyncSP2C(SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR, S2CPlayerSyncPacketHandler.class, SP2CPlayerSyncPacket.class);
@@ -80,6 +84,7 @@ public abstract class TerramapNetworkManager {
 		registerSledgehammerP2C(P2C_SH_CREATE_WARP_CONFIRMATION_DISCRIMINATOR, SP2CCreateWarpConfirmationPacketProxyHandler.class, SP2CCreateWarpConfirmationPacket.class);
 		registerSledgehammerC2P(C2P_SH_EDIT_WARP_DISCRIMINATOR, C2SPEditWarpPacketHandler.class, C2SPEditWarpPacket.class);
 		registerSledgehammerP2C(P2C_SH_EDIT_WARP_CONFIRMATION_DISCRIMINATOR, SP2CEditWarpConfirmationPacketProxyHandler.class, SP2CEditWarpConfirmationPacket.class);
+		registerSledgehammerP2C(P2C_SH_WARP_COMMAND_DISCRIMINATOR, SP2CWarpCommandPacketProxyHandler.class, SP2CWarpCommandPacket.class);
 
 	}
 	
@@ -95,6 +100,7 @@ public abstract class TerramapNetworkManager {
 	private static final int S2C_TERRAMAP_CREATE_WARP_CONFIRMATION_DISCRIMINATOR = 8;
 	private static final int C2S_TERRAMAP_EDIT_WARP_DISCRIMINATOR = 9;
 	private static final int S2C_TERRAMAP_EDIT_WARP_CONFIRMATION_DISCRIMINATOR = 10;
+	private static final int S2C_TERRAMAP_WARP_COMMAND_DISCRIMINATOR = 11;
 	
 	// terramap:mapsync
 	private static final int C2SP_MAPSYNC_REGISTER_DISCRIMINATOR = 0;
@@ -103,15 +109,16 @@ public abstract class TerramapNetworkManager {
 	
 	//terramap:sh
 	private static final int P2C_SH_HELLO_DISCRIMINATOR = 0;
-	private static final int P2C_SH_MAPSTYLE_DISCRIMINATOR = 1;
-	private static final int C2P_SH_REQUEST_WARP_DISCRIMINATOR = 2;
-	private static final int P2C_SH_WARP_DISCRIMINATOR = 3;
-	private static final int C2P_SH_REQUEST_MULTI_WARP_DISCRIMINATOR = 4;
-	private static final int P2C_SH_MULTI_WARP_DISCRIMINATOR = 5;
-	private static final int C2P_SH_CREATE_WARP_DISCRIMINATOR = 6;
-	private static final int P2C_SH_CREATE_WARP_CONFIRMATION_DISCRIMINATOR = 7;
-	private static final int C2P_SH_EDIT_WARP_DISCRIMINATOR = 8;
-	private static final int P2C_SH_EDIT_WARP_CONFIRMATION_DISCRIMINATOR = 9;
+	private static final int P2C_SH_MAPSTYLE_DISCRIMINATOR = 2;
+	private static final int C2P_SH_REQUEST_WARP_DISCRIMINATOR = 3;
+	private static final int P2C_SH_WARP_DISCRIMINATOR = 4;
+	private static final int C2P_SH_REQUEST_MULTI_WARP_DISCRIMINATOR = 5;
+	private static final int P2C_SH_MULTI_WARP_DISCRIMINATOR = 6;
+	private static final int C2P_SH_CREATE_WARP_DISCRIMINATOR = 7;
+	private static final int P2C_SH_CREATE_WARP_CONFIRMATION_DISCRIMINATOR = 8;
+	private static final int C2P_SH_EDIT_WARP_DISCRIMINATOR = 9;
+	private static final int P2C_SH_EDIT_WARP_CONFIRMATION_DISCRIMINATOR = 10;
+	private static final int P2C_SH_WARP_COMMAND_DISCRIMINATOR = 11;
 	
 	private static <REQ extends IMessage, REPLY extends IMessage> void registerTerramapS2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
 		CHANNEL_TERRAMAP.registerMessage(handlerclass, msgclass, discriminator, Side.CLIENT);

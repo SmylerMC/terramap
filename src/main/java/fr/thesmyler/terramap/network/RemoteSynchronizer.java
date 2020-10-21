@@ -93,7 +93,7 @@ public abstract class RemoteSynchronizer {
 
 	public static void sendTpCommandToClient(EntityPlayerMP player) {
 		if(TerramapConfig.forceClientTpCmd)
-			TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandSyncPacket(TerramapConfig.tpllcmd), player);
+			TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandPacket(TerramapConfig.tpllcmd), player);
 	}
 
 	public static void sendMapStylesToClient(EntityPlayerMP player) {
