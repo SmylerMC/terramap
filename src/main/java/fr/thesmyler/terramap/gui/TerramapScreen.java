@@ -354,6 +354,17 @@ public class TerramapScreen extends Screen {
 		this.map.restoreTracking(state.trackedMarker);
 		this.map.setMarkersVisibility(state.markerSettings);
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
+		TexturedButtonWidget newButton;
+		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
+			int x = this.panelButton.getX();
+			int y = this.panelButton.getY();
+			int z = this.panelButton.getZ();
+			newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPannel);
+			newButton.setTooltip(this.panelButton.getTooltipText());
+			this.infoPanel.removeWidget(this.panelButton);
+			this.panelButton = newButton;
+		}
+		this.infoPanel.addWidget(this.panelButton);
 		this.setF1Mode(state.f1);
 		this.setDebugMode(state.debug);
 		this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
