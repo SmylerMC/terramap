@@ -67,7 +67,7 @@ terramap.terramapscreen.buttons.style.tooltip=Changer le style de carte
 terramap.terramapscreen.buttons.info.tooltip=Bouger la panneau d'information
 terramap.terramapscreen.search.wip=En cours de dev
 
-terramap.terramapscreen.information.mouse_geo=Position de la souris: %1$s° %2$s°
+terramap.terramapscreen.information.mouse_geo=Position du pointeur: %1$s° %2$s°
 terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
 terramap.terramapscreen.information.trackedoutsidemap=%1$s est en dehors de la projection
 terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°

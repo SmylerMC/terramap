@@ -58,7 +58,7 @@ public class TerramapScreen extends Screen {
 	private TexturedButtonWidget styleButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PAPER);
 	private TextWidget zoomText;
 	private SlidingPanelWidget infoPanel = new SlidingPanelWidget(70, 200);
-	private TexturedButtonWidget panelButton = new TexturedButtonWidget(200, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
+	private TexturedButtonWidget panelButton = new TexturedButtonWidget(220, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
 	private TextWidget mouseGeoLocationText;
 	private TextWidget mouseMCLocationText;
 	private TextWidget distortionText;
@@ -132,7 +132,7 @@ public class TerramapScreen extends Screen {
 
 		// Info pannel
 		this.infoPanel.removeAllWidgets();
-		this.infoPanel.setWidth(220).setHeight(this.getHeight());
+		this.infoPanel.setWidth(240).setHeight(this.getHeight());
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
@@ -167,7 +167,7 @@ public class TerramapScreen extends Screen {
 			button.setY(y);
 			this.infoPanel.addWidget(button);
 		}
-		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(167);
+		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(187);
 		this.searchBox.enableRightClickMenu();
 		this.searchBox.setText(I18n.format("terramap.terramapscreen.search.wip")).disable();
 		this.searchBox.setOnPressEnterCallback(this::search);
