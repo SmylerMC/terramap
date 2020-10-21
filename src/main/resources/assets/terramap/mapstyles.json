@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": 4,
+        "version": 5,
         "comment": "This file contains the tile servers included by default in Terramap, and is maintained by SmylerMC."
     },
     "maps": {
@@ -19,7 +19,7 @@
             },
             "min_zoom": 0,
             "max_zoom": 19,
-            "display_priority": 2147483647,
+            "display_priority": 1000,
             "allow_on_minimap": true
         },
         "osm_fr_hot": {
@@ -37,7 +37,7 @@
             },
             "min_zoom": 0,
             "max_zoom": 19,
-            "display_priority": 1073741823,
+            "display_priority": 900,
             "allow_on_minimap": true
         },
         "stamen_terrain": {
@@ -54,7 +54,7 @@
             },
             "min_zoom": 0,
             "max_zoom": 19,
-            "display_priority": 1073741823,
+            "display_priority": 800,
             "allow_on_minimap": true
         }
     }
