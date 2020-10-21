@@ -38,7 +38,7 @@ terramap.mapwidget.rclickmenu.copy.block=les coordonnées du block
 terramap.mapwidget.rclickmenu.copy.chunk=les coordonnées chunk
 terramap.mapwidget.rclickmenu.copy.region=le nom de fichier de la région vanilla
 terramap.mapwidget.rclickmenu.copy.3dr=le nom de fichier de la région 3D en Y=0
-terramap.mapwidget.rclickmenu.copy.2dr=le nom de fichier de la région 3D
+terramap.mapwidget.rclickmenu.copy.2dr=le nom de fichier de la région 2D
 terramap.mapwidget.rclickmenu.open=Afficher dans
 terramap.mapwidget.rclickmenu.open_osm=OpenStreetMaps
 terramap.mapwidget.rclickmenu.open_bte=le site web BTE 
