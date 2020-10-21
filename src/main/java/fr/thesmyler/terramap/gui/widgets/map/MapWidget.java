@@ -175,7 +175,7 @@ public class MapWidget extends Screen {
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
 			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
 		});
-		this.scale.setX(15).setY(this.height - 5);
+		this.scale.setX(15).setY(this.height - 30);
 		this.addWidget(scale);
 		this.updateRightClickMenuEntries();
 		this.updateMouseGeoPos(this.width/2, this.height/2);
@@ -251,7 +251,8 @@ public class MapWidget extends Screen {
 
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight());
+		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.width);
+		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
 		if(!this.rightClickMenu.isVisible(this)) {
 			int relativeMouseX = mouseX - x;
 			int relativeMouseY = mouseY - y;
