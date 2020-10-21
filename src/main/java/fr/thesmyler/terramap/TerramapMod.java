@@ -65,15 +65,7 @@ public class TerramapMod {
     
     @NetworkCheckHandler
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
-    	String remoteVersion = remote.get(TerramapMod.MODID);
-    	if(remoteVersion == null) return true; //Terramap is not installed on remote, this is fine
-    	//Lots of change in beta6, incompatible
-    	if(remoteVersion.contains("1.0.0-beta5")) return false;
-    	if(remoteVersion.contains("1.0.0-beta4")) return false;
-    	if(remoteVersion.contains("1.0.0-beta3")) return false;
-    	if(remoteVersion.contains("1.0.0-beta2")) return false;
-    	if(remoteVersion.contains("1.0.0-beta1")) return false;
-    	return true; //Anything else should be ok
+    	return true; //Anything should be ok, the actual check is down in the server event handler
     }
     
     @EventHandler

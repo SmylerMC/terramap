@@ -145,6 +145,16 @@ public class TerramapConfig {
 	@Config.LangKey("terramap.config.sync_custom_maps")
 	@Config.Comment("Set to false if you do not want to send custom maps to clients. This is only for testing, as if you don't want to send map styles to client, the first thing to do is to not configure any.")
 	public static boolean sendCusomMapsToClient = true;
+	
+	@Config.Name("join_without_mod_message")
+	@Config.LangKey("terramap.config.join_without_mod_message")
+	@Config.Comment("A message to display to players who do not have Terramap installed, as a json text (https://minecraft.tools/en/json_text.php). Leave blank for no message.")
+	public static String joinWithoutModMessage = "";
+	
+	@Config.Name("join_with_outdated_mod_message")
+	@Config.LangKey("terramap.config.join_with_outdated_mod_message")
+	@Config.Comment("A message to display to players with an incompatible version of Terramap installed, as a json text (https://minecraft.tools/en/json_text.php). Leave blank for no message.")
+	public static String joinWithOutdatedModMessage = "[\"\",{\"text\":\"You are using an old and outdated version of Terramap, it will not work on this server. You can update \",\"color\":\"red\"},{\"text\":\"here\",\"underlined\":true,\"color\":\"red\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.curseforge.com/minecraft/mc-mods/terramap\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Click to open link.\"}},{\"text\":\".\",\"color\":\"red\"}]";
 
 	public static double getEffectiveTileScaling() {
 		if(autoTileScaling) {

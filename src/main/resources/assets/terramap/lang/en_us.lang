@@ -20,6 +20,8 @@ terramap.config.sync_interval=Map sync tick interval
 terramap.config.sync_heartbeet=Sync timeout
 terramap.config.players_opt_in_to_display_default=Default player display
 terramap.config.sync_custom_maps=Send custom maps to client
+terramap.config.join_without_mod_message=Join without Terramap
+terramap.config.join_with_outdated_mod_message=Join with out-dated Terramap
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Open map

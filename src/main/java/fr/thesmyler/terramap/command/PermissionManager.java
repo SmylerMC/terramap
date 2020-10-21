@@ -13,7 +13,6 @@ import net.minecraftforge.server.permission.PermissionAPI;
  * 
  * TODO Support Bukkit permissions
  * 
- * TODO Player sync node
  *
  * @author SmylerMC
  *
