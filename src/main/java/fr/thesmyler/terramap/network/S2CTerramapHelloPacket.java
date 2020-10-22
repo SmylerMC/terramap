@@ -43,7 +43,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		this.worldUUID = worldUUID;
 		this.syncPlayers = syncPlayers;
 		this.syncSpectators = syncSpectators;
-		this.enableAnimalRadar = enablePlayerRadar;
+		this.enableAnimalRadar = enableAnimalRadar;
 		this.enablePlayerRadar = enablePlayerRadar;
 		this.enableMobRadar = enableMobRadar;
 		this.enableDecoRadar = enableDecoRadar;
