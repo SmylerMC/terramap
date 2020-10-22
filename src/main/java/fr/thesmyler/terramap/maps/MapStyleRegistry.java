@@ -3,13 +3,13 @@ package fr.thesmyler.terramap.maps;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 
 public class MapStyleRegistry {
 
-	private static final String BUILT_IN_MAPS = "/assets/terramap/mapstyles.json";
+	private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
 	private static File configMapsFile;
 	private static Map<String, TiledMap> availableMaps = new HashMap<String, TiledMap>();
 
@@ -42,9 +42,11 @@ public class MapStyleRegistry {
 	}
 
 	public static void loadBuiltIns() {
+		String path = BUILT_IN_MAPS;
 		try {
-			Path path = Paths.get(MapStyleRegistry.class.getResource(BUILT_IN_MAPS).toURI());
-			try(BufferedReader txtReader = java.nio.file.Files.newBufferedReader(path)) {
+			// https://github.com/MinecraftForge/MinecraftForge/issues/5713
+			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+			try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(in))) {
 				String json = "";
 				String line = txtReader.readLine();
 				while(line != null) {
@@ -55,6 +57,7 @@ public class MapStyleRegistry {
 			}
 		} catch(Exception e) {
 			TerramapMod.logger.fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
+			TerramapMod.logger.fatal("Path: " + path);
 			TerramapMod.logger.catching(e);
 		}
 
