@@ -488,7 +488,7 @@ public class MapWidget extends Screen {
 	}
 
 	public MapWidget setZoom(double zoom) {
-		this.controller.setZoom(zoom);
+		this.controller.setZoom(Math.max(this.getMinZoom(), Math.min(this.getMaxZoom(), zoom)));
 		return this;
 	}
 
