@@ -19,7 +19,6 @@ import fr.thesmyler.terramap.TerramapMod;
  * @author SmylerMC
  *
  */
-//FIXME Find why the file often contains "null"
 public class TerramapServerPreferences {
 
 	public static final String FILENAME = "terramap_server_preferences.json";
@@ -27,19 +26,31 @@ public class TerramapServerPreferences {
 	private static File file = null;
 	private static Preferences preferences = new Preferences();
 
+	private static boolean loggedDebugError = false;
+	private static long lastNullSaveTime = Long.MIN_VALUE;
+
 	public static boolean shouldDisplayPlayer(UUID uuid) {
 		try {
-			return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.playersDisplayDefault;
+			synchronized(preferences) {
+				return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.playersDisplayDefault;
+			}
 		} catch(Exception e) {
-			return false;
+			if(!loggedDebugError) {
+				TerramapMod.logger.error("Failed to get player display preferences. This error will only be displayed once.");
+				TerramapMod.logger.catching(e);
+				loggedDebugError = true;
+			}
+			return TerramapConfig.playersDisplayDefault;
 		}
 	}
 
 	public static void setShouldDisplayPlayer(UUID uuid, boolean yesNo) {
 		try {
-			PlayerPreferences pp = preferences.players.getOrDefault(uuid, new PlayerPreferences());
-			pp.display = yesNo;
-			if(!preferences.players.containsKey(uuid)) preferences.players.put(uuid, pp);
+			synchronized(preferences) {
+				PlayerPreferences pp = preferences.players.getOrDefault(uuid, new PlayerPreferences());
+				pp.display = yesNo;
+				if(!preferences.players.containsKey(uuid)) preferences.players.put(uuid, pp);
+			}
 		} catch(Exception e) {
 			TerramapMod.logger.error("Failed to set player display preferences! See stack trace:");
 			TerramapMod.logger.catching(e);
@@ -52,16 +63,21 @@ public class TerramapServerPreferences {
 			return;
 		}
 		if(preferences == null) {
-			TerramapMod.logger.error("Trying to save null server preferences, this is not normal, aborting!");
+			long t = System.currentTimeMillis();
+			if(t - lastNullSaveTime > 5*3600*1000) {
+				TerramapMod.logger.error("Trying to save null server preferences, this is not normal, aborting and reseting preferences! This message will not be logged again for 5mn.");
+				lastNullSaveTime = t;
+			}
+			preferences = new Preferences();
 			return;
 		}
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String str = gson.toJson(preferences);
 		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String str = gson.toJson(preferences);
 			Files.write(str, file, Charset.defaultCharset());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			TerramapMod.logger.error("Failed to write server preferences to " + file.getAbsolutePath());
-			e.printStackTrace();
+			TerramapMod.logger.catching(e);
 		}
 	}
 
