@@ -11,7 +11,8 @@ import net.minecraftforge.server.permission.PermissionAPI;
  * The goal in the long run is to support both Forge and Bukkit permissions
  * This is intended to provide an abstraction layer
  * 
- *TODO Support Bukkit permissions
+ * TODO Support Bukkit permissions
+ * 
  *
  * @author SmylerMC
  *
@@ -43,4 +44,5 @@ public abstract class PermissionManager {
 	public static boolean hasPermission(UUID uuid, Permission perm) {
 		return PermissionAPI.hasPermission(new GameProfile(uuid, null), perm.getNodeName(), null);
 	}
+	
 }

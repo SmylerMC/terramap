@@ -1,53 +1,89 @@
 package fr.thesmyler.terramap.network;
 
-import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapUtils;
-import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
+import java.util.UUID;
+
+import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import io.github.terra121.EarthGeneratorSettings;
-import io.github.terra121.EarthTerrainProcessor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class S2CTerramapHelloPacket implements IMessage {
 
-	public EarthGeneratorSettings settings;
 	public String serverVersion;
-	public boolean syncPlayers;
-	public boolean syncSpectators;
-	public boolean hasFe; //Forge essentials
+	public EarthGeneratorSettings worldSettings;
+	public UUID worldUUID;
+	public PlayerSyncStatus syncPlayers;
+	public PlayerSyncStatus syncSpectators;
+	public boolean enablePlayerRadar;
+	public boolean enableAnimalRadar;
+	public boolean enableMobRadar;
+	public boolean enableDecoRadar;
+	public boolean hasWarpSupport;
 	
+	//TODO Warp support
+		
 	public S2CTerramapHelloPacket() {}
 	
-	public S2CTerramapHelloPacket(String serverVersion, EarthGeneratorSettings settings, boolean syncPlayers, boolean syncSpectators, boolean hasFe) {
-		this.settings = settings;
+	public S2CTerramapHelloPacket(
+			String serverVersion,
+			EarthGeneratorSettings settings,
+			UUID worldUUID,
+			PlayerSyncStatus syncPlayers,
+			PlayerSyncStatus syncSpectators,
+			boolean enablePlayerRadar,
+			boolean enableAnimalRadar,
+			boolean enableMobRadar,
+			boolean enableDecoRadar,
+			boolean warpSupport) {
+		this.worldSettings = settings;
 		this.serverVersion = serverVersion;
+		this.worldUUID = worldUUID;
 		this.syncPlayers = syncPlayers;
 		this.syncSpectators = syncSpectators;
-		this.hasFe = hasFe;
+		this.enableAnimalRadar = enablePlayerRadar;
+		this.enablePlayerRadar = enablePlayerRadar;
+		this.enableMobRadar = enableMobRadar;
+		this.enableDecoRadar = enableDecoRadar;
+		this.hasWarpSupport = warpSupport;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.serverVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		this.syncPlayers = buf.readBoolean();
-		this.syncSpectators = buf.readBoolean();
-		this.hasFe = buf.readBoolean();
-		String settings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		this.settings = new EarthGeneratorSettings(settings);
+		String jsonWorldSettings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+		if(jsonWorldSettings.length() > 0) {
+			this.worldSettings = new EarthGeneratorSettings(jsonWorldSettings);
+		} else {
+			this.worldSettings = null;
+		}
+		long leastUUID = buf.readLong();
+		long mostUUID = buf.readLong();
+		this.worldUUID = new UUID(mostUUID, leastUUID);
+		this.syncPlayers = PlayerSyncStatus.getFromNetworkCode(buf.readByte());
+		this.syncSpectators = PlayerSyncStatus.getFromNetworkCode(buf.readByte());
+		this.enablePlayerRadar = buf.readBoolean();
+		this.enableAnimalRadar = buf.readBoolean();
+		this.enableMobRadar = buf.readBoolean();
+		this.enableDecoRadar = buf.readBoolean();
+		this.hasWarpSupport = buf.readBoolean();
 	}
 
 	@Override
-	public void toBytes(ByteBuf buf) { 
-		String settingsStr = this.settings.toString();
+	public void toBytes(ByteBuf buf) {
 		TerramapNetworkManager.encodeStringToByteBuf(this.serverVersion, buf);
-		buf.writeBoolean(this.syncPlayers);
-		buf.writeBoolean(this.syncSpectators);
-		buf.writeBoolean(this.hasFe);
-		TerramapNetworkManager.encodeStringToByteBuf(settingsStr, buf);
+		TerramapNetworkManager.encodeStringToByteBuf(this.worldSettings.toString(), buf);
+		buf.writeLong(this.worldUUID.getLeastSignificantBits());
+		buf.writeLong(this.worldUUID.getMostSignificantBits());
+		buf.writeByte(this.syncPlayers.VALUE);
+		buf.writeByte(this.syncSpectators.VALUE);
+		buf.writeBoolean(this.enablePlayerRadar);
+		buf.writeBoolean(this.enableAnimalRadar);
+		buf.writeBoolean(this.enableMobRadar);
+		buf.writeBoolean(this.enableDecoRadar);
+		buf.writeBoolean(this.hasWarpSupport);
 	}
 	
 	public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {
@@ -57,17 +93,13 @@ public class S2CTerramapHelloPacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(()->{TerramapMod.proxy.onServerHello(message);});
+			Minecraft.getMinecraft().addScheduledTask(()->{RemoteSynchronizer.onServerHello(message);});
 			return null;
 		}
 		
 
 	}
 	
-	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
-		if(TerramapUtils.isEarthWorld(world)) {
-			return ((EarthTerrainProcessor)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
-		} else return null;
-	}
+	
 	
 }

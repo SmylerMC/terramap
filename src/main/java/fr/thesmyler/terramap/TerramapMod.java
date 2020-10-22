@@ -1,12 +1,14 @@
 package fr.thesmyler.terramap;
 
+import java.io.File;
 import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.caching.CacheManager;
-import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.command.PermissionManager;
+import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
+import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -24,7 +26,7 @@ public class TerramapMod {
     public static final String MODID = "terramap";
     private static  String version;
 	public static final String AUTHOR_EMAIL = "smyler at mail dot com";
-
+	public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
 
     public static Logger logger;
     public static CacheManager cacheManager;
@@ -40,6 +42,8 @@ public class TerramapMod {
     	logger = event.getModLog();
     	TerramapMod.version = event.getModMetadata().version;
     	TerramapMod.proxy.preInit(event);
+    	File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
+    	MapStyleRegistry.setConfigMapFile(mapStyleFile);
     }
 
     @EventHandler
@@ -47,6 +51,7 @@ public class TerramapMod {
     	MinecraftForge.EVENT_BUS.register(new CommonTerramapEventHandler());
     	TerramapMod.proxy.init(event);
     	PermissionManager.registerNodes();
+    	MapStyleRegistry.loadFromConfigFile();
     }
     
     public static String getVersion() {
@@ -60,14 +65,7 @@ public class TerramapMod {
     
     @NetworkCheckHandler
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
-    	String remoteVersion = remote.get(TerramapMod.MODID);
-    	if(remoteVersion == null) return true; //Terramap is not installed on remote, this is fine
-    	//Version prior to 1.0.0-beta5 do not have hello packet but projection sync packet
-    	if(remoteVersion.contains("1.0.0-beta4")) return false;
-    	if(remoteVersion.contains("1.0.0-beta3")) return false;
-    	if(remoteVersion.contains("1.0.0-beta2")) return false;
-    	if(remoteVersion.contains("1.0.0-beta1")) return false;
-    	return true; //Anything else should be ok
+    	return true; //Anything should be ok, the actual check is down in the server event handler
     }
     
     @EventHandler

@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.gui.GuiTiledMap.SavedMapState;
+import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -32,11 +32,11 @@ public class TerramapClientPreferences {
 		return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).genSettings: "";
 	}
 	
-	public static SavedMapState getServerMapState(String serverId) {
+	public static TerramapScreenSavedState getServerSavedScreen(String serverId) {
 		return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).mapState: null;
 	}
 
-	public static void setServerMapState(String serverId, SavedMapState mapState) {
+	public static void setServerSavedScreen(String serverId, TerramapScreenSavedState mapState) {
 		ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
 		serv.mapState = mapState;
 		if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
@@ -90,7 +90,7 @@ public class TerramapClientPreferences {
 	
 	private static class ServerPreferences {
 		public String genSettings = "";
-		public SavedMapState mapState = new SavedMapState();
+		public TerramapScreenSavedState mapState = new TerramapScreenSavedState();
 	}
 	
 }

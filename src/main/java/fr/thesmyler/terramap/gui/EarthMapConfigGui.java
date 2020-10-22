@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.IOUtils;
 
-import fr.thesmyler.terramap.TerramapServer;
+import fr.thesmyler.terramap.TerramapRemote;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.TerraMod;
 import io.github.terra121.control.DynamicOptions;
@@ -43,11 +43,11 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 
 	private EarthGeneratorSettings cfg;
 
-	GuiTiledMap parent;
+	GuiScreen parent;
 
-	public EarthMapConfigGui(GuiTiledMap parent, Minecraft mc) {
+	public EarthMapConfigGui(GuiScreen parent, Minecraft mc) {
 
-		EarthGeneratorSettings parentCfg = TerramapServer.getServer().getGeneratorSettings();
+		EarthGeneratorSettings parentCfg = TerramapRemote.getRemote().getGeneratorSettings();
 		if(parentCfg == null) cfg = new EarthGeneratorSettings("");
 		else cfg = new EarthGeneratorSettings(parentCfg.toString());
 
@@ -165,8 +165,8 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int mouseEvent) {
 		if(done.mousePressed(mc, mouseX, mouseY)) {
-			TerramapServer.getServer().setGeneratorSettings(this.cfg);
-			TerramapServer.getServer().saveSettings();
+			TerramapRemote.getRemote().setGeneratorSettings(this.cfg);
+			TerramapRemote.getRemote().saveSettings();
 			this.mc.displayGuiScreen(this.parent); ///exit
 			return;
 

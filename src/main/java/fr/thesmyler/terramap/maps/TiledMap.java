@@ -2,42 +2,50 @@ package fr.thesmyler.terramap.maps;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.maps.tiles.RasterWebTile;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import net.minecraft.util.text.ITextComponent;
 
 
-public class TiledMap<T extends RasterWebTile> {
+public class TiledMap implements Comparable<TiledMap> {
 
-	protected TileFactory<T> factory;
-	protected LinkedList<T> tiles;
+	protected String urlPattern;
+	protected LinkedList<WebTile> tiles;
 	protected int maxLoaded;
 	protected int maxZoom = 19;
 	protected int minZoom = 0;
-	
-	protected String name;
-	protected String copyright;
-	protected String copyrightURL;
-	
+	protected int displayPriority = 0;
+	protected boolean allowOnMinimap = true;
+
+	protected String id;
+	protected TiledMapProvider provider;
+	protected Map<String, String> names; // A map of language key => name
+	protected Map<String, String> copyrightJsons;
+	protected long version;
+	protected String comment;
+	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
+
 	protected boolean smartLoadEnable = false;
-	
-	public TiledMap(TileFactory<T> fact, int minZoom, int maxZoom, int maxLoaded, String name, String copyright, String copyrightURL) {
-		this.factory = fact;
-		this.tiles = new LinkedList<T>();
+
+	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, Map<String, String> copyright, int displayPriority, boolean allowOnMinimap, TiledMapProvider provider, long version, String comment) {
+		this.urlPattern = urlPattern;
+		this.tiles = new LinkedList<WebTile>();
 		this.maxLoaded = maxLoaded;
 		this.maxZoom = maxZoom;
 		this.minZoom = minZoom;
-		this.name = name;
-		this.copyright = copyright;
-		this.copyrightURL = copyrightURL;
+		this.id = id;
+		this.copyrightJsons = copyright;
+		this.names = names;
+		this.provider = provider;
+		this.version = version;
+		this.comment = comment;
+		this.allowOnMinimap = allowOnMinimap;
+		this.displayPriority = displayPriority;
 	}
-	
-	public TiledMap(TileFactory<T> fact) {
-		this(fact, 0, 19, 120, "", "", "");
-	}	
-	
-	protected void loadTile(T tile) {
+
+	protected void loadTile(WebTile tile) {
 		this.tiles.add(0, tile);
 		if(this.isSmartLoadingEnabled()) {
 			TerramapMod.cacheManager.cacheAsync(tile);
@@ -47,86 +55,86 @@ public class TiledMap<T extends RasterWebTile> {
 					if(x == 0 && y == 0) continue;
 					try {
 						TerramapMod.cacheManager.cacheAsync(this.getTile(tile.getZoom(), tile.getX()+x, tile.getY()+y));
-					} catch (RasterWebTile.InvalidTileCoordinatesException e) {}
+					} catch (WebTile.InvalidTileCoordinatesException e) {}
 				}
 			}
 			this.enableSmartLoading();
 		}
 		this.unloadToMaxLoad();
 	}
-	
-	public T getTile(int zoom, long x, long y) {
-		for(T tile: this.tiles)
+
+	public WebTile getTile(int zoom, long x, long y) {
+		for(WebTile tile: this.tiles)
 			if(tile.getX() == x && tile.getY() == y && tile.getZoom() == zoom) {
 				this.needTile(tile);
 				return tile;
 			}
-		T tile = this.factory.getInstance(zoom, x, y);
+		WebTile tile = new WebTile(this.urlPattern, zoom, x, y);
 		this.loadTile(tile);
 		return tile;
 	}
-	
-	
-	public T getTileAt(int zoom, long x, long y) {
+
+
+	public WebTile getTileAt(int zoom, long x, long y) {
 		long tileX = WebMercatorUtils.getTileXAt(x);
 		long tileY = WebMercatorUtils.getTileYAt(y);
 		return this.getTile(zoom, tileX, tileY);
 	}
-	
-	public void unloadTile(T tile) {
+
+	public void unloadTile(WebTile tile) {
 		tile.unloadTexture();
 	}
-	
-	
+
+
 	public long getSizeInTiles(int zoomLevel){
 		return WebMercatorUtils.getDimensionsInTile(zoomLevel);
 	}
-	
+
 	public long getSizeInPixels(int zoomLevel){
 		return WebMercatorUtils.getMapDimensionInPixel(zoomLevel);
 	}
-	
+
 	public int[] getPixel(int zoom, long x, long y) throws IOException {
 		long tileX = WebMercatorUtils.getTileXAt(x);
 		long tileY = WebMercatorUtils.getTileYAt(y);
 		int tX = (int)(x % 256), tY = (int)(y % 256);
 		return this.getTile(zoom, tileX, tileY).getPixel(tX, tY);
 	}
-	
+
 	public void enableSmartLoading() {
 		this.smartLoadEnable = true;
 	}
-	
+
 	public void disableSmartLoading() {
 		this.smartLoadEnable = false;
 	}
-	
+
 	public boolean isSmartLoadingEnabled() {
 		return this.smartLoadEnable;
 	}
-	
+
 	/**
 	 * @return The number of tiles currently loaded
 	 */
 	public int getLoadedCount() {
 		return this.tiles.size();
 	}
-	
-	public void needTile(T tile) {
+
+	public void needTile(WebTile tile) {
 		if(this.tiles.contains(tile)) {
 			this.tiles.remove(tile);
 		}
 		this.tiles.add(0, tile);
 	}
-	
+
 	public int getMaxLoad() {
 		return this.maxLoaded;
 	}
-	
+
 	public void setMaxLoad(int maxLoad) {
 		this.maxLoaded = maxLoad;
 	}
-	
+
 	/**
 	 * Unloads tiles until we are at the max number of loaded tiles
 	 */
@@ -135,32 +143,88 @@ public class TiledMap<T extends RasterWebTile> {
 			this.unloadTile(this.tiles.removeLast());
 		}
 	}
-	
+
 	public void unloadAll() {
 		int i = this.maxLoaded;
 		this.maxLoaded = 0;
 		this.unloadToMaxLoad();
 		this.maxLoaded = i;
 	}
-	
+
 	public int getMinZoom() {
 		return this.minZoom;
 	}
-	
+
 	public int getMaxZoom() {
 		return this.maxZoom;
 	}
-	
-	public String getName() {
-		return this.name;
+
+	public String getId() {
+		return this.id;
+	}
+
+	public ITextComponent getCopyright(String localeKey) {
+		String result = this.copyrightJsons.getOrDefault(localeKey, this.copyrightJsons.get("en_us"));
+		if(result == null) {
+			return FALLBACK_COPYRIGHT;
+		} else {
+			try {
+				return ITextComponent.Serializer.jsonToComponent(result);
+			} catch (Exception e) {
+				TerramapMod.logger.error("Copyright notice json failed to be parsing!");
+				TerramapMod.logger.catching(e);
+				return FALLBACK_COPYRIGHT;
+			}
+		}
 	}
 	
-	public String getCopyright() {
-		return this.copyright;
+	public Map<String, String> getUnlocalizedCopyrights() {
+		return this.copyrightJsons;
+	}
+
+	public String getLocalizedName(String localeKey) {
+		String result = this.names.getOrDefault(localeKey, this.names.get("en_us"));
+		if(result != null) {
+			return result;
+		} else {
+			return this.id;
+		}
 	}
 	
-	public String getCopyrightURL() {
-		return this.copyrightURL;
+	public Map<String, String> getUnlocalizedNames() {
+		return this.names;
 	}
 	
+	public String getUrlPattern() {
+		return this.urlPattern;
+	}
+	
+	public String getComment() {
+		return this.comment;
+	}
+	
+	public TiledMapProvider getProvider() {
+		return this.provider;
+	}
+	
+	public long getProviderVersion() {
+		return this.version;
+	}
+	
+	public int getDisplayPriority() {
+		return this.displayPriority;
+	}
+
+	@Override
+	public int compareTo(TiledMap o) {
+		if(o == null) return 1;
+		if(this.displayPriority > o.displayPriority) return 1;
+		else if(this.displayPriority == o.displayPriority) return 0;
+		else return -1;
+	}
+	
+	public boolean isAllowedOnMinimap() {
+		return this.allowOnMinimap;
+	}
+
 }

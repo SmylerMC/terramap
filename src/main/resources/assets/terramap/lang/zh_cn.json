@@ -1,0 +1,88 @@
+terramap.config.minimap.enable=小地图：启用
+terramap.config.minimap.style=小地图：风格
+terramap.config.minimap.pos_x=小地图：X轴位置 (%%)
+terramap.config.minimap.pos_y=小地图：Y轴位置 (%%)
+terramap.config.minimap.width=小地图宽度 (%%)
+terramap.config.minimap.height=小地图高度 (%%)
+terramap.config.minimap.zoom=小地图缩放
+terramap.config.minimap.show_entities=小地图：显示实体
+terramap.config.minimap.show_players=小地图：显示其他玩家
+terramap.config.cache_dir=缓存目录名
+terramap.config.tile_scaling=Tile缩放
+terramap.config.auto_tile_scaling=自动Tile缩放
+terramap.config.max_tile_load=Tile缓存大小
+terramap.config.double_click_delay=双击延迟
+terramap.config.tpllcmd=tpll命令
+terramap.config.forcetpllcmd=强制tp命令
+terramap.config.sync_players=同步玩家
+terramap.config.sync_spec=同步观察者
+terramap.config.sync_interval=地图同步刻延迟
+terramap.config.sync_heartbeet=同步超时
+terramap.config.players_opt_in_to_display_default=默认显示玩家
+terramap.config.sync_custom_maps=发送自定义地图到客户端
+terramap.config.join_without_mod_message=不使用Terramap加入
+terramap.config.join_with_outdated_mod_message=使用过期的Terramap加入
+
+terramap.binding.category=Terramap
+terramap.binding.open_map=打开地图
+terramap.binding.toggle_debug=切换Terramap调试模式
+terramap.binding.shortcuts=地图快捷键
+terramap.binding.copy_geo=复制地理坐标
+terramap.binding.copy_mc=复制minecraft坐标
+
+terramap.mapwidget.rclickmenu.teleport=传送到这里
+terramap.mapwidget.rclickmenu.center=以这里为地图中心
+terramap.mapwidget.rclickmenu.copy=复制
+terramap.mapwidget.rclickmenu.copy.geo=地理坐标
+terramap.mapwidget.rclickmenu.copy.block=方块坐标
+terramap.mapwidget.rclickmenu.copy.chunk=区块坐标
+terramap.mapwidget.rclickmenu.copy.region=原版区域文件名
+terramap.mapwidget.rclickmenu.copy.3dr=Y=0 3D区域文件名
+terramap.mapwidget.rclickmenu.copy.2dr=2D区域文件名
+terramap.mapwidget.rclickmenu.open=显示在
+terramap.mapwidget.rclickmenu.open_osm=打开街景图
+terramap.mapwidget.rclickmenu.open_bte=BTE网站
+terramap.mapwidget.rclickmenu.open_gmaps=谷歌地图
+terramap.mapwidget.rclickmenu.open_gearth_web=谷歌地球网页版
+terramap.mapwidget.rclickmenu.open_gearth_pro=谷歌地球专业版
+terramap.mapwidget.rclickmenu.open_bing=必应地图
+terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
+terramap.mapwidget.rclickmenu.open_yandex=Yandex地图
+terramap.mapwidget.rclickmenu.set_proj=设置投影
+
+terramap.mapwidget.shortcuts.tp=点击传送
+
+terramap.terramapscreen.projection_warning.unused_comment=你可以在这里添加多行自定义内容
+terramap.terramapscreen.projection_warning.line1=服务器没有安装Terramap！
+terramap.terramapscreen.projection_warning.line2=无法识别投影。
+terramap.terramapscreen.projection_warning.line3=Minecraft世界的元素不会显示在地图上。
+terramap.terramapscreen.projection_warning.line4=你可以让服务器管理员安装Terramap，
+terramap.terramapscreen.projection_warning.line5=或者你可以在右击菜单中手动设置投影。
+
+terramap.terramapscreen.buttons.close.tooltip=关闭地图
+terramap.terramapscreen.buttons.zoomin.tooltip=放大
+terramap.terramapscreen.buttons.zoomout.tooltip=缩小
+terramap.terramapscreen.buttons.track.tooltip=追踪玩家
+terramap.terramapscreen.buttons.style.tooltip=更改地图风格
+terramap.terramapscreen.buttons.info.tooltip=折叠信息和搜索面板
+terramap.terramapscreen.search.wip=开发中
+
+terramap.terramapscreen.information.mouse_geo=鼠标位置： %1$s° %2$s°
+terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
+terramap.terramapscreen.information.trackedoutsidemap=%1$s在投影之外
+terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°
+terramap.terramapscreen.information.playerout=你在投影之外
+terramap.terramapscreen.information.playergeo=玩家位置：%1$s° %2$s°
+terramap.terramapscreen.information.noplayer=玩家位置：-° -°
+terramap.terramapscreen.information.distortion=Distortion: %1$s 格/米 ; ±%2$s°
+
+terramap.terramapscreen.markercontrollers.buttons.mainplayer=切换主玩家是否可见
+terramap.terramapscreen.markercontrollers.buttons.otherplayer=切换其它玩家是否可见
+terramap.terramapscreen.markercontrollers.buttons.animals=切换动物是否可见
+terramap.terramapscreen.markercontrollers.buttons.mobs=切换怪物是否可见
+
+terramap.ingameactions.copy.noplayer=无法复制坐标：没有玩家
+terramap.ingameactions.copy.noproj=无法复制坐标：没有投影
+terramap.ingameactions.copy.outproj=无法复制坐标：你在投影之外
+terramap.ingameactions.copy.mc=已复制Minecraft坐标到剪贴板
+terramap.ingameactions.copy.geo=已复制地理坐标到剪贴板
