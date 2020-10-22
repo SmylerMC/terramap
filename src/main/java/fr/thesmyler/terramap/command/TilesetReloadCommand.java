@@ -12,6 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 
 public class TilesetReloadCommand extends CommandBase {
 	
@@ -32,7 +33,12 @@ public class TilesetReloadCommand extends CommandBase {
 		if(sender instanceof EntityPlayer && !PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES)) {
 			throw new CommandException("You do not have the permission to use that command!");
 		}
-		MapStyleRegistry.loadFromConfigFile();
+		try {
+			MapStyleRegistry.loadFromConfigFile();
+			sender.sendMessage(new TextComponentString("Done"));
+		} catch(Exception e) {
+			sender.sendMessage(new TextComponentString("Error"));
+		}
 	}
 	
 	@Override
