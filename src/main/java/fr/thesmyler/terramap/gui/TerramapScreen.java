@@ -261,7 +261,7 @@ public class TerramapScreen extends Screen {
 			} else {
 				String formatedLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
 				String formatedLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
-				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.playergeo", formatedLon, formatedLat));
+				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
 			}
 		} else {
 			this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.noplayer"));
