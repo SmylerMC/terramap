@@ -370,6 +370,20 @@ public class TerramapScreen extends Screen {
 		this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
 	}
 
+	@Override
+	public boolean doesGuiPauseGame() {
+		/**
+		 * We cannot "pause the game" in single player.
+		 * It stops the integrated server from processing client packets, including the player movements packets.
+		 * But sending a tpll/tp command to a paused server actually processes the command and updates the player position.
+		 * That means that once the server resumes, it will try to process player movement packets from before the player was teleported,
+		 * and will check a MASSIVE area for collision.
+		 * 
+		 * There may be a potential DOS here?
+		 */
+		return false;
+	}
+
 	private boolean search(String text) {
 		TerramapMod.logger.info("Geo search: " + text);
 		//TODO Search

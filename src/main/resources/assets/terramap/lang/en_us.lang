@@ -1,4 +1,4 @@
-terramap.config.minimap.enable=Minimap:enable
+terramap.config.minimap.enable=Minimap: enable
 terramap.config.minimap.style=Minimap: style
 terramap.config.minimap.pos_x=Minimap: X position (%%)
 terramap.config.minimap.pos_y=Minimap: Y position (%%)
