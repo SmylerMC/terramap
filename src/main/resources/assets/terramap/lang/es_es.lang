@@ -19,7 +19,7 @@ terramap.config.sync_spec=Sincronizar los espectadores
 terramap.config.sync_interval=Intervalo de tiempo de sincronización del mapa (en ticks)
 terramap.config.sync_heartbeet=Tiempo de espera de sincronización agotado
 terramap.config.players_opt_in_to_display_default=Vista predeterminada
-terramap.config.sync_custom_maps=Partage des cartes customs
+terramap.config.sync_custom_maps=Compartir los mapas personalizados
 terramap.config.join_without_mod_message=Mensaje sin mod
 terramap.config.join_with_outdated_mod_message=Mensaje con una versión antigua del mod
 
@@ -36,9 +36,9 @@ terramap.mapwidget.rclickmenu.copy=Copiar
 terramap.mapwidget.rclickmenu.copy.geo=las coordenadas geográficas
 terramap.mapwidget.rclickmenu.copy.block=las coordenadas del bloque
 terramap.mapwidget.rclickmenu.copy.chunk=las coordenadas del chunk
-terramap.mapwidget.rclickmenu.copy.region=le nom de fichier de la région vanilla
-terramap.mapwidget.rclickmenu.copy.3dr=le nom de fichier de la région 3D en Y=0
-terramap.mapwidget.rclickmenu.copy.2dr=le nom de fichier de la région 2D
+terramap.mapwidget.rclickmenu.copy.region=el nombre de archivo de la región Vanilla
+terramap.mapwidget.rclickmenu.copy.3dr=el nombre de archivo de la región 3D en Y=0
+terramap.mapwidget.rclickmenu.copy.2dr=el nombre de archivo de la región 2D
 terramap.mapwidget.rclickmenu.open=Abrir en 
 terramap.mapwidget.rclickmenu.open_osm=OpenStreetMaps
 terramap.mapwidget.rclickmenu.open_bte=con el site de BTE
@@ -74,8 +74,8 @@ terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°
 terramap.terramapscreen.information.playerout=Tu jugador está fuera del área proyectada
 terramap.terramapscreen.information.playergeo=Posición del jugador : %1$s° %2$s°
 terramap.terramapscreen.information.noplayer=Posición del jugador : -° -°
-terramap.terramapscreen.information.distortion=Distortion: %1$s blocks/m ; ±%2$s°
-terramap.terramapscreen.information.outdatedterra121=Actualiza Terra121 para tener las últimas novedades
+terramap.terramapscreen.information.distortion=Distorsión: %1$s bloques/m ; ±%2$s°
+terramap.terramapscreen.information.outdatedterra121=Actualiza Terra121 para utilizar el mod
 
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=Cambiar la visibilidad del jugador principal
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=Cambiar la visibilidad de los otros jugadores
