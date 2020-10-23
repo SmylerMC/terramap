@@ -12,8 +12,8 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	
 	protected TerramapPlayer player;
 
-	public OtherPlayerMarker(MarkerController<?> controller, TerramapPlayer player) {
-		super(controller, null);
+	public OtherPlayerMarker(MarkerController<?> controller, TerramapPlayer player, int downscaleFactor) {
+		super(controller, null, downscaleFactor);
 		this.player = player;
 	}
 	
@@ -34,18 +34,6 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	@Override
 	protected ResourceLocation getSkin() {
 		return this.player.getSkin();
-	}
-	
-	
-
-	@Override
-	public int getDeltaX() {
-		return -8;
-	}
-
-	@Override
-	public int getDeltaY() {
-		return -8;
 	}
 
 	@Override

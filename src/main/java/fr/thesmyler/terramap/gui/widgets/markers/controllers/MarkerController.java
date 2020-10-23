@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 
 public abstract class MarkerController<T extends Marker> {
@@ -16,7 +17,7 @@ public abstract class MarkerController<T extends Marker> {
 		this.clazz = clazz;
 	}
 	
-	public abstract T[] getNewMarkers(Marker[] existingMarkers);
+	public abstract T[] getNewMarkers(Marker[] existingMarkers, MapWidget map);
 	
 	public int getZLayer() {
 		return this.zLayer;

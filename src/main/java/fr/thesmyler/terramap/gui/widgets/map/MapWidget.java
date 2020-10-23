@@ -283,7 +283,7 @@ public class MapWidget extends Screen {
 		}
 		for(MarkerController<?> controller: this.markerControllers.values()) {
 			Marker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new Marker[] {});
-			Marker[] newMarkers = controller.getNewMarkers(existingMarkers);
+			Marker[] newMarkers = controller.getNewMarkers(existingMarkers, this);
 			for(Marker markerToAdd: newMarkers) {
 				this.addWidget(markerToAdd);
 			}

@@ -4,7 +4,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.OtherPlayerMarker;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
@@ -30,7 +32,9 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 	}
 
 	@Override
-	public OtherPlayerMarker[] getNewMarkers(Marker[] existingMarkers) {
+	public OtherPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
+		
+		int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
 		
 		if(TerramapRemote.getRemote().getProjection() != null) {
 			
@@ -50,7 +54,7 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 			OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
 			int i = 0;
 			for(TerramapPlayer player: players.values()) {
-				newMarkers[i++] = new OtherPlayerMarker(this, player);
+				newMarkers[i++] = new OtherPlayerMarker(this, player, factor);
 			}
 			
 			return newMarkers;

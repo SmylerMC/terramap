@@ -1,8 +1,10 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -26,10 +28,11 @@ public class MainPlayerMarkerController extends MarkerController<MainPlayerMarke
 	}
 
 	@Override
-	public MainPlayerMarker[] getNewMarkers(Marker[] existingMarkers) {
+	public MainPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
+		int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
 		EntityPlayerSP self = Minecraft.getMinecraft().player;
 		if(existingMarkers.length < 1 && self != null && TerramapRemote.getRemote().getProjection() != null) {
-			return new MainPlayerMarker[] { new MainPlayerMarker(this) };
+			return new MainPlayerMarker[] { new MainPlayerMarker(this, factor) };
 		}
 		return new MainPlayerMarker[0];
 	}

@@ -19,8 +19,8 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	
 	private double playerLongitude, playerLatitude;
 
-	public MainPlayerMarker(MarkerController<?> controller) {
-		super(controller, null);
+	public MainPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
+		super(controller, null, downscaleFactor);
 	}
 	
 	@Override
@@ -40,18 +40,6 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	@Override
 	protected ResourceLocation getSkin() {
 		return Minecraft.getMinecraft().player.getLocationSkin();
-	}
-	
-	
-
-	@Override
-	public int getDeltaX() {
-		return -8;
-	}
-
-	@Override
-	public int getDeltaY() {
-		return -8;
 	}
 
 	@Override
