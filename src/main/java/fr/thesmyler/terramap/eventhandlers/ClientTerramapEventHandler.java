@@ -111,7 +111,7 @@ public class ClientTerramapEventHandler {
 				MapWidget map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
 				map.setInteractive(false);
 				map.setX((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
-				map.setY((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
+				map.setY((int) (TerramapConfig.minimapPosY * 0.01 * screen.getWidth()));
 				map.setWidth((int) (TerramapConfig.minimapWidth * 0.01 * screen.getWidth()));
 				map.setHeight((int) (TerramapConfig.minimapHeight * 0.01 * screen.getWidth()));
 				Map<String, Boolean> markerVisibility = new HashMap<String, Boolean>();
