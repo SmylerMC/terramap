@@ -222,22 +222,36 @@ public class TerramapScreen extends Screen {
 
 		double mouseLat = this.map.getMouseLatitude();
 		double mouseLon = this.map.getMouseLongitude();
-		String displayLat = GeoServices.formatGeoCoordForDisplay(mouseLat);
-		String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
 		String formatX = "-";
 		String formatZ = "-";
 		String formatScale = "-"; 
 		String formatOrientation = "-";
 		if(Math.abs(mouseLat) > WebMercatorUtils.LIMIT_LATITUDE) {
-			displayLat = "-";
-			displayLon = "-";
-		} else if(projection != null) {
-			double[] pos = projection.fromGeo(mouseLon, mouseLat);
-			formatX = "" + Math.round(pos[0]);
-			formatZ = "" + Math.round(pos[1]);
-			double[] dist = projection.tissot(mouseLon, mouseLat, 0.0000001f);
-			formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
-			formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(dist[1]*180.0/Math.PI);
+			this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", "-", "-"));
+			this.mouseGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_geo", "-", "-"));
+			this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", "-", "-"));
+		} else {
+			String displayLat = GeoServices.formatGeoCoordForDisplay(mouseLat);
+			String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
+			this.mouseGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_geo", displayLat, displayLon));
+			if(projection != null) {
+				double[] pos = projection.fromGeo(mouseLon, mouseLat);
+				formatX = "" + Math.round(pos[0]);
+				formatZ = "" + Math.round(pos[1]);
+				this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
+				try {
+					double[] dist = projection.tissot(mouseLon, mouseLat, 0.0000001f);
+					formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
+					formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(dist[1]*180.0/Math.PI);
+					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
+				} catch(NoSuchMethodError e) {
+					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.outdatedterra121"));
+					this.distortionText.setBaseColor(0xFFFF0000);
+				}
+			} else {
+				this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", "-", "-"));
+				this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", "-", "-"));
+			}
 		}
 		
 		if(this.map.isTracking()) {
@@ -266,10 +280,6 @@ public class TerramapScreen extends Screen {
 		} else {
 			this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.noplayer"));
 		}
-
-		this.mouseGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_geo", displayLat, displayLon));
-		this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
-		this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
 		
 		if(this.debugMode) {
 			String dbText = "";

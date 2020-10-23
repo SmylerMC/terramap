@@ -75,6 +75,7 @@ terramap.terramapscreen.information.playerout=Vous êtes en dehors de la project
 terramap.terramapscreen.information.playergeo=Position du joueur: %1$s° %2$s°
 terramap.terramapscreen.information.noplayer=Position du joueur: -° -°
 terramap.terramapscreen.information.distortion=Distortion: %1$s blocks/m ; ±%2$s°
+terramap.terramapscreen.information.outdatedterra121=Merci de mettre à jour Terra121
 
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=Changer la visibilité du joueur principal
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=Changer la visibilité des autres joueurs
