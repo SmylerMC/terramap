@@ -1,0 +1,91 @@
+terramap.config.minimap.enable = Minimap: aktivieren
+terramap.config.minimap.style = Minimap: Stil
+terramap.config.minimap.pos_x = Minimap: X-Position (%%)
+terramap.config.minimap.pos_y = Minimap: Y-Position (%%)
+terramap.config.minimap.width = Minimap-Breite (%%)
+terramap.config.minimap.height = Minimap-Höhe (%%)
+terramap.config.minimap.zoom = Minimap-Zoom
+terramap.config.minimap.show_entities = Minimap: Entitäten anzeigen
+terramap.config.minimap.show_players = Minimap: Zeige andere Spieler
+terramap.config.cache_dir = Cache-Verzeichnis
+terramap.config.tile_scaling = Kachelskalierung
+terramap.config.auto_tile_scaling = Automatische Kachelskalierung
+terramap.config.max_tile_load = Kachel-Cache-Größe
+terramap.config.double_click_delay = Doppelklickverzögerung
+terramap.config.tpllcmd = tpll Befehl
+terramap.config.forcetpllcmd = tp Befehl erzwingen
+terramap.config.sync_players = Spieler synchronisieren
+terramap.config.sync_spec = Zuschauer synchronisieren
+terramap.config.sync_interval = Map-Sync-Tick-Intervall
+terramap.config.sync_heartbeet = Zeitlimit für Synchronisierung
+terramap.config.players_opt_in_to_display_default = Standardanzeige des Spielers
+terramap.config.sync_custom_maps = Benutzerdefinierte Karten an den Client senden
+terramap.config.join_without_mod_message = Du musst die Terramod installiert haben, um zu joinen.
+terramap.config.join_with_outdated_mod_message = Du benutzt eine veraltete Version der Terramod.
+
+terramap.binding.category = Terramap
+terramap.binding.open_map = Karte öffnen
+terramap.binding.toggle_debug = Terramap-Debug-Mod umschalten
+terramap.binding.shortcuts = Map-Verknüpfungen
+terramap.binding.copy_geo = Geografische Koordinaten kopieren
+terramap.binding.copy_mc = Minecraft-Koordinaten kopieren
+
+terramap.mapwidget.rclickmenu.teleport = Hier teleportieren
+terramap.mapwidget.rclickmenu.center = Karte hier zentrieren
+terramap.mapwidget.rclickmenu.copy = Kopieren
+terramap.mapwidget.rclickmenu.copy.geo = Geografische Koordinaten
+terramap.mapwidget.rclickmenu.copy.block = Block-Koordinaten
+terramap.mapwidget.rclickmenu.copy.chunk = Chunk-Koordinaten
+terramap.mapwidget.rclickmenu.copy.region = Dateiname der Vanilla-Region
+terramap.mapwidget.rclickmenu.copy.3dr = Y = 0 Dateiname der 3D-Region
+terramap.mapwidget.rclickmenu.copy.2dr = Dateiname der 2D-Region
+terramap.mapwidget.rclickmenu.open = Anzeigen in
+terramap.mapwidget.rclickmenu.open_osm = OpenStreetMaps
+terramap.mapwidget.rclickmenu.open_bte = BTE-Website
+terramap.mapwidget.rclickmenu.open_gmaps = Google Maps
+terramap.mapwidget.rclickmenu.open_gearth_web = Google Earth-Web
+terramap.mapwidget.rclickmenu.open_gearth_pro = Google Earth Pro
+terramap.mapwidget.rclickmenu.open_bing = Bing Maps
+terramap.mapwidget.rclickmenu.open_wikimapia = Wikimapia
+terramap.mapwidget.rclickmenu.open_yandex = Yandex Maps
+terramap.mapwidget.rclickmenu.set_proj = Projektion festlegen
+
+terramap.mapwidget.shortcuts.tp = Zum Teleportieren klicken
+
+terramap.terramapscreen.projection_warning.unused_comment = Nachricht an die Übersetzer: Sie können hier so viele Zeilen hinzufügen, wie Sie für Ihre Sprache benötigen. Fügen Sie einfach die entsprechende Nummer am Ende des Schlüssels hinzu
+terramap.terramapscreen.projection_warning.line1 = Terramap ist auf diesem Server nicht installiert!
+terramap.terramapscreen.projection_warning.line2 = Die verwendete Projektion kann nicht identifiziert werden.
+terramap.terramapscreen.projection_warning.line3 = Elemente aus der Minecraft-Welt werden nicht auf der Karte angezeigt.
+terramap.terramapscreen.projection_warning.line4 = Bitte den Serveradministrator, Terramap zu installieren.
+terramap.terramapscreen.projection_warning.line5 = oder Sie können die im Rechtsklick-Menü verwendete Projektion manuell einstellen.
+
+terramap.terramapscreen.buttons.close.tooltip = Karte schließen
+terramap.terramapscreen.buttons.zoomin.tooltip = Reinzoomen
+terramap.terramapscreen.buttons.zoomout.tooltip = Rauszoomen
+terramap.terramapscreen.buttons.track.tooltip = Spieler verfolgen
+terramap.terramapscreen.buttons.style.tooltip = Kartenstil ändern
+terramap.terramapscreen.buttons.info.tooltip = Informationen reduzieren und Pannel suchen
+terramap.terramapscreen.search.wip = Work In Progress
+
+terramap.terramapscreen.information.mouse_geo = Mausposition: %1$s° %2$s°
+terramap.terramapscreen.information.mouse_mc =X: %1$s Z: %2$s
+terramap.terramapscreen.information.trackedoutsidemap = %1$s liegt außerhalb der Projektion
+terramap.terramapscreen.information.tracked = %1$s: %2$s° %3$s°
+terramap.terramapscreen.information.playerout = Du befindest dich außerhalb der Projektion
+terramap.terramapscreen.information.playergeo = Spielerposition: %1$s° %2$s°
+terramap.terramapscreen.information.noplayer = Spielerposition: -° -°
+terramap.terramapscreen.information.distortion = Verzerrung: %1$s Blöcke/m ; ±%2$s°
+terramap.terramapscreen.information.outdatedterra121 = Bitte aktualisiere Terra121
+
+terramap.terramapscreen.markercontrollers.buttons.mainplayer = Sichtbarkeit des Spielers bearbeiten
+terramap.terramapscreen.markercontrollers.buttons.otherplayer = Sichtbarkeit anderer Spieler bearbeiten
+terramap.terramapscreen.markercontrollers.buttons.animals = Sichtbarkeit der Tiere bearbeiten
+terramap.terramapscreen.markercontrollers.buttons.mobs = Mob-Sichtbarkeit bearbeiten
+
+terramap.ingameactions.copy.noplayer = Koordinaten konnten nicht kopiert werden: kein Spieler
+terramap.ingameactions.copy.noproj = Koordinaten konnten nicht kopiert werden: keine Projektion
+terramap.ingameactions.copy.outproj = Koordinaten konnten nicht kopiert werden: du bist außerhalb der Projektion
+terramap.ingameactions.copy.mc = Minecraft Koordinaten wurden in die Zwischenablage kopiert
+terramap.ingameactions.copy.geo = Geografische Koordinaten wurden in die Zwischenablage kopiert
+
+
