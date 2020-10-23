@@ -11,6 +11,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
@@ -21,6 +22,7 @@ import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -78,8 +80,11 @@ public class ClientTerramapEventHandler {
 	
 	@SubscribeEvent
 	public void onChangeDimension(PlayerChangedDimensionEvent event) {
-		if(event.player.world.isRemote)
+		// Not called on client...
+		TerramapMod.logger.info(event.player.world.isRemote);
+		if(event.player.world.isRemote) {
 			TerramapRemote.getRemote().resetServerMapStyles();
+		}
 	}
 	
 	@SubscribeEvent
@@ -141,6 +146,8 @@ public class ClientTerramapEventHandler {
 				});
 			}
 			
+		} else if(event.getGui() instanceof GuiDownloadTerrain) {
+			TerramapRemote.getRemote().resetServerMapStyles();
 		}
 	}
 	
