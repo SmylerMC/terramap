@@ -14,28 +14,33 @@ Logo by [@DropeArt](https://twitter.com/DropeArt)
 Make sure you have the proper dependencies installed: Terra1:1, CubicChunks, CubicWorldGen and LetsEncryptCraft (The lets encrypt craft version from the BTE modpack may not be enough, make sure you install it from CurseForge if you have any issue).
 If the map crashes when opened on a BTE server, your version of Terra1:1 is probably to old and does not know about the new projection, you need to update to the new version included in the new installer.
 
-Terramap on a solo world, with the humanitarian osm style:
+Terramap on a solo world, with the vanilla osm style:
 ![terramap screenshot solo](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tiledmap.png)
 
 
 Terramap on BTE-France, with player synchronization enabled:
 ![terramap screenshot server](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tiledmap_server.png)
 
+Custom map styles on BTE-France:
+![terramap screenshot styles](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/custom_map_styles.png)
 
 Terramap on BTE Italia:
 ![terramap screenshot italia](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/tilermap_server_italia.png)
+
+The Terramap minimap on the left, with the Journeymap minimap on the right:
+![terramap screenshot minimap](https://raw.githubusercontent.com/SmylerMC/terramap/master/images/minimap.png)
 
 ## How to use:
 Add the mod to your mods folder along with Terra1:1 and the other mods of you modpack.
 In game, press m to open the map (by default, but it can be changed in the config)
 Drag it, zoom, and explore the world just like with any other digital map.
 Right-click somwhere to get a menu with various usefull tools (see the screenshots).
-Additionally, you can: press p to toggle debug mod, enable entity rendering in the mod config.
-If the map looks too pixelated, you can lower the tile scaling option in the config gui. Powers of two work best, but do not go lower than  0.125.
+Additionally, you can: press p to toggle debug mod, press control to enable quick tp mode, change the map style in the map style menu, change entity display preferences, follow an entity or player by double clicking it, configure the minimap in the mod's config, add your own map styles, and more...
 
 ## How to setup on servers:
 Add Terramap to your server's mod folder and restart the server to generate the config file.
 Players can connect whether or not they have Terramap installed on their client. They will still need it if they want to look at the map.
+You can edit `config/terramap_user_styles.json` to add your own map styles to your server. Use `/reloadmapstyles` to reload that file without restarting your server.
 You can edit your config file, here are some important options:
 
 ### `synchronize_players`
@@ -56,9 +61,15 @@ You can set this to true if you want clients to use a specific command when tele
 ### `players_opt_in_to_display_default`
 Set this to false if you want players to need to do /terrashow show to be visible on the map
 
-There are also to permission nodes related to /terrashow:
-### `terramap.commands.terrashow.others` allows to change anyone's visibility
-### `terramap.commands.terrashow.self` allows to change the visibility of the current players
+There are also a few permission nodes:
+### `terramap.commands.terrashow.others` allows to change anyone's visibility with `/terrashow`
+### `terramap.commands.terrashow.self` allows to change the visibility of the current players with `/terrashow`
+### `terramap.commands.reloadmapstyles` allows to reload the server map styles with `/reloadmapstyles`
+### `terramap.radar.players` allows to see other players on the map
+### `terramap.radar.animals` allows to see animals on the map
+### `terramap.radar.mobs` allows to see monsters on the map
+
+
 ## Contributing:
 In case you want to contribute, please make sure you join the Discord. You will get a contributor role there.
 
