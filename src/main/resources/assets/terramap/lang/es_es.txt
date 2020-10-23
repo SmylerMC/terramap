@@ -1,0 +1,89 @@
+terramap.config.minimap.enable=Minimap: activar
+terramap.config.minimap.style=Minimap: estilo
+terramap.config.minimap.pos_x=Minimap: Posición X (%%)
+terramap.config.minimap.pos_y=Minimap: Posición Y (%%)
+terramap.config.minimap.width=Minimap: Anchura (%%)
+terramap.config.minimap.height=Minimap: Altura (%%)
+terramap.config.minimap.zoom=Minimap: Zoom
+terramap.config.minimap.show_entities=Minimap: affichage des entitées
+terramap.config.minimap.show_players=Minimap: affichage des joueurs
+terramap.config.cache_dir=Nombre del directorio de caché
+terramap.config.tile_scaling=Taille des tuiles
+terramap.config.auto_tile_scaling=Taille des tuiles automatique
+terramap.config.max_tile_load=Taille du cache des cartes
+terramap.config.double_click_delay=Retraso de doble clic
+terramap.config.tpllcmd=Comando tpll
+terramap.config.forcetpllcmd=Forzar los clientes a usar el comando tp del servidor
+terramap.config.sync_players=Sincronizar jugadores
+terramap.config.sync_spec=Synchroniser les spectateurs
+terramap.config.sync_interval=Intervalo de tiempo de sincronización del mapa (en ticks)
+terramap.config.sync_heartbeet=Tiempo de espera de sincronización agotado
+terramap.config.players_opt_in_to_display_default=Affichage par défaut
+terramap.config.sync_custom_maps=Partage des cartes customs
+terramap.config.join_without_mod_message=Message sans le mod
+terramap.config.join_with_outdated_mod_message=Message avec ancienne version
+
+terramap.binding.category=Terramap
+terramap.binding.open_map=Abrir el mapa
+terramap.binding.toggle_debug=Activar el modo depuración de TerraMap
+terramap.binding.shortcuts=Atajos de mapa
+terramap.mapgui.rclickmenu.copy_geo=Copiar las coordenadas IRL
+terramap.mapgui.rclickmenu.copy_mc=Copiar las coordenadas Minecraft
+
+terramap.mapgui.rclickmenu.teleport=Teletransportarse aquí
+terramap.mapgui.rclickmenu.center=Centrar el mapa aquí
+terramap.mapwidget.rclickmenu.copy=Copiar
+terramap.mapwidget.rclickmenu.copy.geo=les coordonnées géographiques
+terramap.mapwidget.rclickmenu.copy.block=les coordonnées du block
+terramap.mapwidget.rclickmenu.copy.chunk=les coordonnées chunk
+terramap.mapwidget.rclickmenu.copy.region=le nom de fichier de la région vanilla
+terramap.mapwidget.rclickmenu.copy.3dr=le nom de fichier de la région 3D en Y=0
+terramap.mapwidget.rclickmenu.copy.2dr=le nom de fichier de la région 2D
+terramap.mapwidget.rclickmenu.open=Afficher dans
+terramap.mapwidget.rclickmenu.open_osm=OpenStreetMaps
+terramap.mapwidget.rclickmenu.open_bte=con el site de BTE
+terramap.mapwidget.rclickmenu.open_gmaps=Google Maps
+terramap.mapwidget.rclickmenu.open_gearth_web=Google Earth Web
+terramap.mapwidget.rclickmenu.open_gearth_pro=Google Earth Pro
+terramap.mapwidget.rclickmenu.open_bing=Bing Maps
+terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
+terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
+terramap.mapwidget.rclickmenu.set_proj=Ajustar la proyección utilizada
+
+terramap.mapwidget.shortcuts.tp=Clickez pour vous téléporter
+
+terramap.terramapscreen.projection_warning.unused_comment=Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
+terramap.terramapscreen.projection_warning.line1=Terramap n'est pas installé sur ce serveur!!
+terramap.terramapscreen.projection_warning.line2=Il est impossible d'identifier la projection utilisée.
+terramap.terramapscreen.projection_warning.line3=Le contenu du monde Mincraft ne sera pas afficher
+terramap.terramapscreen.projection_warning.line4=Vous pouvez demander à l'administrateur du serveur d'installer Terramap,
+terramap.terramapscreen.projection_warning.line5=ou vous pouvez choir vous même une projection dans le menu clique droit.
+
+terramap.terramapscreen.buttons.close.tooltip=Fermer la carte
+terramap.terramapscreen.buttons.zoomin.tooltip=Zoomer
+terramap.terramapscreen.buttons.zoomout.tooltip=Dézoomer
+terramap.terramapscreen.buttons.track.tooltip=Suivre le joueur
+terramap.terramapscreen.buttons.style.tooltip=Changer le style de carte
+terramap.terramapscreen.buttons.info.tooltip=Bouger la panneau d'information
+terramap.terramapscreen.search.wip=En cours de dev
+
+terramap.terramapscreen.information.mouse_geo=Position du pointeur: %1$s° %2$s°
+terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
+terramap.terramapscreen.information.trackedoutsidemap=%1$s est en dehors de la projection
+terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°
+terramap.terramapscreen.information.playerout=Vous êtes en dehors de la projection
+terramap.terramapscreen.information.playergeo=Position du joueur: %1$s° %2$s°
+terramap.terramapscreen.information.noplayer=Position du joueur: -° -°
+terramap.terramapscreen.information.distortion=Distortion: %1$s blocks/m ; ±%2$s°
+terramap.terramapscreen.information.outdatedterra121=Merci de mettre à jour Terra121
+
+terramap.terramapscreen.markercontrollers.buttons.mainplayer=Changer la visibilité du joueur principal
+terramap.terramapscreen.markercontrollers.buttons.otherplayer=Changer la visibilité des autres joueurs
+terramap.terramapscreen.markercontrollers.buttons.animals=Changer la visibilité des animaux
+terramap.terramapscreen.markercontrollers.buttons.mobs=Changer la visibilité des monstres
+
+terramap.ingameactions.copy.noplayer=Impossible de copier les coordonnées: pas de joueur
+terramap.ingameactions.copy.noproj=Impossible de copier les coordonnées: pas de projection
+terramap.ingameactions.copy.outproj=Impossible de copier les coordonnées: vous êtes en dehors de la projection
+terramap.ingameactions.copy.mc=Coordonnées Minecraft copiée dans le presse papier
+terramap.ingameactions.copy.geo=Coordonnées géographiques copiée dans le presse papier
