@@ -27,11 +27,11 @@ terramap.binding.category=Terramap
 terramap.binding.open_map=Abrir el mapa
 terramap.binding.toggle_debug=Activar el modo depuración de TerraMap
 terramap.binding.shortcuts=Atajos de mapa
-terramap.mapgui.rclickmenu.copy_geo=Copiar las coordenadas IRL
-terramap.mapgui.rclickmenu.copy_mc=Copiar las coordenadas Minecraft
+terramap.binding.copy_geo=Copiar las coordenadas IRL
+terramap.binding.copy_mc=Copiar las coordenadas Minecraft
 
-terramap.mapgui.rclickmenu.teleport=Teletransportarse aquí
-terramap.mapgui.rclickmenu.center=Centrar el mapa aquí
+terramap.mapwidget.rclickmenu.teleport=Teletransportarse aquí
+terramap.mapwidget.rclickmenu.center=Centrar el mapa aquí
 terramap.mapwidget.rclickmenu.copy=Copiar
 terramap.mapwidget.rclickmenu.copy.geo=las coordenadas geográficas
 terramap.mapwidget.rclickmenu.copy.block=las coordenadas del bloque
@@ -75,7 +75,7 @@ terramap.terramapscreen.information.playerout=Tu jugador está fuera del área p
 terramap.terramapscreen.information.playergeo=Posición del jugador : %1$s° %2$s°
 terramap.terramapscreen.information.noplayer=Posición del jugador : -° -°
 terramap.terramapscreen.information.distortion=Distorsión: %1$s bloques/m ; ±%2$s°
-terramap.terramapscreen.information.outdatedterra121=Actualiza Terra121 para utilizar el mod
+terramap.terramapscreen.information.outdatedterra121=Actualiza Terra121 para utilizar el mod correctamente
 
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=Cambiar la visibilidad del jugador principal
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=Cambiar la visibilidad de los otros jugadores
