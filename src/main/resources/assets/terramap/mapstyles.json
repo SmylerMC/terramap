@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": 5,
+        "version": 6,
         "comment": "This file contains the tile servers included by default in Terramap, and is maintained by SmylerMC."
     },
     "maps": {
@@ -57,6 +57,20 @@
             "display_priority": 800,
             "allow_on_minimap": true
         }
+    },
+    "mapbox_satellite": {
+        "url": "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic215bGVyIiwiYSI6ImNrZ3M1MjA4ajA3dnoycnBidjVkbXphZW8ifQ.Sj82vo-ddFeHcBVB0JJQYg",
+        "name": {
+            "en_us": "Mapbox Satellite",
+            "fr_fr": "Mapbox Satellite"
+        },
+        "copyright": {
+            "en_us": "[\"© \",{\"text\":\"Mapbox\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.mapbox.com/about/maps/\"}},{\"text\":\" © \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/about/\"}},{\"text\":\" © \"},{\"text\":\"Maxar\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.maxar.com/\"}}]"
+        },
+        "min_zoom": 0,
+        "max_zoom": 22,
+        "display_priority": 950,
+        "allow_on_minimap": false
     }
     
 }
