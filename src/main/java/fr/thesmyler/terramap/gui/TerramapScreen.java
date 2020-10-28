@@ -358,6 +358,7 @@ public class TerramapScreen extends Screen {
 	}
 	
 	public void resumeFromSavedState(TerramapScreenSavedState state) {
+		this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
 		this.map.setZoom(state.zoomLevel);
 		this.map.setCenterLongitude(state.centerLongitude);
 		this.map.setCenterLatitude(state.centerLatitude);
@@ -377,7 +378,6 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.addWidget(this.panelButton);
 		this.setF1Mode(state.f1);
 		this.setDebugMode(state.debug);
-		this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
 	}
 
 	@Override
