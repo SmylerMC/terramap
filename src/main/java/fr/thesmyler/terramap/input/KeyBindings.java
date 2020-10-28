@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.input;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.TerramapScreen;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,11 @@ public abstract class KeyBindings {
 	public static final KeyBinding COPY_GEO_COORDS = new KeyBinding("terramap.binding.copy_geo", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding COPY_MC_COORDS = new KeyBinding("terramap.binding.copy_mc", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
 	
+	//TODO Localize
+	public static final KeyBinding ZOOM_IN = new KeyBinding("terramap.binding.zoom_in", Keyboard.KEY_B, KeyBindings.KEY_CATEGORY);
+	public static final KeyBinding ZOOM_OUT = new KeyBinding("terramap.binding.zoom_out", Keyboard.KEY_V, KeyBindings.KEY_CATEGORY);
+	public static final KeyBinding TOGGLE_MINIMAP = new KeyBinding("terramap.binding.toggle_minimap", Keyboard.KEY_N, KeyBindings.KEY_CATEGORY);
+	
 	private static final IKeyConflictContext TERRAMAP_SCREEN_CONTEXT = new IKeyConflictContext() {
 		@Override
 		public boolean isActive() {
@@ -41,6 +47,9 @@ public abstract class KeyBindings {
 		ClientRegistry.registerKeyBinding(MAP_SHORTCUT);
 		ClientRegistry.registerKeyBinding(COPY_GEO_COORDS);
 		ClientRegistry.registerKeyBinding(COPY_MC_COORDS);
+		ClientRegistry.registerKeyBinding(ZOOM_IN);
+		ClientRegistry.registerKeyBinding(ZOOM_OUT);
+		ClientRegistry.registerKeyBinding(TOGGLE_MINIMAP);
 	}
 	
 	public static void checkBindings() {
@@ -75,6 +84,18 @@ public abstract class KeyBindings {
 				GuiScreen.setClipboardString("" + player.posX + " " + player.posY + " " + player.posZ);
 				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.mc"));
 			}
+		}
+		
+		if(ZOOM_IN.isPressed()) {
+			HudScreenHandler.zoomInMinimap();
+		}
+		
+		if(ZOOM_OUT.isPressed()) {
+			HudScreenHandler.zoomOutMinimap();
+		}
+		
+		if(TOGGLE_MINIMAP.isPressed()) {
+			HudScreenHandler.toggleMinimap();
 		}
 	}
 

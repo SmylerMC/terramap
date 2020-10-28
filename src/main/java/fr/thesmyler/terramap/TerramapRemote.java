@@ -13,8 +13,8 @@ import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
-import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -60,6 +60,10 @@ public class TerramapRemote {
 	private boolean allowAnimalRadar = true;
 	private boolean allowMobRadar = true;
 	private boolean allowDecoRadar = true;
+	private boolean proxyForceGlobalMap = false;
+	private boolean proxyForceGlobalSettings = false;
+	private UUID worldUUID = null;
+	private UUID proxyUUID = null;
 
 	private String serverIdentifier = "genericserver";
 
@@ -148,13 +152,19 @@ public class TerramapRemote {
 	}
 
 	private String buildCurrentServerIdentifer() {
-		ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
-		if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
-			return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@integrated_server@localhost";
-		} else if(servData != null){
-			return servData.serverName + "@" + servData.serverIP;
+		if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
+			return "proxy:" + this.proxyUUID.toString();
+		} else if(this.worldUUID != null) {
+			return "server:" + this.worldUUID.toString();
 		} else {
-			return "noserver";
+			ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+			if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
+				return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@integrated_server@localhost";
+			} else if(servData != null){
+				return servData.serverName + "@" + servData.serverIP;
+			} else {
+				return "noserver";
+			}
 		}
 	}
 	
@@ -221,11 +231,11 @@ public class TerramapRemote {
 		return this.serverIdentifier;
 	}
 
-	public void guessRemoteIdentifier() {
+	public void setRemoteIdentifier() {
 		this.setRemoteIdentifier(this.buildCurrentServerIdentifer());
 	}
 
-	public void setRemoteIdentifier(String identifier) {
+	private void setRemoteIdentifier(String identifier) {
 		this.serverIdentifier = identifier;
 		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getRemoteIdentifier());
 		if(sttgStr.length() > 0) {
@@ -340,6 +350,36 @@ public class TerramapRemote {
 
 	public void setAllowsDecoRadar(boolean allowDecoRadar) {
 		this.allowDecoRadar = allowDecoRadar;
+	}
+	
+	public boolean doesProxyForceMinimap() {
+		return this.proxyForceGlobalMap;
+	}
+	
+	public void setProxyForceMinimap(boolean yesNo) {
+		this.proxyForceGlobalMap = yesNo;
+	}
+	
+	public void setProxyForceGlobalSettings(boolean yesNo) {
+		this.proxyForceGlobalSettings = yesNo;
+	}
+
+	public UUID getWorldUUID() {
+		return worldUUID;
+	}
+
+	public void setWorldUUID(UUID worldUUID) {
+		this.worldUUID = worldUUID;
+		this.setRemoteIdentifier();
+	}
+	
+	public UUID getProxyUUID() {
+		return proxyUUID;
+	}
+
+	public void setProxyUUID(UUID worldUUID) {
+		this.proxyUUID = worldUUID;
+		this.setRemoteIdentifier();
 	}
 
 	public static TerramapRemote getRemote() {

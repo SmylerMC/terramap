@@ -127,8 +127,7 @@ public abstract class RemoteSynchronizer {
 		srv.setServerVersion(pkt.serverVersion);
 		srv.setGeneratorSettings(pkt.worldSettings);
 		if(pkt.worldUUID.getLeastSignificantBits() != 0 || pkt.worldUUID.getMostSignificantBits() != 0) {
-			srv.guessRemoteIdentifier();
-			srv.setRemoteIdentifier(srv.getRemoteIdentifier() + pkt.worldUUID.toString());
+			srv.setWorldUUID(pkt.worldUUID);
 		}
 		srv.setPlayersSynchronizedByServer(pkt.syncPlayers);
 		srv.setSpectatorsSynchronizedByServer(pkt.syncSpectators);

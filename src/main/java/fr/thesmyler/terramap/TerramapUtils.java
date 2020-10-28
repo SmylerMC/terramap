@@ -7,6 +7,7 @@ import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
 import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.EarthTerrainProcessor;
 import io.github.terra121.EarthWorldType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
@@ -32,6 +33,10 @@ public abstract class TerramapUtils {
 		ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
 		if(!(provider instanceof CubeProviderServer)) return false; // Are we on server ?
 		return ((CubeProviderServer) provider).getCubeGenerator() instanceof EarthTerrainProcessor; // Is it the overworld ?
+	}
+	
+	public static boolean isOnEarthWorld(EntityPlayer player) {
+		return player.getEntityWorld().getWorldType() instanceof EarthWorldType && player.dimension == 0;
 	}
 	
 	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {

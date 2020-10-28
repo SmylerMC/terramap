@@ -44,6 +44,7 @@ public class MapWidget extends Screen {
 	private boolean enableRightClickMenu = true;
 	private boolean showCopyright = true;
 	private boolean debugMode = false;
+	private boolean visible = true;
 
 	private ControllerMapLayer controller;
 	protected RasterMapLayerWidget background;
@@ -717,6 +718,16 @@ public class MapWidget extends Screen {
 	
 	private boolean isShortcutEnabled() {
 		return TerramapRemote.getRemote().getProjection() != null && this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
+	}
+
+	@Override
+	public boolean isVisible(Screen parent) {
+		return this.visible;
+	}
+	
+	public MapWidget setVisibility(boolean yesNo) {
+		this.visible = yesNo;
+		return this;
 	}
 
 }
