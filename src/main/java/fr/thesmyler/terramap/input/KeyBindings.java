@@ -42,6 +42,7 @@ public abstract class KeyBindings {
 	
 	public static void registerBindings() {
 		ClientRegistry.registerKeyBinding(OPEN_MAP);
+		TOGGLE_DEBUG.setKeyConflictContext(TERRAMAP_SCREEN_CONTEXT);
 		ClientRegistry.registerKeyBinding(TOGGLE_DEBUG);
 		MAP_SHORTCUT.setKeyConflictContext(TERRAMAP_SCREEN_CONTEXT);
 		ClientRegistry.registerKeyBinding(MAP_SHORTCUT);
