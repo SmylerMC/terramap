@@ -46,14 +46,14 @@ public class TerramapConfig {
 	@Config.Comment("Minimap width, in percents")
 	@Config.RangeInt(min=0, max=100)
 	@Config.SlidingOption
-	public static int minimapWidth = 35;
+	public static int minimapWidth = 20;
 
 	@Config.Name("minimap_height")
 	@Config.LangKey("terramap.config.minimap.height")
 	@Config.Comment("Minimap height, in percents")
 	@Config.RangeInt(min=0, max=100)
 	@Config.SlidingOption
-	public static int minimapHeight = 20;
+	public static int minimapHeight = 15;
 
 	@Config.Name("minimap_zoom")
 	@Config.LangKey("terramap.config.minimap.zoom")
