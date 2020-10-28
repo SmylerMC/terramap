@@ -27,13 +27,11 @@ public abstract class TerramapUtils {
 	}
 	
 	public static boolean isServerEarthWorld(World world) {
-		if(world.getWorldType() instanceof EarthWorldType) { // Is this a terra save?
-			ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
-			if(provider instanceof CubeProviderServer) { // Are we on server ?
-				return ((CubeProviderServer) provider).getCubeGenerator() instanceof EarthTerrainProcessor; // Is it the overworld ?
-			}
-		}
-		return  false;
+		if(!(world.getWorldType() instanceof EarthWorldType)) return false; // Is this a terra save?
+		if(!(world.getChunkProvider() instanceof ICubeProvider)) return false; // Is a CC world (could be a different dimension)
+		ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
+		if(!(provider instanceof CubeProviderServer)) return false; // Are we on server ?
+		return ((CubeProviderServer) provider).getCubeGenerator() instanceof EarthTerrainProcessor; // Is it the overworld ?
 	}
 	
 	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
