@@ -23,8 +23,6 @@ public abstract class KeyBindings {
 	public static final KeyBinding MAP_SHORTCUT = new KeyBinding("terramap.binding.shortcuts", Keyboard.KEY_LCONTROL, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding COPY_GEO_COORDS = new KeyBinding("terramap.binding.copy_geo", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding COPY_MC_COORDS = new KeyBinding("terramap.binding.copy_mc", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
-	
-	//TODO Localize
 	public static final KeyBinding ZOOM_IN = new KeyBinding("terramap.binding.zoom_in", Keyboard.KEY_B, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding ZOOM_OUT = new KeyBinding("terramap.binding.zoom_out", Keyboard.KEY_V, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding TOGGLE_MINIMAP = new KeyBinding("terramap.binding.toggle_minimap", Keyboard.KEY_N, KeyBindings.KEY_CATEGORY);
