@@ -33,7 +33,8 @@
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \"},{\"text\":\"OpenStreetMap contributors\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org/copyright\"}},{\"text\":\". Tiles style by \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.hotosm.org/\"}},{\"text\":\" hosted by \"},{\"text\":\"OpenStreetMap France\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.fr/\"}}]",
-                "fr_fr": "[\"\",{\"text\":\"Données ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Tiles courtesy of \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]"
+                "fr_fr": "[\"\",{\"text\":\"Données ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Tiles courtesy of \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]",
+                "es_es": "[\"\",{\"text\":\"Datos ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Losetas cortesía de \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]"
             },
             "min_zoom": 0,
             "max_zoom": 19,
@@ -61,7 +62,8 @@
             "url": "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic215bGVyIiwiYSI6ImNrZ3M1MjA4ajA3dnoycnBidjVkbXphZW8ifQ.Sj82vo-ddFeHcBVB0JJQYg",
             "name": {
                 "en_us": "Mapbox Satellite",
-                "fr_fr": "Mapbox Satellite"
+                "fr_fr": "Mapbox Satellite",
+                "es_es": "Mapbox Satélite"
             },
             "copyright": {
                 "en_us": "[\"© \",{\"text\":\"Mapbox\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.mapbox.com/about/maps/\"}},{\"text\":\" © \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/about/\"}},{\"text\":\" © \"},{\"text\":\"Maxar\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.maxar.com/\"}}]"
@@ -70,7 +72,37 @@
             "max_zoom": 22,
             "display_priority": 950,
             "allow_on_minimap": false
-        }
+        },
+        "maptiler_hybrid": {
+            "url": "https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=PUT_YOUR_PRIVATE_KEY_HERE",
+            "name": {
+                "en_us": "Maptiler Hybrid",
+                "fr_fr": "Maptiler Hybride",
+                "es_es": "Maptiler Híbrido"
+            },
+            "copyright": {
+                "en_us": "[\"© \",{\"text\":\"Maptiler\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.maptiler.com/copyright/\"}},{\"text\":\" © \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright/\"}}]"
+            },
+            "min_zoom": 0,
+            "max_zoom": 22,
+            "display_priority": 850
+            "allow_on_minimap": true
+        },
+        "maptiler_satellite": {
+            "url": "https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key=PUT_YOUR_PRIVATE_KEY_HERE",
+            "name": {
+                "en_us": "Maptiler Satellite",
+                "fr_fr": "Maptiler Satellite",
+                "es_es": "Maptiler Satélite"
+            },
+            "copyright": {
+                "en_us": "[\"© \",{\"text\":\"Maptiler\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.maptiler.com/copyright/\"}},{\"text\":\" © \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright/\"}}]"
+            },
+            "min_zoom": 0,
+            "max_zoom": 20,
+            "display_priority": 700
+            "allow_on_minimap": true
+        },
     }
     
 }
