@@ -85,7 +85,7 @@
             },
             "min_zoom": 0,
             "max_zoom": 22,
-            "display_priority": 850
+            "display_priority": 850,
             "allow_on_minimap": true
         },
         "maptiler_satellite": {
@@ -100,7 +100,7 @@
             },
             "min_zoom": 0,
             "max_zoom": 20,
-            "display_priority": 700
+            "display_priority": 700,
             "allow_on_minimap": true
         },
     }
