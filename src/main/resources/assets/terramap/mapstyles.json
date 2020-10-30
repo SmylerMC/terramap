@@ -18,7 +18,7 @@
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
                 "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]",
-                "cz_cz": "["",{"text":"© "},{"text":"p\u0159isp\u011bvatelé OpenStreetMap","underlined":true,"color":"dark_aqua","clickEvent":{"action":"open_url","value":"https://www.openstreetmap.org"}}]",
+                "cz_cz": "[\"\",{\"text\":\"© \"},{\"text\":\"p\\u0159isp\\u011bvatelé OpenStreetMap\",\"underlined\":true,\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]",
                 "sk_sk": "[\"\",{\"text\":\"© \"},{\"text\":\"prispievatelia OpenStreetMap\",\"underlined\":true,\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
             },
             "min_zoom": 0,
