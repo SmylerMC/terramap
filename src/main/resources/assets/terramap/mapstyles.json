@@ -54,6 +54,8 @@
                 "es_es": "Terreno",
                 "de_de": "Terrain",
                 "zh_cn": "地形"
+                "cz_cz": "Terén",
+                "sk_sk": "Terén"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"Map tiles by \"},{\"text\":\"Stamen Design\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://stamen.com/\"}},{\"text\":\", under \"},{\"text\":\"CC BY 3.0\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://creativecommons.org/licenses/by/3.0\"}},{\"text\":\".\",\"underlined\":true,\"color\":\"aqua\"},{\"text\":\" Data by \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://openstreetmap.org/\"}},{\"text\":\", under \"},{\"text\":\"ODbL\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright\"}}]"
