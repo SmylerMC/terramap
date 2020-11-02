@@ -1,0 +1,94 @@
+terramap.config.minimap.enable=Minimapa: zapnúť
+terramap.config.minimap.style=Minimapa: štýl
+terramap.config.minimap.pos_x=Minimapa: X pozícia (%%)
+terramap.config.minimap.pos_y=Minimapa: Y pozícia (%%)
+terramap.config.minimap.width=Minimapa: šírka (%%)
+terramap.config.minimap.height=Minimapa výška (%%)
+terramap.config.minimap.zoom=Minimapa: priblíženie
+terramap.config.minimap.show_entities=Minimapa: Zobrazenie entít
+terramap.config.minimap.show_players=Minimapa: Zobrazenie ostatných hráčov
+terramap.config.cache_dir=Adresár ku Cache 
+terramap.config.tile_scaling=Veľkosť dlaždíc
+terramap.config.auto_tile_scaling=Automatická veľkosť dlaždíc
+terramap.config.max_tile_load=Veľkosť Cache dlaždíc
+terramap.config.double_click_delay=Oneskorenie dvojkliku
+terramap.config.tpllcmd=tpll príkaz
+terramap.config.forcetpllcmd=Vynútiť tpll príkaz
+terramap.config.sync_players=Synchronizácia hráčov
+terramap.config.sync_spec=Sync Synchronizácia divákov
+terramap.config.sync_interval=Interval synchronizácie
+terramap.config.sync_heartbeet=Oneskorenie synchronizácie
+terramap.config.players_opt_in_to_display_default=Predvolba vidiťeľnosťi hráčov
+terramap.config.sync_custom_maps=Posielať vlastné mapy clientovi
+terramap.config.join_without_mod_message=Pripojiť sa bez Terramapy
+terramap.config.join_with_outdated_mod_message=Pripojiť sa so starou verziou Terramapy
+
+terramap.binding.category=Terramap
+terramap.binding.open_map=Otvoriť mapu
+terramap.binding.toggle_debug=Zapnúť Terramap debug režim
+terramap.binding.shortcuts=Mapové skratky
+terramap.binding.copy_geo=Kopírovať geografické súradnice
+terramap.binding.copy_mc=Skopírovať minecraft súradnice
+terramap.binding.zoom_in=Priblížiť
+terramap.binding.zoom_out=Oddialiť
+terramap.binding.toggle_minimap=Prepnúť viditeľnosť minimapy
+
+terramap.mapwidget.rclickmenu.teleport=Teleportovať sa sem
+terramap.mapwidget.rclickmenu.center=Vycentrovať mapu sem
+terramap.mapwidget.rclickmenu.copy=Skopírovať
+terramap.mapwidget.rclickmenu.copy.geo=Geografické súradnice
+terramap.mapwidget.rclickmenu.copy.block=Súradnice blokov
+terramap.mapwidget.rclickmenu.copy.chunk=Chunk súradnice
+terramap.mapwidget.rclickmenu.copy.region=Názov Vanilla región súboru
+terramap.mapwidget.rclickmenu.copy.3dr=Názov 3D región súboru Y=0
+terramap.mapwidget.rclickmenu.copy.2dr=Názov 2D región súboru
+terramap.mapwidget.rclickmenu.open=Otvoriť na
+terramap.mapwidget.rclickmenu.open_osm=OpenStreetMaps
+terramap.mapwidget.rclickmenu.open_bte=BTE webstránka
+terramap.mapwidget.rclickmenu.open_gmaps=Google Maps
+terramap.mapwidget.rclickmenu.open_gearth_web=Google Earth web
+terramap.mapwidget.rclickmenu.open_gearth_pro=Google Earth Pro
+terramap.mapwidget.rclickmenu.open_bing=Bing Maps
+terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
+terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
+terramap.mapwidget.rclickmenu.set_proj=Nastaviť projekciu
+
+terramap.mapwidget.shortcuts.tp=Kliknutím sa teleportujete
+
+terramap.terramapscreen.projection_warning.unused_comment=Správa pre prekladateľov: sem môžete pridať toľko riadkov, koľko potrebujete pre svoj jazyk, stačí pridať príslušné číslo na koniec kľúča
+terramap.terramapscreen.projection_warning.line1=Terramapa nie je nainštalovaná na serveri!!
+terramap.terramapscreen.projection_warning.line2=Nie je možne identifikovať použitú projekciu.
+terramap.terramapscreen.projection_warning.line3=Prvky zo sveta Minecraftu sa na mape nezobrazia.
+terramap.terramapscreen.projection_warning.line4=Môžete požiadať správcu servera, aby nainštaloval Terramapu
+terramap.terramapscreen.projection_warning.line5=alebo môžete ručne nastaviť projekciu použitú v ponuke pravým tlačidlom myši.
+
+terramap.terramapscreen.buttons.close.tooltip=Zatvoriť mapu
+terramap.terramapscreen.buttons.zoomin.tooltip=Priblížiť
+terramap.terramapscreen.buttons.zoomout.tooltip=Oddialiť
+terramap.terramapscreen.buttons.track.tooltip=Sledovať hráča
+terramap.terramapscreen.buttons.style.tooltip=Zmeniť štýl mapy
+terramap.terramapscreen.buttons.info.tooltip=Skryť informačný a vyhľadávací panel
+terramap.terramapscreen.search.wip=Pracuje sa na tom
+
+terramap.terramapscreen.information.mouse_geo=Pozícia kurzoru: %1$s° %2$s°
+terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
+terramap.terramapscreen.information.trackedoutsidemap=%1$s je mimo projekcie
+terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°
+terramap.terramapscreen.information.playerout=Ste mimo projekcie
+terramap.terramapscreen.information.playergeo=Pozícia hráča: %1$s° %2$s°
+terramap.terramapscreen.information.noplayer=Pozícia hráča: -° -°
+terramap.terramapscreen.information.distortion=Deformácia: %1$s blocks/m ; ±%2$s°
+terramap.terramapscreen.information.outdatedterra121=Aktualizujte prosím Terra121 mód
+
+terramap.terramapscreen.markercontrollers.buttons.mainplayer=Zapnúť viditeľnosť hlavného hráča
+terramap.terramapscreen.markercontrollers.buttons.otherplayer=Zapnúť viditeľnosť ostatných hráčov
+terramap.terramapscreen.markercontrollers.buttons.animals=Zapnúť viditeľnosť zvierat
+terramap.terramapscreen.markercontrollers.buttons.mobs=Zapnúť viditeľnosť mobov
+
+terramap.ingameactions.copy.noplayer=Nepodarilo sa skopírovať súradnice: žiadny hráč
+terramap.ingameactions.copy.noproj=Nepodarilo sa skopírovať súradnice: žiadna projekcia
+terramap.ingameactions.copy.outproj=Nepodarilo sa skopírovať súradnice: Ste mimo projekciu
+terramap.ingameactions.copy.mc=Minecraft súradnice skopírované do schránky
+terramap.ingameactions.copy.geo=Geografické súradnice skopírované do schránky
+
+
