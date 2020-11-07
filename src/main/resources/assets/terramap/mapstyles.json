@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": 7,
+        "version": 9,
         "comment": "This file contains the tile servers included by default in Terramap, and is maintained by SmylerMC."
     },
     "maps": {
@@ -11,11 +11,15 @@
                 "fr_fr": "OpenStreetMap",
                 "es_es": "OpenStreetMap",
                 "de_de": "OpenStreetMap",
-                "zh_cn": "OpenStreetMap"
+                "zh_cn": "OpenStreetMap",
+                "cz_cz": "OpenStreetMap",
+                "sk_sk": "OpenStreetMap"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
-                "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
+                "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]",
+                "cz_cz": "[\"\",{\"text\":\"© \"},{\"text\":\"p\\u0159isp\\u011bvatelé OpenStreetMap\",\"underlined\":true,\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]",
+                "sk_sk": "[\"\",{\"text\":\"© \"},{\"text\":\"prispievatelia OpenStreetMap\",\"underlined\":true,\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
             },
             "min_zoom": 0,
             "max_zoom": 19,
@@ -29,11 +33,14 @@
                 "fr_fr": "Humanitaire",
                 "es_es": "Humanitario",
                 "de_de": "Humanitär",
-                "zh_cn": "Humanitarian"
+                "zh_cn": "Humanitarian",
+                "cz_cz": "Humanitární",
+                "sk_sk": "Humanitárna"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \"},{\"text\":\"OpenStreetMap contributors\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org/copyright\"}},{\"text\":\". Tiles style by \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.hotosm.org/\"}},{\"text\":\" hosted by \"},{\"text\":\"OpenStreetMap France\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.fr/\"}}]",
-                "fr_fr": "[\"\",{\"text\":\"Données ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Tiles courtesy of \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]"
+                "fr_fr": "[\"\",{\"text\":\"Données ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Tiles courtesy of \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]",
+                "es_es": "[\"\",{\"text\":\"Datos ©; \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://osm.org/copyright\"}},{\"text\":\"/ODbL - Losetas cortesía de \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://hot.openstreetmap.org/\"}}]"
             },
             "min_zoom": 0,
             "max_zoom": 19,
@@ -47,7 +54,9 @@
                 "fr_fr": "Terrain",
                 "es_es": "Terreno",
                 "de_de": "Terrain",
-                "zh_cn": "地形"
+                "zh_cn": "地形",
+                "cz_cz": "Terén",
+                "sk_sk": "Terén"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"Map tiles by \"},{\"text\":\"Stamen Design\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://stamen.com/\"}},{\"text\":\", under \"},{\"text\":\"CC BY 3.0\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://creativecommons.org/licenses/by/3.0\"}},{\"text\":\".\",\"underlined\":true,\"color\":\"aqua\"},{\"text\":\" Data by \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://openstreetmap.org/\"}},{\"text\":\", under \"},{\"text\":\"ODbL\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright\"}}]"
@@ -61,7 +70,8 @@
             "url": "https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoic215bGVyIiwiYSI6ImNrZ3M1MjA4ajA3dnoycnBidjVkbXphZW8ifQ.Sj82vo-ddFeHcBVB0JJQYg",
             "name": {
                 "en_us": "Mapbox Satellite",
-                "fr_fr": "Mapbox Satellite"
+                "fr_fr": "Mapbox Satellite",
+                "es_es": "Mapbox Satélite"
             },
             "copyright": {
                 "en_us": "[\"© \",{\"text\":\"Mapbox\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.mapbox.com/about/maps/\"}},{\"text\":\" © \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/about/\"}},{\"text\":\" © \"},{\"text\":\"Maxar\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.maxar.com/\"}}]"
