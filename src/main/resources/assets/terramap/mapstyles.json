@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": 7,
+        "version": 9,
         "comment": "This file contains the tile servers included by default in Terramap, and is maintained by SmylerMC."
     },
     "maps": {
@@ -80,7 +80,7 @@
             "max_zoom": 22,
             "display_priority": 950,
             "allow_on_minimap": false
-        },
+        }
     }
     
 }
