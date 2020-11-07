@@ -11,11 +11,15 @@
                 "fr_fr": "OpenStreetMap",
                 "es_es": "OpenStreetMap",
                 "de_de": "OpenStreetMap",
-                "zh_cn": "OpenStreetMap"
+                "zh_cn": "OpenStreetMap",
+                "cz_cz": "OpenStreetMap",
+                "sk_sk": "OpenStreetMap"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
-                "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
+                "fr_fr": "[\"\",{\"text\":\"© Contributeurs de \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]",
+                "cz_cz": "[\"\",{\"text\":\"© \"},{\"text\":\"p\\u0159isp\\u011bvatelé OpenStreetMap\",\"underlined\":true,\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]",
+                "sk_sk": "[\"\",{\"text\":\"© \"},{\"text\":\"prispievatelia OpenStreetMap\",\"underlined\":true,\"color\":\"dark_aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}}]"
             },
             "min_zoom": 0,
             "max_zoom": 19,
@@ -29,7 +33,9 @@
                 "fr_fr": "Humanitaire",
                 "es_es": "Humanitario",
                 "de_de": "Humanitär",
-                "zh_cn": "Humanitarian"
+                "zh_cn": "Humanitarian",
+                "cz_cz": "Humanitární",
+                "sk_sk": "Humanitárna"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \"},{\"text\":\"OpenStreetMap contributors\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org/copyright\"}},{\"text\":\". Tiles style by \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.hotosm.org/\"}},{\"text\":\" hosted by \"},{\"text\":\"OpenStreetMap France\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.fr/\"}}]",
@@ -47,7 +53,9 @@
                 "fr_fr": "Terrain",
                 "es_es": "Terreno",
                 "de_de": "Terrain",
-                "zh_cn": "地形"
+                "zh_cn": "地形",
+                "cz_cz": "Terén",
+                "sk_sk": "Terén"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"Map tiles by \"},{\"text\":\"Stamen Design\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://stamen.com/\"}},{\"text\":\", under \"},{\"text\":\"CC BY 3.0\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://creativecommons.org/licenses/by/3.0\"}},{\"text\":\".\",\"underlined\":true,\"color\":\"aqua\"},{\"text\":\" Data by \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://openstreetmap.org/\"}},{\"text\":\", under \"},{\"text\":\"ODbL\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright\"}}]"
