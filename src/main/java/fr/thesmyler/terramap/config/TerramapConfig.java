@@ -65,7 +65,7 @@ public class TerramapConfig {
 	@Config.Name("minimap_show_entities")
 	@Config.LangKey("terramap.config.minimap.show_entities")
 	@Config.Comment("Set to true to show entities on the minimap")
-	public static boolean showEntities = false;
+	public static boolean minimapShowEntities = false;
 
 	@Config.Name("minimap_show_other_players")
 	@Config.LangKey("terramap.config.minimap.show_players")

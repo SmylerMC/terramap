@@ -56,8 +56,8 @@ public abstract class HudScreenHandler {
 		map.setWidth((int) (TerramapConfig.minimapWidth * 0.01 * screen.getWidth()));
 		map.setHeight((int) (TerramapConfig.minimapHeight * 0.01 * screen.getWidth()));
 		Map<String, Boolean> markerVisibility = new HashMap<String, Boolean>();
-		markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.showEntities);
-		markerVisibility.put(MobMarkerController.ID, TerramapConfig.showEntities);
+		markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
+		markerVisibility.put(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
 		markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
 		map.setMarkersVisibility(markerVisibility);
 		Map<String, TiledMap> styles = TerramapRemote.getRemote().getMapStyles();
