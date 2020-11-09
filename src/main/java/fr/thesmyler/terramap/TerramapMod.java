@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 
+import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
+import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
@@ -24,9 +26,11 @@ import net.minecraftforge.fml.relauncher.Side;
 public class TerramapMod {
 	
     public static final String MODID = "terramap";
-    private static  String version;
 	public static final String AUTHOR_EMAIL = "smyler at mail dot com";
 	public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
+	private static TerramapVersion version; // Read from the metadata
+	public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
+	public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
 
     public static Logger logger;
     public static CacheManager cacheManager;
@@ -38,9 +42,9 @@ public class TerramapMod {
 	public static TerramapProxy proxy;
     
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit(FMLPreInitializationEvent event) throws InvalidVersionString {
     	logger = event.getModLog();
-    	TerramapMod.version = event.getModMetadata().version;
+    	TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
     	TerramapMod.proxy.preInit(event);
     	File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
     	MapStyleRegistry.setConfigMapFile(mapStyleFile);
@@ -54,7 +58,7 @@ public class TerramapMod {
     	MapStyleRegistry.loadFromConfigFile();
     }
     
-    public static String getVersion() {
+    public static TerramapVersion getVersion() {
     	return TerramapMod.version;
     }
     

@@ -77,7 +77,7 @@ public abstract class RemoteSynchronizer {
 		if(!TerramapUtils.isServerEarthWorld(world)) return;
 		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
 		IMessage data = new S2CTerramapHelloPacket(
-				TerramapMod.getVersion(),
+				TerramapMod.getVersion().toString(),
 				settings,
 				new UUID(0, 0), //TODO Implement world uuids
 				PlayerSyncStatus.getFromBoolean(TerramapConfig.synchronizePlayers),
