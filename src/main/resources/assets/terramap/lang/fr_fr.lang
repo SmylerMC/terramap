@@ -88,4 +88,22 @@ terramap.ingameactions.copy.outproj=Impossible de copier les coordonnées: vous 
 terramap.ingameactions.copy.mc=Coordonnées Minecraft copiée dans le presse papier
 terramap.ingameactions.copy.geo=Coordonnées géographiques copiée dans le presse papier
 
+terramap.commands.terrashow.usage=/terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
+terramap.commands.terrashow.too_few_parameters=Pas assez de paramètres: /terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
+terramap.commands.terrashow.too_many_parameters=Trop de paramètres: /terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
+terramap.commands.terrashow.console_player_name=Le nom du joueur est nécessaire quand executé depuis la console: /terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
+terramap.commands.terrashow.cannot_change_own_visibility=Vous n'avez pas la permission de changer votre visibilité
+terramap.commands.terrashow.cannot_change_others_visibility=Vous n'avez pas la permission de changer la visibilité des autres joueurs
+terramap.commands.terrashow.noplayer=Le joueur n'existe pas: /terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
+terramap.commands.terrashow.invalid_action=Action invalide: /terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
+terramap.commands.terrashow.getvisible=%1$s est visible sur la carte
+terramap.commands.terrashow.setvisible=%1$s sera dorénavant visible sur la carte
+terramap.commands.terrashow.gethidden=%1$s est caché sur la carte
+terramap.commands.terrashow.sethidden=%1$s sera dorénavant caché sur la carte
+
+terramap.commands.reloadmapstyles.usage=/reloadmapstyles
+terramap.commands.reloadmapstyles.forbidden=Vous n'avez pas l'autorisation d'utiliser cette commande
+terramap.commands.reloadmapstyles.done=Terminé
+terramap.commands.reloadmapstyles.error=Erreur lors du rechargement des styles de carte
+
 
