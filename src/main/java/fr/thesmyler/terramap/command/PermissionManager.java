@@ -12,6 +12,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
  * This is intended to provide an abstraction layer
  * 
  * TODO Support Bukkit permissions
+ * FIXME Make sure operators have all permissions
  * 
  *
  * @author SmylerMC

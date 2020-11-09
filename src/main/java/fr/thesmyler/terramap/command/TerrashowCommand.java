@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.terramap.TerramapVersion;
+import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -16,10 +18,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
-//TODO Localize, but only when installed on remote
 public class TerrashowCommand extends CommandBase {
-
-	public static final String USAGE = "/terrashow <show|hide|status> [playername (optional)]";
+	
+	private static final TerramapVersion FIRST_LOCALIZED_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 3);
 	
 	@Override
 	public String getName() {
@@ -28,43 +29,45 @@ public class TerrashowCommand extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return USAGE;
+		return CommandUtils.getStringForSender("terramap.commands.terrashow.usage", CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION));
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+		boolean clientSupportsLocalize = CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION);
 		EntityPlayerMP player = null;
 		EntityPlayer senderPlayer = sender instanceof EntityPlayer? (EntityPlayer) sender: null;
-		if(args.length <= 0) throw new SyntaxErrorException("Too few parameters: " + USAGE); //TODO Localize
-		else if(args.length > 2) throw new SyntaxErrorException("Too many parameters: " + USAGE); //TODO Localize
+		if(args.length <= 0) throw new SyntaxErrorException(CommandUtils.getStringForSender("terramap.commands.terrashow.too_few_parameters", clientSupportsLocalize));
+		else if(args.length > 2) throw new SyntaxErrorException(CommandUtils.getStringForSender("terramap.commands.terrashow.too_many_parameters", clientSupportsLocalize));
 		else if(args.length == 2) {
 			player = server.getPlayerList().getPlayerByUsername(args[1]);
 		} else if(sender instanceof EntityPlayerMP) player = (EntityPlayerMP)sender;
-		else throw new PlayerNotFoundException("Player name is required when executing from the server console: " + USAGE); //TODO Localize
+		else throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.console_player_name", clientSupportsLocalize));
 		if(player != null && player.equals(senderPlayer)) {
 			if(!PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
-				throw new CommandException("You do not have the permission to change your visibility"); //TODO Localize
+				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_own_visibility", clientSupportsLocalize));
 		} else {
 			if(!PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
-				throw new CommandException("You do not have the permission to change others' visibility"); //TODO Localize
+				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_others_visibility", clientSupportsLocalize));
 		}
-		if(player == null) throw new PlayerNotFoundException("Player does not exist: " + USAGE); //TODO Localize
+		if(player == null) throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.noplayer", clientSupportsLocalize));
 		UUID uuid = player.getPersistentID();
 		switch(args[0]) {
 		case "status":
-			boolean status = TerramapServerPreferences.shouldDisplayPlayer(uuid);
-			sender.sendMessage(player.getDisplayName().appendText(" is currently " + (status ? "visible": "hidden") + " on the map.")); //TODO Localize
+			String key = TerramapServerPreferences.shouldDisplayPlayer(uuid) ? "terramap.commands.terrashow.getvisible": "terramap.commands.terrashow.gethidden";
+			sender.sendMessage(CommandUtils.getComponentForSender(key, clientSupportsLocalize, player.getDisplayName()));
 			break;
 		case "show":
 			TerramapServerPreferences.setShouldDisplayPlayer(uuid, true);
-			sender.sendMessage(player.getDisplayName().appendText(" is now visible on the map.")); //TODO Localize
+			
+			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.setvisible", clientSupportsLocalize, player.getDisplayName()));
 			break;
 		case "hide":
 			TerramapServerPreferences.setShouldDisplayPlayer(uuid, false);
-			sender.sendMessage(player.getDisplayName().appendText(" is now hidden on the map.")); //TODO Localize
+			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.setvisible", clientSupportsLocalize, player.getDisplayName()));
 			break;
 		default:
-			throw new CommandException("Invalid action: " + USAGE); //TODO Localize
+			throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.invalid_action", clientSupportsLocalize));
 		}
 
 	}

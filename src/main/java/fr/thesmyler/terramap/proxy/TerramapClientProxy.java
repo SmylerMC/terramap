@@ -20,6 +20,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
@@ -109,6 +110,11 @@ public class TerramapClientProxy extends TerramapProxy {
 		        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
 			}
 		}
+	}
+	
+	@Override
+	public String localize(String key, Object... objects) {
+		return I18n.format(key, objects);
 	}
 
 }
