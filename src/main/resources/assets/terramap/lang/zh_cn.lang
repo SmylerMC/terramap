@@ -29,6 +29,9 @@ terramap.binding.toggle_debug=切换Terramap调试模式
 terramap.binding.shortcuts=地图快捷键
 terramap.binding.copy_geo=复制地理坐标
 terramap.binding.copy_mc=复制minecraft坐标
+terramap.binding.zoom_in=放大
+terramap.binding.zoom_out=缩小
+terramap.binding.toggle_minimap=切换小地图可见度
 
 terramap.mapwidget.rclickmenu.teleport=传送到这里
 terramap.mapwidget.rclickmenu.center=以这里为地图中心
@@ -74,7 +77,8 @@ terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°
 terramap.terramapscreen.information.playerout=你在投影之外
 terramap.terramapscreen.information.playergeo=玩家位置：%1$s° %2$s°
 terramap.terramapscreen.information.noplayer=玩家位置：-° -°
-terramap.terramapscreen.information.distortion=Distortion: %1$s 格/米 ; ±%2$s°
+terramap.terramapscreen.information.distortion=扭曲：%1$s 格/米 ; ±%2$s°
+terramap.terramapscreen.information.outdatedterra121=请更新Terra121
 
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=切换主玩家是否可见
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=切换其它玩家是否可见
@@ -86,3 +90,21 @@ terramap.ingameactions.copy.noproj=无法复制坐标：没有投影
 terramap.ingameactions.copy.outproj=无法复制坐标：你在投影之外
 terramap.ingameactions.copy.mc=已复制Minecraft坐标到剪贴板
 terramap.ingameactions.copy.geo=已复制地理坐标到剪贴板
+
+terramap.commands.terrashow.usage=/terrashow <show|hide|status> [玩家名（可选）]
+terramap.commands.terrashow.too_few_parameters=参数过少：/terrashow <show|hide|status> [玩家名（可选）]
+terramap.commands.terrashow.too_many_parameters=参数过多：/terrashow <show|hide|status> [玩家名（可选）]
+terramap.commands.terrashow.console_player_name=从服务器控制台执行命令时需要提供玩家名：/terrashow <show|hide|status> [玩家名（可选）]
+terramap.commands.terrashow.cannot_change_own_visibility=你没有权限更改你的可见性
+terramap.commands.terrashow.cannot_change_others_visibility=你没有权限更改其它玩家的可见性
+terramap.commands.terrashow.noplayer=玩家不存在：/terrashow <show|hide|status> [玩家名（可选）]
+terramap.commands.terrashow.invalid_action=无效操作：/terrashow <show|hide|status> [玩家名（可选）]
+terramap.commands.terrashow.getvisible=%1$s在地图上可见
+terramap.commands.terrashow.setvisible=%1$s现已在地图上可见
+terramap.commands.terrashow.gethidden=%1$s在地图上隐匿了踪迹
+terramap.commands.terrashow.sethidden=%1$s现已在地图上隐匿踪迹
+
+terramap.commands.reloadmapstyles.usage=/reloadmapstyles
+terramap.commands.reloadmapstyles.forbidden=你没有权限使用该命令！
+terramap.commands.reloadmapstyles.done=完成
+terramap.commands.reloadmapstyles.error=重载地图风格时出错
