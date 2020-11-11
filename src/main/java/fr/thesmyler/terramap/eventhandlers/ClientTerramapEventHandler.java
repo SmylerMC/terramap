@@ -35,21 +35,22 @@ public class ClientTerramapEventHandler {
 	private boolean configWasFixed = false;
 	
 	@SubscribeEvent
-	public void onRenderHUD(RenderGameOverlayEvent.Text e) {
+	public void onRenderHUD(RenderGameOverlayEvent.Text event) {
 		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
 			GeographicProjection proj = TerramapRemote.getRemote().getProjection();
 			if(proj != null) {
-				e.getLeft().add("");
+				event.getLeft().add("");
 				double x = Minecraft.getMinecraft().player.posX;
 				double z = Minecraft.getMinecraft().player.posZ;
 				double[] coords = proj.toGeo(x, z);
 				if(Double.isFinite(coords[0]) && Double.isFinite(coords[1])) {
 					String lon = GeoServices.formatGeoCoordForDisplay(coords[0]);
 					String lat = GeoServices.formatGeoCoordForDisplay(coords[1]);
-					e.getLeft().add("Position: " + lat + "° " + lon + "°");
+					event.getLeft().add("Position: " + lat + "° " + lon + "°");
 				}
-				
 			}
+			event.getLeft().add("Terramap world UUID: " + TerramapRemote.getRemote().getWorldUUID());
+			event.getLeft().add("Terramap proxy UUID: " + TerramapRemote.getRemote().getProxyUUID());
 		}
 	}
 

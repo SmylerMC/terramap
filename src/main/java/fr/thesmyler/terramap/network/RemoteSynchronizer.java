@@ -23,18 +23,19 @@ import io.github.terra121.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public abstract class RemoteSynchronizer {
 
 	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<UUID, RegisteredForUpdatePlayer>();
 
-	public static void syncPlayers(World world) {
+	public static void syncPlayers(WorldServer world) {
 		if(playersToUpdate.size() <= 0) return;
 		long ctime = System.currentTimeMillis();
 		List<TerramapLocalPlayer> players = new ArrayList<TerramapLocalPlayer>();
 		for(EntityPlayer player: world.playerEntities) {
-			if(!TerramapServerPreferences.shouldDisplayPlayer(player.getPersistentID())) continue;
+			if(!TerramapServerPreferences.shouldDisplayPlayer(world, player.getPersistentID())) continue;
 			TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
 			if(terraPlayer.isSpectator() && !TerramapConfig.synchronizeSpectators) continue;
 			players.add(terraPlayer);
@@ -79,7 +80,7 @@ public abstract class RemoteSynchronizer {
 		IMessage data = new S2CTerramapHelloPacket(
 				TerramapMod.getVersion().toString(),
 				settings,
-				new UUID(0, 0), //TODO Implement world uuids
+				TerramapServerPreferences.getWorldUUID(player.getServerWorld()),
 				PlayerSyncStatus.getFromBoolean(TerramapConfig.synchronizePlayers),
 				PlayerSyncStatus.getFromBoolean(TerramapConfig.synchronizeSpectators),
 				PermissionManager.hasPermission(player, Permission.RADAR_PLAYERS),

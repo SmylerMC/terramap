@@ -8,7 +8,6 @@ import java.util.Map;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -24,8 +23,6 @@ public abstract class HudScreenHandler {
 	private static MapWidget map;
 	
 	public static void init(HudScreen screen) {
-		
-		TerramapMod.logger.info("Init hud screen"); //TODO Remove debug log
 		
 		//TODO Only show the minimap on overworld earth worlds
 		

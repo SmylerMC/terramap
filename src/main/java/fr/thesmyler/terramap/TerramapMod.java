@@ -9,6 +9,8 @@ import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.command.PermissionManager;
+import fr.thesmyler.terramap.command.TerrashowCommand;
+import fr.thesmyler.terramap.command.TilesetReloadCommand;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
@@ -75,6 +77,10 @@ public class TerramapMod {
     @EventHandler
     public void onServerStarts(FMLServerStartingEvent event) {
     	proxy.onServerStarting(event);
+    	
+    	//FIXME Remove debug code
+    	event.registerServerCommand(new TerrashowCommand());
+    	event.registerServerCommand(new TilesetReloadCommand());
     }
     
         

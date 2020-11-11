@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.WorldServer;
 
 public class TerrashowCommand extends CommandBase {
 	
@@ -32,6 +33,7 @@ public class TerrashowCommand extends CommandBase {
 		return CommandUtils.getStringForSender("terramap.commands.terrashow.usage", CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION));
 	}
 
+	//FIXME checking permission for null player
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		boolean clientSupportsLocalize = CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION);
@@ -52,18 +54,19 @@ public class TerrashowCommand extends CommandBase {
 		}
 		if(player == null) throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.noplayer", clientSupportsLocalize));
 		UUID uuid = player.getPersistentID();
+		WorldServer world = player.getServerWorld();
 		switch(args[0]) {
 		case "status":
-			String key = TerramapServerPreferences.shouldDisplayPlayer(uuid) ? "terramap.commands.terrashow.getvisible": "terramap.commands.terrashow.gethidden";
+			String key = TerramapServerPreferences.shouldDisplayPlayer(world, uuid) ? "terramap.commands.terrashow.getvisible": "terramap.commands.terrashow.gethidden";
 			sender.sendMessage(CommandUtils.getComponentForSender(key, clientSupportsLocalize, player.getDisplayName()));
 			break;
 		case "show":
-			TerramapServerPreferences.setShouldDisplayPlayer(uuid, true);
+			TerramapServerPreferences.setShouldDisplayPlayer(world, uuid, true);
 			
 			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.setvisible", clientSupportsLocalize, player.getDisplayName()));
 			break;
 		case "hide":
-			TerramapServerPreferences.setShouldDisplayPlayer(uuid, false);
+			TerramapServerPreferences.setShouldDisplayPlayer(world, uuid, false);
 			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.setvisible", clientSupportsLocalize, player.getDisplayName()));
 			break;
 		default:

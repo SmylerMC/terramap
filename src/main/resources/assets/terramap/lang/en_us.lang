@@ -25,7 +25,7 @@ terramap.config.join_with_outdated_mod_message=Join with out-dated Terramap
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Open map
-terramap.binding.toggle_debug=Toggle Terramap debug mod
+terramap.binding.toggle_debug=Toggle Terramap debug mode
 terramap.binding.shortcuts=Map shortcuts
 terramap.binding.copy_geo=Copy geographic coordinates
 terramap.binding.copy_mc=Copy minecraft coordinates
