@@ -33,7 +33,7 @@ public class TilesetReloadCommand extends CommandBase {
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		boolean clientLocalizes = CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION);
-		if(sender instanceof EntityPlayer && !PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES)) {
+		if(sender instanceof EntityPlayer && !this.checkPermission(server, sender)) {
 			throw new CommandException(CommandUtils.getStringForSender("terramap.commands.reloadmapstyles.forbidden", clientLocalizes));
 		}
 		try {
@@ -50,5 +50,12 @@ public class TilesetReloadCommand extends CommandBase {
 	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
 		return new ArrayList<String>();
     }
+
+	@Override
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		return PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES);
+	}
+	
+	
 
 }

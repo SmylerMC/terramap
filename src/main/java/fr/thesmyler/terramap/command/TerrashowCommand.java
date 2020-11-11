@@ -46,10 +46,10 @@ public class TerrashowCommand extends CommandBase {
 		} else if(sender instanceof EntityPlayerMP) player = (EntityPlayerMP)sender;
 		else throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.console_player_name", clientSupportsLocalize));
 		if(player != null && player.equals(senderPlayer)) {
-			if(!PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
+			if(senderPlayer == null || !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
 				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_own_visibility", clientSupportsLocalize));
 		} else {
-			if(!PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
+			if(senderPlayer == null || !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
 				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_others_visibility", clientSupportsLocalize));
 		}
 		if(player == null) throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.noplayer", clientSupportsLocalize));
