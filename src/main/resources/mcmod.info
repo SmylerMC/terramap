@@ -2,13 +2,13 @@
 {
   "modid": "terramap",
   "name": "Terramap",
-  "description": "A tiled map in minecraft as an addon for terra121, with cools features such as teleport or open in various web map services. All developed with the aim to make building or visiting the Earth easier and faster.",
+  "description": "Terramap's concept is simple: minimap mod are very limited when it comes to Terra121, they do not have low zoom views, and requires the world to be visited, even though the generation is not random. Terramap fixes tat by adding a minimap and a full-screen map, but instead of rendering it from the actual Minecraft world save, it displays web maps of the actual world (OpenStreetMap, Mapbox satellite, and others). It also renders various elements on that maps: players, even when they are on the other side of the world, and entities, for now (server warps are planned). It also has various functionalities to better interact with the Terra world, such as teleporting, opening places on various websites, or copy geo, block, chunk or region coordinates. Outside of the map it also key-bindings to easily copy coordinates to the clip-board. The mod has extensive configuration options and permission nodes, making it server and even survival friendly.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://www.curseforge.com/minecraft/mc-mods/terramap",
   "updateUrl": "",
   "authorList": ["TheSmyler"],
-  "credits": "All the Terra121 team for this amazing mod, there would of course be no Terramap without Terra121. Drope for the cool logo. qsefthuopq, hugofnm and Serdaise for the various translations. Xesau for adapting the bte website to interface with Terramap. OpenStreetMap contributors for the map data.",
+  "credits": "The Terra121 and Terra++ teams, without whom Terramap would be irrelevant. Copyrights notices and links are displayed on the fullscreen map. The now many people helping with the translation: Agrro, EnderBenjy, hugofnm, qsefthuopq and Serdaise. Drope for the logo. Xesau, for adapting the BTE website so Terramap can interact with it. Map credits: OpenStreetMap contributors, Stamen, Mapbox.",
   "logoFile": "terramap.png",
   "screenshots": [],
   "dependencies": ["terra121"]
