@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = TerramapMod.MODID, useMetadata=true)
+@Mod(modid = TerramapMod.MODID, useMetadata=true, dependencies="required-after:terra121")
 public class TerramapMod {
 	
     public static final String MODID = "terramap";
