@@ -1,12 +1,12 @@
 package fr.thesmyler.terramap;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
-import scala.actors.threadpool.Arrays;
 
 public class TerramapVersion implements Comparable<TerramapVersion> {
 
@@ -21,8 +21,6 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 
 	public final boolean devBuild;
 	public final boolean devRun;
-	
-	
 
 	public TerramapVersion(
 			int majorTarget,
