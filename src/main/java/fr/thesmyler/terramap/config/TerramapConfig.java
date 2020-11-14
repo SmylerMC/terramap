@@ -98,7 +98,7 @@ public class TerramapConfig {
 	
 	@Config.Name("unlock_zoom")
 	@Config.LangKey("terramap.config.unlock_zoom")
-	@Config.Comment("Set this to true to allow zoom level up to 25, even on map where the server doesn't support it")
+	@Config.Comment("Set this to true to allow zoom level up to 25, even on maps where the tile server doesn't support it")
 	public static boolean unlockZoom = false;
 
 	@Config.Name("double_click_delay")

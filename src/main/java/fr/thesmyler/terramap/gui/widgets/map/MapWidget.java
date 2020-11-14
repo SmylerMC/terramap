@@ -81,12 +81,14 @@ public class MapWidget extends Screen {
 		this.context = context;
 		this.tileScaling = tileScaling;
 		FontRendererContainer font = new FontRendererContainer(Minecraft.getMinecraft().fontRenderer);
-		this.copyright = new TextComponentWidget(CONTROLLER_Z + 1, new TextComponentString(""), font) {
+		this.copyright = new TextComponentWidget(Integer.MAX_VALUE, new TextComponentString(""), font) {
 			@Override
 			public boolean isVisible(Screen parent) {
 				return MapWidget.this.showCopyright;
 			}
 		};
+		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
+		super.addWidget(this.copyright);
 		
 		this.rightClickMenu = new MenuWidget(100, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
@@ -171,8 +173,6 @@ public class MapWidget extends Screen {
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
 			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
 		});
-		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
-		super.addWidget(this.copyright);
 		
 		this.controller = new ControllerMapLayer(this.tileScaling);
 		super.addWidget(this.controller);
