@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,9 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
@@ -26,20 +25,15 @@ import io.github.terra121.EarthWorldType;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 /**
  * Used to represent the server from the client
  * 
  * @author SmylerMC
- * 
- * TODO use hud handler
  *
  */
 public class TerramapRemote {
@@ -175,20 +169,17 @@ public class TerramapRemote {
 	
 	public void addServerMapStyle(TiledMap map) {
 		this.serverMaps.put(map.getId(), map);
-		// Update the minimap
-        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
+        HudScreenHandler.updateMinimap();
 	}
 	
 	public void addProxyMapStyle(TiledMap map) {
 		this.proxyMaps.put(map.getId(), map);
-		// Update the minimap
-        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
+		HudScreenHandler.updateMinimap();
 	}
 	
 	public void resetServerMapStyles() {
 		this.serverMaps.clear();
-		// Update the minimap
-        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
+		HudScreenHandler.updateMinimap();
 	}
 	
 	public Map<String, TiledMap> getMapStyles() {

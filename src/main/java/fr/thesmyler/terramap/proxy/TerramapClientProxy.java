@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.proxy;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
@@ -10,6 +9,7 @@ import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
+import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
@@ -17,14 +17,12 @@ import fr.thesmyler.terramap.maps.WebTile;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -106,8 +104,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	public void onConfigChanged(OnConfigChangedEvent event) {
 		if (event.getModID().equals(TerramapMod.MODID)) {
 			if(TerramapMod.proxy.isClient() && SmyLibGui.getHudScreen() != null) {
-				// If we are in game, let our hud screen re-init it's minimap
-		        MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
+				HudScreenHandler.updateMinimap();
 			}
 		}
 	}
