@@ -8,11 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
- * The goal in the long run is to support both Forge and Bukkit permissions
- * This is intended to provide an abstraction layer
- * 
- * TODO Support Bukkit permissions
- * FIXME Make sure operators have all permissions
+ * Makes it easier to manage permissions
  * 
  *
  * @author SmylerMC

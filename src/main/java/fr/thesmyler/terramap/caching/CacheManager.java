@@ -25,7 +25,6 @@ import fr.thesmyler.terramap.TerramapMod;
  * It has a worker thread running to allow for asynchronous caching.
  * The worker is started by the mod during preinit
  *
- * FIXME Some tiles are read to soon on disk are invalid (not fully written) avoid that!
  */
 public class CacheManager implements Runnable {
 
