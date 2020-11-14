@@ -19,33 +19,33 @@ import fr.thesmyler.terramap.maps.TiledMap;
 import net.minecraft.client.Minecraft;
 
 public abstract class HudScreenHandler {
-	
+
 	private static MapWidget map;
-	
+
 	public static void init(HudScreen screen) {
-		
-		//TODO Only show the minimap on overworld earth worlds
-		
+
 		screen.removeAllWidgets();
 		screen.cancellAllScheduled();
-		
-		if(map == null) {
-			map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
-			map.setInteractive(false);
-			map.setCopyrightVisibility(false);
-			map.setScaleVisibility(false);
-			map.scheduleAtUpdate(() -> {
-				if(TerramapRemote.getRemote().getProjection() != null) {
-					map.track(map.getMainPlayerMarker());
-				}
-			});
+
+		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP)) {
+			if(map == null) {
+				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
+				map.setInteractive(false);
+				map.setCopyrightVisibility(false);
+				map.setScaleVisibility(false);
+				map.scheduleAtUpdate(() -> {
+					if(TerramapRemote.getRemote().getProjection() != null) {
+						map.track(map.getMainPlayerMarker());
+					}
+				});
+			}
+
+			updateMinimap();
+
+			screen.addWidget(map);
 		}
-		
-		updateMinimap();
-		
-		screen.addWidget(map);
 	}
-	
+
 	public static void updateMinimap() {
 		HudScreen screen = SmyLibGui.getHudScreen();
 		map.setX((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
@@ -69,7 +69,7 @@ public abstract class HudScreenHandler {
 		zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.minimapZoomLevel);
 		map.setZoom(zoomLevel);
 		map.setZoom(TerramapConfig.minimapZoomLevel);
-		
+
 		if(!TerramapConfig.minimapEnable) {
 			map.setVisibility(false);
 		} else if(TerramapRemote.getRemote().doesProxyForceMinimap()){
@@ -78,13 +78,13 @@ public abstract class HudScreenHandler {
 			map.setVisibility(TerramapUtils.isOnEarthWorld(Minecraft.getMinecraft().player));
 		}
 	}
-	
+
 	public static void zoomInMinimap() {
 		map.zoom(1);
 		TerramapConfig.minimapZoomLevel = (int) map.getZoom();
 		TerramapConfig.sync();
 	}
-	
+
 	public static void zoomOutMinimap() {
 		map.zoom(-1);
 		TerramapConfig.minimapZoomLevel = (int) map.getZoom();

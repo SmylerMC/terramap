@@ -22,10 +22,13 @@ import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import io.github.terra121.EarthGeneratorSettings;
+import io.github.terra121.EarthWorldType;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -35,6 +38,8 @@ import net.minecraftforge.common.MinecraftForge;
  * Used to represent the server from the client
  * 
  * @author SmylerMC
+ * 
+ * TODO use hud handler
  *
  */
 public class TerramapRemote {
@@ -60,7 +65,7 @@ public class TerramapRemote {
 	private boolean allowAnimalRadar = true;
 	private boolean allowMobRadar = true;
 	private boolean allowDecoRadar = true;
-	private boolean proxyForceGlobalMap = false;
+	private boolean proxyForcesGlobalMap = false;
 	private boolean proxyForceGlobalSettings = false;
 	private UUID worldUUID = null;
 	private UUID proxyUUID = null;
@@ -170,14 +175,12 @@ public class TerramapRemote {
 	
 	public void addServerMapStyle(TiledMap map) {
 		this.serverMaps.put(map.getId(), map);
-		
 		// Update the minimap
         MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
 	}
 	
 	public void addProxyMapStyle(TiledMap map) {
 		this.proxyMaps.put(map.getId(), map);
-		
 		// Update the minimap
         MinecraftForge.EVENT_BUS.post(new GuiScreenEvent.InitGuiEvent.Pre(SmyLibGui.getHudScreen(), new ArrayList<GuiButton>()));
 	}
@@ -353,11 +356,11 @@ public class TerramapRemote {
 	}
 	
 	public boolean doesProxyForceMinimap() {
-		return this.proxyForceGlobalMap;
+		return this.proxyForcesGlobalMap;
 	}
 	
 	public void setProxyForceMinimap(boolean yesNo) {
-		this.proxyForceGlobalMap = yesNo;
+		this.proxyForcesGlobalMap = yesNo;
 	}
 	
 	public void setProxyForceGlobalSettings(boolean yesNo) {
@@ -380,6 +383,43 @@ public class TerramapRemote {
 	public void setProxyUUID(UUID worldUUID) {
 		this.proxyUUID = worldUUID;
 		this.setRemoteIdentifier();
+	}
+	
+	/**
+	 * Tells whether or not the map should be accessible in the given context
+	 * 
+	 * The fullscreen map is accessible if one of the following is true:
+	 *  - The proxy forces the map
+	 *  - The generation settings are set
+	 *  - We are on a Earth world and Terramap is not installed on the server
+	 *  
+	 *  The minimap is accessible if one of the following is true:
+	 *   - We are on an earth world
+	 *   - The generation settings are set
+	 * 
+	 * @param context
+	 * @return true if the map should be accessible
+	 */
+	public boolean allowsMap(MapContext context) {
+		switch(context) {
+		case FULLSCREEN:
+			return this.proxyForcesGlobalMap || this.getGeneratorSettings() != null || (!this.isInstalledOnServer() && this.isOnEarthWorld());
+		case MINIMAP:
+			return this.isOnEarthWorld() || this.getGeneratorSettings() != null;
+		default:
+			return false;
+		}
+	}
+	
+	/**
+	 * Checks if the player is on the overworld of an EarthWorld (client side check)
+	 * 
+	 * @return
+	 */
+	public boolean isOnEarthWorld() {
+		WorldClient world = Minecraft.getMinecraft().world;
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		return world != null && player != null && world.getWorldType() instanceof EarthWorldType && player.dimension == 0;
 	}
 
 	public static TerramapRemote getRemote() {
