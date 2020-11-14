@@ -62,11 +62,17 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				WebTile bestTile = tile;
 				boolean lowerResRender = false;
-
+				boolean unlockedZoomRender = false;
 				if(!TerramapMod.cacheManager.isCached(tile)) {
 					lowerResRender = true;
-					if(!TerramapMod.cacheManager.isBeingCached(tile))
-						TerramapMod.cacheManager.cacheAsync(tile);
+					if(!TerramapMod.cacheManager.isBeingCached(tile)) {
+						if(this.zoom <= this.map.getMaxZoom()) {
+							TerramapMod.cacheManager.cacheAsync(tile);
+						} else {
+							unlockedZoomRender = true;
+						}
+					}
+						
 					while(tile.getZoom() > 0 && !TerramapMod.cacheManager.isCached(tile)) {
 						tile = this.map.getTile(tile.getZoom()-1, tile.getX() /2, tile.getY() /2);
 					}
@@ -120,27 +126,29 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				
 				if(debug) {
 					final int RED = 0xFFFF0000;
+					final int BLUE = 0xFF0000FF;
 					final int WHITE = 0xFFFFFFFF;
+					int lineColor = lowerResRender? unlockedZoomRender? BLUE: RED : WHITE;
 					parent.drawHorizontalLine(
 							dispX,
 							dispX + displayWidth - 1,
 							dispY,
-							lowerResRender? RED : WHITE);
+							lineColor);
 					parent.drawHorizontalLine(
 							dispX,
 							dispX + displayWidth - 1,
 							dispY + displayHeight - 1,
-							lowerResRender? RED : WHITE);
+							lineColor);
 					parent.drawVerticalLine(
 							dispX,
 							dispY,
 							dispY + displayHeight - 1,
-							lowerResRender? RED : WHITE);
+							lineColor);
 					parent.drawVerticalLine(
 							dispX + displayWidth - 1,
 							dispY,
 							dispY + displayHeight - 1,
-							lowerResRender? RED : WHITE);
+							lineColor);
 				}
 				GlStateManager.color(1, 1, 1, 1);
 

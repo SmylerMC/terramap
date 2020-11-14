@@ -95,6 +95,11 @@ public class TerramapConfig {
 	@Config.RangeInt(min=16, max=256)
 	@Config.SlidingOption
 	public static int maxTileLoad = 128;
+	
+	@Config.Name("unlock_zoom")
+	@Config.LangKey("terramap.config.unlock_zoom")
+	@Config.Comment("Set this to true to allow zoom level up to 25, even on map where the server doesn't support it")
+	public static boolean unlockZoom = false;
 
 	@Config.Name("double_click_delay")
 	@Config.LangKey("terramap.config.double_click_delay")

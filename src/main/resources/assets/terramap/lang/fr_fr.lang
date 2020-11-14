@@ -22,6 +22,7 @@ terramap.config.players_opt_in_to_display_default=Affichage par défaut
 terramap.config.sync_custom_maps=Partage des cartes customs
 terramap.config.join_without_mod_message=Message sans le mod
 terramap.config.join_with_outdated_mod_message=Message avec ancienne version
+terramap.config.unlock_zoom=Déverouiller le zoom
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Ouvrir la carte

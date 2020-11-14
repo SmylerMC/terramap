@@ -22,6 +22,7 @@ terramap.config.players_opt_in_to_display_default=默认显示玩家
 terramap.config.sync_custom_maps=发送自定义地图到客户端
 terramap.config.join_without_mod_message=不使用Terramap加入
 terramap.config.join_with_outdated_mod_message=使用过期的Terramap加入
+terramap.config.unlock_zoom=解锁变焦
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=打开地图

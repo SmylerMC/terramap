@@ -22,6 +22,7 @@ import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.EarthMapConfigGui;
 import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
@@ -86,13 +87,7 @@ public class MapWidget extends Screen {
 				return MapWidget.this.showCopyright;
 			}
 		};
-		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
-		super.addWidget(this.copyright);
 		
-		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
-		
-		this.controller = new ControllerMapLayer(this.tileScaling);
-		super.addWidget(this.controller);
 		this.rightClickMenu = new MenuWidget(100, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
 			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
@@ -176,6 +171,14 @@ public class MapWidget extends Screen {
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
 			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
 		});
+		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
+		super.addWidget(this.copyright);
+		
+		this.controller = new ControllerMapLayer(this.tileScaling);
+		super.addWidget(this.controller);
+		
+		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
+		
 		this.scale.setX(15).setY(this.height - 30);
 		this.addWidget(scale);
 		this.updateRightClickMenuEntries();
@@ -218,6 +221,7 @@ public class MapWidget extends Screen {
 		super.addWidget(background);
 		this.background = background;
 		this.copyright.setComponent(background.map.getCopyright(SmyLibGui.getLanguage()));
+		this.zoom(0);
 		return this;
 	}
 	
@@ -400,8 +404,9 @@ public class MapWidget extends Screen {
 			MapWidget.this.rightClickMenu.hide(null);
 
 			double nzoom = this.zoom + zoom;
+			double maxZoom = TerramapConfig.unlockZoom? 25: getMaxZoom();
+			nzoom = Math.min(maxZoom, nzoom);
 			nzoom = Math.max(getMinZoom(), nzoom);
-			nzoom = Math.min(getMaxZoom(), nzoom);
 
 			if(nzoom == this.zoom) return; // Do not move if we are not doing anything
 
@@ -481,11 +486,11 @@ public class MapWidget extends Screen {
 	}
 
 	public double getMaxZoom() {
-		return this.background.map.getMaxZoom(); //TODO Take other layers into account
+		return TerramapConfig.unlockZoom? 25: this.background.map.getMaxZoom();
 	}
 
 	public double getMinZoom() {
-		return this.background.map.getMinZoom(); //TODO Take other layers into account
+		return this.background.map.getMinZoom();
 	}
 
 	public MapWidget setZoom(double zoom) {

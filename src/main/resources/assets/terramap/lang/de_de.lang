@@ -22,6 +22,7 @@ terramap.config.players_opt_in_to_display_default=Standardanzeige des Spielers
 terramap.config.sync_custom_maps=Benutzerdefinierte Karten an den Client senden
 terramap.config.join_without_mod_message=Du musst die Terramod installiert haben, um zu joinen.
 terramap.config.join_with_outdated_mod_message=Du benutzt eine veraltete Version der Terramod.
+terramap.config.unlock_zoom=Zoom entsperren
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Karte öffnen

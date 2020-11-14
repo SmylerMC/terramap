@@ -22,6 +22,7 @@ terramap.config.players_opt_in_to_display_default=Predvolba vidiťeľnosťi hrá
 terramap.config.sync_custom_maps=Posielať vlastné mapy clientovi
 terramap.config.join_without_mod_message=Pripojiť sa bez Terramapy
 terramap.config.join_with_outdated_mod_message=Pripojiť sa so starou verziou Terramapy
+terramap.config.unlock_zoom=Odomknite priblíženie
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Otvoriť mapu

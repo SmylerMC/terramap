@@ -9,7 +9,6 @@ import net.minecraftforge.server.permission.PermissionAPI;
 
 /**
  * Makes it easier to manage permissions
- * 
  *
  * @author SmylerMC
  *

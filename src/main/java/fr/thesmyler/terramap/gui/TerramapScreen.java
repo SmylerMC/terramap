@@ -330,7 +330,7 @@ public class TerramapScreen extends Screen {
 	
 	@Override
 	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
-		if(this.getFocusedWidget() == null || this.getFocusedWidget().equals(this.map)) {
+		if(this.getFocusedWidget() == null || !this.getFocusedWidget().equals(this.searchBox)) {
 			if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
 			if(keyCode == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
 			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.map.moveMap(0, 10);

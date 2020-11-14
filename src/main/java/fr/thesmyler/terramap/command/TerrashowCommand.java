@@ -33,7 +33,6 @@ public class TerrashowCommand extends CommandBase {
 		return CommandUtils.getStringForSender("terramap.commands.terrashow.usage", CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION));
 	}
 
-	//FIXME checking permission for null player
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 		boolean clientSupportsLocalize = CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION);

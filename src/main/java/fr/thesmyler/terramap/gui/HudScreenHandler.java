@@ -48,6 +48,7 @@ public abstract class HudScreenHandler {
 
 	public static void updateMinimap() {
 		HudScreen screen = SmyLibGui.getHudScreen();
+		if(map == null) init(screen);
 		map.setX((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
 		map.setY((int) (TerramapConfig.minimapPosY * 0.01 * screen.getWidth()));
 		map.setWidth((int) (TerramapConfig.minimapWidth * 0.01 * screen.getWidth()));
