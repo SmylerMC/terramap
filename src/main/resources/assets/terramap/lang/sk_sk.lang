@@ -22,7 +22,7 @@ terramap.config.players_opt_in_to_display_default=Predvolba vidiťeľnosťi hrá
 terramap.config.sync_custom_maps=Posielať vlastné mapy clientovi
 terramap.config.join_without_mod_message=Pripojiť sa bez Terramapy
 terramap.config.join_with_outdated_mod_message=Pripojiť sa so starou verziou Terramapy
-terramap.config.unlock_zoom=Odomknite priblíženie
+terramap.config.unlock_zoom=Odomknúť priblíženie
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Otvoriť mapu
@@ -92,4 +92,21 @@ terramap.ingameactions.copy.outproj=Nepodarilo sa skopírovať súradnice: Ste m
 terramap.ingameactions.copy.mc=Minecraft súradnice skopírované do schránky
 terramap.ingameactions.copy.geo=Geografické súradnice skopírované do schránky
 
+terramap.commands.terrashow.usage=/terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.too_few_parameters=Too few parameters: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.too_many_parameters=Too many parameters: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.console_player_name=Pri spustení z konzoly sa vyžaduje meno hráča: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.cannot_change_own_visibility=Nemáte povolenie na zmenu svojej viditeľnosti
+terramap.commands.terrashow.cannot_change_others_visibility=Nemáte povolenie na zmenu viditeľnosti ostatných
+terramap.commands.terrashow.noplayer=Player does not exist: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.invalid_action=Invalid action: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.getvisible=%1$s je momentálne viditeľný na mape
+terramap.commands.terrashow.setvisible=%1$s je teraz viditeľný na mape
+terramap.commands.terrashow.gethidden=%1$s je momentálne skrytý na mape
+terramap.commands.terrashow.sethidden=%1$s je teraz skrytý na mape
+
+terramap.commands.reloadmapstyles.usage=/reloadmapstyles
+terramap.commands.reloadmapstyles.forbidden=Na použitie tohto príkazu nemáte povolenie!
+terramap.commands.reloadmapstyles.done=Hotovo
+terramap.commands.reloadmapstyles.error=Chyba pri opätovnom načítaní štýlov máp
 

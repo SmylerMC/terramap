@@ -22,7 +22,7 @@ terramap.config.players_opt_in_to_display_default=Předvolba viditelnosti hráč
 terramap.config.sync_custom_maps=Posílat vlastní mapy clientovi
 terramap.config.join_without_mod_message=Pripojiť se bez Terramapy
 terramap.config.join_with_outdated_mod_message=Připojit se starou verzí Terramapy
-terramap.config.unlock_zoom=Odemkněte přiblížení
+terramap.config.unlock_zoom=Odemknout přiblížení
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Otevřít mapu
@@ -92,4 +92,21 @@ terramap.ingameactions.copy.outproj=Nepodařilo se zkopírovat souřadnice: Jste
 terramap.ingameactions.copy.mc=Minecraft souřadnice zkopírovány do schránky
 terramap.ingameactions.copy.geo=Geografické souřadnice zkopírovány do schránky
 
+terramap.commands.terrashow.usage=/terrashow <show|hide|status> [jméno hráče (volitelné)]
+terramap.commands.terrashow.too_few_parameters=Too few parameters: /terrashow <show|hide|status> [jméno hráče (volitelné)]
+terramap.commands.terrashow.too_many_parameters=Too many parameters: /terrashow <show|hide|status> [jméno hráče (volitelné)]
+terramap.commands.terrashow.console_player_name=Při spuštění z konzoly se vyžaduje jméno hráče: /terrashow <show|hide|status> [jméno hráče (volitelné)]
+terramap.commands.terrashow.cannot_change_own_visibility=Nemáte povolení pro změnu své viditelnosti
+terramap.commands.terrashow.cannot_change_others_visibility=Nemáte povolení pro změnu viditelnosti ostatních
+terramap.commands.terrashow.noplayer=Player does not exist: /terrashow <show|hide|status> [jméno hráče (volitelné)]
+terramap.commands.terrashow.invalid_action=Invalid action: /terrashow <show|hide|status> [jméno hráče (volitelné)]
+terramap.commands.terrashow.getvisible=%1$s je momentálně viditelný na mapě
+terramap.commands.terrashow.setvisible=%1$s je nyní viditelný na mapě
+terramap.commands.terrashow.gethidden=%1$s je momentálně skrytý na mapě
+terramap.commands.terrashow.sethidden=%1$s je nyní skrytý na mape
+
+terramap.commands.reloadmapstyles.usage=/reloadmapstyles
+terramap.commands.reloadmapstyles.forbidden=Pro použití tohoto příkazu nemáte povolení!
+terramap.commands.reloadmapstyles.done=Hotovo
+terramap.commands.reloadmapstyles.error=Chyba při opětovném načítání stylů map
 
