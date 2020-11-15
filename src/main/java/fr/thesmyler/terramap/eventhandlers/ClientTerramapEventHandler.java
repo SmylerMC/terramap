@@ -74,7 +74,7 @@ public class ClientTerramapEventHandler {
 		// Not called on client...
 		TerramapMod.logger.info(event.player.world.isRemote);
 		if(event.player.world.isRemote) {
-			TerramapRemote.getRemote().resetServerMapStyles();
+			TerramapRemote.getRemote().resetWorld();
 		}
 	}
 	
@@ -101,7 +101,7 @@ public class ClientTerramapEventHandler {
 			Minecraft.getMinecraft().displayGuiScreen(new TestScreen(event.getGui()));
 			this.testScreenWasShown = true;
 		} else if(event.getGui() instanceof GuiDownloadTerrain) {
-			TerramapRemote.getRemote().resetServerMapStyles();
+			TerramapRemote.getRemote().resetWorld();
 		}
 	}
 	

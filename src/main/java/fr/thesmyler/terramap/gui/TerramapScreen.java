@@ -85,7 +85,6 @@ public class TerramapScreen extends Screen {
 
 	@Override
 	public void initScreen() {
-
 		this.removeAllWidgets();
 		this.map.setX(0).setY(0).setWidth(this.getWidth()).setHeight(this.getHeight());
 		this.map.setTileScaling(TerramapConfig.getEffectiveTileScaling());

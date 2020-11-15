@@ -45,7 +45,7 @@ public class TerramapRemote {
 	private PlayerSyncStatus serverSyncSpectators = PlayerSyncStatus.DISABLED;
 	private PlayerSyncStatus proxySyncPlayers = PlayerSyncStatus.DISABLED;
 	private PlayerSyncStatus proxySyncSpectators = PlayerSyncStatus.DISABLED;
-	private String serverVersion = null;
+	private TerramapVersion serverVersion = null;
 	private String sledgehammerVersion = null;
 	private EarthGeneratorSettings genSettings = null;
 	private GeographicProjection projection = null;
@@ -118,7 +118,7 @@ public class TerramapRemote {
 
 	public void saveSettings() {
 		try {
-			if(this.genSettings != null) {
+			if(!this.isInstalledOnServer() && this.genSettings != null) {
 				TerramapClientPreferences.setServerGenSettings(this.getRemoteIdentifier(), this.genSettings.toString());
 				TerramapClientPreferences.save();
 			}
@@ -180,7 +180,9 @@ public class TerramapRemote {
 		HudScreenHandler.updateMinimap();
 	}
 	
-	public void resetServerMapStyles() {
+	public void resetWorld() {
+		this.setGeneratorSettings(null);
+		this.serverVersion = null;
 		this.serverMaps.clear();
 		HudScreenHandler.updateMinimap();
 	}
@@ -281,11 +283,11 @@ public class TerramapRemote {
 		this.proxySyncPlayers = status;
 	}
 
-	public void setServerVersion(String version) {
+	public void setServerVersion(TerramapVersion version) {
 		this.serverVersion = version;
 	}
 	
-	public String getServerVersion() {
+	public TerramapVersion getServerVersion() {
 		return this.serverVersion;
 	}
 

@@ -9,6 +9,8 @@ import java.util.UUID;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.TerramapUtils;
+import fr.thesmyler.terramap.TerramapVersion;
+import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.command.Permission;
 import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -125,18 +127,23 @@ public abstract class RemoteSynchronizer {
 						"Warp support: " + pkt.hasWarpSupport + "\t"
 				);
 		TerramapRemote srv = TerramapRemote.getRemote();
-		srv.setServerVersion(pkt.serverVersion);
-		srv.setGeneratorSettings(pkt.worldSettings);
-		if(pkt.worldUUID.getLeastSignificantBits() != 0 || pkt.worldUUID.getMostSignificantBits() != 0) {
-			srv.setWorldUUID(pkt.worldUUID);
+
+		try {
+			srv.setServerVersion(new TerramapVersion(pkt.serverVersion));
+			srv.setGeneratorSettings(pkt.worldSettings);
+			if(pkt.worldUUID.getLeastSignificantBits() != 0 || pkt.worldUUID.getMostSignificantBits() != 0) {
+				srv.setWorldUUID(pkt.worldUUID);
+			}
+			srv.setPlayersSynchronizedByServer(pkt.syncPlayers);
+			srv.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
+			srv.setAllowsPlayerRadar(pkt.enablePlayerRadar);
+			srv.setAllowsAnimalRadar(pkt.enableAnimalRadar);
+			srv.setAllowsMobRadar(pkt.enableMobRadar);
+			srv.setAllowsDecoRadar(pkt.enableDecoRadar);
+			srv.setServerWarpSupport(pkt.hasWarpSupport);
+		} catch (InvalidVersionString e) {
+			TerramapMod.logger.warn("Failed to parse server version! will act as if the server did not have Terramap installed");
 		}
-		srv.setPlayersSynchronizedByServer(pkt.syncPlayers);
-		srv.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
-		srv.setAllowsPlayerRadar(pkt.enablePlayerRadar);
-		srv.setAllowsAnimalRadar(pkt.enableAnimalRadar);
-		srv.setAllowsMobRadar(pkt.enableMobRadar);
-		srv.setAllowsDecoRadar(pkt.enableDecoRadar);
-		srv.setServerWarpSupport(pkt.hasWarpSupport);
 	}
 
 	public static class RegisteredForUpdatePlayer {

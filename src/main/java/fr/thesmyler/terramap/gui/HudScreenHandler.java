@@ -72,7 +72,7 @@ public abstract class HudScreenHandler {
 		map.setZoom(zoomLevel);
 		map.setZoom(TerramapConfig.minimapZoomLevel);
 
-		map.setVisibility(!TerramapConfig.minimapEnable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
+		map.setVisibility(TerramapConfig.minimapEnable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
 	}
 
 	public static void zoomInMinimap() {
@@ -88,8 +88,10 @@ public abstract class HudScreenHandler {
 	}
 
 	public static void toggleMinimap() {
-		map.setVisibility(!map.isVisible(null));
-		TerramapConfig.minimapEnable = map.isVisible(null);
-		TerramapConfig.sync();
+		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP)) {
+			map.setVisibility(!map.isVisible(null));
+			TerramapConfig.minimapEnable = map.isVisible(null);
+			TerramapConfig.sync();
+		}
 	}
 }
