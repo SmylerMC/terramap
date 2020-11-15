@@ -81,15 +81,13 @@ public class CacheManager implements Runnable {
 				sleep = 20;
 			}else {
 				sleep = 0;
-				synchronized(toCache) {  //Crashes the thread when null
+				synchronized(toCache) {  // Crashes the thread when null
 					this.currentlyCachedByWorker = toCache;
 					while(this.shouldCache(toCache)) {
 						try {
 							this.cache(toCache);
 							break;
 						} catch(IOException e) {
-							TerramapMod.logger.error("Failed to cache a file, you may not be connected to the internet, logging exception.");
-							TerramapMod.logger.catching(e);
 							this.reportError(toCache);
 						}
 					}
@@ -99,7 +97,7 @@ public class CacheManager implements Runnable {
 			}
 		}
 		synchronized(TerramapMod.logger) {
-			TerramapMod.logger.info("Stopping IRLW cache manager.");
+			TerramapMod.logger.info("Stopping Terramap cache manager.");
 		}
 	}
 
@@ -321,12 +319,13 @@ public class CacheManager implements Runnable {
 	}
 
 	public void reportError(Cachable c) {
-		TerramapMod.logger.error("Failed to cache " + c.getURL() + " to " + c.getFileName());
 		URL url = c.getURL();
 		if(this.faultyUrls.containsKey(url)) {
 			this.faultyUrls.put(url, this.faultyUrls.get(url) + 1);
 			if(this.faultyUrls.get(url) >= this.getMaxCacheTries()) {
 				TerramapMod.logger.error("Will not attempt to cache " + url + " anymore, too many failed attempts");
+			} else {
+				TerramapMod.logger.error("Failed to cache " + c.getURL() + " to " + c.getFileName());
 			}
 		} else {
 			this.faultyUrls.put(url, 1);
@@ -349,7 +348,7 @@ public class CacheManager implements Runnable {
 	 */
 	public boolean shouldCache(Cachable c) {
 		URL url = c.getURL();
-		return !this.faultyUrls.containsKey(url)|| this.faultyUrls.get(url) < this.maxCacheTries;
+		return this.faultyUrls.getOrDefault(url, 0) < this.maxCacheTries;
 	}
 
 }

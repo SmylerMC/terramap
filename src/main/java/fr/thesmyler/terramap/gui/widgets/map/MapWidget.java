@@ -90,7 +90,7 @@ public class MapWidget extends Screen {
 		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
 		super.addWidget(this.copyright);
 		
-		this.rightClickMenu = new MenuWidget(100, font);
+		this.rightClickMenu = new MenuWidget(1500, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
 			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
 		});

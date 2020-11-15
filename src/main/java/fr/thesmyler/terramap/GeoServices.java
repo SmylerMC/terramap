@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -107,9 +108,11 @@ public abstract class GeoServices {
 		placemark.setDescription("Location exported from Terramap");
 		doc.addPlacemark(placemark);
 		try {
-			File file = Files.createTempFile("terramap_export", ".kmz").toFile();
+			Path path = Files.createTempFile("terramap_export", ".kmz");
+			File file = path.toFile();
 			kml.save(file, true);
 			Desktop.getDesktop().open(file);
+			// It would be nice to delete that file but we have no idea of how long it will take Google Earth to open
 		} catch(Exception e) {
 			TerramapMod.logger.error("There was an error when trying to open a place in Google Earth");
 			TerramapMod.logger.catching(e);

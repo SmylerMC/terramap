@@ -156,6 +156,9 @@ public class TerramapRemote {
 		} else if(this.worldUUID != null) {
 			return "server:" + this.worldUUID.toString();
 		} else {
+			if(this.proxyUUID != null) {
+				return "proxy:" + this.proxyUUID.toString();
+			}
 			ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
 			if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
 				return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@integrated_server@localhost";
@@ -396,7 +399,7 @@ public class TerramapRemote {
 		case FULLSCREEN:
 			return this.proxyForcesGlobalMap || this.getGeneratorSettings() != null || (!this.isInstalledOnServer() && this.isOnEarthWorld());
 		case MINIMAP:
-			return this.isOnEarthWorld() || this.getGeneratorSettings() != null;
+			return this.getGeneratorSettings() != null;
 		default:
 			return false;
 		}

@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = TerramapMod.MODID, useMetadata=true, dependencies="required-after:terra121")
+@Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terra121")
 public class TerramapMod {
 	
     public static final String MODID = "terramap";
@@ -45,6 +45,7 @@ public class TerramapMod {
     public void preInit(FMLPreInitializationEvent event) throws InvalidVersionString {
     	logger = event.getModLog();
     	TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
+    	TerramapMod.logger.info("Terramap version: " + getVersion());
     	TerramapMod.proxy.preInit(event);
     	File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
     	MapStyleRegistry.setConfigMapFile(mapStyleFile);

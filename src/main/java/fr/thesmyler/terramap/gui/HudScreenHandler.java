@@ -9,14 +9,12 @@ import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.maps.TiledMap;
-import net.minecraft.client.Minecraft;
 
 public abstract class HudScreenHandler {
 
@@ -48,7 +46,10 @@ public abstract class HudScreenHandler {
 
 	public static void updateMinimap() {
 		HudScreen screen = SmyLibGui.getHudScreen();
-		if(map == null) init(screen);
+		if(map == null) {
+			init(screen);
+			return;
+		}
 		map.setX((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
 		map.setY((int) (TerramapConfig.minimapPosY * 0.01 * screen.getWidth()));
 		map.setWidth((int) (TerramapConfig.minimapWidth * 0.01 * screen.getWidth()));
@@ -71,13 +72,7 @@ public abstract class HudScreenHandler {
 		map.setZoom(zoomLevel);
 		map.setZoom(TerramapConfig.minimapZoomLevel);
 
-		if(!TerramapConfig.minimapEnable) {
-			map.setVisibility(false);
-		} else if(TerramapRemote.getRemote().doesProxyForceMinimap()){
-			map.setVisibility(true);
-		} else {
-			map.setVisibility(TerramapUtils.isOnEarthWorld(Minecraft.getMinecraft().player));
-		}
+		map.setVisibility(!TerramapConfig.minimapEnable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
 	}
 
 	public static void zoomInMinimap() {
