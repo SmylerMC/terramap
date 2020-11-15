@@ -1,15 +1,22 @@
 package fr.thesmyler.terramap;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+
+import fr.thesmyler.terramap.files.kml.KmlDocument;
+import fr.thesmyler.terramap.files.kml.KmlFile;
+import fr.thesmyler.terramap.files.kml.KmlPlacemark;
+import fr.thesmyler.terramap.files.kml.KmlPoint;
 
 //TODO Open places on services other than gmaps
 public abstract class GeoServices {
@@ -87,6 +94,26 @@ public abstract class GeoServices {
 	public static void openInYandex(int zoom, double lon, double lat, double markerLon, double markerLat) {
 		int z = Math.min(zoom, 18);
 		GeoServices.openURI(GeoServices.formatStringWithCoords(YANDEX_SITE_BASE_URL, z, lon, lat, markerLon, markerLat));
+	}
+	
+	public static void openInGoogleEarthPro(double lon, double lat) {
+		KmlFile kml = new KmlFile();
+		KmlDocument doc = kml.getDocument();
+		doc.setName("Terramap kml document");
+		KmlPlacemark placemark = new KmlPlacemark();
+		KmlPoint point = new KmlPoint(lon, lat);
+		placemark.setPoint(point);
+		placemark.setName("Terramap");
+		placemark.setDescription("Location exported from Terramap");
+		doc.addPlacemark(placemark);
+		try {
+			File file = Files.createTempFile("terramap_export", ".kmz").toFile();
+			kml.save(file, true);
+			Desktop.getDesktop().open(file);
+		} catch(Exception e) {
+			TerramapMod.logger.error("There was an error when trying to open a place in Google Earth");
+			TerramapMod.logger.catching(e);
+		}
 	}
 
 	public static void openURI(String uriStr) {
