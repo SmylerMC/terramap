@@ -30,6 +30,9 @@ terramap.binding.toggle_debug=Activar el modo depuración de TerraMap
 terramap.binding.shortcuts=Atajos de mapa
 terramap.binding.copy_geo=Copiar las coordenadas IRL
 terramap.binding.copy_mc=Copiar las coordenadas Minecraft
+terramap.binding.zoom_in=Zoom +
+terramap.binding.zoom_out=Zoom -
+terramap.binding.toggle_minimap=Alternar la visibilidad del minimapa
 
 terramap.mapwidget.rclickmenu.teleport=Teletransportarse aquí
 terramap.mapwidget.rclickmenu.center=Centrar el mapa aquí

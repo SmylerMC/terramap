@@ -30,6 +30,9 @@ terramap.binding.toggle_debug=Mode de débogage
 terramap.binding.shortcuts=Racourcis de carte
 terramap.binding.copy_geo=Copier les coordonnées géographiques
 terramap.binding.copy_mc=Copier les coordonnées Minecraft
+terramap.binding.zoom_in=Zoomer
+terramap.binding.zoom_out=Dézoomer
+terramap.binding.toggle_minimap=Affichage de la minimap
 
 terramap.mapwidget.rclickmenu.teleport=Se téléporter ici
 terramap.mapwidget.rclickmenu.center=Centrer la carte ici

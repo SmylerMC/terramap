@@ -337,6 +337,8 @@ public class TerramapScreen extends Screen {
 			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) this.map.moveMap(0, -10);
 			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) this.map.moveMap(-10, 0);
 			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || keyCode == Keyboard.KEY_LEFT) this.map.moveMap(10, 0);
+			if(keyCode == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
+			if(keyCode == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
 			if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		} else {
 			super.onKeyTyped(typedChar, keyCode, parent);
@@ -465,7 +467,6 @@ public class TerramapScreen extends Screen {
 		TerramapRemote.getRemote().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
 		TerramapRemote.getRemote().saveSettings();
 		TerramapRemote.getRemote().registerForUpdates(false);
-
 	}
 	
 	public void setF1Mode(boolean yesNo) {
