@@ -91,4 +91,20 @@ terramap.ingameactions.copy.outproj=Nepodařilo se zkopírovat souřadnice: Jste
 terramap.ingameactions.copy.mc=Minecraft souřadnice zkopírovány do schránky
 terramap.ingameactions.copy.geo=Geografické souřadnice zkopírovány do schránky
 
+terramap.commands.terrashow.usage=/terrashow <show|hide|status> [player name (optional)]
+terramap.commands.terrashow.too_few_parameters=Too few parameters: /terrashow <show|hide|status> [player name (optional)]
+terramap.commands.terrashow.too_many_parameters=Too many parameters: /terrashow <show|hide|status> [player name (optional)]
+terramap.commands.terrashow.console_player_name=Player name is required when executing from the server console: /terrashow <show|hide|status> [player name (optional)]
+terramap.commands.terrashow.cannot_change_own_visibility=You do not have the permission to change your visibility
+terramap.commands.terrashow.cannot_change_others_visibility=You do not have the permission to change others' visibility
+terramap.commands.terrashow.noplayer=Player does not exist: /terrashow <show|hide|status> [player name (optional)]
+terramap.commands.terrashow.invalid_action=Invalid action: /terrashow <show|hide|status> [player name (optional)]
+terramap.commands.terrashow.getvisible=%1$s is currently visible on the map
+terramap.commands.terrashow.setvisible=%1$s is now visible on the map
+terramap.commands.terrashow.gethidden=%1$s is currently hidden on the map
+terramap.commands.terrashow.sethidden=%1$s is now hidden on the map
 
+terramap.commands.reloadmapstyles.usage=/reloadmapstyles
+terramap.commands.reloadmapstyles.forbidden=You do not have the permission to use that command!
+terramap.commands.reloadmapstyles.done=Done
+terramap.commands.reloadmapstyles.error=Error when reloading mapstyles
