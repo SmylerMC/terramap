@@ -27,7 +27,7 @@ public class ServerTerramapEventHandler {
     		} catch(Exception e) {
     			TerramapMod.logger.error("Failed to send custom join message to client, make sure your json text is valid");
     		}
-    	} else if(remoteVersion.isNewerOrSame(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
+    	} else if(remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
     		try {
     			if(TerramapConfig.joinWithOutdatedModMessage.length() > 0)
     				player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.joinWithOutdatedModMessage));
