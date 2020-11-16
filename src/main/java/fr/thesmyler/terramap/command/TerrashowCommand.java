@@ -66,7 +66,7 @@ public class TerrashowCommand extends CommandBase {
 			break;
 		case "hide":
 			TerramapServerPreferences.setShouldDisplayPlayer(world, uuid, false);
-			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.setvisible", clientSupportsLocalize, player.getDisplayName().getFormattedText()));
+			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.sethidden", clientSupportsLocalize, player.getDisplayName().getFormattedText()));
 			break;
 		default:
 			throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.invalid_action", clientSupportsLocalize));

@@ -88,10 +88,14 @@ public class TerramapServerProxy extends TerramapProxy {
 				while(line != null) {
 					try {
 						int delimiter = line.indexOf("=");
-						if(delimiter == -1 || delimiter >= line.length() - 1) continue;
+						if(delimiter == -1 || delimiter >= line.length() - 1) {
+							line = txtReader.readLine();
+							continue;
+						}
 						String key = line.substring(0, delimiter);
 						String value = line.substring(delimiter + 1);
 						this.translationMappings.put(key, value);
+						line = txtReader.readLine();
 					} catch(Exception e) {
 						TerramapMod.logger.warn("Failed to parse translation line " + line + " : " + e.getLocalizedMessage());
 					}
