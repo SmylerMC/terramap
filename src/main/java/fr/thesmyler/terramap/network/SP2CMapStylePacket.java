@@ -131,7 +131,7 @@ public class SP2CMapStylePacket implements IMessage {
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
 			TiledMap map = message.getTiledMap(TiledMapProvider.PROXY, TerramapConfig.maxTileLoad);
 			TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + map.getUrlPattern());
-			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addServerMapStyle(map));
+			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addProxyMapStyle(map));
 			return null;
 		}
 		
