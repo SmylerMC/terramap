@@ -8,6 +8,12 @@ import javax.annotation.Nonnull;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
+/**
+ * Represents a version of Terramap
+ * 
+ * @author SmylerMC
+ *
+ */
 public class TerramapVersion implements Comparable<TerramapVersion> {
 
 	public final int majorTarget;

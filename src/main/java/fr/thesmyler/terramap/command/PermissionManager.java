@@ -30,14 +30,18 @@ public abstract class PermissionManager {
 	}
 	
 	public static boolean hasPermission(EntityPlayer player, Permission perm) {
+		return player.canUseCommand(4, "") || hasPermission(player, perm);
+	}
+	
+	public static boolean hasPermissionNode(EntityPlayer player, Permission perm) {
 		return PermissionAPI.hasPermission(player, perm.getNodeName());
 	}
 	
-	public static boolean hasPermission(GameProfile profile, Permission perm) {
+	public static boolean hasPermissionNode(GameProfile profile, Permission perm) {
 		return PermissionAPI.hasPermission(profile, perm.getNodeName(), null);
 	}
 	
-	public static boolean hasPermission(UUID uuid, Permission perm) {
+	public static boolean hasPermissionNode(UUID uuid, Permission perm) {
 		return PermissionAPI.hasPermission(new GameProfile(uuid, null), perm.getNodeName(), null);
 	}
 	

@@ -241,7 +241,7 @@ public class TerramapScreen extends Screen {
 				try {
 					double[] dist = projection.tissot(mouseLon, mouseLat, 0.0000001f);
 					formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
-					formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(dist[1]*180.0/Math.PI);
+					formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
 					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
 				} catch(NoSuchMethodError e) {
 					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.outdatedterra121"));

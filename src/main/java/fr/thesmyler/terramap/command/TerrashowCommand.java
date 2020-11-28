@@ -44,13 +44,15 @@ public class TerrashowCommand extends CommandBase {
 			player = server.getPlayerList().getPlayerByUsername(args[1]);
 		} else if(sender instanceof EntityPlayerMP) player = (EntityPlayerMP)sender;
 		else throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.console_player_name", clientSupportsLocalize));
+		
 		if(player != null && player.equals(senderPlayer)) {
-			if(senderPlayer == null || !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
+			if(senderPlayer != null && !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
 				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_own_visibility", clientSupportsLocalize));
 		} else {
-			if(senderPlayer == null || !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
+			if(senderPlayer != null && !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
 				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_others_visibility", clientSupportsLocalize));
 		}
+		
 		if(player == null) throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.noplayer", clientSupportsLocalize));
 		UUID uuid = player.getPersistentID();
 		WorldServer world = player.getServerWorld();
@@ -61,7 +63,6 @@ public class TerrashowCommand extends CommandBase {
 			break;
 		case "show":
 			TerramapServerPreferences.setShouldDisplayPlayer(world, uuid, true);
-			
 			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.setvisible", clientSupportsLocalize, player.getDisplayName().getFormattedText()));
 			break;
 		case "hide":

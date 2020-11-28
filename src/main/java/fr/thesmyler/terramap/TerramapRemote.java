@@ -123,7 +123,7 @@ public class TerramapRemote {
 			}
 			TerramapClientPreferences.save();
 		} catch(Exception e) {
-			TerramapMod.logger.info("Failed to save server preference file");
+			TerramapMod.logger.info("Failed to save client preference file");
 			TerramapMod.logger.catching(e);
 		}
 	}
@@ -361,6 +361,7 @@ public class TerramapRemote {
 	
 	public void setProxyForceGlobalSettings(boolean yesNo) {
 		this.proxyForceGlobalSettings = yesNo;
+		this.setRemoteIdentifier();
 	}
 
 	public UUID getWorldUUID() {
