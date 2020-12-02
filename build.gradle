@@ -30,10 +30,25 @@ minecraft {
     mappings = project.mcp_mappings
     runDir = "run"
 }
+
+repositories {
+	    maven {
+        	name = "JitPack"
+        	url = "https://jitpack.io/"
+    	}
+}
+
 dependencies {
     
-	// We need Terra121, OpenCubicChunks and CubicWorlsGen in ./libs
-	// Malisis core seems to be causing problems, but is fortunately not mandatory
+	deobfProvided ("com.github.OpenCubicChunks.CubicChunks:cubicchunks:0d61d787ed052ad53391c3ebe9799e4ed2da3659") {
+        transitive = false
+    }
+    deobfProvided ("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
+        transitive = false
+    }
+    deobfProvided ("com.github.BuildTheEarth:terraplusplus:1f0f527a556aa8992f311a45b61c9fd20e17c4e6") {
+        transitive = false
+    }
 
 }
 
