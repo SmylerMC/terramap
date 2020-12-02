@@ -21,7 +21,7 @@ import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
-import io.github.terra121.EarthGeneratorSettings;
+import io.github.terra121.generator.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;

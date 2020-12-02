@@ -16,10 +16,10 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.IOUtils;
 
 import fr.thesmyler.terramap.TerramapRemote;
-import io.github.terra121.EarthGeneratorSettings;
 import io.github.terra121.TerraMod;
 import io.github.terra121.control.DynamicOptions;
 import io.github.terra121.control.DynamicOptions.Element;
+import io.github.terra121.generator.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
