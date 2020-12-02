@@ -18,9 +18,6 @@ public abstract class TerramapProxy {
 	public abstract void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event);
 	public abstract GameType getGameMode(EntityPlayer e);
 	
-	// I18n is only is client sided, but we need to localize string on the server when sending command feedback to client which do not have the mod
-	public abstract String localize(String key, Object... objects);
-	
 	public boolean isClient() {
 		return this.getSide().equals(Side.CLIENT);
 	}

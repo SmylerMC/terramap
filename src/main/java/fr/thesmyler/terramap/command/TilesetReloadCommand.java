@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
+import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -15,10 +16,13 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 
 public class TilesetReloadCommand extends CommandBase {
 	
-	private static final TerramapVersion FIRST_LOCALIZED_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 3);
+	private final TranslationContextBuilder translationContextBuilder = new TranslationContextBuilder(new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 3));
 
 	@Override
 	public String getName() {
@@ -27,23 +31,27 @@ public class TilesetReloadCommand extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return CommandUtils.getStringForSender("terramap.commands.reloadmapstyles.usage", CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION));
+		return this.translationContextBuilder.createNewContext(sender).getText("terramap.commands.reloadmapstyles.usage");
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		boolean clientLocalizes = CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION);
+		TranslationContext ctx = this.translationContextBuilder.createNewContext(sender);
 		if(sender instanceof EntityPlayer && !this.checkPermission(server, sender)) {
-			throw new CommandException(CommandUtils.getStringForSender("terramap.commands.reloadmapstyles.forbidden", clientLocalizes));
+			ctx.commandException("terramap.commands.reloadmapstyles.forbidden");
 		}
+		ITextComponent msg = ctx.getComponent("terramap.commands.reloadmapstyles.done");
 		try {
 			MapStyleRegistry.loadFromConfigFile();
-			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.reloadmapstyles.done", clientLocalizes));
+			msg.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false));
 		} catch(Exception e) {
-			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.reloadmapstyles.error", clientLocalizes));
+			msg = ctx.getComponent("terramap.commands.reloadmapstyles.error");
+			msg.setStyle(new Style().setColor(TextFormatting.RED).setBold(false));
 			TerramapMod.logger.error("Error when reloading map styles!");
 			TerramapMod.logger.catching(e);
 		}
+		msg = CommandUtils.addHeader(msg);
+		sender.sendMessage(msg);
 	}
 	
 	@Override
@@ -53,6 +61,7 @@ public class TilesetReloadCommand extends CommandBase {
 
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+		if(!(sender instanceof EntityPlayer)) return true;
 		return PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES);
 	}
 	

@@ -1,32 +1,19 @@
 package fr.thesmyler.terramap.command;
 
-import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapVersion;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 public abstract class CommandUtils {
-
-	public static String getStringForSender(String key, boolean clientSupportsLocalization) {
-		if(clientSupportsLocalization) {
-			return key; // The client will handler the translation
-		} else {
-			return TerramapMod.proxy.localize(key);
-		}
-	}
 	
-	public static ITextComponent getComponentForSender(String key, boolean clientSupportsLocalization, Object...objects) {
-		if(clientSupportsLocalization) {
-			return new TextComponentTranslation(key, objects); // The client will handler the translation
-		} else {
-			return new TextComponentString(TerramapMod.proxy.localize(key, objects));
-		}
-	}
+	public static final ITextComponent MESSAGE_HEADER = new TextComponentString("Terramap > ")
+			.setStyle(
+					new Style()
+					.setColor(TextFormatting.DARK_GREEN)
+					.setBold(true));
 	
-	public static boolean senderSupportsLocalization(ICommandSender sender, TerramapVersion minVersion) {
-		return sender instanceof EntityPlayerMP && minVersion.isOlder(TerramapVersion.getClientVersion((EntityPlayerMP) sender));
+	public static ITextComponent addHeader(ITextComponent component) {
+		return MESSAGE_HEADER.createCopy().appendSibling(component);
 	}
 }

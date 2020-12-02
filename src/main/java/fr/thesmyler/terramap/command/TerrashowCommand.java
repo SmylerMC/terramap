@@ -7,21 +7,23 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
+import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerNotFoundException;
-import net.minecraft.command.SyntaxErrorException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
 
 public class TerrashowCommand extends CommandBase {
 	
-	private static final TerramapVersion FIRST_LOCALIZED_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 3);
+	private final TranslationContextBuilder contextBuilder = new TranslationContextBuilder(new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 3));
 	
 	@Override
 	public String getName() {
@@ -30,49 +32,52 @@ public class TerrashowCommand extends CommandBase {
 
 	@Override
 	public String getUsage(ICommandSender sender) {
-		return CommandUtils.getStringForSender("terramap.commands.terrashow.usage", CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION));
+		return this.contextBuilder.createNewContext(sender).getText("terramap.commands.terrashow.usage");
 	}
 
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		boolean clientSupportsLocalize = CommandUtils.senderSupportsLocalization(sender, FIRST_LOCALIZED_VERSION);
+		TranslationContext transCtx = this.contextBuilder.createNewContext(sender);
+
 		EntityPlayerMP player = null;
 		EntityPlayer senderPlayer = sender instanceof EntityPlayer? (EntityPlayer) sender: null;
-		if(args.length <= 0) throw new SyntaxErrorException(CommandUtils.getStringForSender("terramap.commands.terrashow.too_few_parameters", clientSupportsLocalize));
-		else if(args.length > 2) throw new SyntaxErrorException(CommandUtils.getStringForSender("terramap.commands.terrashow.too_many_parameters", clientSupportsLocalize));
+		if(args.length <= 0) transCtx.syntaxException("terramap.commands.terrashow.too_few_parameters");
+		else if(args.length > 2) transCtx.syntaxException("terramap.commands.terrashow.too_many_parameters");
 		else if(args.length == 2) {
 			player = server.getPlayerList().getPlayerByUsername(args[1]);
 		} else if(sender instanceof EntityPlayerMP) player = (EntityPlayerMP)sender;
-		else throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.console_player_name", clientSupportsLocalize));
+		else transCtx.playerNotFoundException("terramap.commands.terrashow.console_player_name");
 		
 		if(player != null && player.equals(senderPlayer)) {
 			if(senderPlayer != null && !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
-				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_own_visibility", clientSupportsLocalize));
+				transCtx.commandException("terramap.commands.terrashow.cannot_change_own_visibility");
 		} else {
 			if(senderPlayer != null && !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
-				throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.cannot_change_others_visibility", clientSupportsLocalize));
+				transCtx.commandException("terramap.commands.terrashow.cannot_change_others_visibility");
 		}
 		
-		if(player == null) throw new PlayerNotFoundException(CommandUtils.getStringForSender("terramap.commands.terrashow.noplayer", clientSupportsLocalize));
+		if(player == null) transCtx.playerNotFoundException("terramap.commands.terrashow.noplayer");
 		UUID uuid = player.getPersistentID();
 		WorldServer world = player.getServerWorld();
+		ITextComponent message = transCtx.getComponent("terramap.commands.terrashow.invalid_action");
 		switch(args[0]) {
 		case "status":
 			String key = TerramapServerPreferences.shouldDisplayPlayer(world, uuid) ? "terramap.commands.terrashow.getvisible": "terramap.commands.terrashow.gethidden";
-			sender.sendMessage(CommandUtils.getComponentForSender(key, clientSupportsLocalize, player.getDisplayName().getFormattedText()));
+			message = transCtx.getComponent(key, player.getDisplayName().getFormattedText());
 			break;
 		case "show":
 			TerramapServerPreferences.setShouldDisplayPlayer(world, uuid, true);
-			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.setvisible", clientSupportsLocalize, player.getDisplayName().getFormattedText()));
+			message = transCtx.getComponent("terramap.commands.terrashow.setvisible", player.getDisplayName().getFormattedText());
 			break;
 		case "hide":
 			TerramapServerPreferences.setShouldDisplayPlayer(world, uuid, false);
-			sender.sendMessage(CommandUtils.getComponentForSender("terramap.commands.terrashow.sethidden", clientSupportsLocalize, player.getDisplayName().getFormattedText()));
+			message = transCtx.getComponent("terramap.commands.terrashow.sethidden", player.getDisplayName().getFormattedText());
 			break;
 		default:
-			throw new CommandException(CommandUtils.getStringForSender("terramap.commands.terrashow.invalid_action", clientSupportsLocalize));
+			transCtx.commandException("terramap.commands.terrashow.invalid_action");
 		}
-
+		message = CommandUtils.addHeader(message.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false)));
+		sender.sendMessage(message);
 	}
 	
 	@Override
