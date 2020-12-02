@@ -4,9 +4,9 @@ import java.util.Random;
 
 import io.github.opencubicchunks.cubicchunks.api.world.ICubeProvider;
 import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
-import io.github.terra121.EarthGeneratorSettings;
-import io.github.terra121.EarthTerrainProcessor;
 import io.github.terra121.EarthWorldType;
+import io.github.terra121.generator.EarthGenerator;
+import io.github.terra121.generator.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -32,7 +32,7 @@ public abstract class TerramapUtils {
 		if(!(world.getChunkProvider() instanceof ICubeProvider)) return false; // Is a CC world (could be a different dimension)
 		ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
 		if(!(provider instanceof CubeProviderServer)) return false; // Are we on server ?
-		return ((CubeProviderServer) provider).getCubeGenerator() instanceof EarthTerrainProcessor; // Is it the overworld ?
+		return ((CubeProviderServer) provider).getCubeGenerator() instanceof EarthGenerator; // Is it the overworld ?
 	}
 	
 	public static boolean isOnEarthWorld(EntityPlayer player) {
@@ -41,7 +41,7 @@ public abstract class TerramapUtils {
 	
 	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
 		if(TerramapUtils.isServerEarthWorld(world)) {
-			return ((EarthTerrainProcessor)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
+			return ((EarthGenerator)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
 		} else return null;
 	}
 	
@@ -50,8 +50,8 @@ public abstract class TerramapUtils {
 				gen != null &&
 				gen.settings.projection.equals(BTE_GENERATOR_SETTINGS.settings.projection) &&
 				gen.settings.orentation.equals(BTE_GENERATOR_SETTINGS.settings.orentation) &&
-				gen.settings.scaleX.equals(BTE_GENERATOR_SETTINGS.settings.scaleX) &&
-				gen.settings.scaleY.equals(BTE_GENERATOR_SETTINGS.settings.scaleY);
+				gen.settings.scaleX == BTE_GENERATOR_SETTINGS.settings.scaleX &&
+				gen.settings.scaleY == BTE_GENERATOR_SETTINGS.settings.scaleY;
 	}
 	
 }
