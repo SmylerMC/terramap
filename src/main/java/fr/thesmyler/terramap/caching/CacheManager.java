@@ -41,15 +41,15 @@ public class CacheManager {
 	 * Gets the given url in a new thread, either by downloading it or by loading it from the cache,
 	 * then calls the given consumer from that thread.
 	 * 
-	 * TODO return a queued task, so it can be cancelled if necessary
-	 * TODO Keep a record of how many threads are running
-	 * 
 	 * @param url
 	 * @param callback
+	 * 
+	 * @return
 	 */
-	public void getAsync(URL url, Consumer<CachedRequest> callback) {
+	public QueuedCacheTask getAsync(URL url, Consumer<CachedRequest> callback) {
 		String host = url.getAuthority();
 		Runnable action;
+		QueuedCacheTask task = new QueuedCacheTask();
 		if(!host.equals("")) {
 			action = () -> {
 				this.waitingRequests.getAndIncrement();
@@ -63,17 +63,21 @@ public class CacheManager {
 				}
 				boolean incremented = false;
 				try {
-					while(currentActions.get() >= MAX_CONCURRENT_DOWNLOAD) {
+					while(!task.isCanceled() && currentActions.get() >= MAX_CONCURRENT_DOWNLOAD) {
 						synchronized(currentActions) {
 							currentActions.wait();
 						}
 					}
+					if(task.isCanceled()) return;
 					currentActions.incrementAndGet();
 					incremented = true;
 					CachedRequest data = this.get(url);
+					task.setResult(data);
 					callback.accept(data);
 				} catch(Exception e) {
-					callback.accept(new FailedRequest(url, e, false));
+					CachedRequest data= new FailedRequest(url, e, false);
+					task.setResult(data);
+					callback.accept(data);
 				} finally {
 					if(incremented) currentActions.decrementAndGet();
 					synchronized(currentActions) {
@@ -86,9 +90,13 @@ public class CacheManager {
 			action = () -> {
 				this.waitingRequests.getAndIncrement();
 				try {
-					callback.accept(this.get(url));
+					CachedRequest data = this.get(url);
+					task.setResult(data);
+					callback.accept(data);
 				} catch(Exception e) {
-					callback.accept(new FailedRequest(url, e, false));
+					CachedRequest data = new FailedRequest(url, e, false);
+					task.setResult(data);
+					callback.accept(data);
 				} finally {
 					this.waitingRequests.decrementAndGet();
 				}
@@ -98,6 +106,7 @@ public class CacheManager {
 		t.setName("Terramap download " + threadNumberingGet.getAndIncrement());
 		t.setDaemon(true);
 		t.start();
+		return task;
 	}
 
 	public CachedRequest get(URL url) {

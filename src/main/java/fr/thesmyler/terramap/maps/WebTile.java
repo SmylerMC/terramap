@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.caching.Cachable;
+import fr.thesmyler.terramap.caching.QueuedCacheTask;
 import fr.thesmyler.terramap.caching.requests.CachedRequest;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
@@ -33,7 +34,7 @@ public class WebTile implements Cachable {
 	protected BufferedImage image;
 	protected ResourceLocation texture = errorTileTexture;
 	private String urlPattern;
-	private boolean waitingForTexture = false;
+	private QueuedCacheTask textureTask;
 
 	private static ResourceLocation errorTileTexture = null;
 
@@ -86,7 +87,7 @@ public class WebTile implements Cachable {
 			TextureManager textureManager = mc.getTextureManager();
 			BufferedImage image = ImageIO.read(new ByteArrayInputStream(r.getData()));
 			this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.x + "/" + this.y + "/" + this.zoom, new DynamicTexture(image));
-			this.waitingForTexture = false;
+			this.textureTask = null;
 		} catch (Exception e) {
 			TerramapMod.logger.catching(e);
 			TerramapMod.cacheManager.reportError(this);				
@@ -98,7 +99,7 @@ public class WebTile implements Cachable {
 	}
 	
 	public boolean isWaitingForTexture() {
-		return this.waitingForTexture;
+		return this.textureTask != null;
 	}
 
 	@Override
@@ -121,9 +122,8 @@ public class WebTile implements Cachable {
 	}
 
 	public ResourceLocation getTexture() {
-		if(!this.hasTexture() && !this.waitingForTexture) {
-			TerramapMod.cacheManagerNew.getAsync(this.getURL(), (d) -> Minecraft.getMinecraft().addScheduledTask(() -> this.loadFromRequest(d)));			
-			this.waitingForTexture = true;
+		if(!this.hasTexture() && !this.isWaitingForTexture()) {
+			this.textureTask = TerramapMod.cacheManagerNew.getAsync(this.getURL(), (d) -> Minecraft.getMinecraft().addScheduledTask(() -> this.loadFromRequest(d)));			
 		}
 		return this.texture;
 	}
@@ -135,7 +135,10 @@ public class WebTile implements Cachable {
 			textureManager.deleteTexture(this.texture);
 		}
 	}
-
+	
+	public void cancelLoading() {
+		if(this.textureTask != null) this.textureTask.cancel();
+	}
 
 	///// Various uninteresting getters and setters from here /////
 

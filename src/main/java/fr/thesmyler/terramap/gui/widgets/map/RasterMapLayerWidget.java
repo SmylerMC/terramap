@@ -1,5 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.WebTile;
@@ -14,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 public class RasterMapLayerWidget extends MapLayerWidget {
 
 	protected TiledMap map;
+	private Set<WebTile> neededTiles = new HashSet<>();
 
 	public RasterMapLayerWidget(TiledMap map, double tileScaling) {
 		super(tileScaling);
@@ -31,6 +35,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		if(parent instanceof MapWidget) {
 			debug = ((MapWidget) parent).isDebugMode();
 		}
+		
+		Set<WebTile> neededNow = new HashSet<>();
 
 		//TODO Remove the lines when tile scaling is not a power of 2
 		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling;
@@ -60,6 +66,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				WebTile bestTile = tile;
+				neededNow.add(tile);
 				boolean lowerResRender = false;
 				boolean unlockedZoomRender = false;
 				if(!tile.hasTexture()) {
@@ -153,7 +160,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 			}
 		}
-
+		this.neededTiles.forEach((tile) -> {if(!neededNow.contains(tile)) tile.cancelLoading();});
+		this.neededTiles = neededNow;
 	}
 
 }
