@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.WebTile;
 import fr.thesmyler.terramap.maps.WebTile.InvalidTileCoordinatesException;
@@ -63,17 +62,17 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				WebTile bestTile = tile;
 				boolean lowerResRender = false;
 				boolean unlockedZoomRender = false;
-				if(!TerramapMod.cacheManager.isCached(tile)) {
+				if(!tile.hasTexture()) {
 					lowerResRender = true;
-					if(!TerramapMod.cacheManager.isBeingCached(tile)) {
+					if(!tile.isWaitingForTexture()) {
 						if(this.zoom <= this.map.getMaxZoom()) {
-							TerramapMod.cacheManager.cacheAsync(tile);
+							tile.getTexture(); // Will request the texture if not already waiting for it
 						} else {
 							unlockedZoomRender = true;
 						}
 					}
 						
-					while(tile.getZoom() > 0 && !TerramapMod.cacheManager.isCached(tile)) {
+					while(tile.getZoom() > 0 && !tile.hasTexture()) {
 						tile = this.map.getTile(tile.getZoom()-1, tile.getX() /2, tile.getY() /2);
 					}
 				}

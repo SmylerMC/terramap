@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.maps;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -88,17 +87,6 @@ public class TiledMap implements Comparable<TiledMap> {
 
 	public long getSizeInTiles(int zoomLevel){
 		return WebMercatorUtils.getDimensionsInTile(zoomLevel);
-	}
-
-	public long getSizeInPixels(int zoomLevel){
-		return WebMercatorUtils.getMapDimensionInPixel(zoomLevel);
-	}
-
-	public int[] getPixel(int zoom, long x, long y) throws IOException {
-		long tileX = WebMercatorUtils.getTileXAt(x);
-		long tileY = WebMercatorUtils.getTileYAt(y);
-		int tX = (int)(x % 256), tY = (int)(y % 256);
-		return this.getTile(zoom, tileX, tileY).getPixel(tX, tY);
 	}
 
 	public void enableSmartLoading() {

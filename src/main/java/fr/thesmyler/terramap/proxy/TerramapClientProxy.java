@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.caching.CacheManager;
+import fr.thesmyler.terramap.caching.CacheManagerOld;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
@@ -41,13 +41,13 @@ public class TerramapClientProxy extends TerramapProxy {
 		TerramapMod.logger.debug("Terramap client pre-init");
 		TerramapNetworkManager.registerHandlers(Side.CLIENT);
 		try {
-			TerramapMod.cacheManager = new CacheManager(TerramapConfig.cachingDir);
+			TerramapMod.cacheManager = new CacheManagerOld(TerramapConfig.cachingDir);
 			TerramapMod.cacheManager.createDirectory();
 		} catch (IOException e) {
 			TerramapMod.logger.catching(e);
 			TerramapMod.logger.error("Caching directory doesn't seem to be valid, we will use a temporary one.");
 			TerramapMod.logger.error("Make sure your config is correct!");
-			TerramapMod.cacheManager = new CacheManager();
+			TerramapMod.cacheManager = new CacheManagerOld();
 
 		}
 		TerramapMod.cacheManager.startWorker();

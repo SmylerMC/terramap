@@ -1,354 +1,222 @@
 package fr.thesmyler.terramap.caching;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-
-import com.google.common.io.Files;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 import fr.thesmyler.terramap.TerramapMod;
-
-//FIXME If we loose Internet access, the thread just gets stuck...
+import fr.thesmyler.terramap.caching.requests.CachedRequest;
+import fr.thesmyler.terramap.caching.requests.FailedRequest;
+import fr.thesmyler.terramap.caching.requests.HttpRequest;
+import fr.thesmyler.terramap.caching.requests.SuccessfulCachedRequest;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 
 /**
- * @author Smyler
+ * @author SmylerMC
  * 
- * This class is responsible for handling all resources which needs to be downloaded at some point
- * It has a worker thread running to allow for asynchronous caching.
- * The worker is started by the mod during preinit
+ * TODO javadoc for cache manager
  *
  */
-public class CacheManager implements Runnable {
+public class CacheManager {
 
-	private Thread worker;
-	private volatile boolean workerRunning;
-	private LinkedList<Cachable> toCacheAsync = new LinkedList<Cachable>();
-	private Map<URL, Integer> faultyUrls = new HashMap<URL, Integer>();
-	private int maxCacheTries = 3;
-	private int queueSizeWarningThershold = 75;
+	// How many threads can be downloading from the same server at the same time
+	private static final int MAX_CONCURRENT_DOWNLOAD = 2;
+	private final Map<String, AtomicInteger> threadCounts = new HashMap<>();
 
-	private File cachingDirectory;
+	// Used to name threads
+	private static AtomicLong threadNumberingGet = new AtomicLong(0);
+	private static AtomicLong threadNumberingCache = new AtomicLong(0);
 
-	private Cachable currentlyCachedByWorker = null;
-
-	public CacheManager(String path) throws IOException {
-		this.setCachingDirectory(new File(path));
-		this.createWorker();
-	}
-
-
-	public CacheManager() {
-		this.cachingDirectory = Files.createTempDir();
-		this.createWorker();
-	}
-
-
-	private void createWorker() {
-		this.worker = new Thread(this);
-		this.worker.setName("Terramap Caching Thread");
-		this.worker.setDaemon(true);
-	}
+	private final AtomicInteger waitingRequests = new AtomicInteger(0);
 
 	/**
-	 * Called by the worker when it is launched.
-	 * If called by an other thread, it calls CacheManager::startWorker and returns. It should be avoided
+	 * Gets the given url in a new thread, either by downloading it or by loading it from the cache,
+	 * then calls the given consumer from that thread.
+	 * 
+	 * TODO return a queued task, so it can be cancelled if necessary
+	 * TODO Keep a record of how many threads are running
+	 * 
+	 * @param url
+	 * @param callback
 	 */
-	@Override
-	public void run() {
-		if(! this.isCallingFromWorker()) {
-			this.startWorker();
-			return;
-		}
-		this.workerRunning = true;
-		synchronized(TerramapMod.logger) {
-			TerramapMod.logger.info("Started Terramap cache manager");
-		}
-		while(this.workerRunning) {
-			Cachable toCache;
-			int sleep = 10;
-			synchronized(this.toCacheAsync) {
-				toCache = this.toCacheAsync.poll();
-			}
-			if(toCache == null) {
-				sleep = 20;
-			}else {
-				sleep = 0;
-				synchronized(toCache) {  // Crashes the thread when null
-					this.currentlyCachedByWorker = toCache;
-					while(this.shouldCache(toCache)) {
-						try {
-							this.cache(toCache);
-							break;
-						} catch(IOException e) {
-							this.reportError(toCache);
+	public void getAsync(URL url, Consumer<CachedRequest> callback) {
+		String host = url.getAuthority();
+		Runnable action;
+		if(!host.equals("")) {
+			action = () -> {
+				this.waitingRequests.getAndIncrement();
+				AtomicInteger currentActions;
+				synchronized(this.threadCounts) {
+					currentActions = threadCounts.get(host);
+					if(currentActions == null) {
+						currentActions = new AtomicInteger(0);
+					}
+					threadCounts.put(host, currentActions);
+				}
+				boolean incremented = false;
+				try {
+					while(currentActions.get() >= MAX_CONCURRENT_DOWNLOAD) {
+						synchronized(currentActions) {
+							currentActions.wait();
 						}
 					}
-					this.currentlyCachedByWorker = null;
+					currentActions.incrementAndGet();
+					incremented = true;
+					CachedRequest data = this.get(url);
+					callback.accept(data);
+				} catch(Exception e) {
+					callback.accept(new FailedRequest(url, e, false));
+				} finally {
+					if(incremented) currentActions.decrementAndGet();
+					synchronized(currentActions) {
+						currentActions.notify();
+					}
+					this.waitingRequests.getAndDecrement();
 				}
-				try {Thread.sleep(sleep);} catch (InterruptedException e) {TerramapMod.logger.catching(e);}
-			}
+			};
+		} else { // This is local, process immediately
+			action = () -> {
+				this.waitingRequests.getAndIncrement();
+				try {
+					callback.accept(this.get(url));
+				} catch(Exception e) {
+					callback.accept(new FailedRequest(url, e, false));
+				} finally {
+					this.waitingRequests.decrementAndGet();
+				}
+			};
 		}
-		synchronized(TerramapMod.logger) {
-			TerramapMod.logger.info("Stopping Terramap cache manager.");
-		}
+		Thread t = new Thread(action);
+		t.setName("Terramap download " + threadNumberingGet.getAndIncrement());
+		t.setDaemon(true);
+		t.start();
 	}
 
-	/**
-	 * Starts the worker if it is not running
-	 * Does nothing if it is
-	 */
-	public void startWorker() {
-		if(!this.worker.isAlive()) this.worker.start();
-	}
-
-	/**
-	 * Stops the worker if it is running
-	 * Does nothing if it isn't
-	 */
-	public void stopWorker() {
-		if(this.worker.isAlive()) this.workerRunning = false;
-	}
-
-	/**
-	 * 
-	 * @return True if the worker is running
-	 */
-	public boolean isWorkerAlive() {
-		return this.worker.isAlive();
-	}
-
-	/**
-	 * 
-	 * @return true when called from the worker, false otherwise.
-	 */
-	public boolean isCallingFromWorker() {
-		return Thread.currentThread().equals(this.worker);
-	}
-
-	/**
-	 * @return The directory where cached files are saved as a File object
-	 */
-	public File getCachingDirectory() {
-		return cachingDirectory;
-	}
-
-	/**
-	 * @return The absolute path to the directory where cached files are saved as a File string
-	 */
-	public String getCachingPath() {
-		return cachingDirectory.getAbsolutePath();
-	}
-
-
-	/**
-	 * Sets directory where cached files are saved
-	 * 
-	 * @param path to a directory as a string
-	 * @throws IOException if the path is not an actual directory
-	 */
-	public void setCachingDirectory(String path) throws IOException {
-		this.setCachingDirectory(new File(path));
-	}
-
-	/**
-	 * Sets directory where cached files are saved
-	 * 
-	 * @param a File object representing the directory
-	 * @throws IOException if the file is not an actual directory
-	 */
-	public void setCachingDirectory(File cachingDirectory) throws IOException {
-		if(!cachingDirectory.exists() && cachingDirectory.isDirectory()) {
-			throw new IOException("No such file or directory: " + cachingDirectory.getPath());
-		}
-		this.cachingDirectory = cachingDirectory;
-	}
-
-
-
-	/**
-	 * Caches a Cachable and returns when done
-	 * 
-	 * @param toCache
-	 * @throws IOException
-	 * @throws InvalidMapboxSessionException
-	 */
-	public void cache(Cachable toCache) throws IOException {
-
-		if(this.isCached(toCache)) return;
-
-		if(!this.shouldCache(toCache)) {
-			return;
-		}
-		if(!this.isCallingFromWorker()) 
-			TerramapMod.logger.warn("Caching from an other thread!!");
-
-		File f = this.getCachableFile(toCache);
+	public CachedRequest get(URL url) {
+		TerramapMod.logger.info(url);
+		boolean isNetwork = false;
 		try {
-			this.downloadUrlToFile(toCache.getURL(), f);
-			if(!f.exists() || !f.isFile()) {
-				throw new IOException("A file should have been cached but doesn't exit: " + f.getAbsolutePath());
+			//TODO Do not make a request if the cached version is recent enough
+			URLConnection connection = url.openConnection();
+			connection.setAllowUserInteraction(false);
+			connection.setRequestProperty("User-Agent", TerramapMod.getUserAgent());
+			if (connection instanceof HttpURLConnection) {
+				HttpURLConnection httpConnection = (HttpURLConnection) connection;
+				httpConnection.setRequestMethod("GET");
+				httpConnection.setInstanceFollowRedirects(true);
+				isNetwork = true;
 			}
-			toCache.cached(f);
-		}catch (FileNotFoundException e) {
-			this.faultyUrls.put(toCache.getURL(), this.maxCacheTries);
-		}
-	}
+			
+			// TODO connection.setIfModifiedSince(ifmodifiedsince);
 
-	/**
-	 * Adds the Cachable to a queue so that it gets cached by the worker in a near future
-	 * 
-	 * @param toCache
-	 */
-	public void cacheAsync(Cachable toCache) {
-		synchronized(this.toCacheAsync) {
-			this.toCacheAsync.add(toCache);
-			if(this.toCacheAsync.size() > this.queueSizeWarningThershold) {
-				TerramapMod.logger.warn("The caching queue is getting too large, dropping a request! Queue: " + this.toCacheAsync.size());
-				this.toCacheAsync.pop();
+			ByteBuf buf = ByteBufAllocator.DEFAULT.ioBuffer();
+			connection.connect();
+
+			boolean errorStream = false;
+			int code = -1;
+			if (connection instanceof HttpURLConnection) {
+				HttpURLConnection httpConnection = (HttpURLConnection) connection;
+				code = httpConnection.getResponseCode();
+				if(code >= 400 && code < 600) errorStream = true;
 			}
+			try(InputStream inStream = errorStream? ((HttpURLConnection)connection).getErrorStream(): connection.getInputStream()) {
+				do {
+					buf.ensureWritable(1024);
+				} while (buf.writeBytes(inStream, 1024) > 0);
+			}
+
+			if (code > 0) {
+				switch(code) {
+				case HttpURLConnection.HTTP_NOT_MODIFIED:
+					return this.readFromCache(url);
+				default:
+					byte[] read = new byte[buf.writerIndex()];
+					buf.readBytes(read);
+					CachedRequest req = new HttpRequest(url, code, read);
+					this.cacheAsync(req);
+					return req;
+				}
+			}
+
+		} catch (Exception e) {
+			return new FailedRequest(url, e, isNetwork);
 		}
+		return new FailedRequest(url, new Exception(), isNetwork);
 	}
 
-
-	private File getCachableFile(Cachable c) {
-		return new File(this.cachingDirectory.getAbsoluteFile() + "/" + c.getFileName());
-	}
-
-
-	/**
-	 * @param c The resource to check
-	 * 
-	 * @return true if the given resource has been cached already
-	 */
-	public boolean isCached(Cachable c) {
-		File f = this.getCachableFile(c);
-		return f.exists() && f.isFile() && !c.equals(this.currentlyCachedByWorker);
-	}
-
-
-	/**
-	 * Return the file from the cachable.
-	 * If the file does not exist but no error has been thrown, such as with empty tiles, returns null
-	 * Downloads the resource if needed, or read it from disk.
-	 * 
-	 * @param c
-	 * @throws InvalidMapboxSessionException 
-	 * @throws IOException 
-	 */
-	public File getFile(Cachable c) throws IOException {
-		File f = this.getCachableFile(c);
-		if(f.exists() && f.isFile()) return f;
-		this.cache(c);
-		if(f.exists() && f.isFile()) return f;
-		return null;
-	}
-
-	/**
-	 * Empties the queue of resources waiting to be cached by the worker
-	 */
-	public void clearQueue() {
-		synchronized(this.toCacheAsync) {
-			this.toCacheAsync = new LinkedList<Cachable>();
-		}
-	}
-
-	/**
-	 * 
-	 * @return The number of resources waiting to be cached by the worker
-	 */
 	public int getQueueSize() {
-		synchronized(this.toCacheAsync) {
-			return this.toCacheAsync.size();
-		}
+		return this.waitingRequests.get();
 	}
 
-
-	public void createDirectory() {
-		this.cachingDirectory.mkdirs();
+	public CachedRequest readFromCache(URL url) {
+		return new SuccessfulCachedRequest(url, new byte[0]); //TODO ReadFromCache
 	}
 
-	public boolean isBeingCached(Cachable c) {
-		if(c.equals(this.currentlyCachedByWorker))
-			return true;
-		synchronized(this.toCacheAsync) {
-			for(Cachable ca: this.toCacheAsync) {
-				if(ca.getURL().equals(c.getURL())) return true;
+	private void cache(CachedRequest data) {
+		//TODO CacheManager::cache
+	}
+
+	private void cacheAsync(CachedRequest data) {
+		Thread t = new Thread(() ->  {this.cache(data);});
+		t.setName("Terramap caching " + threadNumberingCache.getAndIncrement());
+		t.setDaemon(true);
+		t.start();
+	}
+
+	public static void main(String args[]) {
+		String[] urls = {
+				"http://localhost/index.php?test01",
+				"http://localhost/index.php?test02",
+				"http://localhost/index.php?test03",
+				"http://localhost/index.php?test04",
+				"http://localhost/index.php?test05",
+				"http://localhost/index.php?test06",
+				"http://localhost/index.php?test07",
+				"http://localhost/index.php?test08",
+				"http://localhost/index.php?test09",
+				"http://localhost/index.php?test10",
+				"http://localhost:80/index.php?test11",
+				"http://localhost/index.php?test12",
+				"http://localhost/index.php?test13",
+				"http://localhost/index.php?test14",
+				"http://localhost/index.php?test15",
+				"http://localhost/index.php?test16",
+				"http://localhost/index.php?test17",
+				"http://localhost/index.php?test18",
+				"http://example.com/",
+				"http://localhost:80/index.php?test19"
+		};
+		CacheManager m = new CacheManager();
+		for(String s: urls) {
+			URL url;
+			try {
+				url = new URL(s);
+				m.getAsync(url, (d) -> {
+					System.out.println((d.wasSuccessful()? "OK": "Nop") + " => " + d.getUrl());
+					if(!d.wasSuccessful()) {
+						Object e = d.getError();
+						if(e instanceof Exception) ((Exception) e).printStackTrace();
+						else if(d instanceof HttpRequest) System.out.println(((HttpRequest)d).getStatusCode());
+					}
+				});
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
 			}
+
 		}
-		return false;		
-	}
-
-
-	public int downloadUrlToFile(URL url, File file) throws IOException {
-		TerramapMod.logger.debug("Requesting:" + url.toString());
-		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
-		connection.setAllowUserInteraction(false);
-		connection.setRequestMethod("GET");
-		connection.setRequestProperty("User-Agent", TerramapMod.getUserAgent());
-
-		connection.connect();
-
-		switch(connection.getResponseCode()) {
-
-		case HttpURLConnection.HTTP_OK:  //TODO Make sure we don't need to support 304 response (could they happend in this context?)
-			InputStream inStream = connection.getInputStream();
-			OutputStream outStream = new FileOutputStream(file);
-			int lastByte = -1;
-			byte[] buffer = new byte[32];
-			while ((lastByte = inStream.read(buffer)) != -1) {
-				outStream.write(buffer, 0, lastByte);
-			}
-			outStream.close();
-			inStream.close();
-			break;
-		case HttpURLConnection.HTTP_NOT_FOUND:
-			this.faultyUrls.put(url, this.maxCacheTries);
-			throw new FileNotFoundException();
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		connection.disconnect();
-		return connection.getResponseCode();
-	}
-
-	public void reportError(Cachable c) {
-		URL url = c.getURL();
-		if(this.faultyUrls.containsKey(url)) {
-			this.faultyUrls.put(url, this.faultyUrls.get(url) + 1);
-			if(this.faultyUrls.get(url) >= this.getMaxCacheTries()) {
-				TerramapMod.logger.error("Will not attempt to cache " + url + " anymore, too many failed attempts");
-			} else {
-				TerramapMod.logger.error("Failed to cache " + c.getURL() + " to " + c.getFileName());
-			}
-		} else {
-			this.faultyUrls.put(url, 1);
-		}
-	}
-
-	public int getMaxCacheTries() {
-		return this.maxCacheTries;
-	}
-
-	public void setMaxCacheTries(int i) {
-		this.maxCacheTries = i;
-	}
-
-	/**
-	 * Check if a Cachable should be cached or has failed to cache to many times
-	 * 
-	 * @param c The Cachable
-	 * @return a boolean indicating if the CacheManager will cache or discard the Cachable
-	 */
-	public boolean shouldCache(Cachable c) {
-		URL url = c.getURL();
-		return this.faultyUrls.getOrDefault(url, 0) < this.maxCacheTries;
 	}
 
 }

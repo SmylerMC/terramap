@@ -295,7 +295,7 @@ public class TerramapScreen extends Screen {
 			}
 			dbText += "\nProjection: " + proj;
 			dbText += "\nOrientation: " + orientation;
-			dbText += "\nCache queue: " + TerramapMod.cacheManager.getQueueSize();
+			dbText += "\nCache queue: " + TerramapMod.cacheManagerNew.getQueueSize();
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
 			dbText += "\nMap url: " + this.map.getBackgroundStyle().getUrlPattern();

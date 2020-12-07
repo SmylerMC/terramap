@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.maps;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -10,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.caching.Cachable;
+import fr.thesmyler.terramap.caching.requests.CachedRequest;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
@@ -29,9 +31,10 @@ public class WebTile implements Cachable {
 	protected int[] defaultPixel = {0, 0, 0, 0}; //What to return when the tile doesn't exist but should
 	protected int size;
 	protected BufferedImage image;
-	protected ResourceLocation texture = null;
+	protected ResourceLocation texture = errorTileTexture;
 	private String urlPattern;
-	
+	private boolean waitingForTexture = false;
+
 	private static ResourceLocation errorTileTexture = null;
 
 
@@ -59,9 +62,9 @@ public class WebTile implements Cachable {
 		try {
 			return new URL(
 					this.urlPattern
-						.replace("{x}", ""+this.getX())
-						.replace("{y}", ""+this.getY())
-						.replace("{z}", ""+this.getZoom()));
+					.replace("{x}", ""+this.getX())
+					.replace("{y}", ""+this.getY())
+					.replace("{z}", ""+this.getZoom()));
 		} catch (MalformedURLException e) {
 			TerramapMod.logger.error("Failed to craft url for a raster tile. URL pattern is " + this.urlPattern);
 			e.printStackTrace();
@@ -77,16 +80,26 @@ public class WebTile implements Cachable {
 		return u.getHost() + u.getPath().replace('/', '.'); //TODO Make sure this is always a valid file name
 	}
 
-
-	public BufferedImage getImage() throws IOException {
-		if(this.image == null) {
-			File f = TerramapMod.cacheManager.getFile(this);
-			//If the file has been cached, it may have been loaded in this::cached
-				if(this.image == null) this.loadImageFomFile(f);
+	private void loadFromRequest(CachedRequest r) {
+		try {
+			Minecraft mc = Minecraft.getMinecraft();
+			TextureManager textureManager = mc.getTextureManager();
+			BufferedImage image = ImageIO.read(new ByteArrayInputStream(r.getData()));
+			this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.x + "/" + this.y + "/" + this.zoom, new DynamicTexture(image));
+			this.waitingForTexture = false;
+		} catch (Exception e) {
+			TerramapMod.logger.catching(e);
+			TerramapMod.cacheManager.reportError(this);				
 		}
-		return this.image;
 	}
 
+	public boolean hasTexture() {
+		return !errorTileTexture.equals(this.texture);
+	}
+	
+	public boolean isWaitingForTexture() {
+		return this.waitingForTexture;
+	}
 
 	@Override
 	public void cached(File f) {
@@ -106,32 +119,11 @@ public class WebTile implements Cachable {
 			this.image = ImageIO.read(f);
 		}
 	}
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @return The value of the pixel at x and y
-	 * @throws InvalidMapboxSessionException 
-	 * @throws IOException 
-	 */
-	public int[] getPixel(int x, int y) throws IOException {
-		return TerramapImageUtils.decodeRGBA2Array(this.getImage().getRGB(x, y));
-	}
-
 
 	public ResourceLocation getTexture() {
-		if(this.texture == null) {
-			Minecraft mc = Minecraft.getMinecraft();
-			TextureManager textureManager = mc.getTextureManager();
-			try {
-				BufferedImage image = this.getImage();
-				this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.x + "/" + this.y + "/" + this.zoom, new DynamicTexture(image));
-			} catch (Exception e) {
-				TerramapMod.logger.catching(e);
-				TerramapMod.cacheManager.reportError(this);
-				TerramapMod.cacheManager.cacheAsync(this);
-				return WebTile.errorTileTexture;
-			}
+		if(!this.hasTexture() && !this.waitingForTexture) {
+			TerramapMod.cacheManagerNew.getAsync(this.getURL(), (d) -> Minecraft.getMinecraft().addScheduledTask(() -> this.loadFromRequest(d)));			
+			this.waitingForTexture = true;
 		}
 		return this.texture;
 	}
@@ -188,7 +180,7 @@ public class WebTile implements Cachable {
 
 
 	}
-	
+
 	public static void registerErrorTexture() {
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 		int color[] = {175, 175, 175};

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.caching.CacheManager;
+import fr.thesmyler.terramap.caching.CacheManagerOld;
 import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
@@ -33,7 +34,8 @@ public class TerramapMod {
 	public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
 
     public static Logger logger;
-    public static CacheManager cacheManager;
+    public static CacheManagerOld cacheManager;
+    public static CacheManager cacheManagerNew = new CacheManager();
     
     /* Proxy things */
     private static final String CLIENT_PROXY_CLASS = "fr.thesmyler.terramap.proxy.TerramapClientProxy";
