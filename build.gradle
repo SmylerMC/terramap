@@ -1,26 +1,25 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        maven {
+        	name = "Minecraft Forge"
+        	url = "https://files.minecraftforge.net/maven"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.0"
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "com.github.johnrengelman.shadow"
 
 version = project.mod_version
 group = project.mod_group
 archivesBaseName = project.mod_id
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 
-// A note on the jdk version:
-// Gradle seems to have issues with the latests versions of OpenJDK on Linux.
-// If you experience errors related to LWJGL when launching the game in a developpement environement,
-// make sure you are using at most the 18.8_232 jdk, if not, you can download it and set it at the jdk in your IDE's run build path section
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
@@ -29,6 +28,11 @@ minecraft {
     version = project.forge_version
     mappings = project.mcp_mappings
     runDir = "run"
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
 }
 
 repositories {
@@ -61,8 +65,7 @@ dependencies {
     runtime("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
         exclude group: "io.netty"
     }
-    //compileOnly "org.projectlombok:lombok:1.18.0"
-    //annotationProcessor "org.projectlombok:lombok:1.18.0"
+    shade "org.xerial:sqlite-jdbc:3.14.2"
 }
 
 processResources {
@@ -84,11 +87,12 @@ processResources {
     }
 }
 
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    from "build/source/main"
-    classifier "dev"
+shadowJar {
+    classifier = null
+    configurations = [project.configurations.shade]
 }
+build.dependsOn shadowJar
 
-artifacts {
-    archives deobfJar
+reobf { //reobfuscate the shaded JAR
+    shadowJar {}
 }
