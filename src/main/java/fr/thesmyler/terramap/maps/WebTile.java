@@ -137,7 +137,10 @@ public class WebTile implements Cachable {
 	}
 	
 	public void cancelLoading() {
-		if(this.textureTask != null) this.textureTask.cancel();
+		if(this.textureTask != null) {
+			this.textureTask.cancel();
+			this.textureTask = null;
+		}
 	}
 
 	///// Various uninteresting getters and setters from here /////
