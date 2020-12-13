@@ -30,7 +30,7 @@ public abstract class PermissionManager {
 	}
 	
 	public static boolean hasPermission(EntityPlayer player, Permission perm) {
-		return player.canUseCommand(4, "") || hasPermission(player, perm);
+		return player.canUseCommand(4, "") || hasPermissionNode(player, perm);
 	}
 	
 	public static boolean hasPermissionNode(EntityPlayer player, Permission perm) {

@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 /**
  * Q: Why?
- * A: Because some at Mojang though nobody would ever want to render a transparent String, yet I do
+ * A: Because some at Mojang thought nobody would ever want to render a transparent String, yet I do
  * 
  * Q: Yes, but why?
  * A: I didn't want to just extend FontRenderer as I prefer to use the vanilla Minecraft::fontRenderer
