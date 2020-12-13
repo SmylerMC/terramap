@@ -42,7 +42,8 @@ public class TerramapClientProxy extends TerramapProxy {
 		TerramapNetworkManager.registerHandlers(Side.CLIENT);
 		try {
 			TerramapMod.cacheManager = new CacheManagerOld(TerramapConfig.cachingDir);
-			TerramapMod.cacheManager.createDirectory();
+//			TerramapMod.cacheManager.createDirectory();
+			TerramapMod.cacheManagerNew.setup();
 		} catch (IOException e) {
 			TerramapMod.logger.catching(e);
 			TerramapMod.logger.error("Caching directory doesn't seem to be valid, we will use a temporary one.");

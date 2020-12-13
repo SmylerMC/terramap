@@ -2,15 +2,12 @@ package fr.thesmyler.terramap.maps;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.caching.Cachable;
 import fr.thesmyler.terramap.caching.QueuedCacheTask;
 import fr.thesmyler.terramap.caching.requests.CachedRequest;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
@@ -24,7 +21,7 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
-public class WebTile implements Cachable {
+public class WebTile {
 
 	protected long x;
 	protected long y;
@@ -57,8 +54,6 @@ public class WebTile implements Cachable {
 		this.defaultPixel = defaultPixel;
 	}
 
-
-	@Override
 	public URL getURL() {
 		try {
 			return new URL(
@@ -73,14 +68,6 @@ public class WebTile implements Cachable {
 		return null;
 	}
 
-
-	@Override
-	public String getFileName(){
-		URL u = this.getURL();
-		u.getPath();
-		return u.getHost() + u.getPath().replace('/', '.'); //TODO Make sure this is always a valid file name
-	}
-
 	private void loadFromRequest(CachedRequest r) {
 		try {
 			Minecraft mc = Minecraft.getMinecraft();
@@ -90,7 +77,7 @@ public class WebTile implements Cachable {
 			this.textureTask = null;
 		} catch (Exception e) {
 			TerramapMod.logger.catching(e);
-			TerramapMod.cacheManager.reportError(this);				
+			//TODO handle problems when loading tile
 		}
 	}
 
@@ -100,25 +87,6 @@ public class WebTile implements Cachable {
 	
 	public boolean isWaitingForTexture() {
 		return this.textureTask != null;
-	}
-
-	@Override
-	public void cached(File f) {
-		try {
-			this.loadImageFomFile(f);
-		} catch (IOException e) {
-			TerramapMod.logger.error("Got an IOException when reading a file which should have been properly cached!");
-			TerramapMod.logger.catching(e);
-		}
-	}
-
-
-	private void loadImageFomFile(File f) throws IOException {
-		if(!f.exists() || !f.isFile()) {
-			this.image = TerramapImageUtils.imageFromColor(this.size, this.size, this.defaultPixel);
-		} else {
-			this.image = ImageIO.read(f);
-		}
 	}
 
 	public ResourceLocation getTexture() {
@@ -178,11 +146,6 @@ public class WebTile implements Cachable {
 		public InvalidTileCoordinatesException(WebTile t) {
 			super("Invalid tile coordinates: " + t.zoom + "/" + t.x + "/" + t.y);
 		}
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
 
 
 	}

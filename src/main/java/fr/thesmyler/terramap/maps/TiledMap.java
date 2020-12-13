@@ -26,8 +26,6 @@ public class TiledMap implements Comparable<TiledMap> {
 	protected String comment;
 	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
-	protected boolean smartLoadEnable = false;
-
 	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, Map<String, String> copyright, int displayPriority, boolean allowOnMinimap, TiledMapProvider provider, long version, String comment) {
 		this.urlPattern = urlPattern;
 		this.tiles = new LinkedList<WebTile>();
@@ -46,22 +44,10 @@ public class TiledMap implements Comparable<TiledMap> {
 
 	protected void loadTile(WebTile tile) {
 		this.tiles.add(0, tile);
-		if(this.isSmartLoadingEnabled()) {
-			TerramapMod.cacheManager.cacheAsync(tile);
-			this.disableSmartLoading();
-			for(int x=-1; x<=1; x++) {
-				for(int y=-1; y<=1; y++) {
-					if(x == 0 && y == 0) continue;
-					try {
-						TerramapMod.cacheManager.cacheAsync(this.getTile(tile.getZoom(), tile.getX()+x, tile.getY()+y));
-					} catch (WebTile.InvalidTileCoordinatesException e) {}
-				}
-			}
-			this.enableSmartLoading();
-		}
 		this.unloadToMaxLoad();
 	}
 
+	//TODO make fast
 	public WebTile getTile(int zoom, long x, long y) {
 		for(WebTile tile: this.tiles)
 			if(tile.getX() == x && tile.getY() == y && tile.getZoom() == zoom) {
@@ -87,18 +73,6 @@ public class TiledMap implements Comparable<TiledMap> {
 
 	public long getSizeInTiles(int zoomLevel){
 		return WebMercatorUtils.getDimensionsInTile(zoomLevel);
-	}
-
-	public void enableSmartLoading() {
-		this.smartLoadEnable = true;
-	}
-
-	public void disableSmartLoading() {
-		this.smartLoadEnable = false;
-	}
-
-	public boolean isSmartLoadingEnabled() {
-		return this.smartLoadEnable;
 	}
 
 	/**

@@ -9,6 +9,7 @@ import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.caching.CacheManagerOld;
+import fr.thesmyler.terramap.caching.CacheManagerTerramap;
 import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
@@ -35,7 +36,7 @@ public class TerramapMod {
 
     public static Logger logger;
     public static CacheManagerOld cacheManager;
-    public static CacheManager cacheManagerNew = new CacheManager();
+    public static CacheManager cacheManagerNew = new CacheManagerTerramap();
     
     /* Proxy things */
     private static final String CLIENT_PROXY_CLASS = "fr.thesmyler.terramap.proxy.TerramapClientProxy";
