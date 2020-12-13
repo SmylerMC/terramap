@@ -1,8 +1,10 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+
 import fr.thesmyler.smylibgui.SmyLibGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,7 +15,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * A: Because some at Mojang though nobody would ever want to render a transparent String, yet I do
  * 
  * Q: Yes, but why?
- * A: I didn't want to just extend FontRenderer as I prefer to use the vanilla Mincraft::fontRenderer
+ * A: I didn't want to just extend FontRenderer as I prefer to use the vanilla Minecraft::fontRenderer
  * 
  * Q: Still, why?
  * A: Ok, I admit it, I wanted to experiment with ObfuscationReflectionHelper. I know, right?
@@ -30,18 +32,31 @@ public class FontRendererContainer {
 	private static final String SRG_trimStringNewline = "func_78273_d";
 	private static Method trimStringNewline;
 	private static final String SRG_posX = "field_78295_j";
+	private static Field posX;
 	private static final String SRG_posY = "field_78296_k";
+	private static Field posY;
 	private static final String SRG_red = "field_78291_n";
+	private static Field red;
 	private static final String SRG_green = "field_78306_p";
+	private static Field green;
 	private static final String SRG_blue = "field_78292_o";
+	private static Field blue;
 	private static final String SRG_alpha = "field_78305_q";
+	private static Field alpha;
 	private static final String SRG_textColor = "field_78304_r";
+	private static Field textColor;
 	private static final String SRG_randomStyle = "field_78303_s";
+	private static Field randomStyle;
 	private static final String SRG_boldStyle = "field_78302_t";
+	private static Field boldStyle;
 	private static final String SRG_strikethroughStyle = "field_78299_w";
+	private static Field strikethroughStyle;
 	private static final String SRG_underlineStyle = "field_78300_v";
+	private static Field underlineStyle;
 	private static final String SRG_italicStyle = "field_78301_u";
+	private static Field italicStyle;
 	private static final String SRG_colorCode = "field_78285_g";
+	private static Field colorCode;
 
 	public final int FONT_HEIGHT;
 
@@ -76,7 +91,7 @@ public class FontRendererContainer {
 			return this.font.drawString(text, x, y, color, dropShadow);
 		}
 	}
-	
+
 	public void drawCenteredString(float x, float y, String str, int color, boolean shadow) {
 		int w = this.getStringWidth(str);
 		this.drawString(str, x - w/2, y, color, shadow);
@@ -108,12 +123,12 @@ public class FontRendererContainer {
 			if (this.font.getBidiFlag()) {
 				t = this.bidiReorder(text);
 			}
-			
+
 			int shadowedColor = color;
-			
-            if (dropShadow) {
-            	shadowedColor = (color & 16579836) >> 2 | color & -16777216;
-            }
+
+			if (dropShadow) {
+				shadowedColor = (color & 16579836) >> 2 | color & -16777216;
+			}
 
 			float red = (float)(shadowedColor >> 16 & 255) / 255.0F;
 			float green = (float)(shadowedColor >> 8 & 255) / 255.0F;
@@ -131,49 +146,49 @@ public class FontRendererContainer {
 		}
 	}
 
-    /**
-     * Perform actual work of rendering a multi-line string with wordwrap and with darker drop shadow color if flag is
-     * set
-     * @throws InvocationTargetException 
-     * @throws IllegalArgumentException 
-     * @throws IllegalAccessException 
-     */
-    protected void renderSplitString(String str, int x, int y, int wrapWidth, boolean addShadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-    	int t = y;
-        for (String s : this.listFormattedStringToWidth(str, wrapWidth)) {
-            this.renderStringAligned(s, x, t, wrapWidth, this.getTextColor(), addShadow);
-            t += this.FONT_HEIGHT;
-        }
-    }
-    
-    /**
-     * Render string either left or right aligned depending on bidiFlag
-     * @throws InvocationTargetException 
-     * @throws IllegalArgumentException 
-     * @throws IllegalAccessException 
-     */
-    protected int renderStringAligned(String text, int x, int y, int width, int color, boolean dropShadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-    	int t = x;
-        if (this.font.getBidiFlag()) {
-            int i = this.getStringWidth(this.bidiReorder(text));
-            t = t + width - i;
-        }
+	/**
+	 * Perform actual work of rendering a multi-line string with wordwrap and with darker drop shadow color if flag is
+	 * set
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	protected void renderSplitString(String str, int x, int y, int wrapWidth, boolean addShadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		int t = y;
+		for (String s : this.listFormattedStringToWidth(str, wrapWidth)) {
+			this.renderStringAligned(s, x, t, wrapWidth, this.getTextColor(), addShadow);
+			t += this.FONT_HEIGHT;
+		}
+	}
 
-        return this.renderString(text, (float)t, (float)y, color, dropShadow);
-    }
-    
+	/**
+	 * Render string either left or right aligned depending on bidiFlag
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	protected int renderStringAligned(String text, int x, int y, int width, int color, boolean dropShadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		int t = x;
+		if (this.font.getBidiFlag()) {
+			int i = this.getStringWidth(this.bidiReorder(text));
+			t = t + width - i;
+		}
+
+		return this.renderString(text, (float)t, (float)y, color, dropShadow);
+	}
+
 	protected void renderStringAtPos(String text, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(renderStringAtPos == null) 
 			renderStringAtPos = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_renderStringAtPos, Void.TYPE, String.class, Boolean.TYPE);
 		renderStringAtPos.invoke(this.font, text, shadow);
 	}
-    
+
 	protected String trimStringNewline(String t) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(trimStringNewline == null)
 			trimStringNewline = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_trimStringNewline, String.class, String.class);
 		return (String) trimStringNewline.invoke(this.font, t);
 	}
-	
+
 	protected void resetStyles() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(resetStyles == null)
 			resetStyles = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_resetStyles, Void.TYPE);
@@ -187,116 +202,142 @@ public class FontRendererContainer {
 	}
 
 	protected int getTextColor() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_textColor);
+		if(textColor == null) textColor = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_textColor);
+		return textColor.getInt(this.font);
 	}
 
 	protected void setTextColor(int color) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, color, SRG_textColor);
-	}
-	
-	protected float getRed() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_red);
+		if(textColor == null) textColor = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_textColor);
+		textColor.setInt(this.font, color);
 	}
 
-	protected void setRed(float red) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, red, SRG_red);
+	protected float getRed() throws IllegalArgumentException, IllegalAccessException {
+		if(red == null) red = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_red);
+		return red.getFloat(this.font);
+	}
+
+	protected void setRed(float value) throws IllegalArgumentException, IllegalAccessException {
+		if(red == null) red = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_red);
+		red.setFloat(this.font, value);
 	}
 
 	protected float getGreen() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_green);
+		if(green == null) green = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_green);
+		return green.getFloat(this.font);
 	}
 
-	protected void setGreen(float green) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, green, SRG_green);
+	protected void setGreen(float value) throws IllegalArgumentException, IllegalAccessException {
+		if(green == null) green = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_green);
+		green.setFloat(this.font, value);
 	}
 
 	protected float getBlue() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_blue);
+		if(blue == null) blue = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_blue);
+		return blue.getFloat(this.font);
 	}
 
-	protected void setBlue(float blue) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, blue, SRG_blue);
+	protected void setBlue(float value) throws IllegalArgumentException, IllegalAccessException {
+		if(blue == null) blue = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_blue);
+		blue.setFloat(this.font, value);
 	}
-	
+
 	protected float getAlpha() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_alpha);
+		if(alpha == null) alpha = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_alpha);
+		return alpha.getFloat(this.font);
 	}
 
-	protected void setAlpha(float alpha) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, alpha, SRG_alpha);
+	protected void setAlpha(float value) throws IllegalArgumentException, IllegalAccessException {
+		if(alpha == null) alpha = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_alpha);
+		alpha.setFloat(this.font, value);
 	}
-	
+
 	protected float getPosX() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_posX);
+		if(posX == null) posX = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posX);
+		return posX.getFloat(this.font);
 	}
 
-	protected void setPosX(float posX) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, posX, SRG_posX);
+	protected void setPosX(float value) throws IllegalArgumentException, IllegalAccessException {
+		if(posX == null) posX = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posX);
+		posX.set(this.font, value);
 	}
 
 	protected float getPosY() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_posY);
+		if(posY == null) posY = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posY);
+		return posY.getFloat(this.font);
 	}
 
-	protected void setPosY(float posY) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, posY, SRG_posY);
+	protected void setPosY(float value) throws IllegalArgumentException, IllegalAccessException {
+		if(posY == null) posY = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posY);
+		posY.set(this.font, value);
 	}
-	
+
 	protected boolean getBoldStyle() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_boldStyle);
+		if(boldStyle == null) boldStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_boldStyle);
+		return boldStyle.getBoolean(this.font);
 	}
 
 	protected void setBoldStyle(boolean yesNo) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, yesNo, SRG_boldStyle);
+		if(boldStyle == null) boldStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_boldStyle);
+		boldStyle.setBoolean(this.font, yesNo);
 	}
-	
+
 	protected boolean getUnderlineStyle() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_underlineStyle);
+		if(underlineStyle == null) underlineStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_underlineStyle);
+		return underlineStyle.getBoolean(this.font);
 	}
 
 	protected void setUnderlineStyle(boolean yesNo) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, yesNo, SRG_underlineStyle);
-	}
-	
-	protected boolean getStrikethroughStyle() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_strikethroughStyle);
+		if(underlineStyle == null) underlineStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_underlineStyle);
+		underlineStyle.setBoolean(this.font, yesNo);
 	}
 
+	protected boolean getStrikethroughStyle() throws IllegalArgumentException, IllegalAccessException {
+		if(strikethroughStyle == null) strikethroughStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_strikethroughStyle);
+		return strikethroughStyle.getBoolean(this.font);
+		}
+
 	protected void setStrikethroughStyle(boolean yesNo) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, yesNo, SRG_strikethroughStyle);
+		if(strikethroughStyle == null) strikethroughStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_strikethroughStyle);
+		strikethroughStyle.setBoolean(this.font, yesNo);
 	}
-	
+
 	protected boolean getItalicStyle() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_italicStyle);
+		if(italicStyle == null) italicStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_italicStyle);
+		return italicStyle.getBoolean(this.font);
 	}
 
 	protected void setItalicStyle(boolean yesNo) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, yesNo, SRG_italicStyle);
+		if(italicStyle == null) italicStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_italicStyle);
+		italicStyle.setBoolean(this.font, yesNo);
 	}
-	
+
 	protected boolean getRandomStyle() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_randomStyle);
+		if(randomStyle == null) randomStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_randomStyle);
+		return randomStyle.getBoolean(this.font);
 	}
 
 	protected void setRandomStyle(boolean yesNo) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, yesNo, SRG_randomStyle);
-	}
-	
-	protected int[] getColorCode() throws IllegalArgumentException, IllegalAccessException {
-		return ObfuscationReflectionHelper.getPrivateValue(FontRenderer.class, this.font, SRG_colorCode);
+		if(randomStyle == null) randomStyle = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_randomStyle);
+		randomStyle.setBoolean(this.font, yesNo);
 	}
 
-	protected void setColorCode(int[] yesNo) throws IllegalArgumentException, IllegalAccessException {
-		ObfuscationReflectionHelper.setPrivateValue(FontRenderer.class, this.font, yesNo, SRG_colorCode);
+	protected int[] getColorCode() throws IllegalArgumentException, IllegalAccessException {
+		if(colorCode == null) colorCode = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_colorCode);
+		return (int[]) boldStyle.get(this.font);
+	}
+
+	protected void setColorCode(int[] value) throws IllegalArgumentException, IllegalAccessException {
+		if(colorCode == null) colorCode = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_colorCode);
+		boldStyle.set(this.font, value);
 	}
 
 	protected void setColor(float r, float g, float b, float a) {
 		GlStateManager.color(r, g, b, a);
 	}
-	
-    protected void enableAlpha() {
-        GlStateManager.enableAlpha();
-    }
+
+	protected void enableAlpha() {
+		GlStateManager.enableAlpha();
+	}
 
 	/**
 	 * Draws the specified string with a shadow.
