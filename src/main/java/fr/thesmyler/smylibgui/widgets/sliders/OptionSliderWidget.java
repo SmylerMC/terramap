@@ -1,5 +1,8 @@
 package fr.thesmyler.smylibgui.widgets.sliders;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 import net.minecraft.client.Minecraft;
@@ -60,6 +63,23 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 	
 	public T getCurrentOption() {
 		return this.options[this.option];
+	}
+	
+	/**
+	 * Sets the current option if it exists, it is added if not available
+	 * 
+	 * @param option - The option
+	 */
+	@SuppressWarnings("unchecked")
+	public void setCurrentOption(T option) {
+		for(int i=0; i<this.options.length; i++) {
+			if(option.equals(this.options[i])) {
+				this.option = i;
+			}
+		}
+		List<T> l = new ArrayList<>();
+		Collections.addAll(l, this.options);
+		this.options = (T[]) l.toArray();
 	}
 
 	@Override

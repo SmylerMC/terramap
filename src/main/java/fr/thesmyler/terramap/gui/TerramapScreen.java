@@ -28,6 +28,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
@@ -129,12 +130,13 @@ public class TerramapScreen extends Screen {
 		this.debugText.setVisibility(this.debugMode);
 		this.addWidget(this.debugText);
 
-		// Info pannel
+		// Info panel
 		this.infoPanel.removeAllWidgets();
 		this.infoPanel.setWidth(240).setHeight(this.getHeight());
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
+		this.infoPanel.addWidget(new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig));
 		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
 		this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.mouseGeoLocationText);
@@ -485,6 +487,10 @@ public class TerramapScreen extends Screen {
 		this.debugMode = yesNo;
 		if(this.debugText != null) this.debugText.setVisibility(yesNo);
 		this.map.setDebugMode(yesNo);
+	}
+	
+	private void openConfig() {
+		Minecraft.getMinecraft().displayGuiScreen(new TerramapConfigScreen(this));
 	}
 
 	private class MapPreview extends MapWidget {
