@@ -1,17 +1,20 @@
 package fr.thesmyler.terramap.maps;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.caching.Cachable;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import io.github.terra121.util.http.Disk;
+import io.github.terra121.util.http.Http;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -21,18 +24,17 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
-public class WebTile implements Cachable {
+public class WebTile {
 
-	protected long x;
-	protected long y;
-	protected int zoom;
-	protected int[] defaultPixel = {0, 0, 0, 0}; //What to return when the tile doesn't exist but should
-	protected int size;
-	protected BufferedImage image;
-	protected ResourceLocation texture = null;
+	private long x;
+	private long y;
+	private int zoom;
+	private int size;
+	private ResourceLocation texture = null;
 	private String urlPattern;
-	
-	private static ResourceLocation errorTileTexture = null;
+	private CompletableFuture<ByteBuf> textureTask;
+
+	public static ResourceLocation errorTileTexture = null;
 
 
 	public WebTile(String urlPattern, int zoom, long x, long y) {
@@ -48,99 +50,49 @@ public class WebTile implements Cachable {
 	}
 
 
-	public WebTile(String urlPattern, int zoom, long x, long y, int[] defaultPixel) {
-		this(urlPattern, zoom, x, y);
-		this.defaultPixel = defaultPixel;
+	public String getURL() {
+		return this.urlPattern
+				.replace("{x}", ""+this.getX())
+				.replace("{y}", ""+this.getY())
+				.replace("{z}", ""+this.getZoom());
+	}
+	
+	public boolean isTextureAvailable() {
+		return this.texture != null;
 	}
 
-
-	@Override
-	public URL getURL() {
-		try {
-			return new URL(
-					this.urlPattern
-						.replace("{x}", ""+this.getX())
-						.replace("{y}", ""+this.getY())
-						.replace("{z}", ""+this.getZoom()));
-		} catch (MalformedURLException e) {
-			TerramapMod.logger.error("Failed to craft url for a raster tile. URL pattern is " + this.urlPattern);
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-
-	@Override
-	public String getFileName(){
-		URL u = this.getURL();
-		u.getPath();
-		return u.getHost() + u.getPath().replace('/', '.'); //TODO Make sure this is always a valid file name
-	}
-
-
-	public BufferedImage getImage() throws IOException {
-		if(this.image == null) {
-			File f = TerramapMod.cacheManager.getFile(this);
-			//If the file has been cached, it may have been loaded in this::cached
-				if(this.image == null) this.loadImageFomFile(f);
-		}
-		return this.image;
-	}
-
-
-	@Override
-	public void cached(File f) {
-		try {
-			this.loadImageFomFile(f);
-		} catch (IOException e) {
-			TerramapMod.logger.error("Got an IOException when reading a file which should have been properly cached!");
-			TerramapMod.logger.catching(e);
-		}
-	}
-
-
-	private void loadImageFomFile(File f) throws IOException {
-		if(!f.exists() || !f.isFile()) {
-			this.image = TerramapImageUtils.imageFromColor(this.size, this.size, this.defaultPixel);
-		} else {
-			this.image = ImageIO.read(f);
-		}
-	}
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @return The value of the pixel at x and y
-	 * @throws InvalidMapboxSessionException 
-	 * @throws IOException 
-	 */
-	public int[] getPixel(int x, int y) throws IOException {
-		return TerramapImageUtils.decodeRGBA2Array(this.getImage().getRGB(x, y));
-	}
-
-
-	public ResourceLocation getTexture() {
+	public ResourceLocation getTexture() throws IOException, InterruptedException, ExecutionException {
 		if(this.texture == null) {
-			Minecraft mc = Minecraft.getMinecraft();
-			TextureManager textureManager = mc.getTextureManager();
-			try {
-				BufferedImage image = this.getImage();
-				this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.x + "/" + this.y + "/" + this.zoom, new DynamicTexture(image));
-			} catch (Exception e) {
-				TerramapMod.logger.catching(e);
-				TerramapMod.cacheManager.reportError(this);
-				TerramapMod.cacheManager.cacheAsync(this);
-				return WebTile.errorTileTexture;
+			if(this.textureTask == null) {
+				this.textureTask = Http.get(this.getURL());
+			} else if(this.textureTask.isDone() && !this.textureTask.isCompletedExceptionally()){
+				Minecraft mc = Minecraft.getMinecraft();
+				TextureManager textureManager = mc.getTextureManager();
+				ByteBuf buf = this.textureTask.get();
+				try (ByteBufInputStream is = new ByteBufInputStream(buf)) {
+					BufferedImage image = ImageIO.read(is);
+					if(image == null) throw new IOException("Failed to read image! url: " + this.getURL() + " file: " + Disk.cacheFileFor(new URL(this.getURL()).getFile()).toString());
+					this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.getURL(), new DynamicTexture(image));
+				}
 			}
 		}
 		return this.texture;
 	}
+	
+	public void cancelTextureLoading() {
+		if(this.textureTask != null) {
+			this.textureTask.cancel(true); //FIXME This is not working
+			this.textureTask = null;
+		}
+	}
 
 	public void unloadTexture() {
+		this.cancelTextureLoading();
 		if(this.texture != null) {
 			Minecraft mc = Minecraft.getMinecraft();
 			TextureManager textureManager = mc.getTextureManager();
 			textureManager.deleteTexture(this.texture);
+			this.texture = null;
 		}
 	}
 
@@ -181,14 +133,9 @@ public class WebTile implements Cachable {
 			super("Invalid tile coordinates: " + t.zoom + "/" + t.x + "/" + t.y);
 		}
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
 
 	}
-	
+
 	public static void registerErrorTexture() {
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 		int color[] = {175, 175, 175};

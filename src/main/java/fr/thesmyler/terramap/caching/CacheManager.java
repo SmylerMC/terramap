@@ -26,6 +26,7 @@ import fr.thesmyler.terramap.TerramapMod;
  * The worker is started by the mod during preinit
  *
  */
+@Deprecated
 public class CacheManager implements Runnable {
 
 	private Thread worker;

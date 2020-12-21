@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.maps;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ public class TiledMap implements Comparable<TiledMap> {
 	protected String comment;
 	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
-	protected boolean smartLoadEnable = false;
 
 	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, Map<String, String> copyright, int displayPriority, boolean allowOnMinimap, TiledMapProvider provider, long version, String comment) {
 		this.urlPattern = urlPattern;
@@ -47,19 +45,6 @@ public class TiledMap implements Comparable<TiledMap> {
 
 	protected void loadTile(WebTile tile) {
 		this.tiles.add(0, tile);
-		if(this.isSmartLoadingEnabled()) {
-			TerramapMod.cacheManager.cacheAsync(tile);
-			this.disableSmartLoading();
-			for(int x=-1; x<=1; x++) {
-				for(int y=-1; y<=1; y++) {
-					if(x == 0 && y == 0) continue;
-					try {
-						TerramapMod.cacheManager.cacheAsync(this.getTile(tile.getZoom(), tile.getX()+x, tile.getY()+y));
-					} catch (WebTile.InvalidTileCoordinatesException e) {}
-				}
-			}
-			this.enableSmartLoading();
-		}
 		this.unloadToMaxLoad();
 	}
 
@@ -92,25 +77,6 @@ public class TiledMap implements Comparable<TiledMap> {
 
 	public long getSizeInPixels(int zoomLevel){
 		return WebMercatorUtils.getMapDimensionInPixel(zoomLevel);
-	}
-
-	public int[] getPixel(int zoom, long x, long y) throws IOException {
-		long tileX = WebMercatorUtils.getTileXAt(x);
-		long tileY = WebMercatorUtils.getTileYAt(y);
-		int tX = (int)(x % 256), tY = (int)(y % 256);
-		return this.getTile(zoom, tileX, tileY).getPixel(tX, tY);
-	}
-
-	public void enableSmartLoading() {
-		this.smartLoadEnable = true;
-	}
-
-	public void disableSmartLoading() {
-		this.smartLoadEnable = false;
-	}
-
-	public boolean isSmartLoadingEnabled() {
-		return this.smartLoadEnable;
 	}
 
 	/**

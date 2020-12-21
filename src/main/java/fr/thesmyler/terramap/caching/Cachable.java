@@ -7,6 +7,7 @@ import java.net.URL;
  * @author Smyler
  *
  */
+@Deprecated
 public interface Cachable {
 
 	/**
