@@ -110,4 +110,6 @@ terramap.commands.reloadmapstyles.forbidden=You do not have the permission to us
 terramap.commands.reloadmapstyles.done=Done
 terramap.commands.reloadmapstyles.error=Error when reloading mapstyles
 
-
+terramap.terraerror.warn.1=Terramap requires Terra++, and Terra121 was detected.
+terramap.terraerror.warn.2=Please install Terra++.
+terramap.terraerror.closegame=Close the game
