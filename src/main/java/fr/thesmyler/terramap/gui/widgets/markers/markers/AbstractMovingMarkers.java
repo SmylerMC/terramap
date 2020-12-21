@@ -3,11 +3,12 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 
 public abstract class AbstractMovingMarkers extends Marker {
-	
+
 	protected Animation movingAnimation;
-	
+
 	protected double longitude, latitude;
 	protected double oldLongitude, oldLatitude;
 
@@ -15,24 +16,28 @@ public abstract class AbstractMovingMarkers extends Marker {
 		super(controller, width, height, minZoom, maxZoom);
 		this.movingAnimation = new Animation(10000);
 	}
-	
+
 	public AbstractMovingMarkers(MarkerController<?> controller, int width, int height) {
 		this(controller, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
-	
+
 	@Override
 	public void update(MapWidget map) {
-		
+
 		//TODO Animate for smoother movements
-		double[] coordinates = this.getActualCoordinates();
-		double realLo = coordinates[0];
-		double realLa = coordinates[1];
-		this.longitude = realLo;
-		this.latitude = realLa;
-		
+		try {
+			double[] coordinates = this.getActualCoordinates();
+			double realLo = coordinates[0];
+			double realLa = coordinates[1];
+			this.longitude = realLo;
+			this.latitude = realLa;
+		} catch(OutOfProjectionBoundsException e) {
+			this.latitude = this.longitude = Double.NaN;
+		}
+
 	}
-	
-	protected abstract double[] getActualCoordinates();
+
+	protected abstract double[] getActualCoordinates() throws OutOfProjectionBoundsException;
 
 	@Override
 	public double getLongitude() {

@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
@@ -16,13 +17,13 @@ import net.minecraft.util.text.TextComponentString;
  *
  */
 public class MainPlayerMarker extends AbstractPlayerMarker {
-	
+
 	private double playerLongitude, playerLatitude;
 
 	public MainPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
 		super(controller, null, downscaleFactor);
 	}
-	
+
 	@Override
 	public void onUpdate(Screen parent) {
 		if(Minecraft.getMinecraft().player == null) {
@@ -31,12 +32,16 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 		}
 		if(TerramapRemote.getRemote().getProjection() == null) return;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		double[] lola = TerramapRemote.getRemote().getProjection().toGeo(player.posX, player.posZ);
-		this.playerLongitude = lola[0];
-		this.playerLatitude = lola[1];
+		try {
+			double[] lola = TerramapRemote.getRemote().getProjection().toGeo(player.posX, player.posZ);
+			this.playerLongitude = lola[0];
+			this.playerLatitude = lola[1];
+		} catch(OutOfProjectionBoundsException e) {
+			this.playerLatitude = this.playerLongitude = Double.NaN;
+		}
 		super.onUpdate(parent);
 	}
-	
+
 	@Override
 	protected ResourceLocation getSkin() {
 		return Minecraft.getMinecraft().player.getLocationSkin();
@@ -56,11 +61,11 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	protected boolean showName(boolean hovered) {
 		return true;
 	}
-	
+
 	@Override
 	public ITextComponent getDisplayName() {
 		if(Minecraft.getMinecraft().player != null) {
-		return Minecraft.getMinecraft().player.getDisplayName();
+			return Minecraft.getMinecraft().player.getDisplayName();
 		} else {
 			return new TextComponentString("Missing main player");
 		}
@@ -74,5 +79,5 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 		}
 		return this.getControllerId() + ":" + uuid;
 	}
-	
+
 }

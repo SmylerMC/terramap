@@ -5,6 +5,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -57,7 +58,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	protected double[] getActualCoordinates() {
+	protected double[] getActualCoordinates() throws OutOfProjectionBoundsException {
 		return this.player.getGeoCoordinates();
 	}
 

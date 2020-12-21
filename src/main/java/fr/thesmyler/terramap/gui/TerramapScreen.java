@@ -36,6 +36,7 @@ import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -67,7 +68,7 @@ public class TerramapScreen extends Screen {
 	private TextFieldWidget searchBox = new TextFieldWidget(10, new FontRendererContainer(Minecraft.getMinecraft().fontRenderer));
 	private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200); 
 	private Scrollbar styleScrollbar = new Scrollbar(100);
-	
+
 	private boolean f1Mode = false;
 	private boolean debugMode = false;
 
@@ -174,7 +175,7 @@ public class TerramapScreen extends Screen {
 		TexturedButtonWidget searchButton = new TexturedButtonWidget(50, IncludedTexturedButtons.SEARCH);
 		searchButton.setX(this.searchBox.getX() + this.searchBox.getWidth() + 2).setY(this.searchBox.getY() - 1);
 		searchButton.setOnClick(() -> this.search(this.searchBox.getText()));
-//		searchButton.enable();
+		//		searchButton.enable();
 		this.infoPanel.addWidget(searchButton);
 		this.infoPanel.setHeight(this.searchBox.getY() + this.searchBox.getHeight() + 5);
 		this.addWidget(this.infoPanel);
@@ -191,7 +192,7 @@ public class TerramapScreen extends Screen {
 		if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
 		this.stylePanel.addWidget(s);
 		this.addWidget(this.stylePanel);
-		
+
 		if(!TerramapRemote.getRemote().isInstalledOnServer() && TerramapRemote.getRemote().getProjection() == null) {
 			String warning = "";
 			for(int i=1; I18n.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
@@ -211,9 +212,9 @@ public class TerramapScreen extends Screen {
 	@Override
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
-		
+
 		GeographicProjection projection = TerramapRemote.getRemote().getProjection();
-		
+
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
 		this.zoomText.setText("" + Math.round(this.map.getZoom()));
@@ -234,14 +235,18 @@ public class TerramapScreen extends Screen {
 			String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
 			this.mouseGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_geo", displayLat, displayLon));
 			if(projection != null) {
-				double[] pos = projection.fromGeo(mouseLon, mouseLat);
-				formatX = "" + Math.round(pos[0]);
-				formatZ = "" + Math.round(pos[1]);
+				try {
+					double[] pos = projection.fromGeo(mouseLon, mouseLat);
+					formatX = "" + Math.round(pos[0]);
+					formatZ = "" + Math.round(pos[1]);
+				} catch(OutOfProjectionBoundsException e) {}
 				this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
 				try {
-					double[] dist = projection.tissot(mouseLon, mouseLat, 0.0000001f);
-					formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
-					formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
+					try {
+						double[] dist = projection.tissot(mouseLon, mouseLat, 0.0000001f);
+						formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
+						formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
+					} catch(OutOfProjectionBoundsException e) {}
 					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
 				} catch(NoSuchMethodError e) {
 					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.outdatedterra121"));
@@ -252,7 +257,7 @@ public class TerramapScreen extends Screen {
 				this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", "-", "-"));
 			}
 		}
-		
+
 		if(this.map.isTracking()) {
 			Marker marker = this.map.getTracking();
 			double markerLon = marker.getLongitude();
@@ -279,7 +284,7 @@ public class TerramapScreen extends Screen {
 		} else {
 			this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.noplayer"));
 		}
-		
+
 		if(this.debugMode) {
 			String dbText = "";
 			TerramapRemote srv = TerramapRemote.getRemote();
@@ -302,7 +307,7 @@ public class TerramapScreen extends Screen {
 			this.debugText.setText(dbText);
 		}
 	}
-	
+
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, @Nullable Screen parent) {
 		this.debugText.setAnchorY(this.getHeight() - this.debugText.getHeight());
@@ -326,7 +331,7 @@ public class TerramapScreen extends Screen {
 		this.panelButton = newButton;
 		this.infoPanel.addWidget(this.panelButton);
 	}
-	
+
 	@Override
 	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
 		if(this.getFocusedWidget() == null || !this.getFocusedWidget().equals(this.searchBox)) {
@@ -343,7 +348,7 @@ public class TerramapScreen extends Screen {
 			super.onKeyTyped(typedChar, keyCode, parent);
 		}
 	}
-	
+
 	public TerramapScreenSavedState saveToState() {
 		String tracking = null;
 		Marker trackingMarker = this.map.getTracking();
@@ -360,7 +365,7 @@ public class TerramapScreen extends Screen {
 				this.f1Mode,
 				this.map.getMarkersVisibility(), tracking);
 	}
-	
+
 	public void resumeFromSavedState(TerramapScreenSavedState state) {
 		this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
 		this.map.setZoom(state.zoomLevel);
@@ -460,14 +465,14 @@ public class TerramapScreen extends Screen {
 		}
 
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		TerramapRemote.getRemote().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
 		TerramapRemote.getRemote().saveSettings();
 		TerramapRemote.getRemote().registerForUpdates(false);
 	}
-	
+
 	public void setF1Mode(boolean yesNo) {
 		this.f1Mode = yesNo;
 		this.infoPanel.setVisibility(!yesNo);
@@ -480,7 +485,7 @@ public class TerramapScreen extends Screen {
 		if(this.zoomText != null) this.zoomText.setVisibility(!yesNo);
 		this.map.setScaleVisibility(!yesNo);
 	}
-	
+
 	public void setDebugMode(boolean yesNo) {
 		this.debugMode = yesNo;
 		if(this.debugText != null) this.debugText.setVisibility(yesNo);

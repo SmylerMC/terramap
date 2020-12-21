@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
@@ -42,7 +43,12 @@ public class SP2CPlayerSyncPacket implements IMessage {
 	public void toBytes(ByteBuf buf) {
 		buf.writeInt(this.localPlayers.length);
 		for(TerramapPlayer player: this.localPlayers) {
-			double[] coordinates = player.getGeoCoordinates();
+			double[] coordinates;
+			try {
+				coordinates = player.getGeoCoordinates();
+			} catch(OutOfProjectionBoundsException e) {
+				coordinates = new double[] {Double.NaN, Double.NaN};
+			}
 			buf.writeLong(player.getUUID().getLeastSignificantBits());
 			buf.writeLong(player.getUUID().getMostSignificantBits());
 			String playerDisplayName = ITextComponent.Serializer.componentToJson(player.getDisplayName());

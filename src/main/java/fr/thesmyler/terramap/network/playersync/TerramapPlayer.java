@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
 
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
@@ -14,7 +15,7 @@ public abstract class TerramapPlayer {
 
 	public abstract ITextComponent getDisplayName();
 
-	public abstract double[] getGeoCoordinates();
+	public abstract double[] getGeoCoordinates() throws OutOfProjectionBoundsException;
 	
 	public abstract float getAzimut();
 	

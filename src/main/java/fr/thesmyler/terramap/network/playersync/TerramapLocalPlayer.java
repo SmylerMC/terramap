@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.TerramapUtils;
 import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -33,7 +34,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 	}
 
 	@Override
-	public double[] getGeoCoordinates() {
+	public double[] getGeoCoordinates() throws OutOfProjectionBoundsException {
 		GeographicProjection proj;
 		if(this.player.world.isRemote) {
 			proj = TerramapRemote.getRemote().getProjection();
