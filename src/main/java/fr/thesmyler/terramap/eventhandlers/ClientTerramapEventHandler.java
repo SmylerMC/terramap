@@ -11,6 +11,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.input.KeyBindings;
 import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -42,11 +43,13 @@ public class ClientTerramapEventHandler {
 				event.getLeft().add("");
 				double x = Minecraft.getMinecraft().player.posX;
 				double z = Minecraft.getMinecraft().player.posZ;
-				double[] coords = proj.toGeo(x, z);
-				if(Double.isFinite(coords[0]) && Double.isFinite(coords[1])) {
+				try {
+					double[] coords = proj.toGeo(x, z);
 					String lon = GeoServices.formatGeoCoordForDisplay(coords[0]);
 					String lat = GeoServices.formatGeoCoordForDisplay(coords[1]);
 					event.getLeft().add("Position: " + lat + "° " + lon + "°");
+				} catch(OutOfProjectionBoundsException e) {
+					event.getLeft().add("Out of projection bounds");
 				}
 			}
 			event.getLeft().add("Terramap world UUID: " + TerramapRemote.getRemote().getWorldUUID());

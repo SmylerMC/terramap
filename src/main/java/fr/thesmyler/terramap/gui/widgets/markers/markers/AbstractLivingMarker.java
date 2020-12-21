@@ -7,6 +7,7 @@ import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -65,11 +66,13 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 		double z = this.entity.posZ;
 		double[] lola = {Double.NaN, Double.NaN};
 		GeographicProjection proj = TerramapRemote.getRemote().getProjection();
-		if(proj != null) {
+		try {
 			lola = proj.toGeo(x, z);
+			this.actualLongitude = lola[0];
+			this.actualLatitude = lola[1];
+		} catch(OutOfProjectionBoundsException | NullPointerException e) {
+			this.actualLatitude = this.actualLongitude = Double.NaN;
 		}
-		this.actualLongitude = lola[0];
-		this.actualLatitude = lola[1];
 		super.onUpdate(parent);
 		if(this.entity.isDead) parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
 	}

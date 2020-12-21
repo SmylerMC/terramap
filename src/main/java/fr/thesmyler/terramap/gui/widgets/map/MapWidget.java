@@ -33,6 +33,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -68,9 +69,9 @@ public class MapWidget extends Screen {
 	private MenuEntry setProjectionMenuEntry;
 	private TextComponentWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
-	
+
 	protected double tileScaling;
-	
+
 	private final MapContext context;
 
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
@@ -89,7 +90,7 @@ public class MapWidget extends Screen {
 		};
 		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
 		super.addWidget(this.copyright);
-		
+
 		this.rightClickMenu = new MenuWidget(1500, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
 			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
@@ -102,34 +103,54 @@ public class MapWidget extends Screen {
 			GuiScreen.setClipboardString("" + this.mouseLatitude + " " + this.mouseLongitude);
 		});
 		this.copyBlockMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
-			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
-			String dispX = "" + Math.round(coords[0]);
-			String dispY = "" + Math.round(coords[1]);
-			GuiScreen.setClipboardString(dispX + " " + dispY);
+			String strToCopy = "Outside projection";
+			try {
+				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				String dispX = "" + Math.round(coords[0]);
+				String dispY = "" + Math.round(coords[1]);
+				strToCopy = dispX + " " + dispY;
+			} catch(OutOfProjectionBoundsException e) {}
+			GuiScreen.setClipboardString(strToCopy);
 		});	
 		this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
-			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
-			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
-			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
-			GuiScreen.setClipboardString(dispX + " " + dispY);
+			String strToCopy = "Outside projection";
+			try {
+				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
+				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
+				strToCopy = dispX + " " + dispY;
+			} catch(OutOfProjectionBoundsException e) {}
+			GuiScreen.setClipboardString(strToCopy);
 		});
 		this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
-			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
-			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
-			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
-			GuiScreen.setClipboardString("r." + dispX + "." + dispY + ".mca");
+			String strToCopy = "Outside projection";
+			try {
+				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
+				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
+				strToCopy = "r." + dispX + "." + dispY + ".mca";
+			} catch(OutOfProjectionBoundsException e) {}
+			GuiScreen.setClipboardString(strToCopy);
 		});
 		this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
-			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
-			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
-			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
-			GuiScreen.setClipboardString(dispX + ".0." + dispY + ".3dr");
+			String strToCopy = "Outside projection";
+			try {
+				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
+				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
+				strToCopy = dispX + ".0." + dispY + ".3dr";
+			} catch(OutOfProjectionBoundsException e) {}
+			GuiScreen.setClipboardString(strToCopy);
 		});
 		this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
-			double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
-			String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
-			String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
-			GuiScreen.setClipboardString(dispX + "." + dispY + ".2dr");
+			String strToCopy = "Outside projection";
+			try {
+				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
+				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
+				strToCopy = dispX + "." + dispY + ".2dr";
+			} catch(OutOfProjectionBoundsException e) {}
+			GuiScreen.setClipboardString(strToCopy);
 		});
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy"), copySubMenu);
 		this.rightClickMenu.addSeparator();
@@ -152,7 +173,7 @@ public class MapWidget extends Screen {
 			} else {
 				GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
 			}
-			
+
 		});
 		openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_web"), () -> {
 			GeoServices.opentInGoogleEarthWeb(this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
@@ -174,24 +195,24 @@ public class MapWidget extends Screen {
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
 			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
 		});
-		
+
 		this.controller = new ControllerMapLayer(this.tileScaling);
 		super.addWidget(this.controller);
-		
+
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
-		
+
 		this.scale.setX(15).setY(this.height - 30);
 		this.addWidget(scale);
 		this.updateRightClickMenuEntries();
 		this.updateMouseGeoPos(this.width/2, this.height/2);
-		
+
 		for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
 			if(controller instanceof RightClickMarkerController) {
 				this.rcmMarkerController = (RightClickMarkerController) controller;
 			}
 			this.markerControllers.put(controller.getId(), controller);
 		}
-		
+
 	}
 
 	public MapWidget(int z, TiledMap map, MapContext context, double tileScaling) {
@@ -225,7 +246,7 @@ public class MapWidget extends Screen {
 		this.zoom(0);
 		return this;
 	}
-	
+
 	public void setBackground(TiledMap map) {
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 	}
@@ -307,7 +328,7 @@ public class MapWidget extends Screen {
 				}
 			}
 		}
-		
+
 		/* The map markers have a higher priority than the background since they are on top,
 		 * which means that they are updated before it moves,
 		 * so they lag behind when the map moves fast if they are not updated again
@@ -320,7 +341,7 @@ public class MapWidget extends Screen {
 		if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 	}
-	
+
 	@Override
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
@@ -466,18 +487,23 @@ public class MapWidget extends Screen {
 		this.copy2drMenuEntry.enabled = hasProjection;
 		this.setProjectionMenuEntry.enabled = !TerramapRemote.getRemote().isInstalledOnServer();
 	}
-	
+
 	private void teleportPlayerTo(double longitude, double latitude) {
 		String cmd = TerramapRemote.getRemote().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
 		if(TerramapRemote.getRemote().getProjection() != null) {
-			double[] xz = TerramapRemote.getRemote().getProjection().fromGeo(longitude, latitude);
-			cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
-			this.sendChatMessage(cmd, false);
+			try {
+				double[] xz = TerramapRemote.getRemote().getProjection().fromGeo(longitude, latitude);
+				cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
+				this.sendChatMessage(cmd, false);
+			} catch (OutOfProjectionBoundsException e) {
+				//TODO Do not fail silently: shwo a message on the screen
+				TerramapMod.logger.error("Tried to teleport outside of the projection");
+			}
 		} else {
 			TerramapMod.logger.error("Tried to teleport from the map but the projection was null!");
 		}
 	}
-	
+
 	public MarkerController<?>[] getMarkerControllers() {
 		return this.markerControllers.values().toArray(new MarkerController<?>[0]);
 	}
@@ -593,11 +619,11 @@ public class MapWidget extends Screen {
 	public MapWidget disableRightClickMenu() {
 		return this.setRightClickMenuEnabled(false);
 	}
-	
+
 	public boolean getCopyrightVisibility() {
 		return this.showCopyright;
 	}
-	
+
 	public MapWidget setCopyrightVisibility(boolean yesNo) {
 		this.showCopyright = yesNo;
 		return this;
@@ -614,7 +640,7 @@ public class MapWidget extends Screen {
 	public double getScreenY(double latitude) {
 		return this.background.getScreenY(latitude);
 	}
-	
+
 	public double getScreenLongitude(double xOnScreen) {
 		return this.background.getScreenLongitude(xOnScreen);
 	}
@@ -622,67 +648,67 @@ public class MapWidget extends Screen {
 	public double getScreenLatitude(double yOnScreen) {
 		return this.background.getScreenLatitude(yOnScreen);
 	}
-	
+
 	public int getScaleX() {
 		return this.scale.getX();
 	}
-	
+
 	public MapWidget setScaleX(int x) {
 		this.scale.setX(x);
 		return this;
 	}
-	
+
 	public int getScaleY() {
 		return this.scale.getY();
 	}
-	
+
 	public MapWidget setScaleY(int y) {
 		this.scale.setY(y);
 		return this;
 	}
-	
+
 	public int getScaleWidth() {
 		return this.scale.getWidth();
 	}
-	
+
 	public MapWidget setScaleWidth(int width) {
 		this.scale.setWidth(width);
 		return this;
 	}
-	
+
 	public boolean getScaleVisibility() {
 		return this.scale.isVisible(this);
 	}
-	
+
 	public MapWidget setScaleVisibility(boolean yesNo) {
 		this.scale.setVisibility(yesNo);
 		return this;
 	}
-	
+
 	public MapContext getContext() {
 		return this.context;
 	}
-	
+
 	public boolean isTracking() {
 		return this.trackingMarker != null;
 	}
-	
+
 	public Marker getTracking() {
 		return this.trackingMarker;
 	}
-	
+
 	public void track(Marker marker) {
 		this.trackingMarker = marker;
 	}
-	
+
 	public MainPlayerMarker getMainPlayerMarker() {
 		return this.mainPlayerMarker;
 	}
-	
+
 	public TiledMap getBackgroundStyle() {
 		return this.background.getMap();
 	}
-	
+
 	public Map<String, Boolean> getMarkersVisibility() {
 		Map<String, Boolean> outMap = new HashMap<String, Boolean>();
 		for(MarkerController<?> controller: this.markerControllers.values()) {
@@ -690,7 +716,7 @@ public class MapWidget extends Screen {
 		}
 		return outMap;
 	}
-	
+
 	public MapWidget setMarkersVisibility(Map<String, Boolean> m) {
 		for(String key: m.keySet()) {
 			if(this.markerControllers.containsKey(key)) {
@@ -701,7 +727,7 @@ public class MapWidget extends Screen {
 		}
 		return this;
 	}
-	
+
 	public void restoreTracking(String markerId) {
 		this.restoreTrackingId = markerId;
 	}
@@ -713,15 +739,15 @@ public class MapWidget extends Screen {
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
 	}
-	
+
 	public double getTileScaling() {
 		return this.tileScaling;
 	}
-	
+
 	public void setTileScaling(double tileScaling) {
 		this.tileScaling = tileScaling;
 	}
-	
+
 	private boolean isShortcutEnabled() {
 		return TerramapRemote.getRemote().getProjection() != null && this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
 	}
@@ -730,7 +756,7 @@ public class MapWidget extends Screen {
 	public boolean isVisible(Screen parent) {
 		return this.visible;
 	}
-	
+
 	public MapWidget setVisibility(boolean yesNo) {
 		this.visible = yesNo;
 		return this;

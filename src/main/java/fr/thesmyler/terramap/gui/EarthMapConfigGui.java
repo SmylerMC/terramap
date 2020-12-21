@@ -21,6 +21,7 @@ import io.github.terra121.control.DynamicOptions;
 import io.github.terra121.control.DynamicOptions.Element;
 import io.github.terra121.generator.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -112,6 +113,7 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 				//not out of bounds
 				if(bounds[0]<=X&&X<=bounds[2]&&bounds[1]<=Y&&Y<=bounds[3]) {
 
+					try {
 					double proj[] = projection.toGeo(X, Y); //projection coords to lon lat
 
 					//lat lon to reference image coords
@@ -122,6 +124,7 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 					if(lon>=0 && lat>=0 && lat < base.getHeight() && lon < base.getWidth()) {
 						img.setRGB(x, y, base.getRGB(lon, base.getHeight()-lat-1));
 					}
+					} catch(OutOfProjectionBoundsException e) {}
 				}
 			}
 		}
