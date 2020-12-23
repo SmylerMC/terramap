@@ -24,26 +24,28 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
+//TODO Change error tile color
 public class WebTile {
 
-	private long x;
-	private long y;
-	private int zoom;
-	private int size;
+	private final int x;
+	private final int y;
+	private final int zoom;
+	private final int size;
+	private final String url;
 	private ResourceLocation texture = null;
-	private String urlPattern;
 	private CompletableFuture<ByteBuf> textureTask;
 
 	public static ResourceLocation errorTileTexture = null;
 
-
-	public WebTile(String urlPattern, int zoom, long x, long y) {
-		this.urlPattern = urlPattern;
+	public WebTile(String urlPattern, int zoom, int x, int y) {
 		this.x = x;
 		this.y = y;
 		this.zoom = zoom;
 		this.size = 256;
-
+		this.url = urlPattern
+				.replace("{x}", ""+this.getX())
+				.replace("{y}", ""+this.getY())
+				.replace("{z}", ""+this.getZoom());
 		if(!WebMercatorUtils.isTileInWorld(zoom, x, y))
 			throw new InvalidTileCoordinatesException(this);
 
@@ -51,10 +53,7 @@ public class WebTile {
 
 
 	public String getURL() {
-		return this.urlPattern
-				.replace("{x}", ""+this.getX())
-				.replace("{y}", ""+this.getY())
-				.replace("{z}", ""+this.getZoom());
+		return this.url;
 	}
 	
 	public boolean isTextureAvailable() {
@@ -81,7 +80,7 @@ public class WebTile {
 	
 	public void cancelTextureLoading() {
 		if(this.textureTask != null) {
-			this.textureTask.cancel(true); //FIXME This is not working
+			this.textureTask.cancel(true);
 			this.textureTask = null;
 		}
 	}
@@ -99,11 +98,11 @@ public class WebTile {
 
 	///// Various uninteresting getters and setters from here /////
 
-	public long getX() {
+	public int getX() {
 		return x;
 	}
 
-	public long getY() {
+	public int getY() {
 		return y;
 	}
 

@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.maps;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -7,29 +8,32 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.util.text.ITextComponent;
 
-
+//TODO Never unload bellow a certain zoom level
+//TODO Set rate limit per host
 public class TiledMap implements Comparable<TiledMap> {
 
-	protected String urlPattern;
-	protected LinkedList<WebTile> tiles;
-	protected int maxLoaded;
-	protected int maxZoom = 19;
-	protected int minZoom = 0;
-	protected int displayPriority = 0;
-	protected boolean allowOnMinimap = true;
+	private String urlPattern;
+	private LinkedList<WebTile> tileList; // Uses for ordered access when unloading
+	private Map<TileCoordinates, WebTile> tileMap; // Used for unordered access
+	private int maxLoaded;
+	private int maxZoom = 19;
+	private int minZoom = 0;
+	private int displayPriority = 0;
+	private boolean allowOnMinimap = true;
 
-	protected String id;
-	protected TiledMapProvider provider;
-	protected Map<String, String> names; // A map of language key => name
-	protected Map<String, String> copyrightJsons;
-	protected long version;
-	protected String comment;
+	private String id;
+	private TiledMapProvider provider;
+	private Map<String, String> names; // A map of language key => name
+	private Map<String, String> copyrightJsons;
+	private long version;
+	private String comment;
 	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
 
 	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, Map<String, String> copyright, int displayPriority, boolean allowOnMinimap, TiledMapProvider provider, long version, String comment) {
 		this.urlPattern = urlPattern;
-		this.tiles = new LinkedList<WebTile>();
+		this.tileList = new LinkedList<>();
+		this.tileMap = new HashMap<>();
 		this.maxLoaded = maxLoaded;
 		this.maxZoom = maxZoom;
 		this.minZoom = minZoom;
@@ -44,30 +48,31 @@ public class TiledMap implements Comparable<TiledMap> {
 	}
 
 	protected void loadTile(WebTile tile) {
-		this.tiles.add(0, tile);
+		this.tileList.add(0, tile);
+		this.tileMap.put(new TileCoordinates(tile), tile);
 		this.unloadToMaxLoad();
 	}
 
-	public WebTile getTile(int zoom, long x, long y) {
-		for(WebTile tile: this.tiles)
-			if(tile.getX() == x && tile.getY() == y && tile.getZoom() == zoom) {
-				this.needTile(tile);
-				return tile;
-			}
-		WebTile tile = new WebTile(this.urlPattern, zoom, x, y);
+	public WebTile getTile(int zoom, int x, int y) {
+		WebTile tile = this.tileMap.get(new TileCoordinates(x, y, zoom));
+		if(tile != null) {
+			this.needTile(tile);
+			return tile;
+		}
+		tile = new WebTile(this.urlPattern, zoom, x, y);
 		this.loadTile(tile);
 		return tile;
 	}
 
-
 	public WebTile getTileAt(int zoom, long x, long y) {
-		long tileX = WebMercatorUtils.getTileXAt(x);
-		long tileY = WebMercatorUtils.getTileYAt(y);
+		int tileX = WebMercatorUtils.getTileXAt(x);
+		int tileY = WebMercatorUtils.getTileYAt(y);
 		return this.getTile(zoom, tileX, tileY);
 	}
 
 	public void unloadTile(WebTile tile) {
 		tile.unloadTexture();
+		//TODO Remove tile from list
 	}
 
 
@@ -83,14 +88,15 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * @return The number of tiles currently loaded
 	 */
 	public int getLoadedCount() {
-		return this.tiles.size();
+		return this.tileList.size();
 	}
 
 	public void needTile(WebTile tile) {
-		if(this.tiles.contains(tile)) {
-			this.tiles.remove(tile);
+		if(this.tileList.contains(tile)) {
+			this.tileList.remove(tile);
 		}
-		this.tiles.add(0, tile);
+		this.tileList.add(0, tile);
+		this.tileMap.put(new TileCoordinates(tile), tile);
 	}
 
 	public int getMaxLoad() {
@@ -105,8 +111,10 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * Unloads tiles until we are at the max number of loaded tiles
 	 */
 	public void unloadToMaxLoad() {
-		while(this.tiles.size() > this.maxLoaded) {
-			this.unloadTile(this.tiles.removeLast());
+		while(this.tileList.size() > this.maxLoaded) {
+			WebTile toUnload = this.tileList.removeLast();
+			this.tileMap.remove(new TileCoordinates(toUnload));
+			this.unloadTile(toUnload);
 		}
 	}
 
@@ -191,6 +199,46 @@ public class TiledMap implements Comparable<TiledMap> {
 	
 	public boolean isAllowedOnMinimap() {
 		return this.allowOnMinimap;
+	}
+	
+	private static class TileCoordinates {
+		 int x, y, z;
+		 TileCoordinates(int x, int y, int z) {
+			 this.x = x;
+			 this.y = y;
+			 this.z = z;
+		 }
+		 TileCoordinates(WebTile tile) {
+			 this(tile.getX(), tile.getY(), tile.getZoom());
+		 }
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + x;
+			result = prime * result + y;
+			result = prime * result + z;
+			return result;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			TileCoordinates other = (TileCoordinates) obj;
+			if (x != other.x)
+				return false;
+			if (y != other.y)
+				return false;
+			if (z != other.z)
+				return false;
+			return true;
+		}
+		 
+		 
 	}
 
 }
