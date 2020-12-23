@@ -448,8 +448,6 @@ public class MapWidget extends Screen {
 			//			this.mapVelocityY *= factor;
 			//			this.updateMouseGeoPos(mouseX, mouseY);
 
-			TerramapMod.cacheManager.clearQueue(); // We are displaying new tiles, we don't need what we needed earlier
-
 		}
 
 		public void moveMap(int dX, int dY) {

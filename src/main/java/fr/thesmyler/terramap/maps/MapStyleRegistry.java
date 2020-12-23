@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class MapStyleRegistry {
 					json += line;
 					line = txtReader.readLine();
 				}
-				availableMaps = loadFromJson(json, TiledMapProvider.BUILT_IN);
+				availableMaps.putAll(loadFromJson(json, TiledMapProvider.BUILT_IN));
 			}
 		} catch(Exception e) {
 			TerramapMod.logger.fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
@@ -64,18 +65,24 @@ public class MapStyleRegistry {
 	}
 	
 	public static void loadFromOnline(String hostname) {
-		File file = new File(TerramapMod.cacheManager.getCachingPath() + "/mapstyles.json");
 		try {
+			// We can't rely on Terra++ for that because the cache would cause trouble
 			URL url = resolveUpdateURL(hostname);
-			TerramapMod.cacheManager.downloadUrlToFile(url, file);
+			URLConnection connection = url.openConnection();
+			connection.setAllowUserInteraction(false);
+			connection.setRequestProperty("User-Agent", TerramapMod.getUserAgent());
+			connection.connect();
+			try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+				String json = "";
+				String line = txtReader.readLine();
+				while(line != null) {
+					json += line;
+					line = txtReader.readLine();
+				}
+				availableMaps.putAll(loadFromJson(json, TiledMapProvider.ONLINE));
+			}
 		} catch (NamingException | IOException e) {
 			TerramapMod.logger.error("Failed to download updated map style file, let's hope the cache has a good version!");
-			TerramapMod.logger.catching(e);
-		}
-		try {
-			availableMaps.putAll(loadFromFile(file, TiledMapProvider.ONLINE));
-		} catch (IOException e) {
-			TerramapMod.logger.error("Failed to load updated map styles, will fallback to built-ins");
 			TerramapMod.logger.catching(e);
 		}
 	}
@@ -104,6 +111,13 @@ public class MapStyleRegistry {
 				TerramapMod.logger.catching(e);
 			}
 		}
+	}
+	
+	public static void reload() {
+		availableMaps = new HashMap<>();
+		loadBuiltIns();
+		loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
+		loadFromConfigFile();
 	}
 	
 	private static TiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {

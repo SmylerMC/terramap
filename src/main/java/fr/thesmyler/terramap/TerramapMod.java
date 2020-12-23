@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
-import fr.thesmyler.terramap.caching.CacheManager;
 import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
@@ -35,7 +34,6 @@ public class TerramapMod {
 	private static boolean isTerraDependencyValid;
 
     public static Logger logger;
-    public static CacheManager cacheManager;
     
     /* Proxy things */
     private static final String CLIENT_PROXY_CLASS = "fr.thesmyler.terramap.proxy.TerramapClientProxy";

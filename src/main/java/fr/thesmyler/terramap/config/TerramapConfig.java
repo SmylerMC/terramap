@@ -76,6 +76,7 @@ public class TerramapConfig {
 	@Config.LangKey("terramap.config.cache_dir")
 	@Config.Comment("Where to cache Terramap's files")
 	@Config.RequiresMcRestart
+	@Deprecated
 	public static String cachingDir = "Terramap_cache";
 
 	@Config.Name("tile_scaling")

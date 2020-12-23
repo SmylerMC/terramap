@@ -86,9 +86,11 @@ public class TiledMap implements Comparable<TiledMap> {
 
 	public void unloadTile(WebTile tile) {
 		tile.unloadTexture();
-		tile = this.tileMap.get(new TileCoordinates(tile));
-		tile.unloadTexture();
-		this.tileList.remove(tile);
+		tile = this.tileMap.remove(new TileCoordinates(tile));
+		if(tile != null) {
+			tile.unloadTexture();
+			this.tileList.remove(tile);
+		}
 	}
 
 
@@ -167,7 +169,7 @@ public class TiledMap implements Comparable<TiledMap> {
 			}
 		}
 	}
-	
+
 	public Map<String, String> getUnlocalizedCopyrights() {
 		return this.copyrightJsons;
 	}
@@ -180,31 +182,31 @@ public class TiledMap implements Comparable<TiledMap> {
 			return this.id;
 		}
 	}
-	
+
 	public Map<String, String> getUnlocalizedNames() {
 		return this.names;
 	}
-	
+
 	public String getUrlPattern() {
 		return this.urlPattern;
 	}
-	
+
 	public String getComment() {
 		return this.comment;
 	}
-	
+
 	public TiledMapProvider getProvider() {
 		return this.provider;
 	}
-	
+
 	public long getProviderVersion() {
 		return this.version;
 	}
-	
+
 	public int getDisplayPriority() {
 		return this.displayPriority;
 	}
-	
+
 	public int getMaxConcurrentRequests() {
 		return this.maxConcurrentRequests;
 	}
@@ -216,21 +218,21 @@ public class TiledMap implements Comparable<TiledMap> {
 		else if(this.displayPriority == o.displayPriority) return 0;
 		else return -1;
 	}
-	
+
 	public boolean isAllowedOnMinimap() {
 		return this.allowOnMinimap;
 	}
-	
+
 	private static class TileCoordinates {
-		 int x, y, z;
-		 TileCoordinates(int x, int y, int z) {
-			 this.x = x;
-			 this.y = y;
-			 this.z = z;
-		 }
-		 TileCoordinates(WebTile tile) {
-			 this(tile.getX(), tile.getY(), tile.getZoom());
-		 }
+		int x, y, z;
+		TileCoordinates(int x, int y, int z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+		TileCoordinates(WebTile tile) {
+			this(tile.getX(), tile.getY(), tile.getZoom());
+		}
 		@Override
 		public int hashCode() {
 			final int prime = 31;
@@ -257,8 +259,8 @@ public class TiledMap implements Comparable<TiledMap> {
 				return false;
 			return true;
 		}
-		 
-		 
+
+
 	}
 
 }
