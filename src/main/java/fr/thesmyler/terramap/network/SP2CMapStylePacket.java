@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+//FIXME Adapt to outdated remotes
 public class SP2CMapStylePacket implements IMessage {
 	
 	private String id;
@@ -26,6 +27,7 @@ public class SP2CMapStylePacket implements IMessage {
 	private int displayPriority;
 	private boolean isAllowedOnMinimap;
 	private String comment;
+	private int maxConcurrentConnection;
 		
 	public SP2CMapStylePacket(TiledMap map) {
 		this.id = map.getId();
@@ -38,6 +40,7 @@ public class SP2CMapStylePacket implements IMessage {
 		this.displayPriority = map.getDisplayPriority();
 		this.isAllowedOnMinimap = map.isAllowedOnMinimap();
 		this.comment = map.getComment();
+		this.maxConcurrentConnection = map.getMaxConcurrentRequests();
 	}
 	
 	public SP2CMapStylePacket() {}
@@ -68,6 +71,7 @@ public class SP2CMapStylePacket implements IMessage {
 		this.displayPriority = buf.readInt();
 		this.isAllowedOnMinimap = buf.readBoolean();
 		this.comment = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+		this.maxConcurrentConnection = buf.readInt();
 	}
 
 	@Override
@@ -90,6 +94,7 @@ public class SP2CMapStylePacket implements IMessage {
 		buf.writeInt(this.displayPriority);
 		buf.writeBoolean(this.isAllowedOnMinimap);
 		TerramapNetworkManager.encodeStringToByteBuf(this.comment, buf);
+		buf.writeInt(this.maxConcurrentConnection);
 	}
 	
 	public TiledMap getTiledMap(TiledMapProvider provider, int maxLoaded) {
@@ -105,7 +110,8 @@ public class SP2CMapStylePacket implements IMessage {
 				this.isAllowedOnMinimap,
 				provider,
 				this.providerVersion,
-				this.comment
+				this.comment,
+				this.maxConcurrentConnection
 			);
 	}
 	

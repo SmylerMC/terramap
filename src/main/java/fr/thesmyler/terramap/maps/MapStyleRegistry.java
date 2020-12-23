@@ -120,7 +120,8 @@ public class MapStyleRegistry {
 				saved.allow_on_minimap,
 				provider,
 				version,
-				comment
+				comment,
+				saved.max_concurrent_requests
 			);
 	}
 	
@@ -166,6 +167,7 @@ public class MapStyleRegistry {
 		int max_zoom;
 		int display_priority;
 		boolean allow_on_minimap;
+		int max_concurrent_requests = 2;
 
 	}
 

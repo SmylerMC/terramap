@@ -14,6 +14,7 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.WebTile;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -23,6 +24,7 @@ import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import io.github.terra121.EarthWorldType;
 import io.github.terra121.generator.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.util.http.Http;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -417,6 +419,17 @@ public class TerramapRemote {
 		WorldClient world = Minecraft.getMinecraft().world;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		return world != null && player != null && world.getWorldType() instanceof EarthWorldType && player.dimension == 0;
+	}
+	
+	public void enforceConnectionSettings() {
+		for(TiledMap map: this.getMapStyles().values()) {
+			WebTile tile = map.getTile(0, 0, 0);
+			try {
+				Http.setMaximumConcurrentRequestsTo(tile.getURL(), map.getMaxConcurrentRequests());
+			} catch(IllegalArgumentException e) {
+				TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + tile.getURL());
+			}
+		}
 	}
 
 	public static TerramapRemote getRemote() {

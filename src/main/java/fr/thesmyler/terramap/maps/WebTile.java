@@ -24,13 +24,11 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
-//TODO Change error tile color
 public class WebTile {
 
 	private final int x;
 	private final int y;
 	private final int zoom;
-	private final int size;
 	private final String url;
 	private ResourceLocation texture = null;
 	private CompletableFuture<ByteBuf> textureTask;
@@ -41,7 +39,6 @@ public class WebTile {
 		this.x = x;
 		this.y = y;
 		this.zoom = zoom;
-		this.size = 256;
 		this.url = urlPattern
 				.replace("{x}", ""+this.getX())
 				.replace("{y}", ""+this.getY())
@@ -96,6 +93,29 @@ public class WebTile {
 	}
 
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + x;
+		result = prime * result + y;
+		result = prime * result + zoom;
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		WebTile other = (WebTile) obj;
+		if (x != other.x) return false;
+		if (y != other.y) return false;
+		if (zoom != other.zoom) return false;
+		return true;
+	}
+
 	///// Various uninteresting getters and setters from here /////
 
 	public int getX() {
@@ -110,34 +130,17 @@ public class WebTile {
 		return zoom;
 	}
 
-	public long getXinPixel() {
-		return this.x * this.size;
-	}
-
-	public long getYinPixel() {
-		return this.y * this.size;
-	}
-
-	public int getSideSize() {
-		return this.size;
-	}
-
-
 	public class InvalidTileCoordinatesException extends RuntimeException{
 
-		/**
-		 * @param string
-		 */
 		public InvalidTileCoordinatesException(WebTile t) {
 			super("Invalid tile coordinates: " + t.zoom + "/" + t.x + "/" + t.y);
 		}
-
 
 	}
 
 	public static void registerErrorTexture() {
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-		int color[] = {175, 175, 175};
+		int color[] = {170, 211, 223};
 		WebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
 
 	}

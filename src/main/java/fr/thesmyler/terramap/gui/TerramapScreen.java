@@ -207,6 +207,8 @@ public class TerramapScreen extends Screen {
 			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
 			this.addWidget(warningWidget);
 		}
+		
+		TerramapRemote.getRemote().enforceConnectionSettings();
 	}
 
 	@Override

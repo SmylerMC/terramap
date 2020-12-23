@@ -9,28 +9,41 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.util.text.ITextComponent;
 
 //TODO Never unload bellow a certain zoom level
-//TODO Set rate limit per host
 public class TiledMap implements Comparable<TiledMap> {
 
-	private String urlPattern;
-	private LinkedList<WebTile> tileList; // Uses for ordered access when unloading
-	private Map<TileCoordinates, WebTile> tileMap; // Used for unordered access
-	private int maxLoaded;
-	private int maxZoom = 19;
-	private int minZoom = 0;
-	private int displayPriority = 0;
-	private boolean allowOnMinimap = true;
+	private final String urlPattern;
+	private final LinkedList<WebTile> tileList; // Uses for ordered access when unloading
+	private final Map<TileCoordinates, WebTile> tileMap; // Used for unordered access
+	private final int maxZoom;
+	private final int minZoom;
+	private final int displayPriority;
+	private final boolean allowOnMinimap;
 
-	private String id;
-	private TiledMapProvider provider;
-	private Map<String, String> names; // A map of language key => name
-	private Map<String, String> copyrightJsons;
-	private long version;
-	private String comment;
+	private final String id;
+	private final TiledMapProvider provider;
+	private final Map<String, String> names; // A map of language key => name
+	private final Map<String, String> copyrightJsons;
+	private final long version;
+	private final String comment;
+	private final int maxConcurrentRequests; // How many concurrent http connections are allowed by this map provider. This should be two by default, as that's what OSM requires
+	private int maxLoaded;
 	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
 
-	public TiledMap(String urlPattern, int minZoom, int maxZoom, int maxLoaded, String id, Map<String, String> names, Map<String, String> copyright, int displayPriority, boolean allowOnMinimap, TiledMapProvider provider, long version, String comment) {
+	public TiledMap(
+			String urlPattern,
+			int minZoom,
+			int maxZoom,
+			int maxLoaded,
+			String id,
+			Map<String, String> names,
+			Map<String, String> copyright,
+			int displayPriority,
+			boolean allowOnMinimap,
+			TiledMapProvider provider,
+			long version,
+			String comment,
+			int maxConcurrentDownloads) {
 		this.urlPattern = urlPattern;
 		this.tileList = new LinkedList<>();
 		this.tileMap = new HashMap<>();
@@ -45,6 +58,7 @@ public class TiledMap implements Comparable<TiledMap> {
 		this.comment = comment;
 		this.allowOnMinimap = allowOnMinimap;
 		this.displayPriority = displayPriority;
+		this.maxConcurrentRequests = maxConcurrentDownloads;
 	}
 
 	protected void loadTile(WebTile tile) {
@@ -72,7 +86,9 @@ public class TiledMap implements Comparable<TiledMap> {
 
 	public void unloadTile(WebTile tile) {
 		tile.unloadTexture();
-		//TODO Remove tile from list
+		tile = this.tileMap.get(new TileCoordinates(tile));
+		tile.unloadTexture();
+		this.tileList.remove(tile);
 	}
 
 
@@ -187,6 +203,10 @@ public class TiledMap implements Comparable<TiledMap> {
 	
 	public int getDisplayPriority() {
 		return this.displayPriority;
+	}
+	
+	public int getMaxConcurrentRequests() {
+		return this.maxConcurrentRequests;
 	}
 
 	@Override
