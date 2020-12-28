@@ -421,7 +421,7 @@ public class TerramapRemote {
 		return world != null && player != null && world.getWorldType() instanceof EarthWorldType && player.dimension == 0;
 	}
 	
-	public void enforceConnectionSettings() {
+	public void setupMaps() {
 		for(TiledMap map: this.getMapStyles().values()) {
 			WebTile tile = map.getTile(0, 0, 0);
 			try {
@@ -429,6 +429,7 @@ public class TerramapRemote {
 			} catch(IllegalArgumentException e) {
 				TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + tile.getURL());
 			}
+			map.prepareLowTiles();
 		}
 	}
 

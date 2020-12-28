@@ -13,6 +13,13 @@ public class WebMercatorUtils {
 	public static final int TILE_DIMENSIONS = 256;
 	public static final double LIMIT_LATITUDE_RADIANS = 2 * Math.atan(Math.pow(Math.E, Math.PI)) - Math.PI/2;
 	public static final double LIMIT_LATITUDE = Math.toDegrees(LIMIT_LATITUDE_RADIANS);
+	
+	/* 
+	 * This is not really a limit of web Mercator,
+	 * but since tile positions are encoded as integers,
+	 * this is the max value that avoid overflows.
+	 */
+	public static final int MAX_ZOOM = 30;
 
 	
 	/**
@@ -153,7 +160,7 @@ public class WebMercatorUtils {
 	 * @param zoom
 	 * @return true if the tile at given x and z is on the real world scaled at zoom
 	 */
-	public static boolean isTileInWorld(int zoom, long tX, long tY){
+	public static boolean isTileInWorld(int zoom, int tX, int tY){
 		int mS = 1 << zoom;
 		return tX >= 0 && tX < mS && tY >= 0 && tY < mS;
 	}
@@ -177,7 +184,7 @@ public class WebMercatorUtils {
 	 * @param zoomlvl the zoom level of the map to consider
 	 * @return 2^zoomlvl
 	 */
-	public static long getDimensionsInTile(int zoomlvl) {
+	public static int getDimensionsInTile(int zoomlvl) {
 		return 1 << zoomlvl;
 	}
 	

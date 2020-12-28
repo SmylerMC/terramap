@@ -23,6 +23,7 @@ terramap.config.sync_custom_maps=Send custom maps to client
 terramap.config.join_without_mod_message=Join without Terramap
 terramap.config.join_with_outdated_mod_message=Join with out-dated Terramap
 terramap.config.unlock_zoom=Unlock zoom
+terramap.config.low_zoom_level=Keep loaded under zoom level
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Open map

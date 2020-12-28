@@ -208,7 +208,7 @@ public class TerramapScreen extends Screen {
 			this.addWidget(warningWidget);
 		}
 		
-		TerramapRemote.getRemote().enforceConnectionSettings();
+		TerramapRemote.getRemote().setupMaps();
 	}
 
 	@Override
@@ -302,7 +302,7 @@ public class TerramapScreen extends Screen {
 			}
 			dbText += "\nProjection: " + proj;
 			dbText += "\nOrientation: " + orientation;
-			dbText += "\nLoaded tiles: " + this.map.getBackgroundStyle().getLoadedCount() + "/" + this.map.getBackgroundStyle().getMaxLoad();
+			dbText += "\nLoaded tiles: " + this.map.getBackgroundStyle().getBaseLoad() + "/" + this.map.getBackgroundStyle().getLoadedCount() + "/" + this.map.getBackgroundStyle().getMaxLoad();
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
 			dbText += "\nMap url: " + this.map.getBackgroundStyle().getUrlPattern();

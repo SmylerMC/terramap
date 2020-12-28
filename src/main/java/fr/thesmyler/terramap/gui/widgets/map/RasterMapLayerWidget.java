@@ -7,9 +7,9 @@ import java.util.concurrent.ExecutionException;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.maps.TilePosition.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.WebTile;
-import fr.thesmyler.terramap.maps.WebTile.InvalidTileCoordinatesException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -66,7 +66,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				try {
 					tile = map.getTile((int)this.zoom, Math.floorMod(tileX, maxTileXY), tileY);
-				} catch(InvalidTileCoordinatesException e) { continue ;}
+				} catch(InvalidTilePositionException e) { continue ;}
 				
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				WebTile bestTile = tile;
@@ -171,9 +171,9 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 							dispY,
 							dispY + displayHeight - 1,
 							lineColor);
+					parent.getFont().drawString("" + tile.getZoom(), dispX + 2, dispY + 2, lineColor);
 				}
 				GlStateManager.color(1, 1, 1, 1);
-
 			}
 		}
 		

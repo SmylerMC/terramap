@@ -10,7 +10,6 @@ import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.util.http.Disk;
 import io.github.terra121.util.http.Http;
 import io.netty.buffer.ByteBuf;
@@ -26,26 +25,23 @@ import net.minecraft.util.ResourceLocation;
  */
 public class WebTile {
 
-	private final int x;
-	private final int y;
-	private final int zoom;
+	private final UnmutableTilePosition pos;
 	private final String url;
 	private ResourceLocation texture = null;
 	private CompletableFuture<ByteBuf> textureTask;
 
 	public static ResourceLocation errorTileTexture = null;
 
-	public WebTile(String urlPattern, int zoom, int x, int y) {
-		this.x = x;
-		this.y = y;
-		this.zoom = zoom;
+	public WebTile(String urlPattern, UnmutableTilePosition pos) {
+		this.pos = pos;
 		this.url = urlPattern
-				.replace("{x}", ""+this.getX())
-				.replace("{y}", ""+this.getY())
-				.replace("{z}", ""+this.getZoom());
-		if(!WebMercatorUtils.isTileInWorld(zoom, x, y))
-			throw new InvalidTileCoordinatesException(this);
-
+				.replace("{x}", "" + this.getX())
+				.replace("{y}", "" + this.getY())
+				.replace("{z}", "" + this.getZoom());
+	}
+	
+	public WebTile(String urlPattern, int zoom, int x, int y) {
+		this(urlPattern, new UnmutableTilePosition(zoom, x , y));
 	}
 
 
@@ -54,6 +50,12 @@ public class WebTile {
 	}
 	
 	public boolean isTextureAvailable() {
+		if(texture != null) return true; // Don't try loading the texture if it has already been loaded
+		try {
+			this.tryLoadingTexture();
+		} catch (InterruptedException | ExecutionException | IOException e) {
+			return false;
+		}
 		return this.texture != null;
 	}
 
@@ -61,18 +63,22 @@ public class WebTile {
 		if(this.texture == null) {
 			if(this.textureTask == null) {
 				this.textureTask = Http.get(this.getURL());
-			} else if(this.textureTask.isDone() && !this.textureTask.isCompletedExceptionally()){
-				Minecraft mc = Minecraft.getMinecraft();
-				TextureManager textureManager = mc.getTextureManager();
-				ByteBuf buf = this.textureTask.get();
-				try (ByteBufInputStream is = new ByteBufInputStream(buf)) {
-					BufferedImage image = ImageIO.read(is);
-					if(image == null) throw new IOException("Failed to read image! url: " + this.getURL() + " file: " + Disk.cacheFileFor(new URL(this.getURL()).getFile()).toString());
-					this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.getURL(), new DynamicTexture(image));
-				}
-			}
+			} else this.tryLoadingTexture();
 		}
 		return this.texture;
+	}
+	
+	private void tryLoadingTexture() throws InterruptedException, ExecutionException, IOException {
+		if(this.textureTask != null && this.textureTask.isDone() && !this.textureTask.isCompletedExceptionally()){
+			Minecraft mc = Minecraft.getMinecraft();
+			TextureManager textureManager = mc.getTextureManager();
+			ByteBuf buf = this.textureTask.get();
+			try (ByteBufInputStream is = new ByteBufInputStream(buf)) {
+				BufferedImage image = ImageIO.read(is);
+				if(image == null) throw new IOException("Failed to read image! url: " + this.getURL() + " file: " + Disk.cacheFileFor(new URL(this.getURL()).getFile()).toString());
+				this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.getURL(), new DynamicTexture(image));
+			}
+		}
 	}
 	
 	public void cancelTextureLoading() {
@@ -92,50 +98,36 @@ public class WebTile {
 		}
 	}
 
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + x;
-		result = prime * result + y;
-		result = prime * result + zoom;
-		return result;
-	}
-
-
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (getClass() != obj.getClass()) return false;
+		if(obj == this) return true;
+		if(obj == null) return false;
+		if(!(obj instanceof WebTile)) return false;
 		WebTile other = (WebTile) obj;
-		if (x != other.x) return false;
-		if (y != other.y) return false;
-		if (zoom != other.zoom) return false;
-		return true;
+		return other.url.equals(this.url);
 	}
 
 	///// Various uninteresting getters and setters from here /////
 
+	public UnmutableTilePosition getPosition() {
+		return this.pos;
+	}
+	
 	public int getX() {
-		return x;
+		return this.pos.xPosition;
 	}
 
 	public int getY() {
-		return y;
+		return this.pos.yPosition;
 	}
 
 	public int getZoom() {
-		return zoom;
+		return this.pos.zoom;
 	}
 
-	public class InvalidTileCoordinatesException extends RuntimeException{
-
-		public InvalidTileCoordinatesException(WebTile t) {
-			super("Invalid tile coordinates: " + t.zoom + "/" + t.x + "/" + t.y);
-		}
-
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
 	public static void registerErrorTexture() {

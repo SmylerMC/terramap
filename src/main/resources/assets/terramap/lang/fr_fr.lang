@@ -23,6 +23,7 @@ terramap.config.sync_custom_maps=Partage des cartes customs
 terramap.config.join_without_mod_message=Message sans le mod
 terramap.config.join_with_outdated_mod_message=Message avec ancienne version
 terramap.config.unlock_zoom=Déverouiller le zoom
+terramap.config.low_zoom_level=Garder chargé sous le zoom
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Ouvrir la carte

@@ -84,7 +84,7 @@ public class ClientTerramapEventHandler {
 	@SubscribeEvent
 	public void onHudInit(HudScreenInitEvent event) {
 		HudScreenHandler.init(event.getHudScreen());
-		TerramapRemote.getRemote().enforceConnectionSettings();
+		TerramapRemote.getRemote().setupMaps();
 	}
 	
 	@SubscribeEvent
