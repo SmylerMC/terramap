@@ -14,7 +14,6 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
-import fr.thesmyler.terramap.maps.WebTile;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -423,11 +422,14 @@ public class TerramapRemote {
 	
 	public void setupMaps() {
 		for(TiledMap map: this.getMapStyles().values()) {
-			WebTile tile = map.getTile(0, 0, 0);
-			try {
-				Http.setMaximumConcurrentRequestsTo(tile.getURL(), map.getMaxConcurrentRequests());
-			} catch(IllegalArgumentException e) {
-				TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + tile.getURL());
+			for(String urlPattern: map.getUrlPatterns()) {
+				String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
+				try {
+					Http.setMaximumConcurrentRequestsTo(url, map.getMaxConcurrentRequests());
+				} catch(IllegalArgumentException e) {
+					TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + url);
+				}
+				
 			}
 			map.prepareLowTiles();
 		}

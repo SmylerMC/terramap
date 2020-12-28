@@ -1,11 +1,16 @@
 {
     "metadata": {
-        "version": 12,
+        "version": 13,
         "comment": "This file contains the tile servers included by default in Terramap, and is maintained by SmylerMC."
     },
     "maps": {
         "osm": {
             "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "urls": [
+            	"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            	"https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            	"https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        	],
             "name": {
                 "en_us": "OpenStreetMap",
                 "fr_fr": "OpenStreetMap",
@@ -29,6 +34,10 @@
         },
         "osm_fr_hot": {
             "url": "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+            "urls": [
+            	"http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+            	"http://b.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+        	],
             "name": {
                 "en_us": "Humanitarian",
                 "fr_fr": "Humanitaire",
@@ -51,6 +60,12 @@
         },
         "stamen_terrain": {
             "url": "http://tile.stamen.com/terrain/{z}/{x}/{y}.png",
+            "urls": [
+            	"http://a.tile.stamen.com/terrain/{z}/{x}/{y}.png",
+            	"http://b.tile.stamen.com/terrain/{z}/{x}/{y}.png",
+            	"http://c.tile.stamen.com/terrain/{z}/{x}/{y}.png",
+            	"http://d.tile.stamen.com/terrain/{z}/{x}/{y}.png"
+        	],
             "name": {
                 "en_us": "Terrain",
                 "fr_fr": "Terrain",

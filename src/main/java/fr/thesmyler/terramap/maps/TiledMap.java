@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import com.google.common.base.Preconditions;
+
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
@@ -24,7 +26,7 @@ import net.minecraft.util.text.ITextComponent;
  */
 public class TiledMap implements Comparable<TiledMap> {
 
-	private final String urlPattern;
+	private final String[] urlPatterns;
 	private final LinkedList<WebTile> tileList; // Uses for ordered access when unloading
 	private final Map<UnmutableTilePosition, WebTile> tileMap; // Used for unordered access
 	private final int maxZoom;
@@ -46,7 +48,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
 	public TiledMap(
-			String urlPattern,
+			String[] urlPatterns,
 			int minZoom,
 			int maxZoom,
 			int maxLoaded,
@@ -59,7 +61,8 @@ public class TiledMap implements Comparable<TiledMap> {
 			long version,
 			String comment,
 			int maxConcurrentDownloads) {
-		this.urlPattern = urlPattern;
+		Preconditions.checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
+		this.urlPatterns = urlPatterns;
 		this.tileList = new LinkedList<>();
 		this.tileMap = new HashMap<>();
 		this.maxLoaded = maxLoaded;
@@ -90,7 +93,7 @@ public class TiledMap implements Comparable<TiledMap> {
 				try {
 					this.getTile(zoom, x, y).getTexture();
 				} catch (IOException | InterruptedException | ExecutionException e) {
-					TerramapMod.logger.error("Failed to load a low level texture: " + this.urlPattern);
+					TerramapMod.logger.error("Failed to load a low level texture for map: ", this.id + "-" + this.provider + "v" + this.version + " at " + " " + zoom + "/" + x + "/" + y);
 					TerramapMod.logger.catching(e);
 				}
 			}
@@ -125,7 +128,8 @@ public class TiledMap implements Comparable<TiledMap> {
 			this.needTile(tile);
 			return tile;
 		}
-		tile = new WebTile(this.urlPattern, pos);
+		String pat = this.urlPatterns[(zoom + x + y) % this.urlPatterns.length];
+		tile = new WebTile(pat, pos);
 		this.loadTile(tile);
 		return tile;
 	}
@@ -309,8 +313,8 @@ public class TiledMap implements Comparable<TiledMap> {
 	/**
 	 * @return The url pattern used to get the tiles' url for this map
 	 */
-	public String getUrlPattern() {
-		return this.urlPattern;
+	public String[] getUrlPatterns() {
+		return this.urlPatterns;
 	}
 
 	/**

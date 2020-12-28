@@ -14,12 +14,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-//FIXME Adapt to outdated remotes
+//TODO Test map style sync with various remotes
 public class SP2CMapStylePacket implements IMessage {
 	
 	private String id;
 	private long providerVersion;
-	private String urlPattern;
+	private String[] urlPatterns;
 	private Map<String, String> names;
 	private Map<String, String> copyrights;
 	private int minZoom;
@@ -32,7 +32,7 @@ public class SP2CMapStylePacket implements IMessage {
 	public SP2CMapStylePacket(TiledMap map) {
 		this.id = map.getId();
 		this.providerVersion = map.getProviderVersion();
-		this.urlPattern = map.getUrlPattern();
+		this.urlPatterns = map.getUrlPatterns();
 		this.names = map.getUnlocalizedNames();
 		this.copyrights = map.getUnlocalizedCopyrights();
 		this.minZoom = map.getMinZoom();
@@ -49,7 +49,7 @@ public class SP2CMapStylePacket implements IMessage {
 	public void fromBytes(ByteBuf buf) {
 		this.id = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		this.providerVersion = buf.readLong();
-		this.urlPattern = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+		String urlPattern = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		int nameCount = buf.readInt();
 		Map<String, String> names = new HashMap<String, String>();
 		for(int i=0; i < nameCount; i++) {
@@ -71,14 +71,21 @@ public class SP2CMapStylePacket implements IMessage {
 		this.displayPriority = buf.readInt();
 		this.isAllowedOnMinimap = buf.readBoolean();
 		this.comment = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		this.maxConcurrentConnection = buf.readInt();
+		if(buf.isReadable()) {
+			this.maxConcurrentConnection = buf.readInt();
+			this.urlPatterns = TerramapNetworkManager.decodeStringArrayFromByteBuf(buf);
+		} else {
+			this.maxConcurrentConnection = 2;
+			this.urlPatterns = new String[] {urlPattern};
+			return;
+		}
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		TerramapNetworkManager.encodeStringToByteBuf(this.id, buf);
 		buf.writeLong(this.providerVersion);
-		TerramapNetworkManager.encodeStringToByteBuf(this.urlPattern, buf);
+		TerramapNetworkManager.encodeStringToByteBuf(this.urlPatterns[0], buf);
 		buf.writeInt(this.names.size());
 		for(String key: this.names.keySet()) {
 			TerramapNetworkManager.encodeStringToByteBuf(key, buf);
@@ -95,11 +102,12 @@ public class SP2CMapStylePacket implements IMessage {
 		buf.writeBoolean(this.isAllowedOnMinimap);
 		TerramapNetworkManager.encodeStringToByteBuf(this.comment, buf);
 		buf.writeInt(this.maxConcurrentConnection);
+		TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
 	}
 	
 	public TiledMap getTiledMap(TiledMapProvider provider, int maxLoaded) {
 		return new TiledMap(
-				this.urlPattern,
+				this.urlPatterns,
 				this.minZoom,
 				this.maxZoom,
 				maxLoaded,
@@ -122,7 +130,7 @@ public class SP2CMapStylePacket implements IMessage {
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
 			TiledMap map = message.getTiledMap(TiledMapProvider.SERVER, TerramapConfig.maxTileLoad);
-			TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + map.getUrlPattern());
+			TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addServerMapStyle(map));
 			return null;
 		}
@@ -136,7 +144,7 @@ public class SP2CMapStylePacket implements IMessage {
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
 			TiledMap map = message.getTiledMap(TiledMapProvider.PROXY, TerramapConfig.maxTileLoad);
-			TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + map.getUrlPattern());
+			TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addProxyMapStyle(map));
 			return null;
 		}

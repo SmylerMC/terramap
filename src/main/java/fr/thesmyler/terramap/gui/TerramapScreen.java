@@ -305,7 +305,8 @@ public class TerramapScreen extends Screen {
 			dbText += "\nLoaded tiles: " + this.map.getBackgroundStyle().getBaseLoad() + "/" + this.map.getBackgroundStyle().getLoadedCount() + "/" + this.map.getBackgroundStyle().getMaxLoad();
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
-			dbText += "\nMap url: " + this.map.getBackgroundStyle().getUrlPattern();
+			String[] urls = this.map.getBackgroundStyle().getUrlPatterns();
+			dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
 			this.debugText.setText(dbText);
 		}
 	}

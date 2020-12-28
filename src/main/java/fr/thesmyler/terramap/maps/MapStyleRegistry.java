@@ -169,8 +169,15 @@ public class MapStyleRegistry {
 	
 	private static TiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
 		//TODO Do some checks to make sure the parsed map styles are right (only on client)
+		String[] patterns = saved.urls;
+		if(patterns == null || patterns.length <= 0) {
+			if(saved.url != null) {
+				// This is a legacy source, it only has one url
+				patterns = new String[] {saved.url};
+			} else throw new RuntimeException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
+		}
 		return new TiledMap(
-				saved.url,
+				patterns,
 				saved.min_zoom,
 				saved.max_zoom,
 				TerramapConfig.maxTileLoad,
