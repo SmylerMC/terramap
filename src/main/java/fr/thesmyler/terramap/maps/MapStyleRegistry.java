@@ -11,15 +11,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,18 +29,37 @@ public class MapStyleRegistry {
 
 	private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
 	private static File configMapsFile;
-	private static Map<String, TiledMap> availableMaps = new HashMap<String, TiledMap>();
+	private static Map<String, TiledMap> baseMaps = new HashMap<String, TiledMap>();
+	private static Map<String, TiledMap> userMaps = new HashMap<String, TiledMap>();
 
-	public static Map<String, TiledMap> getTiledMaps() {
-		Map<String, TiledMap> map = new LinkedHashMap<String, TiledMap>();
-		map.putAll(getBuiltIns());
-		return map;
+	/**
+	 * Get the default Terramap maps, loaded from the jar and from the online source
+	 * The returned map is a new one, and can be mutated safely.
+	 * Does not actually load the maps, this needs to be done beforehand with {@link MapStyleRegistry#loadBuiltIns()} and {@link MapStyleRegistry#loadFromOnline(String)}
+	 * 
+	 * @return a new map that contains id => TiledMap couples
+	 */
+	public static Map<String, TiledMap> getBaseMaps() {
+		Map<String, TiledMap> maps = new HashMap<>();
+		maps.putAll(baseMaps);
+		return maps;
+	}
+	
+	/**
+	 * Get the default Terramap maps, loaded from config/terramap_user_styles.json.
+	 * The returned map is a new one, and can be mutated safely.
+	 * 
+	 * @return a new map that contains id => TiledMap couples
+	 */
+	public static Map<String, TiledMap> getUserMaps() {
+		Map<String, TiledMap> maps = new HashMap<>();
+		maps.putAll(userMaps);
+		return maps;
 	}
 
-	private static Map<String, TiledMap> getBuiltIns() {
-		return availableMaps;
-	}
-
+	/**
+	 * Loads map styles from the mod's jar.
+	 */
 	public static void loadBuiltIns() {
 		String path = BUILT_IN_MAPS;
 		try {
@@ -54,7 +72,7 @@ public class MapStyleRegistry {
 					json += line;
 					line = txtReader.readLine();
 				}
-				availableMaps.putAll(loadFromJson(json, TiledMapProvider.BUILT_IN));
+				baseMaps.putAll(loadFromJson(json, TiledMapProvider.BUILT_IN));
 			}
 		} catch(Exception e) {
 			TerramapMod.logger.fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
@@ -64,6 +82,17 @@ public class MapStyleRegistry {
 
 	}
 	
+	/**
+	 * Loads map styles from the online file.
+	 * Resolve the TXT field of the given hostname,
+	 * parses it as redirect as would most browsers
+	 * and does a request to the corresponding url.
+	 * The body of that request is then parsed as a map style json config file.
+	 * 
+	 * This should be called after {@link #loadBuiltIns()} so it overwrites it.
+	 * 
+	 * @param hostname - the hostname to lookup
+	 */
 	public static void loadFromOnline(String hostname) {
 		try {
 			// We can't rely on Terra++ for that because the cache would cause trouble
@@ -79,7 +108,7 @@ public class MapStyleRegistry {
 					json += line;
 					line = txtReader.readLine();
 				}
-				availableMaps.putAll(loadFromJson(json, TiledMapProvider.ONLINE));
+				baseMaps.putAll(loadFromJson(json, TiledMapProvider.ONLINE));
 			}
 		} catch (NamingException | IOException e) {
 			TerramapMod.logger.error("Failed to download updated map style file, let's hope the cache has a good version!");
@@ -87,6 +116,10 @@ public class MapStyleRegistry {
 		}
 	}
 	
+	/**
+	 * Load map styles defined in config/terramap_user_styles.json.
+	 * The file to load from needs to be set first with {@link #setConfigMapFile(File)}
+	 */
 	public static void loadFromConfigFile() {
 		if(configMapsFile == null) {
 			TerramapMod.logger.error("Map config file was null!");
@@ -98,14 +131,14 @@ public class MapStyleRegistry {
 				MapStyleFile mapFile = new MapStyleFile(new MapFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
 				GsonBuilder builder = new GsonBuilder();
 				builder.setPrettyPrinting();
-				Files.write(builder.create().toJson(mapFile), configMapsFile, Charset.defaultCharset());
+				Files.write(configMapsFile.toPath(), builder.create().toJson(mapFile).getBytes(Charset.defaultCharset()));
 			} catch (IOException e) {
 				TerramapMod.logger.error("Failed to create map style config file!");
 				TerramapMod.logger.catching(e);
 			}
 		} else {
 			try {
-				availableMaps.putAll(loadFromFile(configMapsFile, TiledMapProvider.CUSTOM));
+				userMaps.putAll(loadFromFile(configMapsFile, TiledMapProvider.CUSTOM));
 			} catch (Exception e) {
 				TerramapMod.logger.error("Failed to read map style config file!");
 				TerramapMod.logger.catching(e);
@@ -113,8 +146,22 @@ public class MapStyleRegistry {
 		}
 	}
 	
+	/**
+	 * Set the config file that should contain the user's custom map syles
+	 * It will be created if it does not exist.
+	 * 
+	 * @param file - the json config file
+	 */
+	public static void setConfigMapFile(File file) {
+		configMapsFile = file;
+	}
+	
+	/**
+	 * Reload map styles from the jar, online, and config/terramap_user_styles.json
+	 */
 	public static void reload() {
-		availableMaps = new HashMap<>();
+		baseMaps.clear();
+		userMaps.clear();
 		loadBuiltIns();
 		loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
 		loadFromConfigFile();
@@ -140,7 +187,7 @@ public class MapStyleRegistry {
 	}
 	
 	private static Map<String, TiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
-		String json = String.join("", java.nio.file.Files.readAllLines(file.toPath()));
+		String json = String.join("", Files.readAllLines(file.toPath()));
 		Map<String, TiledMap> maps =  loadFromJson(json, provider);
 		return maps;
 	}
@@ -168,13 +215,10 @@ public class MapStyleRegistry {
 		}
 	}
 	
-	public static void setConfigMapFile(File file) {
-		configMapsFile = file;
-	}
-	
 	static class SavedMapStyle {
 
-		String url;
+		String url; // Used by legacy versions
+		String[] urls;
 		Map<String, String> name;
 		Map<String, String> copyright;
 		int min_zoom;

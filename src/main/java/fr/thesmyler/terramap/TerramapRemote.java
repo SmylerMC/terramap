@@ -190,10 +190,10 @@ public class TerramapRemote {
 	}
 	
 	public Map<String, TiledMap> getMapStyles() {
-		Map<String, TiledMap> maps = new HashMap<String, TiledMap>();
-		maps.putAll(MapStyleRegistry.getTiledMaps());
+		Map<String, TiledMap> maps = MapStyleRegistry.getBaseMaps();
 		maps.putAll(this.proxyMaps);
 		maps.putAll(this.serverMaps);
+		maps.putAll(MapStyleRegistry.getUserMaps());
 		return maps;
 	}
 
