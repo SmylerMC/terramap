@@ -84,6 +84,7 @@ public class ClientTerramapEventHandler {
 	@SubscribeEvent
 	public void onHudInit(HudScreenInitEvent event) {
 		HudScreenHandler.init(event.getHudScreen());
+		TerramapRemote.getRemote().setupMaps();
 	}
 	
 	@SubscribeEvent
@@ -94,8 +95,7 @@ public class ClientTerramapEventHandler {
 			 * and calling ConfigManager::sync only injects the file's value into the fields instead of saving them to disk,
 			 * which is why we have to do it once the game is fully loaded.
 			 * 
-			 * This is called on the physical server by TerramapServerProxy::onServerStarting .
-			 * 
+			 * This is called on the physical server by TerramapServerProxy::onServerStarting.
 			 */
 		    TerramapConfig.update(); // Update if invalid values were left by old versions
 		    configWasFixed = true;

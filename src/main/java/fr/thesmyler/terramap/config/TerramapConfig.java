@@ -72,12 +72,6 @@ public class TerramapConfig {
 	@Config.Comment("Set to false to hide other players on the minimap")
 	public static boolean minimapShowOtherPlayers = true;
 
-	@Config.Name("cache_directory")
-	@Config.LangKey("terramap.config.cache_dir")
-	@Config.Comment("Where to cache Terramap's files")
-	@Config.RequiresMcRestart
-	public static String cachingDir = "Terramap_cache";
-
 	@Config.Name("tile_scaling")
 	@Config.LangKey("terramap.config.tile_scaling")
 	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
@@ -92,9 +86,21 @@ public class TerramapConfig {
 	@Config.Name("max_tile_load")
 	@Config.LangKey("terramap.config.max_tile_load")
 	@Config.Comment("This is the maximum number of tiles to keep loaded. A lower number implies lower memory usage, however, if this is lower than the number of tiles displayed on your screen at once you will experience a huge performance drop. Change for a higher value if you experience lag when displaying a map on a large display")
-	@Config.RangeInt(min=16, max=256)
+	@Config.RangeInt(min=128, max=2048)
 	@Config.SlidingOption
-	public static int maxTileLoad = 128;
+	public static int maxTileLoad = 256;
+	
+	@Config.Name("low_zoom_level")
+	@Config.LangKey("terramap.config.low_zoom_level")
+	@Config.Comment("Tiles bellow this zoom level will be loaded when the map loads for the first time and then will never be unloaded. Number of tiles to keep loaded per zoom level:\n"
+			+ "\t0 -> 1\n"
+			+ "\t1 -> 5\n"
+			+ "\t2 -> 21\n"
+			+ "\t3 -> 85\n"
+			+ "Honnestly, you shouldn't be changing that option, it's mostly for testing purposes")
+	@Config.RangeInt(min=0, max=3)
+	@Config.SlidingOption
+	public static int lowZoomLevel = 1;
 	
 	@Config.Name("unlock_zoom")
 	@Config.LangKey("terramap.config.unlock_zoom")

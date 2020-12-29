@@ -207,6 +207,8 @@ public class TerramapScreen extends Screen {
 			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
 			this.addWidget(warningWidget);
 		}
+		
+		TerramapRemote.getRemote().setupMaps();
 	}
 
 	@Override
@@ -300,10 +302,11 @@ public class TerramapScreen extends Screen {
 			}
 			dbText += "\nProjection: " + proj;
 			dbText += "\nOrientation: " + orientation;
-			dbText += "\nCache queue: " + TerramapMod.cacheManager.getQueueSize();
+			dbText += "\nLoaded tiles: " + this.map.getBackgroundStyle().getBaseLoad() + "/" + this.map.getBackgroundStyle().getLoadedCount() + "/" + this.map.getBackgroundStyle().getMaxLoad();
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
-			dbText += "\nMap url: " + this.map.getBackgroundStyle().getUrlPattern();
+			String[] urls = this.map.getBackgroundStyle().getUrlPatterns();
+			dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
 			this.debugText.setText(dbText);
 		}
 	}

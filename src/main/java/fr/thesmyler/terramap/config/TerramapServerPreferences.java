@@ -3,11 +3,11 @@ package fr.thesmyler.terramap.config;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -167,7 +167,7 @@ public class TerramapServerPreferences {
 		WorldPreferences preferences = new WorldPreferences();
 		if(fileToLoad.exists()) {
 			try {
-				String text = String.join("\n", Files.readLines(fileToLoad, Charset.defaultCharset()));
+				String text = String.join("\n", Files.readAllLines(fileToLoad.toPath(), Charset.defaultCharset()));
 				preferences = GSON.fromJson(text, WorldPreferences.class);
 			} catch (IOException | JsonSyntaxException e) {
 				TerramapMod.logger.error("Failed to load server preference file, setting to default");
@@ -184,7 +184,7 @@ public class TerramapServerPreferences {
 	
 	private static void save(File file, WorldPreferences preferences) throws IOException {
 		String str = GSON.toJson(preferences);
-		Files.write(str, file, Charset.defaultCharset());
+		Files.write(file.toPath(), str.getBytes(Charset.defaultCharset()));
 	}
 
 	private static File getFileForWorld(WorldServer world) {

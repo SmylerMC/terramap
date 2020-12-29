@@ -1,20 +1,24 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.maps.TilePosition.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.WebTile;
-import fr.thesmyler.terramap.maps.WebTile.InvalidTileCoordinatesException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.ResourceLocation;
 
 //TODO Fractional zoom
 public class RasterMapLayerWidget extends MapLayerWidget {
 
 	protected TiledMap map;
+	protected Set<WebTile> lastNeededTiles = new HashSet<>();
 
 	public RasterMapLayerWidget(TiledMap map, double tileScaling) {
 		super(tileScaling);
@@ -28,9 +32,13 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 		
+		Set<WebTile> neededTiles = new HashSet<>();
+		
 		boolean debug = false;
+		MapWidget parentMap = null;
 		if(parent instanceof MapWidget) {
-			debug = ((MapWidget) parent).isDebugMode();
+			parentMap = (MapWidget) parent;
+			debug = parentMap.isDebugMode();
 		}
 
 		//TODO Remove the lines when tile scaling is not a power of 2
@@ -57,26 +65,31 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				try {
 					tile = map.getTile((int)this.zoom, Math.floorMod(tileX, maxTileXY), tileY);
-				} catch(InvalidTileCoordinatesException e) { continue ;}
+				} catch(InvalidTilePositionException e) { continue ;}
 				
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				WebTile bestTile = tile;
+				neededTiles.add(bestTile);
 				boolean lowerResRender = false;
 				boolean unlockedZoomRender = false;
-				if(!TerramapMod.cacheManager.isCached(tile)) {
+				if(!bestTile.isTextureAvailable()) {
 					lowerResRender = true;
-					if(!TerramapMod.cacheManager.isBeingCached(tile)) {
 						if(this.zoom <= this.map.getMaxZoom()) {
-							TerramapMod.cacheManager.cacheAsync(tile);
+							try {
+								bestTile.getTexture(); // Will start loading the texture from cache / network
+							} catch (Throwable e) {
+								if(parentMap != null) parentMap.reportError(e.toString());
+							} 
 						} else {
 							unlockedZoomRender = true;
 						}
-					}
-						
-					while(tile.getZoom() > 0 && !TerramapMod.cacheManager.isCached(tile)) {
+					
+					while(tile.getZoom() > 0 && !tile.isTextureAvailable()) {
 						tile = this.map.getTile(tile.getZoom()-1, tile.getX() /2, tile.getY() /2);
 					}
 				}
+				
+				neededTiles.add(tile);
 
 				int dispX = (int) Math.round(tileX * renderSize - upperLeftX);
 				int dispY = (int) Math.round(tileY * renderSize - upperLeftY);
@@ -114,7 +127,13 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				}
 
 				GlStateManager.color(1, 1, 1, 1);
-				textureManager.bindTexture(tile.getTexture());
+				ResourceLocation texture = WebTile.errorTileTexture;
+				try {
+					if(tile.isTextureAvailable()) texture = tile.getTexture();
+				} catch (Throwable e) {
+					if(parentMap != null) parentMap.reportError(e.toString());
+				}
+				textureManager.bindTexture(texture);
 				Gui.drawModalRectWithCustomSizedTexture(
 						x + dispX,
 						y + dispY,
@@ -149,11 +168,15 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 							dispY,
 							dispY + displayHeight - 1,
 							lineColor);
+					parent.getFont().drawString("" + tile.getZoom(), dispX + 2, dispY + 2, lineColor);
 				}
 				GlStateManager.color(1, 1, 1, 1);
-
 			}
 		}
+		
+		this.lastNeededTiles.removeAll(neededTiles);
+		this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
+		this.lastNeededTiles = neededTiles;
 
 	}
 
