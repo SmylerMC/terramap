@@ -3,10 +3,10 @@ package fr.thesmyler.terramap.config;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -90,7 +90,7 @@ public class TerramapClientPreferences {
 				preferences = new ClientPreferences();
 			}
 			String str = GSON.toJson(preferences);
-			Files.write(str, file, Charset.defaultCharset());
+			Files.write(file.toPath(), str.getBytes(Charset.defaultCharset()));
 		} catch (IOException e) {
 			TerramapMod.logger.error("Failed to write client preferences to " + file.getAbsolutePath());
 			TerramapMod.logger.catching(e);
@@ -103,7 +103,7 @@ public class TerramapClientPreferences {
 			TerramapMod.logger.info("Client preference file did not exist, used default");
 		} else {
 			try {
-				String text = String.join("\n", Files.readLines(file, Charset.defaultCharset()));
+				String text = String.join("\n", Files.readAllLines(file.toPath(), Charset.defaultCharset()));
 				Gson gson = new Gson();
 				preferences = gson.fromJson(text, ClientPreferences.class);
 			} catch (IOException | JsonSyntaxException e) {

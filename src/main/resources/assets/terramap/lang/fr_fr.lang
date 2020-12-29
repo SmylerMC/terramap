@@ -23,6 +23,7 @@ terramap.config.sync_custom_maps=Partage des cartes customs
 terramap.config.join_without_mod_message=Message sans le mod
 terramap.config.join_with_outdated_mod_message=Message avec ancienne version
 terramap.config.unlock_zoom=Déverouiller le zoom
+terramap.config.low_zoom_level=Garder chargé sous le zoom
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Ouvrir la carte
@@ -53,6 +54,7 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Définir la projection
+terramap.mapwidget.error.header=Terramap encontre des difficultés à charger la carte:
 
 terramap.mapwidget.shortcuts.tp=Clickez pour vous téléporter
 
@@ -110,4 +112,6 @@ terramap.commands.reloadmapstyles.forbidden=Vous n'avez pas l'autorisation d'uti
 terramap.commands.reloadmapstyles.done=Terminé
 terramap.commands.reloadmapstyles.error=Erreur lors du rechargement des styles de carte
 
-
+terramap.terraerror.warn.1=Terramap requière Terra++, et Terra121 à été detecté.
+terramap.terraerror.warn.2=Merci d'installer Terra++.
+terramap.terraerror.closegame=Fermer le jeu

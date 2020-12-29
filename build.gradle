@@ -54,15 +54,14 @@ dependencies {
     deobfProvided ("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
         transitive = false
     }
-    deobfProvided ("com.github.BuildTheEarth:terraplusplus:f5f64fd736f067f93641a3a695dfbf1765a9d89d") {
+    deobfProvided ("com.github.BuildTheEarth:terraplusplus:2043479efa66e3ce70adeb777004d0bcf00d014a") {
         transitive = true
     }
     runtime "org.apache.commons:commons-imaging:1.0-alpha2"
     runtime("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
         exclude group: "io.netty"
     }
-    //compileOnly "org.projectlombok:lombok:1.18.0"
-    //annotationProcessor "org.projectlombok:lombok:1.18.0"
+    
 }
 
 processResources {

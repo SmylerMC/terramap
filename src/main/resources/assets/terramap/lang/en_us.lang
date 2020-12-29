@@ -23,6 +23,7 @@ terramap.config.sync_custom_maps=Send custom maps to client
 terramap.config.join_without_mod_message=Join without Terramap
 terramap.config.join_with_outdated_mod_message=Join with out-dated Terramap
 terramap.config.unlock_zoom=Unlock zoom
+terramap.config.low_zoom_level=Keep loaded under zoom level
 
 terramap.binding.category=Terramap
 terramap.binding.open_map=Open map
@@ -53,6 +54,7 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Set projection
+terramap.mapwidget.error.header=Terramap is experiencing problems loading the map:
 
 terramap.mapwidget.shortcuts.tp=Click to teleport
 
@@ -110,4 +112,6 @@ terramap.commands.reloadmapstyles.forbidden=You do not have the permission to us
 terramap.commands.reloadmapstyles.done=Done
 terramap.commands.reloadmapstyles.error=Error when reloading mapstyles
 
-
+terramap.terraerror.warn.1=Terramap requires Terra++, and Terra121 was detected.
+terramap.terraerror.warn.2=Please install Terra++.
+terramap.terraerror.closegame=Close the game

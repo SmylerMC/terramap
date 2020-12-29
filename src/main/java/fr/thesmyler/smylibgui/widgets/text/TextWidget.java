@@ -142,7 +142,7 @@ public class TextWidget extends TextComponentWidget {
 	
 	@Override
 	public TextComponentWidget setShadow(boolean shadow) {
-		this.setShadow(shadow);
+		super.setShadow(shadow);
 		return this;
 	}
 	

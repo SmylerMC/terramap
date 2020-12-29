@@ -1,17 +1,19 @@
 package fr.thesmyler.terramap.maps;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.caching.Cachable;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import io.github.terra121.util.http.Disk;
+import io.github.terra121.util.http.Http;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -21,177 +23,128 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
-public class WebTile implements Cachable {
+public class WebTile {
 
-	protected long x;
-	protected long y;
-	protected int zoom;
-	protected int[] defaultPixel = {0, 0, 0, 0}; //What to return when the tile doesn't exist but should
-	protected int size;
-	protected BufferedImage image;
-	protected ResourceLocation texture = null;
-	private String urlPattern;
+	private final UnmutableTilePosition pos;
+	private final String url;
+	private ResourceLocation texture = null;
+	private CompletableFuture<ByteBuf> textureTask;
+
+	public static ResourceLocation errorTileTexture = null;
+
+	public WebTile(String urlPattern, UnmutableTilePosition pos) {
+		this.pos = pos;
+		this.url = urlPattern
+				.replace("{x}", "" + this.getX())
+				.replace("{y}", "" + this.getY())
+				.replace("{z}", "" + this.getZoom());
+	}
 	
-	private static ResourceLocation errorTileTexture = null;
-
-
-	public WebTile(String urlPattern, int zoom, long x, long y) {
-		this.urlPattern = urlPattern;
-		this.x = x;
-		this.y = y;
-		this.zoom = zoom;
-		this.size = 256;
-
-		if(!WebMercatorUtils.isTileInWorld(zoom, x, y))
-			throw new InvalidTileCoordinatesException(this);
-
+	public WebTile(String urlPattern, int zoom, int x, int y) {
+		this(urlPattern, new UnmutableTilePosition(zoom, x , y));
 	}
 
 
-	public WebTile(String urlPattern, int zoom, long x, long y, int[] defaultPixel) {
-		this(urlPattern, zoom, x, y);
-		this.defaultPixel = defaultPixel;
+	public String getURL() {
+		return this.url;
 	}
-
-
-	@Override
-	public URL getURL() {
+	
+	public boolean isTextureAvailable() {
+		if(texture != null) return true; // Don't try loading the texture if it has already been loaded
 		try {
-			return new URL(
-					this.urlPattern
-						.replace("{x}", ""+this.getX())
-						.replace("{y}", ""+this.getY())
-						.replace("{z}", ""+this.getZoom()));
-		} catch (MalformedURLException e) {
-			TerramapMod.logger.error("Failed to craft url for a raster tile. URL pattern is " + this.urlPattern);
-			e.printStackTrace();
+			this.tryLoadingTexture();
+		} catch (Throwable e) {
+			return false;
 		}
-		return null;
+		return this.texture != null;
 	}
 
-
-	@Override
-	public String getFileName(){
-		URL u = this.getURL();
-		u.getPath();
-		return u.getHost() + u.getPath().replace('/', '.'); //TODO Make sure this is always a valid file name
-	}
-
-
-	public BufferedImage getImage() throws IOException {
-		if(this.image == null) {
-			File f = TerramapMod.cacheManager.getFile(this);
-			//If the file has been cached, it may have been loaded in this::cached
-				if(this.image == null) this.loadImageFomFile(f);
-		}
-		return this.image;
-	}
-
-
-	@Override
-	public void cached(File f) {
-		try {
-			this.loadImageFomFile(f);
-		} catch (IOException e) {
-			TerramapMod.logger.error("Got an IOException when reading a file which should have been properly cached!");
-			TerramapMod.logger.catching(e);
-		}
-	}
-
-
-	private void loadImageFomFile(File f) throws IOException {
-		if(!f.exists() || !f.isFile()) {
-			this.image = TerramapImageUtils.imageFromColor(this.size, this.size, this.defaultPixel);
-		} else {
-			this.image = ImageIO.read(f);
-		}
-	}
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @return The value of the pixel at x and y
-	 * @throws InvalidMapboxSessionException 
-	 * @throws IOException 
-	 */
-	public int[] getPixel(int x, int y) throws IOException {
-		return TerramapImageUtils.decodeRGBA2Array(this.getImage().getRGB(x, y));
-	}
-
-
-	public ResourceLocation getTexture() {
+	public ResourceLocation getTexture() throws Throwable {
 		if(this.texture == null) {
-			Minecraft mc = Minecraft.getMinecraft();
-			TextureManager textureManager = mc.getTextureManager();
-			try {
-				BufferedImage image = this.getImage();
-				this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.x + "/" + this.y + "/" + this.zoom, new DynamicTexture(image));
-			} catch (Exception e) {
-				TerramapMod.logger.catching(e);
-				TerramapMod.cacheManager.reportError(this);
-				TerramapMod.cacheManager.cacheAsync(this);
-				return WebTile.errorTileTexture;
-			}
+			if(this.textureTask == null) {
+				this.textureTask = Http.get(this.getURL());
+			} else this.tryLoadingTexture();
 		}
 		return this.texture;
 	}
+	
+	private void tryLoadingTexture() throws Throwable {
+		if(this.textureTask != null && this.textureTask.isDone()){
+			if(this.textureTask.isCompletedExceptionally()) {
+				if(this.textureTask.isCancelled()) {
+					this.textureTask = null;
+				} else {
+					try {
+						this.textureTask.get(); // That will throw an exception
+					} catch(ExecutionException e) {
+						throw e.getCause();
+					}
+				}
+				return;
+			}
+			Minecraft mc = Minecraft.getMinecraft();
+			TextureManager textureManager = mc.getTextureManager();
+			ByteBuf buf = this.textureTask.get();
+			try (ByteBufInputStream is = new ByteBufInputStream(buf)) {
+				BufferedImage image = ImageIO.read(is);
+				if(image == null) throw new IOException("Failed to read image! url: " + this.getURL() + " file: " + Disk.cacheFileFor(new URL(this.getURL()).getFile()).toString());
+				this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.getURL(), new DynamicTexture(image));
+			}
+		}
+	}
+	
+	public void cancelTextureLoading() {
+		if(this.textureTask != null) {
+			this.textureTask.cancel(true);
+			this.textureTask = null;
+		}
+	}
 
 	public void unloadTexture() {
+		this.cancelTextureLoading();
 		if(this.texture != null) {
 			Minecraft mc = Minecraft.getMinecraft();
 			TextureManager textureManager = mc.getTextureManager();
 			textureManager.deleteTexture(this.texture);
+			this.texture = null;
 		}
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == this) return true;
+		if(obj == null) return false;
+		if(!(obj instanceof WebTile)) return false;
+		WebTile other = (WebTile) obj;
+		return other.url.equals(this.url);
+	}
 
 	///// Various uninteresting getters and setters from here /////
 
-	public long getX() {
-		return x;
+	public UnmutableTilePosition getPosition() {
+		return this.pos;
+	}
+	
+	public int getX() {
+		return this.pos.xPosition;
 	}
 
-	public long getY() {
-		return y;
+	public int getY() {
+		return this.pos.yPosition;
 	}
 
 	public int getZoom() {
-		return zoom;
+		return this.pos.zoom;
 	}
 
-	public long getXinPixel() {
-		return this.x * this.size;
+	@Override
+	public int hashCode() {
+		return super.hashCode();
 	}
 
-	public long getYinPixel() {
-		return this.y * this.size;
-	}
-
-	public int getSideSize() {
-		return this.size;
-	}
-
-
-	public class InvalidTileCoordinatesException extends RuntimeException{
-
-		/**
-		 * @param string
-		 */
-		public InvalidTileCoordinatesException(WebTile t) {
-			super("Invalid tile coordinates: " + t.zoom + "/" + t.x + "/" + t.y);
-		}
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-
-	}
-	
 	public static void registerErrorTexture() {
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-		int color[] = {175, 175, 175};
+		int color[] = {170, 211, 223};
 		WebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
 
 	}

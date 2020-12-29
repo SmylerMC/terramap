@@ -157,6 +157,25 @@ public abstract class TerramapNetworkManager {
 		return packetBuffer.readString(Integer.MAX_VALUE/4);
 	}
 	
+	public static void encodeStringArrayToByteBuf(String[] strings, ByteBuf buf) {
+		int readerIndex = buf.readerIndex();
+		int writerIndex = buf.writerIndex();
+		PacketBuffer packetBuffer = new PacketBuffer(buf);
+		packetBuffer.setIndex(readerIndex, writerIndex);
+		packetBuffer.writeVarInt(strings.length);
+		for(String str: strings) packetBuffer.writeString(str);
+	}
+	
+	public static String[] decodeStringArrayFromByteBuf(ByteBuf buf) {
+		PacketBuffer packetBuffer = getPacketBuffer(buf);
+		int strCount = packetBuffer.readVarInt();
+		String[] strings = new String[strCount]; 
+		for(int i=0; i<strCount; i++) {
+			strings[i] = packetBuffer.readString(Integer.MAX_VALUE/4);
+		}
+		return strings;
+	}
+	
 	private static PacketBuffer getPacketBuffer(ByteBuf buf) {
 		int readerIndex = buf.readerIndex();
 		int writerIndex = buf.writerIndex();

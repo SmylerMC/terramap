@@ -26,6 +26,10 @@ public class TerramapServerProxy extends TerramapProxy {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap server pre-init");
+		if(!TerramapMod.isTerraDependencyValid()) {
+			TerramapMod.logger.fatal("This version of Terramap requires Terra++ to run. You are currently using Terra121. Please update to Terra++. The server will crash.");
+			throw new RuntimeException("Please install Terra++ instead of Terra121");
+		}
 		TerramapNetworkManager.registerHandlers(Side.SERVER);
 	}
 

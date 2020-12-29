@@ -101,7 +101,7 @@ public abstract class RemoteSynchronizer {
 
 	public static void sendMapStylesToClient(EntityPlayerMP player) {
 		if(TerramapConfig.sendCusomMapsToClient) {
-			for(TiledMap map: MapStyleRegistry.getTiledMaps().values()) {
+			for(TiledMap map: MapStyleRegistry.getUserMaps().values()) {
 				SP2CMapStylePacket pkt = new SP2CMapStylePacket(map);
 				TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(pkt, player);
 			}
