@@ -146,8 +146,8 @@ public class MapWidget extends Screen {
 			String strToCopy = "Outside projection";
 			try {
 				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
-				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
-				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
+				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
+				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
 				strToCopy = dispX + "." + dispY + ".2dr";
 			} catch(OutOfProjectionBoundsException e) {}
 			GuiScreen.setClipboardString(strToCopy);
