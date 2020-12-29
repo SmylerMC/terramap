@@ -1,10 +1,8 @@
 package fr.thesmyler.terramap.maps;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import com.google.common.base.Preconditions;
 
@@ -92,7 +90,7 @@ public class TiledMap implements Comparable<TiledMap> {
 			for(int x=0; x<size; x++) for(int y=0; y<size; y++) {
 				try {
 					this.getTile(zoom, x, y).getTexture();
-				} catch (IOException | InterruptedException | ExecutionException e) {
+				} catch (Throwable e) {
 					TerramapMod.logger.error("Failed to load a low level texture for map: ", this.id + "-" + this.provider + "v" + this.version + " at " + " " + zoom + "/" + x + "/" + y);
 					TerramapMod.logger.catching(e);
 				}

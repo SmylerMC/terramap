@@ -1,12 +1,9 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.TilePosition.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.WebTile;
@@ -38,8 +35,10 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		Set<WebTile> neededTiles = new HashSet<>();
 		
 		boolean debug = false;
+		MapWidget parentMap = null;
 		if(parent instanceof MapWidget) {
-			debug = ((MapWidget) parent).isDebugMode();
+			parentMap = (MapWidget) parent;
+			debug = parentMap.isDebugMode();
 		}
 
 		//TODO Remove the lines when tile scaling is not a power of 2
@@ -78,9 +77,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 						if(this.zoom <= this.map.getMaxZoom()) {
 							try {
 								bestTile.getTexture(); // Will start loading the texture from cache / network
-							} catch (IOException | InterruptedException | ExecutionException e) {
-								// TODO Handle exception in RasterMapLayerWidget::draw
-								TerramapMod.logger.catching(e);
+							} catch (Throwable e) {
+								if(parentMap != null) parentMap.reportError(e.toString());
 							} 
 						} else {
 							unlockedZoomRender = true;
@@ -132,9 +130,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				ResourceLocation texture = WebTile.errorTileTexture;
 				try {
 					if(tile.isTextureAvailable()) texture = tile.getTexture();
-				} catch (IOException | InterruptedException | ExecutionException e) {
-					// TODO Handle exception in RasterMapLayerWidget::draw
-					TerramapMod.logger.catching(e);
+				} catch (Throwable e) {
+					if(parentMap != null) parentMap.reportError(e.toString());
 				}
 				textureManager.bindTexture(texture);
 				Gui.drawModalRectWithCustomSizedTexture(

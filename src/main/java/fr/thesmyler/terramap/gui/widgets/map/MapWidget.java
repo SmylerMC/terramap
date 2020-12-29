@@ -18,6 +18,7 @@ import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
+import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
@@ -72,6 +73,10 @@ public class MapWidget extends Screen {
 
 	protected double tileScaling;
 
+	private TextWidget errorText;
+	private List<String> reportedErrors = new ArrayList<>();
+	private static final int MAX_ERRORS_KEPT = 10;
+	
 	private final MapContext context;
 
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
@@ -91,6 +96,15 @@ public class MapWidget extends Screen {
 		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
 		super.addWidget(this.copyright);
 
+		this.errorText = new TextWidget(Integer.MAX_VALUE, font) {
+			@Override
+			public boolean isVisible(Screen parent) {
+				return MapWidget.this.reportedErrors.size() > 0 && MapWidget.this.context == MapContext.FULLSCREEN;
+			}
+		};
+		this.errorText.setBackgroundColor(0xC0600000).setPadding(5).setAlignment(TextAlignment.CENTER).setShadow(false).setBaseColor(0xFFFFFFFF);
+		super.addWidget(errorText);
+		
 		this.rightClickMenu = new MenuWidget(1500, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
 			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
@@ -249,6 +263,7 @@ public class MapWidget extends Screen {
 
 	public void setBackground(TiledMap map) {
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
+		this.reportedErrors.clear(); // This is a new background, olds errors are irrelevant
 	}
 
 	/**
@@ -280,6 +295,7 @@ public class MapWidget extends Screen {
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.width);
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
+		this.errorText.setAnchorX(this.width / 2).setAnchorY(0).setMaxWidth(this.width - 40);
 		if(!this.rightClickMenu.isVisible(this)) {
 			int relativeMouseX = mouseX - x;
 			int relativeMouseY = mouseY - y;
@@ -352,6 +368,10 @@ public class MapWidget extends Screen {
 			} else {
 				this.trackingMarker = null;
 			}
+		}
+		if(this.reportedErrors.size() > 0) {
+			String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).toString();
+			this.errorText.setText(errorText);
 		}
 	}
 
@@ -758,6 +778,14 @@ public class MapWidget extends Screen {
 	public MapWidget setVisibility(boolean yesNo) {
 		this.visible = yesNo;
 		return this;
+	}
+	
+	public void reportError(String error) {
+		if(this.reportedErrors.contains(error)) return;
+		this.reportedErrors.add(error);
+		if(this.reportedErrors.size() > MAX_ERRORS_KEPT) {
+			this.reportedErrors.remove(0);
+		}
 	}
 
 }

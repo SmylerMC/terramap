@@ -54,6 +54,7 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Définir la projection
+terramap.mapwidget.error.header=Terramap encontre des difficultés à charger la carte:
 
 terramap.mapwidget.shortcuts.tp=Clickez pour vous téléporter
 

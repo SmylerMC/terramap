@@ -53,13 +53,13 @@ public class WebTile {
 		if(texture != null) return true; // Don't try loading the texture if it has already been loaded
 		try {
 			this.tryLoadingTexture();
-		} catch (InterruptedException | ExecutionException | IOException e) {
+		} catch (Throwable e) {
 			return false;
 		}
 		return this.texture != null;
 	}
 
-	public ResourceLocation getTexture() throws IOException, InterruptedException, ExecutionException {
+	public ResourceLocation getTexture() throws Throwable {
 		if(this.texture == null) {
 			if(this.textureTask == null) {
 				this.textureTask = Http.get(this.getURL());
@@ -68,8 +68,20 @@ public class WebTile {
 		return this.texture;
 	}
 	
-	private void tryLoadingTexture() throws InterruptedException, ExecutionException, IOException {
-		if(this.textureTask != null && this.textureTask.isDone() && !this.textureTask.isCompletedExceptionally()){
+	private void tryLoadingTexture() throws Throwable {
+		if(this.textureTask != null && this.textureTask.isDone()){
+			if(this.textureTask.isCompletedExceptionally()) {
+				if(this.textureTask.isCancelled()) {
+					this.textureTask = null;
+				} else {
+					try {
+						this.textureTask.get(); // That will throw an exception
+					} catch(ExecutionException e) {
+						throw e.getCause();
+					}
+				}
+				return;
+			}
 			Minecraft mc = Minecraft.getMinecraft();
 			TextureManager textureManager = mc.getTextureManager();
 			ByteBuf buf = this.textureTask.get();
