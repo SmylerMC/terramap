@@ -169,7 +169,7 @@ public class TerramapScreen extends Screen {
 			button.setY(y);
 			this.infoPanel.addWidget(button);
 		}
-		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(187);
+		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(186);
 		this.searchBox.enableRightClickMenu();
 		this.searchBox.setText(I18n.format("terramap.terramapscreen.search.wip")).disable();
 		this.searchBox.setOnPressEnterCallback(this::search);
@@ -360,14 +360,15 @@ public class TerramapScreen extends Screen {
 		if(trackingMarker != null) {
 			tracking = trackingMarker.getIdentifier();
 		}
+		
 		return new TerramapScreenSavedState(
 				this.map.getZoom(),
 				this.map.getCenterLongitude(),
 				this.map.getCenterLatitude(),
 				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
-				this.debugMode,
-				this.f1Mode,
+				TerramapConfig.saveUiState ? this.debugMode : false,
+				TerramapConfig.saveUiState ? this.f1Mode : false,
 				this.map.getMarkersVisibility(), tracking);
 	}
 

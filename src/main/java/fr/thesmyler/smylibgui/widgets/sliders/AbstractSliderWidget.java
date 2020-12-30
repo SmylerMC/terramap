@@ -21,6 +21,8 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public abstract class AbstractSliderWidget extends AbstractWidget {
 	
+	protected String displayPrefix = "";
+	
 	public AbstractSliderWidget(int x, int y, int z, int width) {
 		super(x, y, z, width, 20);
 	}
@@ -104,7 +106,7 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 		if (!this.isEnabled()) textColor = 0xFFA0A0A0;
 		else if (hovered || hasFocus) textColor = 0xFFFFFFA0;
 
-        parent.getFont().drawCenteredString(x + this.width / 2, y + (20 - 8) / 2, this.getDisplayString(), textColor, false);
+        parent.getFont().drawCenteredString(x + this.width / 2, y + (20 - 8) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
         
 
 	}
@@ -133,6 +135,15 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 	public AbstractSliderWidget setWidth(int width) {
 		this.width = width;
 		return this;
+	}
+	
+	public AbstractSliderWidget setDisplayPrefix(String prefix) {
+		this.displayPrefix = prefix;
+		return this;
+	}
+	
+	public String getDisplayPrefix() {
+		return this.displayPrefix;
 	}
 
 }

@@ -43,7 +43,10 @@ public class FloatSliderWidget extends AbstractSliderWidget {
 	@Override
 	public void goToPrevious() {
 		this.setValueFromPos(Utils.saturate(this.getPosition() - 0.01f));
-
+	}
+	
+	public void setValue(double value) {
+		this.value = Utils.clamp(value, this.min, this.max);
 	}
 
 }

@@ -74,7 +74,7 @@ public class MapWidget extends Screen {
 	protected double tileScaling;
 
 	private TextWidget errorText;
-	private List<String> reportedErrors = new ArrayList<>();
+	private List<String> reportedErrors = new ArrayList<>(); //TODO Clear errors if none reported on a render cycle
 	private static final int MAX_ERRORS_KEPT = 10;
 	
 	private final MapContext context;

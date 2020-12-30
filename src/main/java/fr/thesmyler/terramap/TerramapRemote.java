@@ -188,6 +188,14 @@ public class TerramapRemote {
 		HudScreenHandler.updateMinimap();
 	}
 	
+	public Map<String, TiledMap> getServerMapStyles() {
+		return this.serverMaps;
+	}
+	
+	public Map<String, TiledMap> getProxyMapStyles() {
+		return this.proxyMaps;
+	}
+	
 	public Map<String, TiledMap> getMapStyles() {
 		Map<String, TiledMap> maps = MapStyleRegistry.getBaseMaps();
 		maps.putAll(this.proxyMaps);
@@ -431,7 +439,7 @@ public class TerramapRemote {
 				}
 				
 			}
-			map.prepareLowTiles();
+			map.setup();
 		}
 	}
 

@@ -83,13 +83,19 @@ public class TerramapConfig {
 	@Config.Comment("If this is set to true, tile scaling will be automatically adjusted to counter Minecraft GUI scaling and the tile_scaling option will be bypassed")
 	public static boolean autoTileScaling = true;
 
+	@Config.Ignore public static final int TILE_LOAD_MIN = 128;
+	@Config.Ignore public static final int TILE_LOAD_DEFAULT = 512;
+	@Config.Ignore public static final int TILE_LOAD_MAX = 4096;
 	@Config.Name("max_tile_load")
 	@Config.LangKey("terramap.config.max_tile_load")
 	@Config.Comment("This is the maximum number of tiles to keep loaded. A lower number implies lower memory usage, however, if this is lower than the number of tiles displayed on your screen at once you will experience a huge performance drop. Change for a higher value if you experience lag when displaying a map on a large display")
-	@Config.RangeInt(min=128, max=2048)
+	@Config.RangeInt(min=TILE_LOAD_MIN, max=TILE_LOAD_MAX)
 	@Config.SlidingOption
-	public static int maxTileLoad = 256;
+	public static int maxTileLoad = TILE_LOAD_DEFAULT;
 	
+	@Config.Ignore public static final int LOW_ZOOM_LEVEL_MIN = 0;
+	@Config.Ignore public static final int LOW_ZOOM_LEVEL_DEFAULT = 2;
+	@Config.Ignore public static final int LOW_ZOOM_LEVEL_MAX = 3;
 	@Config.Name("low_zoom_level")
 	@Config.LangKey("terramap.config.low_zoom_level")
 	@Config.Comment("Tiles bellow this zoom level will be loaded when the map loads for the first time and then will never be unloaded. Number of tiles to keep loaded per zoom level:\n"
@@ -98,21 +104,29 @@ public class TerramapConfig {
 			+ "\t2 -> 21\n"
 			+ "\t3 -> 85\n"
 			+ "Honnestly, you shouldn't be changing that option, it's mostly for testing purposes")
-	@Config.RangeInt(min=0, max=3)
+	@Config.RangeInt(min=LOW_ZOOM_LEVEL_MIN, max=LOW_ZOOM_LEVEL_MAX)
 	@Config.SlidingOption
-	public static int lowZoomLevel = 1;
+	public static int lowZoomLevel = LOW_ZOOM_LEVEL_DEFAULT;
 	
 	@Config.Name("unlock_zoom")
 	@Config.LangKey("terramap.config.unlock_zoom")
 	@Config.Comment("Set this to true to allow zoom level up to 25, even on maps where the tile server doesn't support it")
 	public static boolean unlockZoom = false;
 
+	@Config.Ignore public static final int DOUBLE_CLICK_DELAY_MIN = 10;
+	@Config.Ignore public static final int DOUBLE_CLICK_DELAY_DEFAULT = 500;
+	@Config.Ignore public static final int DOUBLE_CLICK_DELAY_MAX = 2000;
 	@Config.Name("double_click_delay")
 	@Config.LangKey("terramap.config.double_click_delay")
 	@Config.Comment("Double click delay to use in guis, in milliscondes")
-	@Config.RangeInt(min=10, max=1000)
+	@Config.RangeInt(min=DOUBLE_CLICK_DELAY_MIN, max=DOUBLE_CLICK_DELAY_MAX)
 	@Config.SlidingOption
-	public static int doubleClickDelay = 500;
+	public static int doubleClickDelay = DOUBLE_CLICK_DELAY_DEFAULT;
+	
+	@Config.Name("save_ui_state")
+	@Config.LangKey("terramap.config.save_ui_state") //TODO localize
+	@Config.Comment("Whether or not to save the map ui state when closing the full-screen map. Enable to save F1 mode and debug mode.")
+	public static boolean saveUiState = false; //TODO Actualy respect saveUiState
 
 	@Config.Name("tpll_command")
 	@Config.LangKey("terramap.config.tpllcmd")

@@ -53,5 +53,9 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
 	public void goToPrevious() {
 		this.setValueFromPos(Utils.saturate(this.getPosition() - 0.01f));
 	}
+	
+	public void setValue(long value) {
+		this.value = Utils.clamp(value, this.min, this.max);
+	}
 
 }

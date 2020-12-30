@@ -40,5 +40,13 @@ public class Utils {
         if(t < 2f/3f) return p + (q - p) * (2f/3f - t) * 6f;
         return p;
     }
+	
+	public static long clamp(long value, long min, long max) {
+		return Math.min(Math.max(value, min), max);
+	}
+	
+	public static double clamp(double value, double min, double max) {
+		return Math.min(Math.max(value, min), max);
+	}
 
 }

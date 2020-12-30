@@ -77,12 +77,8 @@ public class TiledMap implements Comparable<TiledMap> {
 		this.maxConcurrentRequests = maxConcurrentDownloads;
 	}
 	
-	/**
-	 * Initializes this map by loading all tiles bellow a certain zoom level specified in {@link TerramapConfig}, and starts loading their textures, if it hasn't been done yet.
-	 * Does nothing otherwise.
-	 */
-	public void prepareLowTiles() {
-		if(baseLoad > 0 && this.lowZoom == TerramapConfig.lowZoomLevel) return;
+
+	private void prepareLowTiles() {
 		this.unloadAll();
 		this.lowZoom = Math.min(3, TerramapConfig.lowZoomLevel); // We hard-code that here because we really don't want that to go above 3, 4 would already be 341 tiles
 		for(int zoom=0; zoom<=this.lowZoom; zoom++) {
@@ -97,6 +93,18 @@ public class TiledMap implements Comparable<TiledMap> {
 			}
 		}
 		this.baseLoad = this.tileList.size();
+	}
+	
+	/**
+	 * Initializes this map by loading all tiles bellow a certain zoom level specified in {@link TerramapConfig}, and starts loading their textures, if it hasn't been done yet.
+	 * Also makes sure the cache follows the mod's config
+	 */
+	public void setup() {
+		if(this.maxLoaded != TerramapConfig.maxTileLoad) {
+			this.maxLoaded = TerramapConfig.maxTileLoad;
+			this.unloadToMaxLoad();
+		}
+		if(baseLoad <= 0 || this.lowZoom != TerramapConfig.lowZoomLevel) this.prepareLowTiles();
 	}
 
 	/**
