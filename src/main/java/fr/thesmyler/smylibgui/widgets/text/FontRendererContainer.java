@@ -356,6 +356,7 @@ public class FontRendererContainer {
 	/**
 	 * Returns the width of this string. Equivalent of FontMetrics.stringWidth(String s).
 	 */
+	//FIXME for some reasons, FontRenderer#getStringWidth(String) seams to get stuck in an infinite loop when the Screen is too small, and eclipse's debugger cannot even step there ?
 	public int getStringWidth(String text) {
 		return this.font.getStringWidth(text);
 	}

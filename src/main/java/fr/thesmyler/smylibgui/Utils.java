@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui;
 
-public class Utils {
+public final class Utils {
 	
 	public static int adaptAlpha(int color, float amount) {
 		if(amount >= 1) return color;

@@ -1,5 +1,9 @@
 package fr.thesmyler.smylibgui.screen;
 
+import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Mouse;
+
+import fr.thesmyler.smylibgui.Cursors;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -38,15 +42,8 @@ public class WindowedScreen extends Screen {
 			boolean screenFocused,
 			Screen parent) {
 		super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
-		
-		//FIXME Infinite loop splitting the string in vanilla code
-		parent.getFont().drawCenteredString(x + this.width / 2, y + 5, this.windowTitle, 0xFFFFFFFF, true);
 	}
-
-	@Override
-	public void initScreen() {
-
-	}
+	
 	
 	private void updateSubScreen() {
 		this.subScreen.x = BORDER_WIDTH;
@@ -56,7 +53,32 @@ public class WindowedScreen extends Screen {
 		this.subScreen.initScreen();
 	}
 
-	private class RightBorderBar implements IWidget {
+	private abstract class BorderWidget implements IWidget {
+		
+		private boolean lastHovered = false;
+		private Cursor cursor = null;
+		
+		public BorderWidget(Cursor cursor) {
+			this.cursor = cursor;
+		}
+		
+		@Override
+		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
+			if(this.lastHovered != hovered && !Mouse.isButtonDown(0)) {
+				if(hovered) Cursors.trySetCursor(this.cursor);
+				else if(Mouse.getNativeCursor() == this.cursor) Cursors.trySetCursor(null);
+				this.lastHovered = hovered;
+			}
+		}
+		
+	}
+	
+	private class RightBorderBar extends BorderWidget {
+		
+		public RightBorderBar() {
+			super(Cursors.CURSOR_RESIZE_HORIZONTAL);
+		}
 
 		@Override
 		public int getX() {
@@ -84,19 +106,19 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.width += dX;
 			WindowedScreen.this.updateSubScreen();
 		}
 
 	}
 
-	private class LeftBorderBar implements IWidget {
+	private class LeftBorderBar extends BorderWidget {
+
+		public LeftBorderBar() {
+			super(Cursors.CURSOR_RESIZE_HORIZONTAL);
+		}
 
 		@Override
 		public int getX() {
@@ -124,12 +146,8 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.width -= dX;
 			WindowedScreen.this.x += dX;
 			WindowedScreen.this.updateSubScreen();
@@ -137,7 +155,11 @@ public class WindowedScreen extends Screen {
 
 	}
 
-	private class BottomBorderBar implements IWidget {
+	private class BottomBorderBar extends BorderWidget {
+
+		public BottomBorderBar() {
+			super(Cursors.CURSOR_RESIZE_VERTICAL);
+		}
 
 		@Override
 		public int getX() {
@@ -165,19 +187,19 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.height += dY;
 			WindowedScreen.this.updateSubScreen();
 		}
 
 	}
 
-	private class TopBorderBar implements IWidget {
+	private class TopBorderBar extends BorderWidget {
+
+		public TopBorderBar() {
+			super(Cursors.CURSOR_RESIZE_VERTICAL);
+		}
 
 		@Override
 		public int getX() {
@@ -205,12 +227,8 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.height -= dY;
 			WindowedScreen.this.y += dY;
 			WindowedScreen.this.updateSubScreen();
@@ -218,7 +236,11 @@ public class WindowedScreen extends Screen {
 
 	}
 	
-	private class UpperLeftCorner implements IWidget {
+	private class UpperLeftCorner extends BorderWidget {
+
+		public UpperLeftCorner() {
+			super(Cursors.CURSOR_RESIZE_DIAGONAL_1);
+		}
 
 		@Override
 		public int getX() {
@@ -246,12 +268,8 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.width -= dX;
 			WindowedScreen.this.height -= dY;
 			WindowedScreen.this.y += dY;
@@ -261,7 +279,11 @@ public class WindowedScreen extends Screen {
 
 	}
 	
-	private class LowerLeftCorner implements IWidget {
+	private class LowerLeftCorner extends BorderWidget {
+
+		public LowerLeftCorner() {
+			super(Cursors.CURSOR_RESIZE_DIAGONAL_2);
+		}
 
 		@Override
 		public int getX() {
@@ -289,12 +311,8 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.width -= dX;
 			WindowedScreen.this.height += dY;
 			WindowedScreen.this.x += dX;
@@ -303,7 +321,11 @@ public class WindowedScreen extends Screen {
 
 	}
 	
-	private class LowerRightCorner implements IWidget {
+	private class LowerRightCorner extends BorderWidget {
+
+		public LowerRightCorner() {
+			super(Cursors.CURSOR_RESIZE_DIAGONAL_1);
+		}
 
 		@Override
 		public int getX() {
@@ -331,12 +353,8 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.width += dX;
 			WindowedScreen.this.height += dY;
 			WindowedScreen.this.updateSubScreen();
@@ -344,7 +362,11 @@ public class WindowedScreen extends Screen {
 
 	}
 	
-	private class UpperRightCorner implements IWidget {
+	private class UpperRightCorner extends BorderWidget {
+
+		public UpperRightCorner() {
+			super(Cursors.CURSOR_RESIZE_DIAGONAL_2);
+		}
 
 		@Override
 		public int getX() {
@@ -372,12 +394,8 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
-		}
-
-		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.width += dX;
 			WindowedScreen.this.height -= dY;
 			WindowedScreen.this.y += dY;
@@ -386,7 +404,11 @@ public class WindowedScreen extends Screen {
 
 	}
 
-	private class TopBar implements IWidget {
+	private class TopBar extends BorderWidget {
+
+		public TopBar() {
+			super(Cursors.CURSOR_MOVE);
+		}
 
 		@Override
 		public int getX() {
@@ -415,11 +437,15 @@ public class WindowedScreen extends Screen {
 
 		@Override
 		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), 0xB0000000);
+			super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+			int width = this.getWidth();
+			String toDraw = parent.getFont().trimStringToWidth(WindowedScreen.this.windowTitle, this.getWidth());
+			parent.getFont().drawCenteredString(x + width / 2, y, toDraw, 0xFFFFFFFF, true);
 		}
 
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+			if(mouseButton != 0) return;
 			WindowedScreen.this.x += dX;
 			WindowedScreen.this.y += dY;
 		}
