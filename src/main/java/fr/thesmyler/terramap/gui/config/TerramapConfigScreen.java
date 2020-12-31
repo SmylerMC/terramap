@@ -80,7 +80,7 @@ public class TerramapConfigScreen extends Screen {
 		mapConfigScreen.addWidget(this.doubleClickDelaySlider.setX(mapConfigScreen.width/2 + 5).setY(this.tileScalingSlider.getY()).setWidth(this.tileScalingSlider.getWidth()).setDisplayPrefix("Double click delay: "));
 		mapConfigScreen.addWidget(this.maxLoadedTilesSlider.setX(mapConfigScreen.width/2 - 130).setY(this.tileScalingSlider.getY() + this.tileScalingSlider.getHeight() + inter).setWidth(125).setDisplayPrefix("Tile cache: "));
 		mapConfigScreen.addWidget(this.lowZoomLevelSlider.setX(mapConfigScreen.width/2 + 5).setY(this.maxLoadedTilesSlider.getY()).setWidth(this.maxLoadedTilesSlider.getWidth()).setDisplayPrefix("Low zoom: "));
-		TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, "Configure Minimap");
+		TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, "Configure Minimap", () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
 		mapConfigScreen.addWidget(hudButton);
 		
 		// Map styles
@@ -198,7 +198,7 @@ public class TerramapConfigScreen extends Screen {
 		}
 	}
 	
-	private enum TileScalingOption {
+	protected enum TileScalingOption {
 		
 		AUTO(0), POINT5(0.5), ONE(1), TWO(2), FOUR(4), HEIGHT(8);
 		
@@ -208,7 +208,7 @@ public class TerramapConfigScreen extends Screen {
 			this.value = v;
 		}
 		
-		private static TileScalingOption getFromValue(double val) {
+		protected static TileScalingOption getFromValue(double val) {
 			for(TileScalingOption o: TileScalingOption.values()) {
 				if(o.value == val) return o;
 			}

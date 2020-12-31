@@ -49,6 +49,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 	@Override
 	protected void setValueFromPos(float sliderPosition) {
 		this.option = Math.round((this.options.length - 1)* sliderPosition);
+		this.onCycle();
 	}
 
 	@Override
@@ -80,6 +81,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 		List<T> l = new ArrayList<>();
 		Collections.addAll(l, this.options);
 		this.options = (T[]) l.toArray();
+		this.onCycle();
 	}
 
 	@Override
@@ -96,6 +98,11 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 	
 	protected void onCycle() {
 		if(this.onCycle != null) this.onCycle.accept(this.getCurrentOption());
+	}
+	
+	public OptionSliderWidget<T> setOnChange(Consumer<T> onChange) {
+		this.onCycle = onChange;
+		return this;
 	}
 
 }

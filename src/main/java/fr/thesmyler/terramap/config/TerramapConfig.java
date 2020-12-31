@@ -32,28 +32,28 @@ public class TerramapConfig {
 	@Config.Comment("X position of the minimap on screen, in percents")
 	@Config.RangeInt(min=0, max=100)
 	@Config.SlidingOption
-	public static int minimapPosX = 1;
+	public static float minimapPosX = 1;
 
 	@Config.Name("minimap_position_y")
 	@Config.LangKey("terramap.config.minimap.pos_y")
 	@Config.Comment("Y position of the minimap on screen, in percents")
 	@Config.RangeInt(min=0, max=100)
 	@Config.SlidingOption
-	public static int minimapPosY = 1;
+	public static float minimapPosY = 1;
 
 	@Config.Name("minimap_width")
 	@Config.LangKey("terramap.config.minimap.width")
 	@Config.Comment("Minimap width, in percents")
 	@Config.RangeInt(min=0, max=100)
 	@Config.SlidingOption
-	public static int minimapWidth = 20;
+	public static float minimapWidth = 20;
 
 	@Config.Name("minimap_height")
 	@Config.LangKey("terramap.config.minimap.height")
 	@Config.Comment("Minimap height, in percents")
 	@Config.RangeInt(min=0, max=100)
 	@Config.SlidingOption
-	public static int minimapHeight = 15;
+	public static float minimapHeight = 15;
 
 	@Config.Name("minimap_zoom")
 	@Config.LangKey("terramap.config.minimap.zoom")
@@ -71,10 +71,16 @@ public class TerramapConfig {
 	@Config.LangKey("terramap.config.minimap.show_players")
 	@Config.Comment("Set to false to hide other players on the minimap")
 	public static boolean minimapShowOtherPlayers = true;
+	
+	@Config.Name("minimap_tile_scaling")
+	@Config.LangKey("terramap.config.minimap.tile_scaling") //TODO Localize
+	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. This is for the minimap.")
+	@Config.RangeDouble(min=0.0, max=8.0)
+	public static double minimapTileScaling = 0.0;
 
 	@Config.Name("tile_scaling")
 	@Config.LangKey("terramap.config.tile_scaling")
-	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. Powers of two such as 0.5, 0.25 etc should work best")
+	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. This is for the full-screen map.")
 	@Config.RangeDouble(min=1.0, max=8.0)
 	public static double tileScaling = TerramapMod.proxy.getGuiScaleForConfig();
 
@@ -186,6 +192,14 @@ public class TerramapConfig {
 			return SmyLibGui.getMinecraftGuiScale();
 		} else {
 			return tileScaling;
+		}
+	}
+	
+	public static double getEffectiveMinimapTileScaling() {
+		if(minimapTileScaling == 0) {
+			return SmyLibGui.getMinecraftGuiScale();
+		} else {
+			return minimapTileScaling;
 		}
 	}
 	

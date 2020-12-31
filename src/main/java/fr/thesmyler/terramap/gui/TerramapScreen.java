@@ -378,7 +378,7 @@ public class TerramapScreen extends Screen {
 		this.map.setCenterLongitude(state.centerLongitude);
 		this.map.setCenterLatitude(state.centerLatitude);
 		this.map.restoreTracking(state.trackedMarker);
-		this.map.setMarkersVisibility(state.markerSettings);
+		this.map.setMarkersVisibilities(state.markerSettings);
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
 		TexturedButtonWidget newButton;
 		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {

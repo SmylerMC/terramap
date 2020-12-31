@@ -10,11 +10,13 @@ import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.config.HudConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.maps.TiledMap;
+import net.minecraft.client.Minecraft;
 
 public abstract class HudScreenHandler {
 
@@ -25,9 +27,9 @@ public abstract class HudScreenHandler {
 		screen.removeAllWidgets();
 		screen.cancellAllScheduled();
 
-		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP)) {
+		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
 			if(map == null) {
-				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveTileScaling());
+				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveMinimapTileScaling());
 				map.setInteractive(false);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
@@ -50,15 +52,15 @@ public abstract class HudScreenHandler {
 			init(screen);
 			return;
 		}
-		map.setX((int) (TerramapConfig.minimapPosX * 0.01 * screen.getWidth()));
-		map.setY((int) (TerramapConfig.minimapPosY * 0.01 * screen.getWidth()));
-		map.setWidth((int) (TerramapConfig.minimapWidth * 0.01 * screen.getWidth()));
-		map.setHeight((int) (TerramapConfig.minimapHeight * 0.01 * screen.getWidth()));
+		map.setX(Math.round((float)TerramapConfig.minimapPosX / 100 * screen.getWidth()));
+		map.setY(Math.round((float)TerramapConfig.minimapPosY / 100 * screen.getHeight()));
+		map.setWidth(Math.round((float)TerramapConfig.minimapWidth / 100 * screen.getWidth()));
+		map.setHeight(Math.round((float)TerramapConfig.minimapHeight / 100 * screen.getHeight()));
 		Map<String, Boolean> markerVisibility = new HashMap<String, Boolean>();
 		markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
 		markerVisibility.put(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
 		markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
-		map.setMarkersVisibility(markerVisibility);
+		map.setMarkersVisibilities(markerVisibility);
 		Map<String, TiledMap> styles = TerramapRemote.getRemote().getMapStyles();
 		TiledMap bg = styles.get(TerramapConfig.minimapStyle);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {
@@ -72,6 +74,7 @@ public abstract class HudScreenHandler {
 		map.setZoom(zoomLevel);
 		map.setZoom(TerramapConfig.minimapZoomLevel);
 
+		map.setTileScaling(TerramapConfig.getEffectiveMinimapTileScaling());
 		map.setVisibility(TerramapConfig.minimapEnable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
 	}
 

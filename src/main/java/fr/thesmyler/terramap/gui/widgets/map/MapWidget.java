@@ -735,7 +735,7 @@ public class MapWidget extends Screen {
 		return outMap;
 	}
 
-	public MapWidget setMarkersVisibility(Map<String, Boolean> m) {
+	public MapWidget setMarkersVisibilities(Map<String, Boolean> m) {
 		for(String key: m.keySet()) {
 			if(this.markerControllers.containsKey(key)) {
 				this.markerControllers.get(key).setVisibility(m.get(key));
@@ -743,6 +743,12 @@ public class MapWidget extends Screen {
 				TerramapMod.logger.warn("Was not able to restore marker visibility for marker type " + key);
 			}
 		}
+		return this;
+	}
+	
+	public MapWidget trySetMarkersVisibility(String markerId, boolean value) {
+		MarkerController<?> c = this.markerControllers.get(markerId);
+		if(c != null) c.setVisibility(value);
 		return this;
 	}
 
