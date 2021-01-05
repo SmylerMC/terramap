@@ -245,7 +245,7 @@ public class TerramapScreen extends Screen {
 				this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
 				try {
 					try {
-						double[] dist = projection.tissot(mouseLon, mouseLat, 0.0000001f);
+						double[] dist = projection.tissot(mouseLon, mouseLat);
 						formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
 						formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
 					} catch(OutOfProjectionBoundsException e) {}
