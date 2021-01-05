@@ -2,8 +2,11 @@ package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture;
+import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -12,15 +15,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TerramapRemotePlayer extends TerramapPlayer {
-	
+
 	protected UUID uuid;
 	protected ITextComponent displayName;
 	protected double longitude;
 	protected double latitude;
 	protected float azimut;
 	protected GameType gamemode;
-	protected NetworkPlayerInfo playerInfo;
-	
+	protected ResourceLocation texture;
+	protected boolean texureRequested = false;
+
 	public TerramapRemotePlayer(UUID uuid, ITextComponent name, double longitude, double latitude, float azimut, GameType gameMode) {
 		this.uuid = uuid;
 		this.displayName = name;
@@ -59,12 +63,12 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-	
+
 	@Override
 	public float getAzimut() {
 		return this.azimut;
 	}
-	
+
 	public void setAzimut(float azimut) {
 		this.azimut = azimut;
 	}
@@ -72,12 +76,17 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getSkin() {
-		if(this.playerInfo == null) {
-			this.playerInfo = Minecraft.getMinecraft().getConnection().getPlayerInfo(this.getUUID());
+		if(this.texture == null && !this.texureRequested) {
+			GameProfile profile = new GameProfile(this.getUUID(), null);
+			new Thread(() -> {
+				Minecraft.getMinecraft().getSessionService().fillProfileProperties(profile, true);
+				Minecraft.getMinecraft().getSkinManager().loadProfileTextures(profile, this::skinAvailable, false);
+			}).start();
+			this.texureRequested = true;
 		}
-		return this.playerInfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUUID()) : this.playerInfo.getLocationSkin();
+		return this.texture == null ? DefaultPlayerSkin.getDefaultSkin(this.getUUID()) : this.texture;
 	}
-	
+
 	public void setGamemode(GameType mode) {
 		this.gamemode = mode;
 	}
@@ -90,6 +99,12 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 	@Override
 	public GameType getGamemode() {
 		return this.gamemode;
+	}
+
+	private void skinAvailable(Type type, ResourceLocation location, MinecraftProfileTexture profileTexture) {
+		if(type.equals(Type.SKIN)) {
+			this.texture = location;
+		}
 	}
 
 }
