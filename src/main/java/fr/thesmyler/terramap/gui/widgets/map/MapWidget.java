@@ -43,7 +43,7 @@ import net.minecraft.util.text.TextComponentString;
 public class MapWidget extends Screen {
 
 	private boolean interactive = true;
-	private boolean focusedZoom = true; //Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
+	private boolean focusedZoom = true; // Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
 	private boolean enableRightClickMenu = true;
 	private boolean showCopyright = true;
 	private boolean debugMode = false;
@@ -66,15 +66,15 @@ public class MapWidget extends Screen {
 	private MenuEntry copyRegionMenuEntry;
 	private MenuEntry copy3drMenuEntry;
 	private MenuEntry copy2drMenuEntry;
-
 	private MenuEntry setProjectionMenuEntry;
+	
 	private TextComponentWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 
 	protected double tileScaling;
 
 	private TextWidget errorText;
-	private List<String> reportedErrors = new ArrayList<>();
+	private List<ReportedError> reportedErrors = new ArrayList<>();
 	private static final int MAX_ERRORS_KEPT = 10;
 	
 	private final MapContext context;
@@ -262,8 +262,8 @@ public class MapWidget extends Screen {
 	}
 
 	public void setBackground(TiledMap map) {
+		this.discardPreviousErrors(this.background); // We don't care about errors for this background anumore
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
-		this.reportedErrors.clear(); // This is a new background, olds errors are irrelevant
 	}
 
 	/**
@@ -370,7 +370,7 @@ public class MapWidget extends Screen {
 			}
 		}
 		if(this.reportedErrors.size() > 0) {
-			String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).toString();
+			String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
 			this.errorText.setText(errorText);
 		}
 	}
@@ -780,11 +780,31 @@ public class MapWidget extends Screen {
 		return this;
 	}
 	
-	public void reportError(String error) {
+	public void reportError(Object source, String errorMessage) {
+		ReportedError error = new ReportedError(source, errorMessage);
 		if(this.reportedErrors.contains(error)) return;
 		this.reportedErrors.add(error);
 		if(this.reportedErrors.size() > MAX_ERRORS_KEPT) {
 			this.reportedErrors.remove(0);
+		}
+	}
+	
+	public void discardPreviousErrors(Object source) {
+		List<ReportedError> errsToRm = new ArrayList<>();
+		for(ReportedError e: this.reportedErrors) {
+			if(e.source.equals(source)) errsToRm.add(e);
+		}
+		this.reportedErrors.removeAll(errsToRm);
+	}
+	
+	private class ReportedError {
+		
+		private Object source;
+		private String message;
+		
+		private ReportedError(Object source, String message) {
+			this.source = source;
+			this.message = message;
 		}
 	}
 
