@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui;
+package fr.thesmyler.terramap.gui.screens;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,8 +30,8 @@ import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;

@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.markers.markers;
+package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.MapContext;
@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;

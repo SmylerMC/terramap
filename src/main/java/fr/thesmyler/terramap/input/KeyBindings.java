@@ -5,7 +5,7 @@ import org.lwjgl.input.Keyboard;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
-import fr.thesmyler.terramap.gui.TerramapScreen;
+import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;

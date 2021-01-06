@@ -1,9 +1,10 @@
-package fr.thesmyler.terramap.gui.widgets.markers.markers;
+package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

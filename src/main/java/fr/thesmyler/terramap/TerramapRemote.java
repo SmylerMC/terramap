@@ -11,7 +11,7 @@ import java.util.UUID;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
-import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
+import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;

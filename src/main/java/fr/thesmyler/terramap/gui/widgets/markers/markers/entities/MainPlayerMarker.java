@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.markers.markers;
+package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapRemote;

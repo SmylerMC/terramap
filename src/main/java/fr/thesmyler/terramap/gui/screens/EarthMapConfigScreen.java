@@ -4,7 +4,7 @@
  * @author orangeadam3, shejan0
  */
 
-package fr.thesmyler.terramap.gui;
+package fr.thesmyler.terramap.gui.screens;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
-public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handler {
+public class EarthMapConfigScreen extends GuiScreen implements DynamicOptions.Handler {
 
 	ResourceLocation map = null;
 	ResourceLocation rightmap = null;
@@ -46,7 +46,7 @@ public class EarthMapConfigGui extends GuiScreen implements DynamicOptions.Handl
 
 	GuiScreen parent;
 
-	public EarthMapConfigGui(GuiScreen parent, Minecraft mc) {
+	public EarthMapConfigScreen(GuiScreen parent, Minecraft mc) {
 
 		EarthGeneratorSettings parentCfg = TerramapRemote.getRemote().getGeneratorSettings();
 		if(parentCfg == null) cfg = new EarthGeneratorSettings("");

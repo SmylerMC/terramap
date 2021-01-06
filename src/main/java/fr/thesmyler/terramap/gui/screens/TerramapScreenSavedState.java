@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui;
+package fr.thesmyler.terramap.gui.screens;
 
 import java.util.HashMap;
 import java.util.Map;

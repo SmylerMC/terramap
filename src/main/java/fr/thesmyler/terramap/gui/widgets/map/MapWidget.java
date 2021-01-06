@@ -24,13 +24,13 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.gui.EarthMapConfigGui;
+import fr.thesmyler.terramap.gui.screens.EarthMapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
@@ -207,7 +207,7 @@ public class MapWidget extends Screen {
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
-			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
+			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigScreen(null, Minecraft.getMinecraft()));	
 		});
 
 		this.controller = new ControllerMapLayer(this.tileScaling);

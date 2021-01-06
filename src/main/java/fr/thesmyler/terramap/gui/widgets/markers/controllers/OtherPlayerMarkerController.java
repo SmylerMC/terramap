@@ -8,7 +8,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.OtherPlayerMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.OtherPlayerMarker;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
