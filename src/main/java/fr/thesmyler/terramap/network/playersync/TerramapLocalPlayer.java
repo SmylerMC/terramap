@@ -62,7 +62,12 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 
 	@Override
 	public float getAzimut() {
-		GeographicProjection proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+		GeographicProjection proj;
+		if(this.player.world.isRemote) {
+			proj = TerramapRemote.getRemote().getProjection();
+		} else {
+			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+		}
 		if(proj == null) return Float.NaN;
 		try{
 			return proj.azimuth(this.player.posX, this.player.posZ, this.player.rotationYaw);

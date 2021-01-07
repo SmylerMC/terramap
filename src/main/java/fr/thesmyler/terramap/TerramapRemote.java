@@ -139,6 +139,7 @@ public class TerramapRemote {
 				savedPlayer.setDisplayName(player.getDisplayName());
 				savedPlayer.setLongitude(player.getLongitude());
 				savedPlayer.setLatitude(player.getLatitude());
+				savedPlayer.setAzimut(player.getAzimut());
 				savedPlayer.setGamemode(player.getGamemode());
 			} else toAdd.add(player);
 		}

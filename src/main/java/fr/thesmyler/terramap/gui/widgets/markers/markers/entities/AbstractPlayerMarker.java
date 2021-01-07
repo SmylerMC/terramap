@@ -39,7 +39,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 		if(hovered) Gui.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, 0x50000000);
 
 		// Draw the direction arrow
-		if(this.showDirection(hovered)) {
+		if(this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x + this.width / 2, y + this.height / 2, 0);
 			GlStateManager.rotate(this.azimuth, 0, 0, 1);
