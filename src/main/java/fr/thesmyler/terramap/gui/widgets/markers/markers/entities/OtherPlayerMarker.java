@@ -62,4 +62,14 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 		return this.player.getGeoCoordinates();
 	}
 
+	@Override
+	protected float getActualAzimuth() throws OutOfProjectionBoundsException {
+		return this.player.getAzimut();
+	}
+
+	@Override
+	protected boolean showDirection(boolean hovered) {
+		return true;
+	}
+
 }

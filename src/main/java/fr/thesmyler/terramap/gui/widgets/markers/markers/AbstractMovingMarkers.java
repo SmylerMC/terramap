@@ -10,6 +10,7 @@ public abstract class AbstractMovingMarkers extends Marker {
 	protected Animation movingAnimation;
 
 	protected double longitude, latitude;
+	protected float azimuth;
 	protected double oldLongitude, oldLatitude;
 
 	public AbstractMovingMarkers(MarkerController<?> controller, int width, int height, int minZoom, int maxZoom) {
@@ -34,6 +35,13 @@ public abstract class AbstractMovingMarkers extends Marker {
 		} catch(OutOfProjectionBoundsException e) {
 			this.latitude = this.longitude = Double.NaN;
 		}
+		try {
+			float realAzimuth = this.getActualAzimuth();
+			this.azimuth = Math.round(realAzimuth);
+		} catch (OutOfProjectionBoundsException e) {
+			this.azimuth = Float.NaN;
+		}
+		
 
 	}
 
@@ -48,5 +56,7 @@ public abstract class AbstractMovingMarkers extends Marker {
 	public double getLatitude() {
 		return this.latitude;
 	}
+	
+	protected abstract float getActualAzimuth() throws OutOfProjectionBoundsException;
 
 }
