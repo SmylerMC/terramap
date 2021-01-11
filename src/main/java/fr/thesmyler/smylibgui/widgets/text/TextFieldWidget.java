@@ -641,7 +641,7 @@ public class TextFieldWidget implements IWidget {
 	}
 	
 	public static boolean isValidChar(char chr) {
-		return chr != '§' && chr >= ' ' && chr != 127;
+		return chr != '\u00a7' && chr >= ' ' && chr != 127;
 	}
 
 	public static String stripInvalidChars(String str) {
