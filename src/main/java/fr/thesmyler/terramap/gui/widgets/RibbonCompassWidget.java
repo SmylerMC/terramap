@@ -98,7 +98,6 @@ public class RibbonCompassWidget implements IWidget {
 		tess.draw();
 		
 		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
 		
 	}
 
