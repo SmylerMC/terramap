@@ -54,7 +54,7 @@ dependencies {
     deobfProvided ("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
         transitive = false
     }
-    deobfProvided ("com.github.BuildTheEarth:terraplusplus:91c505aacaded217c1372ad3afcaa6c283542633") {
+    deobfProvided ("com.github.BuildTheEarth:terraplusplus:8e2492c66ad0b2e2ca0b1e83e9acf4786e6055d5") {
         transitive = true
     }
     runtime "org.apache.commons:commons-imaging:1.0-alpha2"
