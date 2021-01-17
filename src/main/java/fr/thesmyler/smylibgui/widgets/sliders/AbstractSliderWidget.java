@@ -93,8 +93,11 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        parent.drawTexturedModalRect(x, y, 0, 46, this.width / 2, 20);
-        parent.drawTexturedModalRect(x + this.width / 2, y, 200 - this.width / 2, 46, this.width / 2, 20);
+        int leftWidth = this.width / 2;
+        int rightWidth = leftWidth;
+        leftWidth += this.width % 2;
+        parent.drawTexturedModalRect(x, y, 0, 46, leftWidth, 20);
+        parent.drawTexturedModalRect(x + leftWidth, y, 200 - rightWidth, 46, rightWidth, 20);
         
 		float sliderPosition = this.getPosition();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);

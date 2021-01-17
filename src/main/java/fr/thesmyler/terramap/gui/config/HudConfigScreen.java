@@ -94,9 +94,9 @@ public class HudConfigScreen extends Screen {
 		}
 		this.minimapWindow.initScreen();
 		this.addWidget(this.minimapWindow);
-		this.addWidget(new TextButtonWidget(this.width/2 - 93, this.height - 20, 10, 64, "Cancel", this::close));
-		this.addWidget(new TextButtonWidget(this.width/2 - 31, this.height - 20, 10, 64, "Reset", this::reset));
-		this.addWidget(new TextButtonWidget(this.width/2 + 31, this.height - 20, 10, 62, "Save", this::saveAndClose));
+		this.addWidget(new TextButtonWidget(this.width/2 - 93, this.height - 20, 10, 63, "Cancel", this::close));
+		this.addWidget(new TextButtonWidget(this.width/2 - 31, this.height - 20, 10, 62, "Reset", this::reset));
+		this.addWidget(new TextButtonWidget(this.width/2 + 30, this.height - 20, 10, 63, "Save", this::saveAndClose));
 		this.addWidget(this.tileScalingSlider.setX(this.width / 2 - 93).setY(this.height - 39).setWidth(94).setDisplayPrefix("Scaling: ")); 
 		this.addWidget(this.zoomSlider.setWidth(94).setX(this.width/2 - 1).setY(this.height - 39).setDisplayPrefix("Zoom: "));
 		this.addWidget(this.styleSlider.setWidth(186).setX(this.width/2 - 93).setY(this.height - 58));
