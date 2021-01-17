@@ -118,7 +118,10 @@ public class HudConfigScreen extends Screen {
 	private void reset() {
 		this.zoomSlider.setValue(TerramapConfig.minimapZoomLevel);
 		this.otherPlayers.setState(TerramapConfig.minimapShowOtherPlayers);
+		this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
 		this.entities.setState(TerramapConfig.minimapShowEntities);
+		this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
+		this.minimap.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
 		this.styleSlider.setCurrentOption(TerramapConfig.minimapStyle);
 		this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.minimapTileScaling));
 		this.recalcMinimapPos();
@@ -129,6 +132,9 @@ public class HudConfigScreen extends Screen {
 		this.minimapWindow.setY(Math.round(this.height * TerramapConfig.minimapPosY / 100));
 		this.minimapWindow.setWidth(Math.round(this.width * TerramapConfig.minimapWidth / 100));
 		this.minimapWindow.setHeight(Math.round(this.height * TerramapConfig.minimapHeight / 100));
+		this.minimapWindow.setEnableTopBar(false);
+		this.minimapWindow.setCenterDragColor(0x00000000);
+		this.minimapWindow.setEnableCenterDrag(true);
 	}
 
 }
