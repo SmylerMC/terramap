@@ -151,7 +151,7 @@ public class WindowedScreen extends Screen {
 
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
-			if(mouseButton != 0) return;
+			if(mouseButton != 0 || !WindowedScreen.this.allowHorizontalResize) return;
 			WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() + dX);
 			WindowedScreen.this.updateSubScreen();
 		}
@@ -191,7 +191,7 @@ public class WindowedScreen extends Screen {
 
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
-			if(mouseButton != 0) return;
+			if(mouseButton != 0 || !WindowedScreen.this.allowHorizontalResize) return;
 			if(WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
 			WindowedScreen.this.updateSubScreen();
 		}
@@ -231,7 +231,7 @@ public class WindowedScreen extends Screen {
 
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
-			if(mouseButton != 0) return;
+			if(mouseButton != 0 || !WindowedScreen.this.allowVerticalResize) return;
 			WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() + dY);
 			WindowedScreen.this.updateSubScreen();
 		}
@@ -271,7 +271,7 @@ public class WindowedScreen extends Screen {
 
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
-			if(mouseButton != 0) return;
+			if(mouseButton != 0 || !WindowedScreen.this.allowVerticalResize) return;
 			if(WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
 			WindowedScreen.this.updateSubScreen();
 		}
@@ -312,8 +312,8 @@ public class WindowedScreen extends Screen {
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
-			if(WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
-			if(WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
+			if(WindowedScreen.this.allowHorizontalResize && WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
+			if(WindowedScreen.this.allowVerticalResize && WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
 			WindowedScreen.this.updateSubScreen();
 		}
 
@@ -353,8 +353,8 @@ public class WindowedScreen extends Screen {
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
-			WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() + dY);
-			if(WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
+			if(WindowedScreen.this.allowVerticalResize) WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() + dY);
+			if(WindowedScreen.this.allowHorizontalResize && WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
 			WindowedScreen.this.updateSubScreen();
 		}
 
@@ -394,7 +394,9 @@ public class WindowedScreen extends Screen {
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
-			WindowedScreen.this.trySetInnerDimensions(WindowedScreen.this.getInnerWidth() + dX, WindowedScreen.this.getInnerHeight() + dY);
+			if(WindowedScreen.this.allowHorizontalResize) WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() + dX);
+			if(WindowedScreen.this.allowVerticalResize) WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() + dY);
+			WindowedScreen.this.updateSubScreen();
 		}
 
 		@Override
@@ -433,8 +435,8 @@ public class WindowedScreen extends Screen {
 		@Override
 		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
-			WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() + dX);
-			if(WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
+			if(WindowedScreen.this.allowHorizontalResize) WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() + dX);
+			if(WindowedScreen.this.allowVerticalResize && WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
 			WindowedScreen.this.updateSubScreen();
 		}
 
@@ -642,6 +644,18 @@ public class WindowedScreen extends Screen {
 	public WindowedScreen setMinInnerWidth(int width) {
 		Preconditions.checkArgument(width > 0, "inner width needs to be striclty positive");
 		this.minInnerWidth = width;
+		return this;
+	}
+	
+	public WindowedScreen setMaxInnerWidth(int width) {
+		Preconditions.checkArgument(width > 0, "inner width needs to be striclty positive");
+		this.minInnerWidth = width;
+		return this;
+	}
+	
+	public WindowedScreen setMinInnerHeight(int height) {
+		Preconditions.checkArgument(height > 0, "inner height needs to be striclty positive");
+		this.minInnerHeight = height;
 		return this;
 	}
 	

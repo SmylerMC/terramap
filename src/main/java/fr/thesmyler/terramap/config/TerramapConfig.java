@@ -88,21 +88,21 @@ public class TerramapConfig {
 	@Config.Comment("Compass X position, as % of the screen's width")
 	@Config.RangeDouble(min=0, max=100)
 	@Config.SlidingOption
-	public static double compassX = 0; // TODO Better default value
+	public static float compassX = 0; // TODO Better default value
 	
 	@Config.Name("compass_position_y")
 	@Config.LangKey("terramap.config.compass.position.y") //TODO Localize
 	@Config.Comment("Compass Y position, as % of the screen's height")
 	@Config.RangeDouble(min=0, max=100)
 	@Config.SlidingOption
-	public static double compassY = 0; // TODO Better default value
+	public static float compassY = 0; // TODO Better default value
 	
 	@Config.Name("compass_width")
 	@Config.LangKey("terramap.config.compass.width") //TODO Localize
 	@Config.Comment("Compass width, as % of the screen's width")
 	@Config.RangeDouble(min=0, max=100)
 	@Config.SlidingOption
-	public static double compassWidth = 0; // TODO Better default value
+	public static float compassWidth = 0; // TODO Better default value
 
 	@Config.Name("tile_scaling")
 	@Config.LangKey("terramap.config.tile_scaling")

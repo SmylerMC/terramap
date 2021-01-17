@@ -28,6 +28,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
@@ -130,12 +131,13 @@ public class TerramapScreen extends Screen {
 		this.debugText.setVisibility(this.debugMode);
 		this.addWidget(this.debugText);
 
-		// Info pannel
+		// Info panel
 		this.infoPanel.removeAllWidgets();
 		this.infoPanel.setWidth(240).setHeight(this.getHeight());
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
+		this.infoPanel.addWidget(new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig));
 		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
 		this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.mouseGeoLocationText);
@@ -167,7 +169,7 @@ public class TerramapScreen extends Screen {
 			button.setY(y);
 			this.infoPanel.addWidget(button);
 		}
-		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(187);
+		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(186);
 		this.searchBox.enableRightClickMenu();
 		this.searchBox.setText(I18n.format("terramap.terramapscreen.search.wip")).disable();
 		this.searchBox.setOnPressEnterCallback(this::search);
@@ -358,14 +360,15 @@ public class TerramapScreen extends Screen {
 		if(trackingMarker != null) {
 			tracking = trackingMarker.getIdentifier();
 		}
+		
 		return new TerramapScreenSavedState(
 				this.map.getZoom(),
 				this.map.getCenterLongitude(),
 				this.map.getCenterLatitude(),
 				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
-				this.debugMode,
-				this.f1Mode,
+				TerramapConfig.saveUiState ? this.debugMode : false,
+				TerramapConfig.saveUiState ? this.f1Mode : false,
 				this.map.getMarkersVisibility(), tracking);
 	}
 
@@ -493,6 +496,10 @@ public class TerramapScreen extends Screen {
 		this.debugMode = yesNo;
 		if(this.debugText != null) this.debugText.setVisibility(yesNo);
 		this.map.setDebugMode(yesNo);
+	}
+	
+	private void openConfig() {
+		Minecraft.getMinecraft().displayGuiScreen(new TerramapConfigScreen(this));
 	}
 
 	private class MapPreview extends MapWidget {

@@ -15,18 +15,23 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.config.TerramapConfigScreen.TileScalingOption;
+import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.maps.TiledMap;
+import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 
 //TODO Localize
 public class HudConfigScreen extends Screen {
 	
 	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.tileScaling);
-	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, minimap, "Minimap", 15);
+	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, this.minimap, "Minimap", 15);
+	private CompassScreen compassScreen = new CompassScreen();
+	private WindowedScreen compassWindow = new WindowedScreen(BackgroundType.NONE, this.compassScreen, "Compass", 16);
 	private OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<TileScalingOption>(10, TileScalingOption.values());
 	private IntegerSliderWidget zoomSlider = new IntegerSliderWidget(11, 0, 20, 10);
 	private OptionSliderWidget<String> styleSlider;
@@ -60,6 +65,16 @@ public class HudConfigScreen extends Screen {
 		this.otherPlayers.setOnActivate(() -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, true)).setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, false));
 		this.entities.setOnActivate(() -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, true).trySetMarkersVisibility(MobMarkerController.ID, true))
 				   .setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, false).trySetMarkersVisibility(MobMarkerController.ID, false));
+		this.minimapWindow.setEnableTopBar(false);
+		this.minimapWindow.setCenterDragColor(0x00000000);
+		this.minimapWindow.setEnableCenterDrag(true);
+		this.compassWindow.setHeight(this.compassScreen.getHeight());
+		this.compassWindow.setAllowVerticalResize(false);
+		this.compassWindow.setEnableTopBar(false);
+		this.compassWindow.setEnableCenterDrag(true);
+		this.compassWindow.setMinInnerHeight(1);
+		this.compassWindow.trySetInnerDimensions(50, this.compassScreen.compass.getHeight());
+		this.compassWindow.setCenterDragColor(0x00000000);
 		this.reset();
 	}
 	
@@ -67,7 +82,7 @@ public class HudConfigScreen extends Screen {
 	public void initScreen() {
 		this.removeAllWidgets();
 		if(this.lastHeight <= 0 || this.lastWidth <= 0) {
-			this.recalcMinimapPos();
+			this.recalcWidgetsPos();
 		} else {
 			this.minimapWindow.setX(Math.round((float)this.minimapWindow.getX() * this.width / this.lastWidth));
 			this.minimapWindow.setY(Math.round((float)this.minimapWindow.getY() * this.height / this.lastHeight));
@@ -93,6 +108,7 @@ public class HudConfigScreen extends Screen {
 		this.addWidget(this.entities.setX(this.width/2 + 92 - this.entities.getWidth()).setY(playerText.getY()));
 		TextWidget explain = new TextWidget("Move and resize the minimap using the preview window.", this.width/2, this.height - 90, 10, TextAlignment.CENTER, this.getFont());
 		this.addWidget(explain.setMaxWidth(200).setAnchorY(this.height - 80 - explain.getHeight()));
+		this.addWidget(this.compassWindow);
 		this.lastHeight = this.height;
 		this.lastWidth = this.width;
 	}
@@ -107,6 +123,9 @@ public class HudConfigScreen extends Screen {
 		TerramapConfig.minimapPosY = (float)this.minimapWindow.getY() / this.getHeight() * 100;
 		TerramapConfig.minimapWidth = (float)this.minimapWindow.getWidth() / this.getWidth() * 100;
 		TerramapConfig.minimapHeight = (float)this.minimapWindow.getHeight() / this.getHeight() * 100;
+		TerramapConfig.compassX = (float)this.compassWindow.getX() / this.getWidth() * 100;
+		TerramapConfig.compassY = (float)this.compassWindow.getY() / this.getHeight() * 100;
+		TerramapConfig.compassWidth = (float)this.compassWindow.getWidth() / this.getWidth() * 100;
 		TerramapConfig.sync();
 		this.close();
 	}
@@ -124,17 +143,47 @@ public class HudConfigScreen extends Screen {
 		this.minimap.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
 		this.styleSlider.setCurrentOption(TerramapConfig.minimapStyle);
 		this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.minimapTileScaling));
-		this.recalcMinimapPos();
+		this.recalcWidgetsPos();
 	}
 	
-	private void recalcMinimapPos() {
+	private void recalcWidgetsPos() {
 		this.minimapWindow.setX(Math.round(this.width * TerramapConfig.minimapPosX / 100));
 		this.minimapWindow.setY(Math.round(this.height * TerramapConfig.minimapPosY / 100));
 		this.minimapWindow.setWidth(Math.round(this.width * TerramapConfig.minimapWidth / 100));
 		this.minimapWindow.setHeight(Math.round(this.height * TerramapConfig.minimapHeight / 100));
-		this.minimapWindow.setEnableTopBar(false);
-		this.minimapWindow.setCenterDragColor(0x00000000);
-		this.minimapWindow.setEnableCenterDrag(true);
+		this.compassWindow.setX(Math.round(this.width * TerramapConfig.compassX / 100));
+		this.compassWindow.setY(Math.round(this.height * TerramapConfig.compassY / 100));
+		this.compassWindow.setWidth(Math.round(this.width * TerramapConfig.compassWidth / 100));
+	}
+	
+	private class CompassScreen extends Screen {
+		
+		RibbonCompassWidget compass = new RibbonCompassWidget(0, 0, 0, 30);
+		
+		CompassScreen() {
+			super(BackgroundType.NONE);
+			this.addWidget(this.compass);
+			this.scheduleAtUpdate(() -> {
+				GeographicProjection p = TerramapRemote.getRemote().getProjection();
+				if(p != null) {
+					double x = Minecraft.getMinecraft().player.posX;
+					double z = Minecraft.getMinecraft().player.posZ;
+					float a = Minecraft.getMinecraft().player.rotationYaw;
+					try {
+						compass.setAzimuth(p.azimuth(x, z, a));
+					} catch (OutOfProjectionBoundsException e) {
+					}
+				}
+			});
+		}
+
+		@Override
+		public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, Screen parent) {
+			this.compass.setWidth(this.width);
+			super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+		}
+		
+		
 	}
 
 }
