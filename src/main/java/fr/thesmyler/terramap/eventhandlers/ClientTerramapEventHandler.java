@@ -12,6 +12,7 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.input.KeyBindings;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
+import io.github.terra121.util.CardinalDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -49,8 +50,9 @@ public class ClientTerramapEventHandler {
 					float azimuth = proj.azimuth(x, z, yaw);
 					String lon = GeoServices.formatGeoCoordForDisplay(coords[0]);
 					String lat = GeoServices.formatGeoCoordForDisplay(coords[1]);
-					String azimuthStr = GeoServices.formatGeoCoordForDisplay(azimuth);
-					event.getLeft().add("Position: " + lat + "° " + lon + "° Looking at: " + azimuthStr + "°");
+					String azimuthStr = GeoServices.formatAzimuthForDisplay(azimuth);
+					String cardinal = CardinalDirection.azimuthToFacing(azimuth).realName();
+					event.getLeft().add("Position: " + lat + "° " + lon + "° Looking at: " + azimuthStr + "° (" + cardinal + ")");
 				} catch(OutOfProjectionBoundsException e) {
 					event.getLeft().add("Out of projection bounds");
 				}
