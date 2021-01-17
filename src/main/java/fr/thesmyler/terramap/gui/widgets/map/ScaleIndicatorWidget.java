@@ -1,9 +1,8 @@
-package fr.thesmyler.terramap.gui.widgets;
+package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.TerramapUtils;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.gui.GuiScreen;
 

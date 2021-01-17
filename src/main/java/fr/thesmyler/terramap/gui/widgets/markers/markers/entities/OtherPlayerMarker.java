@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.markers.markers;
+package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
@@ -60,6 +60,16 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	@Override
 	protected double[] getActualCoordinates() throws OutOfProjectionBoundsException {
 		return this.player.getGeoCoordinates();
+	}
+
+	@Override
+	protected float getActualAzimuth() throws OutOfProjectionBoundsException {
+		return this.player.getAzimut();
+	}
+
+	@Override
+	protected boolean showDirection(boolean hovered) {
+		return true;
 	}
 
 }

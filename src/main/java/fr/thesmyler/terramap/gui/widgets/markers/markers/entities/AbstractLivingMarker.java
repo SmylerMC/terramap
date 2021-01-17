@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.markers.markers;
+package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.MapContext;
@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	protected int u, v, textureWidth, textureHeight;
 	protected Entity entity;
 	protected double actualLongitude, actualLatitude;
+	protected float actualAzimuth;
 
 	public AbstractLivingMarker(MarkerController<?> controller, int width, int height, ResourceLocation texture, int u, int v, int textureWidth, int textureHeight, Entity entity) {
 		super(controller, width, height, 16, Integer.MAX_VALUE);
@@ -70,8 +72,10 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 			lola = proj.toGeo(x, z);
 			this.actualLongitude = lola[0];
 			this.actualLatitude = lola[1];
+			this.actualAzimuth = proj.azimuth(x, z, this.entity.rotationYaw);
 		} catch(OutOfProjectionBoundsException | NullPointerException e) {
 			this.actualLatitude = this.actualLongitude = Double.NaN;
+			this.actualAzimuth = Float.NaN;
 		}
 		super.onUpdate(parent);
 		if(this.entity.isDead) parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
@@ -110,5 +114,12 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	public String getIdentifier() {
 		return this.getControllerId() + ":" + this.entity.getUniqueID().toString();
 	}
+
+	@Override
+	public float getActualAzimuth() throws OutOfProjectionBoundsException {
+		return this.actualAzimuth;
+	}
+	
+	
 
 }

@@ -11,16 +11,20 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.config.HudConfigScreen;
+import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.maps.TiledMap;
+import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 
 public abstract class HudScreenHandler {
 
 	private static MapWidget map;
+	private static RibbonCompassWidget compass;
 
 	public static void init(HudScreen screen) {
 
@@ -39,10 +43,31 @@ public abstract class HudScreenHandler {
 					}
 				});
 			}
-
 			updateMinimap();
-
 			screen.addWidget(map);
+			
+			int compassX = (int) Math.round(TerramapConfig.compassX * 0.01 * screen.getWidth());
+			int compassY = (int) Math.round(TerramapConfig.compassY * 0.01 * screen.getHeight());
+			int compassWidth = (int) Math.round(TerramapConfig.compassWidth * 0.01 * screen.getWidth());
+
+			compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
+			screen.addWidget(compass);
+			screen.scheduleAtUpdate(() -> {
+				GeographicProjection p = TerramapRemote.getRemote().getProjection();
+				if(p != null) {
+					double x = Minecraft.getMinecraft().player.posX;
+					double z = Minecraft.getMinecraft().player.posZ;
+					float a = Minecraft.getMinecraft().player.rotationYaw;
+					try {
+						compass.setAzimuth(p.azimuth(x, z, a));
+						compass.setVisibility(true && TerramapConfig.compassVisibility);
+					} catch (OutOfProjectionBoundsException e) {
+						compass.setVisibility(false);
+					}
+				}
+			});
+			compass.setVisibility(TerramapConfig.compassVisibility);
+			screen.addWidget(compass);
 		}
 	}
 

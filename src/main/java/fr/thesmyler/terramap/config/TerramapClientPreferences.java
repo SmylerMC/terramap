@@ -12,7 +12,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.gui.TerramapScreenSavedState;
+import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 

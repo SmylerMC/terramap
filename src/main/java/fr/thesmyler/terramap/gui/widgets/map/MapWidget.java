@@ -24,13 +24,12 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.gui.EarthMapConfigGui;
-import fr.thesmyler.terramap.gui.widgets.ScaleIndicatorWidget;
+import fr.thesmyler.terramap.gui.screens.EarthMapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.MainPlayerMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.TiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
@@ -43,7 +42,7 @@ import net.minecraft.util.text.TextComponentString;
 public class MapWidget extends Screen {
 
 	private boolean interactive = true;
-	private boolean focusedZoom = true; //Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
+	private boolean focusedZoom = true; // Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
 	private boolean enableRightClickMenu = true;
 	private boolean showCopyright = true;
 	private boolean debugMode = false;
@@ -66,15 +65,16 @@ public class MapWidget extends Screen {
 	private MenuEntry copyRegionMenuEntry;
 	private MenuEntry copy3drMenuEntry;
 	private MenuEntry copy2drMenuEntry;
-
 	private MenuEntry setProjectionMenuEntry;
+	
 	private TextComponentWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 
 	protected double tileScaling;
 
 	private TextWidget errorText;
-	private List<String> reportedErrors = new ArrayList<>(); //TODO Clear errors if none reported on a render cycle
+
+	private List<ReportedError> reportedErrors = new ArrayList<>();
 	private static final int MAX_ERRORS_KEPT = 10;
 	
 	private final MapContext context;
@@ -207,7 +207,7 @@ public class MapWidget extends Screen {
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
-			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigGui(null, Minecraft.getMinecraft()));	
+			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigScreen(null, Minecraft.getMinecraft()));	
 		});
 
 		this.controller = new ControllerMapLayer(this.tileScaling);
@@ -262,8 +262,8 @@ public class MapWidget extends Screen {
 	}
 
 	public void setBackground(TiledMap map) {
+		this.discardPreviousErrors(this.background); // We don't care about errors for this background anumore
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
-		this.reportedErrors.clear(); // This is a new background, olds errors are irrelevant
 	}
 
 	/**
@@ -370,7 +370,7 @@ public class MapWidget extends Screen {
 			}
 		}
 		if(this.reportedErrors.size() > 0) {
-			String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).toString();
+			String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
 			this.errorText.setText(errorText);
 		}
 	}
@@ -786,11 +786,31 @@ public class MapWidget extends Screen {
 		return this;
 	}
 	
-	public void reportError(String error) {
+	public void reportError(Object source, String errorMessage) {
+		ReportedError error = new ReportedError(source, errorMessage);
 		if(this.reportedErrors.contains(error)) return;
 		this.reportedErrors.add(error);
 		if(this.reportedErrors.size() > MAX_ERRORS_KEPT) {
 			this.reportedErrors.remove(0);
+		}
+	}
+	
+	public void discardPreviousErrors(Object source) {
+		List<ReportedError> errsToRm = new ArrayList<>();
+		for(ReportedError e: this.reportedErrors) {
+			if(e.source.equals(source)) errsToRm.add(e);
+		}
+		this.reportedErrors.removeAll(errsToRm);
+	}
+	
+	private class ReportedError {
+		
+		private Object source;
+		private String message;
+		
+		private ReportedError(Object source, String message) {
+			this.source = source;
+			this.message = message;
 		}
 	}
 

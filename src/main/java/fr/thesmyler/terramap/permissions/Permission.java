@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.command;
+package fr.thesmyler.terramap.permissions;
 
 import net.minecraftforge.server.permission.DefaultPermissionLevel;
 

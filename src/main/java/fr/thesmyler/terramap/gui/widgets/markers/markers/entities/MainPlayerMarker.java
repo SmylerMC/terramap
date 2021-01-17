@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.markers.markers;
+package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapRemote;
@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextComponentString;
 public class MainPlayerMarker extends AbstractPlayerMarker {
 
 	private double playerLongitude, playerLatitude;
+	private float playerAzimuth;
 
 	public MainPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
 		super(controller, null, downscaleFactor);
@@ -38,6 +39,11 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 			this.playerLatitude = lola[1];
 		} catch(OutOfProjectionBoundsException e) {
 			this.playerLatitude = this.playerLongitude = Double.NaN;
+		}
+		try {
+			this.playerAzimuth = TerramapRemote.getRemote().getProjection().azimuth(player.posX, player.posZ, player.rotationYaw);
+		} catch(OutOfProjectionBoundsException e) {
+			this.playerAzimuth = Float.NaN;
 		}
 		super.onUpdate(parent);
 	}
@@ -78,6 +84,16 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 			uuid = Minecraft.getMinecraft().player.getUniqueID().toString();
 		}
 		return this.getControllerId() + ":" + uuid;
+	}
+
+	@Override
+	protected float getActualAzimuth() throws OutOfProjectionBoundsException {
+		return this.playerAzimuth;
+	}
+
+	@Override
+	protected boolean showDirection(boolean hovered) {
+		return true;
 	}
 
 }

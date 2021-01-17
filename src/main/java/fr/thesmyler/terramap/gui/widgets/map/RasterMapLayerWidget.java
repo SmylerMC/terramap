@@ -24,16 +24,17 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		super(tileScaling);
 		this.map = map;
 	}
-	
+
 	public TiledMap getMap() {
 		return this.map;
 	}
 
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-		
+
+		boolean perfectDraw = true;
 		Set<WebTile> neededTiles = new HashSet<>();
-		
+
 		boolean debug = false;
 		MapWidget parentMap = null;
 		if(parent instanceof MapWidget) {
@@ -43,7 +44,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 		//TODO Remove the lines when tile scaling is not a power of 2
 		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling;
-		
+
 		long upperLeftX = (long) this.getUpperLeftX();
 		long upperLeftY = (long) this.getUpperLeftY();
 
@@ -66,7 +67,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				try {
 					tile = map.getTile((int)this.zoom, Math.floorMod(tileX, maxTileXY), tileY);
 				} catch(InvalidTilePositionException e) { continue ;}
-				
+
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				WebTile bestTile = tile;
 				neededTiles.add(bestTile);
@@ -74,21 +75,25 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				boolean unlockedZoomRender = false;
 				if(!bestTile.isTextureAvailable()) {
 					lowerResRender = true;
-						if(this.zoom <= this.map.getMaxZoom()) {
-							try {
-								bestTile.getTexture(); // Will start loading the texture from cache / network
-							} catch (Throwable e) {
-								if(parentMap != null) parentMap.reportError(e.toString());
-							} 
-						} else {
-							unlockedZoomRender = true;
-						}
-					
+					perfectDraw = false;
+					if(this.zoom <= this.map.getMaxZoom()) {
+						try {
+							bestTile.getTexture(); // Will start loading the texture from cache / network
+						} catch (Throwable e) {
+							if(parentMap != null) {
+								parentMap.reportError(this, e.toString());
+							}
+							perfectDraw = false;
+						} 
+					} else {
+						unlockedZoomRender = true;
+					}
+
 					while(tile.getZoom() > 0 && !tile.isTextureAvailable()) {
 						tile = this.map.getTile(tile.getZoom()-1, tile.getX() /2, tile.getY() /2);
 					}
 				}
-				
+
 				neededTiles.add(tile);
 
 				int dispX = (int) Math.round(tileX * renderSize - upperLeftX);
@@ -101,7 +106,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				int displayWidth = (int) Math.round(Math.min(renderSize, maxX - tileX * renderSize));
 				int displayHeight = (int) Math.round(Math.min(renderSize, maxY - tileY * renderSize));
-				
+
 				if(tileX == lowerTileX) {
 					dX -= dispX;
 					dispX = 0;
@@ -112,7 +117,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					dispY = 0;
 					displayHeight -= dY;
 				}
-				
+
 				if(lowerResRender) {
 					int sizeFactor = (1 <<(bestTile.getZoom() - tile.getZoom()));
 
@@ -130,8 +135,10 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				ResourceLocation texture = WebTile.errorTileTexture;
 				try {
 					if(tile.isTextureAvailable()) texture = tile.getTexture();
+					else perfectDraw = false;
 				} catch (Throwable e) {
-					if(parentMap != null) parentMap.reportError(e.toString());
+					perfectDraw = false;
+					if(parentMap != null) parentMap.reportError(this, e.toString());
 				}
 				textureManager.bindTexture(texture);
 				Gui.drawModalRectWithCustomSizedTexture(
@@ -142,7 +149,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 						displayHeight,
 						renderSizedSize,
 						renderSizedSize);
-				
+
 				if(debug) {
 					final int RED = 0xFFFF0000;
 					final int BLUE = 0xFF0000FF;
@@ -173,7 +180,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				GlStateManager.color(1, 1, 1, 1);
 			}
 		}
-		
+
+		if(perfectDraw && parentMap != null) parentMap.discardPreviousErrors(this);
 		this.lastNeededTiles.removeAll(neededTiles);
 		this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
 		this.lastNeededTiles = neededTiles;

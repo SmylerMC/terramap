@@ -7,7 +7,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
-import fr.thesmyler.terramap.gui.TerraDependencyErrorScreen;
+import fr.thesmyler.terramap.gui.screens.TerraDependencyErrorScreen;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;

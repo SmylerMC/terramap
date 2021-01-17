@@ -136,6 +136,11 @@ public abstract class GeoServices {
 		if(x==Double.NaN) return "-";
 		return decFormat4.format(x);
 	}
+	
+	public static String formatAzimuthForDisplay(float 	az) {
+		if(az==Float.NaN) return "-";
+		return decFormat1.format(az);
+	}
 
 	public static double getLongitudeInRange(double longitude) {
 		if(!Double.isFinite(longitude)) throw new RuntimeException("longitude cannot be infinite");

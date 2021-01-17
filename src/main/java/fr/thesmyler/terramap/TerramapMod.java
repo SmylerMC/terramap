@@ -7,9 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
-import fr.thesmyler.terramap.command.PermissionManager;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.permissions.PermissionManager;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import io.github.terra121.TerraMod;
 import net.minecraftforge.common.MinecraftForge;

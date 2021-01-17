@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui;
+package fr.thesmyler.terramap.gui.screens;
 
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
