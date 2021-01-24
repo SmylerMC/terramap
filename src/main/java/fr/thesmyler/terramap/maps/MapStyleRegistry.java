@@ -23,14 +23,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 
+//TODO Make this async and thread safe
 public class MapStyleRegistry {
 
 	private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
 	private static File configMapsFile;
-	private static Map<String, UrlTiledMap> baseMaps = new HashMap<String, UrlTiledMap>();
-	private static Map<String, UrlTiledMap> userMaps = new HashMap<String, UrlTiledMap>();
+	private static Map<String, IRasterTiledMap> baseMaps = new HashMap<>();
+	private static Map<String, UrlTiledMap> userMaps = new HashMap<>();
 
 	/**
 	 * Get the default Terramap maps, loaded from the jar and from the online source
@@ -39,8 +41,8 @@ public class MapStyleRegistry {
 	 * 
 	 * @return a new map that contains id => TiledMap couples
 	 */
-	public static Map<String, UrlTiledMap> getBaseMaps() {
-		Map<String, UrlTiledMap> maps = new HashMap<>();
+	public static Map<String, IRasterTiledMap> getBaseMaps() {
+		Map<String, IRasterTiledMap> maps = new HashMap<>();
 		maps.putAll(baseMaps);
 		return maps;
 	}
@@ -80,6 +82,11 @@ public class MapStyleRegistry {
 			TerramapMod.logger.catching(e);
 		}
 
+	}
+	
+	public static void loadInternals() {
+		TerrainPreviewMap terrain = new TerrainPreviewMap(); 
+		baseMaps.put(terrain.getId(), terrain);
 	}
 	
 	/**
@@ -163,6 +170,7 @@ public class MapStyleRegistry {
 		baseMaps.clear();
 		userMaps.clear();
 		loadBuiltIns();
+		loadInternals();
 		loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
 		loadFromConfigFile();
 	}
@@ -180,7 +188,6 @@ public class MapStyleRegistry {
 				patterns,
 				saved.min_zoom,
 				saved.max_zoom,
-				TerramapConfig.maxTileLoad,
 				id,
 				saved.name,
 				saved.copyright,

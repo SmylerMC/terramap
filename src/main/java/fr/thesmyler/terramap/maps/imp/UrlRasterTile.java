@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps;
+package fr.thesmyler.terramap.maps.imp;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import io.github.terra121.util.http.Disk;
@@ -44,7 +45,6 @@ public class UrlRasterTile implements IRasterTile {
 	public UrlRasterTile(String urlPattern, int zoom, int x, int y) {
 		this(urlPattern, new TilePosUnmutable(zoom, x , y));
 	}
-
 
 	public String getURL() {
 		return this.url;
@@ -88,7 +88,7 @@ public class UrlRasterTile implements IRasterTile {
 			Minecraft mc = Minecraft.getMinecraft();
 			TextureManager textureManager = mc.getTextureManager();
 			ByteBuf buf = this.textureTask.get();
-			if(buf == null) throw new IOException("Cached 404 response");
+			if(buf == null) throw new IOException("Cached 404 response"); //TODO Change this
 			try (ByteBufInputStream is = new ByteBufInputStream(buf)) {
 				BufferedImage image = ImageIO.read(is);
 				if(image == null) throw new IOException("Failed to read image! url: " + this.getURL() + " file: " + Disk.cacheFileFor(new URL(this.getURL()).getFile()).toString());
@@ -124,9 +124,7 @@ public class UrlRasterTile implements IRasterTile {
 		UrlRasterTile other = (UrlRasterTile) obj;
 		return other.url.equals(this.url);
 	}
-
-	///// Various uninteresting getters and setters from here /////
-
+	
 	@Override
 	public TilePosUnmutable getPosition() {
 		return this.pos;

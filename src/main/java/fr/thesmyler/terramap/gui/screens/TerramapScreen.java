@@ -34,8 +34,9 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
+import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
-import fr.thesmyler.terramap.maps.UrlTiledMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
@@ -210,7 +211,7 @@ public class TerramapScreen extends Screen {
 			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
 			this.addWidget(warningWidget);
 		}
-		
+
 		TerramapRemote.getRemote().setupMaps();
 	}
 
@@ -307,11 +308,14 @@ public class TerramapScreen extends Screen {
 			dbText += "\nOrientation: " + orientation;
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
-			if(this.map.getBackgroundStyle() instanceof UrlTiledMap) {
-				UrlTiledMap urlMap = (UrlTiledMap) this.map.getBackgroundStyle();
-				dbText += "\nLoaded tiles: " + urlMap.getBaseLoad() + "/" + urlMap.getLoadedCount() + "/" + urlMap.getMaxLoad();
-				String[] urls = urlMap.getUrlPatterns();
-				dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
+			if(this.map.getBackgroundStyle() instanceof CachingRasterTiledMap) {
+				CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) this.map.getBackgroundStyle();
+				dbText += "\nLoaded tiles: " + cachingMap.getBaseLoad() + "/" + cachingMap.getLoadedCount() + "/" + cachingMap.getMaxLoad();
+				if(cachingMap instanceof UrlTiledMap) {
+					UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
+					String[] urls = urlMap.getUrlPatterns();
+					dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
+				}
 			}
 			this.debugText.setText(dbText);
 		}
@@ -364,7 +368,7 @@ public class TerramapScreen extends Screen {
 		if(trackingMarker != null) {
 			tracking = trackingMarker.getIdentifier();
 		}
-		
+
 		return new TerramapScreenSavedState(
 				this.map.getZoom(),
 				this.map.getCenterLongitude(),
@@ -372,8 +376,8 @@ public class TerramapScreen extends Screen {
 				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
 				TerramapConfig.saveUiState ? this.debugMode : false,
-				TerramapConfig.saveUiState ? this.f1Mode : false,
-				this.map.getMarkersVisibility(), tracking);
+						TerramapConfig.saveUiState ? this.f1Mode : false,
+								this.map.getMarkersVisibility(), tracking);
 	}
 
 	public void resumeFromSavedState(TerramapScreenSavedState state) {
@@ -501,7 +505,7 @@ public class TerramapScreen extends Screen {
 		if(this.debugText != null) this.debugText.setVisibility(yesNo);
 		this.map.setDebugMode(yesNo);
 	}
-	
+
 	private void openConfig() {
 		Minecraft.getMinecraft().displayGuiScreen(new TerramapConfigScreen(this));
 	}

@@ -14,7 +14,7 @@ import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
-import fr.thesmyler.terramap.maps.UrlTiledMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;

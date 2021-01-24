@@ -14,7 +14,8 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
-import fr.thesmyler.terramap.maps.UrlTiledMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
+import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -23,7 +24,10 @@ import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import io.github.terra121.EarthWorldType;
 import io.github.terra121.generator.EarthGeneratorSettings;
+import io.github.terra121.generator.TerrainPreview;
 import io.github.terra121.projection.GeographicProjection;
+import io.github.terra121.projection.MapsProjection;
+import io.github.terra121.projection.transform.ScaleProjectionTransform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -50,6 +54,7 @@ public class TerramapRemote {
 	private String sledgehammerVersion = null;
 	private EarthGeneratorSettings genSettings = null;
 	private GeographicProjection projection = null;
+	private TerrainPreview terrainPreview = null;
 	private boolean isRegisteredForUpdates = false;
 	private String tpCommand = null;
 	private Map<String, IRasterTiledMap> serverMaps = new HashMap<>();
@@ -106,6 +111,13 @@ public class TerramapRemote {
 		}
 		return this.projection;
 	}
+	
+	public TerrainPreview getTerrainPreview() {
+		if(this.terrainPreview == null && this.genSettings != null) {
+			this.terrainPreview = new TerrainPreview(new ScaleProjectionTransform(new MapsProjection(), WebMercatorUtils.getDimensionsInTile(15)*256), this.genSettings);
+		}
+		return this.terrainPreview;
+	}
 
 	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
 		if(genSettings != null && this.hasSledgehammer() && !TerramapUtils.isBteCompatible(genSettings)) {
@@ -115,6 +127,7 @@ public class TerramapRemote {
 		}
 		this.genSettings = genSettings;
 		this.projection = null;
+		this.terrainPreview = null;
 	}
 
 	public void saveSettings() {

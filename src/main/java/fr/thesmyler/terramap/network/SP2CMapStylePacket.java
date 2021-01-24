@@ -5,9 +5,8 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
-import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.maps.UrlTiledMap;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -105,12 +104,11 @@ public class SP2CMapStylePacket implements IMessage {
 		TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
 	}
 	
-	public UrlTiledMap getTiledMap(TiledMapProvider provider, int maxLoaded) {
+	public UrlTiledMap getTiledMap(TiledMapProvider provider) {
 		return new UrlTiledMap(
 				this.urlPatterns,
 				this.minZoom,
 				this.maxZoom,
-				maxLoaded,
 				this.id,
 				this.names,
 				this.copyrights,
@@ -129,7 +127,7 @@ public class SP2CMapStylePacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
-			UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER, TerramapConfig.maxTileLoad);
+			UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER);
 			TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addServerMapStyle(map));
 			return null;
@@ -143,7 +141,7 @@ public class SP2CMapStylePacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
-			UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY, TerramapConfig.maxTileLoad);
+			UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY);
 			TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addProxyMapStyle(map));
 			return null;

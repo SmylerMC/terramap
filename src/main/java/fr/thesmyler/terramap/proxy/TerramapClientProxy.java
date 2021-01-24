@@ -11,7 +11,7 @@ import fr.thesmyler.terramap.gui.screens.TerraDependencyErrorScreen;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
-import fr.thesmyler.terramap.maps.UrlRasterTile;
+import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -65,8 +65,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		KeyBindings.registerBindings();
 		UrlRasterTile.registerErrorTexture();
 		MarkerControllerManager.registerBuiltInControllers();
-		MapStyleRegistry.loadBuiltIns();
-		MapStyleRegistry.loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
+		MapStyleRegistry.reload();
 	}
 
 	@Override

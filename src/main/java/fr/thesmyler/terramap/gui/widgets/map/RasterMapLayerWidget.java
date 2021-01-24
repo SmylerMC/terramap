@@ -6,7 +6,7 @@ import java.util.Set;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
-import fr.thesmyler.terramap.maps.UrlRasterTile;
+import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
 import fr.thesmyler.terramap.maps.utils.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
