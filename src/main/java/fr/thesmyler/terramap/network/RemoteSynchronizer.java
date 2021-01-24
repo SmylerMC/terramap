@@ -14,7 +14,7 @@ import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.UrlTiledMap;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
@@ -101,7 +101,7 @@ public abstract class RemoteSynchronizer {
 
 	public static void sendMapStylesToClient(EntityPlayerMP player) {
 		if(TerramapConfig.sendCusomMapsToClient) {
-			for(TiledMap map: MapStyleRegistry.getUserMaps().values()) {
+			for(UrlTiledMap map: MapStyleRegistry.getUserMaps().values()) {
 				SP2CMapStylePacket pkt = new SP2CMapStylePacket(map);
 				TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(pkt, player);
 			}

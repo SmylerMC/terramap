@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.maps.TilePosition.InvalidTilePositionException;
-import fr.thesmyler.terramap.maps.TiledMap;
-import fr.thesmyler.terramap.maps.WebTile;
+import fr.thesmyler.terramap.maps.IRasterTile;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.UrlRasterTile;
+import fr.thesmyler.terramap.maps.utils.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -17,15 +18,15 @@ import net.minecraft.util.ResourceLocation;
 //TODO Fractional zoom
 public class RasterMapLayerWidget extends MapLayerWidget {
 
-	protected TiledMap map;
-	protected Set<WebTile> lastNeededTiles = new HashSet<>();
+	protected IRasterTiledMap map;
+	protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
 
-	public RasterMapLayerWidget(TiledMap map, double tileScaling) {
+	public RasterMapLayerWidget(IRasterTiledMap map, double tileScaling) {
 		super(tileScaling);
 		this.map = map;
 	}
 
-	public TiledMap getMap() {
+	public IRasterTiledMap getMap() {
 		return this.map;
 	}
 
@@ -33,7 +34,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 
 		boolean perfectDraw = true;
-		Set<WebTile> neededTiles = new HashSet<>();
+		Set<IRasterTile> neededTiles = new HashSet<>();
 
 		boolean debug = false;
 		MapWidget parentMap = null;
@@ -51,7 +52,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
 
-		int maxTileXY = (int) map.getSizeInTiles((int)this.zoom);
+		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile((int)this.zoom);
 		long maxX = (long) (upperLeftX + this.width);
 		long maxY = (long) (upperLeftY + this.height);
 
@@ -62,14 +63,14 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 			for(int tileY = lowerTileY; tileY * renderSize < maxY; tileY++) {
 
-				WebTile tile;
+				IRasterTile tile;
 
 				try {
 					tile = map.getTile((int)this.zoom, Math.floorMod(tileX, maxTileXY), tileY);
 				} catch(InvalidTilePositionException e) { continue ;}
 
 				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
-				WebTile bestTile = tile;
+				IRasterTile bestTile = tile;
 				neededTiles.add(bestTile);
 				boolean lowerResRender = false;
 				boolean unlockedZoomRender = false;
@@ -89,8 +90,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 						unlockedZoomRender = true;
 					}
 
-					while(tile.getZoom() > 0 && !tile.isTextureAvailable()) {
-						tile = this.map.getTile(tile.getZoom()-1, tile.getX() /2, tile.getY() /2);
+					while(tile.getPosition().getZoom() > 0 && !tile.isTextureAvailable()) {
+						tile = this.map.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
 					}
 				}
 
@@ -119,10 +120,10 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				}
 
 				if(lowerResRender) {
-					int sizeFactor = (1 <<(bestTile.getZoom() - tile.getZoom()));
+					int sizeFactor = (1 <<(bestTile.getPosition().getZoom() - tile.getPosition().getZoom()));
 
-					int xInBiggerTile = (int) (bestTile.getX() - sizeFactor * tile.getX());
-					int yInBiggerTile = (int) (bestTile.getY() - sizeFactor * tile.getY());
+					int xInBiggerTile = (int) (bestTile.getPosition().getX() - sizeFactor * tile.getPosition().getX());
+					int yInBiggerTile = (int) (bestTile.getPosition().getY() - sizeFactor * tile.getPosition().getY());
 
 					double factorX = (double)xInBiggerTile / (double)sizeFactor;
 					double factorY = (double)yInBiggerTile / (double)sizeFactor;
@@ -132,7 +133,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				}
 
 				GlStateManager.color(1, 1, 1, 1);
-				ResourceLocation texture = WebTile.errorTileTexture;
+				ResourceLocation texture = UrlRasterTile.errorTileTexture;
 				try {
 					if(tile.isTextureAvailable()) texture = tile.getTexture();
 					else perfectDraw = false;
@@ -175,7 +176,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 							dispY,
 							dispY + displayHeight - 1,
 							lineColor);
-					parent.getFont().drawString("" + tile.getZoom(), dispX + 2, dispY + 2, lineColor);
+					parent.getFont().drawString("" + tile.getPosition().getZoom(), dispX + 2, dispY + 2, lineColor);
 				}
 				GlStateManager.color(1, 1, 1, 1);
 			}

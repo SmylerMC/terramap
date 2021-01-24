@@ -29,8 +29,8 @@ public class MapStyleRegistry {
 
 	private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
 	private static File configMapsFile;
-	private static Map<String, TiledMap> baseMaps = new HashMap<String, TiledMap>();
-	private static Map<String, TiledMap> userMaps = new HashMap<String, TiledMap>();
+	private static Map<String, UrlTiledMap> baseMaps = new HashMap<String, UrlTiledMap>();
+	private static Map<String, UrlTiledMap> userMaps = new HashMap<String, UrlTiledMap>();
 
 	/**
 	 * Get the default Terramap maps, loaded from the jar and from the online source
@@ -39,8 +39,8 @@ public class MapStyleRegistry {
 	 * 
 	 * @return a new map that contains id => TiledMap couples
 	 */
-	public static Map<String, TiledMap> getBaseMaps() {
-		Map<String, TiledMap> maps = new HashMap<>();
+	public static Map<String, UrlTiledMap> getBaseMaps() {
+		Map<String, UrlTiledMap> maps = new HashMap<>();
 		maps.putAll(baseMaps);
 		return maps;
 	}
@@ -51,8 +51,8 @@ public class MapStyleRegistry {
 	 * 
 	 * @return a new map that contains id => TiledMap couples
 	 */
-	public static Map<String, TiledMap> getUserMaps() {
-		Map<String, TiledMap> maps = new HashMap<>();
+	public static Map<String, UrlTiledMap> getUserMaps() {
+		Map<String, UrlTiledMap> maps = new HashMap<>();
 		maps.putAll(userMaps);
 		return maps;
 	}
@@ -167,7 +167,7 @@ public class MapStyleRegistry {
 		loadFromConfigFile();
 	}
 	
-	private static TiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
+	private static UrlTiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
 		//TODO Do some checks to make sure the parsed map styles are right (only on client)
 		String[] patterns = saved.urls;
 		if(patterns == null || patterns.length <= 0) {
@@ -176,7 +176,7 @@ public class MapStyleRegistry {
 				patterns = new String[] {saved.url};
 			} else throw new RuntimeException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
 		}
-		return new TiledMap(
+		return new UrlTiledMap(
 				patterns,
 				saved.min_zoom,
 				saved.max_zoom,
@@ -193,18 +193,18 @@ public class MapStyleRegistry {
 			);
 	}
 	
-	private static Map<String, TiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
+	private static Map<String, UrlTiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
 		String json = String.join("", Files.readAllLines(file.toPath()));
-		Map<String, TiledMap> maps =  loadFromJson(json, provider);
+		Map<String, UrlTiledMap> maps =  loadFromJson(json, provider);
 		return maps;
 	}
 
-	private static Map<String, TiledMap> loadFromJson(String json, TiledMapProvider provider) {
+	private static Map<String, UrlTiledMap> loadFromJson(String json, TiledMapProvider provider) {
 		Gson gson = new Gson();
 		MapStyleFile savedStyles = gson.fromJson(json, MapStyleFile.class);
-		Map<String, TiledMap> styles = new HashMap<String, TiledMap>();
+		Map<String, UrlTiledMap> styles = new HashMap<String, UrlTiledMap>();
 		for(String id: savedStyles.maps.keySet()) {
-			TiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
+			UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
 			styles.put(id, style);
 		}
 		return styles;

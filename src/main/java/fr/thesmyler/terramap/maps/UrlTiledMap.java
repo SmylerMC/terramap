@@ -8,8 +8,11 @@ import com.google.common.base.Preconditions;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.maps.utils.TilePos;
+import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
+import io.github.terra121.util.http.Http;
 import net.minecraft.util.text.ITextComponent;
 
 /**
@@ -22,11 +25,11 @@ import net.minecraft.util.text.ITextComponent;
  * @author SmylerMC
  *
  */
-public class TiledMap implements Comparable<TiledMap> {
+public class UrlTiledMap implements IRasterTiledMap {
 
 	private final String[] urlPatterns;
-	private final LinkedList<WebTile> tileList; // Uses for ordered access when unloading
-	private final Map<UnmutableTilePosition, WebTile> tileMap; // Used for unordered access
+	private final LinkedList<UrlRasterTile> tileList; // Uses for ordered access when unloading
+	private final Map<TilePosUnmutable, UrlRasterTile> tileMap; // Used for unordered access
 	private final int maxZoom;
 	private final int minZoom;
 	private final int displayPriority;
@@ -45,7 +48,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	
 	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
-	public TiledMap(
+	public UrlTiledMap(
 			String[] urlPatterns,
 			int minZoom,
 			int maxZoom,
@@ -99,7 +102,16 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * Initializes this map by loading all tiles bellow a certain zoom level specified in {@link TerramapConfig}, and starts loading their textures, if it hasn't been done yet.
 	 * Also makes sure the cache follows the mod's config
 	 */
+	@Override
 	public void setup() {
+		for(String urlPattern: this.getUrlPatterns()) {
+			String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
+			try {
+				Http.setMaximumConcurrentRequestsTo(url, this.getMaxConcurrentRequests());
+			} catch(IllegalArgumentException e) {
+				TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + url);
+			}
+		}
 		if(this.maxLoaded != TerramapConfig.maxTileLoad) {
 			this.maxLoaded = TerramapConfig.maxTileLoad;
 			this.unloadToMaxLoad();
@@ -112,46 +124,31 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * 
 	 * @param tile - the tile to load
 	 */
-	protected void loadTile(WebTile tile) {
+	protected void loadTile(UrlRasterTile tile) {
 		this.tileList.add(Math.min(this.baseLoad, this.tileList.size()), tile);
 		this.tileMap.put(tile.getPosition(), tile);
 		this.unloadToMaxLoad();
 	}
-
-	/**
-	 * Gets a specific tile from this map.
-	 * Registers it as last used
-	 * 
-	 * @param zoom - the zoom level of the tile
-	 * @param x - x coordinate of the tile
-	 * @param y - y coordinate of the tile
-	 * @return a {@link WebTile}
-	 */
-	public WebTile getTile(int zoom, int x, int y) {
-		UnmutableTilePosition pos = new UnmutableTilePosition(zoom, x, y);
-		WebTile tile = this.tileMap.get(pos);
+	
+	@Override
+	public UrlRasterTile getTile(TilePos position) {
+		TilePosUnmutable pos = position.getUnmutable();
+		UrlRasterTile tile = this.tileMap.get(pos);
 		if(tile != null) {
 			this.needTile(tile);
 			return tile;
 		}
-		String pat = this.urlPatterns[(zoom + x + y) % this.urlPatterns.length];
-		tile = new WebTile(pat, pos);
+		String pat = this.urlPatterns[(pos.getZoom() + pos.getX() + pos.getY()) % this.urlPatterns.length];
+		tile = new UrlRasterTile(pat, pos);
 		this.loadTile(tile);
 		return tile;
 	}
 
-	/**
-	 * Get the tile at a specific position
-	 * 
-	 * @param zoom - the zoom level to consider
-	 * @param x - x coordinate on the map, in pixels
-	 * @param y - y coordinate on the map, in pixels
-	 * @return the {@link WebTile} that contains that position at that zoom level
-	 */
-	public WebTile getTileAt(int zoom, long x, long y) {
-		int tileX = WebMercatorUtils.getTileXAt(x);
-		int tileY = WebMercatorUtils.getTileYAt(y);
-		return this.getTile(zoom, tileX, tileY);
+
+	@Override
+	public boolean isDebug() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	/**
@@ -160,7 +157,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * 
 	 * @param tile - the tile to unload
 	 */
-	public void unloadTile(WebTile tile) {
+	public void unloadTile(UrlRasterTile tile) {
 		tile.unloadTexture();
 		tile = this.tileMap.remove(tile.getPosition());
 		if(tile != null) {
@@ -170,24 +167,14 @@ public class TiledMap implements Comparable<TiledMap> {
 	}
 
 	/**
-	 * The size of this map in tiles at a given zoom level
-	 * 
-	 * @param zoomLevel
-	 * @return 2^zoom
-	 */
-	public long getSizeInTiles(int zoomLevel){
-		return WebMercatorUtils.getDimensionsInTile(zoomLevel);
-	}
-
-	/**
 	 * @return The number of tiles currently loaded
 	 */
 	public int getLoadedCount() {
 		return this.tileList.size();
 	}
 
-	private void needTile(WebTile tile) {
-		if(tile.getZoom() <= this.lowZoom) return; // Those should stay where they are
+	private void needTile(UrlRasterTile tile) {
+		if(tile.getPosition().getZoom() <= this.lowZoom) return; // Those should stay where they are
 		if(this.tileList.contains(tile)) {
 			this.tileList.remove(tile);
 		}
@@ -221,7 +208,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	 */
 	public void unloadToMaxLoad() {
 		while(this.tileList.size() > this.maxLoaded) {
-			WebTile toUnload = this.tileList.removeLast();
+			UrlRasterTile toUnload = this.tileList.removeLast();
 			this.tileMap.remove(toUnload.getPosition());
 			this.unloadTile(toUnload);
 		}
@@ -242,6 +229,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * 
 	 * @return the minimum zoom level that map supports, that's usually 0
 	 */
+	@Override
 	public int getMinZoom() {
 		return this.minZoom;
 	}
@@ -249,6 +237,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	/**
 	 * @return the maximum zoom level this map supports
 	 */
+	@Override
 	public int getMaxZoom() {
 		return this.maxZoom;
 	}
@@ -256,6 +245,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	/**
 	 * @return the String id of this map
 	 */
+	@Override
 	public String getId() {
 		return this.id;
 	}
@@ -269,6 +259,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * @param localeKey - the language key to get the copyright for
 	 * @return a copyright as a {@link ITextComponent}, translated to the appropriate language.
 	 */
+	@Override
 	public ITextComponent getCopyright(String localeKey) {
 		String result = this.copyrightJsons.getOrDefault(localeKey, this.copyrightJsons.get("en_us"));
 		if(result == null) {
@@ -300,6 +291,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * @param localeKey - the language key to get the copyright for
 	 * @return the name of this map, translated to the appropriate language.
 	 */
+	@Override
 	public String getLocalizedName(String localeKey) {
 		String result = this.names.getOrDefault(localeKey, this.names.get("en_us"));
 		if(result != null) {
@@ -326,14 +318,16 @@ public class TiledMap implements Comparable<TiledMap> {
 	/**
 	 * @return the comment from the map provider metadata
 	 */
+	@Override
 	public String getComment() {
 		return this.comment;
 	}
 
 	/**
 	 * 
-	 * @return this mapt's provider
+	 * @return this map's provider
 	 */
+	@Override
 	public TiledMapProvider getProvider() {
 		return this.provider;
 	}
@@ -342,6 +336,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	 * 
 	 * @return the version of this map's provider
 	 */
+	@Override
 	public long getProviderVersion() {
 		return this.version;
 	}
@@ -349,6 +344,7 @@ public class TiledMap implements Comparable<TiledMap> {
 	/**
 	 * @return an integer used to calculate the order in which map styles should be displayed. Higher means first.
 	 */
+	@Override
 	public int getDisplayPriority() {
 		return this.displayPriority;
 	}
@@ -368,17 +364,10 @@ public class TiledMap implements Comparable<TiledMap> {
 		return this.baseLoad;
 	}
 
-	@Override
-	public int compareTo(TiledMap o) {
-		if(o == null) return 1;
-		if(this.displayPriority > o.displayPriority) return 1;
-		else if(this.displayPriority == o.displayPriority) return 0;
-		else return -1;
-	}
-
 	/**
 	 * @return Whether or not this map can be used on the minimap
 	 */
+	@Override
 	public boolean isAllowedOnMinimap() {
 		return this.allowOnMinimap;
 	}

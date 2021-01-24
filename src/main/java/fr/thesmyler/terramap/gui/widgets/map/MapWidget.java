@@ -31,7 +31,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerCon
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -82,7 +82,7 @@ public class MapWidget extends Screen {
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
 
-	public MapWidget(int x, int y, int z, int width, int height, TiledMap map, MapContext context, double tileScaling) {
+	public MapWidget(int x, int y, int z, int width, int height, IRasterTiledMap map, MapContext context, double tileScaling) {
 		super(x, y, z, width, height, BackgroundType.NONE);
 		this.context = context;
 		this.tileScaling = tileScaling;
@@ -229,7 +229,7 @@ public class MapWidget extends Screen {
 
 	}
 
-	public MapWidget(int z, TiledMap map, MapContext context, double tileScaling) {
+	public MapWidget(int z, IRasterTiledMap map, MapContext context, double tileScaling) {
 		this(0, 0, z, 50, 50, map, context, tileScaling);
 	}
 
@@ -261,7 +261,7 @@ public class MapWidget extends Screen {
 		return this;
 	}
 
-	public void setBackground(TiledMap map) {
+	public void setBackground(IRasterTiledMap map) {
 		this.discardPreviousErrors(this.background); // We don't care about errors for this background anumore
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 	}
@@ -723,7 +723,7 @@ public class MapWidget extends Screen {
 		return this.mainPlayerMarker;
 	}
 
-	public TiledMap getBackgroundStyle() {
+	public IRasterTiledMap getBackgroundStyle() {
 		return this.background.getMap();
 	}
 

@@ -12,8 +12,9 @@ import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.UrlTiledMap;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -23,7 +24,6 @@ import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import io.github.terra121.EarthWorldType;
 import io.github.terra121.generator.EarthGeneratorSettings;
 import io.github.terra121.projection.GeographicProjection;
-import io.github.terra121.util.http.Http;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -52,8 +52,8 @@ public class TerramapRemote {
 	private GeographicProjection projection = null;
 	private boolean isRegisteredForUpdates = false;
 	private String tpCommand = null;
-	private Map<String, TiledMap> serverMaps = new HashMap<String, TiledMap>();
-	private Map<String, TiledMap> proxyMaps = new HashMap<String, TiledMap>();
+	private Map<String, IRasterTiledMap> serverMaps = new HashMap<>();
+	private Map<String, IRasterTiledMap> proxyMaps = new HashMap<>();
 	private boolean proxyHasWarpSupport = false;
 	private boolean serverHasWarpSupport = false;
 	private boolean allowPlayerRadar = true;
@@ -172,12 +172,12 @@ public class TerramapRemote {
 		}
 	}
 	
-	public void addServerMapStyle(TiledMap map) {
+	public void addServerMapStyle(UrlTiledMap map) {
 		this.serverMaps.put(map.getId(), map);
         HudScreenHandler.updateMinimap();
 	}
 	
-	public void addProxyMapStyle(TiledMap map) {
+	public void addProxyMapStyle(UrlTiledMap map) {
 		this.proxyMaps.put(map.getId(), map);
 		HudScreenHandler.updateMinimap();
 	}
@@ -189,16 +189,17 @@ public class TerramapRemote {
 		HudScreenHandler.updateMinimap();
 	}
 	
-	public Map<String, TiledMap> getServerMapStyles() {
+	public Map<String, IRasterTiledMap> getServerMapStyles() {
 		return this.serverMaps;
 	}
 	
-	public Map<String, TiledMap> getProxyMapStyles() {
+	public Map<String, IRasterTiledMap> getProxyMapStyles() {
 		return this.proxyMaps;
 	}
 	
-	public Map<String, TiledMap> getMapStyles() {
-		Map<String, TiledMap> maps = MapStyleRegistry.getBaseMaps();
+	public Map<String, IRasterTiledMap> getMapStyles() {
+		Map<String, IRasterTiledMap> maps = new HashMap<>();
+		maps.putAll(MapStyleRegistry.getBaseMaps());
 		maps.putAll(this.proxyMaps);
 		maps.putAll(this.serverMaps);
 		maps.putAll(MapStyleRegistry.getUserMaps());
@@ -430,16 +431,7 @@ public class TerramapRemote {
 	}
 	
 	public void setupMaps() {
-		for(TiledMap map: this.getMapStyles().values()) {
-			for(String urlPattern: map.getUrlPatterns()) {
-				String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
-				try {
-					Http.setMaximumConcurrentRequestsTo(url, map.getMaxConcurrentRequests());
-				} catch(IllegalArgumentException e) {
-					TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + url);
-				}
-				
-			}
+		for(IRasterTiledMap map: this.getMapStyles().values()) {
 			map.setup();
 		}
 	}

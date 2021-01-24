@@ -6,7 +6,7 @@ import java.util.Map;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.UrlTiledMap;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -29,7 +29,7 @@ public class SP2CMapStylePacket implements IMessage {
 	private String comment;
 	private int maxConcurrentConnection;
 		
-	public SP2CMapStylePacket(TiledMap map) {
+	public SP2CMapStylePacket(UrlTiledMap map) {
 		this.id = map.getId();
 		this.providerVersion = map.getProviderVersion();
 		this.urlPatterns = map.getUrlPatterns();
@@ -105,8 +105,8 @@ public class SP2CMapStylePacket implements IMessage {
 		TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
 	}
 	
-	public TiledMap getTiledMap(TiledMapProvider provider, int maxLoaded) {
-		return new TiledMap(
+	public UrlTiledMap getTiledMap(TiledMapProvider provider, int maxLoaded) {
+		return new UrlTiledMap(
 				this.urlPatterns,
 				this.minZoom,
 				this.maxZoom,
@@ -129,7 +129,7 @@ public class SP2CMapStylePacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
-			TiledMap map = message.getTiledMap(TiledMapProvider.SERVER, TerramapConfig.maxTileLoad);
+			UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER, TerramapConfig.maxTileLoad);
 			TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addServerMapStyle(map));
 			return null;
@@ -143,7 +143,7 @@ public class SP2CMapStylePacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
-			TiledMap map = message.getTiledMap(TiledMapProvider.PROXY, TerramapConfig.maxTileLoad);
+			UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY, TerramapConfig.maxTileLoad);
 			TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addProxyMapStyle(map));
 			return null;

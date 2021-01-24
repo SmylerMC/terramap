@@ -20,7 +20,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -53,8 +53,8 @@ public class HudConfigScreen extends Screen {
 		});
 		this.zoomSlider.setOnChange(this.minimap::setZoom);
 		this.styleSlider.setOnChange(v -> {
-			Map<String, TiledMap> maps = TerramapRemote.getRemote().getMapStyles();
-			TiledMap map = maps.get(v);
+			Map<String, IRasterTiledMap> maps = TerramapRemote.getRemote().getMapStyles();
+			IRasterTiledMap map = maps.get(v);
 			if(map == null) map = maps.values().iterator().next();
 			this.minimap.setBackground(map);
 		});

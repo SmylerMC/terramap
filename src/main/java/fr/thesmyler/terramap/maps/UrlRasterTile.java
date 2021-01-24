@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
+import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import io.github.terra121.util.http.Disk;
 import io.github.terra121.util.http.Http;
 import io.netty.buffer.ByteBuf;
@@ -23,25 +24,25 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
-public class WebTile {
+public class UrlRasterTile implements IRasterTile {
 
-	private final UnmutableTilePosition pos;
+	private final TilePosUnmutable pos;
 	private final String url;
 	private ResourceLocation texture = null;
 	private CompletableFuture<ByteBuf> textureTask;
 
 	public static ResourceLocation errorTileTexture = null;
 
-	public WebTile(String urlPattern, UnmutableTilePosition pos) {
+	public UrlRasterTile(String urlPattern, TilePosUnmutable pos) {
 		this.pos = pos;
 		this.url = urlPattern
-				.replace("{x}", "" + this.getX())
-				.replace("{y}", "" + this.getY())
-				.replace("{z}", "" + this.getZoom());
+				.replace("{x}", "" + this.getPosition().getX())
+				.replace("{y}", "" + this.getPosition().getY())
+				.replace("{z}", "" + this.getPosition().getZoom());
 	}
 	
-	public WebTile(String urlPattern, int zoom, int x, int y) {
-		this(urlPattern, new UnmutableTilePosition(zoom, x , y));
+	public UrlRasterTile(String urlPattern, int zoom, int x, int y) {
+		this(urlPattern, new TilePosUnmutable(zoom, x , y));
 	}
 
 
@@ -49,6 +50,7 @@ public class WebTile {
 		return this.url;
 	}
 	
+	@Override
 	public boolean isTextureAvailable() {
 		if(texture != null) return true; // Don't try loading the texture if it has already been loaded
 		try {
@@ -59,6 +61,7 @@ public class WebTile {
 		return this.texture != null;
 	}
 
+	@Override
 	public ResourceLocation getTexture() throws Throwable {
 		if(this.texture == null) {
 			if(this.textureTask == null) {
@@ -94,6 +97,7 @@ public class WebTile {
 		}
 	}
 	
+	@Override
 	public void cancelTextureLoading() {
 		if(this.textureTask != null) {
 			this.textureTask.cancel(true);
@@ -101,6 +105,7 @@ public class WebTile {
 		}
 	}
 
+	@Override
 	public void unloadTexture() {
 		this.cancelTextureLoading();
 		if(this.texture != null) {
@@ -115,27 +120,16 @@ public class WebTile {
 	public boolean equals(Object obj) {
 		if(obj == this) return true;
 		if(obj == null) return false;
-		if(!(obj instanceof WebTile)) return false;
-		WebTile other = (WebTile) obj;
+		if(!(obj instanceof UrlRasterTile)) return false;
+		UrlRasterTile other = (UrlRasterTile) obj;
 		return other.url.equals(this.url);
 	}
 
 	///// Various uninteresting getters and setters from here /////
 
-	public UnmutableTilePosition getPosition() {
+	@Override
+	public TilePosUnmutable getPosition() {
 		return this.pos;
-	}
-	
-	public int getX() {
-		return this.pos.xPosition;
-	}
-
-	public int getY() {
-		return this.pos.yPosition;
-	}
-
-	public int getZoom() {
-		return this.pos.zoom;
 	}
 
 	@Override
@@ -146,8 +140,7 @@ public class WebTile {
 	public static void registerErrorTexture() {
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 		int color[] = {170, 211, 223};
-		WebTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
-
+		UrlRasterTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
 	}
 
 }

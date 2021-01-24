@@ -154,15 +154,14 @@ public class WebMercatorUtils {
 	
 	
 	/**
-	 * 
 	 * @param x
 	 * @param z
 	 * @param zoom
-	 * @return true if the tile at given x and z is on the real world scaled at zoom
+	 * @return true if zoom, x, y is a valid tile position
 	 */
-	public static boolean isTileInWorld(int zoom, int tX, int tY){
+	public static boolean isValidTilePosition(int zoom, int tX, int tY){
 		int mS = 1 << zoom;
-		return tX >= 0 && tX < mS && tY >= 0 && tY < mS;
+		return zoom >= 0 && zoom < MAX_ZOOM && tX >= 0 && tX < mS && tY >= 0 && tY < mS;
 	}
 	
 	/**
