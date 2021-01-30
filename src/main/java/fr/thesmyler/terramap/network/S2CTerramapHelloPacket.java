@@ -55,7 +55,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 		this.serverVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		String jsonWorldSettings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
 		if(jsonWorldSettings.length() > 0) {
-			this.worldSettings = new EarthGeneratorSettings(jsonWorldSettings);
+			this.worldSettings = EarthGeneratorSettings.parse(jsonWorldSettings);
 		} else {
 			this.worldSettings = null;
 		}

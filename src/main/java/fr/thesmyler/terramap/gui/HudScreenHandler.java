@@ -16,7 +16,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,7 @@ public abstract class HudScreenHandler {
 
 		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
 			if(map == null) {
-				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new TiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveMinimapTileScaling());
+				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveMinimapTileScaling());
 				map.setInteractive(false);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
@@ -86,10 +86,10 @@ public abstract class HudScreenHandler {
 		markerVisibility.put(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
 		markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
 		map.setMarkersVisibilities(markerVisibility);
-		Map<String, TiledMap> styles = TerramapRemote.getRemote().getMapStyles();
-		TiledMap bg = styles.get(TerramapConfig.minimapStyle);
+		Map<String, IRasterTiledMap> styles = TerramapRemote.getRemote().getMapStyles();
+		IRasterTiledMap bg = styles.get(TerramapConfig.minimapStyle);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {
-			ArrayList<TiledMap> maps = new ArrayList<TiledMap>(styles.values());
+			ArrayList<IRasterTiledMap> maps = new ArrayList<IRasterTiledMap>(styles.values());
 			Collections.sort(maps, Collections.reverseOrder());
 			bg = maps.get(0);
 		}

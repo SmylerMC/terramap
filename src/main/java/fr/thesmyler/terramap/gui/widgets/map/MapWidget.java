@@ -24,14 +24,13 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.gui.screens.EarthMapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -82,7 +81,7 @@ public class MapWidget extends Screen {
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
 
-	public MapWidget(int x, int y, int z, int width, int height, TiledMap map, MapContext context, double tileScaling) {
+	public MapWidget(int x, int y, int z, int width, int height, IRasterTiledMap map, MapContext context, double tileScaling) {
 		super(x, y, z, width, height, BackgroundType.NONE);
 		this.context = context;
 		this.tileScaling = tileScaling;
@@ -206,9 +205,10 @@ public class MapWidget extends Screen {
 		});
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
-		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
-			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigScreen(null, Minecraft.getMinecraft()));	
-		});
+//		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
+//			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigScreen(null, Minecraft.getMinecraft()));	
+//		}); TODO Re-implement this
+		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"));
 
 		this.controller = new ControllerMapLayer(this.tileScaling);
 		super.addWidget(this.controller);
@@ -229,7 +229,7 @@ public class MapWidget extends Screen {
 
 	}
 
-	public MapWidget(int z, TiledMap map, MapContext context, double tileScaling) {
+	public MapWidget(int z, IRasterTiledMap map, MapContext context, double tileScaling) {
 		this(0, 0, z, 50, 50, map, context, tileScaling);
 	}
 
@@ -261,7 +261,7 @@ public class MapWidget extends Screen {
 		return this;
 	}
 
-	public void setBackground(TiledMap map) {
+	public void setBackground(IRasterTiledMap map) {
 		this.discardPreviousErrors(this.background); // We don't care about errors for this background anumore
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 	}
@@ -723,7 +723,7 @@ public class MapWidget extends Screen {
 		return this.mainPlayerMarker;
 	}
 
-	public TiledMap getBackgroundStyle() {
+	public IRasterTiledMap getBackgroundStyle() {
 		return this.background.getMap();
 	}
 

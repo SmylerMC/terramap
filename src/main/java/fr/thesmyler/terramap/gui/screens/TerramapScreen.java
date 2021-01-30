@@ -34,7 +34,9 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
@@ -49,7 +51,7 @@ import net.minecraft.util.text.TextFormatting;
 public class TerramapScreen extends Screen {
 
 	private GuiScreen parent;
-	private Map<String, TiledMap> backgrounds;
+	private Map<String, IRasterTiledMap> backgrounds;
 
 	// Widgets
 	private MapWidget map; 
@@ -74,11 +76,11 @@ public class TerramapScreen extends Screen {
 	private boolean debugMode = false;
 
 
-	public TerramapScreen(GuiScreen parent, Map<String, TiledMap> maps) {
+	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
 		this.parent = parent;
 		this.backgrounds = maps;
-		Collection<TiledMap> tiledMaps = this.backgrounds.values();
-		TiledMap bg = tiledMaps.toArray(new TiledMap[0])[0];
+		Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
+		IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
 		TerramapScreenSavedState state = TerramapRemote.getRemote().getSavedScreenState();
 		if(state != null) this.resumeFromSavedState(TerramapRemote.getRemote().getSavedScreenState());
@@ -209,7 +211,7 @@ public class TerramapScreen extends Screen {
 			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
 			this.addWidget(warningWidget);
 		}
-		
+
 		TerramapRemote.getRemote().setupMaps();
 	}
 
@@ -297,18 +299,21 @@ public class TerramapScreen extends Screen {
 			dbText += "\nServer: " + srv.getServerVersion();
 			dbText += "\nSledgehammer: " + srv.getSledgehammerVersion();
 			String proj = null;
-			String orientation = null;
 			if(srv != null && srv.getGeneratorSettings() != null) {
-				proj = srv.getGeneratorSettings().settings.projection;
-				orientation = srv.getGeneratorSettings().settings.orentation.name();
+				proj = srv.getGeneratorSettings().projection().toString();
 			}
 			dbText += "\nProjection: " + proj;
-			dbText += "\nOrientation: " + orientation;
-			dbText += "\nLoaded tiles: " + this.map.getBackgroundStyle().getBaseLoad() + "/" + this.map.getBackgroundStyle().getLoadedCount() + "/" + this.map.getBackgroundStyle().getMaxLoad();
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
-			String[] urls = this.map.getBackgroundStyle().getUrlPatterns();
-			dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
+			if(this.map.getBackgroundStyle() instanceof CachingRasterTiledMap) {
+				CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) this.map.getBackgroundStyle();
+				dbText += "\nLoaded tiles: " + cachingMap.getBaseLoad() + "/" + cachingMap.getLoadedCount() + "/" + cachingMap.getMaxLoad();
+				if(cachingMap instanceof UrlTiledMap) {
+					UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
+					String[] urls = urlMap.getUrlPatterns();
+					dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
+				}
+			}
 			this.debugText.setText(dbText);
 		}
 	}
@@ -360,7 +365,7 @@ public class TerramapScreen extends Screen {
 		if(trackingMarker != null) {
 			tracking = trackingMarker.getIdentifier();
 		}
-		
+
 		return new TerramapScreenSavedState(
 				this.map.getZoom(),
 				this.map.getCenterLongitude(),
@@ -368,8 +373,8 @@ public class TerramapScreen extends Screen {
 				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
 				TerramapConfig.saveUiState ? this.debugMode : false,
-				TerramapConfig.saveUiState ? this.f1Mode : false,
-				this.map.getMarkersVisibility(), tracking);
+						TerramapConfig.saveUiState ? this.f1Mode : false,
+								this.map.getMarkersVisibility(), tracking);
 	}
 
 	public void resumeFromSavedState(TerramapScreenSavedState state) {
@@ -422,9 +427,9 @@ public class TerramapScreen extends Screen {
 		StyleScreen() {
 			super(0, 0, 0, 0, 0, BackgroundType.NONE);
 			MapWidget lw = null;
-			ArrayList<TiledMap> maps = new ArrayList<TiledMap>(TerramapScreen.this.backgrounds.values());
-			Collections.sort(maps, Collections.reverseOrder());
-			for(TiledMap map: maps) {
+			ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapScreen.this.backgrounds.values());
+			Collections.sort(maps, (m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
+			for(IRasterTiledMap map: maps) {
 				MapWidget w = new MapPreview(50, map);
 				w.setWidth(mapsSize).setHeight(mapsSize);
 				if(lw == null) {
@@ -497,14 +502,14 @@ public class TerramapScreen extends Screen {
 		if(this.debugText != null) this.debugText.setVisibility(yesNo);
 		this.map.setDebugMode(yesNo);
 	}
-	
+
 	private void openConfig() {
 		Minecraft.getMinecraft().displayGuiScreen(new TerramapConfigScreen(this));
 	}
 
 	private class MapPreview extends MapWidget {
 
-		public MapPreview(int z, TiledMap map) {
+		public MapPreview(int z, IRasterTiledMap map) {
 			super(z, map, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
 			this.setInteractive(false);
 			this.setRightClickMenuEnabled(false);

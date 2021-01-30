@@ -159,6 +159,11 @@ public class TerramapConfig {
 	@Config.LangKey("terramap.config.save_ui_state") //TODO localize
 	@Config.Comment("Whether or not to save the map ui state when closing the full-screen map. Enable to save F1 mode and debug mode.")
 	public static boolean saveUiState = false; //TODO Actualy respect saveUiState
+	
+	@Config.Name("enable_debug_maps")
+	@Config.LangKey("terramap.config.enable_debug_maps") //TODO Localize
+	@Config.Comment("Set this to true to enable debugging map styles")
+	public static boolean enableDebugMaps = false;
 
 	@Config.Name("tpll_command")
 	@Config.LangKey("terramap.config.tpllcmd")
