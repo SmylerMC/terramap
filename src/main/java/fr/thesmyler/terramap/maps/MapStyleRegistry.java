@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 
@@ -85,8 +86,10 @@ public class MapStyleRegistry {
 	}
 	
 	public static void loadInternals() {
-		TerrainPreviewMap terrain = new TerrainPreviewMap(); 
-		baseMaps.put(terrain.getId(), terrain);
+		if(TerramapConfig.enableDebugMaps) {
+			TerrainPreviewMap terrain = new TerrainPreviewMap(); 
+			baseMaps.put(terrain.getId(), terrain);
+		}
 	}
 	
 	/**

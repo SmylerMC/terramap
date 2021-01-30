@@ -90,7 +90,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
 		this.unloadAll();
 		this.lowZoom = Math.min(3, TerramapConfig.lowZoomLevel); // We hard-code that here because we really don't want that to go above 3, 4 would already be 341 tiles
 		if(this.useLowZoom) {
-			for(int zoom=0; zoom<=this.lowZoom; zoom++) {
+			for(int zoom=this.getMinZoom(); zoom<=Math.min(this.getMaxZoom(), this.lowZoom); zoom++) {
 				int size = WebMercatorUtils.getDimensionsInTile(zoom);
 				for(int x=0; x<size; x++) for(int y=0; y<size; y++) {
 					try {
