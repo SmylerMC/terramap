@@ -39,7 +39,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 		if(this.player.world.isRemote) {
 			proj = TerramapRemote.getRemote().getProjection();
 		} else {
-			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
 		}
 		if(proj == null) return new double[] {Double.NaN, Double.NaN};
 		return proj.toGeo(this.player.posX, this.player.posZ);
@@ -66,7 +66,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 		if(this.player.world.isRemote) {
 			proj = TerramapRemote.getRemote().getProjection();
 		} else {
-			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).getProjection();
+			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
 		}
 		if(proj == null) return Float.NaN;
 		try{

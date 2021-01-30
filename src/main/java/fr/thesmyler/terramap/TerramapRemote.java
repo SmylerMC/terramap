@@ -14,8 +14,8 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -26,8 +26,7 @@ import io.github.terra121.EarthWorldType;
 import io.github.terra121.generator.EarthGeneratorSettings;
 import io.github.terra121.generator.TerrainPreview;
 import io.github.terra121.projection.GeographicProjection;
-import io.github.terra121.projection.MapsProjection;
-import io.github.terra121.projection.transform.ScaleProjectionTransform;
+import io.github.terra121.projection.mercator.WebMercatorProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -44,6 +43,8 @@ import net.minecraft.entity.player.EntityPlayer;
 public class TerramapRemote {
 
 	private static TerramapRemote instance;
+	
+	private static final GeographicProjection TERRAIN_PREVIEW_PROJECTION = new WebMercatorProjection(TerrainPreviewMap.BASE_ZOOM_LEVEL);
 
 	private Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<UUID, TerramapRemotePlayer>();
 	private PlayerSyncStatus serverSyncPlayers = PlayerSyncStatus.DISABLED;
@@ -107,14 +108,14 @@ public class TerramapRemote {
 
 	public GeographicProjection getProjection() {
 		if(this.projection == null && this.genSettings != null) {
-			this.projection = this.genSettings.getProjection();
+			this.projection = this.genSettings.projection();
 		}
 		return this.projection;
 	}
 	
 	public TerrainPreview getTerrainPreview() {
-		if(this.terrainPreview == null && this.genSettings != null) {
-			this.terrainPreview = new TerrainPreview(new ScaleProjectionTransform(new MapsProjection(), WebMercatorUtils.getDimensionsInTile(15)*256), this.genSettings);
+		if(this.terrainPreview == null && this.genSettings != null) {			
+			this.terrainPreview = new TerrainPreview(this.genSettings.withProjection(TERRAIN_PREVIEW_PROJECTION));
 		}
 		return this.terrainPreview;
 	}
@@ -262,7 +263,7 @@ public class TerramapRemote {
 		this.serverIdentifier = identifier;
 		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getRemoteIdentifier());
 		if(sttgStr.length() > 0) {
-			this.genSettings = new EarthGeneratorSettings(sttgStr);
+			this.genSettings = EarthGeneratorSettings.parse(sttgStr);
 			TerramapMod.logger.info("Got generator settings from client preferences file");
 		}
 	}

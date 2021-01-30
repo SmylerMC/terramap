@@ -35,11 +35,15 @@ public class TerrainPreviewTile implements IRasterTile {
 
 	@Override
 	public ResourceLocation getTexture() throws Throwable {
+		
+		//TODO We don't need to generate tiles for other zoom levels as we might as way scale up when rendering, so uncomment this when tiles are actually requested when lowResRender
+		// if(this.getPosition().getZoom() != TerrainPreviewMap.BASE_ZOOM_LEVEL) return null;
+		
 		if(this.texture == null) {
 			if(this.textureTask == null) {
 				TerrainPreview preview = TerramapRemote.getRemote().getTerrainPreview();
 				if(preview != null) {
-					this.textureTask = preview.tile(this.position.getX(), this.position.getY(), 15 - this.position.getZoom());
+					this.textureTask = preview.tile(this.position.getX(), this.position.getY(), TerrainPreviewMap.BASE_ZOOM_LEVEL - this.position.getZoom());
 				}
 			} else this.tryLoadingTexture();
 		}
@@ -73,16 +77,15 @@ public class TerrainPreviewTile implements IRasterTile {
 	private void tryLoadingTexture() throws Throwable {
 		if(this.textureTask != null && this.textureTask.isDone()){
 			if(this.textureTask.isCompletedExceptionally()) {
-				this.textureTask = null;
-				if(this.textureTask.isCancelled()) {
-					this.textureTask = null;
-				} else {
+				if(!this.textureTask.isCancelled()) {
 					try {
 						this.textureTask.get(); // That will throw an exception
 					} catch(ExecutionException e) {
+						this.textureTask = null;
 						throw e.getCause();
 					}
 				}
+				this.textureTask = null;
 				return;
 			}
 			Minecraft mc = Minecraft.getMinecraft();

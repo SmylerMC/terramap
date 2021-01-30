@@ -7,6 +7,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile> {
+	
+	public static final int BASE_ZOOM_LEVEL = 16;
 
 	public TerrainPreviewMap() {
 		super();
@@ -64,7 +66,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
 
 	@Override
 	public int getMinZoom() {
-		return 15;
+		return BASE_ZOOM_LEVEL;
 	}
 	
 	@Override

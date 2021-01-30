@@ -299,13 +299,10 @@ public class TerramapScreen extends Screen {
 			dbText += "\nServer: " + srv.getServerVersion();
 			dbText += "\nSledgehammer: " + srv.getSledgehammerVersion();
 			String proj = null;
-			String orientation = null;
 			if(srv != null && srv.getGeneratorSettings() != null) {
-				proj = srv.getGeneratorSettings().settings.projection;
-				orientation = srv.getGeneratorSettings().settings.orentation.name();
+				proj = srv.getGeneratorSettings().projection().toString();
 			}
 			dbText += "\nProjection: " + proj;
-			dbText += "\nOrientation: " + orientation;
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
 			if(this.map.getBackgroundStyle() instanceof CachingRasterTiledMap) {
