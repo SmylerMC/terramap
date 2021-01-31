@@ -5,6 +5,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
+//FIXME Default texture is cut
 public class ToggleButtonWidget extends AbstractButtonWidget {
 
 	protected boolean value;

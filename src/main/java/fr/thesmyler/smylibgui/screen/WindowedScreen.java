@@ -28,6 +28,7 @@ public class WindowedScreen extends Screen {
 	private int titleColor = 0xFFFFFFFF;
 	private Screen subScreen;
 	private String windowTitle;
+	private boolean visible = true;
 	
 	public WindowedScreen(BackgroundType back, Screen subScreen, String title, int z) {
 		super(back);
@@ -772,6 +773,16 @@ public class WindowedScreen extends Screen {
 	
 	public WindowedScreen setTitleColor(int color) {
 		this.titleColor = color;
+		return this;
+	}
+	
+	@Override
+	public boolean isVisible(Screen parent) {
+		return this.visible;
+	}
+	
+	public WindowedScreen setVisibility(boolean yesNo) {
+		this.visible = yesNo;
 		return this;
 	}
 	

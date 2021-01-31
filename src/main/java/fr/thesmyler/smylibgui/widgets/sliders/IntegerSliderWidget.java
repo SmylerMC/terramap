@@ -28,7 +28,7 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
 
 	@Override
 	protected float getPosition() {
-		return (float)this.value / (this.max - this.min);
+		return (float)(this.value - this.min)/ (this.max - this.min);
 	}
 
 	@Override
@@ -40,8 +40,20 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
 		return this.min;
 	}
 	
+	public IntegerSliderWidget setMin(long min) {
+		this.min = min;
+		this.setValue(this.value);
+		return this;
+	}
+	
 	public long getMax() {
 		return this.max;
+	}
+	
+	public IntegerSliderWidget setMax(long max) {
+		this.max = max;
+		this.setValue(this.value);
+		return this;
 	}
 	
 	public long getValue() {

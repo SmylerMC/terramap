@@ -30,12 +30,32 @@ public class FloatSliderWidget extends AbstractSliderWidget {
 
 	@Override
 	protected float getPosition() {
-		return (float) (this.value / (this.max - this.min));
+		return (float) ((this.value - this.min) / (this.max - this.min));
 	}
 
 	@Override
 	protected String getDisplayString() {
 		return "" + (float)Math.round(this.value*resolution) / resolution;
+	}
+	
+	public double getMin() {
+		return this.min;
+	}
+	
+	public FloatSliderWidget setMin(double min) {
+		this.min = min;
+		this.setValue(this.value);
+		return this;
+	}
+	
+	public double getMax() {
+		return this.max;
+	}
+	
+	public FloatSliderWidget setMax(double max) {
+		this.max = max;
+		this.setValue(this.value);
+		return this;
 	}
 
 	@Override

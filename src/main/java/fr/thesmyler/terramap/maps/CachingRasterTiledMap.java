@@ -167,4 +167,10 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
 	public void setUseLowZoom(boolean yesNo) {
 		this.useLowZoom = yesNo;
 	}
+	
+	@Override
+	public int compareTo(IRasterTiledMap other) {
+		return Integer.compare(this.getDisplayPriority(), other.getDisplayPriority());
+	}
+	
 }

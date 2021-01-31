@@ -211,6 +211,9 @@ public class TerramapRemote {
 		return this.proxyMaps;
 	}
 	
+	/**
+	 * @return a new Map containing all available mapstyles
+	 */
 	public Map<String, IRasterTiledMap> getMapStyles() {
 		Map<String, IRasterTiledMap> maps = new HashMap<>();
 		maps.putAll(MapStyleRegistry.getBaseMaps());

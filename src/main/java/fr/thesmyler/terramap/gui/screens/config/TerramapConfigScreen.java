@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.config;
+package fr.thesmyler.terramap.gui.screens.config;
 
 import java.util.Set;
 

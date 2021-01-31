@@ -4,7 +4,7 @@ import fr.thesmyler.terramap.maps.utils.TilePos;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import net.minecraft.util.text.ITextComponent;
 
-public interface IRasterTiledMap{
+public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
 	
 	/**
 	 * Initializes the map.
