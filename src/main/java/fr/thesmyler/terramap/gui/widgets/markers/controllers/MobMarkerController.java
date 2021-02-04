@@ -52,12 +52,12 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 	}
 
 	@Override
-	public boolean showToggleButton() {
+	public boolean showButton() {
 		return TerramapRemote.getRemote().allowsMobRadar();
 	}
 
 	@Override
-	public ToggleButtonWidget getToggleButton() {
+	public ToggleButtonWidget getButton() {
 		return this.button;
 	}
 

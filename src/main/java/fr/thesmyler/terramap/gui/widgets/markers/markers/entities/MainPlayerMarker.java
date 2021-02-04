@@ -64,11 +64,6 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	protected boolean showName(boolean hovered) {
-		return true;
-	}
-
-	@Override
 	public ITextComponent getDisplayName() {
 		if(Minecraft.getMinecraft().player != null) {
 			return Minecraft.getMinecraft().player.getDisplayName();
@@ -90,10 +85,5 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	protected float getActualAzimuth() throws OutOfProjectionBoundsException {
 		return this.playerAzimuth;
 	}
-
-	@Override
-	protected boolean showDirection(boolean hovered) {
-		return true;
-	}
-
+	
 }

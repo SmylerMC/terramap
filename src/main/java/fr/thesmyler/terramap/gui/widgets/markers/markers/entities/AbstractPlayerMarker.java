@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
@@ -32,7 +33,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 		if(parent instanceof MapWidget) {
 			MapWidget map = (MapWidget) parent;
 			isMinimap = map.getContext().equals(MapContext.MINIMAP);
-			drawName = drawName && !isMinimap;
+			drawName = drawName && !isMinimap; //TODO Do that in the minimap init instead now that we support more modularity
 		}
 		int textureSize = 128 / this.downScaleFactor;
 		GlStateManager.enableAlpha();
@@ -84,9 +85,21 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 
 	protected abstract float getTransparency();
 
-	protected abstract boolean showName(boolean hovered);
+	protected boolean showName(boolean hovered) {
+		if(this.getController() instanceof AbstractPlayerMarkerController) {
+			AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
+			return controller.doesMarkersShowNames() || hovered;
+		}
+		return hovered;
+	}
 
-	protected abstract boolean showDirection(boolean hovered);
+	protected boolean showDirection(boolean hovered) {
+		if(this.getController() instanceof AbstractPlayerMarkerController) {
+			AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
+			return controller.doesMarkersShowDirection();
+		}
+		return true;
+	}
 
 	@Override
 	public int getDeltaX() {

@@ -31,6 +31,7 @@ import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 
 //TODO Localize
+//TODO Tooltips
 //FIXME Compass position changes
 public class HudConfigScreen extends Screen {
 	

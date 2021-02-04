@@ -20,12 +20,12 @@ public class RightClickMarkerController extends MarkerController<RightClickMarke
 	}
 
 	@Override
-	public boolean showToggleButton() {
+	public boolean showButton() {
 		return false;
 	}
 
 	@Override
-	public ToggleButtonWidget getToggleButton() {
+	public ToggleButtonWidget getButton() {
 		return null;
 	}
 

@@ -207,7 +207,7 @@ public class MapWidget extends Screen {
 		this.rightClickMenu.addSeparator();
 //		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
 //			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigScreen(null, Minecraft.getMinecraft()));	
-//		}); TODO Re-implement this
+//		}); FIXME Re-implement this
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"));
 
 		this.controller = new ControllerMapLayer(this.tileScaling);
@@ -514,7 +514,7 @@ public class MapWidget extends Screen {
 				cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
 				this.sendChatMessage(cmd, false);
 			} catch (OutOfProjectionBoundsException e) {
-				//TODO Do not fail silently: shwo a message on the screen
+				//TODO Do not fail silently: show a message on the screen
 				TerramapMod.logger.error("Tried to teleport outside of the projection");
 			}
 		} else {
@@ -522,8 +522,10 @@ public class MapWidget extends Screen {
 		}
 	}
 
-	public MarkerController<?>[] getMarkerControllers() {
-		return this.markerControllers.values().toArray(new MarkerController<?>[0]);
+	public Map<String, MarkerController<?>> getMarkerControllers() {
+		Map<String, MarkerController<?>> m = new LinkedHashMap<>();
+		m.putAll(this.markerControllers);
+		return m;
 	}
 
 	public double getZoom() {
