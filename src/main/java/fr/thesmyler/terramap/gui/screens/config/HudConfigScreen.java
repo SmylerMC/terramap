@@ -25,6 +25,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
@@ -47,7 +48,7 @@ public class HudConfigScreen extends Screen {
 	private ToggleButtonWidget entitiesButton = new ToggleButtonWidget(10, false);
 	private ToggleButtonWidget minimapButton = new ToggleButtonWidget(10, false);
 	private ToggleButtonWidget compassButton = new ToggleButtonWidget(10, false);
-	private ToggleButtonWidget directionsButton = new ToggleButtonWidget(10, false); //TODO Implement
+	private ToggleButtonWidget directionsButton = new ToggleButtonWidget(10, false);
 	private SlidingPanelWidget buttonPanel = new SlidingPanelWidget(20, 100);
 	private SlidingPanelWidget settingsPanel = new SlidingPanelWidget(20, 100);
 	private int lastWidth, lastHeight = -1; // Used to re-calculate the relative minimap position when the game's window is resized
@@ -85,6 +86,7 @@ public class HudConfigScreen extends Screen {
 		this.otherPlayersButton.setOnActivate(() -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, true)).setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, false));
 		this.entitiesButton.setOnActivate(() -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, true).trySetMarkersVisibility(MobMarkerController.ID, true))
 				   .setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, false).trySetMarkersVisibility(MobMarkerController.ID, false));
+		this.directionsButton.setOnActivate(() -> this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, true)).setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, false));
 		this.minimapWindow.setEnableTopBar(false);
 		this.minimapWindow.setCenterDragColor(0x00000000);
 		this.minimapWindow.setEnableCenterDrag(true);
@@ -201,6 +203,7 @@ public class HudConfigScreen extends Screen {
 		TerramapConfig.minimapPosY = (float)this.minimapWindow.getY() / this.getHeight() * 100;
 		TerramapConfig.minimapWidth = (float)this.minimapWindow.getWidth() / this.getWidth() * 100;
 		TerramapConfig.minimapHeight = (float)this.minimapWindow.getHeight() / this.getHeight() * 100;
+		TerramapConfig.minimapPlayerDirections = this.directionsButton.getState();
 		TerramapConfig.compassVisibility = this.compassButton.getState();
 		TerramapConfig.compassX = (float)this.compassWindow.getX() / this.getWidth() * 100;
 		TerramapConfig.compassY = (float)this.compassWindow.getY() / this.getHeight() * 100;
@@ -224,11 +227,13 @@ public class HudConfigScreen extends Screen {
 		this.entitiesButton.setState(TerramapConfig.minimapShowEntities);
 		this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
 		this.minimap.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
+		this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.minimapPlayerDirections);
 		for(MapStyleSliderEntry map: this.mapStyles) if(map.map.getId().equals(TerramapConfig.minimapStyle)) {
 			this.styleSlider.setCurrentOption(map);
 			break;
 		}
 		this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.minimapTileScaling));
+		this.directionsButton.setState(TerramapConfig.minimapPlayerDirections);
 		this.recalcWidgetsPos();
 	}
 	

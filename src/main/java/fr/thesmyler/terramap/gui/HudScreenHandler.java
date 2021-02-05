@@ -15,6 +15,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
@@ -83,6 +84,7 @@ public abstract class HudScreenHandler {
 		map.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
 		map.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
 		map.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
+		map.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.minimapPlayerDirections);
 		Map<String, IRasterTiledMap> styles = TerramapRemote.getRemote().getMapStyles();
 		IRasterTiledMap bg = styles.get(TerramapConfig.minimapStyle);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {

@@ -77,6 +77,11 @@ public class TerramapConfig {
 	@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. This is for the minimap.")
 	@Config.RangeDouble(min=0.0, max=8.0)
 	public static double minimapTileScaling = 0.0;
+	
+	@Config.Name("minimap_player_directions")
+	@Config.LangKey("terramap.config.minimap.direction") //TODO Localize
+	@Config.Comment("Whether or not player directions should show up on the minimap")
+	public static boolean minimapPlayerDirections = true;
 
 	@Config.Name("compass_visibility")
 	@Config.LangKey("terramap.config.compass.visibility") //TODO Localize
