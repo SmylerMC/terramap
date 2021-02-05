@@ -6,6 +6,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
+import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ public abstract class KeyBindings {
 	private static final String KEY_CATEGORY = "terramap.binding.category";
 
 	public static final KeyBinding OPEN_MAP = new KeyBinding("terramap.binding.open_map", Keyboard.KEY_M, KeyBindings.KEY_CATEGORY);
+	public static final KeyBinding OPEN_HUD_CONFIG = new KeyBinding("terramap.binding.configure_minimap", Keyboard.KEY_O, KeyBindings.KEY_CATEGORY); //TODO Localize
 	public static final KeyBinding TOGGLE_DEBUG = new KeyBinding("terramap.binding.toggle_debug", Keyboard.KEY_P, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding MAP_SHORTCUT = new KeyBinding("terramap.binding.shortcuts", Keyboard.KEY_LCONTROL, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding COPY_GEO_COORDS = new KeyBinding("terramap.binding.copy_geo", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);
@@ -32,7 +34,7 @@ public abstract class KeyBindings {
 	private static final IKeyConflictContext TERRAMAP_SCREEN_CONTEXT = new IKeyConflictContext() {
 		@Override
 		public boolean isActive() {
-			return  Minecraft.getMinecraft().currentScreen instanceof TerramapScreen;
+			return Minecraft.getMinecraft().currentScreen instanceof TerramapScreen;
 		}
 		@Override
 		public boolean conflicts(IKeyConflictContext other) {
@@ -42,6 +44,7 @@ public abstract class KeyBindings {
 
 	public static void registerBindings() {
 		ClientRegistry.registerKeyBinding(OPEN_MAP);
+		ClientRegistry.registerKeyBinding(OPEN_HUD_CONFIG);
 		TOGGLE_DEBUG.setKeyConflictContext(TERRAMAP_SCREEN_CONTEXT);
 		ClientRegistry.registerKeyBinding(TOGGLE_DEBUG);
 		MAP_SHORTCUT.setKeyConflictContext(TERRAMAP_SCREEN_CONTEXT);
@@ -85,17 +88,13 @@ public abstract class KeyBindings {
 			}
 		}
 
-		if(ZOOM_IN.isPressed()) {
-			HudScreenHandler.zoomInMinimap();
-		}
+		if(ZOOM_IN.isPressed()) HudScreenHandler.zoomInMinimap();
 
-		if(ZOOM_OUT.isPressed()) {
-			HudScreenHandler.zoomOutMinimap();
-		}
+		if(ZOOM_OUT.isPressed()) HudScreenHandler.zoomOutMinimap();
 
-		if(TOGGLE_MINIMAP.isPressed()) {
-			HudScreenHandler.toggleMinimap();
-		}
+		if(TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleMinimap();
+		
+		if(OPEN_HUD_CONFIG.isPressed()) Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen());
 	}
 
 }
