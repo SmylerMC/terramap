@@ -74,7 +74,7 @@ public abstract class Marker implements IWidget {
 	
 	@Override
 	public boolean isVisible(Screen parent) {
-		if(!this.controller.areMakersVisible()) return false;
+		if(!this.controller.getVisibility()) return false;
 		if(!WebMercatorUtils.isPositionOnMap(this.getLongitude(), this.getLatitude())) return false;
 		if(parent instanceof MapWidget) {
 			MapWidget map = (MapWidget)parent;

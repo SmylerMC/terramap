@@ -25,7 +25,12 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
@@ -51,9 +56,13 @@ public class MapWidget extends Screen {
 	protected RasterMapLayerWidget background;
 	private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
+	private MainPlayerMarkerController mainPlayerMarkerController;
+	private OtherPlayerMarkerController otherPlayerMarkerController;
 	private MainPlayerMarker mainPlayerMarker;
 	private Marker trackingMarker;
 	private String restoreTrackingId;
+	private PlayerDirectionsVisibilityController directionVisibility;
+	private PlayerNameVisibilityController nameVisibility;
 
 	private double mouseLongitude, mouseLatitude;
 
@@ -223,8 +232,17 @@ public class MapWidget extends Screen {
 		for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
 			if(controller instanceof RightClickMarkerController) {
 				this.rcmMarkerController = (RightClickMarkerController) controller;
+			} else if(controller instanceof MainPlayerMarkerController) {
+				this.mainPlayerMarkerController = (MainPlayerMarkerController) controller;
+			} else if(controller instanceof OtherPlayerMarkerController) {
+				this.otherPlayerMarkerController = (OtherPlayerMarkerController) controller;
 			}
 			this.markerControllers.put(controller.getId(), controller);
+		}
+		
+		if(this.mainPlayerMarkerController != null && this.otherPlayerMarkerController != null) {
+			this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
+			this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
 		}
 
 	}
@@ -522,9 +540,11 @@ public class MapWidget extends Screen {
 		}
 	}
 
-	public Map<String, MarkerController<?>> getMarkerControllers() {
-		Map<String, MarkerController<?>> m = new LinkedHashMap<>();
+	public Map<String, FeatureVisibilityController> getVisibilityControllers() {
+		Map<String, FeatureVisibilityController> m = new LinkedHashMap<>();
 		m.putAll(this.markerControllers);
+		if(this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
+		if(this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
 		return m;
 	}
 
@@ -728,28 +748,9 @@ public class MapWidget extends Screen {
 	public IRasterTiledMap getBackgroundStyle() {
 		return this.background.getMap();
 	}
-
-	public Map<String, Boolean> getMarkersVisibility() {
-		Map<String, Boolean> outMap = new HashMap<String, Boolean>();
-		for(MarkerController<?> controller: this.markerControllers.values()) {
-			outMap.put(controller.getId(), controller.areMakersVisible());
-		}
-		return outMap;
-	}
-
-	public MapWidget setMarkersVisibilities(Map<String, Boolean> m) {
-		for(String key: m.keySet()) {
-			if(this.markerControllers.containsKey(key)) {
-				this.markerControllers.get(key).setVisibility(m.get(key));
-			} else {
-				TerramapMod.logger.warn("Was not able to restore marker visibility for marker type " + key);
-			}
-		}
-		return this;
-	}
 	
 	public MapWidget trySetMarkersVisibility(String markerId, boolean value) {
-		MarkerController<?> c = this.markerControllers.get(markerId);
+		FeatureVisibilityController c = this.getVisibilityControllers().get(markerId);
 		if(c != null) c.setVisibility(value);
 		return this;
 	}

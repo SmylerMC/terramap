@@ -63,8 +63,13 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
 
 	@Override
-	public boolean areMakersVisible() {
-		return super.areMakersVisible() && TerramapRemote.getRemote().allowsPlayerRadar();
+	public boolean getVisibility() {
+		return super.getVisibility() && TerramapRemote.getRemote().allowsPlayerRadar();
+	}
+	
+	@Override
+	public String getSaveName() {
+		return ID;
 	}
 
 }

@@ -19,8 +19,6 @@ public class TerramapScreenSavedState {
 	public boolean f1 = false;
 	public Map<String, Boolean> markerSettings = new HashMap<String, Boolean>();
 	public String trackedMarker = null;
-	public boolean showPlayerNames = true;
-	public boolean showPlayerDirections = true;
 	
 	public TerramapScreenSavedState(
 			double zoomLevel,
@@ -31,9 +29,7 @@ public class TerramapScreenSavedState {
 			boolean debug,
 			boolean f1,
 			Map<String, Boolean> markerSettings,
-			String trackedMarker,
-			boolean showPlayerDirections,
-			boolean showPlayerNames) {
+			String trackedMarker) {
 		super();
 		this.zoomLevel = zoomLevel;
 		this.centerLongitude = centerLongitude;
@@ -44,8 +40,6 @@ public class TerramapScreenSavedState {
 		this.f1 = f1;
 		this.markerSettings = markerSettings;
 		this.trackedMarker = trackedMarker;
-		this.showPlayerDirections = showPlayerDirections;
-		this.showPlayerNames = showPlayerNames;
 	}
 	
 	public TerramapScreenSavedState() {

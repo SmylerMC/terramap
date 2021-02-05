@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -81,11 +80,9 @@ public abstract class HudScreenHandler {
 		map.setY(Math.round((float)TerramapConfig.minimapPosY / 100 * screen.getHeight()));
 		map.setWidth(Math.round((float)TerramapConfig.minimapWidth / 100 * screen.getWidth()));
 		map.setHeight(Math.round((float)TerramapConfig.minimapHeight / 100 * screen.getHeight()));
-		Map<String, Boolean> markerVisibility = new HashMap<String, Boolean>();
-		markerVisibility.put(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
-		markerVisibility.put(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
-		markerVisibility.put(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
-		map.setMarkersVisibilities(markerVisibility);
+		map.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
+		map.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
+		map.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
 		Map<String, IRasterTiledMap> styles = TerramapRemote.getRemote().getMapStyles();
 		IRasterTiledMap bg = styles.get(TerramapConfig.minimapStyle);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {

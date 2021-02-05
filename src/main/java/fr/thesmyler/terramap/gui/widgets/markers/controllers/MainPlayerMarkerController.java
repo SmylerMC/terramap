@@ -36,6 +36,11 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
 	@Override
 	public boolean showButton() {
 		return true;
-	}	
+	}
+	
+	@Override
+	public String getSaveName() {
+		return ID;
+	}
 
 }

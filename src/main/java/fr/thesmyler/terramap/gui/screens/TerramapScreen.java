@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,6 @@ import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.AbstractButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
@@ -32,9 +32,7 @@ import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
@@ -55,7 +53,6 @@ import net.minecraft.util.text.TextFormatting;
 public class TerramapScreen extends Screen {
 
 	private GuiScreen parent;
-	private Map<String, IRasterTiledMap> backgrounds;
 
 	// Main map area widgets
 	private MapWidget map; 
@@ -83,7 +80,8 @@ public class TerramapScreen extends Screen {
 	// Screen states
 	private boolean f1Mode = false;
 	private boolean debugMode = false;
-
+	
+	private Map<String, IRasterTiledMap> backgrounds;
 
 	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
 		this.parent = parent;
@@ -165,7 +163,7 @@ public class TerramapScreen extends Screen {
 		int y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
 		int lineHeight = 0;
 		int x = 5;
-		for(InfoPanelButtonProvider provider: this.getButtonProviders()) {
+		for(FeatureVisibilityController provider: this.getButtonProviders()) {
 			if(!provider.showButton()) continue;
 			AbstractButtonWidget button = provider.getButton();
 			if(button == null) continue;
@@ -371,9 +369,13 @@ public class TerramapScreen extends Screen {
 	public TerramapScreenSavedState saveToState() {
 		String tracking = null;
 		Marker trackingMarker = this.map.getTracking();
-		Map<String, MarkerController<?>> m = this.map.getMarkerControllers();
 		if(trackingMarker != null) {
 			tracking = trackingMarker.getIdentifier();
+		}
+		Map<String, Boolean> visibility = new HashMap<>();
+		Map<String, FeatureVisibilityController> visibilityControllers = this.map.getVisibilityControllers();
+		for(String key: visibilityControllers.keySet()) {
+			visibility.put(key, visibilityControllers.get(key).getVisibility());
 		}
 
 		return new TerramapScreenSavedState(
@@ -384,10 +386,9 @@ public class TerramapScreen extends Screen {
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
 				TerramapConfig.saveUiState ? this.debugMode : false,
 				TerramapConfig.saveUiState ? this.f1Mode : false,
-				this.map.getMarkersVisibility(),
-				tracking,
-				((MainPlayerMarkerController)m.get(MainPlayerMarkerController.ID)).doesMarkersShowDirection(),
-				((OtherPlayerMarkerController)m.get(OtherPlayerMarkerController.ID)).doesMarkersShowNames());
+				visibility,
+				tracking
+			);
 	}
 
 	public void resumeFromSavedState(TerramapScreenSavedState state) {
@@ -396,7 +397,6 @@ public class TerramapScreen extends Screen {
 		this.map.setCenterLongitude(state.centerLongitude);
 		this.map.setCenterLatitude(state.centerLatitude);
 		this.map.restoreTracking(state.trackedMarker);
-		this.map.setMarkersVisibilities(state.markerSettings);
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
 		TexturedButtonWidget newButton;
 		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
@@ -411,13 +411,9 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.addWidget(this.panelButton);
 		this.setF1Mode(state.f1);
 		this.setDebugMode(state.debug);
-		Map<String, MarkerController<?>> m = this.map.getMarkerControllers();
-		
-		//TODO Also change this for more modularity: save from value
-		((MainPlayerMarkerController)m.get(MainPlayerMarkerController.ID)).setShowMarkerDirection(state.showPlayerDirections);
-		((OtherPlayerMarkerController)m.get(OtherPlayerMarkerController.ID)).setShowMarkerDirection(state.showPlayerDirections);
-		((MainPlayerMarkerController)m.get(MainPlayerMarkerController.ID)).setShowMarkerNames(state.showPlayerNames);
-		((OtherPlayerMarkerController)m.get(OtherPlayerMarkerController.ID)).setShowMarkerNames(state.showPlayerNames);
+		for(FeatureVisibilityController c: this.map.getVisibilityControllers().values()) {
+			if(state.markerSettings.containsKey(c.getSaveName())) c.setVisibility(state.markerSettings.get(c.getSaveName()));
+		}
 	}
 
 	@Override
@@ -527,59 +523,9 @@ public class TerramapScreen extends Screen {
 		Minecraft.getMinecraft().displayGuiScreen(new TerramapConfigScreen(this));
 	}
 	
-	private Collection<InfoPanelButtonProvider> getButtonProviders() {
-		List<InfoPanelButtonProvider> l = new ArrayList<>();
-		l.addAll(this.map.getMarkerControllers().values());
-		l.add(new InfoPanelButtonProvider() {
-			@Override
-			public boolean showButton() {
-				return true;
-			}
-			@Override
-			public AbstractButtonWidget getButton() {
-				MainPlayerMarkerController main = (MainPlayerMarkerController) TerramapScreen.this.map.getMarkerControllers().get(MainPlayerMarkerController.ID);
-				OtherPlayerMarkerController other = (OtherPlayerMarkerController) TerramapScreen.this.map.getMarkerControllers().get(OtherPlayerMarkerController.ID);
-				ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-						158, 108, 158, 122,
-						158, 108, 158, 122,
-						158, 136, 158, 150,
-						main.doesMarkersShowDirection(),
-						() -> {
-							main.setShowMarkerDirection(true);
-							other.setShowMarkerDirection(true);
-						},
-						() -> {
-							main.setShowMarkerDirection(false);
-							other.setShowMarkerDirection(false);
-						});
-				return button; //TODO Tooltip
-			}
-		});
-		l.add(new InfoPanelButtonProvider() {
-			@Override
-			public boolean showButton() {
-				return true;
-			}
-			@Override
-			public AbstractButtonWidget getButton() {
-				MainPlayerMarkerController main = (MainPlayerMarkerController) TerramapScreen.this.map.getMarkerControllers().get(MainPlayerMarkerController.ID);
-				OtherPlayerMarkerController other = (OtherPlayerMarkerController) TerramapScreen.this.map.getMarkerControllers().get(OtherPlayerMarkerController.ID);
-				ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-						172, 108, 172, 122,
-						172, 108, 172, 122,
-						172, 136, 172, 150,
-						main.doesMarkersShowNames(),
-						() -> {
-							main.setShowMarkerNames(true);
-							other.setShowMarkerNames(true);
-						},
-						() -> {
-							main.setShowMarkerNames(false);
-							other.setShowMarkerNames(false);
-						});
-				return button; //TODO Tooltip
-			}
-		});
+	private Collection<FeatureVisibilityController> getButtonProviders() {
+		List<FeatureVisibilityController> l = new ArrayList<>();
+		l.addAll(this.map.getVisibilityControllers().values());
 		return l;
 	}
 
@@ -626,11 +572,6 @@ public class TerramapScreen extends Screen {
 			return 0;
 		}
 
-	}
-	
-	public interface InfoPanelButtonProvider {
-		public boolean showButton();
-		public AbstractButtonWidget getButton();
 	}
 
 }

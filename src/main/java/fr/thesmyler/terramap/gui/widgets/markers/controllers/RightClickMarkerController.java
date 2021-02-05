@@ -28,5 +28,10 @@ public class RightClickMarkerController extends MarkerController<RightClickMarke
 	public ToggleButtonWidget getButton() {
 		return null;
 	}
+	
+	@Override
+	public String getSaveName() {
+		return ID;
+	}
 
 }

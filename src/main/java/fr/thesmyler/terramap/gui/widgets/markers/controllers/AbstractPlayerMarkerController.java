@@ -14,7 +14,7 @@ public abstract class AbstractPlayerMarkerController<T extends AbstractPlayerMar
 		this.button = button;
 		this.button.setOnActivate(() -> this.setVisibility(true));
 		this.button.setOnDeactivate(() -> this.setVisibility(false));
-		this.button.setState(this.areMakersVisible());
+		this.button.setState(this.getVisibility());
 	}
 
 	public boolean doesMarkersShowNames() {
