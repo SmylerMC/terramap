@@ -15,6 +15,7 @@ import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTextu
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.IntegerSliderWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.OptionSliderWidget;
+import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapRemote;
@@ -33,7 +34,6 @@ import net.minecraft.client.Minecraft;
 
 //TODO Localize
 //TODO Tooltips
-//FIXME Compass position changes
 public class HudConfigScreen extends Screen {
 	
 	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.tileScaling);
@@ -115,6 +115,9 @@ public class HudConfigScreen extends Screen {
 			double t = this.tileScalingSlider.getCurrentOption().value;
 			if(t == 0) this.minimap.setTileScaling(SmyLibGui.getMinecraftGuiScale());
 			else this.minimap.setTileScaling(t);
+			this.compassWindow.setX(Math.round((float)this.compassWindow.getX() * this.width / this.lastWidth));
+			this.compassWindow.setY(Math.round((float)this.compassWindow.getY() * this.height / this.lastHeight));
+			this.compassWindow.setWidth(Math.round((float)this.compassWindow.getWidth() / this.lastWidth * this.width));
 		}
 		this.minimapWindow.initScreen();
 		this.addWidget(this.minimapWindow);
@@ -182,8 +185,8 @@ public class HudConfigScreen extends Screen {
 		this.buttonPanel.setOpenX(this.buttonPanel.getClosedX()).setOpenY(this.height - this.settingsPanel.getHeight() - this.buttonPanel.getHeight());
 		this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 		
-//		TextWidget explain = new TextWidget("Move and resize the minimap using the preview window.", this.width/2, this.height - 90, 10, TextAlignment.CENTER, this.getFont());
-//		this.addWidget(explain.setMaxWidth(200).setAnchorY(this.height - 80 - explain.getHeight()));
+		TextWidget explain = new TextWidget("Move and resize the minimap using the preview windows, and click the menu button for more options", this.width/2, this.height/2 - 100, 10, TextAlignment.CENTER, this.getFont());
+		this.addWidget(explain.setMaxWidth((int)(this.width * .8)).setAnchorY(this.height/2 - explain.getHeight() - 10));
 		
 		this.addWidget(this.buttonPanel);
 		this.addWidget(this.settingsPanel);
