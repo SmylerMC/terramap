@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
-import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.permissions.Permission;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import net.minecraft.command.CommandBase;
@@ -44,7 +44,7 @@ public class TilesetReloadCommand extends CommandBase {
 		}
 		ITextComponent msg = ctx.getComponent("terramap.commands.reloadmapstyles.done");
 		try {
-			MapStyleRegistry.loadFromConfigFile();
+			MapStylesLibrary.loadFromConfigFile();
 			msg.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false));
 		} catch(Exception e) {
 			msg = ctx.getComponent("terramap.commands.reloadmapstyles.error");

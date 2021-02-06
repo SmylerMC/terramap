@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
-import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
@@ -15,11 +15,7 @@ import io.github.terra121.util.http.Http;
 import net.minecraft.util.text.ITextComponent;
 
 /**
- * This class is in charge of keeping track of and loading the tiles used for rendering a specific map.
- * When tiles need to be unloaded, priority is given to keep those that were used recently loaded.
- * Tiles with zoom levels lower than a certain value will also never be unloaded, so that backup textures are always kept.
- * It also holds the metadata defined in the map config.
- * Instances are usually created in {@link MapStyleRegistry} and {@link SP2CMapStylePacket}.
+ * Instances are usually created in {@link MapStylesLibrary} and {@link SP2CMapStylePacket}.
  * 
  * @author SmylerMC
  *
@@ -39,6 +35,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> {
 	private final long version;
 	private final String comment;
 	private final int maxConcurrentRequests; // How many concurrent http connections are allowed by this map provider. This should be two by default, as that's what OSM requires
+	private boolean debug;
 	
 	private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
@@ -54,7 +51,8 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> {
 			TiledMapProvider provider,
 			long version,
 			String comment,
-			int maxConcurrentDownloads) {
+			int maxConcurrentDownloads,
+			boolean debug) {
 		Preconditions.checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
 		this.urlPatterns = urlPatterns;
 		this.maxZoom = maxZoom;
@@ -68,6 +66,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> {
 		this.allowOnMinimap = allowOnMinimap;
 		this.displayPriority = displayPriority;
 		this.maxConcurrentRequests = maxConcurrentDownloads;
+		this.debug = debug;
 	}
 	
 	/**
@@ -95,8 +94,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> {
 
 	@Override
 	public boolean isDebug() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.debug;
 	}
 
 	/**

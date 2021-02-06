@@ -10,6 +10,16 @@ import fr.thesmyler.terramap.maps.utils.TilePos;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 
+/**
+ * This class is in charge of keeping track of and loading the tiles used for rendering a specific map.
+ * When tiles need to be unloaded, priority is given to keep those that were used recently loaded.
+ * Tiles with zoom levels lower than a certain value will also never be unloaded, so that backup textures are always kept.
+ * It also holds the metadata defined in the map config.
+ * 
+ * @author SmylerMC
+ *
+ * @param <T> The type of tile handled by this map
+ */
 public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IRasterTiledMap {
 
 	private final LinkedList<T> tileList; // Uses for ordered access when unloading

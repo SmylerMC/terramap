@@ -13,7 +13,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
-import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
@@ -216,10 +216,10 @@ public class TerramapRemote {
 	 */
 	public Map<String, IRasterTiledMap> getMapStyles() {
 		Map<String, IRasterTiledMap> maps = new HashMap<>();
-		maps.putAll(MapStyleRegistry.getBaseMaps());
+		maps.putAll(MapStylesLibrary.getBaseMaps());
 		maps.putAll(this.proxyMaps);
 		maps.putAll(this.serverMaps);
-		maps.putAll(MapStyleRegistry.getUserMaps());
+		maps.putAll(MapStylesLibrary.getUserMaps());
 		return maps;
 	}
 

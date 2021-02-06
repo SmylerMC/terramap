@@ -5,6 +5,7 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import io.netty.buffer.ByteBuf;
@@ -27,6 +28,7 @@ public class SP2CMapStylePacket implements IMessage {
 	private boolean isAllowedOnMinimap;
 	private String comment;
 	private int maxConcurrentConnection;
+	private boolean debug;
 		
 	public SP2CMapStylePacket(UrlTiledMap map) {
 		this.id = map.getId();
@@ -40,6 +42,7 @@ public class SP2CMapStylePacket implements IMessage {
 		this.isAllowedOnMinimap = map.isAllowedOnMinimap();
 		this.comment = map.getComment();
 		this.maxConcurrentConnection = map.getMaxConcurrentRequests();
+		this.debug = map.isDebug();
 	}
 	
 	public SP2CMapStylePacket() {}
@@ -70,12 +73,14 @@ public class SP2CMapStylePacket implements IMessage {
 		this.displayPriority = buf.readInt();
 		this.isAllowedOnMinimap = buf.readBoolean();
 		this.comment = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		if(buf.isReadable()) {
+		if(buf.isReadable()) { // The following fields were added in 1.0.0-beta7
 			this.maxConcurrentConnection = buf.readInt();
 			this.urlPatterns = TerramapNetworkManager.decodeStringArrayFromByteBuf(buf);
+			this.debug = buf.readBoolean();
 		} else {
 			this.maxConcurrentConnection = 2;
 			this.urlPatterns = new String[] {urlPattern};
+			this.debug = false;
 			return;
 		}
 	}
@@ -102,6 +107,7 @@ public class SP2CMapStylePacket implements IMessage {
 		TerramapNetworkManager.encodeStringToByteBuf(this.comment, buf);
 		buf.writeInt(this.maxConcurrentConnection);
 		TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
+		buf.writeBoolean(this.debug);
 	}
 	
 	public UrlTiledMap getTiledMap(TiledMapProvider provider) {
@@ -117,7 +123,8 @@ public class SP2CMapStylePacket implements IMessage {
 				provider,
 				this.providerVersion,
 				this.comment,
-				this.maxConcurrentConnection
+				this.maxConcurrentConnection,
+				this.debug
 			);
 	}
 	
@@ -129,6 +136,10 @@ public class SP2CMapStylePacket implements IMessage {
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
 			UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER);
 			TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
+			if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
+				TerramapMod.logger.debug("Ignoring debug map from server: " + map.getId());
+				return null;
+			}
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addServerMapStyle(map));
 			return null;
 		}
@@ -143,6 +154,10 @@ public class SP2CMapStylePacket implements IMessage {
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
 			UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY);
 			TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
+			if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
+				TerramapMod.logger.debug("Ignoring debug map from proxy: " + map.getId());
+				return null;
+			}
 			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addProxyMapStyle(map));
 			return null;
 		}

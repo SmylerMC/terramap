@@ -28,7 +28,7 @@ import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 
 //TODO Make this async and thread safe
-public class MapStyleRegistry {
+public class MapStylesLibrary {
 
 	private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
 	private static File configMapsFile;
@@ -38,7 +38,7 @@ public class MapStyleRegistry {
 	/**
 	 * Get the default Terramap maps, loaded from the jar and from the online source
 	 * The returned map is a new one, and can be mutated safely.
-	 * Does not actually load the maps, this needs to be done beforehand with {@link MapStyleRegistry#loadBuiltIns()} and {@link MapStyleRegistry#loadFromOnline(String)}
+	 * Does not actually load the maps, this needs to be done beforehand with {@link MapStylesLibrary#loadBuiltIns()} and {@link MapStylesLibrary#loadFromOnline(String)}
 	 * 
 	 * @return a new map that contains id => TiledMap couples
 	 */
@@ -199,7 +199,8 @@ public class MapStyleRegistry {
 				provider,
 				version,
 				comment,
-				saved.max_concurrent_requests
+				saved.max_concurrent_requests,
+				saved.debug
 			);
 	}
 	
@@ -215,6 +216,10 @@ public class MapStyleRegistry {
 		Map<String, UrlTiledMap> styles = new HashMap<String, UrlTiledMap>();
 		for(String id: savedStyles.maps.keySet()) {
 			UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
+			if(!TerramapConfig.enableDebugMaps && style.isDebug()) {
+				TerramapMod.logger.info("Not loading debug map style " + style.getId());
+				continue;
+			}
 			styles.put(id, style);
 		}
 		return styles;
@@ -232,7 +237,11 @@ public class MapStyleRegistry {
 		}
 	}
 	
-	static class SavedMapStyle {
+	public static File getFile() {
+		return configMapsFile;
+	}
+	
+	private static class SavedMapStyle {
 
 		String url; // Used by legacy versions
 		String[] urls;
@@ -243,10 +252,11 @@ public class MapStyleRegistry {
 		int display_priority;
 		boolean allow_on_minimap;
 		int max_concurrent_requests = 2;
+		boolean debug;
 
 	}
 
-	static class MapStyleFile {
+	private static class MapStyleFile {
 
 		Map<String, SavedMapStyle> maps;
 		MapFileMetadata metadata;
@@ -255,14 +265,10 @@ public class MapStyleRegistry {
 			this.metadata = metadata;
 			this.maps = new HashMap<String, SavedMapStyle>();
 		}
-		
-		MapStyleFile() {
-			this(new MapFileMetadata());
-		}
 
 	}
 
-	static class MapFileMetadata {
+	private static class MapFileMetadata {
 		
 		long version;
 		String comment;
@@ -270,10 +276,6 @@ public class MapStyleRegistry {
 		MapFileMetadata(long version, String comment) {
 			this.comment = comment;
 			this.version = version;
-		}
-		
-		MapFileMetadata() {
-			this(0, "");
 		}
 
 	}
