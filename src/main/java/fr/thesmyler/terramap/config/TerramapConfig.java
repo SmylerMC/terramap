@@ -83,31 +83,31 @@ public class TerramapConfig {
 	@Config.Comment("Whether or not player directions should show up on the minimap")
 	public static boolean minimapPlayerDirections = true;
 
-	@Config.Name("compass_visibility")
+	@Config.Name("compass_enable")
 	@Config.LangKey("terramap.config.compass.visibility") //TODO Localize
 	@Config.Comment("Show the compass in the hud")
-	public static boolean compassVisibility = true;
+	public static boolean compassEnable = true;
 	
 	@Config.Name("compass_position_x")
 	@Config.LangKey("terramap.config.compass.position.x") //TODO Localize
 	@Config.Comment("Compass X position, as % of the screen's width")
 	@Config.RangeDouble(min=0, max=100)
 	@Config.SlidingOption
-	public static float compassX = 0; // TODO Better default value
+	public static float compassPosX = 1;
 	
 	@Config.Name("compass_position_y")
 	@Config.LangKey("terramap.config.compass.position.y") //TODO Localize
 	@Config.Comment("Compass Y position, as % of the screen's height")
 	@Config.RangeDouble(min=0, max=100)
 	@Config.SlidingOption
-	public static float compassY = 0; // TODO Better default value
+	public static float compassPosY = 16;
 	
 	@Config.Name("compass_width")
 	@Config.LangKey("terramap.config.compass.width") //TODO Localize
 	@Config.Comment("Compass width, as % of the screen's width")
 	@Config.RangeDouble(min=0, max=100)
 	@Config.SlidingOption
-	public static float compassWidth = 0; // TODO Better default value
+	public static float compassWidth = 20;
 
 	@Config.Name("tile_scaling")
 	@Config.LangKey("terramap.config.tile_scaling")

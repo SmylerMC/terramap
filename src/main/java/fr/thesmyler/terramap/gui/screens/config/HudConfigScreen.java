@@ -207,9 +207,9 @@ public class HudConfigScreen extends Screen {
 		TerramapConfig.minimapWidth = (float)this.minimapWindow.getWidth() / this.getWidth() * 100;
 		TerramapConfig.minimapHeight = (float)this.minimapWindow.getHeight() / this.getHeight() * 100;
 		TerramapConfig.minimapPlayerDirections = this.directionsButton.getState();
-		TerramapConfig.compassVisibility = this.compassButton.getState();
-		TerramapConfig.compassX = (float)this.compassWindow.getX() / this.getWidth() * 100;
-		TerramapConfig.compassY = (float)this.compassWindow.getY() / this.getHeight() * 100;
+		TerramapConfig.compassEnable = this.compassButton.getState();
+		TerramapConfig.compassPosX = (float)this.compassWindow.getX() / this.getWidth() * 100;
+		TerramapConfig.compassPosY = (float)this.compassWindow.getY() / this.getHeight() * 100;
 		TerramapConfig.compassWidth = (float)this.compassWindow.getWidth() / this.getWidth() * 100;
 		TerramapConfig.sync();
 		this.close();
@@ -221,9 +221,9 @@ public class HudConfigScreen extends Screen {
 	
 	private void reset() {
 		this.minimapWindow.setVisibility(TerramapConfig.minimapEnable);
-		this.compassWindow.setVisibility(TerramapConfig.compassVisibility);
+		this.compassWindow.setVisibility(TerramapConfig.compassEnable);
 		this.minimapButton.setState(TerramapConfig.minimapEnable);
-		this.compassButton.setState(TerramapConfig.compassVisibility);
+		this.compassButton.setState(TerramapConfig.compassEnable);
 		this.zoomSlider.setValue(TerramapConfig.minimapZoomLevel);
 		this.otherPlayersButton.setState(TerramapConfig.minimapShowOtherPlayers);
 		this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
@@ -245,8 +245,8 @@ public class HudConfigScreen extends Screen {
 		this.minimapWindow.setY(Math.round(this.height * TerramapConfig.minimapPosY / 100));
 		this.minimapWindow.setWidth(Math.round(this.width * TerramapConfig.minimapWidth / 100));
 		this.minimapWindow.setHeight(Math.round(this.height * TerramapConfig.minimapHeight / 100));
-		this.compassWindow.setX(Math.round(this.width * TerramapConfig.compassX / 100));
-		this.compassWindow.setY(Math.round(this.height * TerramapConfig.compassY / 100));
+		this.compassWindow.setX(Math.round(this.width * TerramapConfig.compassPosX / 100));
+		this.compassWindow.setY(Math.round(this.height * TerramapConfig.compassPosY / 100));
 		this.compassWindow.setWidth(Math.round(this.width * TerramapConfig.compassWidth / 100));
 	}
 	

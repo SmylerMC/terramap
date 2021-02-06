@@ -46,8 +46,8 @@ public abstract class HudScreenHandler {
 			updateMinimap();
 			screen.addWidget(map);
 			
-			int compassX = (int) Math.round(TerramapConfig.compassX * 0.01 * screen.getWidth());
-			int compassY = (int) Math.round(TerramapConfig.compassY * 0.01 * screen.getHeight());
+			int compassX = (int) Math.round(TerramapConfig.compassPosX * 0.01 * screen.getWidth());
+			int compassY = (int) Math.round(TerramapConfig.compassPosY * 0.01 * screen.getHeight());
 			int compassWidth = (int) Math.round(TerramapConfig.compassWidth * 0.01 * screen.getWidth());
 
 			compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
@@ -60,13 +60,13 @@ public abstract class HudScreenHandler {
 					float a = Minecraft.getMinecraft().player.rotationYaw;
 					try {
 						compass.setAzimuth(p.azimuth(x, z, a));
-						compass.setVisibility(true && TerramapConfig.compassVisibility);
+						compass.setVisibility(true && TerramapConfig.compassEnable);
 					} catch (OutOfProjectionBoundsException e) {
 						compass.setVisibility(false);
 					}
 				}
 			});
-			compass.setVisibility(TerramapConfig.compassVisibility);
+			compass.setVisibility(TerramapConfig.compassEnable);
 			screen.addWidget(compass);
 		}
 	}
