@@ -163,7 +163,7 @@ public class TerramapConfig {
 	@Config.Name("save_ui_state")
 	@Config.LangKey("terramap.config.save_ui_state") //TODO localize
 	@Config.Comment("Whether or not to save the map ui state when closing the full-screen map. Enable to save F1 mode and debug mode.")
-	public static boolean saveUiState = false; //TODO Actualy respect saveUiState
+	public static boolean saveUiState = false;
 	
 	@Config.Name("enable_debug_maps")
 	@Config.LangKey("terramap.config.enable_debug_maps") //TODO Localize

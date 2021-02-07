@@ -3,8 +3,6 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
@@ -29,12 +27,6 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 		boolean drawName = this.showName(hovered);
-		boolean isMinimap = false;
-		if(parent instanceof MapWidget) {
-			MapWidget map = (MapWidget) parent;
-			isMinimap = map.getContext().equals(MapContext.MINIMAP);
-			drawName = drawName && !isMinimap; //TODO Do that in the minimap init instead now that we support more modularity
-		}
 		int textureSize = 128 / this.downScaleFactor;
 		GlStateManager.enableAlpha();
 		if(hovered) Gui.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, 0x50000000);

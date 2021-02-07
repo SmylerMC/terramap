@@ -16,6 +16,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerControl
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
@@ -37,6 +38,7 @@ public abstract class HudScreenHandler {
 				map.setInteractive(false);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
+				map.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
 				map.scheduleAtUpdate(() -> {
 					if(TerramapRemote.getRemote().getProjection() != null) {
 						map.track(map.getMainPlayerMarker());
@@ -60,7 +62,7 @@ public abstract class HudScreenHandler {
 					float a = Minecraft.getMinecraft().player.rotationYaw;
 					try {
 						compass.setAzimuth(p.azimuth(x, z, a));
-						compass.setVisibility(true && TerramapConfig.compassEnable);
+						compass.setVisibility(TerramapConfig.compassEnable);
 					} catch (OutOfProjectionBoundsException e) {
 						compass.setVisibility(false);
 					}
