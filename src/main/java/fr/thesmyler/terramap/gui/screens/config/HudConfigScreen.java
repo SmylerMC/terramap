@@ -27,6 +27,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerControl
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
@@ -65,6 +66,7 @@ public class HudConfigScreen extends Screen {
 		this.minimap.setCopyrightVisibility(false);
 		this.minimap.setRightClickMenuEnabled(false);
 		this.minimap.setScaleVisibility(false);
+		this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
 		this.minimap.scheduleAtUpdate(() -> {
 			if(TerramapRemote.getRemote().getProjection() != null) {
 				this.minimap.track(this.minimap.getMainPlayerMarker());
@@ -74,7 +76,7 @@ public class HudConfigScreen extends Screen {
 		this.styleSlider.setOnChange(map -> {
 			this.minimap.setBackground(map.map);
 			this.zoomSlider.setMin(map.map.getMinZoom());
-			this.zoomSlider.setMax(map.map.getMaxZoom());
+			this.zoomSlider.setMax(TerramapConfig.unlockZoom ? 25: map.map.getMaxZoom());
 
 		});
 		this.tileScalingSlider.setOnChange(v -> {
