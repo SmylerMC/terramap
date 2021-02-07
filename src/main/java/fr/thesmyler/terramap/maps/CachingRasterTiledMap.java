@@ -20,6 +20,7 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
  *
  * @param <T> The type of tile handled by this map
  */
+//FIXME There is a problem when changing low zoom level
 public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IRasterTiledMap {
 
 	private final LinkedList<T> tileList; // Uses for ordered access when unloading
@@ -32,7 +33,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
 	public CachingRasterTiledMap() {
 		this.tileList = new LinkedList<>();
 		this.tileMap = new HashMap<>();
-		this.maxLoaded = TerramapConfig.maxTileLoad;
+		this.maxLoaded = TerramapConfig.CLIENT.maxTileLoad;
 	}
 
 	@Override
@@ -98,7 +99,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
 
 	private void prepareLowTiles() {
 		this.unloadAll();
-		this.lowZoom = Math.min(3, TerramapConfig.lowZoomLevel); // We hard-code that here because we really don't want that to go above 3, 4 would already be 341 tiles
+		this.lowZoom = Math.min(3, TerramapConfig.CLIENT.lowZoomLevel); // We hard-code that here because we really don't want that to go above 3, 4 would already be 341 tiles
 		if(this.useLowZoom) {
 			for(int zoom=this.getMinZoom(); zoom<=Math.min(this.getMaxZoom(), this.lowZoom); zoom++) {
 				int size = WebMercatorUtils.getDimensionsInTile(zoom);
@@ -117,11 +118,11 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
 
 	@Override
 	public void setup() {
-		if(this.maxLoaded != TerramapConfig.maxTileLoad) {
-			this.maxLoaded = TerramapConfig.maxTileLoad;
+		if(this.maxLoaded != TerramapConfig.CLIENT.maxTileLoad) {
+			this.maxLoaded = TerramapConfig.CLIENT.maxTileLoad;
 			this.unloadToMaxLoad();
 		}
-		if(baseLoad <= 0 || this.lowZoom != TerramapConfig.lowZoomLevel) this.prepareLowTiles();
+		if(baseLoad <= 0 || this.lowZoom != TerramapConfig.CLIENT.lowZoomLevel) this.prepareLowTiles();
 	}
 
 	/**

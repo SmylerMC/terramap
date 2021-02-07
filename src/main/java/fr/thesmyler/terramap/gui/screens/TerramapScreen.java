@@ -384,8 +384,8 @@ public class TerramapScreen extends Screen {
 				this.map.getCenterLatitude(),
 				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
-				TerramapConfig.saveUiState ? this.debugMode : false,
-				TerramapConfig.saveUiState ? this.f1Mode : false,
+				TerramapConfig.CLIENT.saveUiState ? this.debugMode : false,
+				TerramapConfig.CLIENT.saveUiState ? this.f1Mode : false,
 				visibility,
 				tracking
 			);

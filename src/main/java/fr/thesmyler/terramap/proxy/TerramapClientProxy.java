@@ -16,7 +16,6 @@ import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -66,17 +65,6 @@ public class TerramapClientProxy extends TerramapProxy {
 		UrlRasterTile.registerErrorTexture();
 		MarkerControllerManager.registerBuiltInControllers();
 		MapStylesLibrary.reload();
-	}
-
-	@Override
-	public double getGuiScaleForConfig() {
-		double[] acceptableFactors = {0.5d, 1.0d, 2.0d, 4.0d, 8.0d};
-		double bestFactor = acceptableFactors[0];
-		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-		double computedFactor = scaledRes.getScaleFactor();
-		for(double factor: acceptableFactors)
-			if(Math.abs(computedFactor - factor) < Math.abs(bestFactor - computedFactor)) bestFactor = factor;
-		return bestFactor;
 	}
 
 	@Override

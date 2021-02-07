@@ -48,9 +48,9 @@ public abstract class HudScreenHandler {
 			updateMinimap();
 			screen.addWidget(map);
 			
-			int compassX = (int) Math.round(TerramapConfig.compassPosX * 0.01 * screen.getWidth());
-			int compassY = (int) Math.round(TerramapConfig.compassPosY * 0.01 * screen.getHeight());
-			int compassWidth = (int) Math.round(TerramapConfig.compassWidth * 0.01 * screen.getWidth());
+			int compassX = (int) Math.round(TerramapConfig.CLIENT.compass.posX * 0.01 * screen.getWidth());
+			int compassY = (int) Math.round(TerramapConfig.CLIENT.compass.posY * 0.01 * screen.getHeight());
+			int compassWidth = (int) Math.round(TerramapConfig.CLIENT.compass.width * 0.01 * screen.getWidth());
 
 			compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
 			screen.addWidget(compass);
@@ -62,13 +62,13 @@ public abstract class HudScreenHandler {
 					float a = Minecraft.getMinecraft().player.rotationYaw;
 					try {
 						compass.setAzimuth(p.azimuth(x, z, a));
-						compass.setVisibility(TerramapConfig.compassEnable);
+						compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
 					} catch (OutOfProjectionBoundsException e) {
 						compass.setVisibility(false);
 					}
 				}
 			});
-			compass.setVisibility(TerramapConfig.compassEnable);
+			compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
 			screen.addWidget(compass);
 		}
 	}
@@ -79,47 +79,47 @@ public abstract class HudScreenHandler {
 			init(screen);
 			return;
 		}
-		map.setX(Math.round((float)TerramapConfig.minimapPosX / 100 * screen.getWidth()));
-		map.setY(Math.round((float)TerramapConfig.minimapPosY / 100 * screen.getHeight()));
-		map.setWidth(Math.round((float)TerramapConfig.minimapWidth / 100 * screen.getWidth()));
-		map.setHeight(Math.round((float)TerramapConfig.minimapHeight / 100 * screen.getHeight()));
-		map.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
-		map.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
-		map.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
-		map.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.minimapPlayerDirections);
+		map.setX(Math.round((float)TerramapConfig.CLIENT.minimap.posX / 100 * screen.getWidth()));
+		map.setY(Math.round((float)TerramapConfig.CLIENT.minimap.posY / 100 * screen.getHeight()));
+		map.setWidth(Math.round((float)TerramapConfig.CLIENT.minimap.width / 100 * screen.getWidth()));
+		map.setHeight(Math.round((float)TerramapConfig.CLIENT.minimap.height / 100 * screen.getHeight()));
+		map.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		map.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		map.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
+		map.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
 		Map<String, IRasterTiledMap> styles = TerramapRemote.getRemote().getMapStyles();
-		IRasterTiledMap bg = styles.get(TerramapConfig.minimapStyle);
+		IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {
 			ArrayList<IRasterTiledMap> maps = new ArrayList<IRasterTiledMap>(styles.values());
 			Collections.sort(maps, Collections.reverseOrder());
 			bg = maps.get(0);
 		}
 		map.setBackground(bg);
-		int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.minimapZoomLevel);
-		zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.minimapZoomLevel);
+		int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
+		zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
 		map.setZoom(zoomLevel);
-		map.setZoom(TerramapConfig.minimapZoomLevel);
+		map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
 
 		map.setTileScaling(TerramapConfig.getEffectiveMinimapTileScaling());
-		map.setVisibility(TerramapConfig.minimapEnable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
+		map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
 	}
 
 	public static void zoomInMinimap() {
 		map.zoom(1);
-		TerramapConfig.minimapZoomLevel = (int) map.getZoom();
+		TerramapConfig.CLIENT.minimap.zoomLevel = (int) map.getZoom();
 		TerramapConfig.sync();
 	}
 
 	public static void zoomOutMinimap() {
 		map.zoom(-1);
-		TerramapConfig.minimapZoomLevel = (int) map.getZoom();
+		TerramapConfig.CLIENT.minimap.zoomLevel = (int) map.getZoom();
 		TerramapConfig.sync();
 	}
 
 	public static void toggleMinimap() {
 		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP)) {
 			map.setVisibility(!map.isVisible(null));
-			TerramapConfig.minimapEnable = map.isVisible(null);
+			TerramapConfig.CLIENT.minimap.enable = map.isVisible(null);
 			TerramapConfig.sync();
 		}
 	}

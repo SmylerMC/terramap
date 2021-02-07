@@ -24,7 +24,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class TerramapConfigScreen extends Screen {
-	
+
 	private GuiScreen parent;
 	private Screen[] pages;
 	private String[] titles;
@@ -35,16 +35,16 @@ public class TerramapConfigScreen extends Screen {
 	private ToggleButtonWidget unlockZoomToggle = new ToggleButtonWidget(10, false);
 	private ToggleButtonWidget saveUIStateToggle = new ToggleButtonWidget(10, false);
 	private OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<>(10, TileScalingOption.values());
-	private IntegerSliderWidget doubleClickDelaySlider = new IntegerSliderWidget(10, TerramapConfig.DOUBLE_CLICK_DELAY_MIN, TerramapConfig.DOUBLE_CLICK_DELAY_MAX, TerramapConfig.DOUBLE_CLICK_DELAY_DEFAULT);
-	private IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, TerramapConfig.TILE_LOAD_MIN, TerramapConfig.TILE_LOAD_MAX, TerramapConfig.TILE_LOAD_DEFAULT);
-	private IntegerSliderWidget lowZoomLevelSlider = new IntegerSliderWidget(10, TerramapConfig.LOW_ZOOM_LEVEL_MIN, TerramapConfig.LOW_ZOOM_LEVEL_MAX, TerramapConfig.LOW_ZOOM_LEVEL_DEFAULT);
+	private IntegerSliderWidget doubleClickDelaySlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MIN, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MAX, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_DEFAULT);
+	private IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.TILE_LOAD_MIN, TerramapConfig.CLIENT.TILE_LOAD_MAX, TerramapConfig.CLIENT.TILE_LOAD_DEFAULT);
+	private IntegerSliderWidget lowZoomLevelSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MIN, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MAX, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_DEFAULT);
 	private ToggleButtonWidget debugMapStyles = new ToggleButtonWidget(10, false);
 	private TextButtonWidget reloadMapStylesButton;
 	private TextFieldWidget tpCommandField;
 	private TextWidget pageText;
 	//TODO Localize
 	//TODO Tooltips
-	
+
 	public TerramapConfigScreen(GuiScreen parent) {
 		super(Screen.BackgroundType.DIRT);
 		this.parent = parent;
@@ -52,7 +52,7 @@ public class TerramapConfigScreen extends Screen {
 		this.tpCommandField = new TextFieldWidget(10, this.getFont()).setWidth(200);
 		this.reset();
 	}
-	
+
 	@Override
 	public void initScreen() {
 		int inter = 9;
@@ -75,13 +75,13 @@ public class TerramapConfigScreen extends Screen {
 				mapConfigScreen,
 				mapStylesConfigScreen,
 				otherConfigScreen
-			};
+		};
 		this.titles = new String[] {
 				"Terramap Configuration: map settings",
 				"Terramap Configuration: mapstyles",
 				"Terramap Configuration: other"
-			};
-		
+		};
+
 		// Map settings
 		TextWidget unlockZoomText = new TextWidget("Unlock zoom: ", 10, TextAlignment.RIGHT, this.getFont());
 		unlockZoomText.setAnchorX((mapConfigScreen.width - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth())/2 - 71).setAnchorY(this.height / 4 - 30);
@@ -97,7 +97,7 @@ public class TerramapConfigScreen extends Screen {
 		mapConfigScreen.addWidget(this.lowZoomLevelSlider.setX(mapConfigScreen.width/2 + 5).setY(this.maxLoadedTilesSlider.getY()).setWidth(this.maxLoadedTilesSlider.getWidth()).setDisplayPrefix("Low zoom: "));
 		TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, "Configure Minimap", () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
 		mapConfigScreen.addWidget(hudButton);
-		
+
 		// Map styles
 		TextWidget debugMapStylesText = new TextWidget("Enable debug map styles: ", 10, true, this.getFont());
 		mapStylesConfigScreen.addWidget(debugMapStylesText.setAnchorX((mapStylesConfigScreen.width - debugMapStyles.getWidth() - debugMapStylesText.getWidth() - 3) / 2).setAnchorY(mapStylesConfigScreen.height / 4 - 30));
@@ -127,7 +127,7 @@ public class TerramapConfigScreen extends Screen {
 				TerramapMod.logger.catching(e);
 			}
 		}));
-		
+
 		// Other config screen
 		TextWidget tpCommandText = new TextWidget("Teleport command: ", 10, TextAlignment.RIGHT, this.getFont());
 		otherConfigScreen.addWidget(tpCommandText.setAnchorX((otherConfigScreen.getWidth() - this.tpCommandField.getWidth() - tpCommandText.getWidth()) / 2).setAnchorY(60));
@@ -139,7 +139,7 @@ public class TerramapConfigScreen extends Screen {
 		this.addWidget(this.pageText.setAnchorX(this.width/2).setAnchorY(this.height - 45).setAlignment(TextAlignment.CENTER));
 		this.updateButtons();
 	}
-	
+
 	private void nextPage() {
 		this.removeWidget(this.pages[this.currentSubScreen]);
 		this.currentSubScreen++;
@@ -147,7 +147,7 @@ public class TerramapConfigScreen extends Screen {
 		this.title.setText(this.titles[currentSubScreen]);
 		this.updateButtons();
 	}
-	
+
 	private void previousPage() {
 		this.removeWidget(this.pages[this.currentSubScreen]);
 		this.currentSubScreen--;
@@ -155,7 +155,7 @@ public class TerramapConfigScreen extends Screen {
 		this.title.setText(this.titles[currentSubScreen]);
 		this.updateButtons();
 	}
-	
+
 	private void updateButtons() {
 		if(this.currentSubScreen <= 0) this.previous.disable();
 		else this.previous.enable();
@@ -163,44 +163,35 @@ public class TerramapConfigScreen extends Screen {
 		else this.next.enable();
 		this.pageText.setText("Page " + (this.currentSubScreen + 1) + " of " + this.pages.length);
 	}
-	
+
 	private void saveAndClose() {
-		if(this.tileScalingSlider.getCurrentOption() == TileScalingOption.AUTO) {
-			TerramapConfig.autoTileScaling = true;
-		} else {
-			TerramapConfig.autoTileScaling = false;
-			TerramapConfig.tileScaling = this.tileScalingSlider.getCurrentOption().value;
-		}
-		TerramapConfig.unlockZoom = this.unlockZoomToggle.getState();
-		TerramapConfig.saveUiState = this.saveUIStateToggle.getState();
-		TerramapConfig.doubleClickDelay = (int) this.doubleClickDelaySlider.getValue();
-		TerramapConfig.maxTileLoad = (int) this.maxLoadedTilesSlider.getValue();
-		TerramapConfig.lowZoomLevel = (int) this.lowZoomLevelSlider.getValue();
+		TerramapConfig.CLIENT.tileScaling = this.tileScalingSlider.getCurrentOption().value;
+		TerramapConfig.CLIENT.unlockZoom = this.unlockZoomToggle.getState();
+		TerramapConfig.CLIENT.saveUiState = this.saveUIStateToggle.getState();
+		TerramapConfig.CLIENT.doubleClickDelay = (int) this.doubleClickDelaySlider.getValue();
+		TerramapConfig.CLIENT.maxTileLoad = (int) this.maxLoadedTilesSlider.getValue();
+		TerramapConfig.CLIENT.lowZoomLevel = (int) this.lowZoomLevelSlider.getValue();
 		TerramapConfig.tpllcmd = this.tpCommandField.getText();
 		TerramapConfig.enableDebugMaps = this.debugMapStyles.getState();
 		TerramapConfig.sync();
 		this.close();
 	}
-	
+
 	private void close() {
 		Minecraft.getMinecraft().displayGuiScreen(this.parent);
 	}
-	
+
 	private void reset() {
-		if(TerramapConfig.autoTileScaling) {
-			this.tileScalingSlider.setCurrentOption(TileScalingOption.AUTO);
-		} else {
-			this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.tileScaling));
-		}
-		this.unlockZoomToggle.setState(TerramapConfig.unlockZoom);
-		this.saveUIStateToggle.setState(TerramapConfig.saveUiState);
-		this.doubleClickDelaySlider.setValue(TerramapConfig.doubleClickDelay);
-		this.maxLoadedTilesSlider.setValue(TerramapConfig.maxTileLoad);
-		this.lowZoomLevelSlider.setValue(TerramapConfig.lowZoomLevel);
+		this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.CLIENT.tileScaling));
+		this.unlockZoomToggle.setState(TerramapConfig.CLIENT.unlockZoom);
+		this.saveUIStateToggle.setState(TerramapConfig.CLIENT.saveUiState);
+		this.doubleClickDelaySlider.setValue(TerramapConfig.CLIENT.doubleClickDelay);
+		this.maxLoadedTilesSlider.setValue(TerramapConfig.CLIENT.maxTileLoad);
+		this.lowZoomLevelSlider.setValue(TerramapConfig.CLIENT.lowZoomLevel);
 		this.tpCommandField.setText(TerramapConfig.tpllcmd);
 		this.debugMapStyles.setState(TerramapConfig.enableDebugMaps);
 	}
-	
+
 	@Override
 	public void onKeyTyped(char typedChar, int keyCode, Screen parent) {
 		switch(keyCode) {
@@ -210,7 +201,7 @@ public class TerramapConfigScreen extends Screen {
 		default: super.onKeyTyped(typedChar, keyCode, parent);
 		}
 	}
-	
+
 	private class ConfirmScreen extends Screen {
 		public ConfirmScreen() {
 			super(BackgroundType.DIRT);
@@ -226,24 +217,24 @@ public class TerramapConfigScreen extends Screen {
 			this.addWidget(new TextButtonWidget(this.width / 2 + 45, text.getY() + text.getHeight() + 15, 10, 80, "Yes",TerramapConfigScreen.this::saveAndClose));
 		}
 	}
-	
+
 	protected enum TileScalingOption {
-		
+
 		AUTO(0), POINT5(0.5), ONE(1), TWO(2), FOUR(4), HEIGHT(8);
-		
+
 		double value;
-		
+
 		TileScalingOption(double v) {
 			this.value = v;
 		}
-		
+
 		protected static TileScalingOption getFromValue(double val) {
 			for(TileScalingOption o: TileScalingOption.values()) {
 				if(o.value == val) return o;
 			}
 			return AUTO;
 		}
-		
+
 		@Override
 		public String toString() {
 			if(this == AUTO) {

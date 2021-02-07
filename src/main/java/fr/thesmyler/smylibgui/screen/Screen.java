@@ -218,7 +218,7 @@ public class Screen extends GuiScreen implements IWidget{
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		long ctime = System.currentTimeMillis();
-		if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.doubleClickDelay && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
+		if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.CLIENT.doubleClickDelay && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
 			this.delayedActions.add(new MouseAction(MouseActionType.DOUBLE_CLICK, mouseButton, mouseX - this.getX(), mouseY - this.getY()));
 		} else {
 			this.delayedActions.add(new MouseAction(MouseActionType.CLICK, mouseButton, mouseX - this.getX(), mouseY - this.getY()));

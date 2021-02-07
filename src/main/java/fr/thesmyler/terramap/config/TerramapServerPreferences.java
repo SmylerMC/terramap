@@ -43,7 +43,7 @@ public class TerramapServerPreferences {
 		try {
 			WorldPreferences preferences = TerramapServerPreferences.getWorldPreferences(world);
 			synchronized(preferences) {
-				return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.playersDisplayDefault;
+				return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.SERVER.playersDisplayDefault;
 			}
 		} catch(Exception e) {
 			if(!loggedDebugError) {
@@ -51,7 +51,7 @@ public class TerramapServerPreferences {
 				TerramapMod.logger.catching(e);
 				loggedDebugError = true;
 			}
-			return TerramapConfig.playersDisplayDefault;
+			return TerramapConfig.SERVER.playersDisplayDefault;
 		}
 	}
 
@@ -206,7 +206,7 @@ public class TerramapServerPreferences {
 	}
 
 	private static class PlayerPreferences {
-		public boolean display = TerramapConfig.playersDisplayDefault;
+		public boolean display = TerramapConfig.SERVER.playersDisplayDefault;
 	}
 
 }

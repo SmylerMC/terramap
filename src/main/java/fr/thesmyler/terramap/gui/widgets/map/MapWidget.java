@@ -464,7 +464,7 @@ public class MapWidget extends Screen {
 			MapWidget.this.rightClickMenu.hide(null);
 
 			double nzoom = this.zoom + zoom;
-			double maxZoom = TerramapConfig.unlockZoom? 25: getMaxZoom();
+			double maxZoom = TerramapConfig.CLIENT.unlockZoom? 25: getMaxZoom();
 			nzoom = Math.min(maxZoom, nzoom);
 			nzoom = Math.max(getMinZoom(), nzoom);
 
@@ -553,7 +553,7 @@ public class MapWidget extends Screen {
 	}
 
 	public double getMaxZoom() {
-		return TerramapConfig.unlockZoom? 25: this.background.map.getMaxZoom();
+		return TerramapConfig.CLIENT.unlockZoom? 25: this.background.map.getMaxZoom();
 	}
 
 	public double getMinZoom() {

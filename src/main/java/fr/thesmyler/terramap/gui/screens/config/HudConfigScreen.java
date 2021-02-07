@@ -37,7 +37,7 @@ import net.minecraft.client.Minecraft;
 //TODO Tooltips
 public class HudConfigScreen extends Screen {
 	
-	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.tileScaling);
+	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.tileScaling);
 	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, this.minimap, "Minimap", 15);
 	private CompassScreen compassScreen = new CompassScreen();
 	private WindowedScreen compassWindow = new WindowedScreen(BackgroundType.NONE, this.compassScreen, "Compass", 16);
@@ -76,7 +76,7 @@ public class HudConfigScreen extends Screen {
 		this.styleSlider.setOnChange(map -> {
 			this.minimap.setBackground(map.map);
 			this.zoomSlider.setMin(map.map.getMinZoom());
-			this.zoomSlider.setMax(TerramapConfig.unlockZoom ? 25: map.map.getMaxZoom());
+			this.zoomSlider.setMax(TerramapConfig.CLIENT.unlockZoom ? 25: map.map.getMaxZoom());
 
 		});
 		this.tileScalingSlider.setOnChange(v -> {
@@ -198,21 +198,21 @@ public class HudConfigScreen extends Screen {
 	}
 	
 	private void saveAndClose() {
-		TerramapConfig.minimapEnable = this.minimapButton.getState();
-		TerramapConfig.minimapZoomLevel = (int) this.zoomSlider.getValue();
-		TerramapConfig.minimapShowEntities = this.entitiesButton.getState();
-		TerramapConfig.minimapShowOtherPlayers = this.otherPlayersButton.getState();
-		TerramapConfig.minimapStyle = this.styleSlider.getCurrentOption().map.getId();
-		TerramapConfig.minimapTileScaling = this.tileScalingSlider.getCurrentOption().value;
-		TerramapConfig.minimapPosX = (float)this.minimapWindow.getX() / this.getWidth() * 100;
-		TerramapConfig.minimapPosY = (float)this.minimapWindow.getY() / this.getHeight() * 100;
-		TerramapConfig.minimapWidth = (float)this.minimapWindow.getWidth() / this.getWidth() * 100;
-		TerramapConfig.minimapHeight = (float)this.minimapWindow.getHeight() / this.getHeight() * 100;
-		TerramapConfig.minimapPlayerDirections = this.directionsButton.getState();
-		TerramapConfig.compassEnable = this.compassButton.getState();
-		TerramapConfig.compassPosX = (float)this.compassWindow.getX() / this.getWidth() * 100;
-		TerramapConfig.compassPosY = (float)this.compassWindow.getY() / this.getHeight() * 100;
-		TerramapConfig.compassWidth = (float)this.compassWindow.getWidth() / this.getWidth() * 100;
+		TerramapConfig.CLIENT.minimap.enable = this.minimapButton.getState();
+		TerramapConfig.CLIENT.minimap.zoomLevel = (int) this.zoomSlider.getValue();
+		TerramapConfig.CLIENT.minimap.showEntities = this.entitiesButton.getState();
+		TerramapConfig.CLIENT.minimap.showOtherPlayers = this.otherPlayersButton.getState();
+		TerramapConfig.CLIENT.minimap.style = this.styleSlider.getCurrentOption().map.getId();
+		TerramapConfig.CLIENT.minimap.tileScaling = this.tileScalingSlider.getCurrentOption().value;
+		TerramapConfig.CLIENT.minimap.posX = (float)this.minimapWindow.getX() / this.getWidth() * 100;
+		TerramapConfig.CLIENT.minimap.posY = (float)this.minimapWindow.getY() / this.getHeight() * 100;
+		TerramapConfig.CLIENT.minimap.width = (float)this.minimapWindow.getWidth() / this.getWidth() * 100;
+		TerramapConfig.CLIENT.minimap.height = (float)this.minimapWindow.getHeight() / this.getHeight() * 100;
+		TerramapConfig.CLIENT.minimap.playerDirections = this.directionsButton.getState();
+		TerramapConfig.CLIENT.compass.enable = this.compassButton.getState();
+		TerramapConfig.CLIENT.compass.posX = (float)this.compassWindow.getX() / this.getWidth() * 100;
+		TerramapConfig.CLIENT.compass.posY = (float)this.compassWindow.getY() / this.getHeight() * 100;
+		TerramapConfig.CLIENT.compass.width = (float)this.compassWindow.getWidth() / this.getWidth() * 100;
 		TerramapConfig.sync();
 		this.close();
 	}
@@ -222,34 +222,34 @@ public class HudConfigScreen extends Screen {
 	}
 	
 	private void reset() {
-		this.minimapWindow.setVisibility(TerramapConfig.minimapEnable);
-		this.compassWindow.setVisibility(TerramapConfig.compassEnable);
-		this.minimapButton.setState(TerramapConfig.minimapEnable);
-		this.compassButton.setState(TerramapConfig.compassEnable);
-		this.zoomSlider.setValue(TerramapConfig.minimapZoomLevel);
-		this.otherPlayersButton.setState(TerramapConfig.minimapShowOtherPlayers);
-		this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.minimapShowOtherPlayers);
-		this.entitiesButton.setState(TerramapConfig.minimapShowEntities);
-		this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.minimapShowEntities);
-		this.minimap.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.minimapShowEntities);
-		this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.minimapPlayerDirections);
-		for(MapStyleSliderEntry map: this.mapStyles) if(map.map.getId().equals(TerramapConfig.minimapStyle)) {
+		this.minimapWindow.setVisibility(TerramapConfig.CLIENT.minimap.enable);
+		this.compassWindow.setVisibility(TerramapConfig.CLIENT.compass.enable);
+		this.minimapButton.setState(TerramapConfig.CLIENT.minimap.enable);
+		this.compassButton.setState(TerramapConfig.CLIENT.compass.enable);
+		this.zoomSlider.setValue(TerramapConfig.CLIENT.minimap.zoomLevel);
+		this.otherPlayersButton.setState(TerramapConfig.CLIENT.minimap.showOtherPlayers);
+		this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
+		this.entitiesButton.setState(TerramapConfig.CLIENT.minimap.showEntities);
+		this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		this.minimap.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
+		for(MapStyleSliderEntry map: this.mapStyles) if(map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
 			this.styleSlider.setCurrentOption(map);
 			break;
 		}
-		this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.minimapTileScaling));
-		this.directionsButton.setState(TerramapConfig.minimapPlayerDirections);
+		this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.CLIENT.minimap.tileScaling));
+		this.directionsButton.setState(TerramapConfig.CLIENT.minimap.playerDirections);
 		this.recalcWidgetsPos();
 	}
 	
 	private void recalcWidgetsPos() {
-		this.minimapWindow.setX(Math.round(this.width * TerramapConfig.minimapPosX / 100));
-		this.minimapWindow.setY(Math.round(this.height * TerramapConfig.minimapPosY / 100));
-		this.minimapWindow.setWidth(Math.round(this.width * TerramapConfig.minimapWidth / 100));
-		this.minimapWindow.setHeight(Math.round(this.height * TerramapConfig.minimapHeight / 100));
-		this.compassWindow.setX(Math.round(this.width * TerramapConfig.compassPosX / 100));
-		this.compassWindow.setY(Math.round(this.height * TerramapConfig.compassPosY / 100));
-		this.compassWindow.setWidth(Math.round(this.width * TerramapConfig.compassWidth / 100));
+		this.minimapWindow.setX(Math.round(this.width * TerramapConfig.CLIENT.minimap.posX / 100));
+		this.minimapWindow.setY(Math.round(this.height * TerramapConfig.CLIENT.minimap.posY / 100));
+		this.minimapWindow.setWidth(Math.round(this.width * TerramapConfig.CLIENT.minimap.width / 100));
+		this.minimapWindow.setHeight(Math.round(this.height * TerramapConfig.CLIENT.minimap.height / 100));
+		this.compassWindow.setX(Math.round(this.width * TerramapConfig.CLIENT.compass.posX / 100));
+		this.compassWindow.setY(Math.round(this.height * TerramapConfig.CLIENT.compass.posY / 100));
+		this.compassWindow.setWidth(Math.round(this.width * TerramapConfig.CLIENT.compass.width / 100));
 	}
 	
 	public void toggleSettingsPanel() {
