@@ -32,15 +32,15 @@ import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 
-//TODO Localize
-//TODO Tooltips
+
 public class HudConfigScreen extends Screen {
 	
 	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
-	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, this.minimap, "Minimap", 15);
+	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, this.minimap, "", 15);
 	private CompassScreen compassScreen = new CompassScreen();
-	private WindowedScreen compassWindow = new WindowedScreen(BackgroundType.NONE, this.compassScreen, "Compass", 16);
+	private WindowedScreen compassWindow = new WindowedScreen(BackgroundType.NONE, this.compassScreen, "", 16);
 	private OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<TileScalingOption>(10, TileScalingOption.values());
 	private IntegerSliderWidget zoomSlider = new IntegerSliderWidget(11, 0, 20, 10);
 	private OptionSliderWidget<MapStyleSliderEntry> styleSlider;
@@ -123,18 +123,23 @@ public class HudConfigScreen extends Screen {
 		this.addWidget(this.minimapWindow);
 		
 		// Buttons
-		this.buttonPanel.addWidget(new TextButtonWidget(3, 3, 10, 54, "Cancel", this::close));
-		this.buttonPanel.addWidget(new TextButtonWidget(58, 3, 10, 54, "Reset", this::reset));
-		this.buttonPanel.addWidget(new TextButtonWidget(113, 3, 10, 54, "Save", this::saveAndClose));
-		this.buttonPanel.addWidget(new TexturedButtonWidget(168, 3, 10, IncludedTexturedButtons.OPTIONS_20, this::toggleSettingsPanel));
+		this.buttonPanel.addWidget(new TextButtonWidget(3, 3, 10, 54, I18n.format("terramap.config.cancel"), this::close).setTooltip(I18n.format("terramap.config.cancel.tooltip")));
+		this.buttonPanel.addWidget(new TextButtonWidget(58, 3, 10, 54, I18n.format("terramap.config.reset"), this::reset).setTooltip(I18n.format("terramap.config.reset.tooltip")));
+		this.buttonPanel.addWidget(new TextButtonWidget(113, 3, 10, 54, I18n.format("terramap.config.save"), this::saveAndClose).setTooltip(I18n.format("terramap.config.save.tooltip")));
+		this.buttonPanel.addWidget(new TexturedButtonWidget(168, 3, 10, IncludedTexturedButtons.OPTIONS_20, this::toggleSettingsPanel).setTooltip(I18n.format("terramap.config.options.tooltip")));
 		
 		// Boolean lines
 		LinkedList<TextWidget> buttonsTexts = new LinkedList<>();
-		buttonsTexts.add(new TextWidget("Minimap: ", 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget("Compass: ", 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget("Players: ", 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget("Entities: ", 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget("Player Direction: ", 10, true, this.getFont()));
+		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.minimap"), 10, true, this.getFont()));
+		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.compass"), 10, true, this.getFont()));
+		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.players"), 10, true, this.getFont()));
+		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.entities"), 10, true, this.getFont()));
+		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.directions"), 10, true, this.getFont()));
+		this.minimapButton.setTooltip(I18n.format("terramap.hudconfig.minimap.tooltip"));
+		this.compassButton.setTooltip(I18n.format("terramap.hudconfig.compass.tooltip"));
+		this.otherPlayersButton.setTooltip(I18n.format("terramap.hudconfig.players.tooltip"));
+		this.entitiesButton.setTooltip(I18n.format("terramap.hudconfig.entities.tooltip"));
+		this.directionsButton.setTooltip(I18n.format("terramap.hudconfig.directions.tooltip"));
 		LinkedList<ToggleButtonWidget> buttons = new LinkedList<>();
 		buttons.add(this.minimapButton);
 		buttons.add(this.compassButton);
@@ -171,9 +176,9 @@ public class HudConfigScreen extends Screen {
 			lineY = lastButton.getY() + lastButton.getHeight() + lineSpace;
 		}
 		// Second line
-		this.settingsPanel.addWidget(this.tileScalingSlider.setX(this.width / 2 - 153).setY(lastButton.getY() + lastButton.getHeight() + lineSpace).setWidth(100).setDisplayPrefix("Scaling: ")); 
-		this.settingsPanel.addWidget(this.zoomSlider.setWidth(100).setX(this.width/2 - 50).setY(this.tileScalingSlider.getY()).setDisplayPrefix("Zoom: "));
-		this.settingsPanel.addWidget(this.styleSlider.setWidth(100).setX(this.width/2 + 53).setY(this.tileScalingSlider.getY()));
+		this.settingsPanel.addWidget(this.tileScalingSlider.setX(this.width / 2 - 153).setY(lastButton.getY() + lastButton.getHeight() + lineSpace).setWidth(100).setDisplayPrefix(I18n.format("terramap.hudconfig.scaling")).setTooltip(I18n.format("terramap.hudconfig.scaling.tooltip")));
+		this.settingsPanel.addWidget(this.zoomSlider.setWidth(100).setX(this.width/2 - 50).setY(this.tileScalingSlider.getY()).setDisplayPrefix(I18n.format("terramap.hudconfig.zoom")).setTooltip(I18n.format("terramap.hudconfig.zoom.tooltip")));
+		this.settingsPanel.addWidget(this.styleSlider.setWidth(100).setX(this.width/2 + 53).setY(this.tileScalingSlider.getY()).setTooltip(I18n.format("terramap.hudconfig.mapstyle.tooltip")));
 		
 		// Setup panels
 		this.buttonPanel.setBackgroundColor(0xB0000000);
@@ -185,7 +190,7 @@ public class HudConfigScreen extends Screen {
 		this.buttonPanel.setOpenX(this.buttonPanel.getClosedX()).setOpenY(this.height - this.settingsPanel.getHeight() - this.buttonPanel.getHeight());
 		this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 		
-		TextWidget explain = new TextWidget("Move and resize the minimap using the preview windows, and click the menu button for more options", this.width/2, this.height/2 - 100, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget explain = new TextWidget(I18n.format("terramap.hudconfig.explain"), this.width/2, this.height/2 - 100, 10, TextAlignment.CENTER, this.getFont());
 		this.addWidget(explain.setMaxWidth((int)(this.width * .8)).setAnchorY(this.height/2 - explain.getHeight() - 10));
 		
 		this.addWidget(this.buttonPanel);
@@ -275,8 +280,7 @@ public class HudConfigScreen extends Screen {
 					float a = Minecraft.getMinecraft().player.rotationYaw;
 					try {
 						compass.setAzimuth(p.azimuth(x, z, a));
-					} catch (OutOfProjectionBoundsException e) {
-					}
+					} catch (OutOfProjectionBoundsException silenced) {}
 				}
 			});
 		}
