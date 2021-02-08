@@ -7,7 +7,6 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
-//FIXME Default texture is cut
 public class ToggleButtonWidget extends AbstractButtonWidget {
 
 	protected boolean value;
@@ -41,11 +40,11 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	}
 	
 	public ToggleButtonWidget(int x, int y, int z, boolean startValue, Consumer<Boolean> onChange) {
-		this(x, y, z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onChange);
+		this(x, y, z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onChange);
 	}
 	
 	public ToggleButtonWidget(int x, int y, int z, boolean startValue) {
-		this(x, y, z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null);
+		this(x, y, z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null);
 	}
 	
 	public ToggleButtonWidget(
@@ -63,11 +62,11 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	}
 	
 	public ToggleButtonWidget(int z, boolean startValue, Consumer<Boolean> onChange) {
-		this(z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onChange);
+		this(z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onChange);
 	}
 	
 	public ToggleButtonWidget(int z, boolean startValue) {
-		this(z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null);
+		this(z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null);
 	}
 
 	@Override

@@ -34,7 +34,7 @@ public abstract class HudScreenHandler {
 
 		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
 			if(map == null) {
-				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.getEffectiveMinimapTileScaling());
+				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
 				map.setInteractive(false);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
@@ -100,7 +100,7 @@ public abstract class HudScreenHandler {
 		map.setZoom(zoomLevel);
 		map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
 
-		map.setTileScaling(TerramapConfig.getEffectiveMinimapTileScaling());
+		map.setTileScaling(TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
 		map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
 	}
 

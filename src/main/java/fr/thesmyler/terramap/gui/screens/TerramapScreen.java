@@ -88,7 +88,7 @@ public class TerramapScreen extends Screen {
 		this.backgrounds = maps;
 		Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
 		IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
-		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
+		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
 		TerramapScreenSavedState state = TerramapRemote.getRemote().getSavedScreenState();
 		if(state != null) this.resumeFromSavedState(TerramapRemote.getRemote().getSavedScreenState());
 		TerramapRemote.getRemote().registerForUpdates(true);
@@ -98,7 +98,7 @@ public class TerramapScreen extends Screen {
 	public void initScreen() {
 		this.removeAllWidgets();
 		this.map.setX(0).setY(0).setWidth(this.getWidth()).setHeight(this.getHeight());
-		this.map.setTileScaling(TerramapConfig.getEffectiveTileScaling());
+		this.map.setTileScaling(TerramapConfig.CLIENT.getEffectiveTileScaling());
 		this.addWidget(this.map);
 
 		// Map control buttons

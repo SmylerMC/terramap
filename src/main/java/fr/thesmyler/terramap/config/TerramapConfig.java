@@ -84,6 +84,14 @@ public class TerramapConfig {
 		@Config.LangKey("terramap.config.minimap.direction") //TODO Localize
 		@Config.Comment("Whether or not player directions should show up on the minimap")
 		public boolean playerDirections = true;
+		
+		public double getEffectiveTileScaling() {
+			if(this.tileScaling == 0) {
+				return SmyLibGui.getMinecraftGuiScale();
+			} else {
+				return CLIENT.minimap.tileScaling;
+			}
+		}
 
 	}
 
@@ -177,6 +185,14 @@ public class TerramapConfig {
 		@Config.LangKey("terramap.config.save_ui_state") //TODO localize
 		@Config.Comment("Whether or not to save the map ui state when closing the full-screen map. Enable to save F1 mode and debug mode.")
 		public boolean saveUiState = false;
+		
+		public double getEffectiveTileScaling() {
+			if(this.tileScaling == 0) {
+				return SmyLibGui.getMinecraftGuiScale();
+			} else {
+				return CLIENT.tileScaling;
+			}
+		}
 
 	}
 
@@ -250,22 +266,6 @@ public class TerramapConfig {
 	@Config.LangKey("terramap.config.enable_debug_maps") //TODO Localize
 	@Config.Comment("Set this to true to enable debugging map styles")
 	public static boolean enableDebugMaps = false;
-
-	public static double getEffectiveTileScaling() {
-		if(CLIENT.tileScaling == 0) {
-			return SmyLibGui.getMinecraftGuiScale();
-		} else {
-			return CLIENT.tileScaling;
-		}
-	}
-
-	public static double getEffectiveMinimapTileScaling() {
-		if(CLIENT.minimap.tileScaling == 0) {
-			return SmyLibGui.getMinecraftGuiScale();
-		} else {
-			return CLIENT.minimap.tileScaling;
-		}
-	}
 
 	public static void sync() {
 		ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);

@@ -37,7 +37,7 @@ import net.minecraft.client.Minecraft;
 //TODO Tooltips
 public class HudConfigScreen extends Screen {
 	
-	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.tileScaling);
+	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
 	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, this.minimap, "Minimap", 15);
 	private CompassScreen compassScreen = new CompassScreen();
 	private WindowedScreen compassWindow = new WindowedScreen(BackgroundType.NONE, this.compassScreen, "Compass", 16);
@@ -160,7 +160,7 @@ public class HudConfigScreen extends Screen {
 			for(int i=0; i<lineCount; i++) {
 				TextWidget text = buttonsTexts.pop();
 				ToggleButtonWidget button = buttons.pop();
-				text.setAnchorX(x).setAnchorY(lineY + 3);
+				text.setAnchorX(x).setAnchorY(lineY + 4);
 				x += text.getWidth() + textButtonSpace;
 				button.setX(x).setY(lineY);
 				x += button.getWidth() + padding;
