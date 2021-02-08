@@ -18,13 +18,9 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
 				158, 108, 158, 122,
 				158, 136, 158, 150,
 				this.main.doesMarkersShowDirection(),
-				() -> {
-					this.main.setShowMarkerDirection(true);
-					this.other.setShowMarkerDirection(true);
-				},
-				() -> {
-					this.main.setShowMarkerDirection(false);
-					this.other.setShowMarkerDirection(false);
+				b -> {
+					this.main.setShowMarkerDirection(b);
+					this.other.setShowMarkerDirection(b);
 				}
 		);
 		 //TODO Tooltip

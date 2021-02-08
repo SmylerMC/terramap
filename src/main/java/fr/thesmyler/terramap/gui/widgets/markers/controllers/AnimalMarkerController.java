@@ -22,12 +22,11 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 			116, 108, 116, 122,
 			116, 108, 116, 122,
 			116, 136, 116, 150,
-			this.getVisibility(), null, null);
+			this.getVisibility(), null);
 
 	public AnimalMarkerController() {
 		super(ID, 700, AnimalMarker.class);
-		this.button.setOnActivate(() -> this.setVisibility(true));
-		this.button.setOnDeactivate(() -> this.setVisibility(false));
+		this.button.setOnChange(b -> this.setVisibility(b));
 		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.animals"));
 	}
 

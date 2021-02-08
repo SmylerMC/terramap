@@ -19,7 +19,7 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
 				74, 108, 74, 122,
 				74, 108, 74, 122,
 				74, 136, 74, 150,
-				false, null, null));
+				false, null));
 		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
 	}
 

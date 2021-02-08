@@ -18,13 +18,9 @@ public class PlayerNameVisibilityController implements FeatureVisibilityControll
 				172, 108, 172, 122,
 				172, 136, 172, 150,
 				this.main.doesMarkersShowNames(),
-				() -> {
-					this.main.setShowMarkerNames(true);
-					this.other.setShowMarkerNames(true);
-				},
-				() -> {
-					this.main.setShowMarkerNames(false);
-					this.other.setShowMarkerNames(false);
+				b -> {
+					this.main.setShowMarkerNames(b);
+					this.other.setShowMarkerNames(b);
 				}
 			);  //TODO Tooltip
 	}

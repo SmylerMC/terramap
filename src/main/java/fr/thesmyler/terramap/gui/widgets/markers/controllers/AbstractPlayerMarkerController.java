@@ -12,8 +12,7 @@ public abstract class AbstractPlayerMarkerController<T extends AbstractPlayerMar
 	public AbstractPlayerMarkerController(String id, int zLayer, Class<T> clazz, ToggleButtonWidget button) {
 		super(id, zLayer, clazz);
 		this.button = button;
-		this.button.setOnActivate(() -> this.setVisibility(true));
-		this.button.setOnDeactivate(() -> this.setVisibility(false));
+		this.button.setOnChange(b -> this.setVisibility(b));
 		this.button.setState(this.getVisibility());
 	}
 

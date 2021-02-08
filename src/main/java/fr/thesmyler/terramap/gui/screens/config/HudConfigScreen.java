@@ -77,18 +77,16 @@ public class HudConfigScreen extends Screen {
 			this.minimap.setBackground(map.map);
 			this.zoomSlider.setMin(map.map.getMinZoom());
 			this.zoomSlider.setMax(TerramapConfig.CLIENT.unlockZoom ? 25: map.map.getMaxZoom());
-
 		});
 		this.tileScalingSlider.setOnChange(v -> {
 			if(v == TileScalingOption.AUTO) this.minimap.setTileScaling(SmyLibGui.getMinecraftGuiScale());
 			else this.minimap.setTileScaling(v.value);
 		});
-		this.minimapButton.setOnActivate(() -> this.minimapWindow.setVisibility(true)).setOnDeactivate(() -> this.minimapWindow.setVisibility(false));
-		this.compassButton.setOnActivate(() -> this.compassWindow.setVisibility(true)).setOnDeactivate(() -> this.compassWindow.setVisibility(false));
-		this.otherPlayersButton.setOnActivate(() -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, true)).setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, false));
-		this.entitiesButton.setOnActivate(() -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, true).trySetMarkersVisibility(MobMarkerController.ID, true))
-				   .setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, false).trySetMarkersVisibility(MobMarkerController.ID, false));
-		this.directionsButton.setOnActivate(() -> this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, true)).setOnDeactivate(() -> this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, false));
+		this.minimapButton.setOnChange(b -> this.minimapWindow.setVisibility(b));
+		this.compassButton.setOnChange(b -> this.compassWindow.setVisibility(b));
+		this.otherPlayersButton.setOnChange(b -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, b));
+		this.entitiesButton.setOnChange(b -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, b).trySetMarkersVisibility(MobMarkerController.ID, b));
+		this.directionsButton.setOnChange(b -> this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, b));
 		this.minimapWindow.setEnableTopBar(false);
 		this.minimapWindow.setCenterDragColor(0x00000000);
 		this.minimapWindow.setEnableCenterDrag(true);

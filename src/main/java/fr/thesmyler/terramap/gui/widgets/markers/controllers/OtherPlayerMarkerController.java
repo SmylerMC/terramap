@@ -23,7 +23,7 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 				88, 108, 88, 122,
 				88, 108, 88, 122,
 				88, 136, 88, 150,
-				false, null, null));
+				false, null));
 		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
 	}
 
