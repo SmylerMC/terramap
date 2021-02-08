@@ -16,19 +16,19 @@ public abstract class AbstractPlayerMarkerController<T extends AbstractPlayerMar
 		this.button.setState(this.getVisibility());
 	}
 
-	public boolean doesMarkersShowNames() {
+	public boolean doesShowNames() {
 		return this.names;
 	}
 
-	public void setShowMarkerNames(boolean yesNo) {
+	public void setShowNames(boolean yesNo) {
 		this.names = yesNo;
 	}
 	
-	public boolean doesMarkersShowDirection() {
+	public boolean doesShowDirection() {
 		return this.direction;
 	}
 
-	public void setShowMarkerDirection(boolean direction) {
+	public void setShowDirection(boolean direction) {
 		this.direction = direction;
 	}
 	

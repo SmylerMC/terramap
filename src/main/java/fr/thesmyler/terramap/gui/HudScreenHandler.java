@@ -83,10 +83,10 @@ public abstract class HudScreenHandler {
 		map.setY(Math.round((float)TerramapConfig.CLIENT.minimap.posY / 100 * screen.getHeight()));
 		map.setWidth(Math.round((float)TerramapConfig.CLIENT.minimap.width / 100 * screen.getWidth()));
 		map.setHeight(Math.round((float)TerramapConfig.CLIENT.minimap.height / 100 * screen.getHeight()));
-		map.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
-		map.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
-		map.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
-		map.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
+		map.trySetFeatureVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		map.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
+		map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
 		Map<String, IRasterTiledMap> styles = TerramapRemote.getRemote().getMapStyles();
 		IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {

@@ -80,7 +80,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 	protected boolean showName(boolean hovered) {
 		if(this.getController() instanceof AbstractPlayerMarkerController) {
 			AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
-			return controller.doesMarkersShowNames() || hovered;
+			return controller.doesShowNames() || hovered;
 		}
 		return hovered;
 	}
@@ -88,7 +88,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 	protected boolean showDirection(boolean hovered) {
 		if(this.getController() instanceof AbstractPlayerMarkerController) {
 			AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
-			return controller.doesMarkersShowDirection();
+			return controller.doesShowDirection();
 		}
 		return true;
 	}

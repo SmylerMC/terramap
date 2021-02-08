@@ -17,10 +17,10 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
 				158, 108, 158, 122,
 				158, 108, 158, 122,
 				158, 136, 158, 150,
-				this.main.doesMarkersShowDirection(),
+				this.main.doesShowDirection(),
 				b -> {
-					this.main.setShowMarkerDirection(b);
-					this.other.setShowMarkerDirection(b);
+					this.main.setShowDirection(b);
+					this.other.setShowDirection(b);
 				}
 		);
 		 //TODO Tooltip
@@ -43,14 +43,14 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
 
 	@Override
 	public void setVisibility(boolean visibility) {
-		this.main.setShowMarkerDirection(visibility);
-		this.other.setShowMarkerDirection(visibility);
+		this.main.setShowDirection(visibility);
+		this.other.setShowDirection(visibility);
 		this.button.setState(visibility);
 	}
 	
 	@Override
 	public boolean getVisibility() {
-		return this.main.doesMarkersShowDirection();
+		return this.main.doesShowDirection();
 	}
 
 }

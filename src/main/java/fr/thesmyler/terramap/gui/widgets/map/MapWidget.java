@@ -749,7 +749,7 @@ public class MapWidget extends Screen {
 		return this.background.getMap();
 	}
 	
-	public MapWidget trySetMarkersVisibility(String markerId, boolean value) {
+	public MapWidget trySetFeatureVisibility(String markerId, boolean value) {
 		FeatureVisibilityController c = this.getVisibilityControllers().get(markerId);
 		if(c != null) c.setVisibility(value);
 		return this;

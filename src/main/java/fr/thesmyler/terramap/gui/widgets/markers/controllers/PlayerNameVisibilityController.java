@@ -17,10 +17,10 @@ public class PlayerNameVisibilityController implements FeatureVisibilityControll
 				172, 108, 172, 122,
 				172, 108, 172, 122,
 				172, 136, 172, 150,
-				this.main.doesMarkersShowNames(),
+				this.main.doesShowNames(),
 				b -> {
-					this.main.setShowMarkerNames(b);
-					this.other.setShowMarkerNames(b);
+					this.main.setShowNames(b);
+					this.other.setShowNames(b);
 				}
 			);  //TODO Tooltip
 	}
@@ -42,14 +42,14 @@ public class PlayerNameVisibilityController implements FeatureVisibilityControll
 
 	@Override
 	public void setVisibility(boolean visibility) {
-		this.main.setShowMarkerNames(visibility);
-		this.other.setShowMarkerNames(visibility);
+		this.main.setShowNames(visibility);
+		this.other.setShowNames(visibility);
 		this.button.setState(visibility);
 	}
 	
 	@Override
 	public boolean getVisibility() {
-		return this.main.doesMarkersShowNames();
+		return this.main.doesShowNames();
 	}
 
 }

@@ -84,9 +84,9 @@ public class HudConfigScreen extends Screen {
 		});
 		this.minimapButton.setOnChange(b -> this.minimapWindow.setVisibility(b));
 		this.compassButton.setOnChange(b -> this.compassWindow.setVisibility(b));
-		this.otherPlayersButton.setOnChange(b -> this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, b));
-		this.entitiesButton.setOnChange(b -> this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, b).trySetMarkersVisibility(MobMarkerController.ID, b));
-		this.directionsButton.setOnChange(b -> this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, b));
+		this.otherPlayersButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(OtherPlayerMarkerController.ID, b));
+		this.entitiesButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, b).trySetFeatureVisibility(MobMarkerController.ID, b));
+		this.directionsButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, b));
 		this.minimapWindow.setEnableTopBar(false);
 		this.minimapWindow.setCenterDragColor(0x00000000);
 		this.minimapWindow.setEnableCenterDrag(true);
@@ -226,11 +226,11 @@ public class HudConfigScreen extends Screen {
 		this.compassButton.setState(TerramapConfig.CLIENT.compass.enable);
 		this.zoomSlider.setValue(TerramapConfig.CLIENT.minimap.zoomLevel);
 		this.otherPlayersButton.setState(TerramapConfig.CLIENT.minimap.showOtherPlayers);
-		this.minimap.trySetMarkersVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
+		this.minimap.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
 		this.entitiesButton.setState(TerramapConfig.CLIENT.minimap.showEntities);
-		this.minimap.trySetMarkersVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
-		this.minimap.trySetMarkersVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
-		this.minimap.trySetMarkersVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
+		this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		this.minimap.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+		this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
 		for(MapStyleSliderEntry map: this.mapStyles) if(map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
 			this.styleSlider.setCurrentOption(map);
 			break;

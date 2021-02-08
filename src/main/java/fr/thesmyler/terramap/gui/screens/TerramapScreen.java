@@ -412,7 +412,7 @@ public class TerramapScreen extends Screen {
 		this.setF1Mode(state.f1);
 		this.setDebugMode(state.debug);
 		for(FeatureVisibilityController c: this.map.getVisibilityControllers().values()) {
-			if(state.markerSettings.containsKey(c.getSaveName())) c.setVisibility(state.markerSettings.get(c.getSaveName()));
+			if(state.visibilitySettings.containsKey(c.getSaveName())) c.setVisibility(state.visibilitySettings.get(c.getSaveName()));
 		}
 	}
 
