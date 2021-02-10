@@ -4,9 +4,9 @@ import java.util.Random;
 
 import io.github.opencubicchunks.cubicchunks.api.world.ICubeProvider;
 import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
-import io.github.terra121.EarthWorldType;
-import io.github.terra121.generator.EarthGenerator;
-import io.github.terra121.generator.EarthGeneratorSettings;
+import net.buildtheearth.terraplusplus.EarthWorldType;
+import net.buildtheearth.terraplusplus.generator.EarthGenerator;
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

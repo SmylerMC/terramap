@@ -7,7 +7,6 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
-import fr.thesmyler.terramap.gui.screens.TerraDependencyErrorScreen;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
@@ -15,18 +14,15 @@ import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
-import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy {
@@ -39,7 +35,6 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client pre-init");
-		if(!TerramapMod.isTerraDependencyValid()) return;
 		TerramapNetworkManager.registerHandlers(Side.CLIENT);
 		File clientPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapClientPreferences.FILENAME);
 		TerramapClientPreferences.setFile(clientPrefs);
@@ -49,16 +44,6 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client init");
-		if(!TerramapMod.isTerraDependencyValid()) {
-			MinecraftForge.EVENT_BUS.register(new Object() {
-				@SubscribeEvent
-				public void onGuiScreenInit(InitGuiEvent event) {
-					if(event.getGui() instanceof GuiMainMenu)
-					Minecraft.getMinecraft().displayGuiScreen(new TerraDependencyErrorScreen());
-				}
-			});
-			return;
-		}
 		SmyLibGui.init(TerramapMod.logger, false);
 		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();

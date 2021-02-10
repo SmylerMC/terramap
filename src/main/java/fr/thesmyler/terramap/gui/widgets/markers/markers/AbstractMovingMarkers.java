@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import io.github.terra121.projection.OutOfProjectionBoundsException;
+import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
 public abstract class AbstractMovingMarkers extends Marker {
 

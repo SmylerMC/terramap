@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import io.github.terra121.projection.OutOfProjectionBoundsException;
+import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;

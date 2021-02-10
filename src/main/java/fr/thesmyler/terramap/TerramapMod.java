@@ -11,7 +11,6 @@ import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
-import io.github.terra121.TerraMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -22,7 +21,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terra121")
+@Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terraplusplus")
 public class TerramapMod {
 	
     public static final String MODID = "terramap";
@@ -31,7 +30,6 @@ public class TerramapMod {
 	private static TerramapVersion version; // Read from the metadata
 	public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
 	public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
-	private static boolean isTerraDependencyValid;
 
     public static Logger logger;
     
@@ -46,13 +44,7 @@ public class TerramapMod {
     	logger = event.getModLog();
     	TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
     	TerramapMod.logger.info("Terramap version: " + getVersion());
-    	try {
-    		isTerraDependencyValid = TerraMod.isTerraPlusPlus(); // This method only exists in Terra++, not Terra121
-    	} catch(NoSuchMethodError e) {
-    		isTerraDependencyValid = false;
-    	}
     	TerramapMod.proxy.preInit(event);
-    	if(!isTerraDependencyValid) return;
     	File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
     	MapStylesLibrary.setConfigMapFile(mapStyleFile);
     }
@@ -61,17 +53,12 @@ public class TerramapMod {
     public void init(FMLInitializationEvent event) {
     	MinecraftForge.EVENT_BUS.register(new CommonTerramapEventHandler());
     	TerramapMod.proxy.init(event);
-    	if(!isTerraDependencyValid) return;
     	PermissionManager.registerNodes();
     	MapStylesLibrary.loadFromConfigFile();
     }
     
     public static TerramapVersion getVersion() {
     	return TerramapMod.version;
-    }
-    
-    public static boolean isTerraDependencyValid() {
-    	return isTerraDependencyValid;
     }
     
     public static String getUserAgent() {
