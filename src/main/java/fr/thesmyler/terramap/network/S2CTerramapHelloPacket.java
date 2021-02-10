@@ -3,8 +3,8 @@ package fr.thesmyler.terramap.network;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
-import io.github.terra121.generator.EarthGeneratorSettings;
 import io.netty.buffer.ByteBuf;
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

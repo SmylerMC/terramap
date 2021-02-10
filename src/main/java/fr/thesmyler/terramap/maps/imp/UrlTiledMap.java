@@ -11,7 +11,7 @@ import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
-import io.github.terra121.util.http.Http;
+import net.buildtheearth.terraplusplus.util.http.Http;
 import net.minecraft.util.text.ITextComponent;
 
 /**

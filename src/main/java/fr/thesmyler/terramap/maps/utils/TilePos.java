@@ -137,9 +137,4 @@ public abstract class TilePos {
 
 	}
 	
-
-	public io.github.terra121.util.TilePos toTerrappPos() {
-		return new io.github.terra121.util.TilePos(this.xPosition, this.yPosition, this.zoom);
-	}
-	
 }

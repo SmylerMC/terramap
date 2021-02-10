@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutionException;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
-import io.github.terra121.generator.TerrainPreview;
+import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;

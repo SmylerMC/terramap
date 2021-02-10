@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
-import io.github.terra121.projection.OutOfProjectionBoundsException;
 import io.netty.buffer.ByteBuf;
+import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;

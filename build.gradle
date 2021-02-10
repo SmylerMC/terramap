@@ -54,7 +54,7 @@ dependencies {
     deobfProvided ("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
         transitive = false
     }
-    deobfProvided ("com.github.BuildTheEarth:terraplusplus:fast-osm-SNAPSHOT") {
+    deobfProvided ("com.github.BuildTheEarth:terraplusplus:master-SNAPSHOT") {
         transitive = true
     }
     runtime "org.apache.commons:commons-imaging:1.0-alpha2"
