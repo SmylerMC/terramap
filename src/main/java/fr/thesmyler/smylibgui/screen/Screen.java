@@ -9,7 +9,9 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Mouse;
 
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.Utils;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
@@ -424,6 +426,9 @@ public class Screen extends GuiScreen implements IWidget{
 
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, @Nullable Screen parent) {
+		RenderUtil.setScissorState(true);
+		RenderUtil.pushScissorPos();
+		RenderUtil.scissor(x, y, this.getWidth(), this.getHeight());
 		boolean mouseMoved = mouseX - x != this.lastMouseX && mouseY - y != this.lastMouseY;
 		switch(this.background) {
 		case NONE: break;
@@ -441,8 +446,8 @@ public class Screen extends GuiScreen implements IWidget{
 		IWidget wf = null;
 		if(screenHovered) {
 			for(IWidget widget: this.widgets) {
-				if(!widget.isVisible(this) || this.isOutsideScreen(widget)) continue;
-				if(widget.isVisible(this) && this.isOverWidget(mouseX - x, mouseY - y, widget)) {
+				if(!widget.isVisible(this) || this.isOutsideScreen(widget) || !Utils.doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.width, this.height)) continue;
+				if(this.isOverWidget(mouseX - x, mouseY - y, widget)) {
 					wf = widget;
 					break;
 				}
@@ -450,7 +455,7 @@ public class Screen extends GuiScreen implements IWidget{
 		}
 		this.hoveredWidget = wf;
 		this.widgets.descendingIterator().forEachRemaining((widget) -> {
-			if(!widget.isVisible(this) || this.isOutsideScreen(widget)) return;
+			if(!widget.isVisible(this) || this.isOutsideScreen(widget)|| !Utils.doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.width, this.height)) return;
 			widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
 		});
 		IWidget w = this.getHoveredWidget();
@@ -468,6 +473,8 @@ public class Screen extends GuiScreen implements IWidget{
 		}
 		this.lastMouseX = mouseX - x;
 		this.lastMouseY = mouseY - y;
+		RenderUtil.popScissorPos();
+		RenderUtil.setScissorState(false);
 	}
 	
 	/**
