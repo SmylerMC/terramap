@@ -1,5 +1,7 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
+import java.util.function.Consumer;
+
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import net.minecraft.client.Minecraft;
@@ -10,14 +12,14 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	protected boolean value;
 	private int onEnableU, onEnableV, offEnableU, offEnableV, onDisableU, onDisableV, offDisableU, offDisableV,
 	onEnableUFocus, onEnableVFocus, offEnableUFocus, offEnableVFocus;
-	protected Runnable onEnable, onDisable;
+	protected Consumer<Boolean> onChange;
 	
 	public ToggleButtonWidget(
 			int x, int y, int z, int width, int height,
 			int onEnableU, int onEnableV, int offEnableU, int offEnableV,
 			int onDisableU, int onDisableV, int offDisableU, int offDisableV,
 			int onEnableUFocus, int onEnableVFocus, int offEnableUFocus, int offEnableVFocus,
-			boolean startValue, Runnable onEnable, Runnable onDisable) {
+			boolean startValue, Consumer<Boolean> onChange) {
 		super(x, y, z, width, height, null);
 		this.onClick = this::toggle;
 		this.onDoubleClick = this::toggle;
@@ -34,16 +36,15 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 		this.onEnableVFocus = onEnableVFocus;
 		this.offEnableUFocus = offEnableUFocus;
 		this.offEnableVFocus = offEnableVFocus;
-		this.onEnable = onEnable;
-		this.onDisable = onDisable;
+		this.onChange = onChange;
 	}
 	
-	public ToggleButtonWidget(int x, int y, int z, boolean startValue, Runnable onEnable, Runnable onDisable) {
-		this(x, y, z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onEnable,  onDisable);
+	public ToggleButtonWidget(int x, int y, int z, boolean startValue, Consumer<Boolean> onChange) {
+		this(x, y, z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onChange);
 	}
 	
 	public ToggleButtonWidget(int x, int y, int z, boolean startValue) {
-		this(x, y, z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null,  null);
+		this(x, y, z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null);
 	}
 	
 	public ToggleButtonWidget(
@@ -51,21 +52,21 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 			int onEnableU, int onEnableV, int offEnableU, int offEnableV,
 			int onDisableU, int onDisableV, int offDisableU, int offDisableV,
 			int onEnableUFocus, int onEnableVFocus, int offEnableUFocus, int offEnableVFocus,
-			boolean startValue, Runnable onEnable, Runnable onDisable) {
+			boolean startValue, Consumer<Boolean> onChange) {
 		this(
 			0, 0, z, width, height,
 			onEnableU, onEnableV, offEnableU, offEnableV,
 			onDisableU, onDisableV, offDisableU, offDisableV,
 			onEnableUFocus, onEnableVFocus, offEnableUFocus, offEnableVFocus,
-			startValue, onEnable, onDisable);
+			startValue, onChange);
 	}
 	
-	public ToggleButtonWidget(int z, boolean startValue, Runnable onEnable, Runnable onDisable) {
-		this(z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onEnable,  onDisable);
+	public ToggleButtonWidget(int z, boolean startValue, Consumer<Boolean> onChange) {
+		this(z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onChange);
 	}
 	
 	public ToggleButtonWidget(int z, boolean startValue) {
-		this(z, 25, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null,  null);
+		this(z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null);
 	}
 
 	@Override
@@ -108,8 +109,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	
 	public void toggle() {
 		this.value = !this.value;
-		if(this.value && this.onEnable != null) this.onEnable.run();
-		else if(!this.value && this.onDisable != null) this.onDisable.run();
+		if(this.onChange != null) this.onChange.accept(this.value);
 	}
 	
 	public boolean getState() {
@@ -120,13 +120,8 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 		this.value = state;
 	}
 	
-	public ToggleButtonWidget setOnActivate(Runnable action) {
-		this.onEnable = action;
-		return this;
-	}
-	
-	public ToggleButtonWidget setOnDeactivate(Runnable action) {
-		this.onDisable = action;
+	public ToggleButtonWidget setOnChange(Consumer<Boolean> action) {
+		this.onChange = action;
 		return this;
 	}
 

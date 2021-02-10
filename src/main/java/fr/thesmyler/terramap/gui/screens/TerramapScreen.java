@@ -3,6 +3,8 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -15,9 +17,9 @@ import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
+import fr.thesmyler.smylibgui.widgets.buttons.AbstractButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
@@ -28,12 +30,15 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.GeographicProjection;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
@@ -48,15 +53,16 @@ import net.minecraft.util.text.TextFormatting;
 public class TerramapScreen extends Screen {
 
 	private GuiScreen parent;
-	private Map<String, TiledMap> backgrounds;
 
-	// Widgets
+	// Main map area widgets
 	private MapWidget map; 
 	private TexturedButtonWidget closeButton = new TexturedButtonWidget(50, IncludedTexturedButtons.CROSS);
 	private TexturedButtonWidget zoomInButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PLUS);
 	private TexturedButtonWidget zoomOutButton = new TexturedButtonWidget(50, IncludedTexturedButtons.MINUS);
 	private TexturedButtonWidget centerButton = new TexturedButtonWidget(50, IncludedTexturedButtons.CENTER);
 	private TexturedButtonWidget styleButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PAPER);
+	
+	// Info panel widgets
 	private TextWidget zoomText;
 	private SlidingPanelWidget infoPanel = new SlidingPanelWidget(70, 200);
 	private TexturedButtonWidget panelButton = new TexturedButtonWidget(220, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
@@ -66,19 +72,23 @@ public class TerramapScreen extends Screen {
 	private TextWidget debugText;
 	private TextWidget playerGeoLocationText;
 	private TextFieldWidget searchBox = new TextFieldWidget(10, new FontRendererContainer(Minecraft.getMinecraft().fontRenderer));
+	
+	// Style panel
 	private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200); 
 	private Scrollbar styleScrollbar = new Scrollbar(100);
 
+	// Screen states
 	private boolean f1Mode = false;
 	private boolean debugMode = false;
+	
+	private Map<String, IRasterTiledMap> backgrounds;
 
-
-	public TerramapScreen(GuiScreen parent, Map<String, TiledMap> maps) {
+	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
 		this.parent = parent;
 		this.backgrounds = maps;
-		Collection<TiledMap> tiledMaps = this.backgrounds.values();
-		TiledMap bg = tiledMaps.toArray(new TiledMap[0])[0];
-		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.getEffectiveTileScaling());
+		Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
+		IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
+		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
 		TerramapScreenSavedState state = TerramapRemote.getRemote().getSavedScreenState();
 		if(state != null) this.resumeFromSavedState(TerramapRemote.getRemote().getSavedScreenState());
 		TerramapRemote.getRemote().registerForUpdates(true);
@@ -88,7 +98,7 @@ public class TerramapScreen extends Screen {
 	public void initScreen() {
 		this.removeAllWidgets();
 		this.map.setX(0).setY(0).setWidth(this.getWidth()).setHeight(this.getHeight());
-		this.map.setTileScaling(TerramapConfig.getEffectiveTileScaling());
+		this.map.setTileScaling(TerramapConfig.CLIENT.getEffectiveTileScaling());
 		this.addWidget(this.map);
 
 		// Map control buttons
@@ -130,12 +140,13 @@ public class TerramapScreen extends Screen {
 		this.debugText.setVisibility(this.debugMode);
 		this.addWidget(this.debugText);
 
-		// Info pannel
+		// Info panel
 		this.infoPanel.removeAllWidgets();
 		this.infoPanel.setWidth(240).setHeight(this.getHeight());
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
+		this.infoPanel.addWidget(new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig));
 		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
 		this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.mouseGeoLocationText);
@@ -152,9 +163,9 @@ public class TerramapScreen extends Screen {
 		int y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
 		int lineHeight = 0;
 		int x = 5;
-		for(MarkerController<?> controller: this.map.getMarkerControllers()) {
-			if(!controller.showToggleButton()) continue;
-			ToggleButtonWidget button = controller.getToggleButton();
+		for(FeatureVisibilityController provider: this.getButtonProviders()) {
+			if(!provider.showButton()) continue;
+			AbstractButtonWidget button = provider.getButton();
 			if(button == null) continue;
 			if(x + button.getWidth() > this.infoPanel.getWidth() - 20) {
 				x = 5;
@@ -167,7 +178,7 @@ public class TerramapScreen extends Screen {
 			button.setY(y);
 			this.infoPanel.addWidget(button);
 		}
-		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(187);
+		this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(186);
 		this.searchBox.enableRightClickMenu();
 		this.searchBox.setText(I18n.format("terramap.terramapscreen.search.wip")).disable();
 		this.searchBox.setOnPressEnterCallback(this::search);
@@ -207,7 +218,7 @@ public class TerramapScreen extends Screen {
 			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
 			this.addWidget(warningWidget);
 		}
-		
+
 		TerramapRemote.getRemote().setupMaps();
 	}
 
@@ -295,18 +306,21 @@ public class TerramapScreen extends Screen {
 			dbText += "\nServer: " + srv.getServerVersion();
 			dbText += "\nSledgehammer: " + srv.getSledgehammerVersion();
 			String proj = null;
-			String orientation = null;
 			if(srv != null && srv.getGeneratorSettings() != null) {
-				proj = srv.getGeneratorSettings().settings.projection;
-				orientation = srv.getGeneratorSettings().settings.orentation.name();
+				proj = srv.getGeneratorSettings().projection().toString();
 			}
 			dbText += "\nProjection: " + proj;
-			dbText += "\nOrientation: " + orientation;
-			dbText += "\nLoaded tiles: " + this.map.getBackgroundStyle().getBaseLoad() + "/" + this.map.getBackgroundStyle().getLoadedCount() + "/" + this.map.getBackgroundStyle().getMaxLoad();
 			dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
 			dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
-			String[] urls = this.map.getBackgroundStyle().getUrlPatterns();
-			dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
+			if(this.map.getBackgroundStyle() instanceof CachingRasterTiledMap) {
+				CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) this.map.getBackgroundStyle();
+				dbText += "\nLoaded tiles: " + cachingMap.getBaseLoad() + "/" + cachingMap.getLoadedCount() + "/" + cachingMap.getMaxLoad();
+				if(cachingMap instanceof UrlTiledMap) {
+					UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
+					String[] urls = urlMap.getUrlPatterns();
+					dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
+				}
+			}
 			this.debugText.setText(dbText);
 		}
 	}
@@ -358,15 +372,23 @@ public class TerramapScreen extends Screen {
 		if(trackingMarker != null) {
 			tracking = trackingMarker.getIdentifier();
 		}
+		Map<String, Boolean> visibility = new HashMap<>();
+		Map<String, FeatureVisibilityController> visibilityControllers = this.map.getVisibilityControllers();
+		for(String key: visibilityControllers.keySet()) {
+			visibility.put(key, visibilityControllers.get(key).getVisibility());
+		}
+
 		return new TerramapScreenSavedState(
 				this.map.getZoom(),
 				this.map.getCenterLongitude(),
 				this.map.getCenterLatitude(),
 				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
-				this.debugMode,
-				this.f1Mode,
-				this.map.getMarkersVisibility(), tracking);
+				TerramapConfig.CLIENT.saveUiState ? this.debugMode : false,
+				TerramapConfig.CLIENT.saveUiState ? this.f1Mode : false,
+				visibility,
+				tracking
+			);
 	}
 
 	public void resumeFromSavedState(TerramapScreenSavedState state) {
@@ -375,7 +397,6 @@ public class TerramapScreen extends Screen {
 		this.map.setCenterLongitude(state.centerLongitude);
 		this.map.setCenterLatitude(state.centerLatitude);
 		this.map.restoreTracking(state.trackedMarker);
-		this.map.setMarkersVisibility(state.markerSettings);
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
 		TexturedButtonWidget newButton;
 		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
@@ -390,6 +411,9 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.addWidget(this.panelButton);
 		this.setF1Mode(state.f1);
 		this.setDebugMode(state.debug);
+		for(FeatureVisibilityController c: this.map.getVisibilityControllers().values()) {
+			if(state.visibilitySettings.containsKey(c.getSaveName())) c.setVisibility(state.visibilitySettings.get(c.getSaveName()));
+		}
 	}
 
 	@Override
@@ -419,9 +443,9 @@ public class TerramapScreen extends Screen {
 		StyleScreen() {
 			super(0, 0, 0, 0, 0, BackgroundType.NONE);
 			MapWidget lw = null;
-			ArrayList<TiledMap> maps = new ArrayList<TiledMap>(TerramapScreen.this.backgrounds.values());
-			Collections.sort(maps, Collections.reverseOrder());
-			for(TiledMap map: maps) {
+			ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapScreen.this.backgrounds.values());
+			Collections.sort(maps, (m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
+			for(IRasterTiledMap map: maps) {
 				MapWidget w = new MapPreview(50, map);
 				w.setWidth(mapsSize).setHeight(mapsSize);
 				if(lw == null) {
@@ -495,9 +519,19 @@ public class TerramapScreen extends Screen {
 		this.map.setDebugMode(yesNo);
 	}
 
+	private void openConfig() {
+		Minecraft.getMinecraft().displayGuiScreen(new TerramapConfigScreen(this));
+	}
+	
+	private Collection<FeatureVisibilityController> getButtonProviders() {
+		List<FeatureVisibilityController> l = new ArrayList<>();
+		l.addAll(this.map.getVisibilityControllers().values());
+		return l;
+	}
+
 	private class MapPreview extends MapWidget {
 
-		public MapPreview(int z, TiledMap map) {
+		public MapPreview(int z, IRasterTiledMap map) {
 			super(z, map, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
 			this.setInteractive(false);
 			this.setRightClickMenuEnabled(false);

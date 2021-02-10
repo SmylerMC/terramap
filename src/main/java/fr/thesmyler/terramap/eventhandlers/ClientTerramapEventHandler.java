@@ -7,7 +7,6 @@ import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
-import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.input.KeyBindings;
 import io.github.terra121.projection.GeographicProjection;
@@ -15,7 +14,6 @@ import io.github.terra121.projection.OutOfProjectionBoundsException;
 import io.github.terra121.util.CardinalDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -34,7 +32,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ClientTerramapEventHandler {
 	
 	private boolean testScreenWasShown = false;
-	private boolean configWasFixed = false;
 	
 	@SubscribeEvent
 	public void onRenderHUD(RenderGameOverlayEvent.Text event) {
@@ -94,17 +91,6 @@ public class ClientTerramapEventHandler {
 	
 	@SubscribeEvent
 	public void onGuiScreenInit(InitGuiEvent event) {
-		if(event.getGui() instanceof GuiMainMenu && !configWasFixed) {
-			/* 
-			 * Unfortunately, Forge's ConfigManager does not let us modify our config when the game is still loading and 
-			 * and calling ConfigManager::sync only injects the file's value into the fields instead of saving them to disk,
-			 * which is why we have to do it once the game is fully loaded.
-			 * 
-			 * This is called on the physical server by TerramapServerProxy::onServerStarting.
-			 */
-		    TerramapConfig.update(); // Update if invalid values were left by old versions
-		    configWasFixed = true;
-		}
 		if(SmyLibGui.debug && !testScreenWasShown && !(event.getGui() instanceof Screen)) {
 			Minecraft.getMinecraft().displayGuiScreen(new TestScreen(event.getGui()));
 			this.testScreenWasShown = true;

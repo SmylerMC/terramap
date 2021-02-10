@@ -14,20 +14,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 
-public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMarker> {
+public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<OtherPlayerMarker> {
 	
 	public static final String ID = "other_players";
-	
-	protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-			88, 108, 88, 122,
-			88, 108, 88, 122,
-			88, 136, 88, 150,
-			this.areMakersVisible(), null, null);
 
 	public OtherPlayerMarkerController() {
-		super(ID, 800, OtherPlayerMarker.class);
-		this.button.setOnActivate(() -> this.setVisibility(true));
-		this.button.setOnDeactivate(() -> this.setVisibility(false));
+		super(ID, 800, OtherPlayerMarker.class, new ToggleButtonWidget(10, 14, 14,
+				88, 108, 88, 122,
+				88, 108, 88, 122,
+				88, 136, 88, 150,
+				false, null));
 		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
 	}
 
@@ -47,9 +43,7 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 			
 			// The main player has its own controller
 			EntityPlayerSP self = Minecraft.getMinecraft().player;
-			if(self != null) {
-				players.remove(self.getUniqueID());
-			}
+			if(self != null) players.remove(self.getUniqueID());
 			
 			OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
 			int i = 0;
@@ -63,20 +57,19 @@ public class OtherPlayerMarkerController extends MarkerController<OtherPlayerMar
 	}
 
 	@Override
-	public boolean showToggleButton() {
+	public boolean showButton() {
 		return TerramapRemote.getRemote().allowsPlayerRadar();
 	}
 
-	@Override
-	public ToggleButtonWidget getToggleButton() {
-		return this.button;
-	}
 
 	@Override
-	public boolean areMakersVisible() {
-		return super.areMakersVisible() && TerramapRemote.getRemote().allowsPlayerRadar();
+	public boolean getVisibility() {
+		return super.getVisibility() && TerramapRemote.getRemote().allowsPlayerRadar();
 	}
 	
-	
+	@Override
+	public String getSaveName() {
+		return ID;
+	}
 
 }

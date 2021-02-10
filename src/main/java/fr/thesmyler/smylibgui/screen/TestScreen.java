@@ -99,7 +99,7 @@ public class TestScreen extends Screen {
 				}
 				);
 		buttonScreen.addWidget(testButton);
-		buttonScreen.addWidget(new TexturedButtonWidget(0, 30, 1, IncludedTexturedButtons.BLANK, null));
+		buttonScreen.addWidget(new TexturedButtonWidget(0, 30, 1, IncludedTexturedButtons.BLANK_15, null));
 		buttonScreen.addWidget(new TexturedButtonWidget(30, 30, 1, IncludedTexturedButtons.CROSS, null));
 		buttonScreen.addWidget(new TexturedButtonWidget(30, 30, 1, IncludedTexturedButtons.PLUS, null));
 		buttonScreen.addWidget(new TexturedButtonWidget(60, 30, 1, IncludedTexturedButtons.MINUS, null));
@@ -109,7 +109,7 @@ public class TestScreen extends Screen {
 		buttonScreen.addWidget(new TexturedButtonWidget(180, 30, 1, IncludedTexturedButtons.RIGHT, null));
 		ToggleButtonWidget tb1 = new ToggleButtonWidget(0, 60, 1, true);
 		buttonScreen.addWidget(tb1);
-		buttonScreen.addWidget(new ToggleButtonWidget(30, 60, 1, true, () -> {tb1.enable();}, () -> {tb1.disable();}));
+		buttonScreen.addWidget(new ToggleButtonWidget(30, 60, 1, true, b -> tb1.setEnabled(b)));
 		buttonScreen.addWidget(new OptionButtonWidget<String>(0, 90, 2, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
 
 		

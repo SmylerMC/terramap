@@ -74,7 +74,7 @@ public abstract class Marker implements IWidget {
 	
 	@Override
 	public boolean isVisible(Screen parent) {
-		if(!this.controller.areMakersVisible()) return false;
+		if(!this.controller.getVisibility()) return false;
 		if(!WebMercatorUtils.isPositionOnMap(this.getLongitude(), this.getLatitude())) return false;
 		if(parent instanceof MapWidget) {
 			MapWidget map = (MapWidget)parent;
@@ -104,13 +104,17 @@ public abstract class Marker implements IWidget {
 		return false;
 	}
 	
+	public MarkerController<?> getController() {
+		return this.controller;
+	}
+	
 	public abstract ITextComponent getDisplayName();
 	
 	/**
 	 * This identifier shall be used to resume tracking this marker is the map is saved and closed then opened again
 	 * So it cannot depend on runtime and should be unique. The convention is markertype:uuid
 	 * 
-	 * @return a String uniquely identify this marker
+	 * @return a String uniquely identifying this marker
 	 */
 	public abstract String getIdentifier();
 	

@@ -21,12 +21,11 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 			102, 108, 102, 122,
 			102, 108, 102, 122,
 			102, 136, 102, 150,
-			this.areMakersVisible(), null, null);
+			this.getVisibility(), null);
 
 	public MobMarkerController() {
 		super(ID, 700, MobMarker.class);
-		this.button.setOnActivate(() -> this.setVisibility(true));
-		this.button.setOnDeactivate(() -> this.setVisibility(false));
+		this.button.setOnChange(b -> this.setVisibility(b));
 		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.mobs"));
 	}
 
@@ -52,18 +51,23 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 	}
 
 	@Override
-	public boolean showToggleButton() {
+	public boolean showButton() {
 		return TerramapRemote.getRemote().allowsMobRadar();
 	}
 
 	@Override
-	public ToggleButtonWidget getToggleButton() {
+	public ToggleButtonWidget getButton() {
 		return this.button;
 	}
 
 	@Override
-	public boolean areMakersVisible() {
-		return super.areMakersVisible() && TerramapRemote.getRemote().allowsMobRadar();
+	public boolean getVisibility() {
+		return super.getVisibility() && TerramapRemote.getRemote().allowsMobRadar();
+	}
+	
+	@Override
+	public String getSaveName() {
+		return ID;
 	}
 
 }

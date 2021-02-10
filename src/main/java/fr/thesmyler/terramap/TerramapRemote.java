@@ -12,8 +12,10 @@ import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
-import fr.thesmyler.terramap.maps.MapStyleRegistry;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.MapStylesLibrary;
+import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -22,8 +24,9 @@ import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import io.github.terra121.EarthWorldType;
 import io.github.terra121.generator.EarthGeneratorSettings;
+import io.github.terra121.generator.TerrainPreview;
 import io.github.terra121.projection.GeographicProjection;
-import io.github.terra121.util.http.Http;
+import io.github.terra121.projection.mercator.WebMercatorProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
@@ -40,6 +43,8 @@ import net.minecraft.entity.player.EntityPlayer;
 public class TerramapRemote {
 
 	private static TerramapRemote instance;
+	
+	private static final GeographicProjection TERRAIN_PREVIEW_PROJECTION = new WebMercatorProjection(TerrainPreviewMap.BASE_ZOOM_LEVEL);
 
 	private Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<UUID, TerramapRemotePlayer>();
 	private PlayerSyncStatus serverSyncPlayers = PlayerSyncStatus.DISABLED;
@@ -50,10 +55,11 @@ public class TerramapRemote {
 	private String sledgehammerVersion = null;
 	private EarthGeneratorSettings genSettings = null;
 	private GeographicProjection projection = null;
+	private TerrainPreview terrainPreview = null;
 	private boolean isRegisteredForUpdates = false;
 	private String tpCommand = null;
-	private Map<String, TiledMap> serverMaps = new HashMap<String, TiledMap>();
-	private Map<String, TiledMap> proxyMaps = new HashMap<String, TiledMap>();
+	private Map<String, IRasterTiledMap> serverMaps = new HashMap<>();
+	private Map<String, IRasterTiledMap> proxyMaps = new HashMap<>();
 	private boolean proxyHasWarpSupport = false;
 	private boolean serverHasWarpSupport = false;
 	private boolean allowPlayerRadar = true;
@@ -102,9 +108,16 @@ public class TerramapRemote {
 
 	public GeographicProjection getProjection() {
 		if(this.projection == null && this.genSettings != null) {
-			this.projection = this.genSettings.getProjection();
+			this.projection = this.genSettings.projection();
 		}
 		return this.projection;
+	}
+	
+	public TerrainPreview getTerrainPreview() {
+		if(this.terrainPreview == null && this.genSettings != null) {			
+			this.terrainPreview = new TerrainPreview(this.genSettings.withProjection(TERRAIN_PREVIEW_PROJECTION));
+		}
+		return this.terrainPreview;
 	}
 
 	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
@@ -115,6 +128,7 @@ public class TerramapRemote {
 		}
 		this.genSettings = genSettings;
 		this.projection = null;
+		this.terrainPreview = null;
 	}
 
 	public void saveSettings() {
@@ -172,12 +186,12 @@ public class TerramapRemote {
 		}
 	}
 	
-	public void addServerMapStyle(TiledMap map) {
+	public void addServerMapStyle(UrlTiledMap map) {
 		this.serverMaps.put(map.getId(), map);
         HudScreenHandler.updateMinimap();
 	}
 	
-	public void addProxyMapStyle(TiledMap map) {
+	public void addProxyMapStyle(UrlTiledMap map) {
 		this.proxyMaps.put(map.getId(), map);
 		HudScreenHandler.updateMinimap();
 	}
@@ -189,11 +203,23 @@ public class TerramapRemote {
 		HudScreenHandler.updateMinimap();
 	}
 	
-	public Map<String, TiledMap> getMapStyles() {
-		Map<String, TiledMap> maps = MapStyleRegistry.getBaseMaps();
+	public Map<String, IRasterTiledMap> getServerMapStyles() {
+		return this.serverMaps;
+	}
+	
+	public Map<String, IRasterTiledMap> getProxyMapStyles() {
+		return this.proxyMaps;
+	}
+	
+	/**
+	 * @return a new Map containing all available mapstyles
+	 */
+	public Map<String, IRasterTiledMap> getMapStyles() {
+		Map<String, IRasterTiledMap> maps = new HashMap<>();
+		maps.putAll(MapStylesLibrary.getBaseMaps());
 		maps.putAll(this.proxyMaps);
 		maps.putAll(this.serverMaps);
-		maps.putAll(MapStyleRegistry.getUserMaps());
+		maps.putAll(MapStylesLibrary.getUserMaps());
 		return maps;
 	}
 
@@ -240,7 +266,7 @@ public class TerramapRemote {
 		this.serverIdentifier = identifier;
 		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getRemoteIdentifier());
 		if(sttgStr.length() > 0) {
-			this.genSettings = new EarthGeneratorSettings(sttgStr);
+			this.genSettings = EarthGeneratorSettings.parse(sttgStr);
 			TerramapMod.logger.info("Got generator settings from client preferences file");
 		}
 	}
@@ -422,17 +448,8 @@ public class TerramapRemote {
 	}
 	
 	public void setupMaps() {
-		for(TiledMap map: this.getMapStyles().values()) {
-			for(String urlPattern: map.getUrlPatterns()) {
-				String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
-				try {
-					Http.setMaximumConcurrentRequestsTo(url, map.getMaxConcurrentRequests());
-				} catch(IllegalArgumentException e) {
-					TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + url);
-				}
-				
-			}
-			map.prepareLowTiles();
+		for(IRasterTiledMap map: this.getMapStyles().values()) {
+			map.setup();
 		}
 	}
 

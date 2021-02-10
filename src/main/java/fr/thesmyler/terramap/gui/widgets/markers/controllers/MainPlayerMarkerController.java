@@ -10,20 +10,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 
-public class MainPlayerMarkerController extends MarkerController<MainPlayerMarker> {
+public class MainPlayerMarkerController extends AbstractPlayerMarkerController<MainPlayerMarker> {
 	
 	public static final String ID = "main_player_marker";
-	
-	protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-			74, 108, 74, 122,
-			74, 108, 74, 122,
-			74, 136, 74, 150,
-			this.areMakersVisible(), null, null);
 
 	public MainPlayerMarkerController() {
-		super(ID, 900, MainPlayerMarker.class);
-		this.button.setOnActivate(() -> this.setVisibility(true));
-		this.button.setOnDeactivate(() -> this.setVisibility(false));
+		super(ID, 900, MainPlayerMarker.class, new ToggleButtonWidget(10, 14, 14,
+				74, 108, 74, 122,
+				74, 108, 74, 122,
+				74, 136, 74, 150,
+				false, null));
 		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
 	}
 
@@ -38,13 +34,13 @@ public class MainPlayerMarkerController extends MarkerController<MainPlayerMarke
 	}
 
 	@Override
-	public boolean showToggleButton() {
+	public boolean showButton() {
 		return true;
 	}
-
+	
 	@Override
-	public ToggleButtonWidget getToggleButton() {
-		return this.button;
+	public String getSaveName() {
+		return ID;
 	}
 
 }

@@ -24,14 +24,18 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapRemote;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.gui.screens.EarthMapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.TiledMap;
+import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import io.github.terra121.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -52,9 +56,13 @@ public class MapWidget extends Screen {
 	protected RasterMapLayerWidget background;
 	private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
+	private MainPlayerMarkerController mainPlayerMarkerController;
+	private OtherPlayerMarkerController otherPlayerMarkerController;
 	private MainPlayerMarker mainPlayerMarker;
 	private Marker trackingMarker;
 	private String restoreTrackingId;
+	private PlayerDirectionsVisibilityController directionVisibility;
+	private PlayerNameVisibilityController nameVisibility;
 
 	private double mouseLongitude, mouseLatitude;
 
@@ -73,6 +81,7 @@ public class MapWidget extends Screen {
 	protected double tileScaling;
 
 	private TextWidget errorText;
+
 	private List<ReportedError> reportedErrors = new ArrayList<>();
 	private static final int MAX_ERRORS_KEPT = 10;
 	
@@ -81,7 +90,7 @@ public class MapWidget extends Screen {
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
 
-	public MapWidget(int x, int y, int z, int width, int height, TiledMap map, MapContext context, double tileScaling) {
+	public MapWidget(int x, int y, int z, int width, int height, IRasterTiledMap map, MapContext context, double tileScaling) {
 		super(x, y, z, width, height, BackgroundType.NONE);
 		this.context = context;
 		this.tileScaling = tileScaling;
@@ -205,9 +214,10 @@ public class MapWidget extends Screen {
 		});
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
-		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
-			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigScreen(null, Minecraft.getMinecraft()));	
-		});
+//		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
+//			Minecraft.getMinecraft().displayGuiScreen(new EarthMapConfigScreen(null, Minecraft.getMinecraft()));	
+//		}); FIXME Re-implement this
+		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"));
 
 		this.controller = new ControllerMapLayer(this.tileScaling);
 		super.addWidget(this.controller);
@@ -222,13 +232,22 @@ public class MapWidget extends Screen {
 		for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
 			if(controller instanceof RightClickMarkerController) {
 				this.rcmMarkerController = (RightClickMarkerController) controller;
+			} else if(controller instanceof MainPlayerMarkerController) {
+				this.mainPlayerMarkerController = (MainPlayerMarkerController) controller;
+			} else if(controller instanceof OtherPlayerMarkerController) {
+				this.otherPlayerMarkerController = (OtherPlayerMarkerController) controller;
 			}
 			this.markerControllers.put(controller.getId(), controller);
+		}
+		
+		if(this.mainPlayerMarkerController != null && this.otherPlayerMarkerController != null) {
+			this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
+			this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
 		}
 
 	}
 
-	public MapWidget(int z, TiledMap map, MapContext context, double tileScaling) {
+	public MapWidget(int z, IRasterTiledMap map, MapContext context, double tileScaling) {
 		this(0, 0, z, 50, 50, map, context, tileScaling);
 	}
 
@@ -260,7 +279,7 @@ public class MapWidget extends Screen {
 		return this;
 	}
 
-	public void setBackground(TiledMap map) {
+	public void setBackground(IRasterTiledMap map) {
 		this.discardPreviousErrors(this.background); // We don't care about errors for this background anumore
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 	}
@@ -445,7 +464,7 @@ public class MapWidget extends Screen {
 			MapWidget.this.rightClickMenu.hide(null);
 
 			double nzoom = this.zoom + zoom;
-			double maxZoom = TerramapConfig.unlockZoom? 25: getMaxZoom();
+			double maxZoom = TerramapConfig.CLIENT.unlockZoom? 25: getMaxZoom();
 			nzoom = Math.min(maxZoom, nzoom);
 			nzoom = Math.max(getMinZoom(), nzoom);
 
@@ -513,7 +532,7 @@ public class MapWidget extends Screen {
 				cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
 				this.sendChatMessage(cmd, false);
 			} catch (OutOfProjectionBoundsException e) {
-				//TODO Do not fail silently: shwo a message on the screen
+				//TODO Do not fail silently: show a message on the screen
 				TerramapMod.logger.error("Tried to teleport outside of the projection");
 			}
 		} else {
@@ -521,8 +540,12 @@ public class MapWidget extends Screen {
 		}
 	}
 
-	public MarkerController<?>[] getMarkerControllers() {
-		return this.markerControllers.values().toArray(new MarkerController<?>[0]);
+	public Map<String, FeatureVisibilityController> getVisibilityControllers() {
+		Map<String, FeatureVisibilityController> m = new LinkedHashMap<>();
+		m.putAll(this.markerControllers);
+		if(this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
+		if(this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
+		return m;
 	}
 
 	public double getZoom() {
@@ -530,7 +553,7 @@ public class MapWidget extends Screen {
 	}
 
 	public double getMaxZoom() {
-		return TerramapConfig.unlockZoom? 25: this.background.map.getMaxZoom();
+		return TerramapConfig.CLIENT.unlockZoom? 25: this.background.map.getMaxZoom();
 	}
 
 	public double getMinZoom() {
@@ -722,26 +745,13 @@ public class MapWidget extends Screen {
 		return this.mainPlayerMarker;
 	}
 
-	public TiledMap getBackgroundStyle() {
+	public IRasterTiledMap getBackgroundStyle() {
 		return this.background.getMap();
 	}
-
-	public Map<String, Boolean> getMarkersVisibility() {
-		Map<String, Boolean> outMap = new HashMap<String, Boolean>();
-		for(MarkerController<?> controller: this.markerControllers.values()) {
-			outMap.put(controller.getId(), controller.areMakersVisible());
-		}
-		return outMap;
-	}
-
-	public MapWidget setMarkersVisibility(Map<String, Boolean> m) {
-		for(String key: m.keySet()) {
-			if(this.markerControllers.containsKey(key)) {
-				this.markerControllers.get(key).setVisibility(m.get(key));
-			} else {
-				TerramapMod.logger.warn("Was not able to restore marker visibility for marker type " + key);
-			}
-		}
+	
+	public MapWidget trySetFeatureVisibility(String markerId, boolean value) {
+		FeatureVisibilityController c = this.getVisibilityControllers().get(markerId);
+		if(c != null) c.setVisibility(value);
 		return this;
 	}
 

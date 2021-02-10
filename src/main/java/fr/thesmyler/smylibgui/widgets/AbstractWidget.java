@@ -6,6 +6,7 @@ public abstract class AbstractWidget implements IWidget {
 	
 	protected boolean visible = true;
 	protected int x, y, z, width, height;
+	protected String tooltip = null;
 	
 	public AbstractWidget(int x, int y, int z, int width, int height) {
 		this.x = x;
@@ -56,6 +57,17 @@ public abstract class AbstractWidget implements IWidget {
 	
 	public AbstractWidget hide() {
 		return this.setVisibility(false);
+	}
+	
+	
+	public AbstractWidget setTooltip(String tooltip) {
+		this.tooltip = tooltip;
+		return this;
+	}
+	
+	@Override
+	public String getTooltipText() {
+		return this.tooltip;
 	}
 
 }

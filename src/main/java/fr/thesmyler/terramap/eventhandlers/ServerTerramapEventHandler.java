@@ -22,15 +22,15 @@ public class ServerTerramapEventHandler {
     	
     	if(remoteVersion == null) { // Not installed on client
     		try {
-    			if(TerramapConfig.joinWithoutModMessage.length() > 0)
-    				player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.joinWithoutModMessage));
+    			if(TerramapConfig.SERVER.joinWithoutModMessage.length() > 0)
+    				player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithoutModMessage));
     		} catch(Exception e) {
     			TerramapMod.logger.error("Failed to send custom join message to client, make sure your json text is valid");
     		}
     	} else if(remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
     		try {
-    			if(TerramapConfig.joinWithOutdatedModMessage.length() > 0)
-    				player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.joinWithOutdatedModMessage));
+    			if(TerramapConfig.SERVER.joinWithOutdatedModMessage.length() > 0)
+    				player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithOutdatedModMessage));
     		} catch(Exception e) {
     			TerramapMod.logger.error("Failed to send custom join message to client, make sure your json text is valid");
     		}

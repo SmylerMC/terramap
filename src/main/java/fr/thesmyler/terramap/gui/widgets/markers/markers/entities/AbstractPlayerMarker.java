@@ -3,8 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
@@ -28,12 +27,6 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 	@Override
 	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 		boolean drawName = this.showName(hovered);
-		boolean isMinimap = false;
-		if(parent instanceof MapWidget) {
-			MapWidget map = (MapWidget) parent;
-			isMinimap = map.getContext().equals(MapContext.MINIMAP);
-			drawName = drawName && !isMinimap;
-		}
 		int textureSize = 128 / this.downScaleFactor;
 		GlStateManager.enableAlpha();
 		if(hovered) Gui.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, 0x50000000);
@@ -84,9 +77,21 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 
 	protected abstract float getTransparency();
 
-	protected abstract boolean showName(boolean hovered);
+	protected boolean showName(boolean hovered) {
+		if(this.getController() instanceof AbstractPlayerMarkerController) {
+			AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
+			return controller.doesShowNames() || hovered;
+		}
+		return hovered;
+	}
 
-	protected abstract boolean showDirection(boolean hovered);
+	protected boolean showDirection(boolean hovered) {
+		if(this.getController() instanceof AbstractPlayerMarkerController) {
+			AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
+			return controller.doesShowDirection();
+		}
+		return true;
+	}
 
 	@Override
 	public int getDeltaX() {

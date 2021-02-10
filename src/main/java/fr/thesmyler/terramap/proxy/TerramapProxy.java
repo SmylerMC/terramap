@@ -14,7 +14,6 @@ public abstract class TerramapProxy {
 	public abstract void preInit(FMLPreInitializationEvent event);
 	public abstract void init(FMLInitializationEvent event);
 	public abstract void onServerStarting(FMLServerStartingEvent event);
-	public abstract double getGuiScaleForConfig();
 	public abstract void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event);
 	public abstract GameType getGameMode(EntityPlayer e);
 	

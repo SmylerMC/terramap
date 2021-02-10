@@ -19,7 +19,7 @@ public abstract class TerramapUtils {
 	
 	private static final Random RANDOM = new Random();
 	
-	public static final EarthGeneratorSettings BTE_GENERATOR_SETTINGS = new EarthGeneratorSettings("{\"projection\":\"bteairocean\",\"orentation\":\"upright\",\"scaleX\":7318261.522857145,\"scaleY\":7318261.522857145,\"smoothblend\":true,\"roads\":true,\"customcubic\":\"\",\"dynamicbaseheight\":true,\"osmwater\":true,\"buildings\":true}");
+	public static final EarthGeneratorSettings BTE_GENERATOR_SETTINGS = EarthGeneratorSettings.parse(EarthGeneratorSettings.BTE_DEFAULT_SETTINGS);
 	public static final long EARTH_CIRCUMFERENCE = 40075017;
 
 	
@@ -41,17 +41,16 @@ public abstract class TerramapUtils {
 	
 	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
 		if(TerramapUtils.isServerEarthWorld(world)) {
-			return ((EarthGenerator)((CubeProviderServer)world.getChunkProvider()).getCubeGenerator()).cfg;
+			ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
+			EarthGenerator generator = (EarthGenerator)((CubeProviderServer) provider).getCubeGenerator();
+			return generator.settings;
 		} else return null;
 	}
 	
 	public static boolean isBteCompatible(EarthGeneratorSettings gen) {
 		return 
 				gen != null &&
-				gen.settings.projection.equals(BTE_GENERATOR_SETTINGS.settings.projection) &&
-				gen.settings.orentation.equals(BTE_GENERATOR_SETTINGS.settings.orentation) &&
-				gen.settings.scaleX == BTE_GENERATOR_SETTINGS.settings.scaleX &&
-				gen.settings.scaleY == BTE_GENERATOR_SETTINGS.settings.scaleY;
+				gen.projection().equals(BTE_GENERATOR_SETTINGS.projection()); //TODO Be a bit more laxist
 	}
 	
 }

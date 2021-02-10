@@ -24,23 +24,26 @@ import com.google.gson.GsonBuilder;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
+import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 
-public class MapStyleRegistry {
+//TODO Make this async and thread safe
+public class MapStylesLibrary {
 
 	private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
 	private static File configMapsFile;
-	private static Map<String, TiledMap> baseMaps = new HashMap<String, TiledMap>();
-	private static Map<String, TiledMap> userMaps = new HashMap<String, TiledMap>();
+	private static Map<String, IRasterTiledMap> baseMaps = new HashMap<>();
+	private static Map<String, UrlTiledMap> userMaps = new HashMap<>();
 
 	/**
 	 * Get the default Terramap maps, loaded from the jar and from the online source
 	 * The returned map is a new one, and can be mutated safely.
-	 * Does not actually load the maps, this needs to be done beforehand with {@link MapStyleRegistry#loadBuiltIns()} and {@link MapStyleRegistry#loadFromOnline(String)}
+	 * Does not actually load the maps, this needs to be done beforehand with {@link MapStylesLibrary#loadBuiltIns()} and {@link MapStylesLibrary#loadFromOnline(String)}
 	 * 
 	 * @return a new map that contains id => TiledMap couples
 	 */
-	public static Map<String, TiledMap> getBaseMaps() {
-		Map<String, TiledMap> maps = new HashMap<>();
+	public static Map<String, IRasterTiledMap> getBaseMaps() {
+		Map<String, IRasterTiledMap> maps = new HashMap<>();
 		maps.putAll(baseMaps);
 		return maps;
 	}
@@ -51,8 +54,8 @@ public class MapStyleRegistry {
 	 * 
 	 * @return a new map that contains id => TiledMap couples
 	 */
-	public static Map<String, TiledMap> getUserMaps() {
-		Map<String, TiledMap> maps = new HashMap<>();
+	public static Map<String, UrlTiledMap> getUserMaps() {
+		Map<String, UrlTiledMap> maps = new HashMap<>();
 		maps.putAll(userMaps);
 		return maps;
 	}
@@ -80,6 +83,13 @@ public class MapStyleRegistry {
 			TerramapMod.logger.catching(e);
 		}
 
+	}
+	
+	public static void loadInternals() {
+		if(TerramapConfig.enableDebugMaps) {
+			TerrainPreviewMap terrain = new TerrainPreviewMap(); 
+			baseMaps.put(terrain.getId(), terrain);
+		}
 	}
 	
 	/**
@@ -163,11 +173,12 @@ public class MapStyleRegistry {
 		baseMaps.clear();
 		userMaps.clear();
 		loadBuiltIns();
+		loadInternals();
 		loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
 		loadFromConfigFile();
 	}
 	
-	private static TiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
+	private static UrlTiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
 		//TODO Do some checks to make sure the parsed map styles are right (only on client)
 		String[] patterns = saved.urls;
 		if(patterns == null || patterns.length <= 0) {
@@ -176,11 +187,10 @@ public class MapStyleRegistry {
 				patterns = new String[] {saved.url};
 			} else throw new RuntimeException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
 		}
-		return new TiledMap(
+		return new UrlTiledMap(
 				patterns,
 				saved.min_zoom,
 				saved.max_zoom,
-				TerramapConfig.maxTileLoad,
 				id,
 				saved.name,
 				saved.copyright,
@@ -189,22 +199,27 @@ public class MapStyleRegistry {
 				provider,
 				version,
 				comment,
-				saved.max_concurrent_requests
+				saved.max_concurrent_requests,
+				saved.debug
 			);
 	}
 	
-	private static Map<String, TiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
+	private static Map<String, UrlTiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
 		String json = String.join("", Files.readAllLines(file.toPath()));
-		Map<String, TiledMap> maps =  loadFromJson(json, provider);
+		Map<String, UrlTiledMap> maps =  loadFromJson(json, provider);
 		return maps;
 	}
 
-	private static Map<String, TiledMap> loadFromJson(String json, TiledMapProvider provider) {
+	private static Map<String, UrlTiledMap> loadFromJson(String json, TiledMapProvider provider) {
 		Gson gson = new Gson();
 		MapStyleFile savedStyles = gson.fromJson(json, MapStyleFile.class);
-		Map<String, TiledMap> styles = new HashMap<String, TiledMap>();
+		Map<String, UrlTiledMap> styles = new HashMap<String, UrlTiledMap>();
 		for(String id: savedStyles.maps.keySet()) {
-			TiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
+			UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
+			if(!TerramapConfig.enableDebugMaps && style.isDebug()) {
+				TerramapMod.logger.info("Not loading debug map style " + style.getId());
+				continue;
+			}
 			styles.put(id, style);
 		}
 		return styles;
@@ -222,7 +237,11 @@ public class MapStyleRegistry {
 		}
 	}
 	
-	static class SavedMapStyle {
+	public static File getFile() {
+		return configMapsFile;
+	}
+	
+	private static class SavedMapStyle {
 
 		String url; // Used by legacy versions
 		String[] urls;
@@ -233,10 +252,11 @@ public class MapStyleRegistry {
 		int display_priority;
 		boolean allow_on_minimap;
 		int max_concurrent_requests = 2;
+		boolean debug;
 
 	}
 
-	static class MapStyleFile {
+	private static class MapStyleFile {
 
 		Map<String, SavedMapStyle> maps;
 		MapFileMetadata metadata;
@@ -245,14 +265,10 @@ public class MapStyleRegistry {
 			this.metadata = metadata;
 			this.maps = new HashMap<String, SavedMapStyle>();
 		}
-		
-		MapStyleFile() {
-			this(new MapFileMetadata());
-		}
 
 	}
 
-	static class MapFileMetadata {
+	private static class MapFileMetadata {
 		
 		long version;
 		String comment;
@@ -260,10 +276,6 @@ public class MapStyleRegistry {
 		MapFileMetadata(long version, String comment) {
 			this.comment = comment;
 			this.version = version;
-		}
-		
-		MapFileMetadata() {
-			this(0, "");
 		}
 
 	}

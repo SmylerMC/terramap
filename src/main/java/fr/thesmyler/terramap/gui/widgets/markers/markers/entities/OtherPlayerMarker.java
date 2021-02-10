@@ -44,7 +44,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 
 	@Override
 	protected boolean showName(boolean hovered) {
-		return !this.player.isSpectator() || hovered;
+		return super.showName(hovered) && !this.player.isSpectator() || hovered;
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
-import fr.thesmyler.terramap.maps.MapStyleRegistry;
+import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import io.github.terra121.TerraMod;
@@ -54,7 +54,7 @@ public class TerramapMod {
     	TerramapMod.proxy.preInit(event);
     	if(!isTerraDependencyValid) return;
     	File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
-    	MapStyleRegistry.setConfigMapFile(mapStyleFile);
+    	MapStylesLibrary.setConfigMapFile(mapStyleFile);
     }
 
     @EventHandler
@@ -63,7 +63,7 @@ public class TerramapMod {
     	TerramapMod.proxy.init(event);
     	if(!isTerraDependencyValid) return;
     	PermissionManager.registerNodes();
-    	MapStyleRegistry.loadFromConfigFile();
+    	MapStylesLibrary.loadFromConfigFile();
     }
     
     public static TerramapVersion getVersion() {

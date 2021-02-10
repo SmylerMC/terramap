@@ -124,7 +124,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 	public static enum IncludedTexturedButtons {
 		
 		// 15x15
-		BLANK(15, 15, 60, 0, 60, 15, 60, 30, SmyLibGui.WIDGET_TEXTURES),
+		BLANK_15(15, 15, 60, 0, 60, 15, 60, 30, SmyLibGui.WIDGET_TEXTURES),
 		PLUS(15, 15, 75, 0, 75, 15, 75, 30, SmyLibGui.WIDGET_TEXTURES),
 		MINUS(15, 15, 90, 0, 90, 15, 90, 30, SmyLibGui.WIDGET_TEXTURES),
 		LEFT(15, 15, 105, 0, 105, 15, 105, 30, SmyLibGui.WIDGET_TEXTURES),
@@ -134,9 +134,16 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 		CROSS(15, 15, 165, 0, 165, 15, 165, 30, SmyLibGui.WIDGET_TEXTURES),
 		CENTER(15, 15, 180, 0, 180, 15, 180, 30, SmyLibGui.WIDGET_TEXTURES),
 		PAPER(15, 15, 195, 0, 195, 15, 195, 30, SmyLibGui.WIDGET_TEXTURES),
+		WRENCH(15, 15, 210, 0, 210, 15, 210, 30, SmyLibGui.WIDGET_TEXTURES),
+		OPTIONS1_15(15, 15, 225, 0, 225, 15, 225, 30, SmyLibGui.WIDGET_TEXTURES),
+		OPTIONS2_15(15, 15, 240, 0, 240, 15, 240, 30, SmyLibGui.WIDGET_TEXTURES),
 		
+		// 20x20
+		BLANK_20(20, 20, 60, 164, 60, 184, 60, 204, SmyLibGui.WIDGET_TEXTURES),
+		OPTIONS_20(20, 20, 80, 164, 80, 184, 80, 204, SmyLibGui.WIDGET_TEXTURES),
+
 		// 21x21
-		BLANK_BIG(21, 21, 60, 45, 60, 66, 60, 87, SmyLibGui.WIDGET_TEXTURES),
+		BLANK_21(21, 21, 60, 45, 60, 66, 60, 87, SmyLibGui.WIDGET_TEXTURES),
 		SEARCH(21, 21, 81, 45, 81, 66, 81, 87, SmyLibGui.WIDGET_TEXTURES);
 		
 		int width, height, u, v, hoverU, hoverV, disabledU, disabledV;
