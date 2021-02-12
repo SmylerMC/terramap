@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
@@ -22,7 +22,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 	public void update(MapWidget map) {
 		super.update(map);
 		if(
-				!TerramapRemote.getRemote().hasPlayer(this.player.getUUID())
+				!TerramapClientContext.getContext().hasPlayer(this.player.getUUID())
 			  || (this.player instanceof TerramapLocalPlayer && ((TerramapLocalPlayer) this.player).getPlayer().isDead)) {
 			map.scheduleForNextScreenUpdate(() -> map.removeWidget(this));
 		}

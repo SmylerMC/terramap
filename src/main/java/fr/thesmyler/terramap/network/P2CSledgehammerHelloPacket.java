@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.network;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -56,13 +56,13 @@ public class P2CSledgehammerHelloPacket implements IMessage {
 		public IMessage onMessage(P2CSledgehammerHelloPacket pkt, MessageContext ctx) {
 			Minecraft.getMinecraft().addScheduledTask(() -> {
 				TerramapMod.logger.info("Got Sledgehammer hello, remote version is " + pkt.sledgehammerVersion);
-				TerramapRemote.getRemote().setSledgehammerVersion(pkt.sledgehammerVersion);
-				TerramapRemote.getRemote().setPlayersSynchronizedByProxy(pkt.syncPlayers);
-				TerramapRemote.getRemote().setSpectatorsSynchronizedByProxy(pkt.syncSpectators);
-				TerramapRemote.getRemote().setProxyForceMinimap(pkt.globalMap);
-				TerramapRemote.getRemote().setProxyForceGlobalSettings(pkt.globalSettings);
-				TerramapRemote.getRemote().setProxyWarpSupport(pkt.hasWarpSupport);
-				TerramapRemote.getRemote().setProxyUUID(pkt.proxyUUID);
+				TerramapClientContext.getContext().setSledgehammerVersion(pkt.sledgehammerVersion);
+				TerramapClientContext.getContext().setPlayersSynchronizedByProxy(pkt.syncPlayers);
+				TerramapClientContext.getContext().setSpectatorsSynchronizedByProxy(pkt.syncSpectators);
+				TerramapClientContext.getContext().setProxyForceMinimap(pkt.globalMap);
+				TerramapClientContext.getContext().setProxyForceGlobalSettings(pkt.globalSettings);
+				TerramapClientContext.getContext().setProxyWarpSupport(pkt.hasWarpSupport);
+				TerramapClientContext.getContext().setProxyUUID(pkt.proxyUUID);
 			});
 			return null;
 		}

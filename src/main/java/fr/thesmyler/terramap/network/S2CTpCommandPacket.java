@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.network;
 
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -33,7 +33,7 @@ public class S2CTpCommandPacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(S2CTpCommandPacket message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(() -> {TerramapRemote.getRemote().setTpCommand(message.cmd);});
+			Minecraft.getMinecraft().addScheduledTask(() -> {TerramapClientContext.getContext().setTpCommand(message.cmd);});
 			return null;
 		}
 		

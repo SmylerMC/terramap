@@ -7,7 +7,7 @@ import java.util.Map;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
@@ -32,15 +32,15 @@ public abstract class HudScreenHandler {
 		screen.removeAllWidgets();
 		screen.cancellAllScheduled();
 
-		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
+		if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
 			if(map == null) {
-				map = new MapWidget(10, TerramapRemote.getRemote().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
+				map = new MapWidget(10, TerramapClientContext.getContext().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
 				map.setInteractive(false);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
 				map.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
 				map.scheduleAtUpdate(() -> {
-					if(TerramapRemote.getRemote().getProjection() != null) {
+					if(TerramapClientContext.getContext().getProjection() != null) {
 						map.track(map.getMainPlayerMarker());
 					}
 				});
@@ -55,7 +55,7 @@ public abstract class HudScreenHandler {
 			compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
 			screen.addWidget(compass);
 			screen.scheduleAtUpdate(() -> {
-				GeographicProjection p = TerramapRemote.getRemote().getProjection();
+				GeographicProjection p = TerramapClientContext.getContext().getProjection();
 				if(p != null) {
 					double x = Minecraft.getMinecraft().player.posX;
 					double z = Minecraft.getMinecraft().player.posZ;
@@ -87,7 +87,7 @@ public abstract class HudScreenHandler {
 		map.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
 		map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
 		map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
-		Map<String, IRasterTiledMap> styles = TerramapRemote.getRemote().getMapStyles();
+		Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
 		IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {
 			ArrayList<IRasterTiledMap> maps = new ArrayList<IRasterTiledMap>(styles.values());
@@ -101,7 +101,7 @@ public abstract class HudScreenHandler {
 		map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
 
 		map.setTileScaling(TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
-		map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP));
+		map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP));
 	}
 
 	public static void zoomInMinimap() {
@@ -117,7 +117,7 @@ public abstract class HudScreenHandler {
 	}
 
 	public static void toggleMinimap() {
-		if(TerramapRemote.getRemote().allowsMap(MapContext.MINIMAP)) {
+		if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
 			map.setVisibility(!map.isVisible(null));
 			TerramapConfig.CLIENT.minimap.enable = map.isVisible(null);
 			TerramapConfig.sync();

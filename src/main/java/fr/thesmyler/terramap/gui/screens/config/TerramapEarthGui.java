@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import net.buildtheearth.terraplusplus.control.EarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
@@ -21,8 +21,8 @@ public class TerramapEarthGui extends EarthGui {
     @Override
     public void mouseClicked(int mouseX, int mouseY, int mouseEvent) {
         if(this.doneButton.mousePressed(this.mc, mouseX, mouseY)) {
-        	TerramapRemote.getRemote().setGeneratorSettings(this.settings);
-			TerramapRemote.getRemote().saveSettings();
+        	TerramapClientContext.getContext().setGeneratorSettings(this.settings);
+			TerramapClientContext.getContext().saveSettings();
 			Minecraft.getMinecraft().displayGuiScreen(this.parent);
 			return;
         } else if(this.cancelButton.mousePressed(this.mc, mouseX, mouseY)){

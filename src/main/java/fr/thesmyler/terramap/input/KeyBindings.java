@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.input;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
@@ -57,12 +57,12 @@ public abstract class KeyBindings {
 	}
 
 	public static void checkBindings() {
-		if(OPEN_MAP.isPressed() && TerramapRemote.getRemote().allowsMap(MapContext.FULLSCREEN)) {
-			Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapRemote.getRemote().getMapStyles()));
+		if(OPEN_MAP.isPressed() && TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
+			Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapClientContext.getContext().getMapStyles()));
 		}
 		if(COPY_GEO_COORDS.isPressed()) {
 			EntityPlayerSP player = Minecraft.getMinecraft().player;
-			GeographicProjection projection = TerramapRemote.getRemote().getProjection();
+			GeographicProjection projection = TerramapClientContext.getContext().getProjection();
 			if(player == null) {
 				Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
 			} else if(projection == null) {

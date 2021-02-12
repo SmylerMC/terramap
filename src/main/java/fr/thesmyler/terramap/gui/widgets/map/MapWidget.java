@@ -22,7 +22,7 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapEarthGui;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
@@ -128,7 +128,7 @@ public class MapWidget extends Screen {
 		this.copyBlockMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
 			String strToCopy = "Outside projection";
 			try {
-				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.round(coords[0]);
 				String dispY = "" + Math.round(coords[1]);
 				strToCopy = dispX + " " + dispY;
@@ -138,7 +138,7 @@ public class MapWidget extends Screen {
 		this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
 			String strToCopy = "Outside projection";
 			try {
-				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
 				strToCopy = dispX + " " + dispY;
@@ -148,7 +148,7 @@ public class MapWidget extends Screen {
 		this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
 			String strToCopy = "Outside projection";
 			try {
-				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
 				strToCopy = "r." + dispX + "." + dispY + ".mca";
@@ -158,7 +158,7 @@ public class MapWidget extends Screen {
 		this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
 			String strToCopy = "Outside projection";
 			try {
-				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
 				strToCopy = dispX + ".0." + dispY + ".3dr";
@@ -168,7 +168,7 @@ public class MapWidget extends Screen {
 		this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
 			String strToCopy = "Outside projection";
 			try {
-				double[] coords = TerramapRemote.getRemote().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
 				strToCopy = dispX + "." + dispY + ".2dr";
@@ -216,7 +216,7 @@ public class MapWidget extends Screen {
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
-			Minecraft.getMinecraft().displayGuiScreen(new TerramapEarthGui(null, TerramapRemote.getRemote().getGeneratorSettings()));	
+			Minecraft.getMinecraft().displayGuiScreen(new TerramapEarthGui(null, TerramapClientContext.getContext().getGeneratorSettings()));	
 		});
 
 		this.controller = new ControllerMapLayer(this.tileScaling);
@@ -514,21 +514,21 @@ public class MapWidget extends Screen {
 	}
 
 	private void updateRightClickMenuEntries() {
-		boolean hasProjection = TerramapRemote.getRemote().getProjection() != null;
+		boolean hasProjection = TerramapClientContext.getContext().getProjection() != null;
 		this.teleportMenuEntry.enabled = hasProjection;
 		this.copyBlockMenuEntry.enabled = hasProjection;
 		this.copyChunkMenuEntry.enabled = hasProjection;
 		this.copyRegionMenuEntry.enabled = hasProjection;
 		this.copy3drMenuEntry.enabled = hasProjection;
 		this.copy2drMenuEntry.enabled = hasProjection;
-		this.setProjectionMenuEntry.enabled = !TerramapRemote.getRemote().isInstalledOnServer();
+		this.setProjectionMenuEntry.enabled = !TerramapClientContext.getContext().isInstalledOnServer();
 	}
 
 	private void teleportPlayerTo(double longitude, double latitude) {
-		String cmd = TerramapRemote.getRemote().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
-		if(TerramapRemote.getRemote().getProjection() != null) {
+		String cmd = TerramapClientContext.getContext().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
+		if(TerramapClientContext.getContext().getProjection() != null) {
 			try {
-				double[] xz = TerramapRemote.getRemote().getProjection().fromGeo(longitude, latitude);
+				double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(longitude, latitude);
 				cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
 				this.sendChatMessage(cmd, false);
 			} catch (OutOfProjectionBoundsException e) {
@@ -776,7 +776,7 @@ public class MapWidget extends Screen {
 	}
 
 	private boolean isShortcutEnabled() {
-		return TerramapRemote.getRemote().getProjection() != null && this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
+		return TerramapClientContext.getContext().getProjection() != null && this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
 	}
 
 	@Override

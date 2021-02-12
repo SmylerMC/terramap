@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
@@ -140,7 +140,7 @@ public class SP2CMapStylePacket implements IMessage {
 				TerramapMod.logger.debug("Ignoring debug map from server: " + map.getId());
 				return null;
 			}
-			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addServerMapStyle(map));
+			Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerMapStyle(map));
 			return null;
 		}
 		
@@ -158,7 +158,7 @@ public class SP2CMapStylePacket implements IMessage {
 				TerramapMod.logger.debug("Ignoring debug map from proxy: " + map.getId());
 				return null;
 			}
-			Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().addProxyMapStyle(map));
+			Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyMapStyle(map));
 			return null;
 		}
 		

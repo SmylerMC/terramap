@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -31,17 +31,17 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 			parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
 			return;
 		}
-		if(TerramapRemote.getRemote().getProjection() == null) return;
+		if(TerramapClientContext.getContext().getProjection() == null) return;
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		try {
-			double[] lola = TerramapRemote.getRemote().getProjection().toGeo(player.posX, player.posZ);
+			double[] lola = TerramapClientContext.getContext().getProjection().toGeo(player.posX, player.posZ);
 			this.playerLongitude = lola[0];
 			this.playerLatitude = lola[1];
 		} catch(OutOfProjectionBoundsException e) {
 			this.playerLatitude = this.playerLongitude = Double.NaN;
 		}
 		try {
-			this.playerAzimuth = TerramapRemote.getRemote().getProjection().azimuth(player.posX, player.posZ, player.rotationYaw);
+			this.playerAzimuth = TerramapClientContext.getContext().getProjection().azimuth(player.posX, player.posZ, player.rotationYaw);
 		} catch(OutOfProjectionBoundsException e) {
 			this.playerAzimuth = Float.NaN;
 		}

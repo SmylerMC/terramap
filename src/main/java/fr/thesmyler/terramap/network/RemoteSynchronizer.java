@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
@@ -127,7 +127,7 @@ public abstract class RemoteSynchronizer {
 						"Enable deco radar: " + pkt.enableDecoRadar + "\t" +
 						"Warp support: " + pkt.hasWarpSupport + "\t"
 				);
-		TerramapRemote srv = TerramapRemote.getRemote();
+		TerramapClientContext srv = TerramapClientContext.getContext();
 
 		try {
 			srv.setServerVersion(new TerramapVersion(pkt.serverVersion));

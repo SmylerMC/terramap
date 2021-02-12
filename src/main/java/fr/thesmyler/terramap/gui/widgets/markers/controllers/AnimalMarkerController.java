@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.AnimalMarker;
@@ -32,9 +32,9 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
 	@Override
 	public AnimalMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-		if(TerramapRemote.getRemote().getProjection() == null) return new AnimalMarker[0];
+		if(TerramapClientContext.getContext().getProjection() == null) return new AnimalMarker[0];
 		Map<UUID, Entity> entities = new HashMap<UUID, Entity>();
-		for(Entity entity: TerramapRemote.getRemote().getEntities()) {
+		for(Entity entity: TerramapClientContext.getContext().getEntities()) {
 			if(entity instanceof IAnimals && !(entity instanceof IMob)) {
 				entities.put(entity.getPersistentID(), entity);
 			}
@@ -53,7 +53,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
 	@Override
 	public boolean showButton() {
-		return TerramapRemote.getRemote().allowsAnimalRadar();
+		return TerramapClientContext.getContext().allowsAnimalRadar();
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 	
 	@Override
 	public boolean getVisibility() {
-		return super.getVisibility() && TerramapRemote.getRemote().allowsAnimalRadar();
+		return super.getVisibility() && TerramapClientContext.getContext().allowsAnimalRadar();
 	}
 
 	@Override

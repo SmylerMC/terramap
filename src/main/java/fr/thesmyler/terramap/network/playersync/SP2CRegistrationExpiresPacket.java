@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.network.playersync;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -23,7 +23,7 @@ public class SP2CRegistrationExpiresPacket implements IMessage {
 
 		@Override
 		public C2SPRegisterForUpdatesPacket onMessage(SP2CRegistrationExpiresPacket message, MessageContext ctx) {
-			if(TerramapRemote.getRemote().needsUpdate()) {
+			if(TerramapClientContext.getContext().needsUpdate()) {
 				TerramapMod.logger.debug("Renewing registration for map update to server");
 				return new C2SPRegisterForUpdatesPacket(true);
 			}

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.OtherPlayerMarker;
@@ -32,9 +32,9 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 		
 		int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
 		
-		if(TerramapRemote.getRemote().getProjection() != null) {
+		if(TerramapClientContext.getContext().getProjection() != null) {
 			
-			Map<UUID, TerramapPlayer> players = TerramapRemote.getRemote().getPlayerMap();
+			Map<UUID, TerramapPlayer> players = TerramapClientContext.getContext().getPlayerMap();
 			
 			for(Marker marker: existingMarkers) {
 				TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
@@ -58,13 +58,13 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
 	@Override
 	public boolean showButton() {
-		return TerramapRemote.getRemote().allowsPlayerRadar();
+		return TerramapClientContext.getContext().allowsPlayerRadar();
 	}
 
 
 	@Override
 	public boolean getVisibility() {
-		return super.getVisibility() && TerramapRemote.getRemote().allowsPlayerRadar();
+		return super.getVisibility() && TerramapClientContext.getContext().allowsPlayerRadar();
 	}
 	
 	@Override

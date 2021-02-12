@@ -18,7 +18,7 @@ import fr.thesmyler.smylibgui.widgets.sliders.OptionSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen.TileScalingOption;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
@@ -37,7 +37,7 @@ import net.minecraft.client.resources.I18n;
 
 public class HudConfigScreen extends Screen {
 	
-	private MapWidget minimap = new MapWidget(0, TerramapRemote.getRemote().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
+	private MapWidget minimap = new MapWidget(0, TerramapClientContext.getContext().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
 	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, this.minimap, "", 15);
 	private CompassScreen compassScreen = new CompassScreen();
 	private WindowedScreen compassWindow = new WindowedScreen(BackgroundType.NONE, this.compassScreen, "", 16);
@@ -57,7 +57,7 @@ public class HudConfigScreen extends Screen {
 	public HudConfigScreen() {
 		super(BackgroundType.NONE);
 		List<MapStyleSliderEntry> maps = new ArrayList<>();
-		TerramapRemote.getRemote().getMapStyles().values().stream()
+		TerramapClientContext.getContext().getMapStyles().values().stream()
 			.filter(m -> m.isAllowedOnMinimap())
 			.forEachOrdered(m -> maps.add(new MapStyleSliderEntry(m)));
 		this.mapStyles = maps.toArray(this.mapStyles);
@@ -68,7 +68,7 @@ public class HudConfigScreen extends Screen {
 		this.minimap.setScaleVisibility(false);
 		this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
 		this.minimap.scheduleAtUpdate(() -> {
-			if(TerramapRemote.getRemote().getProjection() != null) {
+			if(TerramapClientContext.getContext().getProjection() != null) {
 				this.minimap.track(this.minimap.getMainPlayerMarker());
 			}
 		});
@@ -273,7 +273,7 @@ public class HudConfigScreen extends Screen {
 			super(BackgroundType.NONE);
 			this.addWidget(this.compass);
 			this.scheduleAtUpdate(() -> {
-				GeographicProjection p = TerramapRemote.getRemote().getProjection();
+				GeographicProjection p = TerramapClientContext.getContext().getProjection();
 				if(p != null) {
 					double x = Minecraft.getMinecraft().player.posX;
 					double z = Minecraft.getMinecraft().player.posZ;

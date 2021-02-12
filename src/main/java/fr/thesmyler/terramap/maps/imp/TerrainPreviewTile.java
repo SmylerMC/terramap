@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
@@ -41,7 +41,7 @@ public class TerrainPreviewTile implements IRasterTile {
 		
 		if(this.texture == null) {
 			if(this.textureTask == null) {
-				TerrainPreview preview = TerramapRemote.getRemote().getTerrainPreview();
+				TerrainPreview preview = TerramapClientContext.getContext().getTerrainPreview();
 				if(preview != null) {
 					this.textureTask = preview.tile(this.position.getX(), this.position.getY(), TerrainPreviewMap.BASE_ZOOM_LEVEL - this.position.getZoom());
 				}

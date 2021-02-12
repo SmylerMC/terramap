@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.network.playersync;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapUtils;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -37,7 +37,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 	public double[] getGeoCoordinates() throws OutOfProjectionBoundsException {
 		GeographicProjection proj;
 		if(this.player.world.isRemote) {
-			proj = TerramapRemote.getRemote().getProjection();
+			proj = TerramapClientContext.getContext().getProjection();
 		} else {
 			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
 		}
@@ -64,7 +64,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 	public float getAzimut() {
 		GeographicProjection proj;
 		if(this.player.world.isRemote) {
-			proj = TerramapRemote.getRemote().getProjection();
+			proj = TerramapClientContext.getContext().getProjection();
 		} else {
 			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
 		}

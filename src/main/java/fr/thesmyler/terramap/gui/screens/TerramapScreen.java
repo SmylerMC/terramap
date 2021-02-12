@@ -28,7 +28,7 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
@@ -89,9 +89,9 @@ public class TerramapScreen extends Screen {
 		Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
 		IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
-		TerramapScreenSavedState state = TerramapRemote.getRemote().getSavedScreenState();
-		if(state != null) this.resumeFromSavedState(TerramapRemote.getRemote().getSavedScreenState());
-		TerramapRemote.getRemote().registerForUpdates(true);
+		TerramapScreenSavedState state = TerramapClientContext.getContext().getSavedScreenState();
+		if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
+		TerramapClientContext.getContext().registerForUpdates(true);
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class TerramapScreen extends Screen {
 		this.stylePanel.addWidget(s);
 		this.addWidget(this.stylePanel);
 
-		if(!TerramapRemote.getRemote().isInstalledOnServer() && TerramapRemote.getRemote().getProjection() == null) {
+		if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null) {
 			String warning = "";
 			for(int i=1; I18n.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
 				if(warning.length() > 0) warning += "\n";
@@ -219,14 +219,14 @@ public class TerramapScreen extends Screen {
 			this.addWidget(warningWidget);
 		}
 
-		TerramapRemote.getRemote().setupMaps();
+		TerramapClientContext.getContext().setupMaps();
 	}
 
 	@Override
 	public void onUpdate(Screen parent) {
 		super.onUpdate(parent);
 
-		GeographicProjection projection = TerramapRemote.getRemote().getProjection();
+		GeographicProjection projection = TerramapClientContext.getContext().getProjection();
 
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
@@ -300,7 +300,7 @@ public class TerramapScreen extends Screen {
 
 		if(this.debugMode) {
 			String dbText = "";
-			TerramapRemote srv = TerramapRemote.getRemote();
+			TerramapClientContext srv = TerramapClientContext.getContext();
 			dbText += "FPS: " + Minecraft.getDebugFPS();
 			dbText += "\nClient: " + TerramapMod.getVersion();
 			dbText += "\nServer: " + srv.getServerVersion();
@@ -495,9 +495,9 @@ public class TerramapScreen extends Screen {
 
 	@Override
 	public void onGuiClosed() {
-		TerramapRemote.getRemote().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
-		TerramapRemote.getRemote().saveSettings();
-		TerramapRemote.getRemote().registerForUpdates(false);
+		TerramapClientContext.getContext().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
+		TerramapClientContext.getContext().saveSettings();
+		TerramapClientContext.getContext().registerForUpdates(false);
 	}
 
 	public void setF1Mode(boolean yesNo) {

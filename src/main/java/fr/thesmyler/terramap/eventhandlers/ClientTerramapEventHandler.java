@@ -6,7 +6,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
@@ -36,7 +36,7 @@ public class ClientTerramapEventHandler {
 	@SubscribeEvent
 	public void onRenderHUD(RenderGameOverlayEvent.Text event) {
 		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
-			GeographicProjection proj = TerramapRemote.getRemote().getProjection();
+			GeographicProjection proj = TerramapClientContext.getContext().getProjection();
 			if(proj != null) {
 				event.getLeft().add("");
 				double x = Minecraft.getMinecraft().player.posX;
@@ -54,8 +54,8 @@ public class ClientTerramapEventHandler {
 					event.getLeft().add("Out of projection bounds");
 				}
 			}
-			event.getLeft().add("Terramap world UUID: " + TerramapRemote.getRemote().getWorldUUID());
-			event.getLeft().add("Terramap proxy UUID: " + TerramapRemote.getRemote().getProxyUUID());
+			event.getLeft().add("Terramap world UUID: " + TerramapClientContext.getContext().getWorldUUID());
+			event.getLeft().add("Terramap proxy UUID: " + TerramapClientContext.getContext().getProxyUUID());
 		}
 	}
 
@@ -66,12 +66,12 @@ public class ClientTerramapEventHandler {
     
 	@SubscribeEvent
 	public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
-		Minecraft.getMinecraft().addScheduledTask(TerramapRemote::resetRemote); // This event is called from the network thread
+		Minecraft.getMinecraft().addScheduledTask(TerramapClientContext::resetContext); // This event is called from the network thread
 	}
 
 	@SubscribeEvent
 	public void onClientConnected(ClientConnectedToServerEvent event) {
-		Minecraft.getMinecraft().addScheduledTask(() -> TerramapRemote.getRemote().setRemoteIdentifier()); // This event is called from the network thread
+		Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().setRemoteIdentifier()); // This event is called from the network thread
 	}
 	
 	@SubscribeEvent
@@ -79,14 +79,14 @@ public class ClientTerramapEventHandler {
 		// Not called on client...
 		TerramapMod.logger.info(event.player.world.isRemote);
 		if(event.player.world.isRemote) {
-			TerramapRemote.getRemote().resetWorld();
+			TerramapClientContext.getContext().resetWorld();
 		}
 	}
 	
 	@SubscribeEvent
 	public void onHudInit(HudScreenInitEvent event) {
 		HudScreenHandler.init(event.getHudScreen());
-		TerramapRemote.getRemote().setupMaps();
+		TerramapClientContext.getContext().setupMaps();
 	}
 	
 	@SubscribeEvent
@@ -95,7 +95,7 @@ public class ClientTerramapEventHandler {
 			Minecraft.getMinecraft().displayGuiScreen(new TestScreen(event.getGui()));
 			this.testScreenWasShown = true;
 		} else if(event.getGui() instanceof GuiDownloadTerrain) {
-			TerramapRemote.getRemote().resetWorld();
+			TerramapClientContext.getContext().resetWorld();
 		}
 	}
 	

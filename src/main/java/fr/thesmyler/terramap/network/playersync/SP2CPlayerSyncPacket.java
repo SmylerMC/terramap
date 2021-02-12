@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
 
-import fr.thesmyler.terramap.TerramapRemote;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -67,7 +67,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(SP2CPlayerSyncPacket message, MessageContext ctx) {
-			Minecraft.getMinecraft().addScheduledTask(()->{TerramapRemote.getRemote().syncPlayers(message.remotePlayers);});
+			Minecraft.getMinecraft().addScheduledTask(()->{TerramapClientContext.getContext().syncPlayers(message.remotePlayers);});
 			return null;
 		}
 

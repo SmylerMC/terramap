@@ -35,14 +35,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * Used to represent the server from the client
+ * Client side context that store important information about the current server, world, proxy, etc.
  * 
  * @author SmylerMC
  *
  */
-public class TerramapRemote {
+public class TerramapClientContext {
 
-	private static TerramapRemote instance;
+	private static TerramapClientContext instance;
 	
 	private static final GeographicProjection TERRAIN_PREVIEW_PROJECTION = new WebMercatorProjection(TerrainPreviewMap.BASE_ZOOM_LEVEL);
 
@@ -453,14 +453,14 @@ public class TerramapRemote {
 		}
 	}
 
-	public static TerramapRemote getRemote() {
-		if(TerramapRemote.instance == null) TerramapRemote.resetRemote();
-		return TerramapRemote.instance;
+	public static TerramapClientContext getContext() {
+		if(TerramapClientContext.instance == null) TerramapClientContext.resetContext();
+		return TerramapClientContext.instance;
 	}
 
-	public static void resetRemote() {
+	public static void resetContext() {
 		TerramapMod.logger.info("Reseting server information");
-		TerramapRemote.instance = new TerramapRemote();
+		TerramapClientContext.instance = new TerramapClientContext();
 	}
 
 }
