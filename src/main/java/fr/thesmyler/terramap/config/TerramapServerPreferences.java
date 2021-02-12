@@ -72,6 +72,7 @@ public class TerramapServerPreferences {
 					worldPreferences.players.put(uuid, pp);
 				}
 			}
+			saveWorldPreferences(world);
 		} catch(Exception e) {
 			TerramapMod.logger.error("Failed to set player display preferences! See stack trace:");
 			TerramapMod.logger.catching(e);
@@ -91,6 +92,7 @@ public class TerramapServerPreferences {
 				if(uuid.getLeastSignificantBits() == 0 && uuid.getMostSignificantBits() == 0) {
 					uuid = UUID.randomUUID();
 					prefs.world_uuid = uuid;
+					saveWorldPreferences(world);
 					TerramapMod.logger.info("Generated uuid " + uuid + " for world " + world.getSaveHandler().getWorldDirectory().getName());
 				}
 				return uuid;

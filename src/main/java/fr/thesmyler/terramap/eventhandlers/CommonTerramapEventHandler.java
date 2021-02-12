@@ -50,14 +50,6 @@ public class CommonTerramapEventHandler {
 	}
 	
 	@SubscribeEvent
-	public void onWorldSave(WorldEvent.Save event) {
-		if(!event.getWorld().isRemote) {
-			WorldServer world = ((WorldServer)event.getWorld());
-	    	TerramapServerPreferences.saveWorldPreferences(world);
-		}
-	}
-	
-	@SubscribeEvent
 	public void onWorldLoads(WorldEvent.Load event) {
 		if(!event.getWorld().isRemote) {
 			WorldServer world = ((WorldServer)event.getWorld());
