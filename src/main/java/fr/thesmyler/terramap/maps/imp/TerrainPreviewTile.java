@@ -36,8 +36,10 @@ public class TerrainPreviewTile implements IRasterTile {
 	@Override
 	public ResourceLocation getTexture() throws Throwable {
 		
-		//TODO We don't need to generate tiles for other zoom levels as we might as way scale up when rendering, so uncomment this when tiles are actually requested when lowResRender
-		// if(this.getPosition().getZoom() != TerrainPreviewMap.BASE_ZOOM_LEVEL) return null;
+		if(this.getPosition().getZoom() < TerrainPreviewMap.BASE_ZOOM_LEVEL)
+			throw new IllegalArgumentException("Trying to request a terrain preview with a zoom that's to low (" + this.position.getZoom() + ")");
+		
+		 if(this.getPosition().getZoom() != TerrainPreviewMap.BASE_ZOOM_LEVEL) return null;
 		
 		if(this.texture == null) {
 			if(this.textureTask == null) {
