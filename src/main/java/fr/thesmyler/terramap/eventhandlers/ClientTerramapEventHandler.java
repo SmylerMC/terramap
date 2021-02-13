@@ -5,8 +5,8 @@ import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.GeoServices;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
@@ -87,6 +87,7 @@ public class ClientTerramapEventHandler {
 	public void onHudInit(HudScreenInitEvent event) {
 		HudScreenHandler.init(event.getHudScreen());
 		TerramapClientContext.getContext().setupMaps();
+		TerramapClientContext.getContext().tryShowWelcomeToast();		
 	}
 	
 	@SubscribeEvent

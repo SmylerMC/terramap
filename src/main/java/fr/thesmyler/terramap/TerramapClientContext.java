@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import fr.thesmyler.smylibgui.toast.TextureToast;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
@@ -33,6 +34,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Client side context that store important information about the current server, world, proxy, etc.
@@ -134,7 +136,7 @@ public class TerramapClientContext {
 	public void saveSettings() {
 		try {
 			if(!this.isInstalledOnServer() && this.genSettings != null) {
-				TerramapClientPreferences.setServerGenSettings(this.getRemoteIdentifier(), this.genSettings.toString());
+				TerramapClientPreferences.setServerGenSettings(this.getContextIdentifier(), this.genSettings.toString());
 			}
 			TerramapClientPreferences.save();
 		} catch(Exception e) {
@@ -224,15 +226,15 @@ public class TerramapClientContext {
 	}
 
 	public TerramapScreenSavedState getSavedScreenState() {
-		return TerramapClientPreferences.getServerSavedScreen(this.getRemoteIdentifier());
+		return TerramapClientPreferences.getServerSavedScreen(this.getContextIdentifier());
 	}
 
 	public boolean hasSavedScreenState() {
-		return TerramapClientPreferences.getServerSavedScreen(this.getRemoteIdentifier()) != null;
+		return TerramapClientPreferences.getServerSavedScreen(this.getContextIdentifier()) != null;
 	}
 
 	public void setSavedScreenState(TerramapScreenSavedState svd) {
-		TerramapClientPreferences.setServerSavedScreen(this.getRemoteIdentifier(), svd);
+		TerramapClientPreferences.setServerSavedScreen(this.getContextIdentifier(), svd);
 	}
 
 	public void registerForUpdates(boolean yesNo) {
@@ -254,7 +256,7 @@ public class TerramapClientContext {
 		return this.isRegisteredForUpdates;
 	}
 
-	public String getRemoteIdentifier() {
+	public String getContextIdentifier() {
 		return this.serverIdentifier;
 	}
 
@@ -264,7 +266,7 @@ public class TerramapClientContext {
 
 	private void setRemoteIdentifier(String identifier) {
 		this.serverIdentifier = identifier;
-		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getRemoteIdentifier());
+		String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getContextIdentifier());
 		if(sttgStr.length() > 0) {
 			this.genSettings = EarthGeneratorSettings.parse(sttgStr);
 			TerramapMod.logger.info("Got generator settings from client preferences file");
@@ -450,6 +452,25 @@ public class TerramapClientContext {
 	public void setupMaps() {
 		for(IRasterTiledMap map: this.getMapStyles().values()) {
 			map.setup();
+		}
+	}
+	
+	public boolean shouldShowWelcomeToast() {
+		if(!this.allowsMap(MapContext.FULLSCREEN)) return false;
+		if(!(Minecraft.getMinecraft().currentScreen == null)) return false;
+		return !TerramapClientPreferences.getServerHasShownWelcome(this.getContextIdentifier());
+	}
+	
+	public void setHasShownWelcomeMessage(boolean yesNo) {
+		TerramapClientPreferences.setServerHasShownWelcome(this.getContextIdentifier(), yesNo);
+		TerramapClientPreferences.save();
+	}
+	
+	public void tryShowWelcomeToast() {
+		if(this.shouldShowWelcomeToast()) {
+			//TODO Localize toast
+			Minecraft.getMinecraft().getToastGui().add(new TextureToast("Terramap", "Press M to open the map", new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
+			this.setHasShownWelcomeMessage(true);
 		}
 	}
 

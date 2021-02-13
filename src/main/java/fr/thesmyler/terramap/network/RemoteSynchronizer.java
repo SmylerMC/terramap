@@ -127,24 +127,25 @@ public abstract class RemoteSynchronizer {
 						"Enable deco radar: " + pkt.enableDecoRadar + "\t" +
 						"Warp support: " + pkt.hasWarpSupport + "\t"
 				);
-		TerramapClientContext srv = TerramapClientContext.getContext();
+		TerramapClientContext ctx = TerramapClientContext.getContext();
 
 		try {
-			srv.setServerVersion(new TerramapVersion(pkt.serverVersion));
-			srv.setGeneratorSettings(pkt.worldSettings);
+			ctx.setServerVersion(new TerramapVersion(pkt.serverVersion));
+			ctx.setGeneratorSettings(pkt.worldSettings);
 			if(pkt.worldUUID.getLeastSignificantBits() != 0 || pkt.worldUUID.getMostSignificantBits() != 0) {
-				srv.setWorldUUID(pkt.worldUUID);
+				ctx.setWorldUUID(pkt.worldUUID);
 			}
-			srv.setPlayersSynchronizedByServer(pkt.syncPlayers);
-			srv.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
-			srv.setAllowsPlayerRadar(pkt.enablePlayerRadar);
-			srv.setAllowsAnimalRadar(pkt.enableAnimalRadar);
-			srv.setAllowsMobRadar(pkt.enableMobRadar);
-			srv.setAllowsDecoRadar(pkt.enableDecoRadar);
-			srv.setServerWarpSupport(pkt.hasWarpSupport);
+			ctx.setPlayersSynchronizedByServer(pkt.syncPlayers);
+			ctx.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
+			ctx.setAllowsPlayerRadar(pkt.enablePlayerRadar);
+			ctx.setAllowsAnimalRadar(pkt.enableAnimalRadar);
+			ctx.setAllowsMobRadar(pkt.enableMobRadar);
+			ctx.setAllowsDecoRadar(pkt.enableDecoRadar);
+			ctx.setServerWarpSupport(pkt.hasWarpSupport);
 		} catch (InvalidVersionString e) {
 			TerramapMod.logger.warn("Failed to parse server version! will act as if the server did not have Terramap installed");
 		}
+		ctx.tryShowWelcomeToast();
 	}
 
 	public static class RegisteredForUpdatePlayer {

@@ -32,9 +32,7 @@ public class TerramapClientPreferences {
 
 	public static String getServerGenSettings(String serverId) {
 		try {
-			if(preferences == null || preferences.servers == null) {
-				preferences = new ClientPreferences();
-			}
+			initPreferences();
 			return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).genSettings: "";
 		} catch(Exception e) {
 			TerramapMod.logger.warn("Failed to get server gen settings");
@@ -45,9 +43,7 @@ public class TerramapClientPreferences {
 
 	public static TerramapScreenSavedState getServerSavedScreen(String serverId) {
 		try {
-			if(preferences == null || preferences.servers == null) {
-				preferences = new ClientPreferences();
-			}
+			initPreferences();
 			return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).mapState: null;
 		} catch(Exception e) {
 			TerramapMod.logger.warn("Failed to get saved screen state");
@@ -55,12 +51,21 @@ public class TerramapClientPreferences {
 			return null;
 		}
 	}
+	
+	public static boolean getServerHasShownWelcome(String serverId) {
+		try {
+			initPreferences();
+			return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).hasShownWelcome: false;
+		} catch(Exception e) {
+			TerramapMod.logger.warn("Failed to query whether or not welcome was shown for " + serverId);
+			TerramapMod.logger.catching(e);
+			return false;
+		}
+	}
 
 	public static void setServerSavedScreen(String serverId, TerramapScreenSavedState mapState) {
 		try {
-			if(preferences == null || preferences.servers == null) {
-				preferences = new ClientPreferences();
-			}
+			initPreferences();
 			ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
 			serv.mapState = mapState;
 			preferences.servers.put(serverId, serv);
@@ -72,15 +77,31 @@ public class TerramapClientPreferences {
 
 	public static void setServerGenSettings(String serverId, String genSettings) {
 		try {
-			if(preferences == null || preferences.servers == null) {
-				preferences = new ClientPreferences();
-			}
+			initPreferences();
 			ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
 			serv.genSettings = genSettings;
 			if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
 		} catch(Exception e) {
 			TerramapMod.logger.warn("Failed to set gen settings");
 			TerramapMod.logger.catching(e);
+		}
+	}
+	
+	public static void setServerHasShownWelcome(String serverId, boolean yesNo) {
+		try {
+			initPreferences();
+			ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
+			serv.hasShownWelcome = yesNo;
+			if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
+		} catch(Exception e) {
+			TerramapMod.logger.warn("Failed to set gen settings");
+			TerramapMod.logger.catching(e);
+		}
+	}
+	
+	private static void initPreferences() {
+		if(preferences == null || preferences.servers == null) {
+			preferences = new ClientPreferences();
 		}
 	}
 
@@ -129,6 +150,7 @@ public class TerramapClientPreferences {
 	private static class ServerPreferences {
 		public String genSettings = "";
 		public TerramapScreenSavedState mapState = new TerramapScreenSavedState();
+		public boolean hasShownWelcome =  false;
 	}
 
 }
