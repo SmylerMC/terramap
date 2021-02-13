@@ -16,6 +16,7 @@ import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
+import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
@@ -494,7 +495,9 @@ public class TerramapClientContext {
 	}
 
 	public static void resetContext() {
-		TerramapMod.logger.info("Reseting server information");
+		TerramapMod.logger.info("Reseting client context");
+		TiledMapProvider.SERVER.setLastError(null);
+		TiledMapProvider.PROXY.setLastError(null);
 		TerramapClientContext.instance = new TerramapClientContext();
 	}
 

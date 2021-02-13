@@ -11,8 +11,10 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
@@ -38,11 +40,13 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
@@ -441,16 +445,29 @@ public class TerramapScreen extends Screen {
 
 	private class StyleScreen extends Screen {
 
-		int mapsSize = 175;
+		int mapWidth = 175;
+		int mapHeight = 100;
 
 		StyleScreen() {
 			super(0, 0, 0, 0, 0, BackgroundType.NONE);
-			MapWidget lw = null;
+			IWidget lw = null;
+			for(TiledMapProvider provider: TiledMapProvider.values()) {
+				Exception e = provider.getLastError();
+				if(e == null) continue;
+				int x = 0;
+				int y = 0;
+				if(lw != null) {
+					y = lw.getY() + lw.getHeight() + 5;
+				}
+				FailedMapLoadingNotice w = new FailedMapLoadingNotice(x, y, 50, mapWidth, mapHeight, provider, e);
+				this.addWidget(w);
+				lw = w;
+			}
 			ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapScreen.this.backgrounds.values());
 			Collections.sort(maps, (m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
 			for(IRasterTiledMap map: maps) {
 				MapWidget w = new MapPreview(50, map);
-				w.setWidth(mapsSize).setHeight(mapsSize);
+				w.setWidth(mapWidth).setHeight(mapHeight);
 				if(lw == null) {
 					w.setX(0).setY(0);
 				} else {
@@ -460,7 +477,7 @@ public class TerramapScreen extends Screen {
 				lw = w;
 			}
 			this.height = lw.getY() + lw.getHeight() + 10;
-			this.width = this.mapsSize;
+			this.width = this.mapWidth;
 		}
 
 		@Override
@@ -494,6 +511,36 @@ public class TerramapScreen extends Screen {
 			return 5 - (int) Math.round((this.height - TerramapScreen.this.getHeight()) * TerramapScreen.this.styleScrollbar.getProgress());
 		}
 
+	}
+	
+	private class FailedMapLoadingNotice extends AbstractWidget {
+
+		private TiledMapProvider provider;
+		private Exception exception;
+		
+		public FailedMapLoadingNotice(int x, int y, int z, int width, int height, TiledMapProvider provider, Exception e) {
+			super(x, y, z, width, height);
+			this.provider = provider;
+			this.exception = e;
+		}
+
+		@Override
+		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+			boolean wasScissor = RenderUtil.isScissorEnabled();
+			RenderUtil.setScissorState(true);
+			RenderUtil.pushScissorPos();
+			RenderUtil.scissor(x, y, this.width, this.height);
+			int yellow = 0xFFFFCC00;
+			int gray = 0xFF808080;
+			Gui.drawRect(x, y, x + this.width, y + this.height, yellow);
+			Gui.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, gray);
+			parent.drawCenteredString(parent.getFont().font, "Some map styles failed to load.", x + this.width / 2, y + 8, yellow); //TODO Localize
+			parent.getFont().drawString("Provider: " + this.provider, x + 8, y + 16 + parent.getFont().FONT_HEIGHT, 0xFFFFFFFF); //TODO Localize
+			parent.getFont().drawSplitString("Exception: " + this.exception, x + 8, y + 24 + parent.getFont().FONT_HEIGHT*2, this.width - 16, 0xFFFFFFFF); //TODO Localize
+			RenderUtil.popScissorPos();
+			RenderUtil.setScissorState(wasScissor);
+		}
+		
 	}
 
 	@Override

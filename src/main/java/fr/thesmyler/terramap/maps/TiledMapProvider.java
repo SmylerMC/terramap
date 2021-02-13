@@ -8,5 +8,15 @@ public enum TiledMapProvider {
 	SERVER,   // From the Minecraft server we are currently playing on
 	PROXY,    // From the Sledgehammer proxy
 	CUSTOM;   // From the user defined config
+	
+	private Exception error = null;
+	
+	public synchronized void setLastError(Exception e) {
+		this.error = e;
+	}
+	
+	public synchronized Exception getLastError() {
+		return this.error;
+	}
 
 }

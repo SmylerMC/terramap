@@ -64,6 +64,7 @@ public class MapStylesLibrary {
 	 * Loads map styles from the mod's jar.
 	 */
 	public static void loadBuiltIns() {
+		TiledMapProvider.BUILT_IN.setLastError(null);
 		String path = BUILT_IN_MAPS;
 		try {
 			// https://github.com/MinecraftForge/MinecraftForge/issues/5713
@@ -81,14 +82,22 @@ public class MapStylesLibrary {
 			TerramapMod.logger.fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
 			TerramapMod.logger.fatal("Path: " + path);
 			TerramapMod.logger.catching(e);
+			TiledMapProvider.BUILT_IN.setLastError(e);
 		}
 
 	}
 	
 	public static void loadInternals() {
-		if(TerramapConfig.enableDebugMaps) {
-			TerrainPreviewMap terrain = new TerrainPreviewMap(); 
-			baseMaps.put(terrain.getId(), terrain);
+		TiledMapProvider.INTERNAL.setLastError(null);
+		try {
+			if(TerramapConfig.enableDebugMaps) {
+				TerrainPreviewMap terrain = new TerrainPreviewMap(); 
+				baseMaps.put(terrain.getId(), terrain);
+			}
+		} catch(Exception e) {
+			TerramapMod.logger.error("Failed to load internal map styles");
+			TerramapMod.logger.catching(e);
+			TiledMapProvider.INTERNAL.setLastError(e);
 		}
 	}
 	
@@ -104,6 +113,7 @@ public class MapStylesLibrary {
 	 * @param hostname - the hostname to lookup
 	 */
 	public static void loadFromOnline(String hostname) {
+		TiledMapProvider.ONLINE.setLastError(null);
 		try {
 			// We can't rely on Terra++ for that because the cache would cause trouble
 			URL url = resolveUpdateURL(hostname);
@@ -123,6 +133,7 @@ public class MapStylesLibrary {
 		} catch (NamingException | IOException e) {
 			TerramapMod.logger.error("Failed to download updated map style file, let's hope the cache has a good version!");
 			TerramapMod.logger.catching(e);
+			TiledMapProvider.ONLINE.setLastError(e);
 		}
 	}
 	
@@ -131,8 +142,10 @@ public class MapStylesLibrary {
 	 * The file to load from needs to be set first with {@link #setConfigMapFile(File)}
 	 */
 	public static void loadFromConfigFile() {
+		TiledMapProvider.CUSTOM.setLastError(null);
 		if(configMapsFile == null) {
 			TerramapMod.logger.error("Map config file was null!");
+			TiledMapProvider.CUSTOM.setLastError(new NullPointerException("Map style config files was null"));
 			return;
 		}
 		if(!configMapsFile.exists()) {
@@ -145,6 +158,8 @@ public class MapStylesLibrary {
 			} catch (IOException e) {
 				TerramapMod.logger.error("Failed to create map style config file!");
 				TerramapMod.logger.catching(e);
+				TiledMapProvider.CUSTOM.setLastError(e);
+
 			}
 		} else {
 			try {
@@ -152,6 +167,7 @@ public class MapStylesLibrary {
 			} catch (Exception e) {
 				TerramapMod.logger.error("Failed to read map style config file!");
 				TerramapMod.logger.catching(e);
+				TiledMapProvider.CUSTOM.setLastError(e);
 			}
 		}
 	}

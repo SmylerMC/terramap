@@ -1,8 +1,11 @@
 package fr.thesmyler.terramap.maps.imp;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -54,6 +57,24 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> {
 			int maxConcurrentDownloads,
 			boolean debug) {
 		Preconditions.checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
+		Preconditions.checkArgument(minZoom >= 0, "Zoom level must be at least 0");
+		Preconditions.checkArgument(maxZoom >= 0, "Zoom level must be at most 25");
+		Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "A valid map id needs to be provided");
+		Preconditions.checkArgument(names != null, "Valid map names needs to be provided");
+		Preconditions.checkArgument(copyright != null, "Valid map coprights needs to be provided");
+		Preconditions.checkArgument(provider != null, "Av alid map provider needs to be provided");
+		Preconditions.checkArgument(version >= 0, "Map version number must be positive");
+		Preconditions.checkArgument(comment != null, "A valid map comment needs to be provided");
+		Preconditions.checkArgument(maxConcurrentDownloads > 0 ,"Max concurent downloads must be at least 1");
+		for(String pattern: urlPatterns) {
+			String url = pattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
+			try {
+				@SuppressWarnings("unused")
+				URL u = new URL(url);
+			} catch (MalformedURLException e) {
+				throw new IllegalArgumentException(url + " is not a valid url pattern");
+			}
+		}
 		this.urlPatterns = urlPatterns;
 		this.maxZoom = maxZoom;
 		this.minZoom = minZoom;

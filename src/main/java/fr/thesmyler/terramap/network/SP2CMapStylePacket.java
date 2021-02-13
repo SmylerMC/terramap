@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 //TODO Test map style sync with various remotes
 public class SP2CMapStylePacket implements IMessage {
-	
+
 	private String id;
 	private long providerVersion;
 	private String[] urlPatterns;
@@ -29,7 +29,7 @@ public class SP2CMapStylePacket implements IMessage {
 	private String comment;
 	private int maxConcurrentConnection;
 	private boolean debug;
-		
+
 	public SP2CMapStylePacket(UrlTiledMap map) {
 		this.id = map.getId();
 		this.providerVersion = map.getProviderVersion();
@@ -44,7 +44,7 @@ public class SP2CMapStylePacket implements IMessage {
 		this.maxConcurrentConnection = map.getMaxConcurrentRequests();
 		this.debug = map.isDebug();
 	}
-	
+
 	public SP2CMapStylePacket() {}
 
 	@Override
@@ -109,7 +109,7 @@ public class SP2CMapStylePacket implements IMessage {
 		TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
 		buf.writeBoolean(this.debug);
 	}
-	
+
 	public UrlTiledMap getTiledMap(TiledMapProvider provider) {
 		return new UrlTiledMap(
 				this.urlPatterns,
@@ -125,43 +125,56 @@ public class SP2CMapStylePacket implements IMessage {
 				this.comment,
 				this.maxConcurrentConnection,
 				this.debug
-			);
+				);
 	}
-	
+
 	public static class SP2CMapStylePacketTerramapHandler implements IMessageHandler<SP2CMapStylePacket, IMessage> {
 
 		public SP2CMapStylePacketTerramapHandler() {}
-		
+
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
-			UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER);
-			TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
-			if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
-				TerramapMod.logger.debug("Ignoring debug map from server: " + map.getId());
-				return null;
+			try {
+				UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER);
+				TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
+				if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
+					TerramapMod.logger.debug("Ignoring debug map from server: " + map.getId());
+					return null;
+				}
+				Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerMapStyle(map));
+
+			} catch(Exception e) {
+				TerramapMod.logger.error("Failed to unpack a map style sent by the server");
+				TerramapMod.logger.catching(e);
+				TiledMapProvider.SERVER.setLastError(e);
 			}
-			Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerMapStyle(map));
 			return null;
 		}
-		
+
 	}
-	
+
 	public static class SP2CMapStylePacketSledgehammerHandler implements IMessageHandler<SP2CMapStylePacket, IMessage> {
 
 		public SP2CMapStylePacketSledgehammerHandler() {}
-		
+
 		@Override
 		public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
-			UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY);
-			TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
-			if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
-				TerramapMod.logger.debug("Ignoring debug map from proxy: " + map.getId());
-				return null;
+			try {
+				UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY);
+				TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
+				if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
+					TerramapMod.logger.debug("Ignoring debug map from proxy: " + map.getId());
+					return null;
+				}
+				Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyMapStyle(map));
+			} catch(Exception e) {
+				TerramapMod.logger.error("Failed to unpack a map style sent by the proxy");
+				TerramapMod.logger.catching(e);
+				TiledMapProvider.PROXY.setLastError(e);
 			}
-			Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyMapStyle(map));
 			return null;
 		}
-		
+
 	}
 
 }
