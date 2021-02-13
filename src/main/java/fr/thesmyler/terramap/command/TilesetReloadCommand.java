@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
+import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.permissions.Permission;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import net.minecraft.command.CommandBase;
@@ -43,14 +43,12 @@ public class TilesetReloadCommand extends CommandBase {
 			ctx.commandException("terramap.commands.reloadmapstyles.forbidden");
 		}
 		ITextComponent msg = ctx.getComponent("terramap.commands.reloadmapstyles.done");
-		try {
-			MapStylesLibrary.loadFromConfigFile();
+		MapStylesLibrary.loadFromConfigFile();
+		if(TiledMapProvider.CUSTOM.getLastError() == null) {
 			msg.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false));
-		} catch(Exception e) {
+		} else {
 			msg = ctx.getComponent("terramap.commands.reloadmapstyles.error");
 			msg.setStyle(new Style().setColor(TextFormatting.RED).setBold(false));
-			TerramapMod.logger.error("Error when reloading map styles!");
-			TerramapMod.logger.catching(e);
 		}
 		msg = CommandUtils.addHeader(msg);
 		sender.sendMessage(msg);
