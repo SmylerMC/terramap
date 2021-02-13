@@ -4,6 +4,7 @@ import java.io.File;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.command.OpenMapCommand;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
@@ -18,6 +19,7 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -50,6 +52,7 @@ public class TerramapClientProxy extends TerramapProxy {
 		UrlRasterTile.registerErrorTexture();
 		MarkerControllerManager.registerBuiltInControllers();
 		MapStylesLibrary.reload();
+		ClientCommandHandler.instance.registerCommand(new OpenMapCommand());
 	}
 
 	@Override

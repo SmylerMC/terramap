@@ -58,7 +58,7 @@ public abstract class KeyBindings {
 
 	public static void checkBindings() {
 		if(OPEN_MAP.isPressed() && TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
-			Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapClientContext.getContext().getMapStyles()));
+			TerramapClientContext.getContext().openMap();
 		}
 		if(COPY_GEO_COORDS.isPressed()) {
 			EntityPlayerSP player = Minecraft.getMinecraft().player;
@@ -93,7 +93,7 @@ public abstract class KeyBindings {
 		if(ZOOM_OUT.isPressed()) HudScreenHandler.zoomOutMinimap();
 
 		if(TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleMinimap();
-		
+
 		if(OPEN_HUD_CONFIG.isPressed()) Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen());
 	}
 

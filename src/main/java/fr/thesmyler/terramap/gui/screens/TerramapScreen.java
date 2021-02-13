@@ -83,15 +83,18 @@ public class TerramapScreen extends Screen {
 	
 	private Map<String, IRasterTiledMap> backgrounds;
 
-	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
+	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps, TerramapScreenSavedState state) {
 		this.parent = parent;
 		this.backgrounds = maps;
 		Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
 		IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
-		TerramapScreenSavedState state = TerramapClientContext.getContext().getSavedScreenState();
 		if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
 		TerramapClientContext.getContext().registerForUpdates(true);
+	}
+	
+	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
+		this(parent, maps, null);
 	}
 
 	@Override

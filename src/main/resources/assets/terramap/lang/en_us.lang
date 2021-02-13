@@ -1,3 +1,4 @@
+## Config
 terramap.config.minimap.enable=Minimap: enable
 terramap.config.minimap.style=Minimap: style
 terramap.config.minimap.pos_x=Minimap: X position (%%)
@@ -31,6 +32,8 @@ terramap.config.reset.tooltip=Reset all values
 terramap.config.save=Save
 terramap.config.save.tooltip=Save and close
 terramap.config.options.tooltip=More options
+
+## Hud config
 terramap.hudconfig.minimap=Minimap: 
 terramap.hudconfig.minimap.tooltip=Change minimap visibility 
 terramap.hudconfig.compass=Compass: 
@@ -48,6 +51,7 @@ terramap.hudconfig.zoom.tooltip=Change minimap zoom level
 terramap.hudconfig.mapstyle.tooltip=Change minimap style
 terramap.hudconfig.explain=Move and resize the minimap and the compass using the preview windows, and click the menu button for more options.
 
+## Keys
 terramap.binding.category=Terramap
 terramap.binding.open_map=Open map
 terramap.binding.toggle_debug=Toggle Terramap debug mode
@@ -58,6 +62,7 @@ terramap.binding.zoom_in=Zoom in
 terramap.binding.zoom_out=Zoom out
 terramap.binding.toggle_minimap=Toggle minimap visibility
 
+## Map
 terramap.mapwidget.rclickmenu.teleport=Teleport here
 terramap.mapwidget.rclickmenu.center=Center map here
 terramap.mapwidget.rclickmenu.copy=Copy
@@ -78,16 +83,18 @@ terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Set projection
 terramap.mapwidget.error.header=Terramap is experiencing problems loading the map:
-
 terramap.mapwidget.shortcuts.tp=Click to teleport
 
-terramap.terramapscreen.projection_warning.unused_comment=Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
+#### Full-screen map ####
+
+## Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
 terramap.terramapscreen.projection_warning.line1=Terramap is not installed on the server!!
 terramap.terramapscreen.projection_warning.line2=There is no way to identify the projection used.
 terramap.terramapscreen.projection_warning.line3=Elements from the Minecraft world will not be displayed on the map.
 terramap.terramapscreen.projection_warning.line4=You can ask the server administrator to install Terramap,
 terramap.terramapscreen.projection_warning.line5=or you can manually set the projection used in the right click menu.
 
+## Buttons
 terramap.terramapscreen.buttons.close.tooltip=Close map
 terramap.terramapscreen.buttons.zoomin.tooltip=Zoom in
 terramap.terramapscreen.buttons.zoomout.tooltip=Zoom out
@@ -96,6 +103,7 @@ terramap.terramapscreen.buttons.style.tooltip=Change map style
 terramap.terramapscreen.buttons.info.tooltip=Collapse information and search pannel
 terramap.terramapscreen.search.wip=Work in progress
 
+## Info panel
 terramap.terramapscreen.information.mouse_geo=Mouse position: %1$s° %2$s°
 terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
 terramap.terramapscreen.information.trackedoutsidemap=%1$s is outside the projection
@@ -106,17 +114,20 @@ terramap.terramapscreen.information.noplayer=Player position: -° -°
 terramap.terramapscreen.information.distortion=Distortion: %1$s blocks/m ; ±%2$s°
 terramap.terramapscreen.information.outdatedterra121=Please update Terra121
 
+## Marker controllers
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=Toggle main player visibility
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=Toggle other players visibility
 terramap.terramapscreen.markercontrollers.buttons.animals=Toggle animals visibility
 terramap.terramapscreen.markercontrollers.buttons.mobs=Toggle mobs visibility
 
+#### In game actions ####
 terramap.ingameactions.copy.noplayer=Could not copy coordinates: no player
 terramap.ingameactions.copy.noproj=Could not copy coordinates: no projection
 terramap.ingameactions.copy.outproj=Could not copy coordinates: you are outside the projection
 terramap.ingameactions.copy.mc=Copied Minecraft coordinates to clipboard
 terramap.ingameactions.copy.geo=Copied geographic coordinates to clipboard
 
+#### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [player name (optional)]
 terramap.commands.terrashow.too_few_parameters=Too few parameters: /terrashow <show|hide|status> [player name (optional)]
 terramap.commands.terrashow.too_many_parameters=Too many parameters: /terrashow <show|hide|status> [player name (optional)]
@@ -129,12 +140,15 @@ terramap.commands.terrashow.getvisible=%1$s is currently visible on the map
 terramap.commands.terrashow.setvisible=%1$s is now visible on the map
 terramap.commands.terrashow.gethidden=%1$s is currently hidden on the map
 terramap.commands.terrashow.sethidden=%1$s is now hidden on the map
-
 terramap.commands.reloadmapstyles.usage=/reloadmapstyles
 terramap.commands.reloadmapstyles.forbidden=You do not have the permission to use that command!
 terramap.commands.reloadmapstyles.done=Done
 terramap.commands.reloadmapstyles.error=Error when reloading mapstyles
+terramap.commands.opentmap.numberargs=Invalid number of arguments, zoom, latitude and longitude are required.
+terramap.commands.opentmap.couldnotopen=Could not open Terramap in the current context.
+terramap.commands.opentmap.usage=/opentmap <zoom> <latitude> <longitude>
 
+#### In game actions ####
 terramap.terraerror.warn.1=Terramap requires Terra++, and Terra121 was detected.
 terramap.terraerror.warn.2=Please install Terra++.
 terramap.terraerror.closegame=Close the game

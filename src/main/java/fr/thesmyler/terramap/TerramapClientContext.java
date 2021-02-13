@@ -12,6 +12,7 @@ import fr.thesmyler.smylibgui.toast.TextureToast;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
+import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
@@ -472,6 +473,19 @@ public class TerramapClientContext {
 			Minecraft.getMinecraft().getToastGui().add(new TextureToast("Terramap", "Press M to open the map", new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
 			this.setHasShownWelcomeMessage(true);
 		}
+	}
+	
+	public void openMap() {
+		Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapClientContext.getContext().getMapStyles(), TerramapClientContext.getContext().getSavedScreenState()));
+	}
+	
+	public void openMapAt(double zoom, double lon, double lat) {
+		TerramapScreenSavedState state = this.getSavedScreenState();
+		state.centerLongitude = lon;
+		state.centerLatitude = lat;
+		state.zoomLevel = zoom;
+		state.trackedMarker = null;
+		Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapClientContext.getContext().getMapStyles(), state));
 	}
 
 	public static TerramapClientContext getContext() {
