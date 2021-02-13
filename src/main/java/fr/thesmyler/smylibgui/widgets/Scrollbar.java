@@ -12,10 +12,10 @@ import net.minecraft.util.math.MathHelper;
 public class Scrollbar extends Screen {
 	
 	private static final int BAR_BG_COLOR = 0xF0111111;
-	private static final int BAR_BORDER_COLOR = 0xFF606060;
-	private static final int DRAG_BG_COLOR = 0xFFE0E0FF;
-	private static final int DRAG_BG_COLOR_HOVER = 0xFFA0A0A0;
-	private static final int DRAG_BORDER_COLOR = 0xFFE0E0E0;
+	private static final int BAR_BORDER_COLOR = 0xFF000000;
+	private static final int DRAG_BG_COLOR = 0xFF646464;
+	private static final int DRAG_BG_COLOR_HOVER = 0xFF7E88BF;
+	private static final int DRAG_BORDER_COLOR = 0xFFAAAAAA;
 	
 	protected TexturedButtonWidget upButton = new TexturedButtonWidget(1, IncludedTexturedButtons.UP);
 	protected TexturedButtonWidget downButton = new TexturedButtonWidget(1, IncludedTexturedButtons.DOWN);
@@ -151,7 +151,7 @@ public class Scrollbar extends Screen {
 		
 		@Override
 		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			int bgcolor = hovered || focused ? DRAG_BG_COLOR: DRAG_BG_COLOR_HOVER;
+			int bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
 			int height = this.getHeight();
 			GuiScreen.drawRect(x, y, x + this.getWidth(), y + height, bgcolor);
 			

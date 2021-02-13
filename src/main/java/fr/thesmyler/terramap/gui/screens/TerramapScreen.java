@@ -593,7 +593,7 @@ public class TerramapScreen extends Screen {
 		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
 			super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 			int color = 0xFF808080;
-			int textColor = hovered? 0xFFC0C0FF: 0xFFFFFFFF;
+			int textColor = hovered? 0xFF90A0FF: 0xFFFFFFFF;
 			String text = this.background.getMap().getLocalizedName(SmyLibGui.getLanguage());
 			GuiScreen.drawRect(x, y, x + this.width, y + 4, color);
 			GuiScreen.drawRect(x, y + this.height - parent.getFont().FONT_HEIGHT - 4, x + this.width, y + this.height, color);
