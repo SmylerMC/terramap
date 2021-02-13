@@ -69,7 +69,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					tile = map.getTile((int)this.zoom, Math.floorMod(tileX, maxTileXY), tileY);
 				} catch(InvalidTilePositionException e) { continue ;}
 
-				//This is the tile we would like to render, but it is not possible if it hasn't been cached yet
+				// This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				IRasterTile bestTile = tile;
 				neededTiles.add(bestTile);
 				boolean lowerResRender = false;
@@ -80,18 +80,28 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					if(this.zoom <= this.map.getMaxZoom()) {
 						try {
 							bestTile.getTexture(); // Will start loading the texture from cache / network
-						} catch (Throwable e) {
+						} catch(Throwable e) {
 							if(parentMap != null) {
 								parentMap.reportError(this, e.toString());
 							}
 							perfectDraw = false;
-						} 
+						}
 					} else {
 						unlockedZoomRender = true;
 					}
 
 					while(tile.getPosition().getZoom() > 0 && !tile.isTextureAvailable()) {
 						tile = this.map.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
+						if(tile.getPosition().getZoom() == this.map.getMaxZoom()) {
+							try {
+								tile.getTexture();
+								neededTiles.add(tile);
+							} catch (Throwable e) {
+								if(parentMap != null) {
+									parentMap.reportError(this, e.toString());
+								}
+							}
+						}
 					}
 				}
 
