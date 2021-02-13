@@ -126,54 +126,74 @@ public class MapWidget extends Screen {
 			GuiScreen.setClipboardString("" + this.mouseLatitude + " " + this.mouseLongitude);
 		});
 		this.copyBlockMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
-			String strToCopy = "Outside projection";
 			try {
+				String strToCopy = "Outside projection";
 				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.round(coords[0]);
 				String dispY = "" + Math.round(coords[1]);
 				strToCopy = dispX + " " + dispY;
-			} catch(OutOfProjectionBoundsException e) {}
-			GuiScreen.setClipboardString(strToCopy);
+				GuiScreen.setClipboardString(strToCopy);
+			} catch(OutOfProjectionBoundsException e) {
+				String s = System.currentTimeMillis() + ""; //Just a random string
+				this.reportError(s, "Failed to copy block coordinates outside the projection"); //TODO Localize
+				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+			}
 		});	
 		this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
-			String strToCopy = "Outside projection";
 			try {
+				String strToCopy = "Outside projection";
 				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
 				strToCopy = dispX + " " + dispY;
-			} catch(OutOfProjectionBoundsException e) {}
-			GuiScreen.setClipboardString(strToCopy);
+				GuiScreen.setClipboardString(strToCopy);
+			} catch(OutOfProjectionBoundsException e) {
+				String s = System.currentTimeMillis() + ""; //Just a random string
+				this.reportError(s, "Failed to copy chunk coordinates outside the projection"); //TODO Localize
+				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+			}
 		});
 		this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
-			String strToCopy = "Outside projection";
 			try {
+				String strToCopy = "Outside projection";
 				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
 				strToCopy = "r." + dispX + "." + dispY + ".mca";
-			} catch(OutOfProjectionBoundsException e) {}
-			GuiScreen.setClipboardString(strToCopy);
+				GuiScreen.setClipboardString(strToCopy);
+			} catch(OutOfProjectionBoundsException e) {
+				String s = System.currentTimeMillis() + ""; //Just a random string
+				this.reportError(s, "Failed to copy vanilla region coordinates outside the projection");  //TODO Localize
+				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+			}
 		});
 		this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
-			String strToCopy = "Outside projection";
 			try {
+				String strToCopy = "Outside projection";
 				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
 				strToCopy = dispX + ".0." + dispY + ".3dr";
-			} catch(OutOfProjectionBoundsException e) {}
-			GuiScreen.setClipboardString(strToCopy);
+				GuiScreen.setClipboardString(strToCopy);
+			} catch(OutOfProjectionBoundsException e) {
+				String s = System.currentTimeMillis() + ""; //Just a random string
+				this.reportError(s, "Failed to copy 3d region coordinates outside the projection");  //TODO Localize
+				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+			}
 		});
 		this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
-			String strToCopy = "Outside projection";
 			try {
+				String strToCopy = "Outside projection";
 				double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
 				String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
 				String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
 				strToCopy = dispX + "." + dispY + ".2dr";
-			} catch(OutOfProjectionBoundsException e) {}
-			GuiScreen.setClipboardString(strToCopy);
+				GuiScreen.setClipboardString(strToCopy);
+			} catch(OutOfProjectionBoundsException e) {
+				String s = System.currentTimeMillis() + ""; //Just a random string
+				this.reportError(s, "Failed to copy 2d region coordinates outside the projection");  //TODO Localize
+				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+			}
 		});
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy"), copySubMenu);
 		this.rightClickMenu.addSeparator();
@@ -532,8 +552,9 @@ public class MapWidget extends Screen {
 				cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
 				this.sendChatMessage(cmd, false);
 			} catch (OutOfProjectionBoundsException e) {
-				//TODO Do not fail silently: show a message on the screen
-				TerramapMod.logger.error("Tried to teleport outside of the projection");
+				String s = System.currentTimeMillis() + ""; //Just a random string
+				this.reportError(s, "Could not teleport outside the projection");  //TODO Localize
+				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		} else {
 			TerramapMod.logger.error("Tried to teleport from the map but the projection was null!");

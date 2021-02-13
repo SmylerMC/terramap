@@ -82,7 +82,7 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Set projection
-terramap.mapwidget.error.header=Terramap is experiencing problems loading the map:
+terramap.mapwidget.error.header=Error:
 terramap.mapwidget.shortcuts.tp=Click to teleport
 
 #### Full-screen map ####
