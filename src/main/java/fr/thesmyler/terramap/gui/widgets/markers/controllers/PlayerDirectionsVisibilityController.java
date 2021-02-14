@@ -2,6 +2,8 @@ package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 
+
+//FIXME only works with the main player
 public class PlayerDirectionsVisibilityController implements FeatureVisibilityController {
 	
 	public static final String ID = "player_directions";

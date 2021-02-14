@@ -294,6 +294,7 @@ public class HudConfigScreen extends Screen {
 		
 	}
 	
+	//TODO Sort those
 	private class MapStyleSliderEntry {
 		private IRasterTiledMap map;
 		private MapStyleSliderEntry(IRasterTiledMap map) {

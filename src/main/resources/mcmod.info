@@ -11,6 +11,6 @@
   "credits": "The Terra121 and Terra++ teams, without whom Terramap would be irrelevant. Copyrights notices and links are displayed on the fullscreen map. The now many people helping with the translation: Agrro, EnderBenjy, hugofnm, qsefthuopq and Serdaise. Drope for the logo. Xesau, for adapting the BTE website so Terramap can interact with it. Map credits: OpenStreetMap contributors, Stamen, Mapbox.",
   "logoFile": "assets/terramap/logo/1000.png",
   "screenshots": [],
-  "dependencies": ["terra121"]
+  "dependencies": ["terraplusplus"]
 }
 ]

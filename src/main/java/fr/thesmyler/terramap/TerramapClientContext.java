@@ -477,7 +477,9 @@ public class TerramapClientContext {
 	
 	public void tryShowWelcomeToast() {
 		if(this.shouldShowWelcomeToast()) {
+			//FIXME often shows up twice
 			//TODO Localize toast
+			//TODO replace M with the proper letter
 			Minecraft.getMinecraft().getToastGui().add(new TextureToast("Terramap", "Press M to open the map", new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
 			this.setHasShownWelcomeMessage(true);
 		}
