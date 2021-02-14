@@ -14,6 +14,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
+import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
@@ -34,6 +35,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -478,9 +480,8 @@ public class TerramapClientContext {
 	public void tryShowWelcomeToast() {
 		if(this.shouldShowWelcomeToast()) {
 			//FIXME often shows up twice
-			//TODO Localize toast
-			//TODO replace M with the proper letter
-			Minecraft.getMinecraft().getToastGui().add(new TextureToast("Terramap", "Press M to open the map", new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
+			String key = KeyBindings.OPEN_MAP.getKeyDescription();
+			Minecraft.getMinecraft().getToastGui().add(new TextureToast(I18n.format("terramap.toasts.welcome.title"), I18n.format("terramap.toasts.welcome.text", key), new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
 			this.setHasShownWelcomeMessage(true);
 		}
 	}

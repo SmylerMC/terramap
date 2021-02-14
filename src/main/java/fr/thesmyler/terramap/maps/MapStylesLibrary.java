@@ -27,7 +27,6 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 
-//TODO Make this async and thread safe
 public class MapStylesLibrary {
 
 	private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";

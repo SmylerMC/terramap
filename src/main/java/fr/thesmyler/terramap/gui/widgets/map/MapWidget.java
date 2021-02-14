@@ -135,7 +135,7 @@ public class MapWidget extends Screen {
 				GuiScreen.setClipboardString(strToCopy);
 			} catch(OutOfProjectionBoundsException e) {
 				String s = System.currentTimeMillis() + ""; //Just a random string
-				this.reportError(s, "Failed to copy block coordinates outside the projection"); //TODO Localize
+				this.reportError(s, I18n.format("terramap.mapwidget.error.copyblock"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		});	
@@ -149,7 +149,7 @@ public class MapWidget extends Screen {
 				GuiScreen.setClipboardString(strToCopy);
 			} catch(OutOfProjectionBoundsException e) {
 				String s = System.currentTimeMillis() + ""; //Just a random string
-				this.reportError(s, "Failed to copy chunk coordinates outside the projection"); //TODO Localize
+				this.reportError(s, I18n.format("terramap.mapwidget.error.copychunk"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		});
@@ -163,7 +163,7 @@ public class MapWidget extends Screen {
 				GuiScreen.setClipboardString(strToCopy);
 			} catch(OutOfProjectionBoundsException e) {
 				String s = System.currentTimeMillis() + ""; //Just a random string
-				this.reportError(s, "Failed to copy vanilla region coordinates outside the projection");  //TODO Localize
+				this.reportError(s, I18n.format("terramap.mapwidget.error.copyregion"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		});
@@ -177,7 +177,7 @@ public class MapWidget extends Screen {
 				GuiScreen.setClipboardString(strToCopy);
 			} catch(OutOfProjectionBoundsException e) {
 				String s = System.currentTimeMillis() + ""; //Just a random string
-				this.reportError(s, "Failed to copy 3d region coordinates outside the projection");  //TODO Localize
+				this.reportError(s, I18n.format("terramap.mapwidget.error.copy2dregion"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		});
@@ -191,7 +191,7 @@ public class MapWidget extends Screen {
 				GuiScreen.setClipboardString(strToCopy);
 			} catch(OutOfProjectionBoundsException e) {
 				String s = System.currentTimeMillis() + ""; //Just a random string
-				this.reportError(s, "Failed to copy 2d region coordinates outside the projection");  //TODO Localize
+				this.reportError(s, I18n.format("terramap.mapwidget.error.copy2dregion"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		});
@@ -553,7 +553,7 @@ public class MapWidget extends Screen {
 				this.sendChatMessage(cmd, false);
 			} catch (OutOfProjectionBoundsException e) {
 				String s = System.currentTimeMillis() + ""; //Just a random string
-				this.reportError(s, "Could not teleport outside the projection");  //TODO Localize
+				this.reportError(s, I18n.format("terramap.mapwidget.error.tp"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		} else {

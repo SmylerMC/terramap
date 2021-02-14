@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.maps.imp;
 import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -31,7 +32,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
 
 	@Override
 	public String getLocalizedName(String localeKey) {
-		return "Terrain debug"; //TODO Localize
+		return I18n.format("terramap.maps.debug.terrain"); // This is always local
 	}
 
 	@Override

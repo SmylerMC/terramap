@@ -22,7 +22,7 @@ public abstract class KeyBindings {
 	private static final String KEY_CATEGORY = "terramap.binding.category";
 
 	public static final KeyBinding OPEN_MAP = new KeyBinding("terramap.binding.open_map", Keyboard.KEY_M, KeyBindings.KEY_CATEGORY);
-	public static final KeyBinding OPEN_HUD_CONFIG = new KeyBinding("terramap.binding.configure_minimap", Keyboard.KEY_O, KeyBindings.KEY_CATEGORY); //TODO Localize
+	public static final KeyBinding OPEN_HUD_CONFIG = new KeyBinding("terramap.binding.configure_minimap", Keyboard.KEY_O, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding TOGGLE_DEBUG = new KeyBinding("terramap.binding.toggle_debug", Keyboard.KEY_P, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding MAP_SHORTCUT = new KeyBinding("terramap.binding.shortcuts", Keyboard.KEY_LCONTROL, KeyBindings.KEY_CATEGORY);
 	public static final KeyBinding COPY_GEO_COORDS = new KeyBinding("terramap.binding.copy_geo", Keyboard.CHAR_NONE, KeyBindings.KEY_CATEGORY);

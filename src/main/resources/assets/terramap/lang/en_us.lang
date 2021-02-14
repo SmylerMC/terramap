@@ -56,7 +56,7 @@ terramap.configmenu.tilescaling=Map scaling:
 terramap.configmenu.doubleclick=Double click delay: 
 terramap.configmenu.tilecache=Tile cache: 
 terramap.configmenu.lowzoom=Low zoom: 
-terramap.configmenu.configureminimap=Configure Minimap
+terramap.configmenu.configureminimap=Configure HUD
 terramap.configmenu.debugmapstyles=Enable debug map styles: 
 terramap.configmenu.mapstyles.base=Base (%1$s): %2$s
 terramap.configmenu.mapstyles.proxy=Proxy (%1$s): %2$s
@@ -99,6 +99,7 @@ terramap.binding.copy_mc=Copy minecraft coordinates
 terramap.binding.zoom_in=Zoom in
 terramap.binding.zoom_out=Zoom out
 terramap.binding.toggle_minimap=Toggle minimap visibility
+terramap.binding.configure_minimap=Open HUD config
 
 ## Map
 terramap.mapwidget.rclickmenu.teleport=Teleport here
@@ -122,6 +123,13 @@ terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Set projection
 terramap.mapwidget.error.header=Error:
 terramap.mapwidget.shortcuts.tp=Click to teleport
+terramap.mapwidget.error.copyblock=Failed to copy block coordinates outside the projection
+terramap.mapwidget.error.copychunk=Failed to copy chunk coordinates outside the projection
+terramap.mapwidget.error.copyregion=Failed to copy vanilla region coordinates outside the projection
+terramap.mapwidget.error.copy3dregion=Failed to copy 3d region coordinates outside the projection
+terramap.mapwidget.error.copy2dregion=Failed to copy 2d region coordinates outside the projection
+terramap.mapwidget.error.tp=Could not teleport outside the projection
+terramap.maps.debug.terrain=Terrain debug
 
 #### Full-screen map ####
 
@@ -162,12 +170,14 @@ terramap.terramapscreen.markercontrollers.buttons.otherplayer=Toggle other playe
 terramap.terramapscreen.markercontrollers.buttons.animals=Toggle animals visibility
 terramap.terramapscreen.markercontrollers.buttons.mobs=Toggle mobs visibility
 
-#### In game actions ####
+#### In game ####
 terramap.ingameactions.copy.noplayer=Could not copy coordinates: no player
 terramap.ingameactions.copy.noproj=Could not copy coordinates: no projection
 terramap.ingameactions.copy.outproj=Could not copy coordinates: you are outside the projection
 terramap.ingameactions.copy.mc=Copied Minecraft coordinates to clipboard
 terramap.ingameactions.copy.geo=Copied geographic coordinates to clipboard
+terramap.toasts.welcome.title=Terramap
+terramap.toasts.welcome.text=Press %1$s to open the map
 
 #### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [player name (optional)]
