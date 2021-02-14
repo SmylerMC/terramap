@@ -75,13 +75,13 @@ public class TerramapConfig {
 		public boolean showOtherPlayers = true;
 
 		@Config.Name("minimap_tile_scaling")
-		@Config.LangKey("terramap.config.minimap.tile_scaling") //TODO Localize
+		@Config.LangKey("terramap.config.minimap.tile_scaling")
 		@Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. This is for the minimap.")
 		@Config.RangeDouble(min=0.0, max=8.0)
 		public double tileScaling = 0.0;
 
 		@Config.Name("minimap_player_directions")
-		@Config.LangKey("terramap.config.minimap.direction") //TODO Localize
+		@Config.LangKey("terramap.config.minimap.direction")
 		@Config.Comment("Whether or not player directions should show up on the minimap")
 		public boolean playerDirections = true;
 		
@@ -97,26 +97,26 @@ public class TerramapConfig {
 
 	public static final class Compass {
 		@Config.Name("compass_enable")
-		@Config.LangKey("terramap.config.compass.visibility") //TODO Localize
+		@Config.LangKey("terramap.config.compass.visibility")
 		@Config.Comment("Show the compass in the hud")
 		public boolean enable = true;
 
 		@Config.Name("compass_position_x")
-		@Config.LangKey("terramap.config.compass.position.x") //TODO Localize
+		@Config.LangKey("terramap.config.compass.position.x")
 		@Config.Comment("Compass X position, as % of the screen's width")
 		@Config.RangeDouble(min=0, max=100)
 		@Config.SlidingOption
 		public float posX = 1;
 
 		@Config.Name("compass_position_y")
-		@Config.LangKey("terramap.config.compass.position.y") //TODO Localize
+		@Config.LangKey("terramap.config.compass.position.y")
 		@Config.Comment("Compass Y position, as % of the screen's height")
 		@Config.RangeDouble(min=0, max=100)
 		@Config.SlidingOption
 		public float posY = 16;
 
 		@Config.Name("compass_width")
-		@Config.LangKey("terramap.config.compass.width") //TODO Localize
+		@Config.LangKey("terramap.config.compass.width")
 		@Config.Comment("Compass width, as % of the screen's width")
 		@Config.RangeDouble(min=0, max=100)
 		@Config.SlidingOption
@@ -127,12 +127,12 @@ public class TerramapConfig {
 
 		@Config.Name("Minimap")
 		@Config.Comment("Everything related to the minimap")
-		@Config.LangKey("terramap.config.minimap") //TODO Localize
+		@Config.LangKey("terramap.config.minimap")
 		public final Minimap minimap = new Minimap();
 
 		@Config.Name("Compass")
 		@Config.Comment("Everything related to the compass")
-		@Config.LangKey("terramap.config.compass") //TODO Localize
+		@Config.LangKey("terramap.config.compass")
 		public final Compass compass = new Compass();
 
 		@Config.Name("tile_scaling")
@@ -182,7 +182,7 @@ public class TerramapConfig {
 		public int doubleClickDelay = DOUBLE_CLICK_DELAY_DEFAULT;
 
 		@Config.Name("save_ui_state")
-		@Config.LangKey("terramap.config.save_ui_state") //TODO localize
+		@Config.LangKey("terramap.config.save_ui_state")
 		@Config.Comment("Whether or not to save the map ui state when closing the full-screen map. Enable to save F1 mode and debug mode.")
 		public boolean saveUiState = false;
 		
@@ -249,12 +249,12 @@ public class TerramapConfig {
 
 	@Config.Name("client")
 	@Config.Comment("Client side Terramap options")
-	@Config.LangKey("terramap.config.client") //TODO Localize
+	@Config.LangKey("terramap.config.client")
 	public static final Client CLIENT = new Client();
 
 	@Config.Name("server")
 	@Config.Comment("Server side Terramap options")
-	@Config.LangKey("terramap.config.server") //TODO Localize
+	@Config.LangKey("terramap.config.server")
 	public static final Server SERVER = new Server();
 	
 	@Config.Name("tpll_command")
@@ -263,7 +263,7 @@ public class TerramapConfig {
 	public static String tpllcmd = "/tpll {latitude} {longitude}";
 
 	@Config.Name("enable_debug_maps")
-	@Config.LangKey("terramap.config.enable_debug_maps") //TODO Localize
+	@Config.LangKey("terramap.config.enable_debug_maps")
 	@Config.Comment("Set this to true to enable debugging map styles")
 	public static boolean enableDebugMaps = false;
 
