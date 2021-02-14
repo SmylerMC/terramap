@@ -67,9 +67,4 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 		return this.player.getAzimut();
 	}
 
-	@Override
-	protected boolean showDirection(boolean hovered) {
-		return true;
-	}
-
 }
