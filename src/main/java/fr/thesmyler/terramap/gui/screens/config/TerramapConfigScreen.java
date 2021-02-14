@@ -39,11 +39,10 @@ public class TerramapConfigScreen extends Screen {
 	private IntegerSliderWidget doubleClickDelaySlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MIN, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MAX, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_DEFAULT);
 	private IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.TILE_LOAD_MIN, TerramapConfig.CLIENT.TILE_LOAD_MAX, TerramapConfig.CLIENT.TILE_LOAD_DEFAULT);
 	private IntegerSliderWidget lowZoomLevelSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MIN, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MAX, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_DEFAULT);
-	private ToggleButtonWidget debugMapStyles = new ToggleButtonWidget(10, false);
+	private ToggleButtonWidget debugMapStylesToggle = new ToggleButtonWidget(10, false);
 	private TextButtonWidget reloadMapStylesButton;
 	private TextFieldWidget tpCommandField;
 	private TextWidget pageText;
-	//TODO Tooltips
 
 	public TerramapConfigScreen(GuiScreen parent) {
 		super(Screen.BackgroundType.DIRT);
@@ -63,9 +62,9 @@ public class TerramapConfigScreen extends Screen {
 		TextButtonWidget save = new TextButtonWidget(this.width/2 + 30, this.height - 30, 10, 100, I18n.format("terramap.configmenu.save"), this::saveAndClose);
 		TextButtonWidget cancel = new TextButtonWidget(this.width/2 - 130, save.getY(), save.getZ(), save.getWidth(), I18n.format("terramap.configmenu.cancel"), this::close);
 		TextButtonWidget reset = new TextButtonWidget(this.width/2 - 25, save.getY(), save.getZ(), 50, I18n.format("terramap.configmenu.reset"), this::reset);
-		this.addWidget(save);
-		this.addWidget(cancel);
-		this.addWidget(reset);
+		this.addWidget(save.setTooltip(I18n.format("terramap.configmenu.save.tooltip")));
+		this.addWidget(cancel.setTooltip(I18n.format("terramap.configmenu.save.cancel")));
+		this.addWidget(reset.setTooltip(I18n.format("terramap.configmenu.save.reset")));
 		this.addWidget(this.next.setX(save.getX() + save.getWidth() + 5).setY(save.getY() + 2));
 		this.addWidget(this.previous.setX(cancel.getX() - 20).setY(this.next.getY()));
 		Screen mapConfigScreen = new Screen(20, 20, 1, this.width - 40, this.height - 75, BackgroundType.NONE);
@@ -86,22 +85,28 @@ public class TerramapConfigScreen extends Screen {
 		TextWidget unlockZoomText = new TextWidget(I18n.format("terramap.configmenu.unlockzoom"), 10, TextAlignment.RIGHT, this.getFont());
 		unlockZoomText.setAnchorX((mapConfigScreen.width - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth())/2 - 71).setAnchorY(this.height / 4 - 30);
 		mapConfigScreen.addWidget(unlockZoomText);
+		this.unlockZoomToggle.setTooltip(I18n.format("terramap.configmenu.unlockzoom.tooltip"));
 		mapConfigScreen.addWidget(this.unlockZoomToggle.setX(unlockZoomText.getX() + unlockZoomText.getWidth() + 5).setY(unlockZoomText.getAnchorY() - 4));
 		TextWidget saveUIStateText = new TextWidget(I18n.format("terramap.configmenu.saveui"), 10, TextAlignment.RIGHT, this.getFont());
+		this.saveUIStateToggle.setTooltip(I18n.format("terramap.configmenu.saveui.tooltip"));
 		saveUIStateText.setAnchorX((mapConfigScreen.width - saveUIStateText.getWidth() - this.saveUIStateToggle.getWidth())/2 + 64).setAnchorY(unlockZoomText.getAnchorY());
 		mapConfigScreen.addWidget(saveUIStateText);
 		mapConfigScreen.addWidget(this.saveUIStateToggle.setX(saveUIStateText.getX() + saveUIStateText.getWidth() + 5).setY(saveUIStateText.getAnchorY() - 4));
 		mapConfigScreen.addWidget(this.tileScalingSlider.setX(mapConfigScreen.width/2 - 130).setY(this.unlockZoomToggle.getY() + this.unlockZoomToggle.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilescaling")));
 		mapConfigScreen.addWidget(this.doubleClickDelaySlider.setX(mapConfigScreen.width/2 + 5).setY(this.tileScalingSlider.getY()).setWidth(this.tileScalingSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.doubleclick")));
+		this.maxLoadedTilesSlider.setTooltip(I18n.format("terramap.configmenu.tilecache.tooltip"));
 		mapConfigScreen.addWidget(this.maxLoadedTilesSlider.setX(mapConfigScreen.width/2 - 130).setY(this.tileScalingSlider.getY() + this.tileScalingSlider.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilecache")));
+		this.maxLoadedTilesSlider.setTooltip(I18n.format("terramap.configmenu.lowzoom.tooltip"));
 		mapConfigScreen.addWidget(this.lowZoomLevelSlider.setX(mapConfigScreen.width/2 + 5).setY(this.maxLoadedTilesSlider.getY()).setWidth(this.maxLoadedTilesSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.lowzoom")));
 		TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, I18n.format("terramap.configmenu.configureminimap"), () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
+		hudButton.setTooltip(I18n.format("terramap.configmenu.configureminimap.tooltip"));
 		mapConfigScreen.addWidget(hudButton);
 
 		// Map styles
 		TextWidget debugMapStylesText = new TextWidget(I18n.format("terramap.configmenu.debugmapstyles"), 10, true, this.getFont());
-		mapStylesConfigScreen.addWidget(debugMapStylesText.setAnchorX((mapStylesConfigScreen.width - debugMapStyles.getWidth() - debugMapStylesText.getWidth() - 3) / 2).setAnchorY(mapStylesConfigScreen.height / 4 - 30));
-		mapStylesConfigScreen.addWidget(debugMapStyles.setX(debugMapStylesText.getX() + debugMapStylesText.getWidth() + 3).setY(debugMapStylesText.getY() - 4));
+		mapStylesConfigScreen.addWidget(debugMapStylesText.setAnchorX((mapStylesConfigScreen.width - debugMapStylesToggle.getWidth() - debugMapStylesText.getWidth() - 3) / 2).setAnchorY(mapStylesConfigScreen.height / 4 - 30));
+		debugMapStylesToggle.setTooltip(I18n.format("terramap.configmenu.debugmapstyles.tooltip"));
+		mapStylesConfigScreen.addWidget(debugMapStylesToggle.setX(debugMapStylesText.getX() + debugMapStylesText.getWidth() + 3).setY(debugMapStylesText.getY() - 4));
 		Set<String> baseIDs = MapStylesLibrary.getBaseMaps().keySet();
 		Set<String> userIDs = MapStylesLibrary.getUserMaps().keySet();
 		Set<String> serverIDs = TerramapClientContext.getContext().getServerMapStyles().keySet();
@@ -112,7 +117,7 @@ public class TerramapConfigScreen extends Screen {
 		TextWidget serverText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), mapStylesConfigScreen.width / 2, 74, 10, TextAlignment.CENTER, this.getFont());
 		TextWidget userText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.user", userIDs.size(), String.join(", ", userIDs)), mapStylesConfigScreen.width / 2, 91, 10, TextAlignment.CENTER, this.getFont());
 		TextWidget effectiveText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), mapStylesConfigScreen.width / 2, 108, 10, TextAlignment.CENTER, this.getFont());
-		mapStylesConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugMapStyles.getY() + debugMapStyles.getHeight() + 10));
+		mapStylesConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugMapStylesToggle.getY() + debugMapStylesToggle.getHeight() + 10));
 		mapStylesConfigScreen.addWidget(proxyText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(baseText.getY() + baseText.getHeight() + inter));
 		mapStylesConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
 		mapStylesConfigScreen.addWidget(userText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(serverText.getY() + serverText.getHeight() + inter));
@@ -172,7 +177,7 @@ public class TerramapConfigScreen extends Screen {
 		TerramapConfig.CLIENT.maxTileLoad = (int) this.maxLoadedTilesSlider.getValue();
 		TerramapConfig.CLIENT.lowZoomLevel = (int) this.lowZoomLevelSlider.getValue();
 		TerramapConfig.tpllcmd = this.tpCommandField.getText();
-		TerramapConfig.enableDebugMaps = this.debugMapStyles.getState();
+		TerramapConfig.enableDebugMaps = this.debugMapStylesToggle.getState();
 		TerramapConfig.sync();
 		this.close();
 	}
@@ -189,7 +194,7 @@ public class TerramapConfigScreen extends Screen {
 		this.maxLoadedTilesSlider.setValue(TerramapConfig.CLIENT.maxTileLoad);
 		this.lowZoomLevelSlider.setValue(TerramapConfig.CLIENT.lowZoomLevel);
 		this.tpCommandField.setText(TerramapConfig.tpllcmd);
-		this.debugMapStyles.setState(TerramapConfig.enableDebugMaps);
+		this.debugMapStylesToggle.setState(TerramapConfig.enableDebugMaps);
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import net.minecraft.client.resources.I18n;
 
 
 public class PlayerDirectionsVisibilityController implements FeatureVisibilityController {
@@ -24,7 +25,7 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
 					this.other.setShowDirection(b);
 				}
 		);
-		 //TODO Tooltip
+		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.direction"));
 	}
 
 	@Override

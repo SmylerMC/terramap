@@ -88,7 +88,7 @@ public class UrlRasterTile implements IRasterTile {
 			Minecraft mc = Minecraft.getMinecraft();
 			TextureManager textureManager = mc.getTextureManager();
 			ByteBuf buf = this.textureTask.get();
-			if(buf == null) throw new IOException("Cached 404 response"); //TODO Change this
+			if(buf == null) throw new IOException("404 response");
 			try (ByteBufInputStream is = new ByteBufInputStream(buf)) {
 				BufferedImage image = ImageIO.read(is);
 				if(image == null) throw new IOException("Failed to read image! url: " + this.getURL() + " file: " + Disk.cacheFileFor(new URL(this.getURL()).getFile()).toString());
