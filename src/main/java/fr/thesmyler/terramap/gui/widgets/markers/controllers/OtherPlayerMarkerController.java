@@ -15,7 +15,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.resources.I18n;
 
 public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<OtherPlayerMarker> {
-	
+
 	public static final String ID = "other_players";
 
 	public OtherPlayerMarkerController() {
@@ -29,31 +29,26 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
 	@Override
 	public OtherPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-		
+
 		int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
-		
-		if(TerramapClientContext.getContext().getProjection() != null) {
-			
-			Map<UUID, TerramapPlayer> players = TerramapClientContext.getContext().getPlayerMap();
-			
-			for(Marker marker: existingMarkers) {
-				TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
-				players.remove(player.getUUID());
-			}
-			
-			// The main player has its own controller
-			EntityPlayerSP self = Minecraft.getMinecraft().player;
-			if(self != null) players.remove(self.getUniqueID());
-			
-			OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
-			int i = 0;
-			for(TerramapPlayer player: players.values()) {
-				newMarkers[i++] = new OtherPlayerMarker(this, player, factor);
-			}
-			
-			return newMarkers;
+
+		Map<UUID, TerramapPlayer> players = TerramapClientContext.getContext().getPlayerMap();
+		for(Marker marker: existingMarkers) {
+			TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
+			players.remove(player.getUUID());
 		}
-		return new OtherPlayerMarker[] {};
+
+		// The main player has its own controller
+		EntityPlayerSP self = Minecraft.getMinecraft().player;
+		if(self != null) players.remove(self.getUniqueID());
+
+		OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
+		int i = 0;
+		for(TerramapPlayer player: players.values()) {
+			newMarkers[i++] = new OtherPlayerMarker(this, player, factor);
+		}
+
+		return newMarkers;
 	}
 
 	@Override
@@ -66,7 +61,7 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 	public boolean getVisibility() {
 		return super.getVisibility() && TerramapClientContext.getContext().allowsPlayerRadar();
 	}
-	
+
 	@Override
 	public String getSaveName() {
 		return ID;

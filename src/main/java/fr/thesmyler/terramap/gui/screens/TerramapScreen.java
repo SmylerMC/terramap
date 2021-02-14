@@ -211,7 +211,7 @@ public class TerramapScreen extends Screen {
 		this.stylePanel.addWidget(s);
 		this.addWidget(this.stylePanel);
 
-		if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null) {
+		if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
 			String warning = "";
 			for(int i=1; I18n.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
 				if(warning.length() > 0) warning += "\n";

@@ -83,10 +83,12 @@ public class TerramapClientContext {
 
 	public Map<UUID, TerramapPlayer> getPlayerMap() {
 		Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
-		if(this.isInstalledOnServer()) {
+		if(this.arePlayersSynchronized()) {
 			players.putAll(this.remotePlayers);
 		}
-		players.putAll(this.getLocalPlayers());
+		if(this.getProjection() != null) {
+			players.putAll(this.getLocalPlayers());
+		}
 		return players;
 	}
 
@@ -107,19 +109,24 @@ public class TerramapClientContext {
 	}
 
 	public EarthGeneratorSettings getGeneratorSettings() {
+		if(this.genSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
+			return TerramapUtils.BTE_GENERATOR_SETTINGS; // Sledgehammer is installed and this is an Earth world, it should be safe to assume a BTE world
+		}
 		return this.genSettings;
 	}
 
 	public GeographicProjection getProjection() {
-		if(this.projection == null && this.genSettings != null) {
-			this.projection = this.genSettings.projection();
+		EarthGeneratorSettings gen = this.getGeneratorSettings();
+		if(this.projection == null && gen != null) {
+			this.projection = gen.projection();
 		}
 		return this.projection;
 	}
 	
 	public TerrainPreview getTerrainPreview() {
-		if(this.terrainPreview == null && this.genSettings != null) {			
-			this.terrainPreview = new TerrainPreview(this.genSettings.withProjection(TERRAIN_PREVIEW_PROJECTION));
+		EarthGeneratorSettings gen = this.getGeneratorSettings();
+		if(this.terrainPreview == null && gen != null) {			
+			this.terrainPreview = new TerrainPreview(gen.withProjection(TERRAIN_PREVIEW_PROJECTION));
 		}
 		return this.terrainPreview;
 	}
@@ -324,7 +331,7 @@ public class TerramapClientContext {
 	}
 
 	public void setSledgehammerVersion(String version) {
-		this.sledgehammerVersion = version;
+		this.sledgehammerVersion = version;		
 	}
 
 	public boolean hasSledgehammer() {
