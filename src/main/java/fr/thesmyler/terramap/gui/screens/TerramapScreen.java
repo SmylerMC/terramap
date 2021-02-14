@@ -153,7 +153,9 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
-		this.infoPanel.addWidget(new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig));
+		TexturedButtonWidget openConfigButton = new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig);
+		openConfigButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.config.tooltip"));
+		this.infoPanel.addWidget(openConfigButton);
 		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
 		this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.mouseGeoLocationText);
@@ -534,9 +536,9 @@ public class TerramapScreen extends Screen {
 			int gray = 0xFF808080;
 			Gui.drawRect(x, y, x + this.width, y + this.height, yellow);
 			Gui.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, gray);
-			parent.drawCenteredString(parent.getFont().font, "Some map styles failed to load.", x + this.width / 2, y + 8, yellow); //TODO Localize
-			parent.getFont().drawString("Provider: " + this.provider, x + 8, y + 16 + parent.getFont().FONT_HEIGHT, 0xFFFFFFFF); //TODO Localize
-			parent.getFont().drawSplitString("Exception: " + this.exception, x + 8, y + 24 + parent.getFont().FONT_HEIGHT*2, this.width - 16, 0xFFFFFFFF); //TODO Localize
+			parent.drawCenteredString(parent.getFont().font, I18n.format("terramap.terramapscreen.mapstylefailed.title"), x + this.width / 2, y + 8, yellow);
+			parent.getFont().drawString(I18n.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), x + 8, y + 16 + parent.getFont().FONT_HEIGHT, 0xFFFFFFFF);
+			parent.getFont().drawSplitString(I18n.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), x + 8, y + 24 + parent.getFont().FONT_HEIGHT*2, this.width - 16, 0xFFFFFFFF);
 			RenderUtil.popScissorPos();
 			RenderUtil.setScissorState(wasScissor);
 		}

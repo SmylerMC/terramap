@@ -93,6 +93,9 @@ terramap.terramapscreen.projection_warning.line2=There is no way to identify the
 terramap.terramapscreen.projection_warning.line3=Elements from the Minecraft world will not be displayed on the map.
 terramap.terramapscreen.projection_warning.line4=You can ask the server administrator to install Terramap,
 terramap.terramapscreen.projection_warning.line5=or you can manually set the projection used in the right click menu.
+terramap.terramapscreen.mapstylefailed.title=Some map styles failed to load.
+terramap.terramapscreen.mapstylefailed.provider=Provider: %1$s
+terramap.terramapscreen.mapstylefailed.exception=Exception: %1$s
 
 ## Buttons
 terramap.terramapscreen.buttons.close.tooltip=Close map
@@ -101,6 +104,7 @@ terramap.terramapscreen.buttons.zoomout.tooltip=Zoom out
 terramap.terramapscreen.buttons.track.tooltip=Track player
 terramap.terramapscreen.buttons.style.tooltip=Change map style
 terramap.terramapscreen.buttons.info.tooltip=Collapse information and search pannel
+terramap.terramapscreen.buttons.config.tooltip=Open config menu
 terramap.terramapscreen.search.wip=Work in progress
 
 ## Info panel
@@ -148,7 +152,32 @@ terramap.commands.opentmap.numberargs=Invalid number of arguments, zoom, latitud
 terramap.commands.opentmap.couldnotopen=Could not open Terramap in the current context.
 terramap.commands.opentmap.usage=/opentmap <zoom> <latitude> <longitude>
 
-#### In game actions ####
-terramap.terraerror.warn.1=Terramap requires Terra++, and Terra121 was detected.
-terramap.terraerror.warn.2=Please install Terra++.
-terramap.terraerror.closegame=Close the game
+#### Config menu ####
+terramap.configmenu.title=Terramap config
+terramap.configmenu.save=Save
+terramap.configmenu.cancel=Cancel
+terramap.configmenu.reset=Reset
+terramap.configmenu.title.mapsettings=Terramap Configuration: map settings
+terramap.configmenu.title.mapstyles=Terramap Configuration: mapstyles
+terramap.configmenu.title.other=Terramap Configuration: other
+terramap.configmenu.unlockzoom=Unlock zoom: 
+terramap.configmenu.saveui=Save UI state: 
+terramap.configmenu.tilescaling=Map scaling: 
+terramap.configmenu.doubleclick=Double click delay: 
+terramap.configmenu.tilecache=Tile cache: 
+terramap.configmenu.lowzoom=Low zoom: 
+terramap.configmenu.configureminimap=Configure Minimap
+terramap.configmenu.debugmapstyles=Enable debug map styles: 
+terramap.configmenu.mapstyles.base=Base (%1$s): %2$s
+terramap.configmenu.mapstyles.proxy=Proxy (%1$s): %2$s
+terramap.configmenu.mapstyles.server=Server (%1$s): %2$s
+terramap.configmenu.mapstyles.custom=User (%1$s): %2$s
+terramap.configmenu.mapstyles.effective=Effective styles (%1$s): %2$s
+terramap.configmenu.teleportcmd=Teleport command: 
+terramap.configmenu.pagenumber=Page %1$s of %2$s
+terramap.configmenu.asksave.prompt=Save configuration ?
+terramap.configmenu.asksave.confirm=Yes
+terramap.configmenu.asksave.deny=No
+terramap.configmenu.asksave.cancel=Cancel
+terramap.configmenu.tilescaling.auto=Auto
+

@@ -22,6 +22,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class TerramapConfigScreen extends Screen {
 
@@ -42,7 +43,6 @@ public class TerramapConfigScreen extends Screen {
 	private TextButtonWidget reloadMapStylesButton;
 	private TextFieldWidget tpCommandField;
 	private TextWidget pageText;
-	//TODO Localize
 	//TODO Tooltips
 
 	public TerramapConfigScreen(GuiScreen parent) {
@@ -58,11 +58,11 @@ public class TerramapConfigScreen extends Screen {
 		int inter = 9;
 		this.removeAllWidgets(); //Remove the widgets that were already there
 		this.cancellAllScheduled(); //Cancel all callbacks that were already there
-		this.title = new TextWidget("Terramap config", this.width/2, 10, 5, TextAlignment.CENTER, this.getFont());
+		this.title = new TextWidget(I18n.format("terramap.configmenu.title"), this.width/2, 10, 5, TextAlignment.CENTER, this.getFont());
 		this.addWidget(this.title);
-		TextButtonWidget save = new TextButtonWidget(this.width/2 + 30, this.height - 30, 10, 100, "Save", this::saveAndClose);
-		TextButtonWidget cancel = new TextButtonWidget(this.width/2 - 130, save.getY(), save.getZ(), save.getWidth(), "Cancel", this::close);
-		TextButtonWidget reset = new TextButtonWidget(this.width/2 - 25, save.getY(), save.getZ(), 50, "Reset", this::reset);
+		TextButtonWidget save = new TextButtonWidget(this.width/2 + 30, this.height - 30, 10, 100, I18n.format("terramap.configmenu.save"), this::saveAndClose);
+		TextButtonWidget cancel = new TextButtonWidget(this.width/2 - 130, save.getY(), save.getZ(), save.getWidth(), I18n.format("terramap.configmenu.cancel"), this::close);
+		TextButtonWidget reset = new TextButtonWidget(this.width/2 - 25, save.getY(), save.getZ(), 50, I18n.format("terramap.configmenu.reset"), this::reset);
 		this.addWidget(save);
 		this.addWidget(cancel);
 		this.addWidget(reset);
@@ -77,29 +77,29 @@ public class TerramapConfigScreen extends Screen {
 				otherConfigScreen
 		};
 		this.titles = new String[] {
-				"Terramap Configuration: map settings",
-				"Terramap Configuration: mapstyles",
-				"Terramap Configuration: other"
+				I18n.format("terramap.configmenu.title.mapsettings"),
+				I18n.format("terramap.configmenu.title.mapstyles"),
+				I18n.format("terramap.configmenu.title.other")
 		};
 
 		// Map settings
-		TextWidget unlockZoomText = new TextWidget("Unlock zoom: ", 10, TextAlignment.RIGHT, this.getFont());
+		TextWidget unlockZoomText = new TextWidget(I18n.format("terramap.configmenu.unlockzoom"), 10, TextAlignment.RIGHT, this.getFont());
 		unlockZoomText.setAnchorX((mapConfigScreen.width - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth())/2 - 71).setAnchorY(this.height / 4 - 30);
 		mapConfigScreen.addWidget(unlockZoomText);
 		mapConfigScreen.addWidget(this.unlockZoomToggle.setX(unlockZoomText.getX() + unlockZoomText.getWidth() + 5).setY(unlockZoomText.getAnchorY() - 4));
-		TextWidget saveUIStateText = new TextWidget("Save UI state: ", 10, TextAlignment.RIGHT, this.getFont());
+		TextWidget saveUIStateText = new TextWidget(I18n.format("terramap.configmenu.saveui"), 10, TextAlignment.RIGHT, this.getFont());
 		saveUIStateText.setAnchorX((mapConfigScreen.width - saveUIStateText.getWidth() - this.saveUIStateToggle.getWidth())/2 + 64).setAnchorY(unlockZoomText.getAnchorY());
 		mapConfigScreen.addWidget(saveUIStateText);
 		mapConfigScreen.addWidget(this.saveUIStateToggle.setX(saveUIStateText.getX() + saveUIStateText.getWidth() + 5).setY(saveUIStateText.getAnchorY() - 4));
-		mapConfigScreen.addWidget(this.tileScalingSlider.setX(mapConfigScreen.width/2 - 130).setY(this.unlockZoomToggle.getY() + this.unlockZoomToggle.getHeight() + inter).setWidth(125).setDisplayPrefix("Tile scaling: "));
-		mapConfigScreen.addWidget(this.doubleClickDelaySlider.setX(mapConfigScreen.width/2 + 5).setY(this.tileScalingSlider.getY()).setWidth(this.tileScalingSlider.getWidth()).setDisplayPrefix("Double click delay: "));
-		mapConfigScreen.addWidget(this.maxLoadedTilesSlider.setX(mapConfigScreen.width/2 - 130).setY(this.tileScalingSlider.getY() + this.tileScalingSlider.getHeight() + inter).setWidth(125).setDisplayPrefix("Tile cache: "));
-		mapConfigScreen.addWidget(this.lowZoomLevelSlider.setX(mapConfigScreen.width/2 + 5).setY(this.maxLoadedTilesSlider.getY()).setWidth(this.maxLoadedTilesSlider.getWidth()).setDisplayPrefix("Low zoom: "));
-		TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, "Configure Minimap", () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
+		mapConfigScreen.addWidget(this.tileScalingSlider.setX(mapConfigScreen.width/2 - 130).setY(this.unlockZoomToggle.getY() + this.unlockZoomToggle.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilescaling")));
+		mapConfigScreen.addWidget(this.doubleClickDelaySlider.setX(mapConfigScreen.width/2 + 5).setY(this.tileScalingSlider.getY()).setWidth(this.tileScalingSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.doubleclick")));
+		mapConfigScreen.addWidget(this.maxLoadedTilesSlider.setX(mapConfigScreen.width/2 - 130).setY(this.tileScalingSlider.getY() + this.tileScalingSlider.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilecache")));
+		mapConfigScreen.addWidget(this.lowZoomLevelSlider.setX(mapConfigScreen.width/2 + 5).setY(this.maxLoadedTilesSlider.getY()).setWidth(this.maxLoadedTilesSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.lowzoom")));
+		TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, I18n.format("terramap.configmenu.configureminimap"), () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
 		mapConfigScreen.addWidget(hudButton);
 
 		// Map styles
-		TextWidget debugMapStylesText = new TextWidget("Enable debug map styles: ", 10, true, this.getFont());
+		TextWidget debugMapStylesText = new TextWidget(I18n.format("terramap.configmenu.debugmapstyles"), 10, true, this.getFont());
 		mapStylesConfigScreen.addWidget(debugMapStylesText.setAnchorX((mapStylesConfigScreen.width - debugMapStyles.getWidth() - debugMapStylesText.getWidth() - 3) / 2).setAnchorY(mapStylesConfigScreen.height / 4 - 30));
 		mapStylesConfigScreen.addWidget(debugMapStyles.setX(debugMapStylesText.getX() + debugMapStylesText.getWidth() + 3).setY(debugMapStylesText.getY() - 4));
 		Set<String> baseIDs = MapStylesLibrary.getBaseMaps().keySet();
@@ -107,11 +107,11 @@ public class TerramapConfigScreen extends Screen {
 		Set<String> serverIDs = TerramapClientContext.getContext().getServerMapStyles().keySet();
 		Set<String> proxyIDs = TerramapClientContext.getContext().getProxyMapStyles().keySet();
 		Set<String> resolved = TerramapClientContext.getContext().getMapStyles().keySet();
-		TextWidget baseText = new TextWidget("Base (" + baseIDs.size() + ") : " + String.join(", ", baseIDs), mapStylesConfigScreen.width / 2, 40, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget proxyText = new TextWidget("Proxy (" + proxyIDs.size() + ") : " + String.join(", ", proxyIDs), mapStylesConfigScreen.width / 2, 57, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget serverText = new TextWidget("Server (" + serverIDs.size() + ") : " + String.join(", ", serverIDs), mapStylesConfigScreen.width / 2, 74, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget userText = new TextWidget("User (" + userIDs.size() + ") : " + String.join(", ", userIDs), mapStylesConfigScreen.width / 2, 91, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget effectiveText = new TextWidget("Effective styles (" + resolved.size() + ") : " + String.join(", ", resolved), mapStylesConfigScreen.width / 2, 108, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget baseText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.base", baseIDs.size(), String.join(", ", baseIDs)), mapStylesConfigScreen.width / 2, 40, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget proxyText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.proxy", proxyIDs.size(), String.join(", ", proxyIDs)), mapStylesConfigScreen.width / 2, 57, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget serverText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), mapStylesConfigScreen.width / 2, 74, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget userText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.user", userIDs.size(), String.join(", ", userIDs)), mapStylesConfigScreen.width / 2, 91, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget effectiveText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), mapStylesConfigScreen.width / 2, 108, 10, TextAlignment.CENTER, this.getFont());
 		mapStylesConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugMapStyles.getY() + debugMapStyles.getHeight() + 10));
 		mapStylesConfigScreen.addWidget(proxyText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(baseText.getY() + baseText.getHeight() + inter));
 		mapStylesConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
@@ -129,7 +129,7 @@ public class TerramapConfigScreen extends Screen {
 		}));
 
 		// Other config screen
-		TextWidget tpCommandText = new TextWidget("Teleport command: ", 10, TextAlignment.RIGHT, this.getFont());
+		TextWidget tpCommandText = new TextWidget(I18n.format("terramap.configmenu.teleportcmd"), 10, TextAlignment.RIGHT, this.getFont());
 		otherConfigScreen.addWidget(tpCommandText.setAnchorX((otherConfigScreen.getWidth() - this.tpCommandField.getWidth() - tpCommandText.getWidth()) / 2).setAnchorY(60));
 		otherConfigScreen.addWidget(this.tpCommandField.setX(tpCommandText.getX() + tpCommandText.getWidth() + inter).setY(tpCommandText.getY() - 7));
 
@@ -161,7 +161,7 @@ public class TerramapConfigScreen extends Screen {
 		else this.previous.enable();
 		if(this.currentSubScreen >= this.pages.length - 1) this.next.disable();
 		else this.next.enable();
-		this.pageText.setText("Page " + (this.currentSubScreen + 1) + " of " + this.pages.length);
+		this.pageText.setText(I18n.format("terramap.configmenu.pagenumber", this.currentSubScreen + 1, this.pages.length));
 	}
 
 	private void saveAndClose() {
@@ -210,11 +210,11 @@ public class TerramapConfigScreen extends Screen {
 		public void initScreen() {
 			this.removeAllWidgets();
 			this.cancellAllScheduled();
-			TextWidget text = new TextWidget("Save configuration ?", this.width / 2, this.height / 2 - 20, 10, TextAlignment.CENTER, this.getFont());
+			TextWidget text = new TextWidget(I18n.format("terramap.configmenu.asksave.prompt"), this.width / 2, this.height / 2 - 20, 10, TextAlignment.CENTER, this.getFont());
 			this.addWidget(text);
-			this.addWidget(new TextButtonWidget(this.width / 2 - 125, text.getY() + text.getHeight() + 15, 10, 80, "No", TerramapConfigScreen.this::close));
-			this.addWidget(new TextButtonWidget(this.width / 2 - 40, text.getY() + text.getHeight() + 15, 10, 80, "Cancel", () -> Minecraft.getMinecraft().displayGuiScreen(TerramapConfigScreen.this)));
-			this.addWidget(new TextButtonWidget(this.width / 2 + 45, text.getY() + text.getHeight() + 15, 10, 80, "Yes",TerramapConfigScreen.this::saveAndClose));
+			this.addWidget(new TextButtonWidget(this.width / 2 - 125, text.getY() + text.getHeight() + 15, 10, 80, I18n.format("terramap.configmenu.asksave.deny"), TerramapConfigScreen.this::close));
+			this.addWidget(new TextButtonWidget(this.width / 2 - 40, text.getY() + text.getHeight() + 15, 10, 80, I18n.format("terramap.configmenu.asksave.cancel"), () -> Minecraft.getMinecraft().displayGuiScreen(TerramapConfigScreen.this)));
+			this.addWidget(new TextButtonWidget(this.width / 2 + 45, text.getY() + text.getHeight() + 15, 10, 80, I18n.format("terramap.configmenu.asksave.confirm"),TerramapConfigScreen.this::saveAndClose));
 		}
 	}
 
@@ -238,7 +238,7 @@ public class TerramapConfigScreen extends Screen {
 		@Override
 		public String toString() {
 			if(this == AUTO) {
-				return "Auto"; //TODO localize
+				return I18n.format("terramap.configmenu.tilescaling.auto");
 			}
 			return "" + this.value;
 		}
