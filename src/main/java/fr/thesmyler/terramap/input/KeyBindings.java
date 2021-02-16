@@ -77,7 +77,7 @@ public abstract class KeyBindings {
 				}
 			}
 		}
-		//There is already a vanilla feature for that, but let's have it a key away instead of two
+		//There is already a vanilla feature for that in 1.13+
 		if(COPY_MC_COORDS.isPressed()) {
 			EntityPlayerSP player = Minecraft.getMinecraft().player;
 			if(player == null) {
@@ -92,7 +92,7 @@ public abstract class KeyBindings {
 
 		if(ZOOM_OUT.isPressed()) HudScreenHandler.zoomOutMinimap();
 
-		if(TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleMinimap();
+		if(TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleWidgets();
 
 		if(OPEN_HUD_CONFIG.isPressed()) Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen());
 	}
