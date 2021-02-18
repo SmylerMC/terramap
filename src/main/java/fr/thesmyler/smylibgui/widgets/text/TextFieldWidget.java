@@ -131,20 +131,20 @@ public class TextFieldWidget implements IWidget {
 		int startDrawAfterCursorX = textRenderX;
 		displaySelectionEnd = Math.min(displaySelectionEnd, string.length());
 
-		if (!string.isEmpty()) {
+		if(!string.isEmpty()) {
 			String textBeforeCursor = displayCursor ? string.substring(0, displaySelectionStart) : string;
 			startDrawAfterCursorX = this.font.drawStringWithShadow(textBeforeCursor, textRenderX, textRenderY, textColor);
 		}
 
 		boolean isCursorAtEndOfText = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxTextLength();
 		int cursorX = startDrawAfterCursorX;
-		if (!displayCursor) {
+		if(!displayCursor) {
 			cursorX = displaySelectionStart > 0 ? textRenderX + this.getEffectiveWidth() : textRenderX;
-		} else if (isCursorAtEndOfText) {
+		} else if(isCursorAtEndOfText) {
 			cursorX = --startDrawAfterCursorX;
 		}
 
-		if (!string.isEmpty() && displayCursor && displaySelectionStart < string.length()) {
+		if(!string.isEmpty() && displayCursor && displaySelectionStart < string.length()) {
 			this.font.drawStringWithShadow(string.substring(displaySelectionStart), startDrawAfterCursorX, textRenderY, textColor);
 		}
 

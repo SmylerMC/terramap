@@ -121,7 +121,7 @@ public abstract class HudScreenHandler {
 	 * If the compass is enabled in the config, sync it's visibility to the minimap, else ignores it.
 	 */
 	public static void toggleWidgets() {
-		if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
+		if(map != null && compass != null && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
 			map.setVisibility(!map.isVisible(null));
 			compass.setVisibility(map.isVisible(null) && TerramapConfig.CLIENT.compass.enable);
 			TerramapConfig.CLIENT.minimap.enable = map.isVisible(null);
