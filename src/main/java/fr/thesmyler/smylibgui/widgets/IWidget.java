@@ -58,20 +58,23 @@ public interface IWidget {
 	/**
 	 * If this returns false, this widget will not be notified of user actions
 	 * 
-	 * @return true if this widget is enabled
+	 * @return true if this widget needs to process user inputs
 	 */
-	public default boolean isEnabled() {
+	public default boolean takesInputs() {
 		return true;
 	}
 
 	/**
 	 * Called when the user clicks this widget
-	 * Can only be called if the widget is visible and enabled
+	 * Can only be called if the widget is visible and takes inputs
 	 * 
 	 * @param mouseX mouse x position relative to the widget's origin
 	 * @param mouseY mouse y position relative to the widget's origin
 	 * @param mouseButton
 	 * @param parent screen
+	 * 
+	 * @see #isVisible(Screen)
+	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
@@ -81,13 +84,16 @@ public interface IWidget {
 	
 	/**
 	 * Called when the user clicks anywhere else on the parent of this widget
-	 * This will be called whether or not the widget is enabled or visible
+	 * This will be called whether or not the widget takes inputs or is visible
 	 * 
 	 * @param mouseX mouse x position relative to the parent's origin
 	 * @param mouseY mouse y position relative to the parent's origin
 	 * @param mouseButton
 	 * @param parent the containing screen that was clicked. It may not be the direct parent
 	 * @param parent screen
+	 * 
+	 * @see #isVisible(Screen)
+	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
@@ -97,12 +103,15 @@ public interface IWidget {
 	
 	/**
 	 * Called when the user double clicks this widget
-	 * Can only be called if the widget is visible and enabled
+	 * Can only be called if the widget is visible and takes inputs
 	 * 
 	 * @param mouseX mouse x position relative to the widget's origin
 	 * @param mouseY mouse y position relative to the widget's origin
 	 * @param mouseButton
 	 * @param parent screen
+	 * 
+	 * @see #isVisible(Screen)
+	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
@@ -112,13 +121,16 @@ public interface IWidget {
 	
 	/**
 	 * Called when the user double clicks anywhere else on the parent of this widget
-	 * This will be called whether or not the widget is enabled or visible
+	 * This will be called whether or not the widget takes inputs or is visible
 	 * 
 	 * @param mouseX position relative to the parent's origin
 	 * @param mouseY position relative to the parent's origin
 	 * @param mouseButton
 	 * @param parent the containing screen that was clicked. It may not be the direct parent
 	 * @param parent screen
+	 * 
+	 * @see #isVisible(Screen)
+	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */

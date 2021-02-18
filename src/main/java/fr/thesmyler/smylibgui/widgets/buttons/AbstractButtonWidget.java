@@ -35,8 +35,9 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		if(!this.isEnabled()) return false;
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-		parent.setFocus(null); //We don't want to keep the focus
+		parent.setFocus(null); // We don't want to keep the focus
 		if(this.onClick != null && mouseButton == 0) {
 			this.onClick.run();
 		}
@@ -45,12 +46,13 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 
 	@Override
 	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		if(!this.isEnabled()) return false;
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		parent.setFocus(null);
 		if(mouseButton == 0) {
 			if(this.onDoubleClick != null) {
 				this.onDoubleClick.run();
-			} else if(this.onClick != null && mouseButton == 0){
+			} else if(this.onClick != null){
 				this.onClick.run();
 			}
 		}
@@ -60,12 +62,6 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 	@Override
 	public long getTooltipDelay() {
 		return 750;
-	}
-
-	@Override
-	public AbstractButtonWidget setTooltip(String tooltip) {
-		this.tooltip = tooltip;
-		return this;
 	}
 
 	public Runnable getOnClick() {
@@ -96,7 +92,6 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 		return this;
 	}
 
-	@Override
 	public boolean isEnabled() {
 		return this.enabled;
 	}

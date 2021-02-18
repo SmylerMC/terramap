@@ -156,7 +156,7 @@ public class Screen extends GuiScreen implements IWidget{
 						break;
 					}
 				} else {
-					if(!(widget.isEnabled() && widget.isVisible(this))) continue;
+					if(!(widget.takesInputs() && widget.isVisible(this))) continue;
 					switch(event.type) {
 					case CLICK:
 						propagate = widget.onClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);

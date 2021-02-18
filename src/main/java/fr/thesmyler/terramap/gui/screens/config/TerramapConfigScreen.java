@@ -115,7 +115,7 @@ public class TerramapConfigScreen extends Screen {
 		TextWidget baseText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.base", baseIDs.size(), String.join(", ", baseIDs)), mapStylesConfigScreen.width / 2, 40, 10, TextAlignment.CENTER, this.getFont());
 		TextWidget proxyText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.proxy", proxyIDs.size(), String.join(", ", proxyIDs)), mapStylesConfigScreen.width / 2, 57, 10, TextAlignment.CENTER, this.getFont());
 		TextWidget serverText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), mapStylesConfigScreen.width / 2, 74, 10, TextAlignment.CENTER, this.getFont());
-		TextWidget userText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.user", userIDs.size(), String.join(", ", userIDs)), mapStylesConfigScreen.width / 2, 91, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget userText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.custom", userIDs.size(), String.join(", ", userIDs)), mapStylesConfigScreen.width / 2, 91, 10, TextAlignment.CENTER, this.getFont());
 		TextWidget effectiveText = new TextWidget(I18n.format("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), mapStylesConfigScreen.width / 2, 108, 10, TextAlignment.CENTER, this.getFont());
 		mapStylesConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugMapStylesToggle.getY() + debugMapStylesToggle.getHeight() + 10));
 		mapStylesConfigScreen.addWidget(proxyText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(baseText.getY() + baseText.getHeight() + inter));

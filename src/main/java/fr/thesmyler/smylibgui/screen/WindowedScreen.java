@@ -146,7 +146,7 @@ public class WindowedScreen extends Screen {
 		}
 		
 		@Override
-		public boolean isEnabled() {
+		public boolean takesInputs() {
 			return WindowedScreen.this.allowHorizontalResize;
 		}
 
