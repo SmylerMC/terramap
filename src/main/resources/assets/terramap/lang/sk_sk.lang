@@ -1,51 +1,127 @@
+## Config
 terramap.config.minimap.enable=Minimapa: zapnúť
 terramap.config.minimap.style=Minimapa: štýl
 terramap.config.minimap.pos_x=Minimapa: X pozícia (%%)
 terramap.config.minimap.pos_y=Minimapa: Y pozícia (%%)
 terramap.config.minimap.width=Minimapa: šírka (%%)
 terramap.config.minimap.height=Minimapa výška (%%)
-terramap.config.minimap.zoom=Minimapa: priblíženie
+terramap.config.minimap.zoom=Minimapa: zväčšenie
 terramap.config.minimap.show_entities=Minimapa: Zobrazenie entít
 terramap.config.minimap.show_players=Minimapa: Zobrazenie ostatných hráčov
-terramap.config.cache_dir=Adresár ku Cache 
+terramap.config.minimap.tile_scaling=Minimapa: mierka
+terramap.config.minimap.direction=Minimapa: orientácia hráčov
+terramap.config.compass.visibility=Kompas: zapnúť
+terramap.config.compass.position.x=Kompas: X pozícia (%%)
+terramap.config.compass.position.y=Kompas: Y pozícia (%%)
+terramap.config.compass.width=Kompas: šírka (%%)
+terramap.config.minimap=Minimapa
+terramap.config.compass=Kompas
+terramap.config.save_ui_state=Uložiť stav používateľského rozhrania
+terramap.config.client=Klient
+terramap.config.server=Server
+terramap.config.enable_debug_maps=Zapnúť debug mapy
 terramap.config.tile_scaling=Veľkosť dlaždíc
-terramap.config.auto_tile_scaling=Automatická veľkosť dlaždíc
-terramap.config.max_tile_load=Veľkosť Cache dlaždíc
+terramap.config.max_tile_load=Veľkosť medzipamäťe dlaždíc
 terramap.config.double_click_delay=Oneskorenie dvojkliku
 terramap.config.tpllcmd=tpll príkaz
 terramap.config.forcetpllcmd=Vynútiť tpll príkaz
 terramap.config.sync_players=Synchronizácia hráčov
-terramap.config.sync_spec=Sync Synchronizácia divákov
+terramap.config.sync_spec=Synchronizácia divákov
 terramap.config.sync_interval=Interval synchronizácie
 terramap.config.sync_heartbeet=Oneskorenie synchronizácie
 terramap.config.players_opt_in_to_display_default=Predvolba vidiťeľnosťi hráčov
 terramap.config.sync_custom_maps=Posielať vlastné mapy clientovi
 terramap.config.join_without_mod_message=Pripojiť sa bez Terramapy
 terramap.config.join_with_outdated_mod_message=Pripojiť sa so starou verziou Terramapy
-terramap.config.unlock_zoom=Odomknúť priblíženie
+terramap.config.unlock_zoom=Odomknúť zväčšenie
+terramap.config.low_zoom_level=Udržiavať načítané pod úrovňou zväčšenia
+terramap.config.cancel=Zrušiť
+terramap.config.cancel.tooltip=Zatvoriť bez uloženia
+terramap.config.reset=Resetovať
+terramap.config.reset.tooltip=Resetovať všetky hodnoty
+terramap.config.save=Uložiť
+terramap.config.save.tooltip=Uložit a zatvoriť
+terramap.config.options.tooltip=Viac nastavení
+terramap.configmenu.title=Nastavenia Terramapy 
+terramap.configmenu.save=Uložiť
+terramap.configmenu.save.tooltip=Uložiť a zatvoriť
+terramap.configmenu.cancel=Zrušiť
+terramap.configmenu.cancel.tooltip=Zatvoriť bez uloženia
+terramap.configmenu.reset=Resetovať
+terramap.configmenu.reset.tooltip=Resetovať všetky hodnoty
+terramap.configmenu.title.mapsettings=Nastavenia Terramapy: mapy
+terramap.configmenu.title.mapstyles=Nastavenia Terramapy: mapové štýly
+terramap.configmenu.title.other=Nastavenia Terramapy: ostatné
+terramap.configmenu.unlockzoom=Odomknúť zväčšenie: 
+terramap.configmenu.unlockzoom.tooltip=Odomknúť umelé zväčšenie na 25
+terramap.configmenu.saveui=Uložiť stav používateľského rozhrania: 
+terramap.configmenu.saveui.tooltip=Zapamätať F1 a debug mod pri zatváraní mapy na celú obrazovku
+terramap.configmenu.tilescaling=Mierka mapy: 
+terramap.configmenu.doubleclick=Oneskorenie dvojkliku: 
+terramap.configmenu.tilecache=Medzipamäť mapových dlaždíc: 
+terramap.configmenu.tilecache.tooltip=Počet dlaždíc uložených v medzipamäti pre každú mapu
+terramap.configmenu.lowzoom=Nízke zväčšenie:
+terramap.configmenu.lowzoom.tooltip=Dlaždice pod touto úrovňou zväčšenia nebudú vyprazdnené z pamäti
+terramap.configmenu.configureminimap=Nastavenia priehľadného displeja
+terramap.configmenu.configureminimap.tooltip=Nastaviť kompas a minimapu v hre
+terramap.configmenu.debugmapstyles=Zapnúť debug mapových štylov: 
+terramap.configmenu.debugmapstyles.tooltip=Toto zapne debug mapových štýlov, je potrebne uložiť a znova načítať
+terramap.configmenu.mapstyles.base=Základné (%1$s): %2$s
+terramap.configmenu.mapstyles.proxy=Proxy (%1$s): %2$s
+terramap.configmenu.mapstyles.server=Server (%1$s): %2$s
+terramap.configmenu.mapstyles.custom=Uživatelské (%1$s): %2$s
+terramap.configmenu.mapstyles.effective=Aktívne štýly (%1$s): %2$s
+terramap.configmenu.teleportcmd=Teleportovaci príkaz: 
+terramap.configmenu.pagenumber=Stránka %1$s of %2$s
+terramap.configmenu.asksave.prompt=Uložiť nastavenia?
+terramap.configmenu.asksave.confirm=Áno
+terramap.configmenu.asksave.deny=Nie
+terramap.configmenu.asksave.cancel=Zrušiť
+terramap.configmenu.tilescaling.auto=Automatická
 
-terramap.binding.category=Terramap
+## Hud config
+terramap.hudconfig.minimap=Minimapa: 
+terramap.hudconfig.minimap.tooltip=Zmeniť viditeľnosť minimapy
+terramap.hudconfig.compass=Kompas: 
+terramap.hudconfig.compass.tooltip=Zmeniť viditeľnosť kompasu
+terramap.hudconfig.players=Hráči: 
+terramap.hudconfig.players.tooltip=Zmeniť viditeľnosť ostatných hráčov na minimape
+terramap.hudconfig.entities=Entity: 
+terramap.hudconfig.entities.tooltip=Zmeniť viditeľnosť entít na minimape
+terramap.hudconfig.directions=Orientácia hráčov: 
+terramap.hudconfig.directions.tooltip=Zmeniť viditeľnosť smerových šípok hráčov na minimape
+terramap.hudconfig.scaling=Mierka: 
+terramap.hudconfig.scaling.tooltip=Zmeniť mierku vykresľovania dlaždíc minimapy
+terramap.hudconfig.zoom=Zväčšenie: 
+terramap.hudconfig.zoom.tooltip=Zmeniť úroveň zväčšenia minimapy
+terramap.hudconfig.mapstyle.tooltip=Zmeniť štýl minimapy
+terramap.hudconfig.explain=Presuňte a zmeňte veľkosť minimapy a kompasu pomocou okien s ukážkou a kliknutím na tlačidlo ponuky zobrazíte ďalšie možnosti.
+
+## Keys
+terramap.binding.category=Terramapa
 terramap.binding.open_map=Otvoriť mapu
-terramap.binding.toggle_debug=Zapnúť Terramap debug režim
+terramap.binding.toggle_debug=Zapnúť debug režim Terramapy
 terramap.binding.shortcuts=Mapové skratky
 terramap.binding.copy_geo=Kopírovať geografické súradnice
 terramap.binding.copy_mc=Skopírovať minecraft súradnice
-terramap.binding.zoom_in=Priblížiť
-terramap.binding.zoom_out=Oddialiť
+terramap.binding.zoom_in=Zväčšiť
+terramap.binding.zoom_out=Zmenšiť
 terramap.binding.toggle_minimap=Prepnúť viditeľnosť minimapy
+terramap.binding.configure_minimap=Otvoriť nastavenia priehľadného displeja
 
+## Map
 terramap.mapwidget.rclickmenu.teleport=Teleportovať sa sem
 terramap.mapwidget.rclickmenu.center=Vycentrovať mapu sem
 terramap.mapwidget.rclickmenu.copy=Skopírovať
 terramap.mapwidget.rclickmenu.copy.geo=Geografické súradnice
-terramap.mapwidget.rclickmenu.copy.block=Súradnice blokov
-terramap.mapwidget.rclickmenu.copy.chunk=Chunk súradnice
+terramap.mapwidget.rclickmenu.copy.block=Blokové súradnice
+terramap.mapwidget.rclickmenu.copy.chunk=Chunkové súradnice
 terramap.mapwidget.rclickmenu.copy.region=Názov Vanilla región súboru
-terramap.mapwidget.rclickmenu.copy.3dr=Názov 3D región súboru Y=0
+terramap.mapwidget.rclickmenu.copy.3dr=Názov 3D región Y=0 súboru
 terramap.mapwidget.rclickmenu.copy.2dr=Názov 2D región súboru
 terramap.mapwidget.rclickmenu.open=Otvoriť na
 terramap.mapwidget.rclickmenu.open_osm=OpenStreetMaps
-terramap.mapwidget.rclickmenu.open_bte=BTE webstránka
+terramap.mapwidget.rclickmenu.open_bte=BTE webstránke
 terramap.mapwidget.rclickmenu.open_gmaps=Google Maps
 terramap.mapwidget.rclickmenu.open_gearth_web=Google Earth web
 terramap.mapwidget.rclickmenu.open_gearth_pro=Google Earth Pro
@@ -53,24 +129,39 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Nastaviť projekciu
-
+terramap.mapwidget.error.header=Chyba:
 terramap.mapwidget.shortcuts.tp=Kliknutím sa teleportujete
+terramap.mapwidget.error.copyblock=Nepodarilo sa skopírovať blokové súradnice mimo projekciu
+terramap.mapwidget.error.copychunk=Nepodarilo sa skopírovať chunkové súradnice mimo projekciu
+terramap.mapwidget.error.copyregion=Nepodarilo sa skopírovať vanilla súradnice regiónu mimo projekciu
+terramap.mapwidget.error.copy3dregion=Nepodarilo sa skopírovať súradnice 3d regiónu mimo projekciu
+terramap.mapwidget.error.copy2dregion=Nepodarilo sa skopírovať súradnice 2d regiónu mimo projekciu
+terramap.mapwidget.error.tp=Nepodarilo sa teleportovať mimo projekciu
+terramap.maps.debug.terrain=Debug terénu
 
-terramap.terramapscreen.projection_warning.unused_comment=Správa pre prekladateľov: sem môžete pridať toľko riadkov, koľko potrebujete pre svoj jazyk, stačí pridať príslušné číslo na koniec kľúča
+#### Full-screen map ####
+
+## Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
 terramap.terramapscreen.projection_warning.line1=Terramapa nie je nainštalovaná na serveri!!
 terramap.terramapscreen.projection_warning.line2=Nie je možne identifikovať použitú projekciu.
 terramap.terramapscreen.projection_warning.line3=Prvky zo sveta Minecraftu sa na mape nezobrazia.
 terramap.terramapscreen.projection_warning.line4=Môžete požiadať správcu servera, aby nainštaloval Terramapu
 terramap.terramapscreen.projection_warning.line5=alebo môžete ručne nastaviť projekciu použitú v ponuke pravým tlačidlom myši.
+terramap.terramapscreen.mapstylefailed.title=Niektoré štýly map sa nepodarilo načítať.
+terramap.terramapscreen.mapstylefailed.provider=Poskytovateľ: %1$s
+terramap.terramapscreen.mapstylefailed.exception=Výnimka: %1$s
 
+## Buttons
 terramap.terramapscreen.buttons.close.tooltip=Zatvoriť mapu
-terramap.terramapscreen.buttons.zoomin.tooltip=Priblížiť
-terramap.terramapscreen.buttons.zoomout.tooltip=Oddialiť
+terramap.terramapscreen.buttons.zoomin.tooltip=Zväčšiť
+terramap.terramapscreen.buttons.zoomout.tooltip=Zmenšiť
 terramap.terramapscreen.buttons.track.tooltip=Sledovať hráča
 terramap.terramapscreen.buttons.style.tooltip=Zmeniť štýl mapy
 terramap.terramapscreen.buttons.info.tooltip=Skryť informačný a vyhľadávací panel
+terramap.terramapscreen.buttons.config.tooltip=Otvoriť ponuku s nastaveniami
 terramap.terramapscreen.search.wip=Pracuje sa na tom
 
+## Info panel
 terramap.terramapscreen.information.mouse_geo=Pozícia kurzoru: %1$s° %2$s°
 terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
 terramap.terramapscreen.information.trackedoutsidemap=%1$s je mimo projekcie
@@ -78,35 +169,42 @@ terramap.terramapscreen.information.tracked=%1$s: %2$s° %3$s°
 terramap.terramapscreen.information.playerout=Ste mimo projekcie
 terramap.terramapscreen.information.playergeo=Pozícia hráča: %1$s° %2$s°
 terramap.terramapscreen.information.noplayer=Pozícia hráča: -° -°
-terramap.terramapscreen.information.distortion=Deformácia: %1$s blocks/m ; ±%2$s°
-terramap.terramapscreen.information.outdatedterra121=Aktualizujte prosím Terra121 mód
+terramap.terramapscreen.information.distortion=Deformácia: %1$s bloky/m ; ±%2$s°
 
+## Marker controllers
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=Zapnúť viditeľnosť hlavného hráča
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=Zapnúť viditeľnosť ostatných hráčov
 terramap.terramapscreen.markercontrollers.buttons.animals=Zapnúť viditeľnosť zvierat
 terramap.terramapscreen.markercontrollers.buttons.mobs=Zapnúť viditeľnosť mobov
+terramap.terramapscreen.markercontrollers.buttons.direction=Zapnúť viditeľnosť smerových šípok hráčov
+terramap.terramapscreen.markercontrollers.buttons.name=Zapnúť viditeľnosť mien hráčov
 
+#### In game ####
 terramap.ingameactions.copy.noplayer=Nepodarilo sa skopírovať súradnice: žiadny hráč
 terramap.ingameactions.copy.noproj=Nepodarilo sa skopírovať súradnice: žiadna projekcia
 terramap.ingameactions.copy.outproj=Nepodarilo sa skopírovať súradnice: Ste mimo projekciu
 terramap.ingameactions.copy.mc=Minecraft súradnice skopírované do schránky
 terramap.ingameactions.copy.geo=Geografické súradnice skopírované do schránky
+terramap.toasts.welcome.title=Terramapa
+terramap.toasts.welcome.text=Stlačením %1$s otvoríte mapu
 
+#### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [meno hráča (voliteľné)]
-terramap.commands.terrashow.too_few_parameters=Too few parameters: /terrashow <show|hide|status> [meno hráča (voliteľné)]
-terramap.commands.terrashow.too_many_parameters=Too many parameters: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.too_few_parameters=Príliš málo parametrov: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.too_many_parameters=Príliš veľa parametrov: /terrashow <show|hide|status> [meno hráča (voliteľné)]
 terramap.commands.terrashow.console_player_name=Pri spustení z konzoly sa vyžaduje meno hráča: /terrashow <show|hide|status> [meno hráča (voliteľné)]
 terramap.commands.terrashow.cannot_change_own_visibility=Nemáte povolenie na zmenu svojej viditeľnosti
 terramap.commands.terrashow.cannot_change_others_visibility=Nemáte povolenie na zmenu viditeľnosti ostatných
-terramap.commands.terrashow.noplayer=Player does not exist: /terrashow <show|hide|status> [meno hráča (voliteľné)]
-terramap.commands.terrashow.invalid_action=Invalid action: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.noplayer=Hráč neexistuje: /terrashow <show|hide|status> [meno hráča (voliteľné)]
+terramap.commands.terrashow.invalid_action=Neplatná akcia: /terrashow <show|hide|status> [meno hráča (voliteľné)]
 terramap.commands.terrashow.getvisible=%1$s je momentálne viditeľný na mape
 terramap.commands.terrashow.setvisible=%1$s je teraz viditeľný na mape
 terramap.commands.terrashow.gethidden=%1$s je momentálne skrytý na mape
 terramap.commands.terrashow.sethidden=%1$s je teraz skrytý na mape
-
 terramap.commands.reloadmapstyles.usage=/reloadmapstyles
 terramap.commands.reloadmapstyles.forbidden=Na použitie tohto príkazu nemáte povolenie!
 terramap.commands.reloadmapstyles.done=Hotovo
 terramap.commands.reloadmapstyles.error=Chyba pri opätovnom načítaní štýlov máp
-
+terramap.commands.opentmap.numberargs=Nesprávny počet argumentov, Správne argumenty sú: <priblíženie> <zemepisná šírka> <zemepisná dĺžka>
+terramap.commands.opentmap.couldnotopen=Nepodarilo sa otvoriť Terramapu v aktuálnom kontexte.
+terramap.commands.opentmap.usage=/opentmap <zväčšenie> <zemepisná šírka> <zemepisná dĺžka>
