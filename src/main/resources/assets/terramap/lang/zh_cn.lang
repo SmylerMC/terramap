@@ -71,6 +71,8 @@ terramap.configmenu.mapstyles.proxy=代理 (%1$s): %2$s
 terramap.configmenu.mapstyles.server=服务器 (%1$s): %2$s
 terramap.configmenu.mapstyles.custom=用户 (%1$s): %2$s
 terramap.configmenu.mapstyles.effective=有效风格 (%1$s): %2$s
+terramap.configmenu.mapstyles.reload=重新载入地图风格
+terramap.configmenu.mapstyles.open=打开地图风格配置文件
 terramap.configmenu.teleportcmd=传送命令：
 terramap.configmenu.pagenumber=%1$s/%2$s
 terramap.configmenu.asksave.prompt=保存配置？
@@ -120,7 +122,7 @@ terramap.mapwidget.rclickmenu.copy.region=原版区域文件名
 terramap.mapwidget.rclickmenu.copy.3dr=Y=0 3D区域文件名
 terramap.mapwidget.rclickmenu.copy.2dr=2D区域文件名
 terramap.mapwidget.rclickmenu.open=显示在
-terramap.mapwidget.rclickmenu.open_osm=打开街景图
+terramap.mapwidget.rclickmenu.open_osm=OpenStreetMap
 terramap.mapwidget.rclickmenu.open_bte=BTE网站
 terramap.mapwidget.rclickmenu.open_gmaps=谷歌地图
 terramap.mapwidget.rclickmenu.open_gearth_web=谷歌地球网页版

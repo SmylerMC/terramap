@@ -122,9 +122,9 @@ public class TerramapConfigScreen extends Screen {
 		mapStylesConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
 		mapStylesConfigScreen.addWidget(userText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(serverText.getY() + serverText.getHeight() + inter));
 		mapStylesConfigScreen.addWidget(effectiveText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(userText.getY() + userText.getHeight() + inter));
-		this.reloadMapStylesButton = new TextButtonWidget(mapStylesConfigScreen.width / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + mapStylesConfigScreen.getHeight()) / 2 - 10, 10, 150, "Reload map styles", () -> {MapStylesLibrary.reload(); TerramapConfigScreen.this.initScreen();});
+		this.reloadMapStylesButton = new TextButtonWidget(mapStylesConfigScreen.width / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + mapStylesConfigScreen.getHeight()) / 2 - 10, 10, 150, I18n.format("terramap.configmenu.mapstyles.reload"), () -> {MapStylesLibrary.reload(); TerramapConfigScreen.this.initScreen();});
 		mapStylesConfigScreen.addWidget(this.reloadMapStylesButton);
-		mapStylesConfigScreen.addWidget(new TextButtonWidget(this.reloadMapStylesButton.getX() + this.reloadMapStylesButton.getWidth() + 3, this.reloadMapStylesButton.getY(), 10, 150, "Open map style config file", () ->  {
+		mapStylesConfigScreen.addWidget(new TextButtonWidget(this.reloadMapStylesButton.getX() + this.reloadMapStylesButton.getWidth() + 3, this.reloadMapStylesButton.getY(), 10, 150, I18n.format("terramap.configmenu.mapstyles.open"), () ->  {
 			try {
 				Desktop.getDesktop().open(MapStylesLibrary.getFile());
 			} catch (IOException e) {
