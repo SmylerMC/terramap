@@ -1,3 +1,4 @@
+## Config
 terramap.config.minimap.enable=小地图：启用
 terramap.config.minimap.style=小地图：风格
 terramap.config.minimap.pos_x=小地图：X轴位置 (%%)
@@ -7,9 +8,19 @@ terramap.config.minimap.height=小地图高度 (%%)
 terramap.config.minimap.zoom=小地图缩放
 terramap.config.minimap.show_entities=小地图：显示实体
 terramap.config.minimap.show_players=小地图：显示其他玩家
-terramap.config.cache_dir=缓存目录名
+terramap.config.minimap.tile_scaling=小地图：缩放
+terramap.config.minimap.direction=小地图：玩家位置
+terramap.config.compass.visibility=指南针：启用
+terramap.config.compass.position.x=指南针：X轴位置 (%%)
+terramap.config.compass.position.y=指南针：Y轴位置 (%%)
+terramap.config.compass.width=指南针：宽度 (%%)
+terramap.config.minimap=小地图
+terramap.config.compass=指南针
+terramap.config.save_ui_state=保存界面状态
+terramap.config.client=客户端
+terramap.config.server=服务器
+terramap.config.enable_debug_maps=启用调试地图
 terramap.config.tile_scaling=Tile缩放
-terramap.config.auto_tile_scaling=自动Tile缩放
 terramap.config.max_tile_load=Tile缓存大小
 terramap.config.double_click_delay=双击延迟
 terramap.config.tpllcmd=tpll命令
@@ -23,7 +34,70 @@ terramap.config.sync_custom_maps=发送自定义地图到客户端
 terramap.config.join_without_mod_message=不使用Terramap加入
 terramap.config.join_with_outdated_mod_message=使用过期的Terramap加入
 terramap.config.unlock_zoom=解锁变焦
+terramap.config.low_zoom_level=在缩放等级下保持加载
+terramap.config.cancel=取消
+terramap.config.cancel.tooltip=不保存并关闭
+terramap.config.reset=重置
+terramap.config.reset.tooltip=重载全部数值
+terramap.config.save=保存
+terramap.config.save.tooltip=保存并关闭
+terramap.config.options.tooltip=更多选项
+terramap.configmenu.title=Terramap配置
+terramap.configmenu.save=保存
+terramap.configmenu.save.tooltip=保存并关闭
+terramap.configmenu.cancel=取消
+terramap.configmenu.cancel.tooltip=不保存并关闭
+terramap.configmenu.reset=重置
+terramap.configmenu.reset.tooltip=重载全部数值
+terramap.configmenu.title.mapsettings=Terramap配置：地图设置
+terramap.configmenu.title.mapstyles=Terramap配置：地图风格
+terramap.configmenu.title.other=Terramap配置：其它
+terramap.configmenu.unlockzoom=解锁缩放：
+terramap.configmenu.unlockzoom.tooltip=解锁缩放至25
+terramap.configmenu.saveui=保存界面状态： 
+terramap.configmenu.saveui.tooltip=在关闭全屏地图时记住F1和调试模组
+terramap.configmenu.tilescaling=地图缩放：
+terramap.configmenu.doubleclick=双击延迟：
+terramap.configmenu.tilecache=Tile缓存：
+terramap.configmenu.tilecache.tooltip=每张地图里保持加载的Tile数
+terramap.configmenu.lowzoom=低缩放：
+terramap.configmenu.lowzoom.tooltip=不加载该缩放等级的Tile
+terramap.configmenu.configureminimap=配置HUD
+terramap.configmenu.configureminimap.tooltip=配置游戏内小地图和指南针
+terramap.configmenu.debugmapstyles=启用调试地图风格：
+terramap.configmenu.debugmapstyles.tooltip=你需要保存并重载以启用调试地图风格
+terramap.configmenu.mapstyles.base=基础 (%1$s): %2$s
+terramap.configmenu.mapstyles.proxy=代理 (%1$s): %2$s
+terramap.configmenu.mapstyles.server=服务器 (%1$s): %2$s
+terramap.configmenu.mapstyles.custom=用户 (%1$s): %2$s
+terramap.configmenu.mapstyles.effective=有效风格 (%1$s): %2$s
+terramap.configmenu.teleportcmd=传送命令：
+terramap.configmenu.pagenumber=%1$s/%2$s
+terramap.configmenu.asksave.prompt=保存配置？
+terramap.configmenu.asksave.confirm=是
+terramap.configmenu.asksave.deny=否
+terramap.configmenu.asksave.cancel=取消
+terramap.configmenu.tilescaling.auto=自动
 
+## Hud config
+terramap.hudconfig.minimap=小地图：
+terramap.hudconfig.minimap.tooltip=更改小地图可见度
+terramap.hudconfig.compass=指南针：
+terramap.hudconfig.compass.tooltip=更改指南针可见度
+terramap.hudconfig.players=玩家：
+terramap.hudconfig.players.tooltip=更改在小地图上其他玩家的可见度
+terramap.hudconfig.entities=实体：
+terramap.hudconfig.entities.tooltip=更改在小地图上实体的可见度
+terramap.hudconfig.directions=玩家朝向：
+terramap.hudconfig.directions.tooltip=更改在小地图上其他玩家朝向的可见度
+terramap.hudconfig.scaling=缩放比例：
+terramap.hudconfig.scaling.tooltip=更改小地图渲染“tile缩放”
+terramap.hudconfig.zoom=缩放：
+terramap.hudconfig.zoom.tooltip=更改小地图缩放等级
+terramap.hudconfig.mapstyle.tooltip=更改小地图风格
+terramap.hudconfig.explain=使用上一个窗口移动并重设小地图和指南针，点击菜单按钮查看更多选项。
+
+## Keys
 terramap.binding.category=Terramap
 terramap.binding.open_map=打开地图
 terramap.binding.toggle_debug=切换Terramap调试模式
@@ -33,7 +107,9 @@ terramap.binding.copy_mc=复制minecraft坐标
 terramap.binding.zoom_in=放大
 terramap.binding.zoom_out=缩小
 terramap.binding.toggle_minimap=切换小地图可见度
+terramap.binding.configure_minimap=打开HUD配置
 
+## Map
 terramap.mapwidget.rclickmenu.teleport=传送到这里
 terramap.mapwidget.rclickmenu.center=以这里为地图中心
 terramap.mapwidget.rclickmenu.copy=复制
@@ -53,24 +129,39 @@ terramap.mapwidget.rclickmenu.open_bing=必应地图
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex地图
 terramap.mapwidget.rclickmenu.set_proj=设置投影
-
+terramap.mapwidget.error.header=错误：
 terramap.mapwidget.shortcuts.tp=点击传送
+terramap.mapwidget.error.copyblock=在投影外复制方块坐标失败
+terramap.mapwidget.error.copychunk=在投影外复制区块坐标失败
+terramap.mapwidget.error.copyregion=在投影外复制区域坐标失败
+terramap.mapwidget.error.copy3dregion=在投影外复制3D区域坐标失败
+terramap.mapwidget.error.copy2dregion=在投影外复制2D区域坐标失败
+terramap.mapwidget.error.tp=无法传送到投影外
+terramap.maps.debug.terrain=地形调试
 
-terramap.terramapscreen.projection_warning.unused_comment=你可以在这里添加多行自定义内容
+#### Full-screen map ####
+
+## Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
 terramap.terramapscreen.projection_warning.line1=服务器没有安装Terramap！
 terramap.terramapscreen.projection_warning.line2=无法识别投影。
 terramap.terramapscreen.projection_warning.line3=Minecraft世界的元素不会显示在地图上。
 terramap.terramapscreen.projection_warning.line4=你可以让服务器管理员安装Terramap，
 terramap.terramapscreen.projection_warning.line5=或者你可以在右击菜单中手动设置投影。
+terramap.terramapscreen.mapstylefailed.title=部分地图风格加载失败。
+terramap.terramapscreen.mapstylefailed.provider=加载正常：%1$s
+terramap.terramapscreen.mapstylefailed.exception=加载异常：%1$s
 
+## Buttons
 terramap.terramapscreen.buttons.close.tooltip=关闭地图
 terramap.terramapscreen.buttons.zoomin.tooltip=放大
 terramap.terramapscreen.buttons.zoomout.tooltip=缩小
 terramap.terramapscreen.buttons.track.tooltip=追踪玩家
 terramap.terramapscreen.buttons.style.tooltip=更改地图风格
 terramap.terramapscreen.buttons.info.tooltip=折叠信息和搜索面板
+terramap.terramapscreen.buttons.config.tooltip=打开配置菜单
 terramap.terramapscreen.search.wip=开发中
 
+## Info panel
 terramap.terramapscreen.information.mouse_geo=鼠标位置： %1$s° %2$s°
 terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
 terramap.terramapscreen.information.trackedoutsidemap=%1$s在投影之外
@@ -79,19 +170,25 @@ terramap.terramapscreen.information.playerout=你在投影之外
 terramap.terramapscreen.information.playergeo=玩家位置：%1$s° %2$s°
 terramap.terramapscreen.information.noplayer=玩家位置：-° -°
 terramap.terramapscreen.information.distortion=扭曲：%1$s 格/米 ; ±%2$s°
-terramap.terramapscreen.information.outdatedterra121=请更新Terra121
 
-terramap.terramapscreen.markercontrollers.buttons.mainplayer=切换主玩家是否可见
-terramap.terramapscreen.markercontrollers.buttons.otherplayer=切换其它玩家是否可见
-terramap.terramapscreen.markercontrollers.buttons.animals=切换动物是否可见
-terramap.terramapscreen.markercontrollers.buttons.mobs=切换怪物是否可见
+## Marker controllers
+terramap.terramapscreen.markercontrollers.buttons.mainplayer=切换主要玩家可见性
+terramap.terramapscreen.markercontrollers.buttons.otherplayer=切换其它玩家可见性
+terramap.terramapscreen.markercontrollers.buttons.animals=切换动物可见性
+terramap.terramapscreen.markercontrollers.buttons.mobs=切换怪物可见性
+terramap.terramapscreen.markercontrollers.buttons.direction=切换玩家朝向可见性
+terramap.terramapscreen.markercontrollers.buttons.name=切换玩家名可见性
 
-terramap.ingameactions.copy.noplayer=无法复制坐标：没有玩家
-terramap.ingameactions.copy.noproj=无法复制坐标：没有投影
-terramap.ingameactions.copy.outproj=无法复制坐标：你在投影之外
-terramap.ingameactions.copy.mc=已复制Minecraft坐标到剪贴板
-terramap.ingameactions.copy.geo=已复制地理坐标到剪贴板
+#### In game ####
+terramap.ingameactions.copy.noplayer=无法复制坐标：无玩家
+terramap.ingameactions.copy.noproj=无法复制坐标：无投影
+terramap.ingameactions.copy.outproj=无法复制坐标：位于投影外
+terramap.ingameactions.copy.mc=已复制Minecraft坐标至剪粘板
+terramap.ingameactions.copy.geo=已复制地理坐标至剪粘板
+terramap.toasts.welcome.title=Terramap
+terramap.toasts.welcome.text=按%1$s打开地图
 
+#### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [玩家名（可选）]
 terramap.commands.terrashow.too_few_parameters=参数过少：/terrashow <show|hide|status> [玩家名（可选）]
 terramap.commands.terrashow.too_many_parameters=参数过多：/terrashow <show|hide|status> [玩家名（可选）]
@@ -104,8 +201,10 @@ terramap.commands.terrashow.getvisible=%1$s在地图上可见
 terramap.commands.terrashow.setvisible=%1$s现已在地图上可见
 terramap.commands.terrashow.gethidden=%1$s在地图上隐匿了踪迹
 terramap.commands.terrashow.sethidden=%1$s现已在地图上隐匿踪迹
-
 terramap.commands.reloadmapstyles.usage=/reloadmapstyles
 terramap.commands.reloadmapstyles.forbidden=你没有权限使用该命令！
 terramap.commands.reloadmapstyles.done=完成
 terramap.commands.reloadmapstyles.error=重载地图风格时出错
+terramap.commands.opentmap.numberargs=参数数量无效，需要缩放、维度和经度。
+terramap.commands.opentmap.couldnotopen=无法在当前条件下打开Terramap。
+terramap.commands.opentmap.usage=/opentmap <缩放> <纬度> <经度>
