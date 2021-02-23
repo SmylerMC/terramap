@@ -155,6 +155,14 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 	
 	@Override
 	public String toString() {
+		String str = this.getTerramapVersionString();
+		if(!Strings.isBlank(this.mcVersion)) {
+			str += "_" + this.mcVersion;
+		}
+		return str;
+	}
+	
+	public String getTerramapVersionString() {
 		if(this.isDev()) {
 			return "${version}";
 		}
@@ -171,9 +179,6 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 		}
 		if(this.devBuild) {
 			str += "-dev";
-		}
-		if(!Strings.isBlank(this.mcVersion)) {
-			str += "_" + this.mcVersion;
 		}
 		return str;
 	}

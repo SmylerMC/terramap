@@ -85,7 +85,7 @@ public abstract class RemoteSynchronizer {
 		if(!TerramapUtils.isServerEarthWorld(world)) return;
 		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
 		S2CTerramapHelloPacket data = new S2CTerramapHelloPacket(
-				TerramapMod.getVersion().toString(),
+				"", // We fill in the version latter
 				settings,
 				TerramapServerPreferences.getWorldUUID(player.getServerWorld()),
 				PlayerSyncStatus.getFromBoolean(TerramapConfig.SERVER.synchronizePlayers),
@@ -96,7 +96,12 @@ public abstract class RemoteSynchronizer {
 				true,
 				//TODO Implement warps
 				false);
-		if(clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS) data.isLegacyClient = true;
+		if(clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS) {
+			data.isLegacyTerraClient = true;
+			data.serverVersion = TerramapMod.getVersion().getTerramapVersionString();
+		} else {
+			data.serverVersion = TerramapMod.getVersion().toString();
+		}
 		TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(data, player);
 	}
 

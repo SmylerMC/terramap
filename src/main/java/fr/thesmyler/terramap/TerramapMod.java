@@ -28,6 +28,8 @@ public class TerramapMod {
 	public static final String AUTHOR_EMAIL = "smyler at mail dot com";
 	public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
 	private static TerramapVersion version; // Read from the metadata
+	
+	// These are notable versions
 	public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
 	public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
 	public static final TerramapVersion OLDEST_TERRA121_TERRAMAP_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 7);
