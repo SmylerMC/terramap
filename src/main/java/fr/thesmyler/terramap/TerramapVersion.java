@@ -55,15 +55,15 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 	}
 	
 	public TerramapVersion(int majorTarget, int minorTarget, int buildTarget, ReleaseType type, int build, int revision) {
-		this(majorTarget, minorTarget, buildTarget, type, build, revision, false, Minecraft.getMinecraft().getVersion());
+		this(majorTarget, minorTarget, buildTarget, type, build, revision, false, "");
 	}
 	
 	public TerramapVersion(int majorTarget, int minorTarget, int buildTarget, ReleaseType type, int build) {
-		this(majorTarget, minorTarget, buildTarget, type, build, 0, false, Minecraft.getMinecraft().getVersion());
+		this(majorTarget, minorTarget, buildTarget, type, build, 0, false, "");
 	}
 	
 	public TerramapVersion(int majorTarget, int minorTarget, int buildTarget) {
-		this(majorTarget, minorTarget, buildTarget, ReleaseType.RELEASE, 0, 0, false, Minecraft.getMinecraft().getVersion());
+		this(majorTarget, minorTarget, buildTarget, ReleaseType.RELEASE, 0, 0, false, "");
 	}
 
 	public TerramapVersion(@Nonnull String versionString) throws InvalidVersionString {
