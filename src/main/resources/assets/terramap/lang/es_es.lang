@@ -1,4 +1,5 @@
-terramap.config.minimap.enable=Minimap: activar
+## Config
+tterramap.config.minimap.enable=Minimap: activar
 terramap.config.minimap.style=Minimap: estilo
 terramap.config.minimap.pos_x=Minimap: Posición X (%%)
 terramap.config.minimap.pos_y=Minimap: Posición Y (%%)
@@ -7,9 +8,19 @@ terramap.config.minimap.height=Minimap: Altura (%%)
 terramap.config.minimap.zoom=Minimap: Zoom
 terramap.config.minimap.show_entities=Minimap: Mostrar entidades
 terramap.config.minimap.show_players=Minimap: Mostrar jugadores
-terramap.config.cache_dir=Nombre del directorio de caché
+terramap.config.minimap.tile_scaling=Minimap: ajuste
+terramap.config.minimap.direction=Minimap: direcciones del jugador
+terramap.config.compass.visibility=Compass: activar
+terramap.config.compass.position.x=Compass: Posición X (%%)
+terramap.config.compass.position.y=Compass: Posición Y (%%)
+terramap.config.compass.width=Compass: Anchura (%%)
+terramap.config.minimap=Minimap
+terramap.config.compass=Brújula
+terramap.config.save_ui_state=Guardar el estado del UI
+terramap.config.client=Cliente
+terramap.config.server=Servidor
+terramap.config.enable_debug_maps=Activar el mapa debug
 terramap.config.tile_scaling=Ajuste de las losetas
-terramap.config.auto_tile_scaling=Tamaño de las losetas automaticas
 terramap.config.max_tile_load=Tamaño del caché de los mapas
 terramap.config.double_click_delay=Retraso de doble clic
 terramap.config.tpllcmd=Comando tpll
@@ -23,7 +34,72 @@ terramap.config.sync_custom_maps=Compartir los mapas personalizados
 terramap.config.join_without_mod_message=Mensaje sin mod
 terramap.config.join_with_outdated_mod_message=Mensaje versión antigua del mod
 terramap.config.unlock_zoom=Desbloquear zoom
+terramap.config.low_zoom_level=Mantener cargado bajo nivel de zoom
+terramap.config.cancel=Cancelar
+terramap.config.cancel.tooltip=Cerrar sin guardar
+terramap.config.reset=Reset
+terramap.config.reset.tooltip=Reset todos los valores
+terramap.config.save=Guardar
+terramap.config.save.tooltip=Guardar y cerrar
+terramap.config.options.tooltip=Mas opciones
+terramap.configmenu.title=Configuración de Terramap
+terramap.configmenu.save=Guardar
+terramap.configmenu.save.tooltip=Guardar y cerrar
+terramap.configmenu.cancel=Cancelar
+terramap.configmenu.cancel.tooltip=Cerrar sin guardar
+terramap.configmenu.reset=Reset
+terramap.configmenu.reset.tooltip=Reset todos los valores
+terramap.configmenu.title.mapsettings=Config. de Terramap: config. del mapa
+terramap.configmenu.title.mapstyles=Config. de Terramap: estilos de mapa
+terramap.configmenu.title.other=Config. de Terramap: otros
+terramap.configmenu.unlockzoom=Desbloquear zoom :
+terramap.configmenu.unlockzoom.tooltip=Desbloquear zoom artificial hasta 25
+terramap.configmenu.saveui=Guardar el estado del UI :
+terramap.configmenu.saveui.tooltip=Acordarse las modificaciones de debug y F1 cuando el mapa de pantalla completa está cerrado
+terramap.configmenu.tilescaling=Escala del mapa:
+terramap.configmenu.doubleclick=Retraso de doble clic:
+terramap.configmenu.tilecache=Caché de losetas:
+terramap.configmenu.tilecache.tooltip=Número de losetas a guardar en la memoria para cada mapa
+terramap.configmenu.lowzoom=Zoom bajo:
+terramap.configmenu.lowzoom.tooltip=Las losetas con este nivel de zoom nunca se descargarán
+terramap.configmenu.configureminimap=Configurar HUD
+terramap.configmenu.configureminimap.tooltip=Configurar el minimapa y la brújula del juego
+terramap.configmenu.debugmapstyles=Activar el debug de los estilos de mapa :
+terramap.configmenu.debugmapstyles.tooltip=Activa el debug de los estilos de mapa, necesitas guardarlos y luego recargarlos
+terramap.configmenu.mapstyles.base=Base (%1$s): %2$s
+terramap.configmenu.mapstyles.proxy=Proxy (%1$s): %2$s
+terramap.configmenu.mapstyles.server=Servidor (%1$s): %2$s
+terramap.configmenu.mapstyles.custom=Usuario (%1$s): %2$s
+terramap.configmenu.mapstyles.effective=Estilos efectivos (%1$s): %2$s
+terramap.configmenu.mapstyles.reload=Recaregar estilos de mapa
+terramap.configmenu.mapstyles.open=Abrir el archivo de la config. de los estilos de mapa
+terramap.configmenu.teleportcmd=Commando de teletransportación:
+terramap.configmenu.pagenumber=Página %1$s of %2$s
+terramap.configmenu.asksave.prompt=Guardar la config. ?
+terramap.configmenu.asksave.confirm=Sí
+terramap.configmenu.asksave.deny=No
+terramap.configmenu.asksave.cancel=Cancelar
+terramap.configmenu.tilescaling.auto=automático
 
+## Hud config
+terramap.hudconfig.minimap=Minimapa: 
+terramap.hudconfig.minimap.tooltip=Cambiar la visibilidad del Minimapa
+terramap.hudconfig.compass=Brújula: 
+terramap.hudconfig.compass.tooltip=Cambiar la visibilidad de la Brújula
+terramap.hudconfig.players=Jugadores: 
+terramap.hudconfig.players.tooltip=Cambiar la visibilidad de los otros jugadores en el Minimapa
+terramap.hudconfig.entities=Entidades: 
+terramap.hudconfig.entities.tooltip=Cambiar la visibilidad de las entidades en el Minimapa
+terramap.hudconfig.directions=Direcciones del jugador: 
+terramap.hudconfig.directions.tooltip=Cambiar la visibilidad de la flecha de dirección en el Minimapa
+terramap.hudconfig.scaling=Ajuste: 
+terramap.hudconfig.scaling.tooltip=Cambiar el factor de "escala de loseta" del Minimapa
+terramap.hudconfig.zoom=Zoom: 
+terramap.hudconfig.zoom.tooltip=Cambiar el nivel de zoom del Minimapa
+terramap.hudconfig.mapstyle.tooltip=Cambiar el estilo del Minimapa
+terramap.hudconfig.explain=Mueva y cambie el tamaño del Minimapa y de la brújula usando las ventanas de vista previa, y haga clic en el botón de menú para ver más opciones.
+
+## Keys
 terramap.binding.category=Terramap
 terramap.binding.open_map=Abrir el mapa
 terramap.binding.toggle_debug=Activar el modo depuración de TerraMap
@@ -32,8 +108,10 @@ terramap.binding.copy_geo=Copiar las coordenadas IRL
 terramap.binding.copy_mc=Copiar las coordenadas Minecraft
 terramap.binding.zoom_in=Zoom +
 terramap.binding.zoom_out=Zoom -
-terramap.binding.toggle_minimap=Alternar la visibilidad del minimapa
+terramap.binding.toggle_minimap=Cambiar la visibilidad del minimapa
+terramap.binding.configure_minimap=Abrir la configuración del HUD
 
+## Map
 terramap.mapwidget.rclickmenu.teleport=Teletransportarse aquí
 terramap.mapwidget.rclickmenu.center=Centrar el mapa aquí
 terramap.mapwidget.rclickmenu.copy=Copiar
@@ -53,24 +131,39 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Ajustar la proyección utilizada
+terramap.mapwidget.error.header=Error:
+terramap.mapwidget.shortcuts.tp=Haga clic para teletransportarse
+terramap.mapwidget.error.copyblock=No se pudo copiar las coordenadas del block fuera de la proyección
+terramap.mapwidget.error.copychunk=No se pudo copiar las coordenadas del chunk fuera de la proyección
+terramap.mapwidget.error.copyregion=No se pudo copiar las coordenadas de la región Vanilla fuera de la proyección
+terramap.mapwidget.error.copy3dregion=No se pudo copiar las coordenadas de la región 3D fuera de la proyección
+terramap.mapwidget.error.copy2dregion=No se pudo copiar las coordenadas de la región 2D fuera de la proyección
+terramap.mapwidget.error.tp=No se pudo teletransportar fuera de la proyección
+terramap.maps.debug.terrain=Debug del terreno
 
-terramap.mapwidget.shortcuts.tp=Haga clic para teletransportarse aquí
+#### Full-screen map ####
 
-terramap.terramapscreen.projection_warning.unused_comment=Puede añadir tantas líneas como necesite para diferentes idiomas aquí
+## Message to translators: Puede añadir tantas líneas como necesite para diferentes idiomas aquí
 terramap.terramapscreen.projection_warning.line1=Terramap no esta descaregado en este servidor!!
 terramap.terramapscreen.projection_warning.line2=No hay forma de identificar la proyección utilizada
 terramap.terramapscreen.projection_warning.line3=Los elementos del mundo Minecraft no serán mostrados en el mapa.
 terramap.terramapscreen.projection_warning.line4=Puedes pedir al admin de añadir Terramap,
 terramap.terramapscreen.projection_warning.line5=o puede ajustar manualmente la proyección utilizada en el menú.
+terramap.terramapscreen.mapstylefailed.title=Algunos estilos de mapas no fueron cargados
+terramap.terramapscreen.mapstylefailed.provider=Proveedor: %1$s
+terramap.terramapscreen.mapstylefailed.exception=Excepción: %1$s
 
-terramap.terramapscreen.buttons.close.tooltip=Cerrar el mapa
+## Buttons
+terramap.terramapscreen.buttons.close.tooltip=Cerrar mapa
 terramap.terramapscreen.buttons.zoomin.tooltip=Zoom +
 terramap.terramapscreen.buttons.zoomout.tooltip=Zoom -
 terramap.terramapscreen.buttons.track.tooltip=Seguir el jugador
 terramap.terramapscreen.buttons.style.tooltip=Cambiar el estilo del mapa
-terramap.terramapscreen.buttons.info.tooltip=Mover el panel de información
+terramap.terramapscreen.buttons.info.tooltip=Cerrar el panel de información
+terramap.terramapscreen.buttons.config.tooltip=Abrir el menú de configuración
 terramap.terramapscreen.search.wip=En desarrollo (WIP)
 
+## Info panel
 terramap.terramapscreen.information.mouse_geo=Posición del ratón: %1$s° %2$s°
 terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
 terramap.terramapscreen.information.trackedoutsidemap=%1$s está fuera del área proyectada
@@ -79,19 +172,25 @@ terramap.terramapscreen.information.playerout=Tu jugador está fuera del área p
 terramap.terramapscreen.information.playergeo=Posición del jugador : %1$s° %2$s°
 terramap.terramapscreen.information.noplayer=Posición del jugador : -° -°
 terramap.terramapscreen.information.distortion=Distorsión: %1$s bloques/m ; ±%2$s°
-terramap.terramapscreen.information.outdatedterra121=Actualiza Terra121 para utilizar el mod correctamente
 
+## Marker controllers
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=Cambiar la visibilidad del jugador principal
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=Cambiar la visibilidad de los otros jugadores
 terramap.terramapscreen.markercontrollers.buttons.animals=Cambiar la visibilidad de los animales
 terramap.terramapscreen.markercontrollers.buttons.mobs=Cambiar la visibilidad de los monstruos
+terramap.terramapscreen.markercontrollers.buttons.direction=Cambiar la visibilidad de la flecha de dirección
+terramap.terramapscreen.markercontrollers.buttons.name=Cambiar la visibilidad del nombre del jugador
 
+#### In game ####
 terramap.ingameactions.copy.noplayer=Imposible de copiar las coordenadas: ningún jugador
 terramap.ingameactions.copy.noproj=Imposible de copiar las coordenadas: sin proyección definida
 terramap.ingameactions.copy.outproj=Imposible de copiar las coordenadas: estás fuera de la proyección
 terramap.ingameactions.copy.mc=Coordenadas de Minecraft copiadas en el portapapeles
 terramap.ingameactions.copy.geo=Coordenadas geográficas copiadas en el portapapeles
+terramap.toasts.welcome.title=Terramap
+terramap.toasts.welcome.text=Presiona %1$s para abrir el mapa
 
+#### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [nombre del jugador (Opcional)]
 terramap.commands.terrashow.too_few_parameters=Faltan parámetros: /terrashow <show|hide|status> [nombre del jugador (Opcional)]
 terramap.commands.terrashow.too_many_parameters=Demasiados parámetros: /terrashow <show|hide|status> [nombre del jugador (Opcional)]
@@ -104,8 +203,10 @@ terramap.commands.terrashow.getvisible=%1$s está visible en el mapa
 terramap.commands.terrashow.setvisible=%1$s está ahora visible en el mapa
 terramap.commands.terrashow.gethidden=%1$s está oculto en el mapa
 terramap.commands.terrashow.sethidden=%1$s está ahora oculto en el mapa
-
 terramap.commands.reloadmapstyles.usage=/reloadmapstyles
 terramap.commands.reloadmapstyles.forbidden=¡No tienes permiso para usar el comando!
 terramap.commands.reloadmapstyles.done=Hecho
 terramap.commands.reloadmapstyles.error=Error al recargar estilos de mapa
+terramap.commands.opentmap.numberargs=Argumentos inválidos : el zoom, latitud y longitud son obligatorios
+terramap.commands.opentmap.couldnotopen=No se pudo abrir Terramap en el contexto actual.
+terramap.commands.opentmap.usage=/opentmap <zoom> <latitude> <longitude>
