@@ -263,6 +263,14 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 		return this.compareTo(other) < 0;
 	}
 	
+	public TerraDependency getTerraDependency() {
+		if(this.isNewer(TerramapMod.OLDEST_TERRA121_TERRAMAP_VERSION)) {
+			return TerraDependency.TERRAPLUSPLUS;
+		} else {
+			return TerraDependency.TERRA121;
+		}
+	}
+	
 	public static TerramapVersion getClientVersion(EntityPlayerMP player) {
 		Map<String, String> modList = NetworkDispatcher.get(player.connection.netManager).getModList();
 		TerramapVersion version = null;
@@ -283,7 +291,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 		RELEASE_CANDIDATE("rc", 3),
 		BETA("beta", 2),
 		ALPHA("alpha", 1),
-		DEV("dev", 0); // Running from dev environment, no actual version number
+		DEV("dev", 0); // Running from dev environment or test build, no actual version number
 
 		public final String name;
 		public final int priority;
@@ -297,12 +305,20 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 
 	public class InvalidVersionString extends Exception {
 
-		private static final long serialVersionUID = 1L;
-
 		public InvalidVersionString(String message) {
 			super(message);
 		}
 
+	}
+	
+	public enum TerraDependency {
+		TERRA121("terra121"), TERRAPLUSPLUS("terraplusplus");
+		
+		public final String MODID;
+		
+		private TerraDependency(String modid) {
+			this.MODID = modid;
+		}
 	}
 
 }

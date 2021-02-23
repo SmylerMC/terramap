@@ -22,6 +22,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 	public boolean enableMobRadar;
 	public boolean enableDecoRadar;
 	public boolean hasWarpSupport;
+	public boolean isLegacyClient = false;
 	
 	//TODO Warp support
 		
@@ -74,7 +75,8 @@ public class S2CTerramapHelloPacket implements IMessage {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		TerramapNetworkManager.encodeStringToByteBuf(this.serverVersion, buf);
-		TerramapNetworkManager.encodeStringToByteBuf(this.worldSettings.toString(), buf);
+		String stgs = this.isLegacyClient ? this.worldSettings.getLegacyGeneratorString(): this.worldSettings.toString();
+		TerramapNetworkManager.encodeStringToByteBuf(stgs, buf);
 		buf.writeLong(this.worldUUID.getLeastSignificantBits());
 		buf.writeLong(this.worldUUID.getMostSignificantBits());
 		buf.writeByte(this.syncPlayers.VALUE);

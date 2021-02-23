@@ -168,7 +168,8 @@ public class Screen extends GuiScreen implements IWidget{
 						break;
 					case RELEASE:
 						this.draggedWidget[event.button] = null;
-						widget.onMouseReleased(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this.draggedWidget[event.button]);						break;
+						widget.onMouseReleased(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this.draggedWidget[event.button]);
+						break;
 					case SCROLL:
 						propagate = widget.onMouseWheeled(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
 						break;

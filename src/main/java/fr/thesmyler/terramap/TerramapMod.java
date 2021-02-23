@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terraplusplus@[0.1.519,)")
+@Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terraplusplus@[0.1.553,)")
 public class TerramapMod {
 	
     public static final String MODID = "terramap";
@@ -30,6 +30,7 @@ public class TerramapMod {
 	private static TerramapVersion version; // Read from the metadata
 	public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
 	public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
+	public static final TerramapVersion OLDEST_TERRA121_TERRAMAP_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 7);
 
     public static Logger logger;
     

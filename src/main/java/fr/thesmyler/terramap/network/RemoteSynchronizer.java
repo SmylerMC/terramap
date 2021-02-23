@@ -11,6 +11,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
+import fr.thesmyler.terramap.TerramapVersion.TerraDependency;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
@@ -75,11 +76,15 @@ public abstract class RemoteSynchronizer {
 	}
 
 	public static void sendHelloToClient(EntityPlayerMP player) {
+		TerramapVersion clientVersion = TerramapVersion.getClientVersion(player);
+		if(TerramapMod.OLDEST_COMPATIBLE_CLIENT.isNewer(clientVersion)) {
+			return;
+		}
 		// Send world data to the client
 		World world = player.getEntityWorld();
 		if(!TerramapUtils.isServerEarthWorld(world)) return;
 		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
-		IMessage data = new S2CTerramapHelloPacket(
+		S2CTerramapHelloPacket data = new S2CTerramapHelloPacket(
 				TerramapMod.getVersion().toString(),
 				settings,
 				TerramapServerPreferences.getWorldUUID(player.getServerWorld()),
@@ -91,6 +96,7 @@ public abstract class RemoteSynchronizer {
 				true,
 				//TODO Implement warps
 				false);
+		if(clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS) data.isLegacyClient = true;
 		TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(data, player);
 	}
 
