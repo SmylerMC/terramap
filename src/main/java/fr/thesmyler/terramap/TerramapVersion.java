@@ -5,6 +5,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.apache.logging.log4j.util.Strings;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
@@ -27,6 +30,8 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 
 	public final boolean devBuild;
 	public final boolean devRun;
+	
+	public final String mcVersion;
 
 	public TerramapVersion(
 			int majorTarget,
@@ -35,7 +40,8 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 			ReleaseType releaseType,
 			int build,
 			int revision,
-			boolean devBuild) {
+			boolean devBuild,
+			String mcVersion) {
 		super();
 		this.majorTarget = majorTarget;
 		this.minorTarget = minorTarget;
@@ -45,18 +51,19 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 		this.revision = revision;
 		this.devBuild = devBuild;
 		this.devRun = false;
+		this.mcVersion = mcVersion;
 	}
 	
 	public TerramapVersion(int majorTarget, int minorTarget, int buildTarget, ReleaseType type, int build, int revision) {
-		this(majorTarget, minorTarget, buildTarget, type, build, revision, false);
+		this(majorTarget, minorTarget, buildTarget, type, build, revision, false, Minecraft.getMinecraft().getVersion());
 	}
 	
 	public TerramapVersion(int majorTarget, int minorTarget, int buildTarget, ReleaseType type, int build) {
-		this(majorTarget, minorTarget, buildTarget, type, build, 0, false);
+		this(majorTarget, minorTarget, buildTarget, type, build, 0, false, Minecraft.getMinecraft().getVersion());
 	}
 	
 	public TerramapVersion(int majorTarget, int minorTarget, int buildTarget) {
-		this(majorTarget, minorTarget, buildTarget, ReleaseType.RELEASE, 0, 0, false);
+		this(majorTarget, minorTarget, buildTarget, ReleaseType.RELEASE, 0, 0, false, Minecraft.getMinecraft().getVersion());
 	}
 
 	public TerramapVersion(@Nonnull String versionString) throws InvalidVersionString {
@@ -65,8 +72,19 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 			this.devBuild = false;
 			this.devRun = true;
 			this.releaseType = ReleaseType.DEV;
+			this.mcVersion = Minecraft.getMinecraft().getVersion();
 		} else {
-			String[] parts = versionString.split("-");
+			String[] versions = versionString.split("\\_");
+			String mcVersion;
+			if(versions.length == 2) {
+				mcVersion = versions[1];
+			} else  if(versions.length == 1) {
+				mcVersion = "";
+			} else {
+				throw new InvalidVersionString("Invalid version string " + versionString);
+			}
+			this.mcVersion = mcVersion;
+			String[] parts = versions[0].split("-");
 			if(parts.length > 3) {
 				throw new InvalidVersionString("Invalid version string " + versionString);
 			}
@@ -153,6 +171,9 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 		}
 		if(this.devBuild) {
 			str += "-dev";
+		}
+		if(!Strings.isBlank(this.mcVersion)) {
+			str += "_" + this.mcVersion;
 		}
 		return str;
 	}

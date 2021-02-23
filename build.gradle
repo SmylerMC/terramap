@@ -61,6 +61,7 @@ dependencies {
     runtime("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
         exclude group: "io.netty"
     }
+    testCompile "junit:junit:4.12"
     
 }
 
