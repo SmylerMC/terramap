@@ -21,10 +21,9 @@ import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.gui.screens.config.TerramapEarthGui;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
@@ -38,6 +37,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import net.buildtheearth.terraplusplus.control.PresetEarthGui;
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -236,7 +237,11 @@ public class MapWidget extends Screen {
 		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
 		this.rightClickMenu.addSeparator();
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
-			Minecraft.getMinecraft().displayGuiScreen(new TerramapEarthGui(null, TerramapClientContext.getContext().getGeneratorSettings()));	
+			EarthGeneratorSettings stg = TerramapClientContext.getContext().getGeneratorSettings();
+			Minecraft.getMinecraft().displayGuiScreen(new PresetEarthGui(this, stg != null ? stg.toString(): "", s ->  {
+				TerramapClientContext.getContext().setGeneratorSettings(EarthGeneratorSettings.parse(s));
+				TerramapClientContext.getContext().saveSettings();
+			}));
 		});
 
 		this.controller = new ControllerMapLayer(this.tileScaling);
