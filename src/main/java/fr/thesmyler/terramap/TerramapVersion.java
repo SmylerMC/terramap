@@ -7,7 +7,6 @@ import javax.annotation.Nonnull;
 
 import org.apache.logging.log4j.util.Strings;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
@@ -72,7 +71,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 			this.devBuild = false;
 			this.devRun = true;
 			this.releaseType = ReleaseType.DEV;
-			this.mcVersion = Minecraft.getMinecraft().getVersion();
+			this.mcVersion = "";
 		} else {
 			String[] versions = versionString.split("\\_");
 			String mcVersion;
@@ -221,9 +220,12 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 			return Integer.MAX_VALUE;
 		}
 		
-		if(this.isDev()) {
-			if(other.isDev()) return 0;
-			else return Integer.MAX_VALUE;
+		if(this.devRun && other.devRun) {
+			return 0;
+		} else if(this.devRun) {
+			return Integer.MAX_VALUE;
+		} else if(other.devRun) {
+			return Integer.MIN_VALUE;
 		}
 		
 		int majorComp = this.majorTarget - other.majorTarget;
@@ -235,7 +237,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 		int buildComp = this.buildTarget - other.buildTarget;
 		if(buildComp != 0) return buildComp;
 		
-		int typeComp = this.releaseType.priority - this.releaseType.priority;
+		int typeComp = this.releaseType.priority - other.releaseType.priority;
 		if(typeComp != 0) return typeComp;
 		
 		int rComp = this.build - other.build;
