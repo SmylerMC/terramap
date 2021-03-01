@@ -6,14 +6,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
@@ -26,6 +24,9 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import net.buildtheearth.terraplusplus.util.http.Http;
 
 public class MapStylesLibrary {
 
@@ -113,14 +114,22 @@ public class MapStylesLibrary {
 	 */
 	public static void loadFromOnline(String hostname) {
 		TiledMapProvider.ONLINE.setLastError(null);
+		String url;
 		try {
-			// We can't rely on Terra++ for that because the cache would cause trouble
-			URL url = resolveUpdateURL(hostname);
-			URLConnection connection = url.openConnection();
-			connection.setAllowUserInteraction(false);
-			connection.setRequestProperty("User-Agent", TerramapMod.getUserAgent());
-			connection.connect();
-			try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+			url = resolveUpdateURL(hostname);
+		} catch (UnknownHostException | NamingException e1) {
+			TerramapMod.logger.error("Failed to resolve map styles urls!");
+			TerramapMod.logger.catching(e1);
+			return;
+		}
+		CompletableFuture<ByteBuf> request = Http.get(url);
+		request.whenComplete((b, e) -> {
+			if(e != null) {
+				TerramapMod.logger.error("Failed to download updated map style file!");
+				TerramapMod.logger.catching(e);
+				TiledMapProvider.ONLINE.setLastError(e);
+			}
+			try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteBufInputStream(b)))) {
 				String json = "";
 				String line = txtReader.readLine();
 				while(line != null) {
@@ -128,12 +137,12 @@ public class MapStylesLibrary {
 					line = txtReader.readLine();
 				}
 				baseMaps.putAll(loadFromJson(json, TiledMapProvider.ONLINE));
+			} catch(Exception f) {
+				TerramapMod.logger.error("Failed to parse updated map style file!");
+				TerramapMod.logger.catching(e);
+				TiledMapProvider.ONLINE.setLastError(e);
 			}
-		} catch (NamingException | IOException e) {
-			TerramapMod.logger.error("Failed to download updated map style file, let's hope the cache has a good version!");
-			TerramapMod.logger.catching(e);
-			TiledMapProvider.ONLINE.setLastError(e);
-		}
+		});
 	}
 	
 	/**
@@ -239,13 +248,13 @@ public class MapStylesLibrary {
 		return styles;
 	}
 
-	private static URL resolveUpdateURL(String hostname) throws UnknownHostException, NamingException, MalformedURLException {
+	private static String resolveUpdateURL(String hostname) throws UnknownHostException, NamingException {
 		InetAddress inetAddress = InetAddress.getByName(hostname);
 		InitialDirContext iDirC = new InitialDirContext();
 		Attributes attributes = iDirC.getAttributes("dns:/" + inetAddress.getHostName(), new String[] {"TXT"});
 		String attribute =  attributes.get("TXT").get().toString();
 		try {
-			return new URL(attribute.split("\\|")[1]);
+			return attribute.split("\\|")[1].replace("${version}", TerramapMod.getVersion().toString());
 		} catch(IndexOutOfBoundsException e) {
 			throw new UnknownHostException("TXT record was malformatted");
 		}

@@ -9,13 +9,13 @@ public enum TiledMapProvider {
 	PROXY,    // From the Sledgehammer proxy
 	CUSTOM;   // From the user defined config
 	
-	private Exception error = null;
+	private Throwable error = null;
 	
-	public synchronized void setLastError(Exception e) {
+	public synchronized void setLastError(Throwable e) {
 		this.error = e;
 	}
 	
-	public synchronized Exception getLastError() {
+	public synchronized Throwable getLastError() {
 		return this.error;
 	}
 

@@ -64,11 +64,6 @@ public class TerramapMod {
     	return TerramapMod.version;
     }
     
-    public static String getUserAgent() {
-    	return "Terramap for the BTE project v" + TerramapMod.getVersion() +
-    			" at https://github.com/SmylerMC/terramap by " + AUTHOR_EMAIL;
-    }
-    
     @NetworkCheckHandler
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
     	return true; //Anything should be ok, the actual check is done in the server event handler

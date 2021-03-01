@@ -454,7 +454,7 @@ public class TerramapScreen extends Screen {
 			super(0, 0, 0, 0, 0, BackgroundType.NONE);
 			IWidget lw = null;
 			for(TiledMapProvider provider: TiledMapProvider.values()) {
-				Exception e = provider.getLastError();
+				Throwable e = provider.getLastError();
 				if(e == null) continue;
 				int x = 0;
 				int y = 0;
@@ -518,9 +518,9 @@ public class TerramapScreen extends Screen {
 	private class FailedMapLoadingNotice extends AbstractWidget {
 
 		private TiledMapProvider provider;
-		private Exception exception;
+		private Throwable exception;
 		
-		public FailedMapLoadingNotice(int x, int y, int z, int width, int height, TiledMapProvider provider, Exception e) {
+		public FailedMapLoadingNotice(int x, int y, int z, int width, int height, TiledMapProvider provider, Throwable e) {
 			super(x, y, z, width, height);
 			this.provider = provider;
 			this.exception = e;
