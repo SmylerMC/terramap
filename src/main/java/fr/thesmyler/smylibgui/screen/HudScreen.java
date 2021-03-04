@@ -4,6 +4,7 @@ import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
@@ -32,6 +33,7 @@ public class HudScreen extends Screen {
 		}
 		this.onUpdate(null);
 		this.drawScreen(res.getScaledWidth()/2, res.getScaledHeight()/2, e.getPartialTicks());
+		GlStateManager.color(1f, 1f, 1f, .5f); // Reset color to what it was
 		this.lastRenderWidth = width;
 		this.lastRenderHeight = height;
 	}

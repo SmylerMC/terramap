@@ -9,7 +9,6 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -23,7 +22,6 @@ public class RibbonCompassWidget implements IWidget {
 	
 	private int x, y, z, width, height, textureWidth, indicatorWidth, indicatorHeight;
 	private float azimuth = 0;
-	private int baseColor = 0xFFFFFFFF;
 	private boolean visibility = true;
 
 	public RibbonCompassWidget(int x, int y, int z, int width) {
@@ -84,7 +82,6 @@ public class RibbonCompassWidget implements IWidget {
 		buff.pos(x + this.width, y, 0).tex(rightU, 0d).color(1f, 1f, 1f, 0f).endVertex();
 
 		tess.draw();
-		Gui.drawRect(0, 0, 0, 0, 0);
         
 		Minecraft.getMinecraft().getTextureManager().bindTexture(COMPASS_INDICATOR_TEXTURE);
 		GlStateManager.color(1f, 1f, 1f, 1f);
@@ -96,8 +93,6 @@ public class RibbonCompassWidget implements IWidget {
 		buff.pos(indX + this.indicatorWidth, indY + this.indicatorHeight, 0).tex(1d, 1d).endVertex();
 		buff.pos(indX + this.indicatorWidth, indY, 0).tex(1d, 0d).endVertex();
 		tess.draw();
-		
-		GlStateManager.disableBlend();
 		
 	}
 
@@ -139,15 +134,6 @@ public class RibbonCompassWidget implements IWidget {
 	@Override
 	public int getZ() {
 		return z;
-	}
-	
-	public int getBaseColor() {
-		return this.baseColor;
-	}
-	
-	public RibbonCompassWidget setBaseColor(int color) {
-		this.baseColor = color;
-		return this;
 	}
 	
 	public float getAzimuth() {
