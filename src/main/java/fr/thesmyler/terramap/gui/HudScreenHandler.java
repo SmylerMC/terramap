@@ -123,8 +123,9 @@ public abstract class HudScreenHandler {
 	public static void toggleWidgets() {
 		if(map != null && compass != null && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
 			map.setVisibility(!map.isVisible(null));
-			compass.setVisibility(map.isVisible(null) && TerramapConfig.CLIENT.compass.enable);
+			compass.setVisibility(map.isVisible(null));
 			TerramapConfig.CLIENT.minimap.enable = map.isVisible(null);
+			TerramapConfig.CLIENT.compass.enable = compass.isVisible(null);
 			TerramapConfig.sync();
 		}
 	}
