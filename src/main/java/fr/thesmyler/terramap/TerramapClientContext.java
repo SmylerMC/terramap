@@ -180,19 +180,20 @@ public class TerramapClientContext {
 	}
 
 	private String buildCurrentServerIdentifer() {
+		String worldType = this.isOnEarthWorld() ? "earth": "other";
 		if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
-			return "proxy:" + this.proxyUUID.toString();
+			return worldType + "@proxy:" + this.proxyUUID.toString();
 		} else if(this.worldUUID != null) {
-			return "server:" + this.worldUUID.toString();
+			return worldType + "@server:" + this.worldUUID.toString();
 		} else {
 			if(this.proxyUUID != null) {
-				return "proxy:" + this.proxyUUID.toString();
+				return worldType + "@proxy:" + this.proxyUUID.toString();
 			}
 			ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
 			if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
 				return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@integrated_server@localhost";
 			} else if(servData != null){
-				return servData.serverName + "@" + servData.serverIP;
+				return worldType + "@" + servData.serverName + "@" + servData.serverIP;
 			} else {
 				return "noserver";
 			}
@@ -480,7 +481,7 @@ public class TerramapClientContext {
 	public void tryShowWelcomeToast() {
 		if(this.shouldShowWelcomeToast()) {
 			//FIXME often shows up twice
-			String key = KeyBindings.OPEN_MAP.getKeyDescription();
+			String key = KeyBindings.OPEN_MAP.getDisplayName();
 			Minecraft.getMinecraft().getToastGui().add(new TextureToast(I18n.format("terramap.toasts.welcome.title"), I18n.format("terramap.toasts.welcome.text", key), new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
 			this.setHasShownWelcomeMessage(true);
 		}
