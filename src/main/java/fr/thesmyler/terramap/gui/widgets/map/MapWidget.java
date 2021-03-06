@@ -39,6 +39,7 @@ import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -76,7 +77,7 @@ public class MapWidget extends Screen {
 	private MenuEntry copy3drMenuEntry;
 	private MenuEntry copy2drMenuEntry;
 	private MenuEntry setProjectionMenuEntry;
-	
+
 	private TextComponentWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 
@@ -86,7 +87,7 @@ public class MapWidget extends Screen {
 
 	private List<ReportedError> reportedErrors = new ArrayList<>();
 	private static final int MAX_ERRORS_KEPT = 10;
-	
+
 	private final MapContext context;
 
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
@@ -114,7 +115,7 @@ public class MapWidget extends Screen {
 		};
 		this.errorText.setBackgroundColor(0xC0600000).setPadding(5).setAlignment(TextAlignment.CENTER).setShadow(false).setBaseColor(0xFFFFFFFF);
 		super.addWidget(errorText);
-		
+
 		this.rightClickMenu = new MenuWidget(1500, font);
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
 			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
@@ -264,7 +265,7 @@ public class MapWidget extends Screen {
 			}
 			this.markerControllers.put(controller.getId(), controller);
 		}
-		
+
 		if(this.mainPlayerMarkerController != null && this.otherPlayerMarkerController != null) {
 			this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
 			this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
@@ -540,30 +541,35 @@ public class MapWidget extends Screen {
 
 	private void updateRightClickMenuEntries() {
 		boolean hasProjection = TerramapClientContext.getContext().getProjection() != null;
-		this.teleportMenuEntry.enabled = hasProjection;
+		this.teleportMenuEntry.enabled = true;
 		this.copyBlockMenuEntry.enabled = hasProjection;
 		this.copyChunkMenuEntry.enabled = hasProjection;
 		this.copyRegionMenuEntry.enabled = hasProjection;
 		this.copy3drMenuEntry.enabled = hasProjection;
 		this.copy2drMenuEntry.enabled = hasProjection;
-		this.setProjectionMenuEntry.enabled = !TerramapClientContext.getContext().isInstalledOnServer();
+		this.setProjectionMenuEntry.enabled = (!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().isOnEarthWorld());
 	}
 
 	private void teleportPlayerTo(double longitude, double latitude) {
 		String cmd = TerramapClientContext.getContext().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
-		if(TerramapClientContext.getContext().getProjection() != null) {
+		GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+		if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
+			String s = System.currentTimeMillis() + ""; // Just a random string
+			this.reportError(s, I18n.format("terramap.mapwidget.error.tp"));
+			this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+			return;
+		}
+		if(projection != null) {
 			try {
 				double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(longitude, latitude);
 				cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
-				this.sendChatMessage(cmd, false);
 			} catch (OutOfProjectionBoundsException e) {
-				String s = System.currentTimeMillis() + ""; //Just a random string
+				String s = System.currentTimeMillis() + ""; // Just a random string
 				this.reportError(s, I18n.format("terramap.mapwidget.error.tp"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
-		} else {
-			TerramapMod.logger.error("Tried to teleport from the map but the projection was null!");
 		}
+		this.sendChatMessage(cmd, false);
 	}
 
 	public Map<String, FeatureVisibilityController> getVisibilityControllers() {
@@ -774,7 +780,7 @@ public class MapWidget extends Screen {
 	public IRasterTiledMap getBackgroundStyle() {
 		return this.background.getMap();
 	}
-	
+
 	public MapWidget trySetFeatureVisibility(String markerId, boolean value) {
 		FeatureVisibilityController c = this.getVisibilityControllers().get(markerId);
 		if(c != null) c.setVisibility(value);
@@ -802,7 +808,7 @@ public class MapWidget extends Screen {
 	}
 
 	private boolean isShortcutEnabled() {
-		return TerramapClientContext.getContext().getProjection() != null && this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
+		return this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
 	}
 
 	@Override
@@ -814,7 +820,7 @@ public class MapWidget extends Screen {
 		this.visible = yesNo;
 		return this;
 	}
-	
+
 	public void reportError(Object source, String errorMessage) {
 		ReportedError error = new ReportedError(source, errorMessage);
 		if(this.reportedErrors.contains(error)) return;
@@ -823,7 +829,7 @@ public class MapWidget extends Screen {
 			this.reportedErrors.remove(0);
 		}
 	}
-	
+
 	public void discardPreviousErrors(Object source) {
 		List<ReportedError> errsToRm = new ArrayList<>();
 		for(ReportedError e: this.reportedErrors) {
@@ -831,12 +837,12 @@ public class MapWidget extends Screen {
 		}
 		this.reportedErrors.removeAll(errsToRm);
 	}
-	
+
 	private class ReportedError {
-		
+
 		private Object source;
 		private String message;
-		
+
 		private ReportedError(Object source, String message) {
 			this.source = source;
 			this.message = message;
