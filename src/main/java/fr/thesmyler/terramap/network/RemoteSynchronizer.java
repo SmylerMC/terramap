@@ -112,6 +112,7 @@ public abstract class RemoteSynchronizer {
 
 	public static void sendMapStylesToClient(EntityPlayerMP player) {
 		TerramapVersion clientVersion = TerramapVersion.getClientVersion(player);
+		if(clientVersion == null) return;
 		boolean compat = clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS;
 		if(TerramapConfig.SERVER.sendCusomMapsToClient) {
 			for(UrlTiledMap map: MapStylesLibrary.getUserMaps().values()) {
