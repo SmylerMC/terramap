@@ -35,7 +35,7 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
 
 	@Override
 	public boolean showButton() {
-		return true;
+		return TerramapClientContext.getContext().getProjection() != null;
 	}
 	
 	@Override

@@ -53,7 +53,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
 	@Override
 	public boolean showButton() {
-		return TerramapClientContext.getContext().allowsAnimalRadar();
+		return TerramapClientContext.getContext().allowsAnimalRadar() && TerramapClientContext.getContext().getProjection() != null;
 	}
 
 	@Override

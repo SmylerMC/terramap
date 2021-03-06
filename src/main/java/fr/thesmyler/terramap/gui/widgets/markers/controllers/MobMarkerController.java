@@ -52,7 +52,7 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 
 	@Override
 	public boolean showButton() {
-		return TerramapClientContext.getContext().allowsMobRadar();
+		return TerramapClientContext.getContext().allowsMobRadar() && TerramapClientContext.getContext().getProjection() != null;
 	}
 
 	@Override

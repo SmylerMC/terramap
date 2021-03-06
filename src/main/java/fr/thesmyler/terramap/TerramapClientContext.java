@@ -250,7 +250,7 @@ public class TerramapClientContext {
 
 	public void registerForUpdates(boolean yesNo) {
 		this.isRegisteredForUpdates = yesNo;
-		if(this.isInstalledOnServer() && this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+		if(this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
 	}
 
 	public String getTpCommand() {
