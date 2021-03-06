@@ -92,7 +92,7 @@ public abstract class Marker implements IWidget {
 	
 	@Override
 	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
-		return true; //TODO do not prevent the map from being dragged if clicked
+		return true;
 	}
 	
 	@Override

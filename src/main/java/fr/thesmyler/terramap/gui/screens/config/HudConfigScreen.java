@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class HudConfigScreen extends Screen {
 		super(BackgroundType.NONE);
 		List<MapStyleSliderEntry> maps = new ArrayList<>();
 		TerramapClientContext.getContext().getMapStyles().values().stream()
+			.sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
 			.filter(m -> m.isAllowedOnMinimap())
 			.forEachOrdered(m -> maps.add(new MapStyleSliderEntry(m)));
 		this.mapStyles = maps.toArray(this.mapStyles);
@@ -294,7 +296,6 @@ public class HudConfigScreen extends Screen {
 		
 	}
 	
-	//TODO Sort those
 	private class MapStyleSliderEntry {
 		private IRasterTiledMap map;
 		private MapStyleSliderEntry(IRasterTiledMap map) {

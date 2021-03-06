@@ -480,7 +480,6 @@ public class TerramapClientContext {
 	
 	public void tryShowWelcomeToast() {
 		if(this.shouldShowWelcomeToast()) {
-			//FIXME often shows up twice
 			String key = KeyBindings.OPEN_MAP.getDisplayName();
 			Minecraft.getMinecraft().getToastGui().add(new TextureToast(I18n.format("terramap.toasts.welcome.title"), I18n.format("terramap.toasts.welcome.text", key), new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
 			this.setHasShownWelcomeMessage(true);

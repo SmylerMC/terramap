@@ -20,7 +20,6 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
  *
  * @param <T> The type of tile handled by this map
  */
-//FIXME There is a problem when changing low zoom level
 public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IRasterTiledMap {
 
 	private final LinkedList<T> tileList; // Uses for ordered access when unloading
