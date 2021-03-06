@@ -111,10 +111,13 @@ public abstract class RemoteSynchronizer {
 	}
 
 	public static void sendMapStylesToClient(EntityPlayerMP player) {
+		TerramapVersion clientVersion = TerramapVersion.getClientVersion(player);
+		boolean compat = clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS;
 		if(TerramapConfig.SERVER.sendCusomMapsToClient) {
 			for(UrlTiledMap map: MapStylesLibrary.getUserMaps().values()) {
 				if(!TerramapConfig.enableDebugMaps && map.isDebug()) continue;
 				SP2CMapStylePacket pkt = new SP2CMapStylePacket(map);
+				if(compat) pkt.setBackwardCompat();
 				TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(pkt, player);
 			}
 		}

@@ -3,6 +3,8 @@ package fr.thesmyler.terramap.network;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.util.Strings;
+
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -14,7 +16,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-//TODO Test map style sync with various remotes
 public class SP2CMapStylePacket implements IMessage {
 
 	private String id;
@@ -29,6 +30,7 @@ public class SP2CMapStylePacket implements IMessage {
 	private String comment;
 	private int maxConcurrentConnection;
 	private boolean debug;
+	private boolean backwardCompat = false;
 
 	public SP2CMapStylePacket(UrlTiledMap map) {
 		this.id = map.getId();
@@ -73,7 +75,7 @@ public class SP2CMapStylePacket implements IMessage {
 		this.displayPriority = buf.readInt();
 		this.isAllowedOnMinimap = buf.readBoolean();
 		this.comment = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-		if(buf.isReadable()) { // The following fields were added in 1.0.0-beta7
+		if(Strings.isBlank(urlPattern)) { // The following fields were added in 1.0.0-beta7
 			this.maxConcurrentConnection = buf.readInt();
 			this.urlPatterns = TerramapNetworkManager.decodeStringArrayFromByteBuf(buf);
 			this.debug = buf.readBoolean();
@@ -89,7 +91,8 @@ public class SP2CMapStylePacket implements IMessage {
 	public void toBytes(ByteBuf buf) {
 		TerramapNetworkManager.encodeStringToByteBuf(this.id, buf);
 		buf.writeLong(this.providerVersion);
-		TerramapNetworkManager.encodeStringToByteBuf(this.urlPatterns[0], buf);
+		String singleUrl = this.backwardCompat ? this.urlPatterns[0]: "";
+		TerramapNetworkManager.encodeStringToByteBuf(singleUrl, buf);
 		buf.writeInt(this.names.size());
 		for(String key: this.names.keySet()) {
 			TerramapNetworkManager.encodeStringToByteBuf(key, buf);
@@ -105,9 +108,19 @@ public class SP2CMapStylePacket implements IMessage {
 		buf.writeInt(this.displayPriority);
 		buf.writeBoolean(this.isAllowedOnMinimap);
 		TerramapNetworkManager.encodeStringToByteBuf(this.comment, buf);
-		buf.writeInt(this.maxConcurrentConnection);
-		TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
-		buf.writeBoolean(this.debug);
+		if(!this.backwardCompat) {
+			buf.writeInt(this.maxConcurrentConnection);
+			TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
+			buf.writeBoolean(this.debug);
+		}
+	}
+	
+	public void setBackwardCompat() {
+		this.backwardCompat = true;
+	}
+	
+	public boolean getBackwardCompat() {
+		return this.backwardCompat;
 	}
 
 	public UrlTiledMap getTiledMap(TiledMapProvider provider) {
