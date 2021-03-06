@@ -238,7 +238,7 @@ public class MapWidget extends Screen {
 		this.rightClickMenu.addSeparator();
 		this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
 			EarthGeneratorSettings stg = TerramapClientContext.getContext().getGeneratorSettings();
-			Minecraft.getMinecraft().displayGuiScreen(new PresetEarthGui(this, stg != null ? stg.toString(): "", s ->  {
+			Minecraft.getMinecraft().displayGuiScreen(new PresetEarthGui(null, stg != null ? stg.toString(): PresetEarthGui.DEFAULT_PRESETS.get("default"), s ->  {
 				TerramapClientContext.getContext().setGeneratorSettings(EarthGeneratorSettings.parse(s));
 				TerramapClientContext.getContext().saveSettings();
 			}));
