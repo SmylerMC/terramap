@@ -29,10 +29,12 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
 	@Override
 	public OtherPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
+		
+		boolean minimap = map.getContext() == MapContext.MINIMAP;
 
-		int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
+		int factor = minimap? 2: 1;
 
-		Map<UUID, TerramapPlayer> players = TerramapClientContext.getContext().getPlayerMap();
+		Map<UUID, TerramapPlayer> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap(): TerramapClientContext.getContext().getPlayerMap();
 		for(Marker marker: existingMarkers) {
 			TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
 			players.remove(player.getUUID());
@@ -41,7 +43,7 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 		// The main player has its own controller
 		EntityPlayerSP self = Minecraft.getMinecraft().player;
 		if(self != null) players.remove(self.getUniqueID());
-
+		
 		OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
 		int i = 0;
 		for(TerramapPlayer player: players.values()) {

@@ -89,7 +89,7 @@ public class TerramapClientContext {
 			players.putAll(this.remotePlayers);
 		}
 		if(this.getProjection() != null) {
-			players.putAll(this.getLocalPlayers());
+			players.putAll(this.getLocalPlayersMap());
 		}
 		return players;
 	}
@@ -99,10 +99,10 @@ public class TerramapClientContext {
 	}
 
 	public boolean hasPlayer(UUID uuid) {
-		return this.remotePlayers.containsKey(uuid) || this.getLocalPlayers().containsKey(uuid);
+		return this.remotePlayers.containsKey(uuid) || this.getLocalPlayersMap().containsKey(uuid);
 	}
 
-	private Map<UUID, TerramapPlayer> getLocalPlayers() {
+	public Map<UUID, TerramapPlayer> getLocalPlayersMap() {
 		Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
 		for(EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) {
 			players.put(player.getPersistentID(), new TerramapLocalPlayer(player));
