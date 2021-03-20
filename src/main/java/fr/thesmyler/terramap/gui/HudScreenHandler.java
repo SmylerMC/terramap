@@ -105,12 +105,14 @@ public abstract class HudScreenHandler {
 	}
 
 	public static void zoomInMinimap() {
+		if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
 		map.zoom(1);
 		TerramapConfig.CLIENT.minimap.zoomLevel = (int) map.getZoom();
 		TerramapConfig.sync();
 	}
 
 	public static void zoomOutMinimap() {
+		if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
 		map.zoom(-1);
 		TerramapConfig.CLIENT.minimap.zoomLevel = (int) map.getZoom();
 		TerramapConfig.sync();
