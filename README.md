@@ -36,39 +36,7 @@ In game, press m to open the map (by default, but it can be changed in the confi
 Drag it, zoom in and out, and explore the world just like with any other digital map.
 Right-click somwhere to get a menu with various useful tools (see the screenshots).
 Additionally, you can: press p to toggle debug mod, press control to enable quick tp mode, change the map style in the map style menu, change entity display preferences, follow an entity or player by double clicking it, configure the minimap in the mod's config, add your own map styles, and more...
-
-## How to setup on servers:
-Add Terramap to your server's mod folder and restart the server to generate the config file.
-Players can connect whether or not they have Terramap installed on their client. They will still need it if they want to look at the map.
-You can edit `config/terramap_user_styles.json` to add your own map styles to your server. Use `/reloadmapstyles` to reload that file without restarting your server.
-You can edit your config file, here are some important options:
-
-### `synchronize_players`
-you need to set this to true if you want all players to be visible on the map, if it is set to false, only players in the range of the server's render distance will be displayed
-
-### `sync_spectators`
-Set it to false if you only want non spectator players to appear on the map no matter the distance
-
-### `sync_interval`
-This is the time interval between each time the map updates will be sent to clients. Increase it if you suspect Terramap is lagging your server (not likely, it's pretty light as long as you don't have ~50 players all looking at the map at the same time). It's in ticks.
-
-### `sync_hearthbeet_timeout`
-You probably don't need to touch that, read the comment and make sure you understand what it does before changing it.
-
-### `force_client_tp_cmd`
-You can set this to true if you want clients to use a specific command when teleporting from the map. You then need to change the tpll_command config value to the command you want. You can use {longitude}, {latitude}, {x} and {z} in the said command, they will be replaced by the corresponding value when executed.
-
-### `players_opt_in_to_display_default`
-Set this to false if you want players to need to do /terrashow show to be visible on the map
-
-There are also a few permission nodes:
-### `terramap.commands.terrashow.others` allows to change anyone's visibility with `/terrashow`
-### `terramap.commands.terrashow.self` allows to change the visibility of the current players with `/terrashow`
-### `terramap.commands.reloadmapstyles` allows to reload the server map styles with `/reloadmapstyles`
-### `terramap.radar.players` allows to see other players on the map
-### `terramap.radar.animals` allows to see animals on the map
-### `terramap.radar.mobs` allows to see monsters on the map
-
+Checkout [the wiki](https://github.com/SmylerMC/terramap/wiki) for more technical information.
 
 ## Contributing:
 In case you want to contribute, please make sure you join the Discord. You will get a contributor role there.
