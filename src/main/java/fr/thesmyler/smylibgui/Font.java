@@ -15,9 +15,18 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class Font {
 	
+	protected float scale;
+	
+	public Font(float size) {
+		this.scale = size;
+	}
+	
+	public Font() {
+		this(1f);
+	}
+	
 	public float height() {
-		//TODO variable size
-		return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
+		return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT * this.scale;
 	}
 
 	@Deprecated
@@ -34,7 +43,7 @@ public class Font {
 			GlStateManager.enableBlend();
 			this.resetStyles();
 			if (shadow) {
-				float endX = this.renderString(text, x + 1f, y + 1f, color, true);
+				float endX = this.renderString(text, x + this.scale, y + this.scale, color, true);
 				return Math.max(endX, this.renderString(text, x, y, color, false));
 			} else {
 				return this.renderString(text, x, y, color, false);
@@ -101,9 +110,15 @@ public class Font {
 			this.setBlue(blue);
 			this.setAlpha(alpha);
 			this.setColor(red, green, blue, alpha);
-			this.setPosX(x);
-			this.setPosY(y);
+			GlStateManager.pushMatrix();
+			this.setPosX(0);
+			this.setPosY(0);
+			GlStateManager.translate(x, y, 0);
+			GlStateManager.scale(this.scale, this.scale, 1);
 			this.renderStringAtPos(actualText, shadow);
+			GlStateManager.popMatrix();
+			this.setPosX(x + this.getPosX()*this.scale);
+			this.setPosY(y);
 			return this.getPosX();
 		}
 	}
@@ -134,10 +149,123 @@ public class Font {
 	}
 	
 	public List<ITextComponent> splitText(ITextComponent textComponent, float maxTextLenght, boolean keepTrailingBlank, boolean forceTextColor) {
-		return GuiUtilRenderComponents.splitText(textComponent, (int) Math.floor(maxTextLenght), this.getFont(), keepTrailingBlank, forceTextColor);
+		return GuiUtilRenderComponents.splitText(textComponent, (int) Math.floor(maxTextLenght / this.scale), this.getFont(), keepTrailingBlank, forceTextColor);
 
 	}
 
+	protected void setColor(float r, float g, float b, float a) {
+		GlStateManager.color(r, g, b, a);
+	}
+
+	protected void enableAlpha() {
+		GlStateManager.enableAlpha();
+	}
+
+	/**
+	 * Draws the specified string with a shadow.
+	 */
+	@Deprecated
+	public float drawStringWithShadow(String text, float x, float y, int color) {
+		return this.drawString(text, x, y, color, true);
+	}
+
+	/**
+	 * Draws the specified string.
+	 */
+	@Deprecated
+	public float drawString(String text, int x, int y, int color) {
+		return this.drawString(text, (float)x, (float)y, color, false);
+	}
+
+	/**
+	 * Returns the width of this string. Equivalent of FontMetrics.stringWidth(String s).
+	 */
+	//FIXME for some reasons, FontRenderer#getStringWidth(String) seams to get stuck in an infinite loop when the Screen is too small, and eclipse's debugger cannot even step there ?
+	public float getStringWidth(String text) {
+		return this.getFont().getStringWidth(text) * this.scale;
+	}
+
+	/**
+	 * Returns the width of this character as rendered.
+	 */
+	public float getCharWidth(char character) {
+		return this.getFont().getCharWidth(character) * this.scale;
+	}
+
+	/**
+	 * Trims a string to fit a specified Width.
+	 */
+	public String trimStringToWidth(String text, float width) {
+		return this.getFont().trimStringToWidth(text, (int)Math.floor(width / this.scale));
+	}
+
+	/**
+	 * Trims a string to a specified width, optionally starting from the end and working backwards.
+	 * <h3>Samples:</h3>
+	 * (Assuming that {@link #getCharWidth(char)} returns <code>6</code> for all of the characters in
+	 * <code>0123456789</code> on the current resource pack)
+	 * <table>
+	 * <tr><th>Input</th><th>Returns</th></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 1, false)</code></td><td><samp>""</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 6, false)</code></td><td><samp>"0"</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 29, false)</code></td><td><samp>"0123"</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 30, false)</code></td><td><samp>"01234"</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 9001, false)</code></td><td><samp>"0123456789"</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 1, true)</code></td><td><samp>""</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 6, true)</code></td><td><samp>"9"</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 29, true)</code></td><td><samp>"6789"</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 30, true)</code></td><td><samp>"56789"</samp></td></tr>
+	 * <tr><td><code>trimStringToWidth("0123456789", 9001, true)</code></td><td><samp>"0123456789"</samp></td></tr>
+	 * </table>
+	 */
+	public String trimStringToWidth(String text, float width, boolean reverse) {
+		return this.getFont().trimStringToWidth(text, (int)Math.ceil(width / this.scale), reverse);
+	}
+
+	/**
+	 * Returns the height (in pixels) of the given string if it is wordwrapped to the given max width.
+	 */
+	public int getWordWrappedHeight(String str, float width) {
+		return this.getFont().getWordWrappedHeight(str, Math.round(width / this.scale));
+	}
+
+	/**
+	 * Set unicodeFlag controlling whether strings should be rendered with Unicode fonts instead of the default.png
+	 * font.
+	 */
+	public void setUnicodeFlag(boolean unicodeFlagIn) {
+		this.getFont().setUnicodeFlag(unicodeFlagIn);
+	}
+
+	/**
+	 * Get unicodeFlag controlling whether strings should be rendered with Unicode fonts instead of the default.png
+	 * font.
+	 */
+	public boolean getUnicodeFlag() {
+		return this.getFont().getUnicodeFlag();
+	}
+
+	/**
+	 * Set bidiFlag to control if the Unicode Bidirectional Algorithm should be run before rendering any string.
+	 */
+	public void setBidiFlag(boolean bidiFlagIn) {
+		this.getFont().setBidiFlag(bidiFlagIn);
+	}
+
+	/**
+	 * Breaks a string into a list of pieces where the width of each line is always less than or equal to the provided
+	 * width. Formatting codes will be preserved between lines.
+	 */
+	public List<String> listFormattedStringToWidth(String str, float wrapWidth) {
+		return this.getFont().listFormattedStringToWidth(str, Math.round(wrapWidth / this.scale));
+	}
+	
+	private FontRenderer getFont() {
+		return Minecraft.getMinecraft().fontRenderer;
+	}
+	
+	/* Only deleguated calls to FontRenderer and reflection stuff from this point */
+	
 	protected void renderStringAtPos(String text, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if(renderStringAtPos == null) 
 			renderStringAtPos = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_renderStringAtPos, Void.TYPE, String.class, Boolean.TYPE);
@@ -290,120 +418,6 @@ public class Font {
 	protected void setColorCode(int[] value) throws IllegalArgumentException, IllegalAccessException {
 		if(colorCode == null) colorCode = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_colorCode);
 		boldStyle.set(this.getFont(), value);
-	}
-
-	protected void setColor(float r, float g, float b, float a) {
-		GlStateManager.color(r, g, b, a);
-	}
-
-	protected void enableAlpha() {
-		GlStateManager.enableAlpha();
-	}
-
-	/**
-	 * Draws the specified string with a shadow.
-	 */
-	@Deprecated
-	public float drawStringWithShadow(String text, float x, float y, int color) {
-		return this.drawString(text, x, y, color, true);
-	}
-
-	/**
-	 * Draws the specified string.
-	 */
-	@Deprecated
-	public float drawString(String text, int x, int y, int color) {
-		return this.drawString(text, (float)x, (float)y, color, false);
-	}
-
-	/**
-	 * Returns the width of this string. Equivalent of FontMetrics.stringWidth(String s).
-	 */
-	//FIXME for some reasons, FontRenderer#getStringWidth(String) seams to get stuck in an infinite loop when the Screen is too small, and eclipse's debugger cannot even step there ?
-	public float getStringWidth(String text) {
-		//TODO float version
-		return this.getFont().getStringWidth(text);
-	}
-
-	/**
-	 * Returns the width of this character as rendered.
-	 */
-	public float getCharWidth(char character) {
-		//TODO Float version
-		return this.getFont().getCharWidth(character);
-	}
-
-	/**
-	 * Trims a string to fit a specified Width.
-	 */
-	public String trimStringToWidth(String text, float width) {
-		return this.getFont().trimStringToWidth(text, (int)Math.floor(width));
-	}
-
-	/**
-	 * Trims a string to a specified width, optionally starting from the end and working backwards.
-	 * <h3>Samples:</h3>
-	 * (Assuming that {@link #getCharWidth(char)} returns <code>6</code> for all of the characters in
-	 * <code>0123456789</code> on the current resource pack)
-	 * <table>
-	 * <tr><th>Input</th><th>Returns</th></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 1, false)</code></td><td><samp>""</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 6, false)</code></td><td><samp>"0"</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 29, false)</code></td><td><samp>"0123"</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 30, false)</code></td><td><samp>"01234"</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 9001, false)</code></td><td><samp>"0123456789"</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 1, true)</code></td><td><samp>""</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 6, true)</code></td><td><samp>"9"</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 29, true)</code></td><td><samp>"6789"</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 30, true)</code></td><td><samp>"56789"</samp></td></tr>
-	 * <tr><td><code>trimStringToWidth("0123456789", 9001, true)</code></td><td><samp>"0123456789"</samp></td></tr>
-	 * </table>
-	 */
-	public String trimStringToWidth(String text, float width, boolean reverse) {
-		return this.getFont().trimStringToWidth(text, (int)Math.ceil(width), reverse);
-	}
-
-	/**
-	 * Returns the height (in pixels) of the given string if it is wordwrapped to the given max width.
-	 */
-	public int getWordWrappedHeight(String str, int maxLength) {
-		return this.getFont().getWordWrappedHeight(str, maxLength);
-	}
-
-	/**
-	 * Set unicodeFlag controlling whether strings should be rendered with Unicode fonts instead of the default.png
-	 * font.
-	 */
-	public void setUnicodeFlag(boolean unicodeFlagIn) {
-		this.getFont().setUnicodeFlag(unicodeFlagIn);
-	}
-
-	/**
-	 * Get unicodeFlag controlling whether strings should be rendered with Unicode fonts instead of the default.png
-	 * font.
-	 */
-	public boolean getUnicodeFlag() {
-		return this.getFont().getUnicodeFlag();
-	}
-
-	/**
-	 * Set bidiFlag to control if the Unicode Bidirectional Algorithm should be run before rendering any string.
-	 */
-	public void setBidiFlag(boolean bidiFlagIn) {
-		this.getFont().setBidiFlag(bidiFlagIn);
-	}
-
-	/**
-	 * Breaks a string into a list of pieces where the width of each line is always less than or equal to the provided
-	 * width. Formatting codes will be preserved between lines.
-	 */
-	public List<String> listFormattedStringToWidth(String str, float wrapWidth) {
-		//TODO Better handling of float width
-		return this.getFont().listFormattedStringToWidth(str, Math.round(wrapWidth));
-	}
-	
-	private FontRenderer getFont() {
-		return Minecraft.getMinecraft().fontRenderer;
 	}
 	
 	/* All there is from this point onwards is reflection stuff */
