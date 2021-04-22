@@ -1,17 +1,19 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
-import net.minecraft.client.gui.GuiScreen;
 
 public class ScaleIndicatorWidget implements IWidget {
 
-	private int x, y, z, width;
+	private float x, y;
+	private int z;
+	private float width;
 	private boolean visible = true;
 	
-	public ScaleIndicatorWidget(int x, int y, int z, int width) {
+	public ScaleIndicatorWidget(float x, float y, int z, float width) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -23,21 +25,21 @@ public class ScaleIndicatorWidget implements IWidget {
 	}
 
 	@Override
-	public int getX() {
+	public float getX() {
 		return this.x;
 	}
 	
-	public ScaleIndicatorWidget setX(int x) {
+	public ScaleIndicatorWidget setX(float x) {
 		this.x = x;
 		return this;
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return this.y;
 	}
 	
-	public ScaleIndicatorWidget setY(int y) {
+	public ScaleIndicatorWidget setY(float y) {
 		this.y = y;
 		return this;
 	}
@@ -48,17 +50,17 @@ public class ScaleIndicatorWidget implements IWidget {
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return this.width;
 	}
 	
-	public ScaleIndicatorWidget setWidth(int width) {
+	public ScaleIndicatorWidget setWidth(float width) {
 		this.width = width;
 		return this;
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return 10;
 	}
 
@@ -73,10 +75,10 @@ public class ScaleIndicatorWidget implements IWidget {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-		int barY = y + 5;
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+		float barY = y + 5;
 		String lengthstr = "-";
-		int barwidth = this.getWidth();
+		float barwidth = this.getWidth();
 		if(parent instanceof MapWidget) {
 
 			MapWidget map = (MapWidget) parent;
@@ -92,11 +94,11 @@ public class ScaleIndicatorWidget implements IWidget {
 				lengthstr = "" + Math.round(scale) + " " + units[j];
 			}
 		}
-		int strwidth = parent.getFont().getStringWidth(lengthstr);
-		parent.getFont().drawString(lengthstr, x + barwidth/2 - strwidth/2, barY - parent.getFont().FONT_HEIGHT - 5, 0xFF444444);
-		GuiScreen.drawRect(x, barY, x + barwidth, barY+2, 0xFF444444);
-		GuiScreen.drawRect(x, barY-4, x+2, barY+6, 0xFF444444);
-		GuiScreen.drawRect(x-2 + barwidth, barY-4, x + barwidth, barY+6, 0xFF444444);
+		float strwidth = parent.getFont().getStringWidth(lengthstr);
+		parent.getFont().drawString(lengthstr, x + barwidth/2 - strwidth/2, barY - parent.getFont().height() - 5, 0xFF444444, false);
+		RenderUtil.drawRect(x, barY, x + barwidth, barY+2, 0xFF444444);
+		RenderUtil.drawRect(x, barY-4, x+2, barY+6, 0xFF444444);
+		RenderUtil.drawRect(x-2 + barwidth, barY-4, x + barwidth, barY+6, 0xFF444444);
 	}
 
 }

@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
@@ -10,7 +11,6 @@ import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
 import fr.thesmyler.terramap.maps.utils.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
@@ -31,8 +31,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+		//TODO floats
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
 
@@ -152,7 +152,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					if(parentMap != null) parentMap.reportError(this, e.toString());
 				}
 				textureManager.bindTexture(texture);
-				Gui.drawModalRectWithCustomSizedTexture(
+				RenderUtil.drawModalRectWithCustomSizedTexture(
 						x + dispX,
 						y + dispY,
 						dX, dY,

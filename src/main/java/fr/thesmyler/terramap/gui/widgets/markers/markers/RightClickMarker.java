@@ -16,7 +16,7 @@ public class RightClickMarker extends AbstractFixedMarker {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.WIDGET_TEXTURES);
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
@@ -25,12 +25,12 @@ public class RightClickMarker extends AbstractFixedMarker {
 	}
 
 	@Override
-	public int getDeltaX() {
+	public float getDeltaX() {
 		return -8;
 	}
 
 	@Override
-	public int getDeltaY() {
+	public float getDeltaY() {
 		return -23;
 	}
 

@@ -5,17 +5,19 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import fr.thesmyler.smylibgui.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public final class RenderUtil {
 	
-	private static final List<Integer> SCISSOR_POS_STACK = new LinkedList<>();
-	private static int scissorX, scissorY, scissorWidth, scissorHeight;
+	private static final List<Float> SCISSOR_POS_STACK = new LinkedList<>();
+	private static float scissorX, scissorY, scissorWidth, scissorHeight;
 	
 	/**
 	 * Enable or disable scissoring
@@ -48,7 +50,7 @@ public final class RenderUtil {
 	 * @param width
 	 * @param height
 	 */
-	public static void scissor(int x, int y, int width, int height) {
+	public static void scissor(float x, float y, float width, float height) {
 		scissorX = x;
 		scissorY = y;
 		scissorWidth = width;
@@ -82,8 +84,8 @@ public final class RenderUtil {
 	/**
 	 * @return the current scissor position {scissorX, scissorY, scissorWidth, scissorHeight}
 	 */
-	public static int[] getScissor() {
-		return new int[] {scissorX, scissorY, scissorWidth, scissorHeight};
+	public static float[] getScissor() {
+		return new float[] {scissorX, scissorY, scissorWidth, scissorHeight};
 	}
 	
 	private static void doScissor() {
@@ -93,13 +95,14 @@ public final class RenderUtil {
         int screenHeight = res.getScaledHeight();
         double scaleW = mc.displayWidth / res.getScaledWidth_double();
         double scaleH = mc.displayHeight / res.getScaledHeight_double();
-        int y = Math.max(0, Math.min(screenHeight, screenHeight - scissorY - scissorHeight));
-        int x = Math.max(0, Math.min(screenWidth, scissorX));
-        int width = Math.max(0, Math.min(scissorWidth + scissorX, screenWidth - scissorX));
-        int height = Math.max(0, Math.min(scissorY + scissorHeight, screenHeight - scissorY));
-        GL11.glScissor((int)(x * scaleW), (int)(y * scaleH), (int)(width * scaleW), (int)(height * scaleH));
+        float y = Math.max(0, Math.min(screenHeight, screenHeight - scissorY - scissorHeight));
+        float x = Math.max(0, Math.min(screenWidth, scissorX));
+        float width = Math.max(0, Math.min(scissorWidth + scissorX, screenWidth - scissorX));
+        float height = Math.max(0, Math.min(scissorY + scissorHeight, screenHeight - scissorY));
+        GL11.glScissor((int)Math.round(x * scaleW), (int)Math.round(y * scaleH), (int)Math.round(width * scaleW), (int)Math.round(height * scaleH));
 	}
-	
+
+	@Deprecated
     public static void drawTexturedModalRect(int x, int y, int z, int u, int v, int width, int height) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
@@ -111,7 +114,8 @@ public final class RenderUtil {
         tessellator.draw();
     }
 
-    public void drawTexturedModalRect(float x, float y, int z, int minU, int minV, int maxU, int maxV) {
+    
+    public static void drawTexturedModalRect(float x, float y, int z, int minU, int minV, int maxU, int maxV) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -121,8 +125,34 @@ public final class RenderUtil {
         bufferbuilder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
         tessellator.draw();
     }
+    
+    public static void drawTexturedModalRect(float x, float y, int z, float minU, float minV, float maxU, float maxV) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(x, y + maxV, z).tex(minU * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
+        bufferbuilder.pos(x + maxU, y + maxV, z).tex((minU + maxU) * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
+        bufferbuilder.pos(x + maxU, y, z).tex((minU + maxU) * 0.00390625, minV * 0.00390625).endVertex();
+        bufferbuilder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
+        tessellator.draw();
+    }
+    
+    public static void drawTexturedModalRect(float x, float y, float minU, float minV, float maxU, float maxV) {
+    	drawTexturedModalRect(x, y, 0, minU, minV, maxU, maxV);
+    }
 
-    public void drawTexturedModalRect(int x, int y, int z, TextureAtlasSprite textureSprite, int width, int height) {
+    /**
+     * @deprecated use the floating point variants
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @param textureSprite
+     * @param width
+     * @param height
+     */
+    @Deprecated
+    public static void drawTexturedModalRect(int x, int y, int z, TextureAtlasSprite textureSprite, int width, int height) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -130,6 +160,59 @@ public final class RenderUtil {
         bufferbuilder.pos(x + width, y + height, z).tex(textureSprite.getMaxU(), textureSprite.getMaxV()).endVertex();
         bufferbuilder.pos(x + width, y, z).tex(textureSprite.getMaxU(), textureSprite.getMinV()).endVertex();
         bufferbuilder.pos(x, y, z).tex(textureSprite.getMinU(), textureSprite.getMinV()).endVertex();
+        tessellator.draw();
+    }
+    
+    public static void drawRect(int z, float xLeft, float yTop, float xRight, float yBottom, Color color) {
+    	drawGradientRect(z, xLeft, yTop, xRight, yBottom, color, color, color, color);
+    }
+    
+    public static void drawRect(float xLeft, float yTop, float xRight, float yBottom, Color color) {
+    	drawGradientRect(0, xLeft, yTop, xRight, yBottom, color, color, color, color);
+    }
+    
+    @Deprecated
+    public static void drawRect(float xLeft, float yTop, float xRight, float yBottom, int color) {
+    	drawRect(xLeft, yTop, xRight, yBottom, new Color(color));
+    }
+    
+    public static void drawGradientRect(int z, float xLeft, float yTop, float xRight, float yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
+    	GlStateManager.enableAlpha();
+    	GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        bufferbuilder.pos(xLeft, yTop, z).color(upperLeftColor.red(), upperLeftColor.green(), upperLeftColor.blue(), upperLeftColor.alpha()).endVertex();
+        bufferbuilder.pos(xLeft, yBottom, z).color(lowerLeftColor.red(), lowerLeftColor.green(), lowerLeftColor.blue(), lowerLeftColor.alpha()).endVertex();
+        bufferbuilder.pos(xRight, yBottom, z).color(lowerRightColor.red(), lowerRightColor.green(), lowerRightColor.blue(), lowerRightColor.alpha()).endVertex();
+        bufferbuilder.pos(xRight, yTop, z).color(upperRightColor.red(), upperRightColor.green(), upperRightColor.blue(), upperRightColor.alpha()).endVertex();
+        tessellator.draw();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
+    }
+    
+    public static void drawGradientRect(float xLeft, float yTop, float xRight, float yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
+    	drawGradientRect(0, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
+    }
+    
+    @Deprecated
+    public static void drawGradientRect(float xLeft, float yTop, float xRight, float yBottom, int upperLeftColor, int lowerLeftColor, int lowerRightColor, int upperRightColor) {
+    	drawGradientRect(0, xLeft, yTop, xRight, yBottom, new Color(upperLeftColor), new Color(lowerLeftColor), new Color(lowerRightColor), new Color(upperRightColor));
+    }
+    
+    public static void drawModalRectWithCustomSizedTexture(float x, float y, float u, float v, float width, float height, float textureWidth, float textureHeight) {
+        float f = 1.0F / textureWidth;
+        float f1 = 1.0F / textureHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(x, y + height, 0.0D).tex(u * f, (v + height) * f1).endVertex();
+        bufferbuilder.pos(x + width, y + height, 0.0D).tex((u + width) * f, (v + height) * f1).endVertex();
+        bufferbuilder.pos(x + width, y, 0.0D).tex((u + width) * f, v * f1).endVertex();
+        bufferbuilder.pos(x, y, 0.0D).tex(u * f, v * f1).endVertex();
         tessellator.draw();
     }
 

@@ -9,13 +9,13 @@ import net.minecraft.util.text.ITextComponent;
 
 public abstract class Marker implements IWidget {
 	
-	protected int width, height;
+	protected float width, height;
 	protected int minZoom;
 	protected int maxZoom;
-	private int x, y;
+	private float x, y;
 	private MarkerController<?> controller;
 
-	public Marker(MarkerController<?> controller, int width, int height, int minZoom, int maxZoom) {
+	public Marker(MarkerController<?> controller, float width, float height, int minZoom, int maxZoom) {
 		this.controller = controller;
 		this.width = width;
 		this.height = height;
@@ -23,17 +23,17 @@ public abstract class Marker implements IWidget {
 		this.maxZoom = maxZoom;
 	}
 	
-	public Marker(MarkerController<?> controller, int width, int height) {
+	public Marker(MarkerController<?> controller, float width, float height) {
 		this(controller, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 
 	@Override
-	public int getX() {
+	public float getX() {
 		return this.x;
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return this.y;
 	}
 
@@ -43,12 +43,12 @@ public abstract class Marker implements IWidget {
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return this.width;
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return this.height;
 	}
 
@@ -56,17 +56,17 @@ public abstract class Marker implements IWidget {
 
 	public abstract double getLatitude();
 	
-	public abstract int getDeltaX();
+	public abstract float getDeltaX();
 	
-	public abstract int getDeltaY();
+	public abstract float getDeltaY();
 
 	@Override
 	public void onUpdate(Screen parent) {
 		if(parent instanceof MapWidget) {
 			MapWidget map = (MapWidget) parent;
 			this.update(map);
-			this.x = (int) Math.round(map.getScreenX(this.getLongitude())) + this.getDeltaX();
-			this.y = (int) Math.round(map.getScreenY(this.getLatitude())) + this.getDeltaY();
+			this.x = (float) (map.getScreenX(this.getLongitude()) + this.getDeltaX());
+			this.y = (float) (map.getScreenY(this.getLatitude()) + this.getDeltaY());
 		}
 	}
 	
@@ -91,12 +91,12 @@ public abstract class Marker implements IWidget {
 	public abstract boolean canBeTracked();
 	
 	@Override
-	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 		return true;
 	}
 	
 	@Override
-	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 		if(this.canBeTracked() && parent instanceof MapWidget) {
 			MapWidget map = (MapWidget) parent;
 			map.track(this);
