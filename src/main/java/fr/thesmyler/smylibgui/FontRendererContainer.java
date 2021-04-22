@@ -1,11 +1,10 @@
-package fr.thesmyler.smylibgui.widgets.text;
+package fr.thesmyler.smylibgui;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -21,6 +20,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
  * A: Ok, I admit it, I wanted to experiment with ObfuscationReflectionHelper. I know, right?
  *
  */
+//TODO Floating point version
+@Deprecated
 public class FontRendererContainer {
 
 	private static final String SRG_renderStringAtPos = "func_78255_a";

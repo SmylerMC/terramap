@@ -50,12 +50,12 @@ abstract class MapLayerWidget implements IWidget {
 	}
 
 	@Override
-	public int getX() {
+	public float getX() {
 		return 0;
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return 0;
 	}
 
@@ -65,12 +65,12 @@ abstract class MapLayerWidget implements IWidget {
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return this.width;
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return this.height;
 	}
 

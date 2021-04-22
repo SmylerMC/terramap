@@ -10,16 +10,16 @@ public class TextButtonWidget extends AbstractButtonWidget {
 
 	protected String str;
 
-	public TextButtonWidget(int x, int y, int z, int width, String str, Runnable onClick, Runnable onDoubleClick) {
+	public TextButtonWidget(float x, float y, int z, float width, String str, Runnable onClick, Runnable onDoubleClick) {
 		super(x, y, z, width, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 11, onClick, onDoubleClick);
 		this.str = str;
 	}
 
-	public TextButtonWidget(int x, int y, int z, int width, String str, Runnable onClick) {
+	public TextButtonWidget(float x, float y, int z, float width, String str, Runnable onClick) {
 		this(x, y, z, width, str, onClick, null);
 	}
 
-	public TextButtonWidget(int x, int y, int z, int width, String str) {
+	public TextButtonWidget(float x, float y, int z, float width, String str) {
 		this(x, y, z, width, str, null, null);
 		this.enabled = false;
 	}
@@ -38,7 +38,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, Screen parent) {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
 		GlStateManager.color(1, 1, 1, 1); //White, non transparent
@@ -52,8 +52,8 @@ public class TextButtonWidget extends AbstractButtonWidget {
 			textColor = 0xFFFFFFA0;
 			textureDelta = 2;
 		}
-		int leftWidth = this.width / 2;
-		int rightWidth = leftWidth;
+		float leftWidth = this.width / 2;
+		float rightWidth = leftWidth;
 		leftWidth += this.width % 2;
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -72,7 +72,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
 		this.str = str;
 	}
 	
-	public TextButtonWidget setWidth(int width) {
+	public TextButtonWidget setWidth(float width) {
 		this.width = width;
 		return this;
 	}

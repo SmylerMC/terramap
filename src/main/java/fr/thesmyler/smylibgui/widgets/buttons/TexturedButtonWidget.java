@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 	protected int disabledV;
 	protected ResourceLocation texture;
 
-	public TexturedButtonWidget(int x, int y, int z, int width, int height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
+	public TexturedButtonWidget(float x, float y, int z, float width, float height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
 		super(x, y, z, width, height, onClick, onDoubleClick);
 		this.u = u;
 		this.v = v;
@@ -29,63 +30,39 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 		this.texture = texture;
 	}
 	
-	public TexturedButtonWidget(int x, int y, int z, int width, int height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, Runnable onClick) {
+	public TexturedButtonWidget(float x, float y, int z, float width, float height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, Runnable onClick) {
 		this(x, y, z, width, height, u, v, hoverU, hoverV, disabledU, disabledV, texture, onClick, onClick);
 	}
 	
-	public TexturedButtonWidget(int x, int y, int z,int width, int height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture) {
+	public TexturedButtonWidget(float x, float y, int z, float width, float height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture) {
 		this(x, y, z, width, height, u, v, hoverU, hoverV, disabledU, disabledV, texture, null);
 		this.disable();
 	}
 	
-	public TexturedButtonWidget(int x, int y, int z, int width, int height, int u, int v, ResourceLocation texture, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
-		this(x, y, z, width, height, u, v, u, v+height, u, v+height*2, texture, onClick, onDoubleClick);
-	}
-	
-	public TexturedButtonWidget(int x, int y, int z, int width, int height, int u, int v, ResourceLocation texture, @Nullable Runnable onClick) {
-		this(x, y, z, width, height, u, v, u, v+height, u, v+height*2, texture, onClick);
-	}
-	
-	public TexturedButtonWidget(int x, int y, int z, int width, int height, int u, int v, ResourceLocation texture) {
-		this(x, y, z, width, height, u, v, u, v+height, u, v+height*2, texture);
-	}
-	
-	public TexturedButtonWidget(int x, int y, int z, IncludedTexturedButtons properties, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
+	public TexturedButtonWidget(float x, float y, int z, IncludedTexturedButtons properties, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
 		this(x, y, z, properties.width, properties.height, properties.u, properties.v, properties.hoverU, properties.hoverV, properties.disabledU, properties.disabledV, properties.texture, onClick, onDoubleClick);
 	}
 	
-	public TexturedButtonWidget(int x, int y, int z, IncludedTexturedButtons properties, @Nullable Runnable onClick) {
+	public TexturedButtonWidget(float x, float y, int z, IncludedTexturedButtons properties, @Nullable Runnable onClick) {
 		this(x, y, z, properties, onClick, onClick);
 	}
 	
-	public TexturedButtonWidget(int x, int y, int z, IncludedTexturedButtons properties) {
+	public TexturedButtonWidget(float x, float y, int z, IncludedTexturedButtons properties) {
 		this(x, y, z, properties, null);
 		this.disable();
 	}
 	
-	public TexturedButtonWidget(int z, int width, int height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
+	public TexturedButtonWidget(int z, float width, float height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
 		this(0, 0, z, width, height, u, v, hoverU, hoverV, disabledU, disabledV, texture, onClick, onDoubleClick);
 	}
 	
-	public TexturedButtonWidget(int z, int width, int height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, Runnable onClick) {
+	public TexturedButtonWidget(int z, float width, float height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture, Runnable onClick) {
 		this(z, width, height, u, v, hoverU, hoverV, disabledU, disabledV, texture, onClick, onClick);
 	}
 	
-	public TexturedButtonWidget(int z,int width, int height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture) {
+	public TexturedButtonWidget(int z, float width, float height, int u, int v, int hoverU, int hoverV, int disabledU, int disabledV, ResourceLocation texture) {
 		this(z, width, height, u, v, hoverU, hoverV, disabledU, disabledV, texture, null);
 		this.disable();
-	}
-	
-	public TexturedButtonWidget(int z, int width, int height, int u, int v, ResourceLocation texture, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
-		this(z, width, height, u, v, u, v+height, u, v+height*2, texture, onClick, onDoubleClick);
-	}
-	
-	public TexturedButtonWidget(int z, int width, int height, int u, int v, ResourceLocation texture, @Nullable Runnable onClick) {
-		this(z, width, height, u, v, u, v+height, u, v+height*2, texture, onClick);
-	}
-	
-	public TexturedButtonWidget(int z, int width, int height, int u, int v, ResourceLocation texture) {
-		this(z, width, height, u, v, u, v+height, u, v+height*2, texture);
 	}
 	
 	public TexturedButtonWidget(int z, IncludedTexturedButtons properties, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
@@ -102,7 +79,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, Screen parent) {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.getTextureManager().bindTexture(this.texture);
 		GlStateManager.color(255, 255, 255, 255);
@@ -118,7 +95,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		parent.drawTexturedModalRect(x, y, u, v, this.getWidth(), this.getHeight());
+		RenderUtil.drawTexturedModalRect(x, y, u, v, this.getWidth(), this.getHeight());
 	}
 	
 	public static enum IncludedTexturedButtons {

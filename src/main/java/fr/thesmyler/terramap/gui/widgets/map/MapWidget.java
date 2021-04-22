@@ -10,12 +10,12 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
+import fr.thesmyler.smylibgui.Font;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
-import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
@@ -93,11 +93,11 @@ public class MapWidget extends Screen {
 	public static final int BACKGROUND_Z = Integer.MIN_VALUE;
 	public static final int CONTROLLER_Z = 0;
 
-	public MapWidget(int x, int y, int z, int width, int height, IRasterTiledMap map, MapContext context, double tileScaling) {
+	public MapWidget(float x, float y, int z, float width, float height, IRasterTiledMap map, MapContext context, double tileScaling) {
 		super(x, y, z, width, height, BackgroundType.NONE);
 		this.context = context;
 		this.tileScaling = tileScaling;
-		FontRendererContainer font = new FontRendererContainer(Minecraft.getMinecraft().fontRenderer);
+		Font font = SmyLibGui.DEFAULT_FONT;
 		this.copyright = new TextComponentWidget(Integer.MAX_VALUE, new TextComponentString(""), font) {
 			@Override
 			public boolean isVisible(Screen parent) {
@@ -336,13 +336,13 @@ public class MapWidget extends Screen {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.width);
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
 		this.errorText.setAnchorX(this.width / 2).setAnchorY(0).setMaxWidth(this.width - 40);
 		if(!this.rightClickMenu.isVisible(this)) {
-			int relativeMouseX = mouseX - x;
-			int relativeMouseY = mouseY - y;
+			float relativeMouseX = mouseX - x;
+			float relativeMouseY = mouseY - y;
 			this.updateMouseGeoPos(relativeMouseX, relativeMouseY);
 		}
 		Map<Class<?>, List<Marker>> markers = new HashMap<Class<?>, List<Marker>>();
@@ -427,12 +427,12 @@ public class MapWidget extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
 			// Literally nothing to do here, this is strictly used to handle user input
 		}
 
 		@Override
-		public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+		public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
 			if(isShortcutEnabled()) {
 				MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLongitude, MapWidget.this.mouseLatitude);
 				if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
@@ -446,7 +446,7 @@ public class MapWidget extends Screen {
 		}
 
 		@Override
-		public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+		public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
 
 			// We don't care about double right clicks
 			if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
@@ -458,7 +458,7 @@ public class MapWidget extends Screen {
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, @Nullable Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable Screen parent) {
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.moveMap(dX, dY);
 			}
@@ -469,7 +469,7 @@ public class MapWidget extends Screen {
 		}
 
 		@Override
-		public boolean onMouseWheeled(int mouseX, int mouseY, int amount, @Nullable Screen parent) {
+		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable Screen parent) {
 			if(MapWidget.this.isInteractive()) {
 				int z = amount > 0? 1: -1;
 				if(MapWidget.this.focusedZoom) {
@@ -481,11 +481,11 @@ public class MapWidget extends Screen {
 			return false;
 		}
 
-		public void zoom(int val) {
+		public void zoom(double val) {
 			this.zoom(this.width/2, this.height/2, val);
 		}
 
-		public void zoom(int mouseX, int mouseY, int zoom) {
+		public void zoom(float mouseX, float mouseY, double zoom) {
 
 			MapWidget.this.rightClickMenu.hide(null);
 
@@ -514,7 +514,7 @@ public class MapWidget extends Screen {
 
 		}
 
-		public void moveMap(int dX, int dY) {
+		public void moveMap(float dX, float dY) {
 			MapWidget.this.trackingMarker = null;
 			double nlon = this.getScreenLongitude((double)this.width/2 - dX);
 			double nlat = this.getScreenLatitude((double)this.height/2 - dY);
@@ -534,7 +534,7 @@ public class MapWidget extends Screen {
 
 	}
 
-	private void updateMouseGeoPos(int mouseX, int mouseY) {
+	private void updateMouseGeoPos(float mouseX, float mouseY) {
 		this.mouseLongitude = controller.getScreenLongitude((double)mouseX);
 		this.mouseLatitude = controller.getScreenLatitude((double)mouseY);
 	}
@@ -597,7 +597,7 @@ public class MapWidget extends Screen {
 		return this;
 	}
 
-	public MapWidget zoom(int zoom) {
+	public MapWidget zoom(double zoom) {
 		this.controller.zoom(zoom);
 		return this;
 	}
@@ -645,23 +645,27 @@ public class MapWidget extends Screen {
 		return new double[] {this.mouseLongitude, this.mouseLatitude};
 	}
 
-	public MapWidget setX(int x) {
+	public MapWidget setX(float x) {
 		this.x = x;
 		return this;
 	}
 
-	public MapWidget setY(int y) {
+	public MapWidget setY(float y) {
 		this.y = y;
 		return this;
 	}
 
-	public MapWidget setWidth(int width) {
-		this.width = width;
+	public MapWidget setWidth(float width) {
+		//TODO better handling of float width
+//		this.width = width;
+		this.width = Math.round(width);
 		return this;
 	}
 
-	public MapWidget setHeight(int height) {
-		this.height = height;
+	public MapWidget setHeight(float height) {
+		//TODO better handling of float height
+//		this.height = height;
+		this.height = Math.round(height);
 		this.scale.setY(this.height - 20);
 		return this;
 	}
@@ -701,7 +705,7 @@ public class MapWidget extends Screen {
 		return this;
 	}
 
-	public void moveMap(int dX, int dY) {
+	public void moveMap(float dX, float dY) {
 		controller.moveMap(dX, dY);
 	}
 
@@ -721,29 +725,29 @@ public class MapWidget extends Screen {
 		return this.background.getScreenLatitude(yOnScreen);
 	}
 
-	public int getScaleX() {
+	public float getScaleX() {
 		return this.scale.getX();
 	}
 
-	public MapWidget setScaleX(int x) {
+	public MapWidget setScaleX(float x) {
 		this.scale.setX(x);
 		return this;
 	}
 
-	public int getScaleY() {
+	public float getScaleY() {
 		return this.scale.getY();
 	}
 
-	public MapWidget setScaleY(int y) {
+	public MapWidget setScaleY(float y) {
 		this.scale.setY(y);
 		return this;
 	}
 
-	public int getScaleWidth() {
+	public float getScaleWidth() {
 		return this.scale.getWidth();
 	}
 
-	public MapWidget setScaleWidth(int width) {
+	public MapWidget setScaleWidth(float width) {
 		this.scale.setWidth(width);
 		return this;
 	}

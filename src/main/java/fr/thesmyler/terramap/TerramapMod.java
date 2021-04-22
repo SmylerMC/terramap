@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
@@ -45,6 +46,7 @@ public class TerramapMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) throws InvalidVersionString {
     	logger = event.getModLog();
+    	SmyLibGui.debug = true; //TODO remove SmyLibGui debug
     	TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
     	TerramapMod.logger.info("Terramap version: " + getVersion());
     	TerramapMod.proxy.preInit(event);

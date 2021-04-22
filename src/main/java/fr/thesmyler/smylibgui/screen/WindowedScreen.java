@@ -6,19 +6,19 @@ import org.lwjgl.input.Mouse;
 import com.google.common.base.Preconditions;
 
 import fr.thesmyler.smylibgui.Cursors;
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import net.minecraft.client.gui.GuiScreen;
 
 public class WindowedScreen extends Screen {
 
-	private int borderWidth = 5;
-	private int effectiveBorderWidth = borderWidth;
-	private int topBarHeight = 12;
-	private int effectiveTopBarHeight = topBarHeight;
-	private int minInnerWidth = 20;
-	private int maxInnerWidth = Integer.MAX_VALUE;
-	private int minInnerHeight = 20;
-	private int maxInnerHeight = Integer.MAX_VALUE;
+	private float borderWidth = 5;
+	private float effectiveBorderWidth = borderWidth;
+	private float topBarHeight = 12;
+	private float effectiveTopBarHeight = topBarHeight;
+	private float minInnerWidth = 20;
+	private float maxInnerWidth = Float.MAX_VALUE;
+	private float minInnerHeight = 20;
+	private float maxInnerHeight = Float.MAX_VALUE;
 	private boolean allowVerticalResize = true;
 	private boolean allowHorizontalResize = true;
 	private boolean enableCustomCursors = true;
@@ -51,10 +51,10 @@ public class WindowedScreen extends Screen {
 
 	@Override
 	public void draw(
-			int x,
-			int y,
-			int mouseX,
-			int mouseY,
+			float x,
+			float y,
+			float mouseX,
+			float mouseY,
 			boolean screenHovered,
 			boolean screenFocused,
 			Screen parent) {
@@ -65,8 +65,11 @@ public class WindowedScreen extends Screen {
 	private void updateSubScreen() {
 		this.subScreen.x = this.effectiveBorderWidth;
 		this.subScreen.y = this.effectiveBorderWidth + this.effectiveTopBarHeight;
-		this.subScreen.width = this.width - this.effectiveBorderWidth * 2;
-		this.subScreen.height = this.height - this.effectiveBorderWidth * 2 -  this.effectiveTopBarHeight;
+		//TODO Float version
+//		this.subScreen.width = this.width - this.effectiveBorderWidth * 2;
+//		this.subScreen.height = this.height - this.effectiveBorderWidth * 2 -  this.effectiveTopBarHeight;
+		this.subScreen.width = Math.round(this.width - this.effectiveBorderWidth * 2);
+		this.subScreen.height = Math.round(this.height - this.effectiveBorderWidth * 2 -  this.effectiveTopBarHeight);
 		this.subScreen.initScreen();
 	}
 	
@@ -90,8 +93,8 @@ public class WindowedScreen extends Screen {
 		protected abstract int getBackgroundColor();
 		
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-			GuiScreen.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
+		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+			RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
 			if(this.lastHovered != hovered && !Mouse.isButtonDown(0)) {
 				if(hovered && this.isCursorEnabled() && WindowedScreen.this.enableCustomCursors) Cursors.trySetCursor(this.cursor);
 				else if(Mouse.getNativeCursor() == this.cursor) Cursors.trySetCursor(null);
@@ -126,22 +129,22 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return WindowedScreen.this.width - WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.height - WindowedScreen.this.effectiveBorderWidth * 2;
 		}
 		
@@ -151,7 +154,7 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0 || !WindowedScreen.this.allowHorizontalResize) return;
 			WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() + dX);
 			WindowedScreen.this.updateSubScreen();
@@ -171,27 +174,27 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return 0;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.height - WindowedScreen.this.effectiveBorderWidth * 2;
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0 || !WindowedScreen.this.allowHorizontalResize) return;
 			if(WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
 			WindowedScreen.this.updateSubScreen();
@@ -211,27 +214,27 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return WindowedScreen.this.height - WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.width - WindowedScreen.this.effectiveBorderWidth * 2;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0 || !WindowedScreen.this.allowVerticalResize) return;
 			WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() + dY);
 			WindowedScreen.this.updateSubScreen();
@@ -251,27 +254,27 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return 0;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.width - WindowedScreen.this.effectiveBorderWidth * 2;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0 || !WindowedScreen.this.allowVerticalResize) return;
 			if(WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
 			WindowedScreen.this.updateSubScreen();
@@ -291,27 +294,27 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return 0;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return 0;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
 			if(WindowedScreen.this.allowHorizontalResize && WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
 			if(WindowedScreen.this.allowVerticalResize && WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
@@ -332,27 +335,27 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return 0;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return WindowedScreen.this.height - WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
 			if(WindowedScreen.this.allowVerticalResize) WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() + dY);
 			if(WindowedScreen.this.allowHorizontalResize && WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() - dX)) WindowedScreen.this.x += dX;
@@ -373,27 +376,27 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return WindowedScreen.this.width - WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return WindowedScreen.this.height - WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
 			if(WindowedScreen.this.allowHorizontalResize) WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() + dX);
 			if(WindowedScreen.this.allowVerticalResize) WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() + dY);
@@ -414,27 +417,27 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return WindowedScreen.this.width - WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return 0;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
 			if(WindowedScreen.this.allowHorizontalResize) WindowedScreen.this.trySetInnerWidth(WindowedScreen.this.getInnerWidth() + dX);
 			if(WindowedScreen.this.allowVerticalResize && WindowedScreen.this.trySetInnerHeight(WindowedScreen.this.getInnerHeight() - dY)) WindowedScreen.this.y += dY;
@@ -455,36 +458,36 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.width - WindowedScreen.this.effectiveBorderWidth * 2;
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.effectiveTopBarHeight;
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
 			super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
-			int width = this.getWidth();
+			float width = this.getWidth();
 			String toDraw = parent.getFont().trimStringToWidth(WindowedScreen.this.windowTitle, this.getWidth());
-			int titleY = y + (this.getHeight() - WindowedScreen.this.effectiveBorderWidth - parent.getFont().FONT_HEIGHT) / 2 + 1;
+			float titleY = y + (this.getHeight() - WindowedScreen.this.effectiveBorderWidth - parent.getFont().height()) / 2 + 1;
 			parent.getFont().drawCenteredString(x + width / 2, titleY, toDraw, WindowedScreen.this.titleColor, true);
 		}
 
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
 			WindowedScreen.this.x += dX;
 			WindowedScreen.this.y += dY;
@@ -514,22 +517,22 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return WindowedScreen.this.effectiveBorderWidth;
 		}
 
 		@Override
-		public int getY() {
+		public float getY() {
 			return WindowedScreen.this.effectiveBorderWidth + WindowedScreen.this.effectiveTopBarHeight;
 		}
 
 		@Override
-		public int getWidth() {
+		public float getWidth() {
 			return WindowedScreen.this.getInnerWidth();
 		}
 
 		@Override
-		public int getHeight() {
+		public float getHeight() {
 			return WindowedScreen.this.getInnerHeight();
 		}
 
@@ -539,34 +542,34 @@ public class WindowedScreen extends Screen {
 		}
 		
 		@Override
-		public void onMouseDragged(int mouseX, int mouseY, int dX, int dY, int mouseButton, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, Screen parent) {
 			if(mouseButton != 0) return;
 			WindowedScreen.this.x += dX;
 			WindowedScreen.this.y += dY;
 		}
 		
 		@Override
-		public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 			return false;
 		}
 
 		@Override
-		public boolean onParentClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		public boolean onParentClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 			return false;
 		}
 
 		@Override
-		public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 			return false;
 		}
 
 		@Override
-		public boolean onParentDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+		public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 			return false;
 		}
 
 		@Override
-		public boolean onMouseWheeled(int mouseX, int mouseY, int amount, Screen parent) {
+		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, Screen parent) {
 			return false;
 		}
 
@@ -582,85 +585,97 @@ public class WindowedScreen extends Screen {
 		
 	}
 	
-	public int getInnerWidth() {
+	public float getInnerWidth() {
 		return this.width - 2*this.effectiveBorderWidth;
 	}
 	
-	public int getInnerHeight() {
+	public float getInnerHeight() {
 		return this.height - 2*this.effectiveBorderWidth - this.effectiveTopBarHeight;
 	}
 	
-	private boolean trySetInnerWidth(int width) {
+	private boolean trySetInnerWidth(float width) {
 		if(width >= this.minInnerWidth && width <= this.maxInnerWidth) {
-			this.width = width + this.effectiveBorderWidth * 2;
+			//TODO Float version
+//			this.width = width + this.effectiveBorderWidth * 2;
+			this.width = Math.round(width + this.effectiveBorderWidth * 2);
 			return true;
 		}
 		return false;
 	}
 	
-	private boolean trySetInnerHeight(int height) {
+	private boolean trySetInnerHeight(float height) {
 		if(height >= this.minInnerHeight && height <= this.maxInnerHeight) {
-			this.height = height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight;
+			//TODO Float version
+//			this.height = height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight;
+			this.height = Math.round(height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight);
 			return true;
 		}
 		return false;
 	}
 	
-	public WindowedScreen trySetInnerDimensions(int width, int height) {
+	public WindowedScreen trySetInnerDimensions(float width, float height) {
 		boolean update = false;
 		if(width >= this.minInnerWidth && width <= this.maxInnerWidth) {
-			this.width = width + this.effectiveBorderWidth * 2;
+			//TODO Float version
+//			this.width = width + this.effectiveBorderWidth * 2;
+			this.width = Math.round(width + this.effectiveBorderWidth * 2);
 			update = true;
 		}
 		if(height >= this.minInnerHeight && height <= this.maxInnerHeight) {
-			this.height = height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight;
+			//TODO Float version
+//			this.height = height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight;
+			this.height = Math.round(height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight);
 			update = true;
 		}
 		if(update) this.updateSubScreen();
 		return this;
 	}
 
-	public WindowedScreen setX(int x) {
+	public WindowedScreen setX(float x) {
 		this.x = x;
 		return this;
 	}
 
-	public WindowedScreen setY(int y) {
+	public WindowedScreen setY(float y) {
 		this.y = y;
 		return this;
 	}
 
-	public WindowedScreen setWidth(int w) {
-		this.width = w;
+	public WindowedScreen setWidth(float w) {
+		//TODO Float version
+//		this.width = w;
+		this.width = Math.round(w);
 		this.updateSubScreen();
 		return this;
 	}
 
-	public WindowedScreen setHeight(int h) {
-		this.height = h;
+	public WindowedScreen setHeight(float h) {
+		//TODO Float version
+//		this.height = h;
+		this.height = Math.round(h);
 		this.updateSubScreen();
 		return this;
 	}
 	
-	public WindowedScreen setMinInnerWidth(int width) {
+	public WindowedScreen setMinInnerWidth(float width) {
 		Preconditions.checkArgument(width > 0, "inner width needs to be striclty positive");
 		this.minInnerWidth = width;
 		return this;
 	}
 	
-	public WindowedScreen setMaxInnerWidth(int width) {
+	public WindowedScreen setMaxInnerWidth(float width) {
 		Preconditions.checkArgument(width > 0, "inner width needs to be striclty positive");
 		this.minInnerWidth = width;
 		return this;
 	}
 	
-	public WindowedScreen setMinInnerHeight(int height) {
+	public WindowedScreen setMinInnerHeight(float height) {
 		Preconditions.checkArgument(height > 0, "inner height needs to be striclty positive");
 		this.minInnerHeight = height;
 		return this;
 	}
 	
-	public WindowedScreen setMaxInnerHeight(int height) {
+	public WindowedScreen setMaxInnerHeight(float height) {
 		Preconditions.checkArgument(height > 0, "inner height needs to be striclty positive");
 		this.minInnerHeight = height;
 		return this;
@@ -680,11 +695,11 @@ public class WindowedScreen extends Screen {
 		this.windowTitle = windowTitle;
 	}
 	
-	public int getBorderWidth() {
+	public float getBorderWidth() {
 		return this.effectiveBorderWidth;
 	}
 	
-	public WindowedScreen setBorderWidth(int width) {
+	public WindowedScreen setBorderWidth(float width) {
 		Preconditions.checkArgument(width > 0, "border width needs to be strictly positive");
 		if(this.borderWidth == this.effectiveBorderWidth)
 			this.effectiveBorderWidth = width;
@@ -733,7 +748,7 @@ public class WindowedScreen extends Screen {
 		return this;
 	}
 	
-	public WindowedScreen setTopBarHeight(int height) {
+	public WindowedScreen setTopBarHeight(float height) {
 		Preconditions.checkArgument(height > 0, "title bar height must be strictly positive");
 		if(this.effectiveTopBarHeight == this.topBarHeight) this.effectiveTopBarHeight = height;
 		this.topBarHeight = height;

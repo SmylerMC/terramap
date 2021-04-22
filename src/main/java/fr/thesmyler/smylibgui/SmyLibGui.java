@@ -19,6 +19,7 @@ public abstract class SmyLibGui {
 	private static HudScreen hudScreen;
 	
 	public static final ResourceLocation BUTTON_TEXTURES, OPTIONS_BACKGROUND, STAT_ICONS, ICONS, WIDGET_TEXTURES;
+	public static final Font DEFAULT_FONT = new Font();
 	
 	static {
 		BUTTON_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(GuiButton.class, null, "field_146122_a");

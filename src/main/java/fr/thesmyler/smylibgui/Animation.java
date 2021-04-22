@@ -1,5 +1,7 @@
 package fr.thesmyler.smylibgui;
 
+import fr.thesmyler.smylibgui.util.Color;
+
 public class Animation {
 
 	protected long duration;
@@ -82,8 +84,8 @@ public class Animation {
 		return Utils.adaptAlpha(color, this.getProgress());
 	}
 	
-	public int rainbowColor() {
-		return Utils.hslToRgb(this.getProgress(), 1f, 0.5f);
+	public Color rainbowColor() {
+		return Color.fromHSL(this.getProgress(), 1f, 0.5f);
 	}
 	
 	public void stop() {
