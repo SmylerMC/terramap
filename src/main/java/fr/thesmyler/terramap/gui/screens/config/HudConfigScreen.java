@@ -148,22 +148,22 @@ public class HudConfigScreen extends Screen {
 		buttons.add(this.otherPlayersButton);
 		buttons.add(this.entitiesButton);
 		buttons.add(this.directionsButton);
-		int lineY = 3;
-		int textButtonSpace = 3;
-		int lineSpace = 4;
+		float lineY = 3;
+		float textButtonSpace = 3;
+		float lineSpace = 4;
 		ToggleButtonWidget lastButton = null;
 		while(buttonsTexts.size() > 0) {
-			int lineWidth = 0;
+			float lineWidth = 0;
 			int lineCount = 0;
 			for(; lineCount < buttonsTexts.size(); lineCount++) {
 				TextWidget text = buttonsTexts.get(lineCount);
 				ToggleButtonWidget button = buttons.get(lineCount);
-				int newWidth = lineWidth + text.getWidth() + textButtonSpace +button.getWidth();
+				float newWidth = lineWidth + text.getWidth() + textButtonSpace +button.getWidth();
 				if(lineCount > 0 && newWidth > 0.75 * this.width) break;
 				lineWidth = newWidth;
 			}
-			int padding = (this.width  - lineWidth) / (lineCount + 1);
-			int x = padding;
+			float padding = (this.width  - lineWidth) / (lineCount + 1);
+			float x = padding;
 			for(int i=0; i<lineCount; i++) {
 				TextWidget text = buttonsTexts.pop();
 				ToggleButtonWidget button = buttons.pop();
@@ -193,7 +193,7 @@ public class HudConfigScreen extends Screen {
 		this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 		
 		TextWidget explain = new TextWidget(I18n.format("terramap.hudconfig.explain"), this.width/2, this.height/2 - 100, 10, TextAlignment.CENTER, this.getFont());
-		this.addWidget(explain.setMaxWidth((int)(this.width * .8)).setAnchorY(this.height/2 - explain.getHeight() - 10));
+		this.addWidget(explain.setMaxWidth(this.width * .8f).setAnchorY(this.height/2 - explain.getHeight() - 10));
 		
 		this.addWidget(this.buttonPanel);
 		this.addWidget(this.settingsPanel);
@@ -288,7 +288,7 @@ public class HudConfigScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, Screen parent) {
+		public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, Screen parent) {
 			this.compass.setWidth(this.width);
 			super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
 		}

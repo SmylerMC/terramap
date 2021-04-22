@@ -2,11 +2,11 @@ package fr.thesmyler.smylibgui.widgets.text;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.smylibgui.Font;
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 
@@ -14,18 +14,19 @@ public class TextComponentWidget implements IWidget {
 
 	protected ITextComponent component;
 	protected ITextComponent[] lines;
-	protected int anchorX, x, anchorY, y, z;
-	protected int width, height, maxWidth;
+	protected float anchorX, x, anchorY, y;
+	protected int z;
+	protected float width, height, maxWidth;
 	protected boolean visible = true;
 	protected int baseColor;
 	protected boolean shadow;
 	protected int backgroundColor = 0x00000000;
-	protected int padding = 0;
-	protected FontRendererContainer font;
+	protected float padding = 0;
+	protected Font font;
 	protected ITextComponent hovered;
 	protected TextAlignment alignment;
 
-	public TextComponentWidget(int x, int y, int z, int maxWidth, ITextComponent component, TextAlignment alignment, int baseColor, boolean shadow, FontRendererContainer font) {
+	public TextComponentWidget(float x, float y, int z, float maxWidth, ITextComponent component, TextAlignment alignment, int baseColor, boolean shadow, Font font) {
 		this.anchorX = x;
 		this.anchorY = y;
 		this.z = z;
@@ -38,30 +39,30 @@ public class TextComponentWidget implements IWidget {
 		this.updateCoords();
 	}
 	
-	public TextComponentWidget(int x, int y, int z, ITextComponent component, TextAlignment alignment, FontRendererContainer font) {
-		this(x, y, z, Integer.MAX_VALUE, component, alignment, 0xFFFFFFFF, true, font);
+	public TextComponentWidget(float x, float y, int z, ITextComponent component, TextAlignment alignment, Font font) {
+		this(x, y, z, Float.MAX_VALUE, component, alignment, 0xFFFFFFFF, true, font);
 	}
 	
-	public TextComponentWidget(int x, int y, int z, ITextComponent component, FontRendererContainer font) {
+	public TextComponentWidget(float x, float y, int z, ITextComponent component, Font font) {
 		this(x, y, z, component, TextAlignment.RIGHT, font);
 	}
 	
-	public TextComponentWidget(int z, ITextComponent component, FontRendererContainer font) {
+	public TextComponentWidget(int z, ITextComponent component, Font font) {
 		this(0, 0, z, component, font);
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
-		int w = this.getWidth();
-		int h = this.getHeight();
-		GuiScreen.drawRect(x, y, x + w, y + h, this.backgroundColor);
-		int drawY = y + this.padding;
+		float w = this.getWidth();
+		float h = this.getHeight();
+		RenderUtil.drawRect(x, y, x + w, y + h, this.backgroundColor);
+		float drawY = y + this.padding;
 		for(ITextComponent line: this.lines) {
 			String ft = line.getFormattedText();
-			int lineWidth = this.font.getStringWidth(ft);
-			int lx = x + this.anchorX - this.x;
+			float lineWidth = this.font.getStringWidth(ft);
+			float lx = x + this.anchorX - this.x;
 			switch(this.alignment) {
 			case RIGHT:
 				break;
@@ -73,15 +74,15 @@ public class TextComponentWidget implements IWidget {
 				break;
 			}
 			this.font.drawString(ft, lx, drawY, this.baseColor, this.shadow);
-			drawY += this.font.FONT_HEIGHT + this.padding;
+			drawY += this.font.height() + this.padding;
 		}
 		this.hovered = this.getComponentUnder(mouseX - x, mouseY - y);
 	}
 
 	protected void updateCoords() {
-		this.lines = GuiUtilRenderComponents.splitText(this.component, this.maxWidth, this.font.font, true, false).toArray(new ITextComponent[] {});
-		this.height = this.lines.length * (this.font.FONT_HEIGHT + this.padding) + this.padding ;
-		int w = 0;
+		this.lines = this.font.splitText(this.component, this.maxWidth, true, false).toArray(new ITextComponent[] {});
+		this.height = this.lines.length * (this.font.height() + this.padding) + this.padding ;
+		float w = 0;
 		for(ITextComponent line: this.lines) {
 			String ft = line.getFormattedText();
 			w = Math.max(w, this.font.getStringWidth(ft));
@@ -102,14 +103,14 @@ public class TextComponentWidget implements IWidget {
 		this.y = this.anchorY;
 	}
 
-	protected ITextComponent getComponentUnder(int x, int y) {
+	protected ITextComponent getComponentUnder(float x, float y) {
 		if(x < this.padding || x > this.width - this.padding) return null;
-		int lineIndex = (int) Math.floor((float)(y - this.padding) / (this.font.FONT_HEIGHT + this.padding));
+		int lineIndex = (int) Math.floor((float)(y - this.padding) / (this.font.height() + this.padding));
 		if(lineIndex < 0 || lineIndex >= this.lines.length) return null;
-		if(y - this.padding - lineIndex*(this.font.FONT_HEIGHT + this.padding) > this.font.FONT_HEIGHT) return null;
+		if(y - this.padding - lineIndex*(this.font.height() + this.padding) > this.font.height()) return null;
 		ITextComponent line = this.lines[lineIndex];
-		int pos = this.padding;
-		int lineWidth = this.font.getStringWidth(line.getFormattedText());
+		float pos = this.padding;
+		float lineWidth = this.font.getStringWidth(line.getFormattedText());
 		switch(this.alignment) {
 		case RIGHT:
 			break;
@@ -128,7 +129,7 @@ public class TextComponentWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
 		ITextComponent clicked = this.getComponentUnder(mouseX, mouseY);
 		if(clicked != null) {
 			Minecraft.getMinecraft().currentScreen.handleComponentClick(clicked);
@@ -148,30 +149,30 @@ public class TextComponentWidget implements IWidget {
 	}
 	
 	@Override
-	public int getX() {
+	public float getX() {
 		return this.x;
 	}
 	
-	public int getAnchorX() {
+	public float getAnchorX() {
 		return this.anchorX;
 	}
 	
-	public TextComponentWidget setAnchorX(int x) {
+	public TextComponentWidget setAnchorX(float x) {
 		this.anchorX = x;
 		this.updateCoords();
 		return this;
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return this.y;
 	}
 	
-	public int getAnchorY() {
+	public float getAnchorY() {
 		return this.anchorY;
 	}
 	
-	public TextComponentWidget setAnchorY(int y) {
+	public TextComponentWidget setAnchorY(float y) {
 		this.anchorY = y;
 		this.updateCoords();
 		return this;
@@ -183,22 +184,22 @@ public class TextComponentWidget implements IWidget {
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return this.width;
 	}
 	
-	public int getMaxWidth() {
+	public float getMaxWidth() {
 		return this.maxWidth;
 	}
 	
-	public TextComponentWidget setMaxWidth(int maxWidth) {
+	public TextComponentWidget setMaxWidth(float maxWidth) {
 		this.maxWidth = maxWidth;
 		this.updateCoords();
 		return this;
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return this.height;
 	}
 	
@@ -254,11 +255,11 @@ public class TextComponentWidget implements IWidget {
 		return this;
 	}
 
-	public int getPadding() {
+	public float getPadding() {
 		return padding;
 	}
 
-	public TextComponentWidget setPadding(int padding) {
+	public TextComponentWidget setPadding(float padding) {
 		this.padding = padding;
 		this.updateCoords();
 		return this;

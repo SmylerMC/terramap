@@ -6,7 +6,7 @@ public abstract class AbstractFixedMarker extends Marker {
 	
 	private double longitude, latitude;
 
-	public AbstractFixedMarker(MarkerController<?> controller, int width, int height, double longitude, double latitude) {
+	public AbstractFixedMarker(MarkerController<?> controller, float width, float height, double longitude, double latitude) {
 		super(controller, width, height);
 		this.longitude = longitude;
 		this.latitude = latitude;

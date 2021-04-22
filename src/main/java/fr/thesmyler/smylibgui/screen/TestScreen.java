@@ -77,7 +77,7 @@ public class TestScreen extends Screen {
 		
 		TextWidget counterStr = new TextWidget(0, 100, 10, this.getFont());
 		this.colored = new TextWidget("Color animated text", 0, 120, 10, this.getFont());
-		this.colored.setColor(animation.rainbowColor());
+		this.colored.setColor(animation.rainbowColor().encoded());
 		textScreen.addWidget(fpsCounter.setAnchorX(0).setAnchorY(10));
 		textScreen.addWidget(focus.setAnchorX(0).setAnchorY(30));
 		textScreen.addWidget(hovered);
@@ -164,7 +164,7 @@ public class TestScreen extends Screen {
 			this.fpsCounter.setText("FPS: " + Minecraft.getDebugFPS());
 			this.focus.setText("Focused: " + this.getFocusedWidget());
 			this.hovered.setText("Hovered: " + this.getHoveredWidget());
-			this.colored.setColor(animation.rainbowColor());
+			this.colored.setColor(animation.rainbowColor().encoded());
 		});
 		this.updateButtons();
 	}

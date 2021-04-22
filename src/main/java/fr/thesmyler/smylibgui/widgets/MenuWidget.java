@@ -7,9 +7,9 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
+import fr.thesmyler.smylibgui.Font;
+import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class MenuWidget implements IWidget {
@@ -19,12 +19,13 @@ public class MenuWidget implements IWidget {
 	protected MenuWidget displayedSubMenu;
 
 	protected boolean visible = false;
-	protected int x, y, z = 0;
-	protected FontRendererContainer font;
+	protected float x, y;
+	protected int z = 0;
+	protected Font font;
 	private boolean isSubMenu = false;
 	private boolean openOnClick = false;
 
-	protected int padding = 4;
+	protected float padding = 4;
 	protected int separatorColor = 0x50FFFFFF;
 	protected int borderColor = 0xA0FFFFFF;
 	protected int backgroundColor = 0xE0000000;
@@ -36,21 +37,21 @@ public class MenuWidget implements IWidget {
 	protected Animation mainAnimation = new Animation(150);
 	protected Animation hoverAnimation = new Animation(150);
 
-	public MenuWidget(int z, FontRendererContainer font) {
+	public MenuWidget(int z, Font font) {
 		this.z = z;
 		this.font = font;
 		this.entries = new ArrayList<MenuEntry>();
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean mouseHoverMenu, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean mouseHoverMenu, boolean hasFocus, Screen parent) {
 		this.mainAnimation.update();
 		this.hoverAnimation.update();
-		int width = this.getWidth();
-		int height = this.getHeight();
-		int fh = this.font.FONT_HEIGHT;
-		int lh = fh + padding * 2;
-		int sh = 3;
+		float width = this.getWidth();
+		float height = this.getHeight();
+		float fh = this.font.height();
+		float lh = fh + padding * 2;
+		float sh = 3;
 		int dw = this.font.getStringWidth(" >");
 		GlStateManager.enableAlpha();
 		int separatorColor = this.mainAnimation.fadeColor(this.separatorColor);
@@ -60,12 +61,12 @@ public class MenuWidget implements IWidget {
 		int textColor = this.mainAnimation.fadeColor(this.textColor);
 		int disabledTextColor = this.mainAnimation.fadeColor(this.disabledTextColor);
 		int hoveredTextColor = this.mainAnimation.fadeColor(this.hoveredTextColor);
-		Gui.drawRect(x, y, x + width, y + height, backgroundColor);
-		Gui.drawRect(x, y, x + 1, y + height, borderColor);
-		Gui.drawRect(x + width, y, x + width + 1, y + height, borderColor);
-		Gui.drawRect(x, y, x + width, y+1, borderColor);
-		Gui.drawRect(x, y + height, x + width + 1, y + height + 1, borderColor);
-		int ty = y;
+		RenderUtil.drawRect(x, y, x + width, y + height, backgroundColor);
+		RenderUtil.drawRect(x, y, x + 1, y + height, borderColor);
+		RenderUtil.drawRect(x + width, y, x + width + 1, y + height, borderColor);
+		RenderUtil.drawRect(x, y, x + width, y+1, borderColor);
+		RenderUtil.drawRect(x, y + height, x + width + 1, y + height + 1, borderColor);
+		float ty = y;
 		for(MenuEntry entry: this.entries) {
 			int tx = 0;
 			if(entry.text != null) {
@@ -81,7 +82,7 @@ public class MenuWidget implements IWidget {
 					}
 					tx += 3 * this.hoverAnimation.getProgress();
 					c = hoveredTextColor;
-					Gui.drawRect(x+1, ty+1, x + width, ty + fh + padding*2 -1, hoveredColor);
+					RenderUtil.drawRect(x+1, ty+1, x + width, ty + fh + padding*2 -1, hoveredColor);
 				}
 				MenuWidget subMenu = entry.getSubMenu();
 				if(this.displayedSubMenu != null && mouseHoverMenu && this.displayedSubMenu.equals(subMenu) && !hovered) {
@@ -90,21 +91,21 @@ public class MenuWidget implements IWidget {
 				if(subMenu != null && hovered && this.displayedSubMenu == null) {
 					this.displayedSubMenu = subMenu;
 					parent.scheduleForNextScreenUpdate(()->{parent.addWidget(subMenu);});
-					int subX = x + width - parent.getX();
-					int subY = ty - parent.getY();
-					int subH = subMenu.getHeight();
-					int subW = subMenu.getWidth();
+					float subX = x + width - parent.getX();
+					float subY = ty - parent.getY();
+					float subH = subMenu.getHeight();
+					float subW = subMenu.getWidth();
 					if(subY + subH > parent.height) subY = parent.height - subH - 1;
 					if(subX + subW > parent.width) subX = subX -= subW + width + 1;
 					subMenu.z = this.z + 1;
 					subMenu.isSubMenu = true;
 					subMenu.show(subX, subY);
 				}
-				this.font.drawString(entry.getText(), x + padding*2 + tx, ty + padding, c);
-				if(subMenu != null) this.font.drawString(" >", x + width - dw - padding, ty + padding, c);
+				this.font.drawString(entry.getText(), x + padding*2 + tx, ty + padding, c, false);
+				if(subMenu != null) this.font.drawString(" >", x + width - dw - padding, ty + padding, c, false);
 				ty += lh;
 			} else {
-				Gui.drawRect(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
+				RenderUtil.drawRect(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
 				ty += sh;
 			}
 		}
@@ -112,15 +113,15 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 		if(mouseButton == 0) {
-			int ty = 0;
-			int width = this.getWidth();
-			int fh = this.font.FONT_HEIGHT;
-			int lh = fh + padding * 2;
-			int sh = 3;
+			float ty = 0;
+			float width = this.getWidth();
+			float fh = this.font.height();
+			float lh = fh + padding * 2;
+			float sh = 3;
 			for(MenuEntry entry: this.entries) {
-				int h = entry.text == null ? sh: lh;
+				float h = entry.text == null ? sh: lh;
 				boolean hovered = mouseX >= 0 && mouseX < width && mouseY >= ty && mouseY <= ty + h - 1;
 				if(hovered) {
 					if(entry.text != null && entry.enabled && entry.action != null ) {
@@ -141,22 +142,22 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
-		return false; //We want to intercept double clicks
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+		return false; // We want to intercept double clicks
 	}
 
 	@Override
-	public boolean onParentClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public boolean onParentClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 		if(this.isSubMenu) return true;
 		if(this.isVisible(parent)) {
 			this.hide(parent);
 			return false;
 		}
 		if(mouseButton == 1 && this.openOnClick) {
-			int x = mouseX;
-			int y = mouseY;
-			int w = this.getWidth();
-			int h = this.getHeight();
+			float x = mouseX;
+			float y = mouseY;
+			float w = this.getWidth();
+			float h = this.getHeight();
 			if(x + w > parent.getWidth()) x -= w;
 			if(y + h > parent.getHeight()) y -= h;
 			this.show(x, y);
@@ -167,7 +168,7 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onParentDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
 		if(mouseButton == 1) return this.onParentClick(mouseX, mouseY, mouseButton, parent);
 		return true;
 	}
@@ -199,7 +200,7 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		int mw = 0;
 		for(MenuEntry e: this.entries) {
 			mw = Math.max(mw, this.font.getStringWidth(e.getText()));
@@ -208,11 +209,11 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public int getHeight() {
-		int h = 0;
-		int fh = this.font.FONT_HEIGHT;
-		int lh = fh + padding * 2;
-		int sh = 3;
+	public float getHeight() {
+		float h = 0;
+		float fh = this.font.height();
+		float lh = fh + padding * 2;
+		float sh = 3;
 		for(MenuEntry entry: this.entries) {
 			if(entry.text != null) {
 				h += lh;
@@ -224,12 +225,12 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public int getX() {
+	public float getX() {
 		return this.x;
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return this.y;
 	}
 
@@ -263,7 +264,7 @@ public class MenuWidget implements IWidget {
 		this.displayedSubMenu = null;
 	}
 
-	public void show(int x, int y) {
+	public void show(float x, float y) {
 		this.x = x;
 		this.y = y;
 		if(!this.visible)
@@ -281,11 +282,11 @@ public class MenuWidget implements IWidget {
 		return this.visible;
 	}
 
-	public int getPadding() {
+	public float getPadding() {
 		return padding;
 	}
 
-	public void setPadding(int padding) {
+	public void setPadding(float padding) {
 		this.padding = padding;
 	}
 
