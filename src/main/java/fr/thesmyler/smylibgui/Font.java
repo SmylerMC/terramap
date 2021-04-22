@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import fr.thesmyler.smylibgui.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
@@ -13,114 +14,88 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class Font {
-
-	private static final String SRG_renderStringAtPos = "func_78255_a";
-	private static Method renderStringAtPos;
-	private static final String SRG_bidiReorder = "func_147647_b";
-	private static Method bidiReorder;
-	private static final String SRG_resetStyles = "func_78265_b";
-	private static Method resetStyles;
-	private static final String SRG_trimStringNewline = "func_78273_d";
-	private static Method trimStringNewline;
-	private static final String SRG_posX = "field_78295_j";
-	private static Field posX;
-	private static final String SRG_posY = "field_78296_k";
-	private static Field posY;
-	private static final String SRG_red = "field_78291_n";
-	private static Field red;
-	private static final String SRG_green = "field_78306_p";
-	private static Field green;
-	private static final String SRG_blue = "field_78292_o";
-	private static Field blue;
-	private static final String SRG_alpha = "field_78305_q";
-	private static Field alpha;
-	private static final String SRG_textColor = "field_78304_r";
-	private static Field textColor;
-	private static final String SRG_randomStyle = "field_78303_s";
-	private static Field randomStyle;
-	private static final String SRG_boldStyle = "field_78302_t";
-	private static Field boldStyle;
-	private static final String SRG_strikethroughStyle = "field_78299_w";
-	private static Field strikethroughStyle;
-	private static final String SRG_underlineStyle = "field_78300_v";
-	private static Field underlineStyle;
-	private static final String SRG_italicStyle = "field_78301_u";
-	private static Field italicStyle;
-	private static final String SRG_colorCode = "field_78285_g";
-	private static Field colorCode;
 	
 	public float height() {
 		//TODO variable size
 		return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
 	}
 
+	@Deprecated
+	public float drawString(String text, float x, float y, int color, boolean shadow) {
+		return this.drawString(x, y, text, new Color(color), shadow);
+	}
+	
 	/**
 	 * Draws the specified string.
 	 */
-	public int drawString(String text, float x, float y, int color, boolean dropShadow) {
+	public float drawString(float x, float y, String text, Color color, boolean shadow) {
 		try {
 			this.enableAlpha();
 			GlStateManager.enableBlend();
 			this.resetStyles();
-			int i;
-			if (dropShadow) {
-				i = this.renderString(text, x + 1.0F, y + 1.0F, color, true);
-				i = Math.max(i, this.renderString(text, x, y, color, false));
+			if (shadow) {
+				float endX = this.renderString(text, x + 1f, y + 1f, color, true);
+				return Math.max(endX, this.renderString(text, x, y, color, false));
 			} else {
-				i = this.renderString(text, x, y, color, false);
+				return this.renderString(text, x, y, color, false);
 			}
-			return i;
 		} catch (Exception e) {
 			if(SmyLibGui.debug) {
-				SmyLibGui.logger.error("Failed to use custom drawString in custom font renderer!");
+				SmyLibGui.logger.error("Failed to use custom drawString in custom font!");
 				SmyLibGui.logger.catching(e);
 			}
-			return this.getFont().drawString(text, x, y, color, dropShadow);
+			return this.getFont().drawString(text, x, y, color.encoded(), shadow);
 		}
 	}
 
-	public void drawCenteredString(float x, float y, String str, int color, boolean shadow) {
-		int w = this.getStringWidth(str);
-		this.drawString(str, x - w/2, y, color, shadow);
+	@Deprecated
+	public void drawCenteredString(float x, float y, String text, int color, boolean shadow) {
+		this.drawCenteredString(x, y, text, new Color(color), shadow);
+	}
+	
+	public void drawCenteredString(float x, float y, String text, Color color, boolean shadow) {
+		float w = this.getStringWidth(text);
+		this.drawString(x - w/2, y, text, color, shadow);
+	}
+	
+	@Deprecated
+	public void drawSplitString(String text, float x, float y, float wrapWidth, int color) {
+		this.drawSplitString(x, y, text, wrapWidth, new Color(color), false);
 	}
 
-	/**
-	 * Splits and draws a String with wordwrap
-	 */
-	public void drawSplitString(String str, float x, float y, float wrapWidth, int textColor) {
+	public void drawSplitString(float x, float y, String text, float wrapWidth, Color color, boolean shadow) {
 		try {
 			this.resetStyles();
-			this.setTextColor(textColor);
-			String s = this.trimStringNewline(str);
-			this.renderSplitString(s, x, y, wrapWidth, false);
+			String trimed = this.trimStringNewline(text);
+			this.renderSplitString(x, y, trimed, wrapWidth, color, shadow);
 		} catch (Exception e) {
 			if(SmyLibGui.debug) {
 				SmyLibGui.logger.error("Failed to use custom drawSplitString in custom font renderer!");
 				SmyLibGui.logger.catching(e);
 			}
-			this.drawSplitString(str, x, y, wrapWidth, textColor);
+			this.getFont().drawSplitString(text, Math.round(x), Math.round(y), Math.round(wrapWidth), color.encoded());
 		}
 	}
 
-	protected int renderString(String text, float x, float y, int color, boolean dropShadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	protected float renderString(String text, float x, float y, Color color, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		if (text == null) {
 			return 0;
 		} else {
-			String t = text;
+			String actualText = text;
 			if (this.getFont().getBidiFlag()) {
-				t = this.bidiReorder(text);
+				actualText = this.bidiReorder(text);
 			}
 
-			int shadowedColor = color;
+			Color actualColor = color;
 
-			if (dropShadow) {
-				shadowedColor = (color & 16579836) >> 2 | color & -16777216;
+			if (shadow) {
+				actualColor = new Color((color.encoded() & 16579836) >> 2 | color.encoded() & 0xFF000000);
 			}
 
-			float red = (float)(shadowedColor >> 16 & 255) / 255.0F;
-			float green = (float)(shadowedColor >> 8 & 255) / 255.0F;
-			float blue = (float)(shadowedColor & 255) / 255.0F;
-			float alpha = (float)(shadowedColor >> 24 & 255) / 255.0F;
+			float red = actualColor.redf();
+			float green = actualColor.greenf();
+			float blue = actualColor.bluef();
+			float alpha = actualColor.alphaf();
 			this.setRed(red);
 			this.setGreen(green);
 			this.setBlue(blue);
@@ -128,46 +103,38 @@ public class Font {
 			this.setColor(red, green, blue, alpha);
 			this.setPosX(x);
 			this.setPosY(y);
-			this.renderStringAtPos(t, dropShadow);
-			return (int)this.getPosX();
+			this.renderStringAtPos(actualText, shadow);
+			return this.getPosX();
 		}
 	}
 
-	/**
-	 * Perform actual work of rendering a multi-line string with wordwrap and with darker drop shadow color if flag is
-	 * set
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
-	 */
-	protected void renderSplitString(String str, float x, float y, float wrapWidth, boolean addShadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		float t = y;
-		//TODO better handling of float widths
-		for (String s : this.listFormattedStringToWidth(str, Math.round(wrapWidth))) {
-			this.renderStringAligned(s, x, t, wrapWidth, this.getTextColor(), addShadow);
-			t += this.getFont().FONT_HEIGHT;
+	protected void renderSplitString(float x, float y, String text, float wrapWidth, Color color, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		float y2 = y;
+		for(String s : this.listFormattedStringToWidth(text, wrapWidth)) {
+			this.renderStringAligned(x, y2, s, wrapWidth, color, shadow);
+			y2 += this.height();
 		}
+	}
+	
+	@Deprecated
+	protected float renderStringAligned(float x, float y, String text, float width, int color, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		return this.renderStringAligned(x, y, text, width, new Color(color), shadow);
 	}
 
 	/**
 	 * Render string either left or right aligned depending on bidiFlag
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
 	 */
-	protected int renderStringAligned(String text, float x, float y, float width, int color, boolean dropShadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		float t = x;
+	protected float renderStringAligned(float x, float y, String text, float width, Color color, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		float actualX = x;
 		if (this.getFont().getBidiFlag()) {
 			float i = this.getStringWidth(this.bidiReorder(text));
-			t = t + width - i;
+			actualX = actualX + width - i;
 		}
-
-		return this.renderString(text, t, y, color, dropShadow);
+		return this.renderString(text, actualX, y, color, shadow);
 	}
 	
 	public List<ITextComponent> splitText(ITextComponent textComponent, float maxTextLenght, boolean keepTrailingBlank, boolean forceTextColor) {
-		//TODO Better float handling
-		return GuiUtilRenderComponents.splitText(textComponent, Math.round(maxTextLenght), this.getFont(), keepTrailingBlank, forceTextColor);
+		return GuiUtilRenderComponents.splitText(textComponent, (int) Math.floor(maxTextLenght), this.getFont(), keepTrailingBlank, forceTextColor);
 
 	}
 
@@ -336,14 +303,16 @@ public class Font {
 	/**
 	 * Draws the specified string with a shadow.
 	 */
-	public int drawStringWithShadow(String text, float x, float y, int color) {
+	@Deprecated
+	public float drawStringWithShadow(String text, float x, float y, int color) {
 		return this.drawString(text, x, y, color, true);
 	}
 
 	/**
 	 * Draws the specified string.
 	 */
-	public int drawString(String text, int x, int y, int color) {
+	@Deprecated
+	public float drawString(String text, int x, int y, int color) {
 		return this.drawString(text, (float)x, (float)y, color, false);
 	}
 
@@ -351,14 +320,16 @@ public class Font {
 	 * Returns the width of this string. Equivalent of FontMetrics.stringWidth(String s).
 	 */
 	//FIXME for some reasons, FontRenderer#getStringWidth(String) seams to get stuck in an infinite loop when the Screen is too small, and eclipse's debugger cannot even step there ?
-	public int getStringWidth(String text) {
+	public float getStringWidth(String text) {
+		//TODO float version
 		return this.getFont().getStringWidth(text);
 	}
 
 	/**
 	 * Returns the width of this character as rendered.
 	 */
-	public int getCharWidth(char character) {
+	public float getCharWidth(char character) {
+		//TODO Float version
 		return this.getFont().getCharWidth(character);
 	}
 
@@ -426,12 +397,49 @@ public class Font {
 	 * Breaks a string into a list of pieces where the width of each line is always less than or equal to the provided
 	 * width. Formatting codes will be preserved between lines.
 	 */
-	public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
-		return this.getFont().listFormattedStringToWidth(str, wrapWidth);
+	public List<String> listFormattedStringToWidth(String str, float wrapWidth) {
+		//TODO Better handling of float width
+		return this.getFont().listFormattedStringToWidth(str, Math.round(wrapWidth));
 	}
 	
 	private FontRenderer getFont() {
 		return Minecraft.getMinecraft().fontRenderer;
 	}
+	
+	/* All there is from this point onwards is reflection stuff */
+	private static final String SRG_renderStringAtPos = "func_78255_a";
+	private static Method renderStringAtPos;
+	private static final String SRG_bidiReorder = "func_147647_b";
+	private static Method bidiReorder;
+	private static final String SRG_resetStyles = "func_78265_b";
+	private static Method resetStyles;
+	private static final String SRG_trimStringNewline = "func_78273_d";
+	private static Method trimStringNewline;
+	private static final String SRG_posX = "field_78295_j";
+	private static Field posX;
+	private static final String SRG_posY = "field_78296_k";
+	private static Field posY;
+	private static final String SRG_red = "field_78291_n";
+	private static Field red;
+	private static final String SRG_green = "field_78306_p";
+	private static Field green;
+	private static final String SRG_blue = "field_78292_o";
+	private static Field blue;
+	private static final String SRG_alpha = "field_78305_q";
+	private static Field alpha;
+	private static final String SRG_textColor = "field_78304_r";
+	private static Field textColor;
+	private static final String SRG_randomStyle = "field_78303_s";
+	private static Field randomStyle;
+	private static final String SRG_boldStyle = "field_78302_t";
+	private static Field boldStyle;
+	private static final String SRG_strikethroughStyle = "field_78299_w";
+	private static Field strikethroughStyle;
+	private static final String SRG_underlineStyle = "field_78300_v";
+	private static Field underlineStyle;
+	private static final String SRG_italicStyle = "field_78301_u";
+	private static Field italicStyle;
+	private static final String SRG_colorCode = "field_78285_g";
+	private static Field colorCode;
 
 }
