@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.Animation;
 import fr.thesmyler.smylibgui.Animation.AnimationState;
+import fr.thesmyler.smylibgui.Font;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.OptionButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
@@ -85,7 +86,7 @@ public class TestScreen extends Screen {
 		textScreen.addWidget(counterStr);
 		textScreen.addWidget(colored);
 		ITextComponent compo = ITextComponent.Serializer.jsonToComponent("[\"\",{\"text\":\"This is red, with a hover event,\",\"color\":\"dark_red\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"I said it's red\"}},{\"text\":\" \"},{\"text\":\"and this is green with an other hover event.\",\"color\":\"dark_green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Don't you trust me? This is green!\"}},{\"text\":\"\\n\"},{\"text\":\"And this is blue, with a click event!\",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://example.com\"}},{\"text\":\"\\n\"},{\"text\":\"And finally, this is \",\"color\":\"white\"},{\"text\":\"black\",\"strikethrough\":true,\"color\":\"white\"},{\"text\":\" white, \",\"color\":\"white\"},{\"text\":\"with\",\"underlined\":true,\"color\":\"white\"},{\"text\":\" various\",\"italic\":true,\"color\":\"white\"},{\"text\":\" styles \",\"bold\":true,\"color\":\"white\"},{\"text\":\"and I bet you can't read that.\",\"obfuscated\":true,\"color\":\"white\"}]");
-		textScreen.addWidget(new TextComponentWidget(textScreen.width/2, 140, 1, compo, TextAlignment.CENTER, this.getFont()).setMaxWidth(textScreen.getWidth()).setBackgroundColor(0x80000000).setPadding(10));
+		textScreen.addWidget(new TextComponentWidget(textScreen.width/2, 140, 1, compo, TextAlignment.CENTER, new Font(2)).setMaxWidth(textScreen.getWidth()).setBackgroundColor(0x80000000).setPadding(10));
 		
 		// === Button screen: examples on how to use button widgets === //
 		

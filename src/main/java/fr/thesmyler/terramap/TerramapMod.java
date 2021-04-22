@@ -46,7 +46,6 @@ public class TerramapMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) throws InvalidVersionString {
     	logger = event.getModLog();
-    	SmyLibGui.debug = true; //TODO remove SmyLibGui debug
     	TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
     	TerramapMod.logger.info("Terramap version: " + getVersion());
     	TerramapMod.proxy.preInit(event);
@@ -68,7 +67,7 @@ public class TerramapMod {
     
     @NetworkCheckHandler
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
-    	return true; //Anything should be ok, the actual check is done in the server event handler
+    	return true; // Anything should be ok, the actual check is done in the server event handler
     }
     
     @EventHandler
