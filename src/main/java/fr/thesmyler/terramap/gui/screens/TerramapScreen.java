@@ -11,9 +11,11 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
@@ -121,7 +123,7 @@ public class TerramapScreen extends Screen {
 		this.addWidget(this.zoomInButton);
 		this.zoomText = new TextWidget(49, this.getFont());
 		this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
-		this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(0xA0000000).setPadding(3);
+		this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
 		this.zoomText.setVisibility(!this.f1Mode);
 		this.addWidget(this.zoomText);
 		this.zoomOutButton.setX(this.zoomInButton.getX()).setY(this.zoomText.getY() + zoomText.getHeight() + 2);
@@ -139,9 +141,9 @@ public class TerramapScreen extends Screen {
 		this.styleButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.style.tooltip"));
 		this.styleButton.enable();
 		this.addWidget(this.styleButton);
-		this.debugText = new TextWidget(49, this.getFont());
+		this.debugText = new TextWidget(49, new Font((float)(1/SmyLibGui.getMinecraftGuiScale())));
 		this.debugText.setAnchorX(3).setAnchorY(0);
-		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(0xC0000000).setPadding(3);
+		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
 		this.debugText.setVisibility(this.debugMode);
 		this.addWidget(this.debugText);
 
@@ -221,8 +223,8 @@ public class TerramapScreen extends Screen {
 			Style style = new Style();
 			style.setColor(TextFormatting.YELLOW);
 			c.setStyle(style);
-			TextComponentWidget warningWidget = new TextComponentWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, 0xFFFFFFFF, true, this.getFont());
-			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
+			TextComponentWidget warningWidget = new TextComponentWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, this.getFont());
+			warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
 			this.addWidget(warningWidget);
 		}
 
@@ -270,7 +272,7 @@ public class TerramapScreen extends Screen {
 					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
 				} catch(NoSuchMethodError e) {
 					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.outdatedterra121"));
-					this.distortionText.setBaseColor(0xFFFF0000);
+					this.distortionText.setBaseColor(Color.RED);
 				}
 			} else {
 				this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", "-", "-"));
@@ -533,13 +535,11 @@ public class TerramapScreen extends Screen {
 			RenderUtil.setScissorState(true);
 			RenderUtil.pushScissorPos();
 			RenderUtil.scissor(x, y, this.width, this.height);
-			int yellow = 0xFFFFCC00;
-			int gray = 0xFF808080;
-			RenderUtil.drawRect(x, y, x + this.width, y + this.height, yellow);
-			RenderUtil.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, gray);
-			parent.getFont().drawCenteredString(x + this.width / 2, y + 8, I18n.format("terramap.terramapscreen.mapstylefailed.title"), yellow, false);
-			parent.getFont().drawString(I18n.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), x + 8, y + 16 + parent.getFont().height(), 0xFFFFFFFF, false);
-			parent.getFont().drawSplitString(I18n.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), x + 8, y + 24 + parent.getFont().height()*2, this.width - 16, 0xFFFFFFFF);
+			RenderUtil.drawRect(x, y, x + this.width, y + this.height, Color.YELLOW);
+			RenderUtil.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
+			parent.getFont().drawCenteredString(x + this.width / 2, y + 8, I18n.format("terramap.terramapscreen.mapstylefailed.title"), Color.YELLOW, false);
+			parent.getFont().drawString(x + 8, y + 16 + parent.getFont().height(), I18n.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
+			parent.getFont().drawSplitString(x + 8, y + 24 + parent.getFont().height()*2, I18n.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16, Color.WHITE, false);
 			RenderUtil.popScissorPos();
 			RenderUtil.setScissorState(wasScissor);
 		}
@@ -595,13 +595,12 @@ public class TerramapScreen extends Screen {
 		@Override
 		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
 			super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
-			int color = 0xFF808080;
-			int textColor = hovered? 0xFF90A0FF: 0xFFFFFFFF;
+			Color textColor = hovered? Color.SELECTION: Color.WHITE;
 			String text = this.background.getMap().getLocalizedName(SmyLibGui.getLanguage());
-			RenderUtil.drawRect(x, y, x + this.width, y + 4, color);
-			RenderUtil.drawRect(x, y + this.height - parent.getFont().height() - 4, x + this.width, y + this.height, color);
-			RenderUtil.drawRect(x, y, x + 4, y + this.height, color);
-			RenderUtil.drawRect(x + this.width - 4, y, x + this.width, y + this.height, color);
+			RenderUtil.drawRect(x, y, x + this.width, y + 4, Color.DARK_GRAY);
+			RenderUtil.drawRect(x, y + this.height - parent.getFont().height() - 4, x + this.width, y + this.height, Color.DARK_GRAY);
+			RenderUtil.drawRect(x, y, x + 4, y + this.height, Color.DARK_GRAY);
+			RenderUtil.drawRect(x + this.width - 4, y, x + this.width, y + this.height, Color.DARK_GRAY);
 			parent.getFont().drawCenteredString(x + this.width/2, y + this.height - parent.getFont().height() - 2, text, textColor, true);
 
 		}

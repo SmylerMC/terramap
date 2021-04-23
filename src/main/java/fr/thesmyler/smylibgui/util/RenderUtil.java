@@ -1,17 +1,15 @@
-package fr.thesmyler.smylibgui;
+package fr.thesmyler.smylibgui.util;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public final class RenderUtil {
@@ -101,19 +99,6 @@ public final class RenderUtil {
         float height = Math.max(0, Math.min(scissorY + scissorHeight, screenHeight - scissorY));
         GL11.glScissor((int)Math.round(x * scaleW), (int)Math.round(y * scaleH), (int)Math.round(width * scaleW), (int)Math.round(height * scaleH));
 	}
-
-	@Deprecated
-    public static void drawTexturedModalRect(int x, int y, int z, int u, int v, int width, int height) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(x, y + height, z).tex(u * 0.00390625, (v + height) * 0.00390625).endVertex();
-        bufferbuilder.pos(x + width, y + height, z).tex((u + width) * 0.00390625, (v + height) * 0.00390625).endVertex();
-        bufferbuilder.pos(x + width, y, z).tex((u + width) * 0.00390625, v * 0.00390625).endVertex();
-        bufferbuilder.pos(x, y, z).tex(u * 0.00390625, v * 0.00390625).endVertex();
-        tessellator.draw();
-    }
-
     
     public static void drawTexturedModalRect(float x, float y, int z, int minU, int minV, int maxU, int maxV) {
         Tessellator tessellator = Tessellator.getInstance();
@@ -140,28 +125,6 @@ public final class RenderUtil {
     public static void drawTexturedModalRect(float x, float y, float minU, float minV, float maxU, float maxV) {
     	drawTexturedModalRect(x, y, 0, minU, minV, maxU, maxV);
     }
-
-    /**
-     * @deprecated use the floating point variants
-     * 
-     * @param x
-     * @param y
-     * @param z
-     * @param textureSprite
-     * @param width
-     * @param height
-     */
-    @Deprecated
-    public static void drawTexturedModalRect(int x, int y, int z, TextureAtlasSprite textureSprite, int width, int height) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(x, y + height, z).tex(textureSprite.getMinU(), textureSprite.getMaxV()).endVertex();
-        bufferbuilder.pos(x + width, y + height, z).tex(textureSprite.getMaxU(), textureSprite.getMaxV()).endVertex();
-        bufferbuilder.pos(x + width, y, z).tex(textureSprite.getMaxU(), textureSprite.getMinV()).endVertex();
-        bufferbuilder.pos(x, y, z).tex(textureSprite.getMinU(), textureSprite.getMinV()).endVertex();
-        tessellator.draw();
-    }
     
     public static void drawRect(int z, float xLeft, float yTop, float xRight, float yBottom, Color color) {
     	drawGradientRect(z, xLeft, yTop, xRight, yBottom, color, color, color, color);
@@ -169,11 +132,6 @@ public final class RenderUtil {
     
     public static void drawRect(float xLeft, float yTop, float xRight, float yBottom, Color color) {
     	drawGradientRect(0, xLeft, yTop, xRight, yBottom, color, color, color, color);
-    }
-    
-    @Deprecated
-    public static void drawRect(float xLeft, float yTop, float xRight, float yBottom, int color) {
-    	drawRect(xLeft, yTop, xRight, yBottom, new Color(color));
     }
     
     public static void drawGradientRect(int z, float xLeft, float yTop, float xRight, float yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
@@ -196,11 +154,6 @@ public final class RenderUtil {
     
     public static void drawGradientRect(float xLeft, float yTop, float xRight, float yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
     	drawGradientRect(0, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
-    }
-    
-    @Deprecated
-    public static void drawGradientRect(float xLeft, float yTop, float xRight, float yBottom, int upperLeftColor, int lowerLeftColor, int lowerRightColor, int upperRightColor) {
-    	drawGradientRect(0, xLeft, yTop, xRight, yBottom, new Color(upperLeftColor), new Color(lowerLeftColor), new Color(lowerRightColor), new Color(upperRightColor));
     }
     
     public static void drawModalRectWithCustomSizedTexture(float x, float y, float u, float v, float width, float height, float textureWidth, float textureHeight) {

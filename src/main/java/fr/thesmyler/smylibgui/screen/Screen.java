@@ -9,10 +9,11 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Mouse;
 
-import fr.thesmyler.smylibgui.Font;
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.Utils;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -65,6 +66,9 @@ public class Screen extends GuiScreen implements IWidget{
 	private MenuWidget menuToShow = null;
 	private float menuToShowX;
 	private float menuToShowY;
+	
+	private static final Color TOP_GRADIENT_BG_COLOR = new Color(0x101010C0);
+	private static final Color BOTTOM_GRADIENT_BG_COLOR = new Color(0x101010D0);
 	
 	public Screen(float x, float y, int z, float width, float height, BackgroundType bg) {
 		for(int i=0; i<this.lastClickTime.length; i++) this.lastClickTime[i] = Long.MIN_VALUE;
@@ -439,14 +443,14 @@ public class Screen extends GuiScreen implements IWidget{
 			this.drawBackground(0);
 			break;
 		case OVERLAY:
-			RenderUtil.drawGradientRect(x, y, x + this.width, y + this.height, 0x101010c0, 0x101010d0, 0x101010d0, 0x101010c0);
+			RenderUtil.drawGradientRect(x, y, x + this.width, y + this.height, TOP_GRADIENT_BG_COLOR, BOTTOM_GRADIENT_BG_COLOR, BOTTOM_GRADIENT_BG_COLOR, TOP_GRADIENT_BG_COLOR);
 			break;
 		}
 		IWidget lastHoveredWidget = this.getHoveredWidget();
 		IWidget wf = null;
 		if(screenHovered) {
 			for(IWidget widget: this.widgets) {
-				if(!widget.isVisible(this) || this.isOutsideScreen(widget) || !Utils.doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.width, this.height)) continue;
+				if(!widget.isVisible(this) || this.isOutsideScreen(widget) || !Util.doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.width, this.height)) continue;
 				if(this.isOverWidget(mouseX - x, mouseY - y, widget)) {
 					wf = widget;
 					break;
@@ -455,7 +459,7 @@ public class Screen extends GuiScreen implements IWidget{
 		}
 		this.hoveredWidget = wf;
 		this.widgets.descendingIterator().forEachRemaining((widget) -> {
-			if(!widget.isVisible(this) || this.isOutsideScreen(widget)|| !Utils.doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.width, this.height)) return;
+			if(!widget.isVisible(this) || this.isOutsideScreen(widget)|| !Util.doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.width, this.height)) return;
 			widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
 		});
 		IWidget w = this.getHoveredWidget();

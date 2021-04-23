@@ -2,10 +2,10 @@ package fr.thesmyler.terramap.gui.widgets;
 
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.TextureUtil;
-import fr.thesmyler.smylibgui.TextureUtil.TextureProperties;
-import fr.thesmyler.smylibgui.TextureUtil.UnknownTextureException;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.TextureUtil;
+import fr.thesmyler.smylibgui.util.TextureUtil.TextureProperties;
+import fr.thesmyler.smylibgui.util.TextureUtil.UnknownTextureException;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;

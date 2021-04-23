@@ -1,6 +1,4 @@
-package fr.thesmyler.smylibgui;
-
-import fr.thesmyler.smylibgui.util.Color;
+package fr.thesmyler.smylibgui.util;
 
 public class Animation {
 
@@ -32,29 +30,29 @@ public class Animation {
 			switch(this.state) {
 			case ENTER:
 				float f = (float)age/(float)this.duration;
-				this.progress = Utils.saturate(f);
+				this.progress = Util.saturate(f);
 				if(this.progress == 1f) this.state = AnimationState.STOPPED;
 				break;
 			case LEAVE:
 				float g = (float)age/(float)this.duration;
-				this.progress = 1 - Utils.saturate(g);
+				this.progress = 1 - Util.saturate(g);
 				if(this.progress == 0f) this.state = AnimationState.STOPPED;
 				break;
 			case FLASH:
-				float k = 2 * Utils.saturate(Math.abs(((float)(age % this.duration) - halfDuration)/(float)halfDuration));
+				float k = 2 * Util.saturate(Math.abs(((float)(age % this.duration) - halfDuration)/(float)halfDuration));
 				this.progress = (int)k;
 				break;
 			case CONTINUOUS_ENTER:
 				float h = (float)(age % this.duration)/(float)this.duration;
-				this.progress = Utils.saturate(h);
+				this.progress = Util.saturate(h);
 				break;
 			case CONTINUOUS_LEAVE:
 				float i = (float)(age % this.duration)/(float)this.duration;
-				this.progress = 1 - Utils.saturate(i);
+				this.progress = 1 - Util.saturate(i);
 				break;
 			case BACK_AND_FORTH:
 				float j = ((float)(age % this.duration) - halfDuration)/(float)halfDuration;
-				this.progress = Utils.saturate(Math.abs(j));
+				this.progress = Util.saturate(Math.abs(j));
 				break;
 			case STOPPED:
 				break;
@@ -80,8 +78,8 @@ public class Animation {
 		return (float) this.blend((double)x1, (double)x2);
 	}
 	
-	public int fadeColor(int color) {
-		return Utils.adaptAlpha(color, this.getProgress());
+	public Color fadeColor(Color color) {
+		return color.withAlpha(Util.saturate(color.alphaf()*this.progress));
 	}
 	
 	public Color rainbowColor() {

@@ -1,15 +1,6 @@
-package fr.thesmyler.smylibgui;
+package fr.thesmyler.smylibgui.util;
 
-public final class Utils {
-	
-	public static int adaptAlpha(int color, float amount) {
-		if(amount >= 1) return color;
-		float factor = saturate(amount);
-		int alpha = color >>> 24;
-		int alphalessColor = color & 0x00FFFFFF;
-		int newAlpha = Math.round(factor * alpha);
-		return (newAlpha << 24) | alphalessColor;
-	}
+public final class Util {
 	
 	public static float saturate(float f) {
 		return Math.max(Math.min(1, f), 0);

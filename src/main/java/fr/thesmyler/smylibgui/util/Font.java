@@ -1,11 +1,11 @@
-package fr.thesmyler.smylibgui;
+package fr.thesmyler.smylibgui.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.SmyLibGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
@@ -27,11 +27,6 @@ public class Font {
 	
 	public float height() {
 		return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT * this.scale;
-	}
-
-	@Deprecated
-	public float drawString(String text, float x, float y, int color, boolean shadow) {
-		return this.drawString(x, y, text, new Color(color), shadow);
 	}
 	
 	/**
@@ -56,20 +51,10 @@ public class Font {
 			return this.getFont().drawString(text, x, y, color.encoded(), shadow);
 		}
 	}
-
-	@Deprecated
-	public void drawCenteredString(float x, float y, String text, int color, boolean shadow) {
-		this.drawCenteredString(x, y, text, new Color(color), shadow);
-	}
 	
 	public void drawCenteredString(float x, float y, String text, Color color, boolean shadow) {
 		float w = this.getStringWidth(text);
 		this.drawString(x - w/2, y, text, color, shadow);
-	}
-	
-	@Deprecated
-	public void drawSplitString(String text, float x, float y, float wrapWidth, int color) {
-		this.drawSplitString(x, y, text, wrapWidth, new Color(color), false);
 	}
 
 	public void drawSplitString(float x, float y, String text, float wrapWidth, Color color, boolean shadow) {
@@ -130,11 +115,6 @@ public class Font {
 			y2 += this.height();
 		}
 	}
-	
-	@Deprecated
-	protected float renderStringAligned(float x, float y, String text, float width, int color, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		return this.renderStringAligned(x, y, text, width, new Color(color), shadow);
-	}
 
 	/**
 	 * Render string either left or right aligned depending on bidiFlag
@@ -159,22 +139,6 @@ public class Font {
 
 	protected void enableAlpha() {
 		GlStateManager.enableAlpha();
-	}
-
-	/**
-	 * Draws the specified string with a shadow.
-	 */
-	@Deprecated
-	public float drawStringWithShadow(String text, float x, float y, int color) {
-		return this.drawString(text, x, y, color, true);
-	}
-
-	/**
-	 * Draws the specified string.
-	 */
-	@Deprecated
-	public float drawString(String text, int x, int y, int color) {
-		return this.drawString(text, (float)x, (float)y, color, false);
 	}
 
 	/**

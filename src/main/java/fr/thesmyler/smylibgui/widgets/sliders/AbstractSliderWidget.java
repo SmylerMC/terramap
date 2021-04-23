@@ -4,10 +4,11 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.Utils;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,6 +25,10 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 	
 	protected String displayPrefix = "";
 	protected boolean enabled = true;
+	
+	protected Color enabledTextColor = Color.LIGHT_GRAY;
+	protected Color activeTextColor = Color.SELECTION;
+	protected Color disabledTextColor = Color.MEDIUM_GRAY;
 	
 	public AbstractSliderWidget(float x, float y, int z, float width) {
 		super(x, y, z, width, 20);
@@ -51,7 +56,7 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 	@Override
 	public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
 		if(!this.isEnabled()) return false;
-		float pos = Utils.saturate(((float)mouseX) / this.getWidth());
+		float pos = Util.saturate(((float)mouseX) / this.getWidth());
 		this.setValueFromPos(pos);
 		return false;
 	}
@@ -111,9 +116,9 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
         parent.drawTexturedModalRect(x + sliderPosition * (this.width - 8), y, 0, 66, 4, 20);
         parent.drawTexturedModalRect(x + sliderPosition * (this.width - 8) + 4, y, 196, 66, 4, 20);
         
-		int textColor = 0xFFE0E0E0;
-		if (!this.isEnabled()) textColor = 0xFFA0A0A0;
-		else if (hovered || hasFocus) textColor = 0xFFFFFFA0;
+		Color textColor = this.enabledTextColor;
+		if (!this.isEnabled()) textColor = this.disabledTextColor;
+		else if (hovered || hasFocus) textColor = this.activeTextColor;
 
         parent.getFont().drawCenteredString(x + this.width / 2, y + (20 - 8) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
         
@@ -162,6 +167,30 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 	public AbstractSliderWidget setEnabled(boolean yesNo) {
 		this.enabled = yesNo;
 		return this;
+	}
+
+	public Color getEnabledTextColor() {
+		return enabledTextColor;
+	}
+
+	public void setEnabledTextColor(Color enabledTextColor) {
+		this.enabledTextColor = enabledTextColor;
+	}
+
+	public Color getActiveTextColor() {
+		return activeTextColor;
+	}
+
+	public void setActiveTextColor(Color activeTextColor) {
+		this.activeTextColor = activeTextColor;
+	}
+
+	public Color getDisabledTextColor() {
+		return disabledTextColor;
+	}
+
+	public void setDisabledTextColor(Color disabledTextColor) {
+		this.disabledTextColor = disabledTextColor;
 	}
 
 }
