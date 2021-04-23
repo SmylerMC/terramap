@@ -35,6 +35,7 @@ import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 
 
 public class HudConfigScreen extends Screen {
@@ -133,11 +134,11 @@ public class HudConfigScreen extends Screen {
 		
 		// Boolean lines
 		LinkedList<TextWidget> buttonsTexts = new LinkedList<>();
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.minimap"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.compass"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.players"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.entities"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.directions"), 10, true, this.getFont()));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.minimap"), this.getFont()));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.compass"), this.getFont()));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.players"), this.getFont()));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.entities"), this.getFont()));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.directions"), this.getFont()));
 		this.minimapButton.setTooltip(I18n.format("terramap.hudconfig.minimap.tooltip"));
 		this.compassButton.setTooltip(I18n.format("terramap.hudconfig.compass.tooltip"));
 		this.otherPlayersButton.setTooltip(I18n.format("terramap.hudconfig.players.tooltip"));
@@ -193,7 +194,7 @@ public class HudConfigScreen extends Screen {
 		this.buttonPanel.setOpenX(this.buttonPanel.getClosedX()).setOpenY(this.height - this.settingsPanel.getHeight() - this.buttonPanel.getHeight());
 		this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 		
-		TextWidget explain = new TextWidget(I18n.format("terramap.hudconfig.explain"), this.width/2, this.height/2 - 100, 10, TextAlignment.CENTER, this.getFont());
+		TextWidget explain = new TextWidget(this.width/2, this.height/2 - 100, 10, new TextComponentTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, this.getFont());
 		this.addWidget(explain.setMaxWidth(this.width * .8f).setAnchorY(this.height/2 - explain.getHeight() - 10));
 		
 		this.addWidget(this.buttonPanel);
