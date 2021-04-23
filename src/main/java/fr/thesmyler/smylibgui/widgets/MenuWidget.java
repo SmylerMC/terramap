@@ -5,11 +5,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.Animation;
-import fr.thesmyler.smylibgui.Animation.AnimationState;
-import fr.thesmyler.smylibgui.Font;
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Animation;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class MenuWidget implements IWidget {
@@ -26,13 +27,21 @@ public class MenuWidget implements IWidget {
 	private boolean openOnClick = false;
 
 	protected float padding = 4;
-	protected int separatorColor = 0x50FFFFFF;
-	protected int borderColor = 0xA0FFFFFF;
-	protected int backgroundColor = 0xE0000000;
-	protected int hoveredColor = 0x40C0C0C0;
-	protected int textColor = 0xFFFFFFFF;
-	protected int disabledTextColor = 0xFF808080;
-	protected int hoveredTextColor = 0xFF8080FF;
+	
+	public static final Color DEFAULT_COLOR_SEPARATOR = new Color(0x50FFFFFF);
+	public static final Color DEFAULT_COLOR_BORDER = new Color(0xA0FFFFFF);
+	public static final Color DEFAULT_COLOR_BACKGROUND = new Color(0xE0000000);
+	public static final Color DEFAULT_COLOR_HOVERED = new Color(0x40C0C0C0);
+	public static final Color DEFAULT_COLOR_TEXT_NORMAL = new Color(0xFFFFFFFF);
+	public static final Color DEFAULT_COLOR_TEXT_DISABLED = new Color(0xFF808080);
+	public static final Color DEFAULT_COLOR_TEXT_HOVERED = new Color(0xFF8080FF);
+	protected Color separatorColor = DEFAULT_COLOR_SEPARATOR;
+	protected Color borderColor = DEFAULT_COLOR_BORDER;
+	protected Color backgroundColor = DEFAULT_COLOR_BACKGROUND;
+	protected Color hoveredColor = DEFAULT_COLOR_HOVERED;
+	protected Color textColor = DEFAULT_COLOR_TEXT_NORMAL;
+	protected Color disabledTextColor = DEFAULT_COLOR_TEXT_DISABLED;
+	protected Color hoveredTextColor = DEFAULT_COLOR_TEXT_HOVERED;
 
 	protected Animation mainAnimation = new Animation(150);
 	protected Animation hoverAnimation = new Animation(150);
@@ -52,15 +61,15 @@ public class MenuWidget implements IWidget {
 		float fh = this.font.height();
 		float lh = fh + padding * 2;
 		float sh = 3;
-		int dw = this.font.getStringWidth(" >");
+		float dw = this.font.getStringWidth(" >");
 		GlStateManager.enableAlpha();
-		int separatorColor = this.mainAnimation.fadeColor(this.separatorColor);
-		int borderColor = this.mainAnimation.fadeColor(this.borderColor);
-		int backgroundColor = this.mainAnimation.fadeColor(this.backgroundColor);
-		int hoveredColor = this.hoverAnimation.fadeColor(this.mainAnimation.fadeColor(this.hoveredColor));
-		int textColor = this.mainAnimation.fadeColor(this.textColor);
-		int disabledTextColor = this.mainAnimation.fadeColor(this.disabledTextColor);
-		int hoveredTextColor = this.mainAnimation.fadeColor(this.hoveredTextColor);
+		Color separatorColor = this.mainAnimation.fadeColor(this.separatorColor);
+		Color borderColor = this.mainAnimation.fadeColor(this.borderColor);
+		Color backgroundColor = this.mainAnimation.fadeColor(this.backgroundColor);
+		Color hoveredColor = this.hoverAnimation.fadeColor(this.mainAnimation.fadeColor(this.hoveredColor));
+		Color textColor = this.mainAnimation.fadeColor(this.textColor);
+		Color disabledTextColor = this.mainAnimation.fadeColor(this.disabledTextColor);
+		Color hoveredTextColor = this.mainAnimation.fadeColor(this.hoveredTextColor);
 		RenderUtil.drawRect(x, y, x + width, y + height, backgroundColor);
 		RenderUtil.drawRect(x, y, x + 1, y + height, borderColor);
 		RenderUtil.drawRect(x + width, y, x + width + 1, y + height, borderColor);
@@ -71,7 +80,7 @@ public class MenuWidget implements IWidget {
 			int tx = 0;
 			if(entry.text != null) {
 				boolean hovered = mouseX >= x && mouseX <= x + width && mouseY >= ty && mouseY <= ty + lh - 1;
-				int c = textColor;
+				Color c = textColor;
 				if(!entry.enabled) c = disabledTextColor;
 				else if(hovered || (entry.getSubMenu() != null && entry.getSubMenu().equals(this.displayedSubMenu))) {
 					if(!entry.equals(this.hoveredEntry)) {
@@ -101,8 +110,8 @@ public class MenuWidget implements IWidget {
 					subMenu.isSubMenu = true;
 					subMenu.show(subX, subY);
 				}
-				this.font.drawString(entry.getText(), x + padding*2 + tx, ty + padding, c, false);
-				if(subMenu != null) this.font.drawString(" >", x + width - dw - padding, ty + padding, c, false);
+				this.font.drawString(x + padding*2 + tx, ty + padding, entry.getText(), c, false);
+				if(subMenu != null) this.font.drawString(x + width - dw - padding, ty + padding, " >", c, false);
 				ty += lh;
 			} else {
 				RenderUtil.drawRect(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
@@ -201,7 +210,7 @@ public class MenuWidget implements IWidget {
 
 	@Override
 	public float getWidth() {
-		int mw = 0;
+		float mw = 0;
 		for(MenuEntry e: this.entries) {
 			mw = Math.max(mw, this.font.getStringWidth(e.getText()));
 		}
@@ -290,59 +299,59 @@ public class MenuWidget implements IWidget {
 		this.padding = padding;
 	}
 
-	public int getSeparatorColor() {
+	public Color getSeparatorColor() {
 		return separatorColor;
 	}
 
-	public void setSeparatorColor(int separatorColor) {
+	public void setSeparatorColor(Color separatorColor) {
 		this.separatorColor = separatorColor;
 	}
 
-	public int getBorderColor() {
+	public Color getBorderColor() {
 		return borderColor;
 	}
 
-	public void setBorderColor(int borderColor) {
+	public void setBorderColor(Color borderColor) {
 		this.borderColor = borderColor;
 	}
 
-	public int getBackgroundColor() {
+	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
 
-	public void setBackgroundColor(int backgroundColor) {
+	public void setBackgroundColor(Color backgroundColor) {
 		this.backgroundColor = backgroundColor;
 	}
 
-	public int getHoveredColor() {
+	public Color getHoveredColor() {
 		return hoveredColor;
 	}
 
-	public void setHoveredColor(int hoveredColor) {
+	public void setHoveredColor(Color hoveredColor) {
 		this.hoveredColor = hoveredColor;
 	}
 
-	public int getTextColor() {
+	public Color getTextColor() {
 		return textColor;
 	}
 
-	public void setTextColor(int textColor) {
+	public void setTextColor(Color textColor) {
 		this.textColor = textColor;
 	}
 
-	public int getHoveredTextColor() {
+	public Color getHoveredTextColor() {
 		return hoveredTextColor;
 	}
 
-	public void setHoveredTextColor(int hoveredTextColor) {
+	public void setHoveredTextColor(Color hoveredTextColor) {
 		this.hoveredTextColor = hoveredTextColor;
 	}
 
-	public int getDisabledTextColor() {
+	public Color getDisabledTextColor() {
 		return disabledTextColor;
 	}
 
-	public void setDisabledTextColor(int disabledTextColor) {
+	public void setDisabledTextColor(Color disabledTextColor) {
 		this.disabledTextColor = disabledTextColor;
 	}
 

@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
+import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

@@ -7,22 +7,21 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.thesmyler.smylibgui.Animation;
-import fr.thesmyler.smylibgui.Animation.AnimationState;
-import fr.thesmyler.smylibgui.Font;
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Animation;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
-import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -39,7 +38,7 @@ public class TextFieldWidget implements IWidget {
 	private float x, y, width, height;
 	private int z;
 	private int selectionStart, selectionEnd, firstCharacterIndex, maxLength;
-	private int enabledTextColor, disabledTextColor;
+	private Color focusedTextColor, enabledTextColor, disabledTextColor, backgroundColor, borderColorNormal, borderColorHovered;
 	private boolean hasBackground, selecting;
 	private boolean enabled, visible, menuEnabled;
 	private Animation cursorAnimation = new Animation(600);
@@ -52,7 +51,6 @@ public class TextFieldWidget implements IWidget {
 	public TextFieldWidget(float x, float y, int z, float width, String defaultText,
 			Consumer<String> onChange, Predicate<String> onPressEnter, Predicate<String> textValidator,
 			int maxTextLength,
-			int enabledTextColor, int disabledTextColor,
 			Font font) {
 		this.x = x;
 		this.y = y;
@@ -65,8 +63,12 @@ public class TextFieldWidget implements IWidget {
 		this.textValidator = textValidator;
 		this.onChangeCallback = onChange;
 		this.onPressEnterCallback = onPressEnter;
-		this.enabledTextColor = enabledTextColor;
-		this.disabledTextColor = disabledTextColor;
+		this.focusedTextColor = Color.LIGHT_GRAY;
+		this.enabledTextColor = Color.MEDIUM_GRAY;
+		this.disabledTextColor = Color.DARK_GRAY;
+		this.backgroundColor = Color.DARK_OVERLAY;
+		this.borderColorNormal = Color.MEDIUM_GRAY;
+		this.borderColorHovered = Color.LIGHT_GRAY;
 		this.hasBackground = true;
 		this.cursorAnimation.start(AnimationState.FLASH);
 		this.enabled = true;
@@ -82,7 +84,7 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	public TextFieldWidget(float x, float y, int z, float width, Font font) {
-		this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, 0xFFE0E0E0, 0xFF707070, font);
+		this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, font);
 	}
 
 	public TextFieldWidget(int z, String defaultText, Font font) {
@@ -94,7 +96,7 @@ public class TextFieldWidget implements IWidget {
 	}
 	
 	public TextFieldWidget(float x, float y, int z, float width) {
-		this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, 0xFFE0E0E0, 0xFF707070, SmyLibGui.DEFAULT_FONT);
+		this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, SmyLibGui.DEFAULT_FONT);
 	}
 
 	public TextFieldWidget(int z, String defaultText) {
@@ -109,18 +111,17 @@ public class TextFieldWidget implements IWidget {
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
 
 		this.cursorAnimation.update();
-
-		int backgroundColor = 0x80000000;
-		int borderColor = 0xFFA0A0A0;
-		int textColor = this.disabledTextColor;
+		
+		Color borderColor = this.borderColorNormal;
+		Color textColor = this.disabledTextColor;
 
 		if(this.isEnabled()) {
-			if(hovered) borderColor = 0xFFE0E0E0;
-			if(focused) textColor = this.enabledTextColor; else textColor = 0xFFB0B0B0;
+			if(hovered) borderColor = this.borderColorHovered;
+			textColor = focused ? this.focusedTextColor: this.enabledTextColor;
 		}
 
 		if(this.hasBackground) {
-			RenderUtil.drawRect(x, y, x + this.width, y + this.height, backgroundColor);
+			RenderUtil.drawRect(x, y, x + this.width, y + this.height, this.backgroundColor);
 			RenderUtil.drawRect(x - 1, y - 1, x + this.width + 1, y, borderColor);
 			RenderUtil.drawRect(x - 1, y + this.height, x + this.width + 1, y + this.height + 1, borderColor);
 			RenderUtil.drawRect(x - 1, y - 1, x, y + this.height + 1, borderColor);
@@ -129,14 +130,14 @@ public class TextFieldWidget implements IWidget {
 		
 		if(this.isSearchBar) {
 			GlStateManager.color(1, 1, 1, 1);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/mapwidgets.png"));
+			Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.WIDGET_TEXTURES);
 			GlStateManager.enableAlpha();
 			GlStateManager.enableBlend();
 			RenderUtil.drawModalRectWithCustomSizedTexture(x + this.width - 17, y + 2, 131, 0, 15, 15, 256, 256);
 		}
 
 
-		int cursorColor = this.cursorAnimation.fadeColor(textColor);
+		Color cursorColor = this.cursorAnimation.fadeColor(textColor);
 		int displaySelectionStart = this.selectionStart - this.firstCharacterIndex;
 		int displaySelectionEnd = this.selectionEnd - this.firstCharacterIndex;
 		String string = this.getVisibleText();
@@ -148,7 +149,7 @@ public class TextFieldWidget implements IWidget {
 
 		if(!string.isEmpty()) {
 			String textBeforeCursor = displayCursor ? string.substring(0, displaySelectionStart) : string;
-			startDrawAfterCursorX = this.font.drawStringWithShadow(textBeforeCursor, textRenderX, textRenderY, textColor);
+			startDrawAfterCursorX = this.font.drawString(textRenderX, textRenderY, textBeforeCursor, textColor, true);
 		}
 
 		boolean isCursorAtEndOfText = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxTextLength();
@@ -160,14 +161,14 @@ public class TextFieldWidget implements IWidget {
 		}
 
 		if(!string.isEmpty() && displayCursor && displaySelectionStart < string.length()) {
-			this.font.drawStringWithShadow(string.substring(displaySelectionStart), startDrawAfterCursorX, textRenderY, textColor);
+			this.font.drawString(startDrawAfterCursorX, textRenderY, string.substring(displaySelectionStart), textColor, true);
 		}
 
 		if(focused && this.isEnabled()) {
 			if (isCursorAtEndOfText) {
 				RenderUtil.drawRect(cursorX, textRenderY - 1, cursorX+1, textRenderY+1 + 9, cursorColor);
 			} else {
-				this.font.drawStringWithShadow("_", cursorX, textRenderY, cursorColor);
+				this.font.drawString(cursorX, textRenderY, "_", cursorColor, true);
 			}
 		}
 
@@ -269,13 +270,13 @@ public class TextFieldWidget implements IWidget {
 					this.moveCursor(-1);
 				}
 				break;
-			case Keyboard.KEY_HOME: //This is the start key
+			case Keyboard.KEY_HOME: // This is the start key
 				this.setCursorToStart();
 				break;
 			case Keyboard.KEY_END:
 				this.setCursorToEnd();
 				break;
-			case Keyboard.KEY_RETURN: //This is the enter key
+			case Keyboard.KEY_RETURN: // This is the enter key
 			case Keyboard.KEY_NUMPADENTER:
 				if(this.onPressEnterCallback.test(this.text)) {
 					parent.setFocus(null);
@@ -548,15 +549,6 @@ public class TextFieldWidget implements IWidget {
 		return this;
 	}
 
-	public int getEnabledTextColor() {
-		return enabledTextColor;
-	}
-
-	public TextFieldWidget setEnabledTextColor(int enabledTextColor) {
-		this.enabledTextColor = enabledTextColor;
-		return this;
-	}
-	
 	public boolean isSearchBar() {
 		return this.isSearchBar;
 	}
@@ -565,16 +557,7 @@ public class TextFieldWidget implements IWidget {
 		this.isSearchBar = yesNo;
 		return this;
 	}
-
-	public int getDisabledTextColor() {
-		return disabledTextColor;
-	}
-
-	public TextFieldWidget setDisabledTextColor(int disabledTextColor) {
-		this.disabledTextColor = disabledTextColor;
-		return this;
-	}
-
+	
 	public Predicate<String> getTextValidator() {
 		return textValidator;
 	}
@@ -658,6 +641,46 @@ public class TextFieldWidget implements IWidget {
 		return this.setRightClickMenuEnabled(false);
 	}
 	
+	public Color getFocusedTextColor() {
+		return focusedTextColor;
+	}
+
+	public void setFocusedTextColor(Color focusedTextColor) {
+		this.focusedTextColor = focusedTextColor;
+	}
+
+	public Color getEnabledTextColor() {
+		return enabledTextColor;
+	}
+
+	public void setEnabledTextColor(Color enabledTextColor) {
+		this.enabledTextColor = enabledTextColor;
+	}
+
+	public Color getDisabledTextColor() {
+		return disabledTextColor;
+	}
+
+	public void setDisabledTextColor(Color disabledTextColor) {
+		this.disabledTextColor = disabledTextColor;
+	}
+
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+
+	public Color getBorderColorHovered() {
+		return borderColorHovered;
+	}
+
+	public void setBorderColorHovered(Color borderColorHovered) {
+		this.borderColorHovered = borderColorHovered;
+	}
+
 	public static boolean isValidChar(char chr) {
 		return chr != '\u00a7' && chr >= ' ' && chr != 127;
 	}

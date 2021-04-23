@@ -5,8 +5,9 @@ import org.lwjgl.input.Mouse;
 
 import com.google.common.base.Preconditions;
 
-import fr.thesmyler.smylibgui.Cursors;
-import fr.thesmyler.smylibgui.RenderUtil;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Cursors;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 
 public class WindowedScreen extends Screen {
@@ -23,9 +24,9 @@ public class WindowedScreen extends Screen {
 	private boolean allowHorizontalResize = true;
 	private boolean enableCustomCursors = true;
 	private boolean enableCenterDrag = false;
-	private int borderColor = 0xB0000000;
-	private int centerDragWidgetColor = 0x60000000;
-	private int titleColor = 0xFFFFFFFF;
+	private Color borderColor = Color.DARKER_OVERLAY;
+	private Color centerDragWidgetColor = Color.LIGHT_OVERLAY;
+	private Color titleColor = Color.WHITE;
 	private Screen subScreen;
 	private String windowTitle;
 	private boolean visible = true;
@@ -90,7 +91,7 @@ public class WindowedScreen extends Screen {
 		
 		protected abstract boolean isCursorEnabled();
 		
-		protected abstract int getBackgroundColor();
+		protected abstract Color getBackgroundColor();
 		
 		@Override
 		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
@@ -115,7 +116,7 @@ public class WindowedScreen extends Screen {
 		}
 		
 		@Override
-		protected int getBackgroundColor() {
+		protected Color getBackgroundColor() {
 			return WindowedScreen.this.borderColor;
 		}
 
@@ -504,7 +505,7 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		protected int getBackgroundColor() {
+		protected Color getBackgroundColor() {
 			return WindowedScreen.this.borderColor;
 		}
 
@@ -579,7 +580,7 @@ public class WindowedScreen extends Screen {
 		}
 
 		@Override
-		protected int getBackgroundColor() {
+		protected Color getBackgroundColor() {
 			return WindowedScreen.this.centerDragWidgetColor;
 		}
 		
@@ -764,29 +765,29 @@ public class WindowedScreen extends Screen {
 		return this;
 	}
 	
-	public int getBorderColor() {
+	public Color getBorderColor() {
 		return this.borderColor;
 	}
 	
-	public WindowedScreen setBorderColor(int color) {
+	public WindowedScreen setBorderColor(Color color) {
 		this.borderColor = color;
 		return this;
 	}
 	
-	public int getCenterDragColor() {
+	public Color getCenterDragColor() {
 		return this.centerDragWidgetColor;
 	}
 	
-	public WindowedScreen setCenterDragColor(int color) {
+	public WindowedScreen setCenterDragColor(Color color) {
 		this.centerDragWidgetColor = color;
 		return this;
 	}
 	
-	public int getTitleColor() {
+	public Color getTitleColor() {
 		return this.titleColor;
 	}
 	
-	public WindowedScreen setTitleColor(int color) {
+	public WindowedScreen setTitleColor(Color color) {
 		this.titleColor = color;
 		return this;
 	}

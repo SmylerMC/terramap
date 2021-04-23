@@ -1,7 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
@@ -95,10 +96,10 @@ public class ScaleIndicatorWidget implements IWidget {
 			}
 		}
 		float strwidth = parent.getFont().getStringWidth(lengthstr);
-		parent.getFont().drawString(lengthstr, x + barwidth/2 - strwidth/2, barY - parent.getFont().height() - 5, 0xFF444444, false);
-		RenderUtil.drawRect(x, barY, x + barwidth, barY+2, 0xFF444444);
-		RenderUtil.drawRect(x, barY-4, x+2, barY+6, 0xFF444444);
-		RenderUtil.drawRect(x-2 + barwidth, barY-4, x + barwidth, barY+6, 0xFF444444);
+		parent.getFont().drawString(x + barwidth/2 - strwidth/2, barY - parent.getFont().height() - 5, lengthstr, Color.DARKER_GRAY, false);
+		RenderUtil.drawRect(x, barY, x + barwidth, barY+2, Color.DARKER_GRAY);
+		RenderUtil.drawRect(x, barY-4, x+2, barY+6, Color.DARKER_GRAY);
+		RenderUtil.drawRect(x-2 + barwidth, barY-4, x + barwidth, barY+6, Color.DARKER_GRAY);
 	}
 
 }

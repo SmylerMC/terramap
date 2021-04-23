@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui;
+package fr.thesmyler.smylibgui.util;
 
 import java.nio.IntBuffer;
 
@@ -8,6 +8,7 @@ import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;

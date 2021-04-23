@@ -1,14 +1,18 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class TextButtonWidget extends AbstractButtonWidget {
 
 	protected String str;
+	protected Color enabledTextColor = Color.LIGHT_GRAY;
+	protected Color activeTextColor = Color.SELECTION;
+	protected Color disabledTextColor = Color.MEDIUM_GRAY;
 
 	public TextButtonWidget(float x, float y, int z, float width, String str, Runnable onClick, Runnable onDoubleClick) {
 		super(x, y, z, width, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 11, onClick, onDoubleClick);
@@ -41,15 +45,15 @@ public class TextButtonWidget extends AbstractButtonWidget {
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, Screen parent) {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
-		GlStateManager.color(1, 1, 1, 1); //White, non transparent
+		GlStateManager.color(1, 1, 1, 1); // White, non transparent
 		int textureDelta = 1;
-		int textColor = 0xFFE0E0E0;
+		Color textColor = this.enabledTextColor;
 		if (!this.isEnabled()) {
-			textColor = 0xFFA0A0A0;
+			textColor = this.disabledTextColor;
 			textureDelta = 0;
 		}
 		else if (hovered || hasFocus) {
-			textColor = 0xFFFFFFA0;
+			textColor = this.activeTextColor;
 			textureDelta = 2;
 		}
 		float leftWidth = this.width / 2;
@@ -76,4 +80,29 @@ public class TextButtonWidget extends AbstractButtonWidget {
 		this.width = width;
 		return this;
 	}
+
+	public Color getEnabledTextColor() {
+		return enabledTextColor;
+	}
+
+	public void setEnabledTextColor(Color enabledTextColor) {
+		this.enabledTextColor = enabledTextColor;
+	}
+
+	public Color getActiveTextColor() {
+		return activeTextColor;
+	}
+
+	public void setActiveTextColor(Color activeTextColor) {
+		this.activeTextColor = activeTextColor;
+	}
+
+	public Color getDisabledTextColor() {
+		return disabledTextColor;
+	}
+
+	public void setDisabledTextColor(Color disabledTextColor) {
+		this.disabledTextColor = disabledTextColor;
+	}
+
 }
