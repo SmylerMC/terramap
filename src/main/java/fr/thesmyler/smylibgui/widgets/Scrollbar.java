@@ -1,7 +1,8 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import net.minecraft.client.Minecraft;
@@ -9,13 +10,14 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 
+//TODO Use a texture
 public class Scrollbar extends Screen {
 	
-	private static final int BAR_BG_COLOR = 0xF0111111;
-	private static final int BAR_BORDER_COLOR = 0xFF000000;
-	private static final int DRAG_BG_COLOR = 0xFF646464;
-	private static final int DRAG_BG_COLOR_HOVER = 0xFF7E88BF;
-	private static final int DRAG_BORDER_COLOR = 0xFFAAAAAA;
+	private static final Color BAR_BG_COLOR = Color.DARKER_OVERLAY; //TODO Extract / change
+	private static final Color BAR_BORDER_COLOR = Color.BLACK;
+	private static final Color DRAG_BG_COLOR = Color.DARK_GRAY; //TODO Extract / change
+	private static final Color DRAG_BG_COLOR_HOVER = Color.SELECTION; //TODO Extract / change
+	private static final Color DRAG_BORDER_COLOR = Color.MEDIUM_GRAY; //TODO Extract / change
 	
 	protected TexturedButtonWidget upButton = new TexturedButtonWidget(1, IncludedTexturedButtons.UP);
 	protected TexturedButtonWidget downButton = new TexturedButtonWidget(1, IncludedTexturedButtons.DOWN);
@@ -152,7 +154,7 @@ public class Scrollbar extends Screen {
 		
 		@Override
 		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
-			int bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
+			Color bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
 			float height = this.getHeight();
 			RenderUtil.drawRect(x, y, x + this.getWidth(), y + height, bgcolor);
 			

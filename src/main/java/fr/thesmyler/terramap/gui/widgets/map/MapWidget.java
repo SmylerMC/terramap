@@ -10,9 +10,10 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.thesmyler.smylibgui.Font;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
@@ -98,13 +99,14 @@ public class MapWidget extends Screen {
 		this.context = context;
 		this.tileScaling = tileScaling;
 		Font font = SmyLibGui.DEFAULT_FONT;
-		this.copyright = new TextComponentWidget(Integer.MAX_VALUE, new TextComponentString(""), font) {
+		Font smallFont = new Font(.5f);
+		this.copyright = new TextComponentWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
 			@Override
 			public boolean isVisible(Screen parent) {
 				return MapWidget.this.showCopyright;
 			}
 		};
-		this.copyright.setBackgroundColor(0x80000000).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
+		this.copyright.setBackgroundColor(Color.DARK_OVERLAY).setPadding(3).setAlignment(TextAlignment.LEFT).setShadow(false);
 		super.addWidget(this.copyright);
 
 		this.errorText = new TextWidget(Integer.MAX_VALUE, font) {
@@ -113,7 +115,7 @@ public class MapWidget extends Screen {
 				return MapWidget.this.reportedErrors.size() > 0 && MapWidget.this.context == MapContext.FULLSCREEN;
 			}
 		};
-		this.errorText.setBackgroundColor(0xC0600000).setPadding(5).setAlignment(TextAlignment.CENTER).setShadow(false).setBaseColor(0xFFFFFFFF);
+		this.errorText.setBackgroundColor(Color.ERROR_OVERLAY).setPadding(5).setAlignment(TextAlignment.CENTER).setShadow(false).setBaseColor(Color.WHITE);
 		super.addWidget(errorText);
 
 		this.rightClickMenu = new MenuWidget(1500, font);

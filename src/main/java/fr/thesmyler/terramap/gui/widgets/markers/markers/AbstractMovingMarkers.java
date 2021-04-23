@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
-import fr.thesmyler.smylibgui.Animation;
+import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;

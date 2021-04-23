@@ -108,8 +108,21 @@ public class Color {
 	public static final Color RED = new Color(0xFFFF0000);
 	public static final Color GREEN = new Color(0xFF00FF00);
 	public static final Color BLUE = new Color(0xFF0000FF);
+	public static final Color YELLOW = new Color(0xFFFFCC00);
+	
 	public static final Color WHITE = new Color(0xFFFFFFFF);
 	public static final Color BLACK = new Color(0xFF000000);
+	public static final Color LIGHT_GRAY = new Color(0xFFE0E0E0);
+	public static final Color MEDIUM_GRAY = new Color(0xFFA0A0A0);
+	public static final Color DARK_GRAY = new Color(0xFF707070);
+	public static final Color DARKER_GRAY = new Color(0xFF404040);
+	public static final Color SELECTION = new Color(0xFFFFFFA0);
+	
+	public static final Color TRANSPARENT = WHITE.withAlpha(0);
+	public static final Color LIGHT_OVERLAY = BLACK.withAlpha(.25f);
+	public static final Color DARK_OVERLAY = BLACK.withAlpha(.5f);
+	public static final Color DARKER_OVERLAY = BLACK.withAlpha(.75f);
+	public static final Color ERROR_OVERLAY = new Color(0xC0600000);
 	
 	public static Color fromHSL(float h, float s, float l){
 	    float r, g, b;

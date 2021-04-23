@@ -2,15 +2,16 @@ package fr.thesmyler.smylibgui.widgets;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.Animation;
-import fr.thesmyler.smylibgui.Animation.AnimationState;
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Animation;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 
 public class SlidingPanelWidget extends Screen {
 
 	protected float showX, hiddenX, showY, hiddenY;
-	protected int bgColor = 0xA0000000;
+	protected Color backgroundColor = Color.DARKER_OVERLAY;
 	protected Animation mainAnimation;
 	protected boolean closeOnClickOther = false;
 	protected boolean visible = true;
@@ -30,7 +31,7 @@ public class SlidingPanelWidget extends Screen {
 
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable Screen parent){
-		RenderUtil.drawRect(x, y, x + this.width, y + this.height, this.bgColor);
+		RenderUtil.drawRect(x, y, x + this.width, y + this.height, this.backgroundColor);
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 		this.mainAnimation.update();
 	}
@@ -144,12 +145,12 @@ public class SlidingPanelWidget extends Screen {
 		return this.mainAnimation.blend(this.showY, this.hiddenY);
 	}
 
-	public int getBackroundColor() {
-		return this.bgColor;
+	public Color getBackroundColor() {
+		return this.backgroundColor;
 	}
 
-	public SlidingPanelWidget setBackgroundColor(int color) {
-		this.bgColor = color;
+	public SlidingPanelWidget setBackgroundColor(Color color) {
+		this.backgroundColor = color;
 		return this;
 	}
 	

@@ -8,6 +8,7 @@ import java.util.List;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.WindowedScreen;
+import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
@@ -90,7 +91,7 @@ public class HudConfigScreen extends Screen {
 		this.entitiesButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, b).trySetFeatureVisibility(MobMarkerController.ID, b));
 		this.directionsButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, b));
 		this.minimapWindow.setEnableTopBar(false);
-		this.minimapWindow.setCenterDragColor(0x00000000);
+		this.minimapWindow.setCenterDragColor(Color.TRANSPARENT);
 		this.minimapWindow.setEnableCenterDrag(true);
 		this.compassWindow.setHeight(this.compassScreen.getHeight());
 		this.compassWindow.setAllowVerticalResize(false);
@@ -98,7 +99,7 @@ public class HudConfigScreen extends Screen {
 		this.compassWindow.setEnableCenterDrag(true);
 		this.compassWindow.setMinInnerHeight(1);
 		this.compassWindow.trySetInnerDimensions(50, this.compassScreen.compass.getHeight());
-		this.compassWindow.setCenterDragColor(0x00000000);
+		this.compassWindow.setCenterDragColor(Color.TRANSPARENT);
 		this.reset();
 	}
 	
@@ -183,7 +184,7 @@ public class HudConfigScreen extends Screen {
 		this.settingsPanel.addWidget(this.styleSlider.setWidth(100).setX(this.width/2 + 53).setY(this.tileScalingSlider.getY()).setTooltip(I18n.format("terramap.hudconfig.mapstyle.tooltip")));
 		
 		// Setup panels
-		this.buttonPanel.setBackgroundColor(0xB0000000);
+		this.buttonPanel.setBackgroundColor(Color.DARKER_OVERLAY);
 		this.buttonPanel.setWidth(190).setHeight(25);
 		this.settingsPanel.setWidth(this.width);
 		this.settingsPanel.setHeight(this.styleSlider.getY() + this.styleSlider.getHeight() + 3);

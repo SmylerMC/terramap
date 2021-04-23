@@ -3,8 +3,9 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
@@ -165,28 +166,28 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					final int RED = 0xFFFF0000;
 					final int BLUE = 0xFF0000FF;
 					final int WHITE = 0xFFFFFFFF;
-					int lineColor = lowerResRender? unlockedZoomRender? BLUE: RED : WHITE;
+					Color lineColor = lowerResRender? unlockedZoomRender? Color.BLACK: Color.RED : Color.WHITE;
 					parent.drawHorizontalLine(
 							dispX,
 							dispX + displayWidth - 1,
 							dispY,
-							lineColor);
+							lineColor.encoded());
 					parent.drawHorizontalLine(
 							dispX,
 							dispX + displayWidth - 1,
 							dispY + displayHeight - 1,
-							lineColor);
+							lineColor.encoded());
 					parent.drawVerticalLine(
 							dispX,
 							dispY,
 							dispY + displayHeight - 1,
-							lineColor);
+							lineColor.encoded());
 					parent.drawVerticalLine(
 							dispX + displayWidth - 1,
 							dispY,
 							dispY + displayHeight - 1,
-							lineColor);
-					parent.getFont().drawString("" + tile.getPosition().getZoom(), dispX + 2, dispY + 2, lineColor);
+							lineColor.encoded());
+					parent.getFont().drawString(dispX + 2, dispY + 2, "" + tile.getPosition().getZoom(), lineColor, false);
 				}
 				GlStateManager.color(1, 1, 1, 1);
 			}

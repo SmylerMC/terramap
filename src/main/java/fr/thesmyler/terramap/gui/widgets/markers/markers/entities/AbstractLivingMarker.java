@@ -1,7 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
@@ -45,7 +46,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 			drawName = drawName && !map.getContext().equals(MapContext.MINIMAP);
 		}
 		GlStateManager.enableAlpha();
-		if(hovered) RenderUtil.drawRect(x +1, y +1, x + 1 + this.width, y + 1 + this.height, 0x50000000);
+		if(hovered) RenderUtil.drawRect(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.enableBlend();
@@ -55,8 +56,8 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 			String name = this.entity.getDisplayName().getFormattedText();
 			float strWidth = parent.getFont().getStringWidth(name);
 			float nameY = y - parent.getFont().height() - 2;
-			RenderUtil.drawRect(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, 0x50000000);
-			parent.getFont().drawCenteredString(x + this.width / 2, nameY, name, 0xFFFFFFFF, false);
+			RenderUtil.drawRect(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, Color.LIGHT_OVERLAY);
+			parent.getFont().drawCenteredString(x + this.width / 2, nameY, name, Color.WHITE, false);
 		}
 		
 		GlStateManager.color(1, 1, 1, 1);

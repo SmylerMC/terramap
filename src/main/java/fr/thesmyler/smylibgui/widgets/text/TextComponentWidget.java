@@ -2,9 +2,10 @@ package fr.thesmyler.smylibgui.widgets.text;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.Font;
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,15 +19,17 @@ public class TextComponentWidget implements IWidget {
 	protected int z;
 	protected float width, height, maxWidth;
 	protected boolean visible = true;
-	protected int baseColor;
+	
+	protected Color baseColor;
+	protected Color backgroundColor = Color.TRANSPARENT;
+	
 	protected boolean shadow;
-	protected int backgroundColor = 0x00000000;
 	protected float padding = 0;
 	protected Font font;
 	protected ITextComponent hovered;
 	protected TextAlignment alignment;
 
-	public TextComponentWidget(float x, float y, int z, float maxWidth, ITextComponent component, TextAlignment alignment, int baseColor, boolean shadow, Font font) {
+	public TextComponentWidget(float x, float y, int z, float maxWidth, ITextComponent component, TextAlignment alignment, Color baseColor, boolean shadow, Font font) {
 		this.anchorX = x;
 		this.anchorY = y;
 		this.z = z;
@@ -40,7 +43,7 @@ public class TextComponentWidget implements IWidget {
 	}
 	
 	public TextComponentWidget(float x, float y, int z, ITextComponent component, TextAlignment alignment, Font font) {
-		this(x, y, z, Float.MAX_VALUE, component, alignment, 0xFFFFFFFF, true, font);
+		this(x, y, z, Float.MAX_VALUE, component, alignment, Color.WHITE, true, font);
 	}
 	
 	public TextComponentWidget(float x, float y, int z, ITextComponent component, Font font) {
@@ -60,8 +63,8 @@ public class TextComponentWidget implements IWidget {
 		RenderUtil.drawRect(x, y, x + w, y + h, this.backgroundColor);
 		float drawY = y + this.padding;
 		for(ITextComponent line: this.lines) {
-			String ft = line.getFormattedText();
-			float lineWidth = this.font.getStringWidth(ft);
+			String formattedText = line.getFormattedText();
+			float lineWidth = this.font.getStringWidth(formattedText);
 			float lx = x + this.anchorX - this.x;
 			switch(this.alignment) {
 			case RIGHT:
@@ -73,7 +76,7 @@ public class TextComponentWidget implements IWidget {
 				lx -= lineWidth/2;
 				break;
 			}
-			this.font.drawString(ft, lx, drawY, this.baseColor, this.shadow);
+			this.font.drawString(lx, drawY, formattedText, this.baseColor, this.shadow);
 			drawY += this.font.height() + this.padding;
 		}
 		this.hovered = this.getComponentUnder(mouseX - x, mouseY - y);
@@ -203,11 +206,11 @@ public class TextComponentWidget implements IWidget {
 		return this.height;
 	}
 	
-	public int getBaseColor() {
+	public Color getBaseColor() {
 		return this.baseColor;
 	}
 	
-	public TextComponentWidget setBaseColor(int color) {
+	public TextComponentWidget setBaseColor(Color color) {
 		this.baseColor = color;
 		return this;
 	}
@@ -246,11 +249,11 @@ public class TextComponentWidget implements IWidget {
 		}
 	}
 	
-	public int getBackgroundColor() {
+	public Color getBackgroundColor() {
 		return this.backgroundColor;
 	}
 	
-	public TextComponentWidget setBackgroundColor(int color) {
+	public TextComponentWidget setBackgroundColor(Color color) {
 		this.backgroundColor = color;
 		return this;
 	}

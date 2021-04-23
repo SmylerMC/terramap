@@ -2,8 +2,9 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
@@ -29,7 +30,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 		boolean drawName = this.showName(hovered);
 		float textureSize = 128 / this.downScaleFactor;
 		GlStateManager.enableAlpha();
-		if(hovered) RenderUtil.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, 0x50000000);
+		if(hovered) RenderUtil.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.LIGHT_OVERLAY);
 
 		// Draw the direction arrow
 		if(this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
@@ -66,8 +67,8 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 			String name = this.getDisplayName().getFormattedText();
 			float strWidth = parent.getFont().getStringWidth(name);
 			float nameY = y - parent.getFont().height() - 2;
-			RenderUtil.drawRect(x + halfSize - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + halfSize + 2, y - 1, 0x50000000);
-			parent.getFont().drawCenteredString(x + halfSize, nameY, name, 0xFFFFFFFF, true);
+			RenderUtil.drawRect(x + halfSize - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + halfSize + 2, y - 1, Color.LIGHT_OVERLAY);
+			parent.getFont().drawCenteredString(x + halfSize, nameY, name, Color.WHITE, true);
 		}
 
 		GlStateManager.color(1, 1, 1, 1);
