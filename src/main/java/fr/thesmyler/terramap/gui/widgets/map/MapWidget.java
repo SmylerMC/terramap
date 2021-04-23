@@ -18,7 +18,6 @@ import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
@@ -79,7 +78,7 @@ public class MapWidget extends Screen {
 	private MenuEntry copy2drMenuEntry;
 	private MenuEntry setProjectionMenuEntry;
 
-	private TextComponentWidget copyright;
+	private TextWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 
 	protected double tileScaling;
@@ -100,7 +99,7 @@ public class MapWidget extends Screen {
 		this.tileScaling = tileScaling;
 		Font font = SmyLibGui.DEFAULT_FONT;
 		Font smallFont = new Font(.5f);
-		this.copyright = new TextComponentWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
+		this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
 			@Override
 			public boolean isVisible(Screen parent) {
 				return MapWidget.this.showCopyright;
@@ -302,7 +301,7 @@ public class MapWidget extends Screen {
 		super.removeWidget(this.background);
 		super.addWidget(background);
 		this.background = background;
-		this.copyright.setComponent(background.map.getCopyright(SmyLibGui.getLanguage()));
+		this.copyright.setText(background.map.getCopyright(SmyLibGui.getLanguage()));
 		this.zoom(0);
 		return this;
 	}
@@ -417,7 +416,7 @@ public class MapWidget extends Screen {
 		}
 		if(this.reportedErrors.size() > 0) {
 			String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
-			this.errorText.setText(errorText);
+			this.errorText.setText(new TextComponentString(errorText));
 		}
 	}
 

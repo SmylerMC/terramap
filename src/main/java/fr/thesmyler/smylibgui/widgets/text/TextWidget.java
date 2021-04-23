@@ -1,154 +1,306 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
+import javax.annotation.Nullable;
+
+import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-//TODO Remove that and rename TextComponentWidget TextWidget
-@Deprecated
-public class TextWidget extends TextComponentWidget {
+public class TextWidget implements IWidget {
+
+	protected ITextComponent component;
+	protected ITextComponent[] lines;
+	protected float anchorX, x, anchorY, y;
+	protected int z;
+	protected float width, height, maxWidth;
+	protected boolean visible = true;
 	
-	public TextWidget(String text, float anchorX, float anchorY, int z, float maxWidth, TextAlignment alignment, Color color, boolean shadow, Font font) {
-		super(anchorX, anchorY, z, maxWidth, new TextComponentString(text), alignment, color, shadow, font);
+	protected Color baseColor;
+	protected Color backgroundColor = Color.TRANSPARENT;
+	
+	protected boolean shadow;
+	protected float padding = 0;
+	protected Font font;
+	protected ITextComponent hovered;
+	protected TextAlignment alignment;
+
+	public TextWidget(float x, float y, int z, float maxWidth, ITextComponent component, TextAlignment alignment, Color baseColor, boolean shadow, Font font) {
+		this.anchorX = x;
+		this.anchorY = y;
+		this.z = z;
+		this.component = component;
+		this.font = font;
+		this.alignment = alignment;
+		this.maxWidth = maxWidth;
+		this.baseColor = baseColor;
+		this.shadow = shadow;
+		this.updateCoords();
 	}
 	
-	public TextWidget(String text, float anchorX, float anchorY, int z, TextAlignment alignment, boolean shadow, Font font) {
-		this(text, anchorX, anchorY, z, Float.MAX_VALUE, alignment, Color.WHITE, shadow, font);
+	public TextWidget(float x, float y, int z, ITextComponent component, TextAlignment alignment, Font font) {
+		this(x, y, z, Float.MAX_VALUE, component, alignment, Color.WHITE, true, font);
 	}
 	
-	public TextWidget(String text, float anchorX, float anchorY, int z, TextAlignment alignment, Font font) {
-		this(text, anchorX, anchorY, z, Float.MAX_VALUE, alignment, Color.WHITE, true, font);
+	public TextWidget(float x, float y, int z, TextAlignment alignment, Font font) {
+		this(x, y, z, Float.MAX_VALUE, new TextComponentString(""), alignment, Color.WHITE, true, font);
 	}
 	
-	public TextWidget(String text, float anchorX, float anchorY, int z, Color color, boolean shadow, Font font) {
-		this(text, anchorX, anchorY, z, Float.MAX_VALUE, TextAlignment.RIGHT, color, shadow, font);
+	public TextWidget(float x, float y, int z, ITextComponent component, Font font) {
+		this(x, y, z, component, TextAlignment.RIGHT, font);
 	}
 	
-	public TextWidget(String text, float anchorX, float anchorY, int z, boolean shadow, Font font) {
-		this(text, anchorX, anchorY, z, Float.MAX_VALUE, TextAlignment.RIGHT, Color.WHITE, shadow, font);
+	public TextWidget(float x, float y, int z, Font font) {
+		this(x, y, z, new TextComponentString(""), TextAlignment.RIGHT, font);
 	}
 	
-	public TextWidget(String text, float anchorX, float anchorY, int z, Font font) {
-		this(text, anchorX, anchorY, z, Float.MAX_VALUE, TextAlignment.RIGHT, Color.WHITE, true, font);
+	public TextWidget(int z, ITextComponent component, TextAlignment alignment, Font font) {
+		this(0, 0, z, Float.MAX_VALUE, component, alignment, Color.WHITE, true, font);
 	}
 	
-	public TextWidget(float anchorX, float anchorY, int z, TextAlignment alignment, boolean shadow, Font font) {
-		this("", anchorX, anchorY, z, Float.MAX_VALUE, alignment, Color.WHITE, shadow, font);
-	}
-	
-	public TextWidget(float anchorX, float anchorY, int z, TextAlignment alignment, Font font) {
-		this("", anchorX, anchorY, z, Float.MAX_VALUE, alignment, Color.WHITE, true, font);
-	}
-	
-	public TextWidget(float anchorX, float anchorY, int z, Color color, boolean shadow, Font font) {
-		this("", anchorX, anchorY, z, Float.MAX_VALUE, TextAlignment.RIGHT, color, shadow, font);
-	}
-	
-	public TextWidget(float anchorX, float anchorY, int z, boolean shadow, Font font) {
-		this("", anchorX, anchorY, z, Float.MAX_VALUE, TextAlignment.RIGHT, Color.WHITE, shadow, font);
-	}
-	
-	public TextWidget(float anchorX, float anchorY, int z, Font font) {
-		this("", anchorX, anchorY, z, Float.MAX_VALUE, TextAlignment.RIGHT, Color.WHITE, true, font);
-	}
-	
-	public TextWidget(String text, int z, TextAlignment alignment, Color color, boolean shadow, Font font) {
-		this(text, 0, 0, z, Float.MAX_VALUE, alignment, color, shadow, font);
-	}
-	
-	public TextWidget(String text, int z, TextAlignment alignment, boolean shadow, Font font) {
-		this(text, z, alignment, Color.WHITE, shadow, font);
-	}
-	
-	public TextWidget(String text, int z, TextAlignment alignment, Font font) {
-		this(text, z, alignment, Color.WHITE, true, font);
-	}
-	
-	public TextWidget(String text, int z, Color color, boolean shadow, Font font) {
-		this(text, z, TextAlignment.RIGHT, color, shadow, font);
-	}
-	
-	public TextWidget(String text, int z, boolean shadow, Font font) {
-		this(text, z, TextAlignment.RIGHT, Color.WHITE, shadow, font);
-	}
-	
-	public TextWidget(String text, int z, Font font) {
-		this(text, z, TextAlignment.RIGHT, Color.WHITE, true, font);
-	}
-	
-	public TextWidget(int z, TextAlignment alignment, boolean shadow, Font font) {
-		this("", z, alignment, Color.WHITE, shadow, font);
-	}
-	
-	public TextWidget(int z, TextAlignment alignment, Font font) {
-		this("", z, alignment, Color.WHITE, true, font);
-	}
-	
-	public TextWidget(int z, Color color, boolean shadow, Font font) {
-		this("", z, TextAlignment.RIGHT, color, shadow, font);
-	}
-	
-	public TextWidget(int z, boolean shadow, Font font) {
-		this("", z, TextAlignment.RIGHT, Color.WHITE, shadow, font);
+	public TextWidget(int z, ITextComponent component, Font font) {
+		this(0, 0, z, component, font);
 	}
 	
 	public TextWidget(int z, Font font) {
-		this("", z, TextAlignment.RIGHT, Color.WHITE, true, font);
+		this(0, 0, z, new TextComponentString(""), font);
 	}
 
-	public Color getColor() {
-		return this.getBaseColor();
+	@Override
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+		float w = this.getWidth();
+		float h = this.getHeight();
+		RenderUtil.drawRect(x, y, x + w, y + h, this.backgroundColor);
+		float drawY = y + this.padding;
+		for(ITextComponent line: this.lines) {
+			String formattedText = line.getFormattedText();
+			float lineWidth = this.font.getStringWidth(formattedText);
+			float lx = x + this.anchorX - this.x;
+			switch(this.alignment) {
+			case RIGHT:
+				break;
+			case LEFT:
+				lx -= lineWidth;
+				break;
+			case CENTER:
+				lx -= lineWidth/2;
+				break;
+			}
+			this.font.drawString(lx, drawY, formattedText, this.baseColor, this.shadow);
+			drawY += this.font.height() + this.padding;
+		}
+		this.hovered = this.getComponentUnder(mouseX - x, mouseY - y);
 	}
 
-	/**
-	 * Warper for setBaseColor
-	 * 
-	 * @param color
-	 * @return this
-	 */
-	public TextWidget setColor(Color color) {
-		this.setBaseColor(color);
-		return this;
+	protected void updateCoords() {
+		this.lines = this.font.splitText(this.component, this.maxWidth, true, false).toArray(new ITextComponent[] {});
+		this.height = this.lines.length * (this.font.height() + this.padding) + this.padding ;
+		float w = 0;
+		for(ITextComponent line: this.lines) {
+			String ft = line.getFormattedText();
+			w = Math.max(w, this.font.getStringWidth(ft));
+		}
+		this.width = w + this.padding * 2;
+		this.x = this.anchorX;
+		switch(this.alignment) {
+		case RIGHT:
+			this.x -= this.padding;
+			break;
+		case LEFT:
+			this.x -= this.width - this.padding;
+			break;
+		case CENTER:
+			this.x -= this.width/2;
+			break;
+		}
+		this.y = this.anchorY;
 	}
 
-	public String getText() {
-		return this.getComponent().getFormattedText();
+	protected ITextComponent getComponentUnder(float x, float y) {
+		if(x < this.padding || x > this.width - this.padding) return null;
+		int lineIndex = (int) Math.floor((float)(y - this.padding) / (this.font.height() + this.padding));
+		if(lineIndex < 0 || lineIndex >= this.lines.length) return null;
+		if(y - this.padding - lineIndex*(this.font.height() + this.padding) > this.font.height()) return null;
+		ITextComponent line = this.lines[lineIndex];
+		float pos = this.padding;
+		float lineWidth = this.font.getStringWidth(line.getFormattedText());
+		switch(this.alignment) {
+		case RIGHT:
+			break;
+		case LEFT:
+			pos = this.width - lineWidth;
+			break;
+		case CENTER:
+			pos = (this.width - lineWidth) / 2;
+			break;
+		}
+		for(ITextComponent child: line.getSiblings()) {
+			pos += this.font.getStringWidth(child.getFormattedText());
+			if(pos >= x) return child;
+		}
+		return null;
 	}
 
-	public TextWidget setText(String text) {
-		this.setComponent(new TextComponentString(text));
+	@Override
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+		ITextComponent clicked = this.getComponentUnder(mouseX, mouseY);
+		if(clicked != null) {
+			Minecraft.getMinecraft().currentScreen.handleComponentClick(clicked);
+		}
+		parent.setFocus(null); //We don't want to retain focus
+		return false;
+	}
+	
+	public ITextComponent getComponent() {
+		return this.component;
+	}
+	
+	public TextWidget setText(ITextComponent component) {
+		this.component = component;
+		this.updateCoords();
 		return this;
 	}
 	
 	@Override
-	public TextWidget setAnchorX(float anchorX) {
-		super.setAnchorX(anchorX);
-		return this;
+	public float getX() {
+		return this.x;
 	}
 	
-	@Override
-	public TextWidget setAnchorY(float anchorY) {
-		super.setAnchorY(anchorY);
-		return this;
+	public float getAnchorX() {
+		return this.anchorX;
 	}
 	
+	public TextWidget setAnchorX(float x) {
+		this.anchorX = x;
+		this.updateCoords();
+		return this;
+	}
+
 	@Override
+	public float getY() {
+		return this.y;
+	}
+	
+	public float getAnchorY() {
+		return this.anchorY;
+	}
+	
+	public TextWidget setAnchorY(float y) {
+		this.anchorY = y;
+		this.updateCoords();
+		return this;
+	}
+
+	@Override
+	public int getZ() {
+		return this.z;
+	}
+
+	@Override
+	public float getWidth() {
+		return this.width;
+	}
+	
+	public float getMaxWidth() {
+		return this.maxWidth;
+	}
+	
 	public TextWidget setMaxWidth(float maxWidth) {
-		super.setMaxWidth(maxWidth);
+		this.maxWidth = maxWidth;
+		this.updateCoords();
 		return this;
 	}
 
 	@Override
+	public float getHeight() {
+		return this.height;
+	}
+	
+	public Color getBaseColor() {
+		return this.baseColor;
+	}
+	
+	public TextWidget setBaseColor(Color color) {
+		this.baseColor = color;
+		return this;
+	}
+	
+	public boolean hasShadow() {
+		return this.shadow;
+	}
+	
+	public TextWidget setShadow(boolean shadow) {
+		this.shadow = shadow;
+		return this;
+	}
+	
+	public TextAlignment getAlignment() {
+		return this.alignment;
+	}
+	
 	public TextWidget setAlignment(TextAlignment alignment) {
-		super.setAlignment(alignment);
+		this.alignment = alignment;
+		this.updateCoords();
+		return this;
+	}
+
+	@Override
+	public long getTooltipDelay() {
+		return 0;
+	}
+
+	@Override
+	public String getTooltipText() {
+		try {
+			//TODO Adapt to non text tooltips
+			return this.hovered.getStyle().getHoverEvent().getValue().getFormattedText();
+		} catch(NullPointerException e) {
+			return null;
+		}
+	}
+	
+	public Color getBackgroundColor() {
+		return this.backgroundColor;
+	}
+	
+	public TextWidget setBackgroundColor(Color color) {
+		this.backgroundColor = color;
+		return this;
+	}
+
+	public float getPadding() {
+		return padding;
+	}
+
+	public TextWidget setPadding(float padding) {
+		this.padding = padding;
+		this.updateCoords();
 		return this;
 	}
 	
 	@Override
-	public TextComponentWidget setShadow(boolean shadow) {
-		super.setShadow(shadow);
+	public boolean isVisible(Screen parent) {
+		return this.visible;
+	}
+	
+	public TextWidget setVisibility(boolean yesNo) {
+		this.visible = yesNo;
 		return this;
 	}
 	
+	public TextWidget show() {
+		return this.setVisibility(true);
+	}
 	
+	public TextWidget hide() {
+		return this.setVisibility(false);
+	}
+
 }
