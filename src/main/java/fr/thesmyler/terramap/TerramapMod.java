@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.logging.log4j.Logger;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
