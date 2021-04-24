@@ -160,33 +160,16 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 						displayWidth,
 						displayHeight,
 						renderSizedSize,
-						renderSizedSize);
-
+						renderSizedSize
+				);
 				if(debug) {
-					final int RED = 0xFFFF0000;
-					final int BLUE = 0xFF0000FF;
-					final int WHITE = 0xFFFFFFFF;
-					Color lineColor = lowerResRender? unlockedZoomRender? Color.BLACK: Color.RED : Color.WHITE;
-					parent.drawHorizontalLine(
-							dispX,
-							dispX + displayWidth - 1,
-							dispY,
-							lineColor.encoded());
-					parent.drawHorizontalLine(
-							dispX,
-							dispX + displayWidth - 1,
-							dispY + displayHeight - 1,
-							lineColor.encoded());
-					parent.drawVerticalLine(
-							dispX,
-							dispY,
-							dispY + displayHeight - 1,
-							lineColor.encoded());
-					parent.drawVerticalLine(
-							dispX + displayWidth - 1,
-							dispY,
-							dispY + displayHeight - 1,
-							lineColor.encoded());
+					Color lineColor = lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : Color.WHITE;
+					RenderUtil.drawClosedStrokeLine(lineColor, 1f, 
+							dispX, dispY,
+							dispX, dispY + displayHeight - 1,
+							dispX + displayWidth - 1, dispY + displayHeight - 1,
+							dispX + displayWidth - 1, dispY
+					);
 					parent.getFont().drawString(dispX + 2, dispY + 2, "" + tile.getPosition().getZoom(), lineColor, false);
 				}
 				GlStateManager.color(1, 1, 1, 1);

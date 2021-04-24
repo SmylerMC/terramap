@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public abstract class SmyLibGui {
+public final class SmyLibGui {
 
 	public static Logger logger;
 	public static boolean debug;
@@ -21,6 +21,8 @@ public abstract class SmyLibGui {
 	
 	public static final ResourceLocation BUTTON_TEXTURES, OPTIONS_BACKGROUND, STAT_ICONS, ICONS, WIDGET_TEXTURES;
 	public static final Font DEFAULT_FONT = new Font();
+	
+	private SmyLibGui() {}
 	
 	static {
 		BUTTON_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(GuiButton.class, null, "field_146122_a");
