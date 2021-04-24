@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
+import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -100,32 +102,6 @@ public final class RenderUtil {
         GL11.glScissor((int)Math.round(x * scaleW), (int)Math.round(y * scaleH), (int)Math.round(width * scaleW), (int)Math.round(height * scaleH));
 	}
     
-    public static void drawTexturedModalRect(float x, float y, int z, int minU, int minV, int maxU, int maxV) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(x, y + maxV, z).tex(minU * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
-        bufferbuilder.pos(x + maxU, y + maxV, z).tex((minU + maxU) * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
-        bufferbuilder.pos(x + maxU, y, z).tex((minU + maxU) * 0.00390625, minV * 0.00390625).endVertex();
-        bufferbuilder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
-        tessellator.draw();
-    }
-    
-    public static void drawTexturedModalRect(float x, float y, int z, float minU, float minV, float maxU, float maxV) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(x, y + maxV, z).tex(minU * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
-        bufferbuilder.pos(x + maxU, y + maxV, z).tex((minU + maxU) * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
-        bufferbuilder.pos(x + maxU, y, z).tex((minU + maxU) * 0.00390625, minV * 0.00390625).endVertex();
-        bufferbuilder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
-        tessellator.draw();
-    }
-    
-    public static void drawTexturedModalRect(float x, float y, float minU, float minV, float maxU, float maxV) {
-    	drawTexturedModalRect(x, y, 0, minU, minV, maxU, maxV);
-    }
-    
     public static void drawRect(int z, float xLeft, float yTop, float xRight, float yBottom, Color color) {
     	drawGradientRect(z, xLeft, yTop, xRight, yBottom, color, color, color, color);
     }
@@ -140,12 +116,12 @@ public final class RenderUtil {
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-        bufferbuilder.pos(xLeft, yTop, z).color(upperLeftColor.red(), upperLeftColor.green(), upperLeftColor.blue(), upperLeftColor.alpha()).endVertex();
-        bufferbuilder.pos(xLeft, yBottom, z).color(lowerLeftColor.red(), lowerLeftColor.green(), lowerLeftColor.blue(), lowerLeftColor.alpha()).endVertex();
-        bufferbuilder.pos(xRight, yBottom, z).color(lowerRightColor.red(), lowerRightColor.green(), lowerRightColor.blue(), lowerRightColor.alpha()).endVertex();
-        bufferbuilder.pos(xRight, yTop, z).color(upperRightColor.red(), upperRightColor.green(), upperRightColor.blue(), upperRightColor.alpha()).endVertex();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        builder.pos(xLeft, yTop, z).color(upperLeftColor.red(), upperLeftColor.green(), upperLeftColor.blue(), upperLeftColor.alpha()).endVertex();
+        builder.pos(xLeft, yBottom, z).color(lowerLeftColor.red(), lowerLeftColor.green(), lowerLeftColor.blue(), lowerLeftColor.alpha()).endVertex();
+        builder.pos(xRight, yBottom, z).color(lowerRightColor.red(), lowerRightColor.green(), lowerRightColor.blue(), lowerRightColor.alpha()).endVertex();
+        builder.pos(xRight, yTop, z).color(upperRightColor.red(), upperRightColor.green(), upperRightColor.blue(), upperRightColor.alpha()).endVertex();
         tessellator.draw();
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
@@ -160,13 +136,108 @@ public final class RenderUtil {
         float f = 1.0F / textureWidth;
         float f1 = 1.0F / textureHeight;
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferbuilder.pos(x, y + height, 0.0D).tex(u * f, (v + height) * f1).endVertex();
-        bufferbuilder.pos(x + width, y + height, 0.0D).tex((u + width) * f, (v + height) * f1).endVertex();
-        bufferbuilder.pos(x + width, y, 0.0D).tex((u + width) * f, v * f1).endVertex();
-        bufferbuilder.pos(x, y, 0.0D).tex(u * f, v * f1).endVertex();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        builder.pos(x, y + height, 0.0D).tex(u * f, (v + height) * f1).endVertex();
+        builder.pos(x + width, y + height, 0.0D).tex((u + width) * f, (v + height) * f1).endVertex();
+        builder.pos(x + width, y, 0.0D).tex((u + width) * f, v * f1).endVertex();
+        builder.pos(x, y, 0.0D).tex(u * f, v * f1).endVertex();
         tessellator.draw();
+    }
+    
+    public static void drawTexturedModalRect(float x, float y, int z, int minU, int minV, int maxU, int maxV) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        builder.pos(x, y + maxV, z).tex(minU * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
+        builder.pos(x + maxU, y + maxV, z).tex((minU + maxU) * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
+        builder.pos(x + maxU, y, z).tex((minU + maxU) * 0.00390625, minV * 0.00390625).endVertex();
+        builder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
+        tessellator.draw();
+    }
+    
+    public static void drawTexturedModalRect(float x, float y, int z, float minU, float minV, float maxU, float maxV) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        builder.pos(x, y + maxV, z).tex(minU * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
+        builder.pos(x + maxU, y + maxV, z).tex((minU + maxU) * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
+        builder.pos(x + maxU, y, z).tex((minU + maxU) * 0.00390625, minV * 0.00390625).endVertex();
+        builder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
+        tessellator.draw();
+    }
+    
+    public static void drawTexturedModalRect(float x, float y, float minU, float minV, float maxU, float maxV) {
+    	drawTexturedModalRect(x, y, 0, minU, minV, maxU, maxV);
+    }
+    
+    public static void drawPolygon(int z, Color color, float... points) {
+    	PValidation.checkArg(points.length % 2 == 0, "An even number of coordinates is required");
+    	GlStateManager.enableAlpha();
+    	GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    	GlStateManager.color(color.redf(), color.greenf(), color.bluef(), color.alphaf());
+    	Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION);
+        for(int i=0; i<points.length; i+=2) {
+        	builder.pos(points[i], points[i+1], z).endVertex();
+        }
+    	tessellator.draw();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
+    }
+    
+    public static void drawPolygon(Color color, float... points) {
+    	drawPolygon(0, color, points);
+    }
+    
+    public static void drawStrokeLine(int z, Color color, float size, float... points) {
+    	GL11.glLineWidth((float)(size * SmyLibGui.getMinecraftGuiScale()));
+    	GlStateManager.enableAlpha();
+    	GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    	GlStateManager.color(color.redf(), color.greenf(), color.bluef(), color.alphaf());
+    	Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
+        for(int i=0; i<points.length; i+=2) {
+        	builder.pos(points[i], points[i+1], z).endVertex();
+        }
+        tessellator.draw();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
+    }
+    
+    public static void drawStrokeLine(Color color, float size, float... points) {
+    	drawStrokeLine(0, color, size, points);
+    }
+    
+    public static void drawClosedStrokeLine(int z, Color color, float size, float... points) {
+    	GL11.glLineWidth((float)(size * SmyLibGui.getMinecraftGuiScale()));
+    	GlStateManager.enableAlpha();
+    	GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    	GlStateManager.color(color.redf(), color.greenf(), color.bluef(), color.alphaf());
+    	Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+        for(int i=0; i<points.length; i+=2) {
+        	builder.pos(points[i], points[i+1], z).endVertex();
+        }
+        tessellator.draw();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+        GlStateManager.enableTexture2D();
+    }
+    
+    public static void drawClosedStrokeLine(Color color, float size, float... points) {
+    	drawClosedStrokeLine(0, color, size, points);
     }
 
 }

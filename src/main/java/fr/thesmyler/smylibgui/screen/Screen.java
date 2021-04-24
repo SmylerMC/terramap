@@ -559,18 +559,5 @@ public class Screen extends GuiScreen implements IWidget{
 		bufferBuilder.pos(x, y, 0).tex(0, tint).color(64, 64, 64, 255).endVertex();
 		tessellator.draw();
 	}
-	
-	@Deprecated
-	@Override
-	public void drawVerticalLine(int startX, int startY, int endY, int color) {
-		super.drawVerticalLine(startX, startY, endY, color);
-	}
-	
-	@Deprecated
-	@Override
-	public void drawHorizontalLine(int startX, int startY, int endY, int color) {
-		super.drawHorizontalLine(startX, startY, endY, color);
-	}
-
 
 }
