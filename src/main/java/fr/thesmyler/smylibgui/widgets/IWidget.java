@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.widgets;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 
 public interface IWidget {
 
@@ -42,7 +42,7 @@ public interface IWidget {
 	 * @param focused indicates whether or not this widget has its parent's focus (it will get keystrokes and so on)
 	 * @param parent the parent Screen
 	 */
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable Screen parent);
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent);
 	
 	/**
 	 * If this returns false, this widget will not be rendered and or notified of user actions
@@ -51,7 +51,7 @@ public interface IWidget {
 	 * 
 	 * @return true if the widget is visible
 	 */
-	public default boolean isVisible(Screen parent) {
+	public default boolean isVisible(WidgetContainer parent) {
 		return true;
 	}
 	
@@ -73,12 +73,12 @@ public interface IWidget {
 	 * @param mouseButton
 	 * @param parent screen
 	 * 
-	 * @see #isVisible(Screen)
+	 * @see #isVisible(WidgetContainer)
 	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public default boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		return true;
 	}
 	
@@ -92,12 +92,12 @@ public interface IWidget {
 	 * @param parent the containing screen that was clicked. It may not be the direct parent
 	 * @param parent screen
 	 * 
-	 * @see #isVisible(Screen)
+	 * @see #isVisible(WidgetContainer)
 	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public default boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		return true;
 	}
 	
@@ -110,12 +110,12 @@ public interface IWidget {
 	 * @param mouseButton
 	 * @param parent screen
 	 * 
-	 * @see #isVisible(Screen)
+	 * @see #isVisible(WidgetContainer)
 	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public default boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		return this.onClick(mouseX, mouseY, mouseButton, parent);
 	}
 	
@@ -129,12 +129,12 @@ public interface IWidget {
 	 * @param parent the containing screen that was clicked. It may not be the direct parent
 	 * @param parent screen
 	 * 
-	 * @see #isVisible(Screen)
+	 * @see #isVisible(WidgetContainer)
 	 * @see #takesInputs()
 	 * 
 	 * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
 	 */
-	public default boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public default boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		return this.onParentClick(mouseX, mouseY, mouseButton, parent);
 	}
 	
@@ -146,7 +146,7 @@ public interface IWidget {
 	 * @param mouseButton
 	 * @param parent screen
 	 */
-	public default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable Screen parent) {}
+	public default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent) {}
 
 	/**
 	 * Called when the mouse is released over this widget
@@ -165,7 +165,7 @@ public interface IWidget {
 	 * 
 	 * @param parent screen
 	 */
-	public default void onUpdate(@Nullable Screen parent) {}
+	public default void onUpdate(@Nullable WidgetContainer parent) {}
 	
 	/**
 	 * Called when a key is typed
@@ -174,7 +174,7 @@ public interface IWidget {
 	 * @param keyCode
 	 * @param parent screen
 	 */
-	public default void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {}
+	public default void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {}
 	
 	/**
 	 * Called when the mouse is over this widget and the wheel is turned
@@ -184,7 +184,7 @@ public interface IWidget {
 	 * @param parent screen
 	 * @param amount
 	 */
-	public default boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable Screen parent) {
+	public default boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 		return true;
 	}
 	

@@ -8,12 +8,12 @@ import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Animation;
+import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import net.minecraft.client.Minecraft;
@@ -108,7 +108,7 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
 		this.cursorAnimation.update();
 		
@@ -209,7 +209,7 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		if (mouseButton == 0) {
 			float mPos = mouseX;
@@ -223,7 +223,7 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		if(mouseButton == 0) {
 			this.setSelectionStart(this.getWordSkipPosition(-1, this.getCursor(), false));
@@ -233,16 +233,16 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	@Override
-	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
+	public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return;
 		this.selecting = GuiScreen.isShiftKeyDown();
-		if (Screen.isKeyComboCtrlA(keyCode)) {
+		if (GuiScreen.isKeyComboCtrlA(keyCode)) {
 			this.selectAll();
-		} else if (Screen.isKeyComboCtrlC(keyCode)) {
+		} else if (GuiScreen.isKeyComboCtrlC(keyCode)) {
 			this.copySelectionToClipboard();
-		} else if (Screen.isKeyComboCtrlV(keyCode)) {
+		} else if (GuiScreen.isKeyComboCtrlV(keyCode)) {
 			this.pasteIn();
-		} else if (Screen.isKeyComboCtrlX(keyCode)) {
+		} else if (GuiScreen.isKeyComboCtrlX(keyCode)) {
 			this.cutSelectionToClipboard();
 		} else {
 			switch(keyCode) {
@@ -264,7 +264,7 @@ public class TextFieldWidget implements IWidget {
 				}
 				break;
 			case Keyboard.KEY_LEFT:
-				if (Screen.isCtrlKeyDown()) {
+				if (GuiScreen.isCtrlKeyDown()) {
 					this.setCursor(this.getWordSkipPosition(-1));
 				} else {
 					this.moveCursor(-1);
@@ -291,7 +291,7 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	@Override
-	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable Screen parent) {
+	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return;
 		if (mouseButton == 0) {
 			float mPos = mouseX;
@@ -607,7 +607,7 @@ public class TextFieldWidget implements IWidget {
 	}
 
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 

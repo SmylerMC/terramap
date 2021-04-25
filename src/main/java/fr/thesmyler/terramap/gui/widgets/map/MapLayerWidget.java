@@ -6,7 +6,8 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 
 abstract class MapLayerWidget implements IWidget {
 	
-	protected int z, width, height;
+	protected int z;
+	protected float width, height;
 	protected double centerLatitude, centerLongitude, zoom;
 	protected double tileScaling;
 	
@@ -102,11 +103,11 @@ abstract class MapLayerWidget implements IWidget {
 		this.z = z;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(float width) {
 		this.width = width;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(float height) {
 		this.height = height;
 	}
 

@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 
 public abstract class AbstractWidget implements IWidget {
 	
@@ -43,7 +43,7 @@ public abstract class AbstractWidget implements IWidget {
 	}
 	
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 	

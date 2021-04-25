@@ -1,12 +1,13 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 
+//FIXME This lies
 public class ScaleIndicatorWidget implements IWidget {
 
 	private float x, y;
@@ -66,7 +67,7 @@ public class ScaleIndicatorWidget implements IWidget {
 	}
 
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 	
@@ -76,7 +77,7 @@ public class ScaleIndicatorWidget implements IWidget {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		float barY = y + 5;
 		String lengthstr = "-";
 		float barwidth = this.getWidth();

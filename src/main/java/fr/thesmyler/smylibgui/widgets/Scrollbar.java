@@ -1,6 +1,7 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
@@ -11,13 +12,13 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.MathHelper;
 
 //TODO Use a texture
-public class Scrollbar extends Screen {
+public class Scrollbar extends FlexibleWidgetContainer {
 	
-	private static final Color BAR_BG_COLOR = Color.DARKER_OVERLAY; //TODO Extract / change
+	private static final Color BAR_BG_COLOR = Color.DARKER_OVERLAY;
 	private static final Color BAR_BORDER_COLOR = Color.BLACK;
-	private static final Color DRAG_BG_COLOR = Color.DARK_GRAY; //TODO Extract / change
-	private static final Color DRAG_BG_COLOR_HOVER = Color.SELECTION; //TODO Extract / change
-	private static final Color DRAG_BORDER_COLOR = Color.MEDIUM_GRAY; //TODO Extract / change
+	private static final Color DRAG_BG_COLOR = Color.DARK_GRAY;
+	private static final Color DRAG_BG_COLOR_HOVER = Color.SELECTION;
+	private static final Color DRAG_BORDER_COLOR = Color.MEDIUM_GRAY;
 	
 	protected TexturedButtonWidget upButton = new TexturedButtonWidget(1, IncludedTexturedButtons.UP);
 	protected TexturedButtonWidget downButton = new TexturedButtonWidget(1, IncludedTexturedButtons.DOWN);
@@ -26,8 +27,8 @@ public class Scrollbar extends Screen {
 	protected double viewPort = 0.1;
 	
 	public Scrollbar(float x, float y, int z, float height) {
-		super(x, y, z, 15, height, BackgroundType.NONE);
-		this.downButton.setY(this.height - this.downButton.getHeight());
+		super(x, y, z, 15, height);
+		this.downButton.setY(this.getHeight() - this.downButton.getHeight());
 		this.upButton.setOnClick(this::scrollUp);
 		this.downButton.setOnClick(this::scrollDown);
 		this.upButton.enable();
@@ -41,7 +42,7 @@ public class Scrollbar extends Screen {
 	}
 	
 	@Override
-	public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		float i = 4;
 		float y = this.drag.getY();
@@ -55,15 +56,17 @@ public class Scrollbar extends Screen {
 	}
 	
 	@Override
-	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		return this.onClick(mouseX, mouseY, mouseButton, parent);
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, Screen parent) {
-		RenderUtil.drawRect(x, y, x + this.width, y + this.height, BAR_BG_COLOR);
-		RenderUtil.drawRect(x, y, x + 1, y + this.height, BAR_BORDER_COLOR);
-		RenderUtil.drawRect(x + this.width - 1, y, x + this.width, y + this.height, BAR_BORDER_COLOR);
+	public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+		float width = this.getWidth();
+		float height = this.getHeight();
+		RenderUtil.drawRect(x, y, x + width, y + height, BAR_BG_COLOR);
+		RenderUtil.drawRect(x, y, x + 1, y + height, BAR_BORDER_COLOR);
+		RenderUtil.drawRect(x + width - 1, y, x + width, y + height, BAR_BORDER_COLOR);
 		super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
 	}
 
@@ -75,21 +78,10 @@ public class Scrollbar extends Screen {
 		this.progress = Math.min(1, this.progress + this.viewPort * 0.5);
 	}
 	
-	public Scrollbar setX(float x) {
-		this.x = x;
-		return this;
-	}
-	
-	public Scrollbar setY(float y) {
-		this.y = y;
-		return this;
-	}
-	
-	public Scrollbar setHeight(float height) {
-		//TODO Better handling of floats
-		this.height = Math.round(height);
-		this.downButton.setY(this.height - this.downButton.getHeight());
-		return this;
+	@Override
+	public void setHeight(float height) {
+		this.setSize(this.getWidth(), height);
+		this.downButton.setY(this.getHeight() - this.downButton.getHeight());
 	}
 	
 	public double getProgress() {
@@ -111,7 +103,7 @@ public class Scrollbar extends Screen {
 	}
 	
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.viewPort < 1;
 	}
 
@@ -125,7 +117,7 @@ public class Scrollbar extends Screen {
 		@Override
 		public float getY() {
 			float selfH = this.getHeight();
-			float h = Scrollbar.this.height - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight() - selfH;
+			float h = Scrollbar.this.getHeight() - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight() - selfH;
 			return Scrollbar.this.upButton.getHeight() + (float)(h*Scrollbar.this.progress);
 		}
 
@@ -141,19 +133,19 @@ public class Scrollbar extends Screen {
 
 		@Override
 		public float getHeight() {
-			return (float) (Math.min(Scrollbar.this.viewPort, 1) * (Scrollbar.this.height - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight()));
+			return (float) (Math.min(Scrollbar.this.viewPort, 1) * (Scrollbar.this.getHeight() - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight()));
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, WidgetContainer parent) {
 			float selfH = this.getHeight();
-			float h = Scrollbar.this.height - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight() - selfH;
+			float h = Scrollbar.this.getHeight() - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight() - selfH;
 			float frac = this.getY() + dY - Scrollbar.this.upButton.getHeight();
 			Scrollbar.this.progress = MathHelper.clamp((double)frac / h, 0, 1);
 		}
 		
 		@Override
-		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 			Color bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
 			float height = this.getHeight();
 			RenderUtil.drawRect(x, y, x + this.getWidth(), y + height, bgcolor);

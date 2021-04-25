@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
@@ -38,7 +38,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		GlStateManager.color(1, 1, 1, 1);
 		boolean drawName = hovered;
 		if(parent instanceof MapWidget) {
@@ -64,7 +64,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	}
 	
 	@Override
-	public void onUpdate(Screen parent) {
+	public void onUpdate(WidgetContainer parent) {
 		double x = this.entity.posX;
 		double z = this.entity.posZ;
 		double[] lola = {Double.NaN, Double.NaN};

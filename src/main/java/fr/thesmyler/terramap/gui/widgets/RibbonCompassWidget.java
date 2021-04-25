@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.gui.widgets;
 
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.TextureUtil;
 import fr.thesmyler.smylibgui.util.TextureUtil.TextureProperties;
 import fr.thesmyler.smylibgui.util.TextureUtil.UnknownTextureException;
@@ -50,7 +50,7 @@ public class RibbonCompassWidget implements IWidget {
 	}
 	
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		double blendBorder = 10; // How many pixels to fade to alpha=0 on the sides
 		double leftU = (double)(this.azimuth - 180) / 360 + (double)(this.textureWidth - this.width) / this.textureWidth / 2;
 		double leftCU = leftU + blendBorder/this.textureWidth;
@@ -148,7 +148,7 @@ public class RibbonCompassWidget implements IWidget {
 	}
 
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visibility;
 	}
 	
