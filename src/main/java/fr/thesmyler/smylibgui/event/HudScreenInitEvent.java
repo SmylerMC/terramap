@@ -1,18 +1,18 @@
 package fr.thesmyler.smylibgui.event;
 
-import fr.thesmyler.smylibgui.screen.HudScreen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class HudScreenInitEvent extends Event {
 	
-	private HudScreen hud;
+	private WidgetContainer content;
 	
-	public HudScreenInitEvent(HudScreen screen) {
-		this.hud = screen;
+	public HudScreenInitEvent(WidgetContainer screen) {
+		this.content = screen;
 	}
 	
-	public HudScreen getHudScreen() {
-		return this.hud;
+	public WidgetContainer getHudScreen() {
+		return this.content;
 	}
 
 }

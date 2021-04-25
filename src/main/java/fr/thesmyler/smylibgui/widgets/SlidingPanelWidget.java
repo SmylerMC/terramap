@@ -2,13 +2,14 @@ package fr.thesmyler.smylibgui.widgets;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Animation;
+import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 
-public class SlidingPanelWidget extends Screen {
+public class SlidingPanelWidget extends FlexibleWidgetContainer {
 
 	protected float showX, hiddenX, showY, hiddenY;
 	protected Color backgroundColor = Color.DARKER_OVERLAY;
@@ -17,7 +18,7 @@ public class SlidingPanelWidget extends Screen {
 	protected boolean visible = true;
 
 	public SlidingPanelWidget(float showX, float hiddenX, float showY, float hiddenY, int z, float width, float height, long delay) {
-		super(hiddenX, hiddenY, z, width, height, BackgroundType.NONE);
+		super(hiddenX, hiddenY, z, width, height);
 		this.showX = showX;
 		this.showY = showY;
 		this.hiddenX = hiddenX;
@@ -30,14 +31,14 @@ public class SlidingPanelWidget extends Screen {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable Screen parent){
-		RenderUtil.drawRect(x, y, x + this.width, y + this.height, this.backgroundColor);
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent){
+		RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor);
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 		this.mainAnimation.update();
 	}
 	
 	@Override
-	public void onUpdate(Screen parent) {
+	public void onUpdate(WidgetContainer parent) {
 		this.mainAnimation.update();
 		super.onUpdate(parent);
 	}
@@ -54,7 +55,7 @@ public class SlidingPanelWidget extends Screen {
 	}
 
 	@Override
-	public boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		if(this.closeOnClickOther && !this.getTarget().equals(PanelTarget.CLOSED)) {
 			this.close();
 			return false;
@@ -112,20 +113,6 @@ public class SlidingPanelWidget extends Screen {
 		return this;
 	}
 
-	public SlidingPanelWidget setWidth(float width) {
-		//TODO handle float width
-//		this.width = width;
-		this.width = Math.round(width);
-		return this;
-	}
-
-	public SlidingPanelWidget setHeight(float height) {
-		//TODO handle float height
-//		this.height = height;
-		this.height = Math.round(height);
-		return this;
-	}
-
 	public boolean closesOnClickOther() {
 		return this.closeOnClickOther;
 	}
@@ -155,7 +142,7 @@ public class SlidingPanelWidget extends Screen {
 	}
 	
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 	

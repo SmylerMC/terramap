@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
@@ -53,7 +53,7 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean mouseHoverMenu, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean mouseHoverMenu, boolean hasFocus, WidgetContainer parent) {
 		this.mainAnimation.update();
 		this.hoverAnimation.update();
 		float width = this.getWidth();
@@ -104,8 +104,8 @@ public class MenuWidget implements IWidget {
 					float subY = ty - parent.getY();
 					float subH = subMenu.getHeight();
 					float subW = subMenu.getWidth();
-					if(subY + subH > parent.height) subY = parent.height - subH - 1;
-					if(subX + subW > parent.width) subX = subX -= subW + width + 1;
+					if(subY + subH > parent.getHeight()) subY = parent.getHeight() - subH - 1;
+					if(subX + subW > parent.getWidth()) subX = subX -= subW + width + 1;
 					subMenu.z = this.z + 1;
 					subMenu.isSubMenu = true;
 					subMenu.show(subX, subY);
@@ -122,7 +122,7 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(mouseButton == 0) {
 			float ty = 0;
 			float width = this.getWidth();
@@ -151,12 +151,12 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		return false; // We want to intercept double clicks
 	}
 
 	@Override
-	public boolean onParentClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onParentClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(this.isSubMenu) return true;
 		if(this.isVisible(parent)) {
 			this.hide(parent);
@@ -177,13 +177,13 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(mouseButton == 1) return this.onParentClick(mouseX, mouseY, mouseButton, parent);
 		return true;
 	}
 
 	@Override
-	public void onUpdate(Screen parent) {
+	public void onUpdate(WidgetContainer parent) {
 	}
 
 	public MenuEntry addEntry(String text, Runnable action) {
@@ -248,7 +248,7 @@ public class MenuWidget implements IWidget {
 		return this.z;
 	}
 
-	public void hide(@Nullable Screen parent) {
+	public void hide(@Nullable WidgetContainer parent) {
 		this.hideSubMenu(parent);
 		if(parent != null) parent.scheduleForNextScreenUpdate(()->{
 			this.visible = false;
@@ -260,7 +260,7 @@ public class MenuWidget implements IWidget {
 
 	}
 
-	public void hideSubMenu(Screen parent) {
+	public void hideSubMenu(WidgetContainer parent) {
 		MenuWidget m = this.displayedSubMenu;
 		if(m != null) {
 			m.hide(parent);
@@ -287,7 +287,7 @@ public class MenuWidget implements IWidget {
 	}
 
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 

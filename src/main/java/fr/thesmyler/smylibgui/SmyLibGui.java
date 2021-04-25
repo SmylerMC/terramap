@@ -17,7 +17,6 @@ public final class SmyLibGui {
 
 	public static Logger logger;
 	public static boolean debug;
-	private static HudScreen hudScreen;
 	
 	public static final ResourceLocation BUTTON_TEXTURES, OPTIONS_BACKGROUND, STAT_ICONS, ICONS, WIDGET_TEXTURES;
 	public static final Font DEFAULT_FONT = new Font();
@@ -35,22 +34,13 @@ public final class SmyLibGui {
 	public static void init(Logger logger, boolean debug) {
 		SmyLibGui.logger = logger;
 		SmyLibGui.debug = debug;
-		hudScreen = new HudScreen();
-		MinecraftForge.EVENT_BUS.register(hudScreen);
-	}
-	
-	public static HudScreen getHudScreen() {
-		return hudScreen;
+		MinecraftForge.EVENT_BUS.register(HudScreen.class);
 	}
 	
 	public static double getMinecraftGuiScale() {
-		double[] acceptableFactors = {0.5d, 1.0d, 2.0d, 4.0d, 8.0d};
-		double bestFactor = acceptableFactors[0];
 		ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
 		double computedFactor = scaledRes.getScaleFactor();
-		for(double factor: acceptableFactors)
-			if(Math.abs(computedFactor - factor) < Math.abs(bestFactor - computedFactor)) bestFactor = factor;
-		return bestFactor;
+		return computedFactor;
 	}
 	
 	public static String getLanguage() {

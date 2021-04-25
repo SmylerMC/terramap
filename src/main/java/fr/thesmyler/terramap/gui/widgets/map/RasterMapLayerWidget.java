@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.maps.IRasterTile;
@@ -32,7 +32,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		//TODO floats
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();

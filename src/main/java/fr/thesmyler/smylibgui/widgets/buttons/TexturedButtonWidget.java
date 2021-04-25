@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -79,7 +79,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.getTextureManager().bindTexture(this.texture);
 		GlStateManager.color(255, 255, 255, 255);

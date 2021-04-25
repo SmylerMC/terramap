@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -31,10 +31,10 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 	}
 
 	@Override
-	public abstract void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, Screen parent);
+	public abstract void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent);
 
 	@Override
-	public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		parent.setFocus(null); // We don't want to keep the focus
@@ -45,7 +45,7 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 	}
 
 	@Override
-	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		parent.setFocus(null);
