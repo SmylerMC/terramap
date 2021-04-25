@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -26,7 +26,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	public void onUpdate(Screen parent) {
+	public void onUpdate(WidgetContainer parent) {
 		if(Minecraft.getMinecraft().player == null) {
 			parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
 			return;

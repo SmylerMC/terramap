@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
@@ -61,7 +61,7 @@ public abstract class Marker implements IWidget {
 	public abstract float getDeltaY();
 
 	@Override
-	public void onUpdate(Screen parent) {
+	public void onUpdate(WidgetContainer parent) {
 		if(parent instanceof MapWidget) {
 			MapWidget map = (MapWidget) parent;
 			this.update(map);
@@ -73,7 +73,7 @@ public abstract class Marker implements IWidget {
 	public void update(MapWidget map) {}
 	
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		if(!this.controller.getVisibility()) return false;
 		if(!WebMercatorUtils.isPositionOnMap(this.getLongitude(), this.getLatitude())) return false;
 		if(parent instanceof MapWidget) {
@@ -91,12 +91,12 @@ public abstract class Marker implements IWidget {
 	public abstract boolean canBeTracked();
 	
 	@Override
-	public boolean onClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		return true;
 	}
 	
 	@Override
-	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(this.canBeTracked() && parent instanceof MapWidget) {
 			MapWidget map = (MapWidget) parent;
 			map.track(this);

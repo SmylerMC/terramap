@@ -1,5 +1,6 @@
 package fr.thesmyler.smylibgui.screen;
 
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,49 +13,79 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-public class HudScreen extends Screen {
+//TODO Render the hud again
+public final class HudScreen {
 
-	private int lastRenderWidth = 0;
-	private int lastRenderHeight = 0;
-	private GuiScreen lastTickScreen = null;
+	private static int renderWidth = 0;
+	private static int renderHeight = 0;
+	private static GuiScreen lastTickScreen = null;
 	
-	public HudScreen() {
-		super(BackgroundType.NONE);
-	}
+	private static HudScreenContainer container = new HudScreenContainer(0);
+	
+	private HudScreen() {}
 	
 	@SubscribeEvent
-	public void onRenderHUD(RenderGameOverlayEvent.Pre e) {
+	public static void onRenderHUD(RenderGameOverlayEvent.Pre e) {
 		if(!e.getType().equals(ElementType.HOTBAR)) return;
 		ScaledResolution res = e.getResolution();
 		int width = res.getScaledWidth();
 		int height = res.getScaledHeight();
-		if(width != this.lastRenderWidth || height != this.lastRenderHeight) {
-			this.setWorldAndResolution(Minecraft.getMinecraft(), width, height);
+		if(width != renderWidth || height != renderHeight) {
+			renderWidth = width;
+			renderHeight = height;
+			init();
 		}
-		this.onUpdate(null);
-		this.drawScreen(res.getScaledWidth()/2, res.getScaledHeight()/2, e.getPartialTicks());
+		container.onUpdate(null);
+		container.draw(0, 0, res.getScaledWidth()/2, res.getScaledHeight()/2, false, false, null);
 		GlStateManager.color(1f, 1f, 1f, .5f); // Reset color to what it was
-		this.lastRenderWidth = width;
-		this.lastRenderHeight = height;
 	}
 	
 	@SubscribeEvent
-	public void onClientTick(ClientTickEvent event) {
+	public static void onClientTick(ClientTickEvent event) {
 		if(event.phase.equals(Phase.START)) {
 			GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
-			if(Minecraft.getMinecraft().world != null && (this.lastTickScreen != null || currentScreen != null) && (this.lastTickScreen == null || !this.lastTickScreen.equals(currentScreen))) {
-				this.initScreen();
+			if(Minecraft.getMinecraft().world != null && (lastTickScreen != null || currentScreen != null) && (lastTickScreen == null || !lastTickScreen.equals(currentScreen))) {
+				init();
 			}
-			this.lastTickScreen = currentScreen;
+			lastTickScreen = currentScreen;
 		}
 	}
 
-	@Override
-	public void initScreen() {
-		MinecraftForge.EVENT_BUS.post(new HudScreenInitEvent(this));
-		super.initScreen();
+	private static void init() {
+		MinecraftForge.EVENT_BUS.post(new HudScreenInitEvent(container));
+		container.init();
 	}
 	
+	public static WidgetContainer getContent() {
+		return container;
+	}
 	
+	private static class HudScreenContainer extends WidgetContainer {
+
+		public HudScreenContainer(int z) {
+			super(z);
+		}
+
+		@Override
+		public float getX() {
+			return 0;
+		}
+
+		@Override
+		public float getY() {
+			return 0;
+		}
+
+		@Override
+		public float getWidth() {
+			return renderWidth;
+		}
+
+		@Override
+		public float getHeight() {
+			return renderHeight;
+		}
+		
+	}
 	
 }

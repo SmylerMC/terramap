@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.widgets.text;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -72,7 +72,7 @@ public class TextWidget implements IWidget {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		GlStateManager.enableAlpha();
 		GlStateManager.enableBlend();
 		float w = this.getWidth();
@@ -149,7 +149,7 @@ public class TextWidget implements IWidget {
 	}
 
 	@Override
-	public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		ITextComponent clicked = this.getComponentUnder(mouseX, mouseY);
 		if(clicked != null) {
 			Minecraft.getMinecraft().currentScreen.handleComponentClick(clicked);
@@ -286,7 +286,7 @@ public class TextWidget implements IWidget {
 	}
 	
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 	

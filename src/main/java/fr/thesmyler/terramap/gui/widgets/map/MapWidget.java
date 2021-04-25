@@ -11,7 +11,8 @@ import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.widgets.IWidget;
@@ -46,7 +47,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 
-public class MapWidget extends Screen {
+public class MapWidget extends FlexibleWidgetContainer {
 
 	private boolean interactive = true;
 	private boolean focusedZoom = true; // Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
@@ -94,14 +95,14 @@ public class MapWidget extends Screen {
 	public static final int CONTROLLER_Z = 0;
 
 	public MapWidget(float x, float y, int z, float width, float height, IRasterTiledMap map, MapContext context, double tileScaling) {
-		super(x, y, z, width, height, BackgroundType.NONE);
+		super(x, y, z, width, height);
 		this.context = context;
 		this.tileScaling = tileScaling;
 		Font font = SmyLibGui.DEFAULT_FONT;
 		Font smallFont = new Font(.5f);
 		this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
 			@Override
-			public boolean isVisible(Screen parent) {
+			public boolean isVisible(WidgetContainer parent) {
 				return MapWidget.this.showCopyright;
 			}
 		};
@@ -110,7 +111,7 @@ public class MapWidget extends Screen {
 
 		this.errorText = new TextWidget(Integer.MAX_VALUE, font) {
 			@Override
-			public boolean isVisible(Screen parent) {
+			public boolean isVisible(WidgetContainer parent) {
 				return MapWidget.this.reportedErrors.size() > 0 && MapWidget.this.context == MapContext.FULLSCREEN;
 			}
 		};
@@ -251,10 +252,10 @@ public class MapWidget extends Screen {
 
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 
-		this.scale.setX(15).setY(this.height - 30);
+		this.scale.setX(15).setY(this.getHeight() - 30);
 		this.addWidget(scale);
 		this.updateRightClickMenuEntries();
-		this.updateMouseGeoPos(this.width/2, this.height/2);
+		this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
 
 		for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
 			if(controller instanceof RightClickMarkerController) {
@@ -321,7 +322,7 @@ public class MapWidget extends Screen {
 	 * @throws InvalidLayerLevelException if the widget has an incompatible z value
 	 */
 	@Override @Deprecated
-	public Screen addWidget(IWidget widget) {
+	public WidgetContainer addWidget(IWidget widget) {
 		if(widget instanceof MapLayerWidget) {
 			this.addMapLayer((MapLayerWidget)widget);
 		} else {
@@ -337,10 +338,10 @@ public class MapWidget extends Screen {
 	}
 
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
-		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.width);
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
-		this.errorText.setAnchorX(this.width / 2).setAnchorY(0).setMaxWidth(this.width - 40);
+		this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
 		if(!this.rightClickMenu.isVisible(this)) {
 			float relativeMouseX = mouseX - x;
 			float relativeMouseY = mouseY - y;
@@ -353,8 +354,8 @@ public class MapWidget extends Screen {
 		for(IWidget widget: this.widgets) {
 			if(widget instanceof MapLayerWidget) {
 				MapLayerWidget layer = (MapLayerWidget) widget;
-				layer.width = this.width;
-				layer.height = this.height;
+				layer.width = this.getWidth();
+				layer.height = this.getHeight();
 				layer.tileScaling = this.tileScaling;
 				if(!layer.equals(this.controller)) {
 					layer.centerLongitude = this.controller.centerLongitude;
@@ -404,7 +405,7 @@ public class MapWidget extends Screen {
 	}
 
 	@Override
-	public void onUpdate(Screen parent) {
+	public void onUpdate(WidgetContainer parent) {
 		super.onUpdate(parent);
 		if(this.trackingMarker != null) {
 			if(this.widgets.contains(this.trackingMarker) && Double.isFinite(this.trackingMarker.getLongitude()) && Double.isFinite(this.trackingMarker.getLatitude())) {
@@ -428,12 +429,12 @@ public class MapWidget extends Screen {
 		}
 
 		@Override
-		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, Screen parent) {
+		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 			// Literally nothing to do here, this is strictly used to handle user input
 		}
 
 		@Override
-		public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+		public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 			if(isShortcutEnabled()) {
 				MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLongitude, MapWidget.this.mouseLatitude);
 				if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
@@ -447,7 +448,7 @@ public class MapWidget extends Screen {
 		}
 
 		@Override
-		public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+		public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 
 			// We don't care about double right clicks
 			if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
@@ -459,18 +460,18 @@ public class MapWidget extends Screen {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable Screen parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent) {
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.moveMap(dX, dY);
 			}
 		}
 
 		@Override
-		public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
+		public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
 		}
 
 		@Override
-		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable Screen parent) {
+		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 			if(MapWidget.this.isInteractive()) {
 				int z = amount > 0? 1: -1;
 				if(MapWidget.this.focusedZoom) {
@@ -570,7 +571,7 @@ public class MapWidget extends Screen {
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		}
-		this.sendChatMessage(cmd, false);
+		new GuiScreen(){}.sendChatMessage(cmd, false); // Mojang, why isn't that static ??
 	}
 
 	public Map<String, FeatureVisibilityController> getVisibilityControllers() {
@@ -645,30 +646,11 @@ public class MapWidget extends Screen {
 	public double[] getMousePosition() {
 		return new double[] {this.mouseLongitude, this.mouseLatitude};
 	}
-
-	public MapWidget setX(float x) {
-		this.x = x;
-		return this;
-	}
-
-	public MapWidget setY(float y) {
-		this.y = y;
-		return this;
-	}
-
-	public MapWidget setWidth(float width) {
-		//TODO better handling of float width
-//		this.width = width;
-		this.width = Math.round(width);
-		return this;
-	}
-
-	public MapWidget setHeight(float height) {
-		//TODO better handling of float height
-//		this.height = height;
-		this.height = Math.round(height);
-		this.scale.setY(this.height - 20);
-		return this;
+	
+	@Override
+	public void setSize(float width, float height) {
+		super.setSize(width, height);
+		this.scale.setY(this.getHeight() - 20);
 	}
 
 	public boolean isInteractive() {
@@ -817,7 +799,7 @@ public class MapWidget extends Screen {
 	}
 
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 

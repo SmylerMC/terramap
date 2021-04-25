@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -27,7 +27,7 @@ public abstract class HudScreenHandler {
 	private static MapWidget map;
 	private static RibbonCompassWidget compass;
 
-	public static void init(HudScreen screen) {
+	public static void init(WidgetContainer screen) {
 
 		screen.removeAllWidgets();
 		screen.cancellAllScheduled();
@@ -74,7 +74,7 @@ public abstract class HudScreenHandler {
 	}
 
 	public static void updateMinimap() {
-		HudScreen screen = SmyLibGui.getHudScreen();
+		WidgetContainer screen = HudScreen.getContent();
 		if(map == null) {
 			init(screen);
 			return;

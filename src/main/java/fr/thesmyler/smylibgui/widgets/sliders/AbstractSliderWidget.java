@@ -5,11 +5,10 @@ import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
-import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -21,17 +20,24 @@ import net.minecraft.client.renderer.GlStateManager;
  * @author SmylerMC
  *
  */
-public abstract class AbstractSliderWidget extends AbstractWidget {
+public abstract class AbstractSliderWidget extends WidgetContainer {
+	
+	protected float x, y, width;
 	
 	protected String displayPrefix = "";
+	protected String tooltip;
 	protected boolean enabled = true;
+	protected boolean visible = true;
 	
 	protected Color enabledTextColor = Color.LIGHT_GRAY;
 	protected Color activeTextColor = Color.SELECTION;
 	protected Color disabledTextColor = Color.MEDIUM_GRAY;
 	
 	public AbstractSliderWidget(float x, float y, int z, float width) {
-		super(x, y, z, width, 20);
+		super(z);
+		this.x = x;
+		this.y = y;
+		this.width = width;
 	}
 	
 	/**
@@ -54,7 +60,7 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 	protected abstract String getDisplayString();
 	
 	@Override
-	public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		float pos = Util.saturate(((float)mouseX) / this.getWidth());
 		this.setValueFromPos(pos);
@@ -62,19 +68,19 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 	}
 	
 	@Override
-	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		return this.onClick(mouseX, mouseY, mouseButton, parent);
 	}
 	
 	@Override
-	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable Screen parent) {
+	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return;
 		this.onClick(mouseX, mouseY, mouseButton, parent);
 	}
 
 	@Override
-	public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable Screen parent) {
+	public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		if(amount > 0) this.goToNext();
 		else this.goToPrevious();
@@ -82,7 +88,7 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 	}
 	
 	@Override
-	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
+	public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
 		if(!this.isEnabled()) return;
 		switch(keyCode) {
 		case Keyboard.KEY_DOWN:
@@ -98,7 +104,7 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 
 	
 	@Override
-	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableBlend();
@@ -113,8 +119,8 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 		float sliderPosition = this.getPosition();
 		Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        parent.drawTexturedModalRect(x + sliderPosition * (this.width - 8), y, 0, 66, 4, 20);
-        parent.drawTexturedModalRect(x + sliderPosition * (this.width - 8) + 4, y, 196, 66, 4, 20);
+        RenderUtil.drawTexturedModalRect(x + sliderPosition * (this.width - 8), y, 0, 66, 4, 20);
+        RenderUtil.drawTexturedModalRect(x + sliderPosition * (this.width - 8) + 4, y, 196, 66, 4, 20);
         
 		Color textColor = this.enabledTextColor;
 		if (!this.isEnabled()) textColor = this.disabledTextColor;
@@ -191,6 +197,57 @@ public abstract class AbstractSliderWidget extends AbstractWidget {
 
 	public void setDisabledTextColor(Color disabledTextColor) {
 		this.disabledTextColor = disabledTextColor;
+	}
+
+	@Override
+	public float getX() {
+		return this.x;
+	}
+
+	@Override
+	public float getY() {
+		return this.y;
+	}
+
+	@Override
+	public float getWidth() {
+		return this.width;
+	}
+
+	@Override
+	public float getHeight() {
+		return 20;
+	}
+	
+
+	
+	@Override
+	public boolean isVisible(WidgetContainer parent) {
+		return this.visible;
+	}
+	
+	public AbstractSliderWidget setVisibility(boolean yesNo) {
+		this.visible = yesNo;
+		return this;
+	}
+	
+	public AbstractSliderWidget show() {
+		return this.setVisibility(true);
+	}
+	
+	public AbstractSliderWidget hide() {
+		return this.setVisibility(false);
+	}
+	
+	
+	public AbstractSliderWidget setTooltip(String tooltip) {
+		this.tooltip = tooltip;
+		return this;
+	}
+	
+	@Override
+	public String getTooltipText() {
+		return this.tooltip;
 	}
 
 }
