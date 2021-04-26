@@ -26,13 +26,19 @@ public class Screen extends GuiScreen {
 	private IWidget lastHoveredWidget;
 	private float lastRenderMouseX, lastRenderMouseY;
 	
+	private BackgroundOption background;
+	
+	public Screen(BackgroundOption background) {
+		this.background = background;
+	}
+	
 	public WidgetContainer getContent() {
 		return this.container;
 	}
 	
 	@Override
 	public void drawScreen(int nopX, int nopY, float partialTicks) {
-		this.drawDefaultBackground();
+		this.drawBackground();
 		super.drawScreen(nopX, nopY, partialTicks);
         float mouseX = (float)Mouse.getX() * this.width / this.mc.displayWidth;
         float mouseY = this.height - (float)Mouse.getY() * this.height / this.mc.displayHeight - 1;
@@ -133,6 +139,22 @@ public class Screen extends GuiScreen {
 		SmyLibGui.logger.warn("Something called SmyLibGui's ScreenGui native vanilla input handling methods. This could cause weird behavior, call the IWidget floating point variants instead!");
 		StackTraceElement[] lines = Thread.currentThread().getStackTrace();
 		for(int i=1; i<lines.length; i++) SmyLibGui.logger.warn(lines[i]);
+	}
+	
+	private void drawBackground() {
+		switch(this.background) {
+		case NONE:
+			break;
+		case DEFAULT:
+			this.drawDefaultBackground();
+			break;
+		case DIRT:
+			this.drawBackground(0);
+			break;
+		case OVERLAY:
+			this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
+			break;
+		}
 	}
 	
 	private class Container extends WidgetContainer {

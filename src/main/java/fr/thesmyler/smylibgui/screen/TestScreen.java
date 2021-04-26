@@ -41,6 +41,7 @@ public class TestScreen extends Screen {
 	private TexturedButtonWidget previous, next;
 	
 	public TestScreen(GuiScreen parent) {
+		super(BackgroundOption.DEFAULT);
 		this.parent = parent;
 		this.animation  = new Animation(5000); 	// We will use an animation to set the color of one of the displayed strings
 		this.animation.start(AnimationState.CONTINUOUS_ENTER);
