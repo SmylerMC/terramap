@@ -14,6 +14,7 @@ import org.lwjgl.input.Keyboard;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
@@ -90,6 +91,7 @@ public class TerramapScreen extends Screen {
 	private Map<String, IRasterTiledMap> backgrounds;
 
 	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps, TerramapScreenSavedState state) {
+		super(BackgroundOption.OVERLAY);
 		this.parent = parent;
 		this.backgrounds = maps;
 		Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();

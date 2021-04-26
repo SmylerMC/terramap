@@ -9,6 +9,7 @@ import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.container.WindowedContainer;
+import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
@@ -60,6 +61,7 @@ public class HudConfigScreen extends Screen {
 	private int lastWidth, lastHeight = -1; // Used to re-calculate the relative minimap position when the game's window is resized
 	
 	public HudConfigScreen() {
+		super(BackgroundOption.NONE);
 		List<MapStyleSliderEntry> maps = new ArrayList<>();
 		TerramapClientContext.getContext().getMapStyles().values().stream()
 			.sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
