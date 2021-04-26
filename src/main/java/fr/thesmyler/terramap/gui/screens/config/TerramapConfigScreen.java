@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
@@ -50,6 +51,7 @@ public class TerramapConfigScreen extends Screen {
 	private TextWidget pageText;
 
 	public TerramapConfigScreen(GuiScreen parent) {
+		super(BackgroundOption.DEFAULT);
 		this.parent = parent;
 		this.pageText = new TextWidget(10, SmyLibGui.DEFAULT_FONT);
 		this.tpCommandField = new TextFieldWidget(10, SmyLibGui.DEFAULT_FONT).setWidth(200);
@@ -213,6 +215,11 @@ public class TerramapConfigScreen extends Screen {
 	}
 
 	private class ConfirmScreen extends Screen {
+		
+		public ConfirmScreen() {
+			super(BackgroundOption.DEFAULT);
+		}
+		
 		@Override
 		public void initGui() {
 			WidgetContainer content = this.getContent();
