@@ -14,6 +14,7 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 
 //TODO Fractional zoom
@@ -31,34 +32,38 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		return this.map;
 	}
 
+	//FIXME Tiles do not align properly at high zoom levels
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-		//TODO floats
+
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
 
 		boolean debug = false;
 		MapWidget parentMap = null;
+		Profiler profiler = new Profiler();
 		if(parent instanceof MapWidget) {
 			parentMap = (MapWidget) parent;
 			debug = parentMap.isDebugMode();
+			profiler = parentMap.getProfiler();
 		}
+		
+		profiler.startSection("render-raster-layer_" + this.map.getId());
 
-		//TODO Remove the lines when tile scaling is not a power of 2
-		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling;
+		float renderSize = (float) (WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling);
 
-		long upperLeftX = (long) this.getUpperLeftX();
-		long upperLeftY = (long) this.getUpperLeftY();
+		double upperLeftX = this.getUpperLeftX();
+		double upperLeftY = this.getUpperLeftY();
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
 
 		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile((int)this.zoom);
-		long maxX = (long) (upperLeftX + this.width);
-		long maxY = (long) (upperLeftY + this.height);
+		double maxX = upperLeftX + this.width;
+		double maxY = upperLeftY + this.height;
 
-		int lowerTileX = (int) Math.floor((double)upperLeftX / (double)renderSize);
-		int lowerTileY = (int) Math.floor((double)upperLeftY / (double)renderSize);
+		int lowerTileX = (int) Math.floor(upperLeftX / renderSize);
+		int lowerTileY = (int) Math.floor(upperLeftY / renderSize);
 
 		for(int tileX = lowerTileX; tileX * renderSize < maxX; tileX++) {
 
@@ -108,16 +113,16 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				neededTiles.add(tile);
 
-				int dispX = (int) Math.round(tileX * renderSize - upperLeftX);
-				int dispY = (int) Math.round(tileY * renderSize - upperLeftY);
+				float dispX = (float) (tileX * renderSize - upperLeftX);
+				float dispY = (float) (tileY * renderSize - upperLeftY);
 
-				int renderSizedSize = (int) Math.round(renderSize);
+				float renderSizedSize = renderSize;
 
-				int dX = 0;
-				int dY = 0;
+				float dX = 0;
+				float dY = 0;
 
-				int displayWidth = (int) Math.round(Math.min(renderSize, maxX - tileX * renderSize));
-				int displayHeight = (int) Math.round(Math.min(renderSize, maxY - tileY * renderSize));
+				float displayWidth = (float) Math.min(renderSize, maxX - tileX * renderSize);
+				float displayHeight = (float) Math.min(renderSize, maxY - tileY * renderSize);
 
 				if(tileX == lowerTileX) {
 					dX -= dispX;
@@ -139,8 +144,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					double factorX = (double)xInBiggerTile / (double)sizeFactor;
 					double factorY = (double)yInBiggerTile / (double)sizeFactor;
 					renderSizedSize *= sizeFactor;
-					dX += (int) (factorX * renderSizedSize);
-					dY += (int) (factorY * renderSizedSize);
+					dX += factorX * renderSizedSize;
+					dY += factorY * renderSizedSize;
 				}
 
 				GlStateManager.color(1, 1, 1, 1);
@@ -180,6 +185,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		this.lastNeededTiles.removeAll(neededTiles);
 		this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
 		this.lastNeededTiles = neededTiles;
+		
+		profiler.endSection();
 
 	}
 
