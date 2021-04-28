@@ -51,6 +51,7 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -338,9 +339,26 @@ public class TerramapScreen extends Screen {
 				}
 			}
 			dbText += "\nScaling: " + this.map.getTileScaling() + "/" + SmyLibGui.getMinecraftGuiScale();
+			dbText += "\n";
+			List<String> profilingResults = new ArrayList<>();
+			this.formatProfilingResult(profilingResults, "", "");
+			dbText += "\n" + String.join("\n", profilingResults);
 			this.debugText.setText(new TextComponentString(dbText));
 			this.debugText.setAnchorY(this.height - this.debugText.getHeight());
 		}
+	}
+	
+	private List<String> formatProfilingResult(List<String> list, String sectionName, String padding) {
+		List<Result> results = this.map.getProfiler().getProfilingData(sectionName);
+		for(Result result: results) {
+			String name = result.profilerName;
+			if("".equals(name) || name.equals(sectionName) || (sectionName + ".").equals(name)) continue;
+			long use = Math.round(result.usePercentage);
+			if("unspecified".equals(name) && use >= 100) continue;
+			list.add(padding + name + ": " + use + "%");
+			this.formatProfilingResult(list, name, padding + "  ");
+		}
+		return list;
 	}
 
 	private void toggleInfoPannel() {

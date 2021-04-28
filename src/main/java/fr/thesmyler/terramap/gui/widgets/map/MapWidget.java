@@ -45,6 +45,7 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.TextComponentString;
 
 public class MapWidget extends FlexibleWidgetContainer {
@@ -56,7 +57,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private boolean debugMode = false;
 	private boolean visible = true;
 
-	private ControllerMapLayer controller;
+	private final ControllerMapLayer controller;
 	protected RasterMapLayerWidget background;
 	private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
@@ -70,17 +71,19 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	private double mouseLongitude, mouseLatitude;
 
-	private MenuWidget rightClickMenu;
-	private MenuEntry teleportMenuEntry;
-	private MenuEntry copyBlockMenuEntry;
-	private MenuEntry copyChunkMenuEntry;
-	private MenuEntry copyRegionMenuEntry;
-	private MenuEntry copy3drMenuEntry;
-	private MenuEntry copy2drMenuEntry;
-	private MenuEntry setProjectionMenuEntry;
+	private final MenuWidget rightClickMenu;
+	private final MenuEntry teleportMenuEntry;
+	private final MenuEntry copyBlockMenuEntry;
+	private final MenuEntry copyChunkMenuEntry;
+	private final MenuEntry copyRegionMenuEntry;
+	private final MenuEntry copy3drMenuEntry;
+	private final MenuEntry copy2drMenuEntry;
+	private final MenuEntry setProjectionMenuEntry;
 
 	private TextWidget copyright;
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
+	
+	private final Profiler profiler = new Profiler();
 
 	protected double tileScaling;
 
@@ -308,7 +311,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	}
 
 	public void setBackground(IRasterTiledMap map) {
-		this.discardPreviousErrors(this.background); // We don't care about errors for this background anumore
+		this.discardPreviousErrors(this.background); // We don't care about errors for this background anymore
 		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
 	}
 
@@ -339,6 +342,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+		this.profiler.startSection("misc-gui-updates");
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
 		this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
@@ -347,6 +351,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 			float relativeMouseY = mouseY - y;
 			this.updateMouseGeoPos(relativeMouseX, relativeMouseY);
 		}
+		
+		// Sync the various layers with the map and gather markers at the same time
+		this.profiler.endStartSection("update-layers");
 		Map<Class<?>, List<Marker>> markers = new HashMap<Class<?>, List<Marker>>();
 		for(MarkerController<?> controller: this.markerControllers.values()) {
 			markers.put(controller.getMarkerType(), new ArrayList<Marker>());
@@ -370,6 +377,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 				}
 			}
 		}
+		
+		// Update the markers
+		this.profiler.endStartSection("query-marker-controllers");
 		for(MarkerController<?> controller: this.markerControllers.values()) {
 			Marker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new Marker[] {});
 			Marker[] newMarkers = controller.getNewMarkers(existingMarkers, this);
@@ -391,17 +401,25 @@ public class MapWidget extends FlexibleWidgetContainer {
 			}
 		}
 
-		/* The map markers have a higher priority than the background since they are on top,
+		/* 
+		 * The map markers have a higher priority than the background since they are on top,
 		 * which means that they are updated before it moves,
 		 * so they lag behind when the map moves fast if they are not updated again
+		 * 
+		 * TODO This is not really ideal
 		 */
+		this.profiler.endStartSection("update-markers");
 		for(IWidget w: this.widgets) {
 			if(w instanceof Marker) {
 				w.onUpdate(this); 
 			}
 		}
 		if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
+		
+		// Actually draw the map
+		this.profiler.endStartSection("draw");
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+		this.profiler.endSection();
 	}
 
 	@Override
@@ -518,8 +536,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 		public void moveMap(float dX, float dY) {
 			MapWidget.this.trackingMarker = null;
-			double nlon = this.getScreenLongitude((double)this.width/2 - dX);
-			double nlat = this.getScreenLatitude((double)this.height/2 - dY);
+			double nlon = this.getScreenLongitude(this.width/2 - dX);
+			double nlat = this.getScreenLatitude(this.height/2 - dY);
 			this.setCenterLongitude(nlon);
 			this.setCenterLatitude(nlat);
 		}
@@ -537,8 +555,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 	}
 
 	private void updateMouseGeoPos(float mouseX, float mouseY) {
-		this.mouseLongitude = controller.getScreenLongitude((double)mouseX);
-		this.mouseLatitude = controller.getScreenLatitude((double)mouseY);
+		this.mouseLongitude = controller.getScreenLongitude(mouseX);
+		this.mouseLatitude = controller.getScreenLatitude(mouseY);
 	}
 
 	private void updateRightClickMenuEntries() {
@@ -784,6 +802,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	public void setDebugMode(boolean debugMode) {
 		this.debugMode = debugMode;
+		this.profiler.profilingEnabled = debugMode;
+		if(!debugMode) this.profiler.clearProfiling();
 	}
 
 	public double getTileScaling() {
@@ -834,6 +854,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 			this.source = source;
 			this.message = message;
 		}
+	}
+	
+	public Profiler getProfiler() {
+		return this.profiler;
 	}
 
 }
