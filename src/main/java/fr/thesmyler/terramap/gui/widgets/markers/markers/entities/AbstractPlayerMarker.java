@@ -68,7 +68,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 			float strWidth = parent.getFont().getStringWidth(name);
 			float nameY = y - parent.getFont().height() - 2;
 			RenderUtil.drawRect(x + halfSize - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + halfSize + 2, y - 1, Color.LIGHT_OVERLAY);
-			parent.getFont().drawCenteredString(x + halfSize, nameY, name, Color.WHITE, true);
+			parent.getFont().drawCenteredString(x + halfSize, nameY, name, Color.WHITE, false);
 		}
 
 		GlStateManager.color(1, 1, 1, 1);

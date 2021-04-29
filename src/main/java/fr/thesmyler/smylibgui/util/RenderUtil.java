@@ -135,6 +135,8 @@ public final class RenderUtil {
     public static void drawModalRectWithCustomSizedTexture(double x, double y, double z, double u, double v, double width, double height, double textureWidth, double textureHeight) {
     	double f = 1.0f / textureWidth;
     	double f1 = 1.0f / textureHeight;
+    	GlStateManager.enableAlpha();
+    	GlStateManager.enableBlend();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(7, DefaultVertexFormats.POSITION_TEX);
@@ -143,6 +145,8 @@ public final class RenderUtil {
         builder.pos(x + width, y, z).tex((u + width) * f, v * f1).endVertex();
         builder.pos(x, y, z).tex(u * f, v * f1).endVertex();
         tessellator.draw();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
     }
     
     public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
@@ -152,12 +156,16 @@ public final class RenderUtil {
     public static void drawTexturedModalRect(double x, double y, double z, double minU, double minV, double maxU, double maxV) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
+    	GlStateManager.enableAlpha();
+    	GlStateManager.enableBlend();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         builder.pos(x, y + maxV, z).tex(minU * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
         builder.pos(x + maxU, y + maxV, z).tex((minU + maxU) * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
         builder.pos(x + maxU, y, z).tex((minU + maxU) * 0.00390625, minV * 0.00390625).endVertex();
         builder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
         tessellator.draw();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
     }
     
     public static void drawTexturedModalRect(double x, double y, double minU, double minV, double maxU, double maxV) {
