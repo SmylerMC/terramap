@@ -52,6 +52,8 @@ public class TestScreen extends Screen {
 		this.focus = new TextWidget(10, new TextComponentString("Focused: null"), SmyLibGui.DEFAULT_FONT);
 		this.hovered = new TextWidget(10, new TextComponentString("Hovered: null"), SmyLibGui.DEFAULT_FONT);
 		this.textField = new TextFieldWidget(1, "Text field",SmyLibGui.DEFAULT_FONT);
+		this.textField.setText("Write and right click");
+		this.textField.setCursor(0);
 	}
 
 	@Override
@@ -66,8 +68,9 @@ public class TestScreen extends Screen {
 		WidgetContainer sliderScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
 		WidgetContainer menuScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
 		this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen};
+		for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
-		TextWidget title = new TextWidget(this.width/2, 20, 10, new TextComponentString("SmyguiLib demo test screen"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+		TextWidget title = new TextWidget(this.width/2, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
 		content.addWidget(title);
 		content.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> {Minecraft.getMinecraft().displayGuiScreen(this.parent);}));
 		content.addWidget(next.setX(this.width - 20).setY(this.height - 20));

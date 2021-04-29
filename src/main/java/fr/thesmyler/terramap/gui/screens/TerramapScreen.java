@@ -19,6 +19,7 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
@@ -148,14 +149,14 @@ public class TerramapScreen extends Screen {
 		this.styleButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.style.tooltip"));
 		this.styleButton.enable();
 		content.addWidget(this.styleButton);
-		this.debugText = new TextWidget(49, new Font((float)(1/SmyLibGui.getMinecraftGuiScale())));
+		this.debugText = new TextWidget(49, Util.getSmallestFont());
 		this.debugText.setAnchorX(3).setAnchorY(0);
 		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
 		this.debugText.setVisibility(this.debugMode);
 		content.addWidget(this.debugText);
 
 		// Info panel
-		Font infoFont = SmyLibGui.DEFAULT_FONT;
+		Font infoFont = content.getFont();
 		this.infoPanel.removeAllWidgets();
 		this.infoPanel.setSize(240, this.height);
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
@@ -473,6 +474,7 @@ public class TerramapScreen extends Screen {
 
 		StyleScreen() {
 			super(0, 0, 0, 0, 0);
+			this.setDoScissor(false);
 			IWidget lw = null;
 			for(TiledMapProvider provider: TiledMapProvider.values()) {
 				Throwable e = provider.getLastError();
