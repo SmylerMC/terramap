@@ -11,9 +11,15 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
@@ -22,9 +28,7 @@ import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.AbstractButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
-import fr.thesmyler.smylibgui.widgets.text.FontRendererContainer;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextComponentWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.GeoServices;
@@ -46,12 +50,13 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 public class TerramapScreen extends Screen {
@@ -75,7 +80,7 @@ public class TerramapScreen extends Screen {
 	private TextWidget distortionText;
 	private TextWidget debugText;
 	private TextWidget playerGeoLocationText;
-	private TextFieldWidget searchBox = new TextFieldWidget(10, new FontRendererContainer(Minecraft.getMinecraft().fontRenderer));
+	private TextFieldWidget searchBox = new TextFieldWidget(10);
 	
 	// Style panel
 	private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200); 
@@ -88,6 +93,7 @@ public class TerramapScreen extends Screen {
 	private Map<String, IRasterTiledMap> backgrounds;
 
 	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps, TerramapScreenSavedState state) {
+		super(BackgroundOption.OVERLAY);
 		this.parent = parent;
 		this.backgrounds = maps;
 		Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
@@ -102,11 +108,13 @@ public class TerramapScreen extends Screen {
 	}
 
 	@Override
-	public void initScreen() {
-		this.removeAllWidgets();
-		this.map.setX(0).setY(0).setWidth(this.getWidth()).setHeight(this.getHeight());
+	public void initGui() {
+		WidgetContainer content = this.getContent();
+		content.removeAllWidgets();
+		this.map.setPosition(0, 0);
+		this.map.setSize(this.width, this.height);
 		this.map.setTileScaling(TerramapConfig.CLIENT.getEffectiveTileScaling());
-		this.addWidget(this.map);
+		content.addWidget(this.map);
 
 		// Map control buttons
 		this.closeButton.setX(this.width - this.closeButton.getWidth() - 5).setY(5);
@@ -115,63 +123,64 @@ public class TerramapScreen extends Screen {
 		});
 		this.closeButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.close.tooltip"));
 		this.closeButton.enable();
-		this.addWidget(this.closeButton);
+		content.addWidget(this.closeButton);
 		this.zoomInButton.setX(this.closeButton.getX()).setY(this.closeButton.getY() + closeButton.getHeight() + 15);
 		this.zoomInButton.setOnClick(() -> this.map.zoom(1));
 		this.zoomInButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomin.tooltip"));
 		this.zoomInButton.enable();
-		this.addWidget(this.zoomInButton);
-		this.zoomText = new TextWidget(49, this.getFont());
+		content.addWidget(this.zoomInButton);
+		this.zoomText = new TextWidget(49, SmyLibGui.DEFAULT_FONT);
 		this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
-		this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(0xA0000000).setPadding(3);
+		this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
 		this.zoomText.setVisibility(!this.f1Mode);
-		this.addWidget(this.zoomText);
+		content.addWidget(this.zoomText);
 		this.zoomOutButton.setX(this.zoomInButton.getX()).setY(this.zoomText.getY() + zoomText.getHeight() + 2);
 		this.zoomOutButton.setOnClick(() -> this.map.zoom(-1));
 		this.zoomOutButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomout.tooltip"));
 		this.zoomOutButton.enable();
-		this.addWidget(this.zoomOutButton);
+		content.addWidget(this.zoomOutButton);
 		this.centerButton.setX(this.zoomOutButton.getX()).setY(this.zoomOutButton.getY() + this.zoomOutButton.getHeight() + 15);
 		this.centerButton.setOnClick(() -> map.track(this.map.getMainPlayerMarker()));
 		this.centerButton.enable();
 		this.centerButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.track.tooltip"));
-		this.addWidget(this.centerButton);
+		content.addWidget(this.centerButton);
 		this.styleButton.setX(this.centerButton.getX()).setY(this.centerButton.getY() + this.centerButton.getHeight() + 5);
 		this.styleButton.setOnClick(() -> this.stylePanel.open());
 		this.styleButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.style.tooltip"));
 		this.styleButton.enable();
-		this.addWidget(this.styleButton);
-		this.debugText = new TextWidget(49, this.getFont());
+		content.addWidget(this.styleButton);
+		this.debugText = new TextWidget(49, Util.getSmallestFont());
 		this.debugText.setAnchorX(3).setAnchorY(0);
-		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(0xC0000000).setPadding(3);
+		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
 		this.debugText.setVisibility(this.debugMode);
-		this.addWidget(this.debugText);
+		content.addWidget(this.debugText);
 
 		// Info panel
+		Font infoFont = content.getFont();
 		this.infoPanel.removeAllWidgets();
-		this.infoPanel.setWidth(240).setHeight(this.getHeight());
+		this.infoPanel.setSize(240, this.height);
 		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
 		TexturedButtonWidget openConfigButton = new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig);
 		openConfigButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.config.tooltip"));
 		this.infoPanel.addWidget(openConfigButton);
-		this.mouseGeoLocationText = new TextWidget(49, this.getFont());
+		this.mouseGeoLocationText = new TextWidget(49, infoFont);
 		this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.mouseGeoLocationText);
-		this.mouseMCLocationText = new TextWidget(49, this.getFont());
-		this.mouseMCLocationText.setAnchorX(5).setAnchorY(this.mouseGeoLocationText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setAlignment(TextAlignment.RIGHT);
+		this.mouseMCLocationText = new TextWidget(49, infoFont);
+		this.mouseMCLocationText.setAnchorX(5).setAnchorY(this.mouseGeoLocationText.getAnchorY() + infoFont.height() + 5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.mouseMCLocationText);
-		this.playerGeoLocationText = new TextWidget(49, this.getFont());
-		this.playerGeoLocationText = new TextWidget(49, this.getFont());
-		this.playerGeoLocationText.setAnchorX(5).setAnchorY(this.mouseMCLocationText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setAlignment(TextAlignment.RIGHT);
+		this.playerGeoLocationText = new TextWidget(49, infoFont);
+		this.playerGeoLocationText = new TextWidget(49, infoFont);
+		this.playerGeoLocationText.setAnchorX(5).setAnchorY(this.mouseMCLocationText.getAnchorY() + infoFont.height() + 5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.playerGeoLocationText);
-		this.distortionText = new TextWidget(49, this.getFont());
-		this.distortionText.setAnchorX(5).setAnchorY(this.playerGeoLocationText.getAnchorY() + this.getFont().FONT_HEIGHT + 5).setAlignment(TextAlignment.RIGHT);
+		this.distortionText = new TextWidget(49, infoFont);
+		this.distortionText.setAnchorX(5).setAnchorY(this.playerGeoLocationText.getAnchorY() + infoFont.height() + 5).setAlignment(TextAlignment.RIGHT);
 		this.infoPanel.addWidget(this.distortionText);
-		int y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
-		int lineHeight = 0;
-		int x = 5;
+		float y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
+		float lineHeight = 0;
+		float x = 5;
 		for(FeatureVisibilityController provider: this.getButtonProviders()) {
 			if(!provider.showButton()) continue;
 			AbstractButtonWidget button = provider.getButton();
@@ -198,20 +207,21 @@ public class TerramapScreen extends Screen {
 		//		searchButton.enable();
 		this.infoPanel.addWidget(searchButton);
 		this.infoPanel.setHeight(this.searchBox.getY() + this.searchBox.getHeight() + 5);
-		this.addWidget(this.infoPanel);
+		content.addWidget(this.infoPanel);
 
 		// Style panel
-		this.stylePanel.setWidth(200).setHeight(this.getHeight());
-		this.stylePanel.setClosedX(this.getWidth() + 1).setClosedY(0).setOpenX(this.getWidth() - this.stylePanel.getWidth()).setOpenY(0);
+		this.stylePanel.setSize(200, this.height);
+		this.stylePanel.setClosedX(this.width + 1).setClosedY(0).setOpenX(this.width - this.stylePanel.getWidth()).setOpenY(0);
 		this.stylePanel.setCloseOnClickOther(false);
 		this.stylePanel.removeAllWidgets();
-		this.styleScrollbar.setX(this.stylePanel.width - 15).setY(0).setHeight(this.getHeight());
+		this.styleScrollbar.setPosition(this.stylePanel.getWidth() - 15, 0);
+		this.styleScrollbar.setHeight(this.height);
 		this.stylePanel.addWidget(this.styleScrollbar);
 		StyleScreen s = new StyleScreen();
 		this.styleScrollbar.setViewPort((double) this.height / (s.getHeight() - 10));
 		if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
 		this.stylePanel.addWidget(s);
-		this.addWidget(this.stylePanel);
+		content.addWidget(this.stylePanel);
 
 		if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
 			String warning = "";
@@ -223,23 +233,22 @@ public class TerramapScreen extends Screen {
 			Style style = new Style();
 			style.setColor(TextFormatting.YELLOW);
 			c.setStyle(style);
-			TextComponentWidget warningWidget = new TextComponentWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, 0xFFFFFFFF, true, this.getFont());
-			warningWidget.setBackgroundColor(0xA0000000).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
-			this.addWidget(warningWidget);
+			TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, SmyLibGui.DEFAULT_FONT);
+			warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
+			content.addWidget(warningWidget);
 		}
 
 		TerramapClientContext.getContext().setupMaps();
 	}
 
 	@Override
-	public void onUpdate(Screen parent) {
-		super.onUpdate(parent);
+	public void onUpdate() {
 
 		GeographicProjection projection = TerramapClientContext.getContext().getProjection();
 
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
-		this.zoomText.setText("" + Math.round(this.map.getZoom()));
+		this.zoomText.setText(new TextComponentString("" + Math.round(this.map.getZoom())));
 		this.centerButton.setEnabled(!(this.map.getTracking() instanceof MainPlayerMarker));
 
 		double mouseLat = this.map.getMouseLatitude();
@@ -249,34 +258,34 @@ public class TerramapScreen extends Screen {
 		String formatScale = "-"; 
 		String formatOrientation = "-";
 		if(Math.abs(mouseLat) > WebMercatorUtils.LIMIT_LATITUDE) {
-			this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", "-", "-"));
-			this.mouseGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_geo", "-", "-"));
-			this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", "-", "-"));
+			this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
+			this.mouseGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_geo", "-", "-"));
+			this.mouseMCLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_mc", "-", "-"));
 		} else {
 			String displayLat = GeoServices.formatGeoCoordForDisplay(mouseLat);
 			String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
-			this.mouseGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_geo", displayLat, displayLon));
+			this.mouseGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_geo", displayLat, displayLon));
 			if(projection != null) {
 				try {
 					double[] pos = projection.fromGeo(mouseLon, mouseLat);
 					formatX = "" + Math.round(pos[0]);
 					formatZ = "" + Math.round(pos[1]);
 				} catch(OutOfProjectionBoundsException e) {}
-				this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
+				this.mouseMCLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
 				try {
 					try {
 						double[] dist = projection.tissot(mouseLon, mouseLat);
 						formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
 						formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
 					} catch(OutOfProjectionBoundsException e) {}
-					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
+					this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
 				} catch(NoSuchMethodError e) {
-					this.distortionText.setText(I18n.format("terramap.terramapscreen.information.outdatedterra121"));
-					this.distortionText.setBaseColor(0xFFFF0000);
+					this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.outdatedterra121"));
+					this.distortionText.setBaseColor(Color.RED);
 				}
 			} else {
-				this.distortionText.setText(I18n.format("terramap.terramapscreen.information.distortion", "-", "-"));
-				this.mouseMCLocationText.setText(I18n.format("terramap.terramapscreen.information.mouse_mc", "-", "-"));
+				this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
+				this.mouseMCLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_mc", "-", "-"));
 			}
 		}
 
@@ -286,25 +295,25 @@ public class TerramapScreen extends Screen {
 			double markerLat = marker.getLatitude();
 			String markerName = marker.getDisplayName().getFormattedText();
 			if(!Double.isFinite(markerLon) || !Double.isFinite(markerLat)) {
-				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.trackedoutsidemap", markerName));
+				this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
 			} else {
 				String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLon);
 				String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLat);
-				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
+				this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
 			}
 		} else if(this.map.getMainPlayerMarker() != null){
 			Marker marker = this.map.getMainPlayerMarker();
 			double markerLong = marker.getLongitude();
 			double markerLat = marker.getLatitude();
 			if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
-				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.playerout"));
+				this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playerout"));
 			} else {
 				String formatedLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
 				String formatedLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
-				this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
+				this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
 			}
 		} else {
-			this.playerGeoLocationText.setText(I18n.format("terramap.terramapscreen.information.noplayer"));
+			this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.noplayer"));
 		}
 
 		if(this.debugMode) {
@@ -330,19 +339,32 @@ public class TerramapScreen extends Screen {
 					dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
 				}
 			}
-			this.debugText.setText(dbText);
+			dbText += "\nScaling: " + this.map.getTileScaling() + "/" + SmyLibGui.getMinecraftGuiScale();
+			dbText += "\n";
+			List<String> profilingResults = new ArrayList<>();
+			this.formatProfilingResult(profilingResults, "", "");
+			dbText += "\n" + String.join("\n", profilingResults);
+			this.debugText.setText(new TextComponentString(dbText));
+			this.debugText.setAnchorY(this.height - this.debugText.getHeight());
 		}
 	}
-
-	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, @Nullable Screen parent) {
-		this.debugText.setAnchorY(this.getHeight() - this.debugText.getHeight());
-		super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+	
+	private List<String> formatProfilingResult(List<String> list, String sectionName, String padding) {
+		List<Result> results = this.map.getProfiler().getProfilingData(sectionName);
+		for(Result result: results) {
+			String name = result.profilerName;
+			if("".equals(name) || name.equals(sectionName) || (sectionName + ".").equals(name)) continue;
+			long use = Math.round(result.usePercentage);
+			if("unspecified".equals(name) && use >= 100) continue;
+			list.add(padding + name + ": " + use + "%");
+			this.formatProfilingResult(list, name, padding + "  ");
+		}
+		return list;
 	}
 
 	private void toggleInfoPannel() {
-		int x = this.panelButton.getX();
-		int y = this.panelButton.getY();
+		float x = this.panelButton.getX();
+		float y = this.panelButton.getY();
 		int z = this.panelButton.getZ();
 		TexturedButtonWidget newButton;
 		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
@@ -359,8 +381,8 @@ public class TerramapScreen extends Screen {
 	}
 
 	@Override
-	public void onKeyTyped(char typedChar, int keyCode, @Nullable Screen parent) {
-		if(this.getFocusedWidget() == null || !this.getFocusedWidget().equals(this.searchBox)) {
+	public void keyTyped(char typedChar, int keyCode) {
+		if(this.getContent().getFocusedWidget() == null || !this.getContent().getFocusedWidget().equals(this.searchBox)) {
 			if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
 			if(keyCode == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
 			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.map.moveMap(0, 10);
@@ -371,7 +393,7 @@ public class TerramapScreen extends Screen {
 			if(keyCode == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
 			if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
 		} else {
-			super.onKeyTyped(typedChar, keyCode, parent);
+			super.keyTyped(typedChar, keyCode);
 		}
 	}
 
@@ -409,8 +431,8 @@ public class TerramapScreen extends Screen {
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
 		TexturedButtonWidget newButton;
 		if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
-			int x = this.panelButton.getX();
-			int y = this.panelButton.getY();
+			float x = this.panelButton.getX();
+			float y = this.panelButton.getY();
 			int z = this.panelButton.getZ();
 			newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPannel);
 			newButton.setTooltip(this.panelButton.getTooltipText());
@@ -445,19 +467,20 @@ public class TerramapScreen extends Screen {
 		return true; // Let the search box loose focus
 	}
 
-	private class StyleScreen extends Screen {
+	private class StyleScreen extends FlexibleWidgetContainer {
 
-		int mapWidth = 175;
-		int mapHeight = 100;
+		float mapWidth = 175;
+		float mapHeight = 100;
 
 		StyleScreen() {
-			super(0, 0, 0, 0, 0, BackgroundType.NONE);
+			super(0, 0, 0, 0, 0);
+			this.setDoScissor(false);
 			IWidget lw = null;
 			for(TiledMapProvider provider: TiledMapProvider.values()) {
 				Throwable e = provider.getLastError();
 				if(e == null) continue;
-				int x = 0;
-				int y = 0;
+				float x = 0;
+				float y = 0;
 				if(lw != null) {
 					y = lw.getY() + lw.getHeight() + 5;
 				}
@@ -469,21 +492,21 @@ public class TerramapScreen extends Screen {
 			Collections.sort(maps, (m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
 			for(IRasterTiledMap map: maps) {
 				MapWidget w = new MapPreview(50, map);
-				w.setWidth(mapWidth).setHeight(mapHeight);
+				w.setWidth(mapWidth);
+				w.setHeight(mapHeight);
 				if(lw == null) {
-					w.setX(0).setY(0);
+					w.setPosition(0, 0);
 				} else {
-					w.setX(0).setY(lw.getY() + lw.getHeight() + 5);
+					w.setPosition(0, lw.getY() + lw.getHeight() + 5);
 				}
 				this.addWidget(w);
 				lw = w;
 			}
-			this.height = lw.getY() + lw.getHeight() + 10;
-			this.width = this.mapWidth;
+			this.setSize(lw.getY() + lw.getHeight() + 10f, this.mapWidth);
 		}
 
 		@Override
-		public void onUpdate(Screen parent) {
+		public void onUpdate(WidgetContainer parent) {
 			for(IWidget w: this.widgets) {
 				if(w instanceof MapPreview) {
 					MapPreview map = (MapPreview)w;
@@ -495,7 +518,7 @@ public class TerramapScreen extends Screen {
 		}
 
 		@Override
-		public boolean onMouseWheeled(int mouseX, int mouseY, int amount, Screen parent) {
+		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, WidgetContainer parent) {
 			if(TerramapScreen.this.styleScrollbar.getViewPort() < 1) {
 				if(amount > 0) TerramapScreen.this.styleScrollbar.scrollUp();
 				else TerramapScreen.this.styleScrollbar.scrollDown();
@@ -504,13 +527,13 @@ public class TerramapScreen extends Screen {
 		}
 
 		@Override
-		public int getX() {
+		public float getX() {
 			return 5;
 		}
 
 		@Override
-		public int getY() {
-			return 5 - (int) Math.round((this.height - TerramapScreen.this.getHeight()) * TerramapScreen.this.styleScrollbar.getProgress());
+		public float getY() {
+			return (float) (5 - (this.getHeight() - TerramapScreen.this.height) * TerramapScreen.this.styleScrollbar.getProgress());
 		}
 
 	}
@@ -520,25 +543,23 @@ public class TerramapScreen extends Screen {
 		private TiledMapProvider provider;
 		private Throwable exception;
 		
-		public FailedMapLoadingNotice(int x, int y, int z, int width, int height, TiledMapProvider provider, Throwable e) {
+		public FailedMapLoadingNotice(float x, float y, int z, float width, float height, TiledMapProvider provider, Throwable e) {
 			super(x, y, z, width, height);
 			this.provider = provider;
 			this.exception = e;
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 			boolean wasScissor = RenderUtil.isScissorEnabled();
 			RenderUtil.setScissorState(true);
 			RenderUtil.pushScissorPos();
 			RenderUtil.scissor(x, y, this.width, this.height);
-			int yellow = 0xFFFFCC00;
-			int gray = 0xFF808080;
-			Gui.drawRect(x, y, x + this.width, y + this.height, yellow);
-			Gui.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, gray);
-			parent.drawCenteredString(parent.getFont().font, I18n.format("terramap.terramapscreen.mapstylefailed.title"), x + this.width / 2, y + 8, yellow);
-			parent.getFont().drawString(I18n.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), x + 8, y + 16 + parent.getFont().FONT_HEIGHT, 0xFFFFFFFF);
-			parent.getFont().drawSplitString(I18n.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), x + 8, y + 24 + parent.getFont().FONT_HEIGHT*2, this.width - 16, 0xFFFFFFFF);
+			RenderUtil.drawRect(x, y, x + this.width, y + this.height, Color.YELLOW);
+			RenderUtil.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
+			parent.getFont().drawCenteredString(x + this.width / 2, y + 8, I18n.format("terramap.terramapscreen.mapstylefailed.title"), Color.YELLOW, false);
+			parent.getFont().drawString(x + 8, y + 16 + parent.getFont().height(), I18n.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
+			parent.getFont().drawSplitString(x + 8, y + 24 + parent.getFont().height()*2, I18n.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16, Color.WHITE, false);
 			RenderUtil.popScissorPos();
 			RenderUtil.setScissorState(wasScissor);
 		}
@@ -592,21 +613,22 @@ public class TerramapScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 			super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
-			int color = 0xFF808080;
-			int textColor = hovered? 0xFF90A0FF: 0xFFFFFFFF;
+			Color textColor = hovered? Color.SELECTION: Color.WHITE;
 			String text = this.background.getMap().getLocalizedName(SmyLibGui.getLanguage());
-			GuiScreen.drawRect(x, y, x + this.width, y + 4, color);
-			GuiScreen.drawRect(x, y + this.height - parent.getFont().FONT_HEIGHT - 4, x + this.width, y + this.height, color);
-			GuiScreen.drawRect(x, y, x + 4, y + this.height, color);
-			GuiScreen.drawRect(x + this.width - 4, y, x + this.width, y + this.height, color);
-			parent.getFont().drawCenteredString(x + this.width/2, y + this.height - parent.getFont().FONT_HEIGHT - 2, text, textColor, true);
+			float width = this.getWidth();
+			float height = this.getHeight();
+			RenderUtil.drawRect(x, y, x + width, y + 4, Color.DARK_GRAY);
+			RenderUtil.drawRect(x, y + height - parent.getFont().height() - 4, x + width, y + height, Color.DARK_GRAY);
+			RenderUtil.drawRect(x, y, x + 4, y + height, Color.DARK_GRAY);
+			RenderUtil.drawRect(x + width - 4, y, x + width, y + height, Color.DARK_GRAY);
+			parent.getFont().drawCenteredString(x + width/2, y + height - parent.getFont().height() - 2, text, textColor, true);
 
 		}
 
 		@Override
-		public boolean onClick(int mouseX, int mouseY, int mouseButton, @Nullable Screen parent) {
+		public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 			if(mouseButton == 0) {
 				TerramapScreen.this.map.setBackground(this.background.getMap());
 				TerramapScreen.this.stylePanel.close();

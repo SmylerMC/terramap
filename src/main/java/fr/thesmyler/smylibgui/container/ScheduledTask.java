@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.screen;
+package fr.thesmyler.smylibgui.container;
 
 class ScheduledTask {
 	

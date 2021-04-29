@@ -3,7 +3,8 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 import java.util.function.Consumer;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -15,7 +16,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	protected Consumer<Boolean> onChange;
 	
 	public ToggleButtonWidget(
-			int x, int y, int z, int width, int height,
+			float x, float y, int z, float width, float height,
 			int onEnableU, int onEnableV, int offEnableU, int offEnableV,
 			int onDisableU, int onDisableV, int offDisableU, int offDisableV,
 			int onEnableUFocus, int onEnableVFocus, int offEnableUFocus, int offEnableVFocus,
@@ -39,16 +40,16 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 		this.onChange = onChange;
 	}
 	
-	public ToggleButtonWidget(int x, int y, int z, boolean startValue, Consumer<Boolean> onChange) {
+	public ToggleButtonWidget(float x, float y, int z, boolean startValue, Consumer<Boolean> onChange) {
 		this(x, y, z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, onChange);
 	}
 	
-	public ToggleButtonWidget(int x, int y, int z, boolean startValue) {
+	public ToggleButtonWidget(float x, float y, int z, boolean startValue) {
 		this(x, y, z, 26, 15, 30, 2, 2, 2, 30, 38, 2, 38, 30, 20, 2, 20, startValue, null);
 	}
 	
 	public ToggleButtonWidget(
-			int z, int width, int height,
+			int z, float width, float height,
 			int onEnableU, int onEnableV, int offEnableU, int offEnableV,
 			int onDisableU, int onDisableV, int offDisableU, int offDisableV,
 			int onEnableUFocus, int onEnableVFocus, int offEnableUFocus, int offEnableVFocus,
@@ -70,7 +71,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.getTextureManager().bindTexture(SmyLibGui.WIDGET_TEXTURES);
 		GlStateManager.color(255, 255, 255, 255);
@@ -104,7 +105,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 				v = this.offEnableV;
 			}
 		}
-		parent.drawTexturedModalRect(x, y, u, v, this.getWidth(), this.getHeight());
+		RenderUtil.drawTexturedModalRect(x, y, u, v, this.getWidth(), this.getHeight());
 	}
 	
 	public void toggle() {

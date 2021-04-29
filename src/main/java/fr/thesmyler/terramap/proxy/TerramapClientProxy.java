@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.proxy;
 import java.io.File;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
@@ -46,7 +47,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client init");
-		SmyLibGui.init(TerramapMod.logger, false);
+		SmyLibGui.init(TerramapMod.logger, true); //TODO Disable smylibgui debug
 		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();
 		UrlRasterTile.registerErrorTexture();
@@ -77,7 +78,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void onConfigChanged(OnConfigChangedEvent event) {
 		if (event.getModID().equals(TerramapMod.MODID)) {
-			if(TerramapMod.proxy.isClient() && SmyLibGui.getHudScreen() != null) {
+			if(TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
 				HudScreenHandler.updateMinimap();
 			}
 		}

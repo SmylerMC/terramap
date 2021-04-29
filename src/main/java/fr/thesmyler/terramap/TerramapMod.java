@@ -66,7 +66,7 @@ public class TerramapMod {
     
     @NetworkCheckHandler
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
-    	return true; //Anything should be ok, the actual check is done in the server event handler
+    	return true; // Anything should be ok, the actual check is done in the server event handler
     }
     
     @EventHandler

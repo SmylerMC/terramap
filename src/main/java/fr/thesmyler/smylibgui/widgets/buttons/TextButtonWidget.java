@@ -1,25 +1,29 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
-import fr.thesmyler.smylibgui.RenderUtil;
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class TextButtonWidget extends AbstractButtonWidget {
 
 	protected String str;
+	protected Color enabledTextColor = Color.LIGHT_GRAY;
+	protected Color activeTextColor = Color.SELECTION;
+	protected Color disabledTextColor = Color.MEDIUM_GRAY;
 
-	public TextButtonWidget(int x, int y, int z, int width, String str, Runnable onClick, Runnable onDoubleClick) {
+	public TextButtonWidget(float x, float y, int z, float width, String str, Runnable onClick, Runnable onDoubleClick) {
 		super(x, y, z, width, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 11, onClick, onDoubleClick);
 		this.str = str;
 	}
 
-	public TextButtonWidget(int x, int y, int z, int width, String str, Runnable onClick) {
+	public TextButtonWidget(float x, float y, int z, float width, String str, Runnable onClick) {
 		this(x, y, z, width, str, onClick, null);
 	}
 
-	public TextButtonWidget(int x, int y, int z, int width, String str) {
+	public TextButtonWidget(float x, float y, int z, float width, String str) {
 		this(x, y, z, width, str, null, null);
 		this.enabled = false;
 	}
@@ -38,22 +42,22 @@ public class TextButtonWidget extends AbstractButtonWidget {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean hasFocus, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
 		Minecraft mc = Minecraft.getMinecraft();
 		mc.getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
-		GlStateManager.color(1, 1, 1, 1); //White, non transparent
+		GlStateManager.color(1, 1, 1, 1); // White, non transparent
 		int textureDelta = 1;
-		int textColor = 0xFFE0E0E0;
+		Color textColor = this.enabledTextColor;
 		if (!this.isEnabled()) {
-			textColor = 0xFFA0A0A0;
+			textColor = this.disabledTextColor;
 			textureDelta = 0;
 		}
 		else if (hovered || hasFocus) {
-			textColor = 0xFFFFFFA0;
+			textColor = this.activeTextColor;
 			textureDelta = 2;
 		}
-		int leftWidth = this.width / 2;
-		int rightWidth = leftWidth;
+		float leftWidth = this.width / 2;
+		float rightWidth = leftWidth;
 		leftWidth += this.width % 2;
 		GlStateManager.enableBlend();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -72,8 +76,33 @@ public class TextButtonWidget extends AbstractButtonWidget {
 		this.str = str;
 	}
 	
-	public TextButtonWidget setWidth(int width) {
+	public TextButtonWidget setWidth(float width) {
 		this.width = width;
 		return this;
 	}
+
+	public Color getEnabledTextColor() {
+		return enabledTextColor;
+	}
+
+	public void setEnabledTextColor(Color enabledTextColor) {
+		this.enabledTextColor = enabledTextColor;
+	}
+
+	public Color getActiveTextColor() {
+		return activeTextColor;
+	}
+
+	public void setActiveTextColor(Color activeTextColor) {
+		this.activeTextColor = activeTextColor;
+	}
+
+	public Color getDisabledTextColor() {
+		return disabledTextColor;
+	}
+
+	public void setDisabledTextColor(Color disabledTextColor) {
+		this.disabledTextColor = disabledTextColor;
+	}
+
 }

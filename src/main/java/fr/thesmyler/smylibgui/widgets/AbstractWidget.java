@@ -1,14 +1,15 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 
 public abstract class AbstractWidget implements IWidget {
 	
 	protected boolean visible = true;
-	protected int x, y, z, width, height;
+	protected int z;
+	protected float x, y, width, height;
 	protected String tooltip = null;
 	
-	public AbstractWidget(int x, int y, int z, int width, int height) {
+	public AbstractWidget(float x, float y, int z, float width, float height) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -17,12 +18,12 @@ public abstract class AbstractWidget implements IWidget {
 	}
 
 	@Override
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
@@ -32,17 +33,17 @@ public abstract class AbstractWidget implements IWidget {
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return this.width;
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return this.height;
 	}
 	
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visible;
 	}
 	

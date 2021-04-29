@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui;
+package fr.thesmyler.smylibgui.util;
 
 import org.lwjgl.opengl.GL11;
 

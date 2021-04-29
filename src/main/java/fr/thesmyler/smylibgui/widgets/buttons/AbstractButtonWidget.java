@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -15,26 +15,26 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 	protected Runnable onDoubleClick;
 	protected boolean enabled = true;
 
-	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
+	public AbstractButtonWidget(float x, float y, int z, float width, float height, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
 		super(x, y, z, width, height);
 		this.onClick = onClick;
 		this.onDoubleClick = onDoubleClick;
 	}
 
-	public AbstractButtonWidget(int x, int y, int z, int width, int height, @Nullable Runnable onClick) {
+	public AbstractButtonWidget(float x, float y, int z, float width, float height, @Nullable Runnable onClick) {
 		this(x, y, z, width, height, onClick, onClick);
 	}
 
-	public AbstractButtonWidget(int x, int y, int z, int width, int height) {
+	public AbstractButtonWidget(float x, float y, int z, float width, float height) {
 		this(x, y, z, width, height, null);
 		this.disable();
 	}
 
 	@Override
-	public abstract void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean hasFocus, Screen parent);
+	public abstract void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent);
 
 	@Override
-	public boolean onClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		parent.setFocus(null); // We don't want to keep the focus
@@ -45,7 +45,7 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 	}
 
 	@Override
-	public boolean onDoubleClick(int mouseX, int mouseY, int mouseButton, Screen parent) {
+	public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
 		if(!this.isEnabled()) return false;
 		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 		parent.setFocus(null);
@@ -82,12 +82,12 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 		return this;
 	}
 
-	public AbstractButtonWidget setX(int x) {
+	public AbstractButtonWidget setX(float x) {
 		this.x = x;
 		return this;
 	}
 
-	public AbstractButtonWidget setY(int y) {
+	public AbstractButtonWidget setY(float y) {
 		this.y = y;
 		return this;
 	}

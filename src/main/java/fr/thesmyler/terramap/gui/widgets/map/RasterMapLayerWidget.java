@@ -3,16 +3,21 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Util;
+import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
 import fr.thesmyler.terramap.maps.utils.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 
 //TODO Fractional zoom
@@ -31,33 +36,38 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
-
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+		
+		Font smallFont = Util.getSmallestFont();
+		
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
 
 		boolean debug = false;
 		MapWidget parentMap = null;
+		Profiler profiler = new Profiler();
 		if(parent instanceof MapWidget) {
 			parentMap = (MapWidget) parent;
 			debug = parentMap.isDebugMode();
+			profiler = parentMap.getProfiler();
 		}
+		
+		profiler.startSection("render-raster-layer_" + this.map.getId());
 
-		//TODO Remove the lines when tile scaling is not a power of 2
 		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling;
 
-		long upperLeftX = (long) this.getUpperLeftX();
-		long upperLeftY = (long) this.getUpperLeftY();
+		double upperLeftX = this.getUpperLeftX();
+		double upperLeftY = this.getUpperLeftY();
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
 
 		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile((int)this.zoom);
-		long maxX = (long) (upperLeftX + this.width);
-		long maxY = (long) (upperLeftY + this.height);
+		double maxX = upperLeftX + this.width;
+		double maxY = upperLeftY + this.height;
 
-		int lowerTileX = (int) Math.floor((double)upperLeftX / (double)renderSize);
-		int lowerTileY = (int) Math.floor((double)upperLeftY / (double)renderSize);
+		int lowerTileX = (int) Math.floor(upperLeftX / renderSize);
+		int lowerTileY = (int) Math.floor(upperLeftY / renderSize);
 
 		for(int tileX = lowerTileX; tileX * renderSize < maxX; tileX++) {
 
@@ -107,16 +117,16 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				neededTiles.add(tile);
 
-				int dispX = (int) Math.round(tileX * renderSize - upperLeftX);
-				int dispY = (int) Math.round(tileY * renderSize - upperLeftY);
+				double dispX = tileX * renderSize - upperLeftX;
+				double dispY = tileY * renderSize - upperLeftY;
 
-				int renderSizedSize = (int) Math.round(renderSize);
+				double renderSizedSize = renderSize;
 
-				int dX = 0;
-				int dY = 0;
+				double dX = 0;
+				double dY = 0;
 
-				int displayWidth = (int) Math.round(Math.min(renderSize, maxX - tileX * renderSize));
-				int displayHeight = (int) Math.round(Math.min(renderSize, maxY - tileY * renderSize));
+				double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
+				double displayHeight = Math.min(renderSize, maxY - tileY * renderSize);
 
 				if(tileX == lowerTileX) {
 					dX -= dispX;
@@ -138,8 +148,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					double factorX = (double)xInBiggerTile / (double)sizeFactor;
 					double factorY = (double)yInBiggerTile / (double)sizeFactor;
 					renderSizedSize *= sizeFactor;
-					dX += (int) (factorX * renderSizedSize);
-					dY += (int) (factorY * renderSizedSize);
+					dX += factorX * renderSizedSize;
+					dY += factorY * renderSizedSize;
 				}
 
 				GlStateManager.color(1, 1, 1, 1);
@@ -152,41 +162,26 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 					if(parentMap != null) parentMap.reportError(this, e.toString());
 				}
 				textureManager.bindTexture(texture);
-				Gui.drawModalRectWithCustomSizedTexture(
+				RenderUtil.drawModalRectWithCustomSizedTexture(
 						x + dispX,
 						y + dispY,
 						dX, dY,
 						displayWidth,
 						displayHeight,
 						renderSizedSize,
-						renderSizedSize);
-
+						renderSizedSize
+				);
 				if(debug) {
-					final int RED = 0xFFFF0000;
-					final int BLUE = 0xFF0000FF;
-					final int WHITE = 0xFFFFFFFF;
-					int lineColor = lowerResRender? unlockedZoomRender? BLUE: RED : WHITE;
-					parent.drawHorizontalLine(
-							dispX,
-							dispX + displayWidth - 1,
-							dispY,
-							lineColor);
-					parent.drawHorizontalLine(
-							dispX,
-							dispX + displayWidth - 1,
-							dispY + displayHeight - 1,
-							lineColor);
-					parent.drawVerticalLine(
-							dispX,
-							dispY,
-							dispY + displayHeight - 1,
-							lineColor);
-					parent.drawVerticalLine(
-							dispX + displayWidth - 1,
-							dispY,
-							dispY + displayHeight - 1,
-							lineColor);
-					parent.getFont().drawString("" + tile.getPosition().getZoom(), dispX + 2, dispY + 2, lineColor);
+					Color lineColor = lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : Color.WHITE;
+					RenderUtil.drawClosedStrokeLine(lineColor, 1f, 
+							dispX, dispY,
+							dispX, dispY + displayHeight - 1,
+							dispX + displayWidth - 1, dispY + displayHeight - 1,
+							dispX + displayWidth - 1, dispY
+					);
+					smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)(dispY + displayHeight/2), "" + tile.getPosition().getZoom(), lineColor, false);
+					smallFont.drawString((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
+					smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
 				}
 				GlStateManager.color(1, 1, 1, 1);
 			}
@@ -196,6 +191,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		this.lastNeededTiles.removeAll(neededTiles);
 		this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
 		this.lastNeededTiles = neededTiles;
+		
+		profiler.endSection();
 
 	}
 

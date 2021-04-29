@@ -6,8 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.container.WindowedContainer;
+import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.screen.WindowedScreen;
+import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
@@ -34,14 +38,15 @@ import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextComponentTranslation;
 
 
 public class HudConfigScreen extends Screen {
 	
 	private MapWidget minimap = new MapWidget(0, TerramapClientContext.getContext().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
-	private WindowedScreen minimapWindow = new WindowedScreen(BackgroundType.NONE, this.minimap, "", 15);
+	private WindowedContainer minimapWindow = new WindowedContainer(15, this.minimap, "");
 	private CompassScreen compassScreen = new CompassScreen();
-	private WindowedScreen compassWindow = new WindowedScreen(BackgroundType.NONE, this.compassScreen, "", 16);
+	private WindowedContainer compassWindow = new WindowedContainer(16, this.compassScreen, "");
 	private OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<TileScalingOption>(10, TileScalingOption.values());
 	private IntegerSliderWidget zoomSlider = new IntegerSliderWidget(11, 0, 20, 10);
 	private OptionSliderWidget<MapStyleSliderEntry> styleSlider;
@@ -56,7 +61,7 @@ public class HudConfigScreen extends Screen {
 	private int lastWidth, lastHeight = -1; // Used to re-calculate the relative minimap position when the game's window is resized
 	
 	public HudConfigScreen() {
-		super(BackgroundType.NONE);
+		super(BackgroundOption.NONE);
 		List<MapStyleSliderEntry> maps = new ArrayList<>();
 		TerramapClientContext.getContext().getMapStyles().values().stream()
 			.sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
@@ -90,7 +95,7 @@ public class HudConfigScreen extends Screen {
 		this.entitiesButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, b).trySetFeatureVisibility(MobMarkerController.ID, b));
 		this.directionsButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, b));
 		this.minimapWindow.setEnableTopBar(false);
-		this.minimapWindow.setCenterDragColor(0x00000000);
+		this.minimapWindow.setCenterDragColor(Color.TRANSPARENT);
 		this.minimapWindow.setEnableCenterDrag(true);
 		this.compassWindow.setHeight(this.compassScreen.getHeight());
 		this.compassWindow.setAllowVerticalResize(false);
@@ -98,31 +103,32 @@ public class HudConfigScreen extends Screen {
 		this.compassWindow.setEnableCenterDrag(true);
 		this.compassWindow.setMinInnerHeight(1);
 		this.compassWindow.trySetInnerDimensions(50, this.compassScreen.compass.getHeight());
-		this.compassWindow.setCenterDragColor(0x00000000);
+		this.compassWindow.setCenterDragColor(Color.TRANSPARENT);
 		this.reset();
 	}
 	
 	@Override
-	public void initScreen() {
-		this.removeAllWidgets();
+	public void initGui() {
+		WidgetContainer content = this.getContent();
+		content.removeAllWidgets();
 		this.buttonPanel.removeAllWidgets();
 		this.settingsPanel.removeAllWidgets();
 		if(this.lastHeight <= 0 || this.lastWidth <= 0) {
 			this.recalcWidgetsPos();
 		} else {
-			this.minimapWindow.setX(Math.round((float)this.minimapWindow.getX() * this.width / this.lastWidth));
-			this.minimapWindow.setY(Math.round((float)this.minimapWindow.getY() * this.height / this.lastHeight));
-			this.minimapWindow.setWidth(Math.round((float)this.minimapWindow.getWidth() / this.lastWidth * this.width));
-			this.minimapWindow.setHeight(Math.round((float)this.minimapWindow.getHeight() / this.lastHeight * this.height));
+			this.minimapWindow.setX(this.minimapWindow.getX() * this.width / this.lastWidth);
+			this.minimapWindow.setY(this.minimapWindow.getY() * this.height / this.lastHeight);
+			this.minimapWindow.setWidth(this.minimapWindow.getWidth() / this.lastWidth * this.width);
+			this.minimapWindow.setHeight(this.minimapWindow.getHeight() / this.lastHeight * this.height);
 			double t = this.tileScalingSlider.getCurrentOption().value;
 			if(t == 0) this.minimap.setTileScaling(SmyLibGui.getMinecraftGuiScale());
 			else this.minimap.setTileScaling(t);
-			this.compassWindow.setX(Math.round((float)this.compassWindow.getX() * this.width / this.lastWidth));
-			this.compassWindow.setY(Math.round((float)this.compassWindow.getY() * this.height / this.lastHeight));
-			this.compassWindow.setWidth(Math.round((float)this.compassWindow.getWidth() / this.lastWidth * this.width));
+			this.compassWindow.setX(this.compassWindow.getX() * this.width / this.lastWidth);
+			this.compassWindow.setY(this.compassWindow.getY() * this.height / this.lastHeight);
+			this.compassWindow.setWidth(this.compassWindow.getWidth() / this.lastWidth * this.width);
 		}
-		this.minimapWindow.initScreen();
-		this.addWidget(this.minimapWindow);
+		this.minimapWindow.init();
+		content.addWidget(this.minimapWindow);
 		
 		// Buttons
 		this.buttonPanel.addWidget(new TextButtonWidget(3, 3, 10, 54, I18n.format("terramap.config.cancel"), this::close).setTooltip(I18n.format("terramap.config.cancel.tooltip")));
@@ -132,11 +138,11 @@ public class HudConfigScreen extends Screen {
 		
 		// Boolean lines
 		LinkedList<TextWidget> buttonsTexts = new LinkedList<>();
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.minimap"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.compass"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.players"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.entities"), 10, true, this.getFont()));
-		buttonsTexts.add(new TextWidget(I18n.format("terramap.hudconfig.directions"), 10, true, this.getFont()));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.minimap"), SmyLibGui.DEFAULT_FONT));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.compass"), SmyLibGui.DEFAULT_FONT));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.players"), SmyLibGui.DEFAULT_FONT));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.entities"), SmyLibGui.DEFAULT_FONT));
+		buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.directions"), SmyLibGui.DEFAULT_FONT));
 		this.minimapButton.setTooltip(I18n.format("terramap.hudconfig.minimap.tooltip"));
 		this.compassButton.setTooltip(I18n.format("terramap.hudconfig.compass.tooltip"));
 		this.otherPlayersButton.setTooltip(I18n.format("terramap.hudconfig.players.tooltip"));
@@ -148,22 +154,22 @@ public class HudConfigScreen extends Screen {
 		buttons.add(this.otherPlayersButton);
 		buttons.add(this.entitiesButton);
 		buttons.add(this.directionsButton);
-		int lineY = 3;
-		int textButtonSpace = 3;
-		int lineSpace = 4;
+		float lineY = 3;
+		float textButtonSpace = 3;
+		float lineSpace = 4;
 		ToggleButtonWidget lastButton = null;
 		while(buttonsTexts.size() > 0) {
-			int lineWidth = 0;
+			float lineWidth = 0;
 			int lineCount = 0;
 			for(; lineCount < buttonsTexts.size(); lineCount++) {
 				TextWidget text = buttonsTexts.get(lineCount);
 				ToggleButtonWidget button = buttons.get(lineCount);
-				int newWidth = lineWidth + text.getWidth() + textButtonSpace +button.getWidth();
+				float newWidth = lineWidth + text.getWidth() + textButtonSpace +button.getWidth();
 				if(lineCount > 0 && newWidth > 0.75 * this.width) break;
 				lineWidth = newWidth;
 			}
-			int padding = (this.width  - lineWidth) / (lineCount + 1);
-			int x = padding;
+			float padding = (this.width  - lineWidth) / (lineCount + 1);
+			float x = padding;
 			for(int i=0; i<lineCount; i++) {
 				TextWidget text = buttonsTexts.pop();
 				ToggleButtonWidget button = buttons.pop();
@@ -183,8 +189,8 @@ public class HudConfigScreen extends Screen {
 		this.settingsPanel.addWidget(this.styleSlider.setWidth(100).setX(this.width/2 + 53).setY(this.tileScalingSlider.getY()).setTooltip(I18n.format("terramap.hudconfig.mapstyle.tooltip")));
 		
 		// Setup panels
-		this.buttonPanel.setBackgroundColor(0xB0000000);
-		this.buttonPanel.setWidth(190).setHeight(25);
+		this.buttonPanel.setBackgroundColor(Color.DARKER_OVERLAY);
+		this.buttonPanel.setSize(190, 25);
 		this.settingsPanel.setWidth(this.width);
 		this.settingsPanel.setHeight(this.styleSlider.getY() + this.styleSlider.getHeight() + 3);
 		this.settingsPanel.setClosedX(0).setOpenX(0).setClosedY(this.height);
@@ -192,12 +198,12 @@ public class HudConfigScreen extends Screen {
 		this.buttonPanel.setOpenX(this.buttonPanel.getClosedX()).setOpenY(this.height - this.settingsPanel.getHeight() - this.buttonPanel.getHeight());
 		this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 		
-		TextWidget explain = new TextWidget(I18n.format("terramap.hudconfig.explain"), this.width/2, this.height/2 - 100, 10, TextAlignment.CENTER, this.getFont());
-		this.addWidget(explain.setMaxWidth((int)(this.width * .8)).setAnchorY(this.height/2 - explain.getHeight() - 10));
+		TextWidget explain = new TextWidget(this.width/2, this.height/2 - 100, 10, new TextComponentTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+		content.addWidget(explain.setMaxWidth(this.width * .8f).setAnchorY(this.height/2 - explain.getHeight() - 10));
 		
-		this.addWidget(this.buttonPanel);
-		this.addWidget(this.settingsPanel);
-		this.addWidget(this.compassWindow);
+		content.addWidget(this.buttonPanel);
+		content.addWidget(this.settingsPanel);
+		content.addWidget(this.compassWindow);
 		this.lastHeight = this.height;
 		this.lastWidth = this.width;
 	}
@@ -209,15 +215,15 @@ public class HudConfigScreen extends Screen {
 		TerramapConfig.CLIENT.minimap.showOtherPlayers = this.otherPlayersButton.getState();
 		TerramapConfig.CLIENT.minimap.style = this.styleSlider.getCurrentOption().map.getId();
 		TerramapConfig.CLIENT.minimap.tileScaling = this.tileScalingSlider.getCurrentOption().value;
-		TerramapConfig.CLIENT.minimap.posX = (float)this.minimapWindow.getX() / this.getWidth() * 100;
-		TerramapConfig.CLIENT.minimap.posY = (float)this.minimapWindow.getY() / this.getHeight() * 100;
-		TerramapConfig.CLIENT.minimap.width = (float)this.minimapWindow.getWidth() / this.getWidth() * 100;
-		TerramapConfig.CLIENT.minimap.height = (float)this.minimapWindow.getHeight() / this.getHeight() * 100;
+		TerramapConfig.CLIENT.minimap.posX = (float)this.minimapWindow.getX() / this.width * 100;
+		TerramapConfig.CLIENT.minimap.posY = (float)this.minimapWindow.getY() / this.height * 100;
+		TerramapConfig.CLIENT.minimap.width = (float)this.minimapWindow.getWidth() / this.width * 100;
+		TerramapConfig.CLIENT.minimap.height = (float)this.minimapWindow.getHeight() / this.height * 100;
 		TerramapConfig.CLIENT.minimap.playerDirections = this.directionsButton.getState();
 		TerramapConfig.CLIENT.compass.enable = this.compassButton.getState();
-		TerramapConfig.CLIENT.compass.posX = (float)this.compassWindow.getX() / this.getWidth() * 100;
-		TerramapConfig.CLIENT.compass.posY = (float)this.compassWindow.getY() / this.getHeight() * 100;
-		TerramapConfig.CLIENT.compass.width = (float)this.compassWindow.getWidth() / this.getWidth() * 100;
+		TerramapConfig.CLIENT.compass.posX = (float)this.compassWindow.getX() / this.width * 100;
+		TerramapConfig.CLIENT.compass.posY = (float)this.compassWindow.getY() / this.height * 100;
+		TerramapConfig.CLIENT.compass.width = (float)this.compassWindow.getWidth() / this.width * 100;
 		TerramapConfig.sync();
 		this.close();
 	}
@@ -248,13 +254,13 @@ public class HudConfigScreen extends Screen {
 	}
 	
 	private void recalcWidgetsPos() {
-		this.minimapWindow.setX(Math.round(this.width * TerramapConfig.CLIENT.minimap.posX / 100));
-		this.minimapWindow.setY(Math.round(this.height * TerramapConfig.CLIENT.minimap.posY / 100));
-		this.minimapWindow.setWidth(Math.round(this.width * TerramapConfig.CLIENT.minimap.width / 100));
-		this.minimapWindow.setHeight(Math.round(this.height * TerramapConfig.CLIENT.minimap.height / 100));
-		this.compassWindow.setX(Math.round(this.width * TerramapConfig.CLIENT.compass.posX / 100));
-		this.compassWindow.setY(Math.round(this.height * TerramapConfig.CLIENT.compass.posY / 100));
-		this.compassWindow.setWidth(Math.round(this.width * TerramapConfig.CLIENT.compass.width / 100));
+		this.minimapWindow.setX(this.width * TerramapConfig.CLIENT.minimap.posX / 100);
+		this.minimapWindow.setY(this.height * TerramapConfig.CLIENT.minimap.posY / 100);
+		this.minimapWindow.setWidth(this.width * TerramapConfig.CLIENT.minimap.width / 100);
+		this.minimapWindow.setHeight(this.height * TerramapConfig.CLIENT.minimap.height / 100);
+		this.compassWindow.setX(this.width * TerramapConfig.CLIENT.compass.posX / 100);
+		this.compassWindow.setY(this.height * TerramapConfig.CLIENT.compass.posY / 100);
+		this.compassWindow.setWidth(this.width * TerramapConfig.CLIENT.compass.width / 100);
 	}
 	
 	public void toggleSettingsPanel() {
@@ -267,13 +273,14 @@ public class HudConfigScreen extends Screen {
 		}
 	}
 	
-	private class CompassScreen extends Screen {
+	private class CompassScreen extends FlexibleWidgetContainer {
 		
 		RibbonCompassWidget compass = new RibbonCompassWidget(0, 0, 0, 30);
 		
 		CompassScreen() {
-			super(BackgroundType.NONE);
+			super(0, 0, 0, 30, 30);
 			this.addWidget(this.compass);
+			this.setSize(this.compass.getWidth(), this.compass.getHeight());
 			this.scheduleAtUpdate(() -> {
 				GeographicProjection p = TerramapClientContext.getContext().getProjection();
 				if(p != null) {
@@ -288,8 +295,8 @@ public class HudConfigScreen extends Screen {
 		}
 
 		@Override
-		public void draw(int x, int y, int mouseX, int mouseY, boolean screenHovered, boolean screenFocused, Screen parent) {
-			this.compass.setWidth(this.width);
+		public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+			this.compass.setWidth(this.getWidth());
 			super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
 		}
 		

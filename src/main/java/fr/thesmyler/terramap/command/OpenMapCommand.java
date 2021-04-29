@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import net.minecraft.command.CommandBase;
@@ -41,7 +41,7 @@ public class OpenMapCommand implements IClientCommand {
 		double lon = CommandBase.parseDouble(args[2], -180, 180);
 		if(TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
 			 // The current screen is the chat, if we change screen now Minecraft will close it immediately, thinking it is closing the chat
-			SmyLibGui.getHudScreen().scheduleForNextScreenUpdate(() -> TerramapClientContext.getContext().openMapAt(zoom, lon, lat));
+			HudScreen.getContent().scheduleForNextScreenUpdate(() -> TerramapClientContext.getContext().openMapAt(zoom, lon, lat));
 		} else {
 			throw new CommandException("terramap.commands.opentmap.couldnotopen");
 		}

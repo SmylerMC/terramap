@@ -2,13 +2,14 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -25,11 +26,11 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 	}
 
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		boolean drawName = this.showName(hovered);
-		int textureSize = 128 / this.downScaleFactor;
+		float textureSize = 128 / this.downScaleFactor;
 		GlStateManager.enableAlpha();
-		if(hovered) Gui.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, 0x50000000);
+		if(hovered) RenderUtil.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.LIGHT_OVERLAY);
 
 		// Draw the direction arrow
 		if(this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
@@ -58,16 +59,16 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(this.getSkin());
 		GlStateManager.color(1, 1, 1, this.getTransparency());
-		Gui.drawModalRectWithCustomSizedTexture(x, y, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
-		Gui.drawModalRectWithCustomSizedTexture(x, y, 80 / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
+		RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
+		RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 80 / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
 
 		if(drawName) {
-			int halfSize = this.width / 2;
+			float halfSize = this.width / 2;
 			String name = this.getDisplayName().getFormattedText();
-			int strWidth = parent.getFont().getStringWidth(name);
-			int nameY = y - parent.getFont().FONT_HEIGHT - 2;
-			Gui.drawRect(x + halfSize - strWidth / 2 - 2, y - parent.getFont().FONT_HEIGHT - 4, x + strWidth / 2 + halfSize + 2, y - 1, 0x50000000);
-			parent.getFont().drawCenteredString(x + halfSize, nameY, name, 0xFFFFFFFF, true);
+			float strWidth = parent.getFont().getStringWidth(name);
+			float nameY = y - parent.getFont().height() - 2;
+			RenderUtil.drawRect(x + halfSize - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + halfSize + 2, y - 1, Color.LIGHT_OVERLAY);
+			parent.getFont().drawCenteredString(x + halfSize, nameY, name, Color.WHITE, false);
 		}
 
 		GlStateManager.color(1, 1, 1, 1);
@@ -94,12 +95,12 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 	}
 
 	@Override
-	public int getDeltaX() {
+	public float getDeltaX() {
 		return - this.getWidth() / 2;
 	}
 
 	@Override
-	public int getDeltaY() {
+	public float getDeltaY() {
 		return - this.getHeight() / 2;
 	}
 

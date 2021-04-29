@@ -2,10 +2,10 @@ package fr.thesmyler.terramap.gui.widgets;
 
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.TextureUtil;
-import fr.thesmyler.smylibgui.TextureUtil.TextureProperties;
-import fr.thesmyler.smylibgui.TextureUtil.UnknownTextureException;
-import fr.thesmyler.smylibgui.screen.Screen;
+import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.util.TextureUtil;
+import fr.thesmyler.smylibgui.util.TextureUtil.TextureProperties;
+import fr.thesmyler.smylibgui.util.TextureUtil.UnknownTextureException;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
@@ -20,11 +20,13 @@ public class RibbonCompassWidget implements IWidget {
 	private static final ResourceLocation COMPASS_BACKGROUND_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_background.png");
 	private static final ResourceLocation COMPASS_INDICATOR_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_indicator.png");
 	
-	private int x, y, z, width, height, textureWidth, indicatorWidth, indicatorHeight;
+	private float x, y;
+	private int z;
+	private float width, height, textureWidth, indicatorWidth, indicatorHeight;
 	private float azimuth = 0;
 	private boolean visibility = true;
 
-	public RibbonCompassWidget(int x, int y, int z, int width) {
+	public RibbonCompassWidget(float x, float y, int z, float width) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -48,7 +50,7 @@ public class RibbonCompassWidget implements IWidget {
 	}
 	
 	@Override
-	public void draw(int x, int y, int mouseX, int mouseY, boolean hovered, boolean focused, Screen parent) {
+	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		double blendBorder = 10; // How many pixels to fade to alpha=0 on the sides
 		double leftU = (double)(this.azimuth - 180) / 360 + (double)(this.textureWidth - this.width) / this.textureWidth / 2;
 		double leftCU = leftU + blendBorder/this.textureWidth;
@@ -97,37 +99,37 @@ public class RibbonCompassWidget implements IWidget {
 	}
 
 	@Override
-	public int getX() {
+	public float getX() {
 		return x;
 	}
 
-	public RibbonCompassWidget setX(int x) {
+	public RibbonCompassWidget setX(float x) {
 		this.x = x;
 		return this;
 	}
 
 	@Override
-	public int getY() {
+	public float getY() {
 		return y;
 	}
 
-	public RibbonCompassWidget setY(int y) {
+	public RibbonCompassWidget setY(float y) {
 		this.y = y;
 		return this;
 	}
 
 	@Override
-	public int getWidth() {
+	public float getWidth() {
 		return width;
 	}
 
-	public RibbonCompassWidget setWidth(int width) {
+	public RibbonCompassWidget setWidth(float width) {
 		this.width = width;
 		return this;
 	}
 
 	@Override
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
@@ -146,7 +148,7 @@ public class RibbonCompassWidget implements IWidget {
 	}
 
 	@Override
-	public boolean isVisible(Screen parent) {
+	public boolean isVisible(WidgetContainer parent) {
 		return this.visibility;
 	}
 	
