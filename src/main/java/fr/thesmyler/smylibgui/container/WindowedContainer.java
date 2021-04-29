@@ -10,7 +10,6 @@ import fr.thesmyler.smylibgui.util.Cursors;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 
-//FIXME
 public class WindowedContainer extends FlexibleWidgetContainer {
 	
 	private float borderWidth = 5;
