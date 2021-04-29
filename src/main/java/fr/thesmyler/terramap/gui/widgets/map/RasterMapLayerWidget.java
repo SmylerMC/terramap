@@ -3,9 +3,12 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
@@ -32,9 +35,10 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		return this.map;
 	}
 
-	//FIXME Tiles do not align properly at high zoom levels
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+		
+		Font smallFont = new Font((float) (1/SmyLibGui.getMinecraftGuiScale()));
 
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
@@ -50,7 +54,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		
 		profiler.startSection("render-raster-layer_" + this.map.getId());
 
-		float renderSize = (float) (WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling);
+		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling;
 
 		double upperLeftX = this.getUpperLeftX();
 		double upperLeftY = this.getUpperLeftY();
@@ -113,16 +117,16 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				neededTiles.add(tile);
 
-				float dispX = (float) (tileX * renderSize - upperLeftX);
-				float dispY = (float) (tileY * renderSize - upperLeftY);
+				double dispX = tileX * renderSize - upperLeftX;
+				double dispY = tileY * renderSize - upperLeftY;
 
-				float renderSizedSize = renderSize;
+				double renderSizedSize = renderSize;
 
-				float dX = 0;
-				float dY = 0;
+				double dX = 0;
+				double dY = 0;
 
-				float displayWidth = (float) Math.min(renderSize, maxX - tileX * renderSize);
-				float displayHeight = (float) Math.min(renderSize, maxY - tileY * renderSize);
+				double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
+				double displayHeight = Math.min(renderSize, maxY - tileY * renderSize);
 
 				if(tileX == lowerTileX) {
 					dX -= dispX;
@@ -175,7 +179,9 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 							dispX + displayWidth - 1, dispY + displayHeight - 1,
 							dispX + displayWidth - 1, dispY
 					);
-					parent.getFont().drawString(dispX + 2, dispY + 2, "" + tile.getPosition().getZoom(), lineColor, false);
+					smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)(dispY + displayHeight/2), "" + tile.getPosition().getZoom(), lineColor, false);
+					smallFont.drawString((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
+					smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
 				}
 				GlStateManager.color(1, 1, 1, 1);
 			}
