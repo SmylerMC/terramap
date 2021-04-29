@@ -54,6 +54,8 @@ public abstract class WidgetContainer implements IWidget{
 	private float menuToShowX;
 	private float menuToShowY;
 	
+	private Font font = SmyLibGui.DEFAULT_FONT;
+	
 	public WidgetContainer(int z) {
 		for(int i=0; i<this.lastClickTime.length; i++) this.lastClickTime[i] = Long.MIN_VALUE;
 		this.z = z;
@@ -398,8 +400,11 @@ public abstract class WidgetContainer implements IWidget{
 	}
 
 	public Font getFont() {
-		//TODO allow for per-screen font
-		return SmyLibGui.DEFAULT_FONT;
+		return this.font;
+	}
+	
+	public void setFont(Font font) {
+		this.font = font;
 	}
 
 	@Nullable public IWidget getHoveredWidget() {
