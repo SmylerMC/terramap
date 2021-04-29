@@ -112,7 +112,7 @@ public abstract class GeoServices {
 			File file = path.toFile();
 			kml.save(file, true);
 			Desktop.getDesktop().open(file);
-			// It would be nice to delete that file but we have no idea of how long it will take Google Earth to open
+			file.deleteOnExit();
 		} catch(Exception e) {
 			TerramapMod.logger.error("There was an error when trying to open a place in Google Earth");
 			TerramapMod.logger.catching(e);
