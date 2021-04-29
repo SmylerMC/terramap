@@ -3,11 +3,11 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
@@ -38,8 +38,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		
-		Font smallFont = new Font((float) (1/SmyLibGui.getMinecraftGuiScale()));
-
+		Font smallFont = Util.getSmallestFont();
+		
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
 

@@ -9,8 +9,8 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 
-//TODO Customizable background
 public class Screen extends GuiScreen {
 	
 	private final WidgetContainer container = new Container();
@@ -56,8 +56,7 @@ public class Screen extends GuiScreen {
 				&& !hoveredWidget.getTooltipText().isEmpty()
 				&& this.startHoverTime + hoveredWidget.getTooltipDelay() <= System.currentTimeMillis()
 			) {
-				//this.drawHoveringText(w.getTooltipText(), mouseX, mouseY); TODO floating point version
-				this.drawHoveringText(hoveredWidget.getTooltipText(), Math.round(mouseX), Math.round(mouseY));
+				this.drawHoveringText(hoveredWidget.getTooltipText(), mouseX, mouseY);
 		}
 		this.lastHoveredWidget = hoveredWidget;
 	}
@@ -85,7 +84,6 @@ public class Screen extends GuiScreen {
     			this.container.onDoubleClick(mouseX, mouseY, mouseButton, null);
     		} else {
     			this.container.onClick(mouseX, mouseY, mouseButton, null);
-//    			this.lastClickTime[mouseButton] = ctime; //TODO Why was it done only here
     		}
             this.lastClickedButton = mouseButton;
             this.lastClickTime[mouseButton] = ctime;
@@ -99,9 +97,11 @@ public class Screen extends GuiScreen {
         } else if(this.lastClickedButton >= 0 && this.mouseButtonsPressed[this.lastClickedButton]) {
     		float dX = mouseX - this.lastClickX[this.lastClickedButton];
     		float dY = mouseY - this.lastClickY[this.lastClickedButton];
+    		long dt = ctime - this.lastClickTime[this.lastClickedButton];
             this.lastClickX[this.lastClickedButton] = mouseX;
             this.lastClickY[this.lastClickedButton] = mouseY;
-    		this.container.onMouseDragged(mouseX, mouseY, dX, dY, this.lastClickedButton, null); //TODO Pass time since last as well
+            this.lastClickTime[this.lastClickedButton] = ctime;
+    		this.container.onMouseDragged(mouseX, mouseY, dX, dY, this.lastClickedButton, null, dt);
         }
 
 		int scroll = Mouse.getDWheel();
@@ -131,7 +131,7 @@ public class Screen extends GuiScreen {
 		this.warnNotToCall();
 		int dX = Math.round(mouseX - this.lastClickX[button]);
 		int dY = Math.round(mouseY - this.lastClickY[button]);
-		this.container.onMouseDragged(mouseX, mouseY, dX, dY, button, null);
+		this.container.onMouseDragged(mouseX, mouseY, dX, dY, button, null, timeSinceLastClick);
 	}
 	
 	private void warnNotToCall() {
@@ -139,6 +139,14 @@ public class Screen extends GuiScreen {
 		SmyLibGui.logger.warn("Something called SmyLibGui's ScreenGui native vanilla input handling methods. This could cause weird behavior, call the IWidget floating point variants instead!");
 		StackTraceElement[] lines = Thread.currentThread().getStackTrace();
 		for(int i=1; i<lines.length; i++) SmyLibGui.logger.warn(lines[i]);
+	}
+	
+	public void drawHoveringText(String text, double x, double y) {
+		// This is a workaround for vanilla not allowing double coordinates
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		this.drawHoveringText(text, 0, 0);
+		GlStateManager.popMatrix();
 	}
 	
 	private void drawBackground() {

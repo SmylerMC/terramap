@@ -15,6 +15,7 @@ import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
@@ -99,10 +100,11 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	public MapWidget(float x, float y, int z, float width, float height, IRasterTiledMap map, MapContext context, double tileScaling) {
 		super(x, y, z, width, height);
+		this.setDoScissor(true);
 		this.context = context;
 		this.tileScaling = tileScaling;
 		Font font = SmyLibGui.DEFAULT_FONT;
-		Font smallFont = new Font(.5f);
+		Font smallFont = Util.getSmallestFont();
 		this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
 			@Override
 			public boolean isVisible(WidgetContainer parent) {
@@ -478,7 +480,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.moveMap(dX, dY);
 			}

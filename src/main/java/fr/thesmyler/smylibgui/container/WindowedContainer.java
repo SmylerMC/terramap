@@ -173,7 +173,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0 || !WindowedContainer.this.allowHorizontalResize) return;
 			WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
 			WindowedContainer.this.updateSubScreen();
@@ -213,7 +213,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0 || !WindowedContainer.this.allowHorizontalResize) return;
 			if(WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
 				WindowedContainer.this.setX(WindowedContainer.this.getX() + dX);
@@ -255,7 +255,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0 || !WindowedContainer.this.allowVerticalResize) return;
 			WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
 			WindowedContainer.this.updateSubScreen();
@@ -295,7 +295,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0 || !WindowedContainer.this.allowVerticalResize) return;
 			if(WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
 				WindowedContainer.this.setY(WindowedContainer.this.getY() + dY);
@@ -337,7 +337,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0) return;
 			if(WindowedContainer.this.allowHorizontalResize && WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
 				WindowedContainer.this.setX(WindowedContainer.this.getX() + dX);
@@ -382,7 +382,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0) return;
 			if(WindowedContainer.this.allowVerticalResize) WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
 			if(WindowedContainer.this.allowHorizontalResize && WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
@@ -425,7 +425,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0) return;
 			if(WindowedContainer.this.allowHorizontalResize) WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
 			if(WindowedContainer.this.allowVerticalResize) WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
@@ -466,7 +466,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0) return;
 			if(WindowedContainer.this.allowHorizontalResize) WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
 			if(WindowedContainer.this.allowVerticalResize && WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
@@ -518,7 +518,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0) return;
 			
 			WindowedContainer.this.setPosition(WindowedContainer.this.getX() + dX, WindowedContainer.this.getY() + dY);
@@ -573,7 +573,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 		}
 		
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
 			if(mouseButton != 0) return;
 			WindowedContainer.this.setPosition(WindowedContainer.this.getX() + dX, WindowedContainer.this.getY() + dY);
 		}

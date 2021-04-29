@@ -137,7 +137,7 @@ public class Scrollbar extends FlexibleWidgetContainer {
 		}
 
 		@Override
-		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, WidgetContainer parent) {
+		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, WidgetContainer parent, long dt) {
 			float selfH = this.getHeight();
 			float h = Scrollbar.this.getHeight() - Scrollbar.this.upButton.getHeight() - Scrollbar.this.downButton.getHeight() - selfH;
 			float frac = this.getY() + dY - Scrollbar.this.upButton.getHeight();
