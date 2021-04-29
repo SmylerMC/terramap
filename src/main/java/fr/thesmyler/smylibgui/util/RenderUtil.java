@@ -97,8 +97,15 @@ public final class RenderUtil {
         double scaleH = mc.displayHeight / res.getScaledHeight_double();
         float y = Math.max(0, Math.min(screenHeight, screenHeight - scissorY - scissorHeight));
         float x = Math.max(0, Math.min(screenWidth, scissorX));
-        float width = Math.max(0, Math.min(scissorWidth + scissorX, screenWidth - scissorX));
-        float height = Math.max(0, Math.min(scissorY + scissorHeight, screenHeight - scissorY));
+        float width = Math.max(0, Math.min(Math.min(scissorWidth + scissorX, scissorWidth), screenWidth - scissorX));
+        float height = Math.max(0, Math.min(scissorHeight, screenHeight - scissorY));
+        /*
+        RenderUtil.drawClosedStrokeLine(Color.RED, 1f, 
+        		scissorX, scissorY,
+        		scissorX, scissorY + scissorHeight,
+        		scissorX + scissorWidth, scissorY + scissorHeight,
+        		scissorX + scissorWidth, scissorY);
+        */
         GL11.glScissor((int)Math.round(x * scaleW), (int)Math.round(y * scaleH), (int)Math.round(width * scaleW), (int)Math.round(height * scaleH));
 	}
     
