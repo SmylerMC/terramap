@@ -140,13 +140,13 @@ public interface IWidget {
 	
 	/**
 	 * Called when this widget is being dragged by the user
-	 * 
 	 * @param dX
 	 * @param dY
 	 * @param mouseButton
 	 * @param parent screen
+	 * @param timeSinceLastMove
 	 */
-	public default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent) {}
+	public default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long timeSinceLastMove) {}
 
 	/**
 	 * Called when the mouse is released over this widget

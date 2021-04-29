@@ -36,7 +36,8 @@ public abstract class WidgetContainer implements IWidget{
 	protected List<ScheduledTask> scheduledForNextUpdate = new ArrayList<ScheduledTask>();
 
 	protected int z;
-	
+	protected boolean doScissor = true;
+
 	private float[] lastClickX = new float[Mouse.getButtonCount()];
 	private float[] lastClickY = new float[Mouse.getButtonCount()];
 	private long[] lastClickTime = new long[Mouse.getButtonCount()];
@@ -49,13 +50,13 @@ public abstract class WidgetContainer implements IWidget{
 
 	private IWidget focusedWidget;
 	private IWidget hoveredWidget = null; // Used when drawing to check if a widget has already been considered as hovered
-	
+
 	private MenuWidget menuToShow = null;
 	private float menuToShowX;
 	private float menuToShowY;
-	
+
 	private Font font = SmyLibGui.DEFAULT_FONT;
-	
+
 	public WidgetContainer(int z) {
 		for(int i=0; i<this.lastClickTime.length; i++) this.lastClickTime[i] = Long.MIN_VALUE;
 		this.z = z;
@@ -84,7 +85,7 @@ public abstract class WidgetContainer implements IWidget{
 
 	@Override
 	public void onUpdate(@Nullable WidgetContainer parent) {
-		
+
 		long ctime = System.currentTimeMillis();
 		int j = 0;
 		while(j < this.scheduledForNextUpdate.size()) {
@@ -149,14 +150,14 @@ public abstract class WidgetContainer implements IWidget{
 		}
 		for(int i=0; i < this.draggedWidget.length; i++) {
 			if(this.draggedWidget[i] != null) {
-				this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this);
+				this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this, 0);
 				this.dClickX[i] = 0;
 				this.dClickY[i] = 0;
 			}
 		}
 		this.delayedActions.clear();
 		for(IWidget w: this.widgets) w.onUpdate(this);
-		
+
 		if(this.menuToShow != null) {
 			if(parent != null) parent.showMenu(this.getX() + this.menuToShowX, this.getY() + this.menuToShowY, this.menuToShow);
 			else {
@@ -206,7 +207,7 @@ public abstract class WidgetContainer implements IWidget{
 	}
 
 	@Override
-	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, @Nullable WidgetContainer parent) {
+	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, @Nullable WidgetContainer parent, long dt) {
 		if(this.draggedWidget[button] == null) {
 			this.dClickX[button] = 0;
 			this.dClickY[button] = 0;
@@ -263,7 +264,7 @@ public abstract class WidgetContainer implements IWidget{
 			this.focusedWidget = widget;
 		});
 	}
-	
+
 	/**
 	 * Show that menu at next update, pass recursively to parent screen
 	 * 
@@ -314,9 +315,12 @@ public abstract class WidgetContainer implements IWidget{
 
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
-		RenderUtil.setScissorState(true);
-		RenderUtil.pushScissorPos();
-		RenderUtil.scissor(x, y, this.getWidth(), this.getHeight());
+		boolean wasScissor = RenderUtil.isScissorEnabled();
+		if(this.doScissor) {
+			RenderUtil.setScissorState(true);
+			RenderUtil.pushScissorPos();
+			RenderUtil.scissor(x, y, this.getWidth(), this.getHeight());
+		}
 		IWidget wf = null;
 		if(screenHovered) {
 			for(IWidget widget: this.widgets) {
@@ -344,10 +348,12 @@ public abstract class WidgetContainer implements IWidget{
 				return;
 			widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
 		});
-		RenderUtil.popScissorPos();
-		RenderUtil.setScissorState(false);
+		if(this.doScissor) {
+			RenderUtil.popScissorPos();
+			RenderUtil.setScissorState(wasScissor);
+		}
 	}
-	
+
 	/**
 	 * Indicates whether or not the widget is worth rendering
 	 * 
@@ -390,7 +396,7 @@ public abstract class WidgetContainer implements IWidget{
 		};
 		this.scheduledForNextUpdate.add(new ScheduledTask(System.currentTimeMillis(), task));
 	}
-	
+
 	public void scheduleAtUpdate(Runnable run) {
 		this.scheduleAtInterval(run, 0);
 	}
@@ -402,9 +408,17 @@ public abstract class WidgetContainer implements IWidget{
 	public Font getFont() {
 		return this.font;
 	}
-	
+
 	public void setFont(Font font) {
 		this.font = font;
+	}
+
+	public boolean doesScissor() {
+		return this.doScissor;
+	}
+
+	public void setDoScissor(boolean yesNo) {
+		this.doScissor = yesNo;
 	}
 
 	@Nullable public IWidget getHoveredWidget() {

@@ -74,7 +74,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 	}
 	
 	@Override
-	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent) {
+	public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
 		if(!this.isEnabled()) return;
 		this.onClick(mouseX, mouseY, mouseButton, parent);
 	}
