@@ -102,15 +102,15 @@ public final class RenderUtil {
         GL11.glScissor((int)Math.round(x * scaleW), (int)Math.round(y * scaleH), (int)Math.round(width * scaleW), (int)Math.round(height * scaleH));
 	}
     
-    public static void drawRect(int z, float xLeft, float yTop, float xRight, float yBottom, Color color) {
+    public static void drawRect(int z, double xLeft, double yTop, double xRight, double yBottom, Color color) {
     	drawGradientRect(z, xLeft, yTop, xRight, yBottom, color, color, color, color);
     }
     
-    public static void drawRect(float xLeft, float yTop, float xRight, float yBottom, Color color) {
+    public static void drawRect(double xLeft, double yTop, double xRight, double yBottom, Color color) {
     	drawGradientRect(0, xLeft, yTop, xRight, yBottom, color, color, color, color);
     }
     
-    public static void drawGradientRect(int z, float xLeft, float yTop, float xRight, float yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
+    public static void drawGradientRect(int z, double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
     	GlStateManager.enableAlpha();
     	GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
@@ -128,24 +128,28 @@ public final class RenderUtil {
         GlStateManager.enableTexture2D();
     }
     
-    public static void drawGradientRect(float xLeft, float yTop, float xRight, float yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
+    public static void drawGradientRect(double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
     	drawGradientRect(0, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
     }
     
-    public static void drawModalRectWithCustomSizedTexture(float x, float y, float u, float v, float width, float height, float textureWidth, float textureHeight) {
-        float f = 1.0F / textureWidth;
-        float f1 = 1.0F / textureHeight;
+    public static void drawModalRectWithCustomSizedTexture(double x, double y, double z, double u, double v, double width, double height, double textureWidth, double textureHeight) {
+    	double f = 1.0f / textureWidth;
+    	double f1 = 1.0f / textureHeight;
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        builder.pos(x, y + height, 0.0D).tex(u * f, (v + height) * f1).endVertex();
-        builder.pos(x + width, y + height, 0.0D).tex((u + width) * f, (v + height) * f1).endVertex();
-        builder.pos(x + width, y, 0.0D).tex((u + width) * f, v * f1).endVertex();
-        builder.pos(x, y, 0.0D).tex(u * f, v * f1).endVertex();
+        builder.pos(x, y + height, z).tex(u * f, (v + height) * f1).endVertex();
+        builder.pos(x + width, y + height, z).tex((u + width) * f, (v + height) * f1).endVertex();
+        builder.pos(x + width, y, z).tex((u + width) * f, v * f1).endVertex();
+        builder.pos(x, y, z).tex(u * f, v * f1).endVertex();
         tessellator.draw();
     }
     
-    public static void drawTexturedModalRect(float x, float y, int z, int minU, int minV, int maxU, int maxV) {
+    public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
+    	drawModalRectWithCustomSizedTexture(x, y, 0d, u, v, width, height, textureWidth, textureHeight);
+    }
+    
+    public static void drawTexturedModalRect(double x, double y, double z, double minU, double minV, double maxU, double maxV) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -156,22 +160,11 @@ public final class RenderUtil {
         tessellator.draw();
     }
     
-    public static void drawTexturedModalRect(float x, float y, int z, float minU, float minV, float maxU, float maxV) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-        builder.pos(x, y + maxV, z).tex(minU * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
-        builder.pos(x + maxU, y + maxV, z).tex((minU + maxU) * 0.00390625, (minV + maxV) * 0.00390625).endVertex();
-        builder.pos(x + maxU, y, z).tex((minU + maxU) * 0.00390625, minV * 0.00390625).endVertex();
-        builder.pos(x, y, z).tex(minU * 0.00390625, minV * 0.00390625).endVertex();
-        tessellator.draw();
-    }
-    
-    public static void drawTexturedModalRect(float x, float y, float minU, float minV, float maxU, float maxV) {
+    public static void drawTexturedModalRect(double x, double y, double minU, double minV, double maxU, double maxV) {
     	drawTexturedModalRect(x, y, 0, minU, minV, maxU, maxV);
     }
     
-    public static void drawPolygon(int z, Color color, float... points) {
+    public static void drawPolygon(double z, Color color, double... points) {
     	PValidation.checkArg(points.length % 2 == 0, "An even number of coordinates is required");
     	GlStateManager.enableAlpha();
     	GlStateManager.enableBlend();
@@ -190,11 +183,11 @@ public final class RenderUtil {
         GlStateManager.enableTexture2D();
     }
     
-    public static void drawPolygon(Color color, float... points) {
-    	drawPolygon(0, color, points);
+    public static void drawPolygon(Color color, double... points) {
+    	drawPolygon(0d, color, points);
     }
     
-    public static void drawStrokeLine(int z, Color color, float size, float... points) {
+    public static void drawStrokeLine(double z, Color color, float size, double... points) {
     	GL11.glLineWidth((float)(size * SmyLibGui.getMinecraftGuiScale()));
     	GlStateManager.enableAlpha();
     	GlStateManager.enableBlend();
@@ -213,11 +206,11 @@ public final class RenderUtil {
         GlStateManager.enableTexture2D();
     }
     
-    public static void drawStrokeLine(Color color, float size, float... points) {
+    public static void drawStrokeLine(Color color, float size, double... points) {
     	drawStrokeLine(0, color, size, points);
     }
     
-    public static void drawClosedStrokeLine(int z, Color color, float size, float... points) {
+    public static void drawClosedStrokeLine(double z, Color color, float size, double... points) {
     	GL11.glLineWidth((float)(size * SmyLibGui.getMinecraftGuiScale()));
     	GlStateManager.enableAlpha();
     	GlStateManager.enableBlend();
@@ -236,8 +229,8 @@ public final class RenderUtil {
         GlStateManager.enableTexture2D();
     }
     
-    public static void drawClosedStrokeLine(Color color, float size, float... points) {
-    	drawClosedStrokeLine(0, color, size, points);
+    public static void drawClosedStrokeLine(Color color, float size, double... points) {
+    	drawClosedStrokeLine(0d, color, size, points);
     }
 
 }
