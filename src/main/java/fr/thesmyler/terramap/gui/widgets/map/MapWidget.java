@@ -50,7 +50,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.TextComponentString;
 
-//FIXME Teleporting crashes the game
 public class MapWidget extends FlexibleWidgetContainer {
 
 	private boolean interactive = true;
@@ -93,6 +92,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 	
 	private final Profiler profiler = new Profiler();
+	private static final GuiScreen CHAT_SENDER_GUI = new GuiScreen() {}; // The only reason this exists is so we can use it to send chat messages
+	static { CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
 
 	private TextWidget errorText;
 
@@ -669,7 +670,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
 		}
-		new GuiScreen(){}.sendChatMessage(cmd, false); // Mojang, why isn't that static ??
+		CHAT_SENDER_GUI.sendChatMessage(cmd, false);
 	}
 
 	public Map<String, FeatureVisibilityController> getVisibilityControllers() {
