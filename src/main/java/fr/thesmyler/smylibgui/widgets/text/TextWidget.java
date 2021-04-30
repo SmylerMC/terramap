@@ -302,5 +302,15 @@ public class TextWidget implements IWidget {
 	public TextWidget hide() {
 		return this.setVisibility(false);
 	}
+	
+	public Font getFont() {
+		return this.font;
+	}
+	
+	public TextWidget setFont(Font font) {
+		this.font = font;
+		this.updateCoords();
+		return this;
+	}
 
 }

@@ -112,7 +112,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.tileScaling = tileScaling;
 		Font font = SmyLibGui.DEFAULT_FONT;
 		Font smallFont = Util.getSmallestFont();
-		this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) { //TODO Font needs to be set at init
+		this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
 			@Override
 			public boolean isVisible(WidgetContainer parent) {
 				return MapWidget.this.showCopyright;
@@ -290,6 +290,11 @@ public class MapWidget extends FlexibleWidgetContainer {
 	public MapWidget(int z, IRasterTiledMap map, MapContext context, double tileScaling) {
 		this(0, 0, z, 50, 50, map, context, tileScaling);
 	}
+	
+	@Override
+	public void init() {
+		this.copyright.setFont(Util.getSmallestFont());
+	}
 
 	/**
 	 * 
@@ -417,7 +422,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		 * which means that they are updated before it moves,
 		 * so they lag behind when the map moves fast if they are not updated again
 		 * 
-		 * TODO This is not really ideal
+		 * This is not really ideal, but negligible compared to other stuff
 		 */
 		this.profiler.endStartSection("update-markers");
 		for(IWidget w: this.widgets) {
