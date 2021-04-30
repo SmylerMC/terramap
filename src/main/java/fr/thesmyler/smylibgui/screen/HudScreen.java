@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-//TODO Render the hud again
+//TODO Mose interaction with the HUD
 public final class HudScreen {
 
 	private static int renderWidth = 0;
