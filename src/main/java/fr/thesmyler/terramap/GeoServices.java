@@ -141,6 +141,11 @@ public abstract class GeoServices {
 		if(az==Float.NaN) return "-";
 		return decFormat1.format(az);
 	}
+	
+	public static String formatZoomLevelForDisplay(double zoomLevel) {
+		if(zoomLevel==Float.NaN) return "-";
+		return decFormat1.format(zoomLevel);
+	}
 
 	public static double getLongitudeInRange(double longitude) {
 		if(!Double.isFinite(longitude)) throw new RuntimeException("longitude cannot be infinite");
