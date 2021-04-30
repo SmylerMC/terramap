@@ -354,12 +354,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
 		this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
-		if(this.lastUpdateTime > 0 && !Mouse.isButtonDown(0)) {
+		if((this.speedX != 0 || this.speedY != 0) && this.lastUpdateTime > 0 && !Mouse.isButtonDown(0)) {
 			long dt = ctime - this.lastUpdateTime;
 			float dX = (float) (this.speedX * dt);
 			float dY = (float) (this.speedY * dt);
 			this.speedX -= this.drag*this.speedX;
 			this.speedY -= this.drag*this.speedY;
+			if(Math.abs(this.speedX) < 0.1f) this.speedX = 0;
+			if(Math.abs(this.speedY) < 0.1f) this.speedY = 0;
 			if(Math.abs(dX) < 100 && Math.abs(dY) < 100) {
 				this.moveMap(dX, dY);
 			}
@@ -519,7 +521,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 			if(MapWidget.this.isInteractive()) {
 				double z = amount > 0? 1: -1;
-				z *= .5;
+				z *= .1;
 				if(MapWidget.this.focusedZoom) {
 					this.zoom(mouseX, mouseY, z);
 				} else {
@@ -545,17 +547,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 			if(nzoom == this.zoom) return; // Do not move if we are not doing anything
 
 			this.zoom = nzoom;
+			double dX = mouseX - this.width/2;
+			double dY = mouseY - this.height/2;
 			double factor = Math.pow(2, zoom);
-			double ndX = (this.width/2 - mouseX) * factor;
-			double ndY = (this.height/2 - mouseY) * factor;
-			if(factor > 1) {
-				ndX = -ndX / 2;
-				ndY = -ndY / 2;
-			}
+			double ndX = dX * (1 - factor);
+			double ndY = dY * (1 - factor);
 
-			//FIXME Re-implement better zoom
-			this.setCenterLongitude(this.getScreenLongitude((double)this.width/2 + ndX));
-			this.setCenterLatitude(this.getScreenLatitude((double)this.height/2 + ndY));
+			this.setCenterLongitude(this.getScreenLongitude((double)this.width/2 - ndX));
+			this.setCenterLatitude(this.getScreenLatitude((double)this.height/2 - ndY));
 			MapWidget.this.speedX *= factor;
 			MapWidget.this.speedY *= factor;
 
