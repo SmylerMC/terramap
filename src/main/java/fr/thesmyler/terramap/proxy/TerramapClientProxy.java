@@ -47,7 +47,7 @@ public class TerramapClientProxy extends TerramapProxy {
 	@Override
 	public void init(FMLInitializationEvent event) {
 		TerramapMod.logger.debug("Terramap client init");
-		SmyLibGui.init(TerramapMod.logger, true); //TODO Disable smylibgui debug
+		SmyLibGui.init(TerramapMod.logger, false);
 		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
 		KeyBindings.registerBindings();
 		UrlRasterTile.registerErrorTexture();
