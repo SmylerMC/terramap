@@ -71,6 +71,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private PlayerNameVisibilityController nameVisibility;
 
 	private double mouseLongitude, mouseLatitude;
+	
+	private float drag = 0.5f;
+	private float speedX, speedY;
+	private long lastUpdateTime = Long.MIN_VALUE;
 
 	private final MenuWidget rightClickMenu;
 	private final MenuEntry teleportMenuEntry;
@@ -344,10 +348,22 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+		long ctime = System.currentTimeMillis();
 		this.profiler.startSection("misc-gui-updates");
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
 		this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
+		if(this.lastUpdateTime > 0) {
+			long dt = ctime - this.lastUpdateTime;
+			float dX = (float) (this.speedX * dt);
+			float dY = (float) (this.speedY * dt);
+			this.speedX -= this.drag*this.speedX;
+			this.speedY -= this.drag*this.speedY;
+			if(Math.abs(dX) < 100 && Math.abs(dY) < 100) {
+				this.moveMap(dX, dY);
+			}
+		}
+		
 		if(!this.rightClickMenu.isVisible(this)) {
 			float relativeMouseX = mouseX - x;
 			float relativeMouseY = mouseY - y;
@@ -422,6 +438,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.profiler.endStartSection("draw");
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 		this.profiler.endSection();
+		this.lastUpdateTime = ctime;
 	}
 
 	@Override
@@ -440,6 +457,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 			this.errorText.setText(new TextComponentString(errorText));
 		}
 	}
+	
+	public void cancelMovement() {
+		this.speedX = this.speedY = 0f;
+	}
 
 	private class ControllerMapLayer extends MapLayerWidget {
 
@@ -455,7 +476,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 		@Override
 		public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-			if(isShortcutEnabled()) {
+			MapWidget.this.cancelMovement();
+			if(MapWidget.this.isShortcutEnabled()) {
 				MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLongitude, MapWidget.this.mouseLatitude);
 				if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
 					Minecraft.getMinecraft().displayGuiScreen(null);
@@ -469,7 +491,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 		@Override
 		public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-
+			MapWidget.this.cancelMovement();
 			// We don't care about double right clicks
 			if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
 
@@ -484,6 +506,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.moveMap(dX, dY);
 			}
+			MapWidget.this.speedX = dX / dt;
+			MapWidget.this.speedY = dY / dt;
 		}
 
 		@Override
@@ -530,9 +554,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 			//FIXME Re-implement better zoom
 			this.setCenterLongitude(this.getScreenLongitude((double)this.width/2 + ndX));
 			this.setCenterLatitude(this.getScreenLatitude((double)this.height/2 + ndY));
-			//			this.mapVelocityX *= factor;
-			//			this.mapVelocityY *= factor;
-			//			this.updateMouseGeoPos(mouseX, mouseY);
+			MapWidget.this.speedX *= factor;
+			MapWidget.this.speedY *= factor;
 
 		}
 
@@ -828,6 +851,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 	public MapWidget setVisibility(boolean yesNo) {
 		this.visible = yesNo;
 		return this;
+	}
+	
+	public float getInertia() {
+		return this.drag;
+	}
+	
+	public void setInertia(float inertia) {
+		this.drag = inertia;
 	}
 
 	public void reportError(Object source, String errorMessage) {

@@ -45,6 +45,7 @@ public abstract class WidgetContainer implements IWidget{
 	private IWidget[] draggedWidget = new IWidget[Mouse.getButtonCount()];
 	private float[] dClickX = new float[Mouse.getButtonCount()];
 	private float[] dClickY = new float[Mouse.getButtonCount()];
+	private long[] dClickT = new long[Mouse.getButtonCount()];
 
 	private List<MouseAction> delayedActions = new ArrayList<MouseAction>();
 
@@ -150,9 +151,10 @@ public abstract class WidgetContainer implements IWidget{
 		}
 		for(int i=0; i < this.draggedWidget.length; i++) {
 			if(this.draggedWidget[i] != null) {
-				this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this, 0);
+				this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this, this.dClickT[i]);
 				this.dClickX[i] = 0;
 				this.dClickY[i] = 0;
+				this.dClickT[i] = 0;
 			}
 		}
 		this.delayedActions.clear();
@@ -217,6 +219,7 @@ public abstract class WidgetContainer implements IWidget{
 		this.lastClickY[button] = mouseY;
 		this.dClickX[button] += dX;
 		this.dClickY[button] += dY;
+		this.dClickT[button] += dt;
 	}
 
 	/**
