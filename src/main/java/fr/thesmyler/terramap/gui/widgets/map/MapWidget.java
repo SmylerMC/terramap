@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
@@ -353,7 +354,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
 		this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
-		if(this.lastUpdateTime > 0) {
+		if(this.lastUpdateTime > 0 && !Mouse.isButtonDown(0)) {
 			long dt = ctime - this.lastUpdateTime;
 			float dX = (float) (this.speedX * dt);
 			float dY = (float) (this.speedY * dt);
@@ -505,9 +506,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.moveMap(dX, dY);
+				MapWidget.this.speedX = dX / dt;
+				MapWidget.this.speedY = dY / dt;
 			}
-			MapWidget.this.speedX = dX / dt;
-			MapWidget.this.speedY = dY / dt;
 		}
 
 		@Override
@@ -517,7 +518,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 		@Override
 		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 			if(MapWidget.this.isInteractive()) {
-				int z = amount > 0? 1: -1;
+				double z = amount > 0? 1: -1;
+				z *= .5;
 				if(MapWidget.this.focusedZoom) {
 					this.zoom(mouseX, mouseY, z);
 				} else {
@@ -544,8 +546,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 			this.zoom = nzoom;
 			double factor = Math.pow(2, zoom);
-			double ndX = ((double)this.width/2 - mouseX) * factor;
-			double ndY = ((double)this.height/2 - mouseY) * factor;
+			double ndX = (this.width/2 - mouseX) * factor;
+			double ndY = (this.height/2 - mouseY) * factor;
 			if(factor > 1) {
 				ndX = -ndX / 2;
 				ndY = -ndY / 2;
