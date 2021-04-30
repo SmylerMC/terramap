@@ -50,6 +50,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.TextComponentString;
 
+//FIXME Teleporting crashes the game
 public class MapWidget extends FlexibleWidgetContainer {
 
 	private boolean interactive = true;
@@ -72,10 +73,12 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private PlayerNameVisibilityController nameVisibility;
 
 	private double mouseLongitude, mouseLatitude;
-	
-	private float drag = 0.5f;
-	private float speedX, speedY;
 	private long lastUpdateTime = Long.MIN_VALUE;
+	
+	private float drag = 0.3f;
+	private float zoomSnapping = 1f;
+	private float zoomResponsiveness = 0.01f;
+	protected double tileScaling;
 
 	private final MenuWidget rightClickMenu;
 	private final MenuEntry teleportMenuEntry;
@@ -90,8 +93,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 	
 	private final Profiler profiler = new Profiler();
-
-	protected double tileScaling;
 
 	private TextWidget errorText;
 
@@ -110,7 +111,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.tileScaling = tileScaling;
 		Font font = SmyLibGui.DEFAULT_FONT;
 		Font smallFont = Util.getSmallestFont();
-		this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
+		this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) { //TODO Font needs to be set at init
 			@Override
 			public boolean isVisible(WidgetContainer parent) {
 				return MapWidget.this.showCopyright;
@@ -349,23 +350,11 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-		long ctime = System.currentTimeMillis();
+		
 		this.profiler.startSection("misc-gui-updates");
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
 		this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
-		if((this.speedX != 0 || this.speedY != 0) && this.lastUpdateTime > 0 && !Mouse.isButtonDown(0)) {
-			long dt = ctime - this.lastUpdateTime;
-			float dX = (float) (this.speedX * dt);
-			float dY = (float) (this.speedY * dt);
-			this.speedX -= this.drag*this.speedX;
-			this.speedY -= this.drag*this.speedY;
-			if(Math.abs(this.speedX) < 0.1f) this.speedX = 0;
-			if(Math.abs(this.speedY) < 0.1f) this.speedY = 0;
-			if(Math.abs(dX) < 100 && Math.abs(dY) < 100) {
-				this.moveMap(dX, dY);
-			}
-		}
 		
 		if(!this.rightClickMenu.isVisible(this)) {
 			float relativeMouseX = mouseX - x;
@@ -441,12 +430,20 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.profiler.endStartSection("draw");
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
 		this.profiler.endSection();
-		this.lastUpdateTime = ctime;
 	}
 
 	@Override
 	public void onUpdate(WidgetContainer parent) {
 		super.onUpdate(parent);
+		long ctime = System.currentTimeMillis();
+		long dt = ctime - this.lastUpdateTime;
+		
+		// Both these things do time dependent integration operations, so if the integration step is irrelevant, skip
+		if(dt < 1000) {
+			this.controller.processInertia(dt);
+			this.controller.processZoom(dt);
+		}
+		
 		if(this.trackingMarker != null) {
 			if(this.widgets.contains(this.trackingMarker) && Double.isFinite(this.trackingMarker.getLongitude()) && Double.isFinite(this.trackingMarker.getLatitude())) {
 				this.setCenterLongitude(this.trackingMarker.getLongitude());
@@ -459,13 +456,15 @@ public class MapWidget extends FlexibleWidgetContainer {
 			String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
 			this.errorText.setText(new TextComponentString(errorText));
 		}
-	}
-	
-	public void cancelMovement() {
-		this.speedX = this.speedY = 0f;
+		
+		this.lastUpdateTime = ctime;
 	}
 
 	private class ControllerMapLayer extends MapLayerWidget {
+		
+		double zoomLongitude, zoomLatitude;
+		double zoomTarget = 0;
+		float speedX, speedY;
 
 		public ControllerMapLayer(double tileScaling) {
 			super(tileScaling);
@@ -479,7 +478,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 		@Override
 		public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-			MapWidget.this.cancelMovement();
+			this.cancelMovement();
 			if(MapWidget.this.isShortcutEnabled()) {
 				MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLongitude, MapWidget.this.mouseLatitude);
 				if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
@@ -494,12 +493,12 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 		@Override
 		public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-			MapWidget.this.cancelMovement();
+			this.cancelMovement();
 			// We don't care about double right clicks
 			if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
 
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
-				this.zoom(mouseX, mouseY, 1);
+				this.zoom(this.getScreenLongitude(mouseX), this.getScreenLatitude(mouseY), 1);
 			}
 			return false;
 		}
@@ -508,8 +507,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.moveMap(dX, dY);
-				MapWidget.this.speedX = dX / dt;
-				MapWidget.this.speedY = dY / dt;
+				this.speedX = dX / dt;
+				this.speedY = dY / dt;
 			}
 		}
 
@@ -521,9 +520,11 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 			if(MapWidget.this.isInteractive()) {
 				double z = amount > 0? 1: -1;
-				z *= .1;
+				z *= MapWidget.this.zoomSnapping;
 				if(MapWidget.this.focusedZoom) {
-					this.zoom(mouseX, mouseY, z);
+					double longitude = this.getScreenLongitude(mouseX);
+					double latitude = this.getScreenLatitude(mouseY);
+					this.zoom(longitude, latitude, z);
 				} else {
 					this.zoom(z);
 				}
@@ -532,32 +533,75 @@ public class MapWidget extends FlexibleWidgetContainer {
 		}
 
 		public void zoom(double val) {
-			this.zoom(this.width/2, this.height/2, val);
+			this.zoom(this.getCenterLongitude(), this.getCenterLatitude(), val);
 		}
-
-		public void zoom(float mouseX, float mouseY, double zoom) {
-
+		
+		public void zoom(double longitude, double latitude, double zoom) {
+			this.zoomLongitude = longitude;
+			this.zoomLatitude = latitude;
+			this.zoomTarget += zoom;
+		}
+		
+		private void processInertia(long dt) {
+			if((this.speedX != 0 || this.speedY != 0) && dt < 1000 && !Mouse.isButtonDown(0)) {
+				float dX = (float) (this.speedX * dt);
+				float dY = (float) (this.speedY * dt);
+				this.speedX -= MapWidget.this.drag*this.speedX;
+				this.speedY -= MapWidget.this.drag*this.speedY;
+				if(Math.abs(this.speedX) < 0.01f && Math.abs(this.speedY) < 0.01f) {
+					this.speedX = 0f;
+					this.speedY = 0f;
+				}
+				if(Math.abs(dX) < 100 && Math.abs(dY) < 100) {
+					this.moveMap(dX, dY);
+				}
+				
+			}
+		}
+		
+		private void processZoom(long dt) {
+			
+			// Round up the targeted zoom level to the nearest multiple of the snapping value and ensure it is within bounds
+			double zoomTarget = Math.round(this.zoomTarget / MapWidget.this.zoomSnapping) * MapWidget.this.zoomSnapping;
+			double maxZoom = TerramapConfig.CLIENT.unlockZoom? 25: getMaxZoom();
+			zoomTarget = Math.min(zoomTarget, maxZoom);
+			zoomTarget = Math.max(MapWidget.this.getMinZoom(), zoomTarget);
+			
+			// If we are close enough of the desired zoom level, just finish reaching it
+			if(Math.abs(this.zoom - zoomTarget) < 0.01d) {
+				this.zoomTarget = zoomTarget;
+				this.zoom = zoomTarget;
+				return;
+			}
+			
 			MapWidget.this.rightClickMenu.hide(null);
 
-			double nzoom = this.zoom + zoom;
-			double maxZoom = TerramapConfig.CLIENT.unlockZoom? 25: getMaxZoom();
-			nzoom = Math.min(maxZoom, nzoom);
-			nzoom = Math.max(getMinZoom(), nzoom);
+			// Compute a delta to the new zoom value, exponential decay, and ensure it is within bounds
+			double maxDzoom = zoomTarget - this.zoom;
+			double dzoom = MapWidget.this.zoomResponsiveness*(maxDzoom)*dt;
+			dzoom = maxDzoom > 0 ? Math.min(dzoom, maxDzoom) : Math.max(dzoom, maxDzoom);
 
-			if(nzoom == this.zoom) return; // Do not move if we are not doing anything
-
-			this.zoom = nzoom;
-			double dX = mouseX - this.width/2;
-			double dY = mouseY - this.height/2;
-			double factor = Math.pow(2, zoom);
+			// The position that needs to stay static and how far it is from the center of the screen
+			double x = this.getScreenX(this.zoomLongitude);
+			double y = this.getScreenY(this.zoomLatitude);
+			double dX = x - this.width/2;
+			double dY = y - this.height/2;
+			
+			/*
+			 *  Get the scale factor from the previous zoom to the new one
+			 *  Then do some basic arithmetic to know much the center of the screen should move
+			 */
+			double factor = Math.pow(2, dzoom);
 			double ndX = dX * (1 - factor);
 			double ndY = dY * (1 - factor);
+			this.speedX *= factor;
+			this.speedY *= factor;
+			
+			this.zoom += dzoom; // That's what we are here for
 
+			// And move so the static point is static
 			this.setCenterLongitude(this.getScreenLongitude((double)this.width/2 - ndX));
 			this.setCenterLatitude(this.getScreenLatitude((double)this.height/2 - ndY));
-			MapWidget.this.speedX *= factor;
-			MapWidget.this.speedY *= factor;
-
 		}
 
 		public void moveMap(float dX, float dY) {
@@ -576,6 +620,16 @@ public class MapWidget extends FlexibleWidgetContainer {
 		@Override
 		public long getTooltipDelay() {
 			return 0;
+		}
+		
+		public void cancelMovement() {
+			this.speedX = this.speedY = 0f;
+		}
+		
+		@Override
+		public void setZoom(double zoom) {
+			super.setZoom(zoom);
+			this.zoomTarget = zoom;
 		}
 
 	}
@@ -861,7 +915,22 @@ public class MapWidget extends FlexibleWidgetContainer {
 	public void setInertia(float inertia) {
 		this.drag = inertia;
 	}
+	
+	public float getZoomSnapping() {
+		return this.zoomSnapping;
+	}
+	
+	public void setZoomSnapping(float value) {
+		this.zoomSnapping = value;
+	}
+	
+	public float getZoomResponsiveness() {
+		return this.zoomResponsiveness;
+	}
 
+	public void setZoomResponsiveness(float value) {
+		this.zoomResponsiveness = value;
+	}
 	public void reportError(Object source, String errorMessage) {
 		ReportedError error = new ReportedError(source, errorMessage);
 		if(this.reportedErrors.contains(error)) return;
