@@ -248,7 +248,7 @@ public class TerramapScreen extends Screen {
 
 		this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
-		this.zoomText.setText(new TextComponentString("" + Math.round(this.map.getZoom())));
+		this.zoomText.setText(new TextComponentString("" + this.map.getZoom()));
 		this.centerButton.setEnabled(!(this.map.getTracking() instanceof MainPlayerMarker));
 
 		double mouseLat = this.map.getMouseLatitude();

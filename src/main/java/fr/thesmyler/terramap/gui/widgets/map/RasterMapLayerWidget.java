@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 
-//TODO Fractional zoom
 public class RasterMapLayerWidget extends MapLayerWidget {
 
 	protected IRasterTiledMap map;
@@ -54,15 +53,18 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		
 		profiler.startSection("render-raster-layer_" + this.map.getId());
 
-		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling;
-
 		double upperLeftX = this.getUpperLeftX();
 		double upperLeftY = this.getUpperLeftY();
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
+		
+		int zoomLevel = (int) Math.round(this.zoom);
+		double zoomSizeFactor = this.zoom - zoomLevel;
+		
+		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling * Math.pow(2, zoomSizeFactor);
 
-		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile((int)this.zoom);
+		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile(zoomLevel);
 		double maxX = upperLeftX + this.width;
 		double maxY = upperLeftY + this.height;
 
@@ -76,7 +78,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				IRasterTile tile;
 
 				try {
-					tile = map.getTile((int)this.zoom, Math.floorMod(tileX, maxTileXY), tileY);
+					tile = map.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
 				} catch(InvalidTilePositionException e) { continue ;}
 
 				// This is the tile we would like to render, but it is not possible if it hasn't been cached yet
@@ -87,7 +89,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				if(!bestTile.isTextureAvailable()) {
 					lowerResRender = true;
 					perfectDraw = false;
-					if(this.zoom <= this.map.getMaxZoom()) {
+					if(zoomLevel <= this.map.getMaxZoom()) {
 						try {
 							bestTile.getTexture(); // Will start loading the texture from cache / network
 						} catch(Throwable e) {
