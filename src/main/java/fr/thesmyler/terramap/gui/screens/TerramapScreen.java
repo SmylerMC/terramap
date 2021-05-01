@@ -501,8 +501,9 @@ public class TerramapScreen extends Screen {
 				}
 				this.addWidget(w);
 				lw = w;
+				System.out.println(lw.getY() + lw.getHeight() + 10f);
 			}
-			this.setSize(lw.getY() + lw.getHeight() + 10f, this.mapWidth);
+			this.setSize(this.mapWidth, lw.getY() + lw.getHeight() + 10f);
 		}
 
 		@Override
