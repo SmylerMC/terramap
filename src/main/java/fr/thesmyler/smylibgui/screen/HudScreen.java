@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,14 +25,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-//TODO Mouse interaction with the HUD
 public final class HudScreen {
 
 	private static int renderWidth = 0;
 	private static int renderHeight = 0;
 	private static GuiScreen lastTickScreen = null;
 	
-	private static HudScreenContainer container = new HudScreenContainer(0);
+	private static final HudScreenContainer CONTAINER = new HudScreenContainer(0);
+	private static final InputProcessor PROCESSOR = new InputProcessor(CONTAINER);
 	
 	private static final Field NEW_CHAT_DRAW_CHAT_LINES_FIELD = ObfuscationReflectionHelper.findField(GuiNewChat.class, "field_146253_i");
 	private static final Field GUI_INGAME_UPDATE_COUNTER_FIELD = ObfuscationReflectionHelper.findField(GuiIngame.class, "field_73837_f");
@@ -52,8 +53,8 @@ public final class HudScreen {
 		}
         float mouseX = (float)Mouse.getX() / res.getScaleFactor();
         float mouseY = height - (float)Mouse.getY() / res.getScaleFactor() - 1;
-		container.onUpdate(null);
-		container.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
+		CONTAINER.onUpdate(null);
+		CONTAINER.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1f, 1f, 1f, .5f); // Reset color to what it was
 	}
@@ -68,14 +69,25 @@ public final class HudScreen {
 			lastTickScreen = currentScreen;
 		}
 	}
+	
+	@SubscribeEvent
+	public static void onMouseInput(MouseInputEvent.Pre event) {
+        if(!(event.getGui() instanceof GuiChat)) return;
+		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+		float mouseX = (float)Mouse.getX() / res.getScaleFactor();
+        float mouseY = renderHeight - (float)Mouse.getY() / res.getScaleFactor() - 1;
+        if(isOverChat(mouseX, mouseY)) return;
+        event.setCanceled(true);
+        PROCESSOR.processMouseEvent();
+	}
 
 	private static void init() {
-		MinecraftForge.EVENT_BUS.post(new HudScreenInitEvent(container));
-		container.init();
+		MinecraftForge.EVENT_BUS.post(new HudScreenInitEvent(CONTAINER));
+		CONTAINER.init();
 	}
 	
 	public static WidgetContainer getContent() {
-		return container;
+		return CONTAINER;
 	}
 	
 	public static boolean isOverChat(float x, float y) {

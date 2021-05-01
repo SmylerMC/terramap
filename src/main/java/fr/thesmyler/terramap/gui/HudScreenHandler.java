@@ -21,6 +21,7 @@ import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 
 public abstract class HudScreenHandler {
 
@@ -35,12 +36,11 @@ public abstract class HudScreenHandler {
 		if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
 			if(map == null) {
 				map = new MapWidget(10, TerramapClientContext.getContext().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
-				map.setInteractive(false);
 				map.setCopyrightVisibility(false);
 				map.setScaleVisibility(false);
 				map.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
 				map.scheduleAtUpdate(() -> {
-					if(TerramapClientContext.getContext().getProjection() != null) {
+					if(TerramapClientContext.getContext().getProjection() != null && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat)) {
 						map.track(map.getMainPlayerMarker());
 					}
 				});
