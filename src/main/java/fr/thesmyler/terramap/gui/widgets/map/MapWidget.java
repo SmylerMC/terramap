@@ -700,6 +700,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	public MapWidget setZoom(double zoom) {
 		this.controller.setZoom(Math.max(this.getMinZoom(), Math.min(this.getMaxZoom(), zoom)));
+		this.controller.zoomLongitude = this.controller.getCenterLongitude();
+		this.controller.zoomLatitude = this.controller.getCenterLatitude();
 		return this;
 	}
 
