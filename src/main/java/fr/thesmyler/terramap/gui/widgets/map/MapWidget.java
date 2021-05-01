@@ -50,6 +50,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.TextComponentString;
 
+//TODO Disable "Center map here" if not interactive
 public class MapWidget extends FlexibleWidgetContainer {
 
 	private boolean interactive = true;

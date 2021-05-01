@@ -7,7 +7,6 @@ import org.lwjgl.input.Mouse;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.config.TerramapConfig;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -15,21 +14,17 @@ public class Screen extends GuiScreen {
 	
 	private final WidgetContainer container = new Container();
 	
-	private int touchContactsCount = 0;
-	private final boolean[] mouseButtonsPressed = new boolean[Mouse.getButtonCount()];
-	private final float[] lastClickX = new float[Mouse.getButtonCount()];
-	private final float[] lastClickY = new float[Mouse.getButtonCount()];
-	private final long[] lastClickTime = new long[Mouse.getButtonCount()];
-	private int lastClickedButton = -1;
-	
 	private long startHoverTime;
 	private IWidget lastHoveredWidget;
 	private float lastRenderMouseX, lastRenderMouseY;
+	
+	private final InputProcessor processor;
 	
 	private BackgroundOption background;
 	
 	public Screen(BackgroundOption background) {
 		this.background = background;
+		this.processor = new InputProcessor(this.container);
 	}
 	
 	public WidgetContainer getContent() {
@@ -71,41 +66,7 @@ public class Screen extends GuiScreen {
 	
 	@Override
 	public void handleMouseInput() throws IOException {
-		// We override that so we can make float math instead of being stuck with ints
-        float mouseX = (float)Mouse.getEventX() * this.width / this.mc.displayWidth;
-        float mouseY = this.height - (float)Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
-        int mouseButton = Mouse.getEventButton();
-        long ctime = System.currentTimeMillis();
-
-        if(Mouse.getEventButtonState()) {
-            if (this.mc.gameSettings.touchscreen && this.touchContactsCount++ > 0) return;
-            this.mouseButtonsPressed[mouseButton] = true;
-    		if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.CLIENT.doubleClickDelay && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
-    			this.container.onDoubleClick(mouseX, mouseY, mouseButton, null);
-    		} else {
-    			this.container.onClick(mouseX, mouseY, mouseButton, null);
-    		}
-            this.lastClickedButton = mouseButton;
-            this.lastClickTime[mouseButton] = ctime;
-            this.lastClickX[mouseButton] = mouseX;
-            this.lastClickY[mouseButton] = mouseY;
-        } else if(mouseButton >= 0) {
-            if(this.mc.gameSettings.touchscreen && --this.touchContactsCount > 0) return;
-            this.mouseButtonsPressed[mouseButton] = false;
-            this.lastClickedButton = -1;
-            this.container.onMouseReleased(mouseX, mouseY, mouseButton, null);
-        } else if(this.lastClickedButton >= 0 && this.mouseButtonsPressed[this.lastClickedButton]) {
-    		float dX = mouseX - this.lastClickX[this.lastClickedButton];
-    		float dY = mouseY - this.lastClickY[this.lastClickedButton];
-    		long dt = ctime - this.lastClickTime[this.lastClickedButton];
-            this.lastClickX[this.lastClickedButton] = mouseX;
-            this.lastClickY[this.lastClickedButton] = mouseY;
-            this.lastClickTime[this.lastClickedButton] = ctime;
-    		this.container.onMouseDragged(mouseX, mouseY, dX, dY, this.lastClickedButton, null, dt);
-        }
-
-		int scroll = Mouse.getDWheel();
-		if(scroll != 0) this.container.onMouseWheeled(mouseX, mouseY, scroll, null);
+		this.processor.processMouseEvent();
 	}
 	
 	@Override
@@ -114,24 +75,21 @@ public class Screen extends GuiScreen {
 	}
 	
 	
-	@Override
+	@Deprecated @Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		this.warnNotToCall();
 		this.container.onClick(mouseX, mouseY, mouseButton, null);
 	}
 	
-	@Override
+	@Deprecated @Override
 	protected void mouseReleased(int mouseX, int mouseY, int mouseButton) {
 		this.warnNotToCall();
 		this.container.onMouseReleased(mouseX, mouseY, mouseButton, null);
 	}
 	
-	@Override
+	@Deprecated @Override
 	protected void mouseClickMove(int mouseX, int mouseY, int button, long timeSinceLastClick) {
 		this.warnNotToCall();
-		int dX = Math.round(mouseX - this.lastClickX[button]);
-		int dY = Math.round(mouseY - this.lastClickY[button]);
-		this.container.onMouseDragged(mouseX, mouseY, dX, dY, button, null, timeSinceLastClick);
 	}
 	
 	private void warnNotToCall() {
