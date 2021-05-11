@@ -104,14 +104,21 @@ public final class HudScreen {
         	if(x >= chatLeft && x <= chatRight && y >= chatTop && y <= chatBottom) return true;
         }
         
-        GuiNewChat chat = mc.ingameGUI.getChatGUI();
+        float[] chatBbox = getChatLinesBoundingBox();
+        return x >= chatBbox[0] && x <= chatBbox[2] && y <= chatBbox[3] && y >= chatBbox[1];
+	}
+	
+	public static float[] getChatLinesBoundingBox() {
+		Minecraft mc = Minecraft.getMinecraft();
+		boolean chatOpen = mc.currentScreen instanceof GuiChat;
+		GuiNewChat chat = mc.ingameGUI.getChatGUI();
         float chatLeft = 0;
         float chatBottom = renderHeight - chat.getChatHeight();
         float chatRight = chatLeft + chat.getChatWidth() + 6;
         float chatTop = renderHeight - 40;
         float scale = chat.getChatScale();
         try {
-        	int updateCounter = GUI_INGAME_UPDATE_COUNTER_FIELD.getInt(mc.ingameGUI);
+        	int updateCounter = getChatUpdateCounter();
         	@SuppressWarnings("unchecked") // Taken care of in the catch block
 			List<ChatLine> lines = (List<ChatLine>)NEW_CHAT_DRAW_CHAT_LINES_FIELD.get(chat);
         	int visibleChatLines = 0;
@@ -126,7 +133,11 @@ public final class HudScreen {
         		SmyLibGui.logger.catching(e);
         	}
         }
-        return x >= chatLeft && x <= chatRight && y <= chatBottom && y >= chatTop;
+        return new float[] { chatLeft, chatTop, chatRight, chatBottom };
+	}
+	
+	public static int getChatUpdateCounter() throws IllegalArgumentException, IllegalAccessException {
+		return GUI_INGAME_UPDATE_COUNTER_FIELD.getInt(Minecraft.getMinecraft().ingameGUI);
 	}
 	
 	private static class HudScreenContainer extends WidgetContainer {
