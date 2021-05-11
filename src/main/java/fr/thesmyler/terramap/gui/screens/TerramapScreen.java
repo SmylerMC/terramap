@@ -61,6 +61,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
+//FIXME Tooltips are broken
 public class TerramapScreen extends Screen implements ITabCompleter {
 
 	private GuiScreen parent;
@@ -227,7 +228,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.stylePanel.addWidget(s);
 		content.addWidget(this.stylePanel);
 		
-		content.addWidget(this.chat);
+		if(TerramapConfig.CLIENT.chatOnMap) content.addWidget(this.chat);
 
 		if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
 			String warning = "";

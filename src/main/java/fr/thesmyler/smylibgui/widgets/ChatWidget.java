@@ -20,8 +20,9 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 /**
  * Kinda hacky widget to add the chat to a custom screen.
  * Due to the way tab completion is implemented in the game,
- * it will not work unless you make the GuiScreen that contains this widget implent {@link ITabCompleter},
+ * it will not work unless you make the GuiScreen that contains this widget implement {@link ITabCompleter},
  * and call this widget's {@link #setCompletions} from there
+ * 
  * @author SmylerMC
  *
  */
