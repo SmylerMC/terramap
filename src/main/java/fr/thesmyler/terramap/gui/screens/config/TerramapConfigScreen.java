@@ -41,6 +41,7 @@ public class TerramapConfigScreen extends Screen {
 	private TexturedButtonWidget previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
 	private ToggleButtonWidget unlockZoomToggle = new ToggleButtonWidget(10, false);
 	private ToggleButtonWidget saveUIStateToggle = new ToggleButtonWidget(10, false);
+	private ToggleButtonWidget showChatOnMapToggle = new ToggleButtonWidget(10, false);
 	private OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<>(10, TileScalingOption.values());
 	private IntegerSliderWidget doubleClickDelaySlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MIN, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MAX, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_DEFAULT);
 	private IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.TILE_LOAD_MIN, TerramapConfig.CLIENT.TILE_LOAD_MAX, TerramapConfig.CLIENT.TILE_LOAD_DEFAULT);
@@ -99,11 +100,16 @@ public class TerramapConfigScreen extends Screen {
 		saveUIStateText.setAnchorX((mapConfigScreen.getWidth() - saveUIStateText.getWidth() - this.saveUIStateToggle.getWidth())/2 + 64).setAnchorY(unlockZoomText.getAnchorY());
 		mapConfigScreen.addWidget(saveUIStateText);
 		mapConfigScreen.addWidget(this.saveUIStateToggle.setX(saveUIStateText.getX() + saveUIStateText.getWidth() + 5).setY(saveUIStateText.getAnchorY() - 4));
-		mapConfigScreen.addWidget(this.tileScalingSlider.setX(mapConfigScreen.getWidth()/2 - 130).setY(this.unlockZoomToggle.getY() + this.unlockZoomToggle.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilescaling")));
+		TextWidget chatOnMapText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.chatonmap"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
+		chatOnMapText.setAnchorX(unlockZoomText.getAnchorX()).setAnchorY(unlockZoomText.getAnchorY() + unlockZoomText.getFont().height() + 10);
+		mapConfigScreen.addWidget(chatOnMapText);
+		this.showChatOnMapToggle.setTooltip(I18n.format("terramap.configmenu.chatonmap.tooltip"));
+		mapConfigScreen.addWidget(this.showChatOnMapToggle.setX(chatOnMapText.getX() + chatOnMapText.getWidth() + 9).setY(chatOnMapText.getAnchorY() - 4));
+		mapConfigScreen.addWidget(this.tileScalingSlider.setX(mapConfigScreen.getWidth()/2 - 130).setY(this.showChatOnMapToggle.getY() + this.unlockZoomToggle.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilescaling")));
 		mapConfigScreen.addWidget(this.doubleClickDelaySlider.setX(mapConfigScreen.getWidth()/2 + 5).setY(this.tileScalingSlider.getY()).setWidth(this.tileScalingSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.doubleclick")));
 		this.maxLoadedTilesSlider.setTooltip(I18n.format("terramap.configmenu.tilecache.tooltip"));
-		mapConfigScreen.addWidget(this.maxLoadedTilesSlider.setX(mapConfigScreen.getWidth()/2 - 130).setY(this.tileScalingSlider.getY() + this.tileScalingSlider.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilecache")));
-		this.maxLoadedTilesSlider.setTooltip(I18n.format("terramap.configmenu.lowzoom.tooltip"));
+		mapConfigScreen.addWidget(this.maxLoadedTilesSlider.setX(mapConfigScreen.getWidth()/2 - 130).setY(this.doubleClickDelaySlider.getY() + this.doubleClickDelaySlider.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilecache")));
+		this.lowZoomLevelSlider.setTooltip(I18n.format("terramap.configmenu.lowzoom.tooltip"));
 		mapConfigScreen.addWidget(this.lowZoomLevelSlider.setX(mapConfigScreen.getWidth()/2 + 5).setY(this.maxLoadedTilesSlider.getY()).setWidth(this.maxLoadedTilesSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.lowzoom")));
 		TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, I18n.format("terramap.configmenu.configureminimap"), () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
 		hudButton.setTooltip(I18n.format("terramap.configmenu.configureminimap.tooltip"));
@@ -180,6 +186,7 @@ public class TerramapConfigScreen extends Screen {
 		TerramapConfig.CLIENT.tileScaling = this.tileScalingSlider.getCurrentOption().value;
 		TerramapConfig.CLIENT.unlockZoom = this.unlockZoomToggle.getState();
 		TerramapConfig.CLIENT.saveUiState = this.saveUIStateToggle.getState();
+		TerramapConfig.CLIENT.chatOnMap = this.showChatOnMapToggle.getState();
 		TerramapConfig.CLIENT.doubleClickDelay = (int) this.doubleClickDelaySlider.getValue();
 		TerramapConfig.CLIENT.maxTileLoad = (int) this.maxLoadedTilesSlider.getValue();
 		TerramapConfig.CLIENT.lowZoomLevel = (int) this.lowZoomLevelSlider.getValue();
@@ -197,6 +204,7 @@ public class TerramapConfigScreen extends Screen {
 		this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.CLIENT.tileScaling));
 		this.unlockZoomToggle.setState(TerramapConfig.CLIENT.unlockZoom);
 		this.saveUIStateToggle.setState(TerramapConfig.CLIENT.saveUiState);
+		this.showChatOnMapToggle.setState(TerramapConfig.CLIENT.chatOnMap);
 		this.doubleClickDelaySlider.setValue(TerramapConfig.CLIENT.doubleClickDelay);
 		this.maxLoadedTilesSlider.setValue(TerramapConfig.CLIENT.maxTileLoad);
 		this.lowZoomLevelSlider.setValue(TerramapConfig.CLIENT.lowZoomLevel);

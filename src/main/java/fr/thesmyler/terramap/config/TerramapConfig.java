@@ -186,6 +186,11 @@ public class TerramapConfig {
 		@Config.Comment("Whether or not to save the map ui state when closing the full-screen map. Enable to save F1 mode and debug mode.")
 		public boolean saveUiState = false;
 		
+		@Config.Name("chat_on_map")
+		@Config.LangKey("terramap.config.chat_on_map")
+		@Config.Comment("Whether or not to show the chat over the full screen map")
+		public boolean chatOnMap = true;
+		
 		public double getEffectiveTileScaling() {
 			if(this.tileScaling == 0) {
 				return SmyLibGui.getMinecraftGuiScale();
