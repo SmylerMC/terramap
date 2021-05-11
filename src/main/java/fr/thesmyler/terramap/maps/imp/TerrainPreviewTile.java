@@ -55,7 +55,7 @@ public class TerrainPreviewTile implements IRasterTile {
 	@Override
 	public void cancelTextureLoading() {
 		if(this.textureTask != null) {
-			this.textureTask.cancel(true);
+//			this.textureTask.cancel(true);
 			this.textureTask = null;
 		}
 	}

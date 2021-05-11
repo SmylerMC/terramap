@@ -21,6 +21,7 @@ import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
+import fr.thesmyler.smylibgui.widgets.ChatWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
@@ -53,15 +54,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler.Result;
+import net.minecraft.util.ITabCompleter;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-public class TerramapScreen extends Screen {
+public class TerramapScreen extends Screen implements ITabCompleter {
 
 	private GuiScreen parent;
+	
+	private ChatWidget chat = new ChatWidget(1000);
 
 	// Main map area widgets
 	private MapWidget map; 
@@ -222,6 +226,8 @@ public class TerramapScreen extends Screen {
 		if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
 		this.stylePanel.addWidget(s);
 		content.addWidget(this.stylePanel);
+		
+		content.addWidget(this.chat);
 
 		if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
 			String warning = "";
@@ -382,7 +388,7 @@ public class TerramapScreen extends Screen {
 
 	@Override
 	public void keyTyped(char typedChar, int keyCode) {
-		if(this.getContent().getFocusedWidget() == null || !this.getContent().getFocusedWidget().equals(this.searchBox)) {
+		if(this.getContent().getFocusedWidget() == null || (!this.getContent().getFocusedWidget().equals(this.searchBox) && !this.chat.isOpen())) {
 			if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
 			if(keyCode == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
 			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.map.moveMap(0, 10);
@@ -392,6 +398,7 @@ public class TerramapScreen extends Screen {
 			if(keyCode == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
 			if(keyCode == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
 			if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
+			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) this.chat.setOpen(!this.chat.isOpen());
 		} else {
 			super.keyTyped(typedChar, keyCode);
 		}
@@ -646,6 +653,11 @@ public class TerramapScreen extends Screen {
 			return 0;
 		}
 
+	}
+
+	@Override
+	public void setCompletions(String... newCompletions) {
+		this.chat.setCompletions(newCompletions);
 	}
 
 }
