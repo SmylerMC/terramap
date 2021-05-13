@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 
 public class RasterMapLayerWidget extends MapLayerWidget {
 
@@ -36,9 +37,9 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-		
+
 		Font smallFont = Util.getSmallestFont();
-		
+
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
 
@@ -50,35 +51,38 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 			debug = parentMap.isDebugMode();
 			profiler = parentMap.getProfiler();
 		}
-		
+
 		profiler.startSection("render-raster-layer_" + this.map.getId());
-		
+
 		GlStateManager.pushMatrix();
-		double cos = Math.abs(Math.cos(Math.toRadians(this.orientation)));
-		double sin = Math.abs(Math.sin(Math.toRadians(this.orientation)));
-		float viewPortWidth = (float) (cos*this.width + sin*this.height);
-		float viewPortHeight = (float) (cos*this.height + sin*this.width);
-		float deltaWidth = -(viewPortWidth - this.width) / 2;
-		float deltaHeight = -(viewPortHeight - this.height) / 2;
+		double radRot = Math.toRadians(this.orientation);
+		double cosRot = Math.cos(radRot);
+		double sinRot = Math.sin(radRot);
+		double cosRotAbs = Math.abs(cosRot);
+		double sinRotAbs = Math.abs(sinRot);
+		double viewPortWidth = cosRotAbs*this.width + sinRotAbs*this.height;
+		double viewPortHeight = cosRotAbs*this.height + sinRotAbs*this.width;
+		double deltaWidth = -(viewPortWidth - this.width) / 2;
+		double deltaHeight = -(viewPortHeight - this.height) / 2;
+
+		// These are the x and y original elementary vectors expressed in the rotated coordinate system
+		Vec3d xvec = new Vec3d(cosRot, -sinRot, 0);
+		Vec3d yvec = new Vec3d(sinRot, cosRot, 0);
+
 		GlStateManager.translate(this.width / 2, this.height / 2, 0);
-		GlStateManager.scale(.5, .5, 1);
-		RenderUtil.drawClosedStrokeLine(1, Color.RED, 5, 
-				-this.width/2, -this.height/2,
-				-this.width/2, this.height/2,
-				this.width/2, this.height/2,
-				this.width/2, -this.height/2);
 		GlStateManager.rotate(this.orientation, 0, 0, 1);
 		GlStateManager.translate(-viewPortWidth / 2, -viewPortHeight / 2, 0);
+
 
 		double upperLeftX = this.getUpperLeftX() + deltaWidth;
 		double upperLeftY = this.getUpperLeftY() + deltaHeight;
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
-		
+
 		int zoomLevel = (int) Math.round(this.zoom);
 		double zoomSizeFactor = this.zoom - zoomLevel;
-		
+
 		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling * Math.pow(2, zoomSizeFactor);
 
 		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile(zoomLevel);
@@ -96,10 +100,54 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				try {
 					tile = map.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
-				} catch(InvalidTilePositionException e) { continue ;}
+				} catch(InvalidTilePositionException silenced) { continue ;}
 
 				// This is the tile we would like to render, but it is not possible if it hasn't been cached yet
 				IRasterTile bestTile = tile;
+				double dispX = tileX * renderSize - upperLeftX;
+				double dispY = tileY * renderSize - upperLeftY;
+				double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
+				double displayHeight = Math.min(renderSize, maxY - tileY * renderSize);
+
+				/* 
+				 * Let's do some checks to ensure the tile is indeed visible when rotation is taken into account.
+				 * To do that, we project each corner of the tile onto the corresponding vector or the non-rotated coordinate system,
+				 * and if the result of the projection is further than the limit, we skip the tile
+				 */
+				Vec3d left;
+				Vec3d right;
+				Vec3d top;
+				Vec3d bottom;
+				if(this.orientation < 90) {
+					top = new Vec3d(dispX, dispY, 0);
+					right = new Vec3d(dispX + displayWidth, dispY, 0);
+					bottom = new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
+					left  = new Vec3d(dispX, dispY + displayHeight, 0);
+				} else if(this.orientation < 180){
+					right = new Vec3d(dispX, dispY, 0);
+					bottom = new Vec3d(dispX + displayWidth, dispY, 0);
+					left = new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
+					top = new Vec3d(dispX, dispY + displayHeight, 0);
+				} else if(this.orientation < 270){
+					bottom = new Vec3d(dispX, dispY, 0);
+					left = new Vec3d(dispX + displayWidth, dispY, 0);
+					top = new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
+					right = new Vec3d(dispX, dispY + displayHeight, 0);
+				} else {
+					left = new Vec3d(dispX, dispY, 0);
+					top = new Vec3d(dispX + displayWidth, dispY, 0);
+					right= new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
+					bottom = new Vec3d(dispX, dispY + displayHeight, 0);
+				}
+				top = top.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
+				right = right.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
+				bottom = bottom.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
+				left = left.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
+				if(bottom.dotProduct(yvec) < -this.height / 2) continue;
+				if(top.dotProduct(yvec) > this.height / 2) continue;
+				if(right.dotProduct(xvec) < -this.width / 2) continue;
+				if(left.dotProduct(xvec) > this.width / 2) continue;
+
 				neededTiles.add(bestTile);
 				boolean lowerResRender = false;
 				boolean unlockedZoomRender = false;
@@ -136,16 +184,10 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				neededTiles.add(tile);
 
-				double dispX = tileX * renderSize - upperLeftX;
-				double dispY = tileY * renderSize - upperLeftY;
-
 				double renderSizedSize = renderSize;
 
 				double dX = 0;
 				double dY = 0;
-
-				double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
-				double displayHeight = Math.min(renderSize, maxY - tileY * renderSize);
 
 				if(tileX == lowerTileX) {
 					dX -= dispX;
@@ -189,7 +231,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 						displayHeight,
 						renderSizedSize,
 						renderSizedSize
-				);
+						);
 				if(debug) {
 					Color lineColor = lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : Color.WHITE;
 					RenderUtil.drawClosedStrokeLine(lineColor, 1f, 
@@ -197,7 +239,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 							dispX, dispY + displayHeight - 1,
 							dispX + displayWidth - 1, dispY + displayHeight - 1,
 							dispX + displayWidth - 1, dispY
-					);
+							);
 					smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)(dispY + displayHeight/2), "" + tile.getPosition().getZoom(), lineColor, false);
 					smallFont.drawString((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
 					smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
@@ -210,7 +252,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		this.lastNeededTiles.removeAll(neededTiles);
 		this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
 		this.lastNeededTiles = neededTiles;
-		
+
 		GlStateManager.popMatrix();
 		profiler.endSection();
 
