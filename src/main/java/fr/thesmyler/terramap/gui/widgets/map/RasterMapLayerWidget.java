@@ -52,9 +52,26 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		}
 		
 		profiler.startSection("render-raster-layer_" + this.map.getId());
+		
+		GlStateManager.pushMatrix();
+		double cos = Math.abs(Math.cos(Math.toRadians(this.orientation)));
+		double sin = Math.abs(Math.sin(Math.toRadians(this.orientation)));
+		float viewPortWidth = (float) (cos*this.width + sin*this.height);
+		float viewPortHeight = (float) (cos*this.height + sin*this.width);
+		float deltaWidth = -(viewPortWidth - this.width) / 2;
+		float deltaHeight = -(viewPortHeight - this.height) / 2;
+		GlStateManager.translate(this.width / 2, this.height / 2, 0);
+		GlStateManager.scale(.5, .5, 1);
+		RenderUtil.drawClosedStrokeLine(1, Color.RED, 5, 
+				-this.width/2, -this.height/2,
+				-this.width/2, this.height/2,
+				this.width/2, this.height/2,
+				this.width/2, -this.height/2);
+		GlStateManager.rotate(this.orientation, 0, 0, 1);
+		GlStateManager.translate(-viewPortWidth / 2, -viewPortHeight / 2, 0);
 
-		double upperLeftX = this.getUpperLeftX();
-		double upperLeftY = this.getUpperLeftY();
+		double upperLeftX = this.getUpperLeftX() + deltaWidth;
+		double upperLeftY = this.getUpperLeftY() + deltaHeight;
 
 		Minecraft mc = Minecraft.getMinecraft();
 		TextureManager textureManager = mc.getTextureManager();
@@ -65,8 +82,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling * Math.pow(2, zoomSizeFactor);
 
 		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile(zoomLevel);
-		double maxX = upperLeftX + this.width;
-		double maxY = upperLeftY + this.height;
+		double maxX = upperLeftX + viewPortWidth;
+		double maxY = upperLeftY + viewPortHeight;
 
 		int lowerTileX = (int) Math.floor(upperLeftX / renderSize);
 		int lowerTileY = (int) Math.floor(upperLeftY / renderSize);
@@ -194,6 +211,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
 		this.lastNeededTiles = neededTiles;
 		
+		GlStateManager.popMatrix();
 		profiler.endSection();
 
 	}

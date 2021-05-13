@@ -9,6 +9,7 @@ abstract class MapLayerWidget implements IWidget {
 	protected int z;
 	protected float width, height;
 	protected double centerLatitude, centerLongitude, zoom;
+	protected float orientation;
 	protected double tileScaling;
 	
 	public MapLayerWidget(double tileScaling) {
