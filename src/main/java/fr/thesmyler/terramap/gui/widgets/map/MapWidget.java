@@ -79,6 +79,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private float zoomSnapping = 1f;
 	private float zoomResponsiveness = 0.01f;
 	protected double tileScaling;
+	private float orientation = 0;
 
 	private final MenuWidget rightClickMenu;
 	private final MenuEntry teleportMenuEntry;
@@ -358,6 +359,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		
+		//TODO Remove debug
+		this.orientation += 1f;
+		if(orientation > 360) this.orientation -= 360;
+		
 		this.profiler.startSection("misc-gui-updates");
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
@@ -385,6 +390,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 					layer.centerLongitude = this.controller.centerLongitude;
 					layer.centerLatitude = this.controller.centerLatitude;
 					layer.zoom = this.controller.zoom;
+					layer.orientation = this.orientation;
 				}
 			} else if(widget instanceof Marker) {
 				for(Class<?> clazz: markers.keySet()) {
@@ -436,6 +442,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		// Actually draw the map
 		this.profiler.endStartSection("draw");
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+		this.getFont().drawCenteredString(x + 200, y+200, "" + this.orientation, Color.RED, false);
 		this.profiler.endSection();
 	}
 
