@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap;
+package fr.thesmyler.terramap.util;
 
 import java.util.Random;
 
@@ -15,7 +15,7 @@ import net.minecraft.world.World;
  *
  *
  */
-public abstract class TerramapUtils {
+public abstract class TerramapUtil {
 	
 	private static final Random RANDOM = new Random();
 	
@@ -40,7 +40,7 @@ public abstract class TerramapUtils {
 	}
 	
 	public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
-		if(TerramapUtils.isServerEarthWorld(world)) {
+		if(TerramapUtil.isServerEarthWorld(world)) {
 			ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
 			EarthGenerator generator = (EarthGenerator)((CubeProviderServer) provider).getCubeGenerator();
 			return generator.settings;

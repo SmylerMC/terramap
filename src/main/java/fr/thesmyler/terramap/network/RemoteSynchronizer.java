@@ -8,7 +8,6 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.TerraDependency;
@@ -22,6 +21,7 @@ import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.permissions.Permission;
 import fr.thesmyler.terramap.permissions.PermissionManager;
+import fr.thesmyler.terramap.util.TerramapUtil;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -82,8 +82,8 @@ public abstract class RemoteSynchronizer {
 		}
 		// Send world data to the client
 		World world = player.getEntityWorld();
-		if(!TerramapUtils.isServerEarthWorld(world)) return;
-		EarthGeneratorSettings settings = TerramapUtils.getEarthGeneratorSettingsFromWorld(world);
+		if(!TerramapUtil.isServerEarthWorld(world)) return;
+		EarthGeneratorSettings settings = TerramapUtil.getEarthGeneratorSettingsFromWorld(world);
 		S2CTerramapHelloPacket data = new S2CTerramapHelloPacket(
 				"", // We fill in the version latter
 				settings,
