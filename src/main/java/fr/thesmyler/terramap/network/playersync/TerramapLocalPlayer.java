@@ -3,8 +3,8 @@ package fr.thesmyler.terramap.network.playersync;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.util.TerramapUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapUtils;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -39,7 +39,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 		if(this.player.world.isRemote) {
 			proj = TerramapClientContext.getContext().getProjection();
 		} else {
-			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
+			proj = TerramapUtil.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
 		}
 		if(proj == null) return new double[] {Double.NaN, Double.NaN};
 		return proj.toGeo(this.player.posX, this.player.posZ);
@@ -66,7 +66,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 		if(this.player.world.isRemote) {
 			proj = TerramapClientContext.getContext().getProjection();
 		} else {
-			proj = TerramapUtils.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
+			proj = TerramapUtil.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
 		}
 		if(proj == null) return Float.NaN;
 		try{

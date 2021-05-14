@@ -1,9 +1,9 @@
 package fr.thesmyler.terramap.eventhandlers;
 
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.RemoteSynchronizer;
+import fr.thesmyler.terramap.util.TerramapUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.world.WorldEvent;
@@ -43,7 +43,7 @@ public class CommonTerramapEventHandler {
 	public void onWorldTick(WorldTickEvent event) {
 		if(event.phase.equals(TickEvent.Phase.END) || event.world.isRemote) return;
 		WorldServer world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
-		if(TerramapConfig.SERVER.synchronizePlayers && TerramapUtils.isServerEarthWorld(world) && this.tickCounter == 0) {
+		if(TerramapConfig.SERVER.synchronizePlayers && TerramapUtil.isServerEarthWorld(world) && this.tickCounter == 0) {
 			RemoteSynchronizer.syncPlayers(world);
 		}
 		this.tickCounter = (this.tickCounter+1) % TerramapConfig.SERVER.syncInterval;

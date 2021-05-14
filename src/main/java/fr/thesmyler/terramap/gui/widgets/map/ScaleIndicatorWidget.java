@@ -4,8 +4,8 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.TerramapUtils;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.TerramapUtil;
 
 //FIXME This lies
 public class ScaleIndicatorWidget implements IWidget {
@@ -88,7 +88,7 @@ public class ScaleIndicatorWidget implements IWidget {
 			double latAtScreenBottom = map.getScreenLatitude(this.y + 5);
 			if(Math.abs(latAtScreenBottom) < 85) {
 
-				double circAtLat = TerramapUtils.EARTH_CIRCUMFERENCE * Math.cos(Math.toRadians(latAtScreenBottom));
+				double circAtLat = TerramapUtil.EARTH_CIRCUMFERENCE * Math.cos(Math.toRadians(latAtScreenBottom));
 				double scale = circAtLat / WebMercatorUtils.getMapDimensionInPixel((int) map.getZoom()) * barwidth;
 				String[] units = {"m", "km"};
 				int j=0;
