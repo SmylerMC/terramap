@@ -26,6 +26,7 @@ import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
+import fr.thesmyler.terramap.util.TerramapUtil;
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
@@ -112,7 +113,7 @@ public class TerramapClientContext {
 
 	public EarthGeneratorSettings getGeneratorSettings() {
 		if(this.genSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
-			return TerramapUtils.BTE_GENERATOR_SETTINGS; // Sledgehammer is installed and this is an Earth world, it should be safe to assume a BTE world
+			return TerramapUtil.BTE_GENERATOR_SETTINGS; // Sledgehammer is installed and this is an Earth world, it should be safe to assume a BTE world
 		}
 		return this.genSettings;
 	}
@@ -134,7 +135,7 @@ public class TerramapClientContext {
 	}
 
 	public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
-		if(genSettings != null && this.hasSledgehammer() && !TerramapUtils.isBteCompatible(genSettings)) {
+		if(genSettings != null && this.hasSledgehammer() && !TerramapUtil.isBteCompatible(genSettings)) {
 			TerramapMod.logger.error("Terrramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
 			TerramapMod.logger.error("The proxy will be assuming a BTE projection, things will not work!");
 			//TODO Warning on the GUI
