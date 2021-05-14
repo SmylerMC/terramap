@@ -8,6 +8,7 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.util.TerramapUtil;
 
 //FIXME This lies
+@Deprecated
 public class ScaleIndicatorWidget implements IWidget {
 
 	private float x, y;
@@ -85,7 +86,9 @@ public class ScaleIndicatorWidget implements IWidget {
 
 			MapWidget map = (MapWidget) parent;
 
-			double latAtScreenBottom = map.getScreenLatitude(this.y + 5);
+//			double latAtScreenBottom = map.getScreenLatitude(this.y + 5);
+			double latAtScreenBottom = 0d;
+
 			if(Math.abs(latAtScreenBottom) < 85) {
 
 				double circAtLat = TerramapUtil.EARTH_CIRCUMFERENCE * Math.cos(Math.toRadians(latAtScreenBottom));
