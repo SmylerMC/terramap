@@ -40,6 +40,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.Vec2d;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
@@ -79,7 +80,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private float zoomSnapping = 1f;
 	private float zoomResponsiveness = 0.01f;
 	protected double tileScaling;
-	private float orientation = 0;
 
 	private final MenuWidget rightClickMenu;
 	private final MenuEntry teleportMenuEntry;
@@ -317,7 +317,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	private MapWidget setMapBackgroud(RasterMapLayerWidget background) {
 		background.z = BACKGROUND_Z;
-		background.tileScaling = this.tileScaling;
+		background.setTileScaling(this.tileScaling);
 		super.removeWidget(this.background);
 		super.addWidget(background);
 		this.background = background;
@@ -359,10 +359,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 	@Override
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 		
-		//TODO Remove debug
-		this.orientation += 1f;
-		if(orientation > 360) this.orientation -= 360;
-		
 		this.profiler.startSection("misc-gui-updates");
 		this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
 		this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
@@ -383,14 +379,13 @@ public class MapWidget extends FlexibleWidgetContainer {
 		for(IWidget widget: this.widgets) {
 			if(widget instanceof MapLayerWidget) {
 				MapLayerWidget layer = (MapLayerWidget) widget;
-				layer.width = this.getWidth();
-				layer.height = this.getHeight();
-				layer.tileScaling = this.tileScaling;
+				layer.setDimensions(this.getWidth(), this.getHeight());
+				layer.setTileScaling(this.tileScaling);
 				if(!layer.equals(this.controller)) {
-					layer.centerLongitude = this.controller.centerLongitude;
-					layer.centerLatitude = this.controller.centerLatitude;
-					layer.zoom = this.controller.zoom;
-					layer.orientation = this.orientation;
+					layer.setCenterLongitude(this.controller.getCenterLongitude());
+					layer.setCenterLatitude(this.controller.getCenterLatitude());
+					layer.setZoom(this.controller.getZoom());
+					layer.setRotation(this.controller.getRotation());
 				}
 			} else if(widget instanceof Marker) {
 				for(Class<?> clazz: markers.keySet()) {
@@ -442,7 +437,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 		// Actually draw the map
 		this.profiler.endStartSection("draw");
 		super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
-		this.getFont().drawCenteredString(x + 200, y+200, "" + this.orientation, Color.RED, false);
 		this.profiler.endSection();
 	}
 
@@ -512,7 +506,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 			if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
 
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
-				this.zoom(this.getScreenLongitude(mouseX), this.getScreenLatitude(mouseY), 1);
+				double[] lola = this.getScreenGeoPos(mouseX, mouseY);
+				this.zoom(lola[0], lola[1], 1);
 			}
 			return false;
 		}
@@ -534,13 +529,20 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 			if(MapWidget.this.isInteractive()) {
 				double z = amount > 0? 1: -1;
-				z *= MapWidget.this.zoomSnapping;
-				if(MapWidget.this.focusedZoom) {
-					double longitude = this.getScreenLongitude(mouseX);
-					double latitude = this.getScreenLatitude(mouseY);
-					this.zoom(longitude, latitude, z);
+				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+					float rotation = this.getRotation();
+					rotation += z;
+					if(rotation >= 360f) rotation -= 360f;
+					if(rotation < 0f) rotation += 360f;
+					this.setRotation(rotation);
 				} else {
-					this.zoom(z);
+					z *= MapWidget.this.zoomSnapping;
+					if(MapWidget.this.focusedZoom) {
+						double[] lola = this.getScreenGeoPos(mouseX, mouseY);
+						this.zoom(lola[0], lola[1], z);
+					} else {
+						this.zoom(z);
+					}
 				}
 			}
 			return false;
@@ -582,24 +584,23 @@ public class MapWidget extends FlexibleWidgetContainer {
 			zoomTarget = Math.max(MapWidget.this.getMinZoom(), zoomTarget);
 			
 			// If we are close enough of the desired zoom level, just finish reaching it
-			if(Math.abs(this.zoom - zoomTarget) < 0.01d) {
+			if(Math.abs(this.getZoom() - zoomTarget) < 0.01d) {
 				this.zoomTarget = zoomTarget;
-				this.zoom = zoomTarget;
+				this.setZoom(zoomTarget);
 				return;
 			}
 			
 			MapWidget.this.rightClickMenu.hide(null);
 
 			// Compute a delta to the new zoom value, exponential decay, and ensure it is within bounds
-			double maxDzoom = zoomTarget - this.zoom;
+			double maxDzoom = zoomTarget - this.getZoom();
 			double dzoom = MapWidget.this.zoomResponsiveness*(maxDzoom)*dt;
 			dzoom = maxDzoom > 0 ? Math.min(dzoom, maxDzoom) : Math.max(dzoom, maxDzoom);
 
 			// The position that needs to stay static and how far it is from the center of the screen
-			double x = this.getScreenX(this.zoomLongitude);
-			double y = this.getScreenY(this.zoomLatitude);
-			double dX = x - this.width/2;
-			double dY = y - this.height/2;
+			Vec2d pos = this.getScreenPos(this.zoomLongitude, this.zoomLatitude);
+			double dX = pos.x - this.getWidth()/2;
+			double dY = pos.y - this.getHeight()/2;
 			
 			/*
 			 *  Get the scale factor from the previous zoom to the new one
@@ -611,19 +612,19 @@ public class MapWidget extends FlexibleWidgetContainer {
 			this.speedX *= factor;
 			this.speedY *= factor;
 			
-			this.zoom += dzoom; // That's what we are here for
+			super.setZoom(this.getZoom() + dzoom); // That's what we are here for
 
 			// And move so the static point is static
-			this.setCenterLongitude(this.getScreenLongitude((double)this.width/2 - ndX));
-			this.setCenterLatitude(this.getScreenLatitude((double)this.height/2 - ndY));
+			double[] lola = this.getScreenGeoPos((double)this.getWidth()/2 - ndX, (double)this.getHeight()/2 - ndY);
+			this.setCenterLongitude(lola[0]);
+			this.setCenterLatitude(lola[1]);
 		}
 
 		public void moveMap(float dX, float dY) {
 			MapWidget.this.trackingMarker = null;
-			double nlon = this.getScreenLongitude(this.width/2 - dX);
-			double nlat = this.getScreenLatitude(this.height/2 - dY);
-			this.setCenterLongitude(nlon);
-			this.setCenterLatitude(nlat);
+			double[] lola = this.getScreenGeoPos(this.getWidth()/2 - dX, this.getHeight()/2 - dY);
+			this.setCenterLongitude(lola[0]);
+			this.setCenterLatitude(lola[1]);
 		}
 
 		@Override
@@ -649,8 +650,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 	}
 
 	private void updateMouseGeoPos(float mouseX, float mouseY) {
-		this.mouseLongitude = controller.getScreenLongitude(mouseX);
-		this.mouseLatitude = controller.getScreenLatitude(mouseY);
+		double lola[] = this.controller.getScreenGeoPos(mouseX, mouseY);
+		this.mouseLongitude = lola[0];
+		this.mouseLatitude = lola[1];
 	}
 
 	private void updateRightClickMenuEntries() {
@@ -805,21 +807,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 	public void moveMap(float dX, float dY) {
 		controller.moveMap(dX, dY);
 	}
-
-	public double getScreenX(double longitude) {
-		return this.background.getScreenX(longitude);
+	
+	public double[] getScreenPos(double longitude, double latitude) {
+		Vec2d pos = this.controller.getScreenPos(longitude, latitude);
+		return new double[] {pos.x, pos.y};
 	}
-
-	public double getScreenY(double latitude) {
-		return this.background.getScreenY(latitude);
-	}
-
-	public double getScreenLongitude(double xOnScreen) {
-		return this.background.getScreenLongitude(xOnScreen);
-	}
-
-	public double getScreenLatitude(double yOnScreen) {
-		return this.background.getScreenLatitude(yOnScreen);
+	
+	public double[] getScreenGeoPos(double x, double y) {
+		return this.controller.getScreenGeoPos(x, y);
 	}
 
 	public float getScaleX() {
@@ -977,6 +972,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 	
 	public Profiler getProfiler() {
 		return this.profiler;
+	}
+	
+	public float getRotation() {
+		return this.controller.getRotation();
+	}
+	
+	public void setRotation(float rotation) {
+		this.controller.setRotation(rotation);
 	}
 
 }

@@ -65,8 +65,9 @@ public abstract class Marker implements IWidget {
 		if(parent instanceof MapWidget) {
 			MapWidget map = (MapWidget) parent;
 			this.update(map);
-			this.x = (float) (map.getScreenX(this.getLongitude()) + this.getDeltaX());
-			this.y = (float) (map.getScreenY(this.getLatitude()) + this.getDeltaY());
+			double[] xy = map.getScreenPos(this.getLongitude(), this.getLatitude());
+			this.x = (float) (xy[0] + this.getDeltaX());
+			this.y = (float) (xy[1] + this.getDeltaY());
 		}
 	}
 	

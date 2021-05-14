@@ -14,12 +14,13 @@ import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
 import fr.thesmyler.terramap.maps.utils.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.Mat2d;
+import fr.thesmyler.terramap.util.Vec2d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 
 public class RasterMapLayerWidget extends MapLayerWidget {
 
@@ -39,6 +40,9 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 	public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
 		Font smallFont = Util.getSmallestFont();
+		Minecraft mc = Minecraft.getMinecraft();
+		TextureManager textureManager = mc.getTextureManager();
+		float rotation = this.getRotation();
 
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
@@ -55,39 +59,34 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		profiler.startSection("render-raster-layer_" + this.map.getId());
 
 		GlStateManager.pushMatrix();
-		double radRot = Math.toRadians(this.orientation);
-		double cosRot = Math.cos(radRot);
-		double sinRot = Math.sin(radRot);
-		double cosRotAbs = Math.abs(cosRot);
-		double sinRotAbs = Math.abs(sinRot);
-		double viewPortWidth = cosRotAbs*this.width + sinRotAbs*this.height;
-		double viewPortHeight = cosRotAbs*this.height + sinRotAbs*this.width;
-		double deltaWidth = -(viewPortWidth - this.width) / 2;
-		double deltaHeight = -(viewPortHeight - this.height) / 2;
+		float widthViewPort = this.getWidth();
+		float heightViewPort = this.getHeight();
+		double zoom = this.getZoom();
+		
+		// The width and height of the rotated map that covers the area of the non-rotated one
+		double extendedWidth = this.getExtendedWidth();
+		double extendedHeight = this.getExtendedHeight();
 
 		// These are the x and y original elementary vectors expressed in the rotated coordinate system
-		Vec3d xvec = new Vec3d(cosRot, -sinRot, 0);
-		Vec3d yvec = new Vec3d(sinRot, cosRot, 0);
+		Mat2d inverseRotationMatrix = this.getInverseRotationMatrix();
+		Vec2d xvec = inverseRotationMatrix.column1();
+		Vec2d yvec = inverseRotationMatrix.column2();
 
-		GlStateManager.translate(this.width / 2, this.height / 2, 0);
-		GlStateManager.rotate(this.orientation, 0, 0, 1);
-		GlStateManager.translate(-viewPortWidth / 2, -viewPortHeight / 2, 0);
+		GlStateManager.translate(widthViewPort / 2, heightViewPort / 2, 0);
+		GlStateManager.rotate(rotation, 0, 0, 1);
+		GlStateManager.translate(-extendedWidth / 2, -extendedHeight / 2, 0);
 
+		double upperLeftX = this.getUpperLeftX();
+		double upperLeftY = this.getUpperLeftY();
 
-		double upperLeftX = this.getUpperLeftX() + deltaWidth;
-		double upperLeftY = this.getUpperLeftY() + deltaHeight;
+		int zoomLevel = (int) Math.round(zoom);
+		double zoomSizeFactor = zoom - zoomLevel;
 
-		Minecraft mc = Minecraft.getMinecraft();
-		TextureManager textureManager = mc.getTextureManager();
-
-		int zoomLevel = (int) Math.round(this.zoom);
-		double zoomSizeFactor = this.zoom - zoomLevel;
-
-		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.tileScaling * Math.pow(2, zoomSizeFactor);
+		double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.getTileScaling() * Math.pow(2, zoomSizeFactor);
 
 		int maxTileXY = (int) WebMercatorUtils.getDimensionsInTile(zoomLevel);
-		double maxX = upperLeftX + viewPortWidth;
-		double maxY = upperLeftY + viewPortHeight;
+		double maxX = upperLeftX + extendedWidth;
+		double maxY = upperLeftY + extendedHeight;
 
 		int lowerTileX = (int) Math.floor(upperLeftX / renderSize);
 		int lowerTileY = (int) Math.floor(upperLeftY / renderSize);
@@ -111,42 +110,42 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 
 				/* 
 				 * Let's do some checks to ensure the tile is indeed visible when rotation is taken into account.
-				 * To do that, we project each corner of the tile onto the corresponding vector or the non-rotated coordinate system,
-				 * and if the result of the projection is further than the limit, we skip the tile
+				 * To do that, we project each corner of the tile onto the corresponding unit vector or the non-rotated coordinate system,
+				 * and if the result of the projection is further than the limit, we skip the tile.
 				 */
-				Vec3d left;
-				Vec3d right;
-				Vec3d top;
-				Vec3d bottom;
-				if(this.orientation < 90) {
-					top = new Vec3d(dispX, dispY, 0);
-					right = new Vec3d(dispX + displayWidth, dispY, 0);
-					bottom = new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
-					left  = new Vec3d(dispX, dispY + displayHeight, 0);
-				} else if(this.orientation < 180){
-					right = new Vec3d(dispX, dispY, 0);
-					bottom = new Vec3d(dispX + displayWidth, dispY, 0);
-					left = new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
-					top = new Vec3d(dispX, dispY + displayHeight, 0);
-				} else if(this.orientation < 270){
-					bottom = new Vec3d(dispX, dispY, 0);
-					left = new Vec3d(dispX + displayWidth, dispY, 0);
-					top = new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
-					right = new Vec3d(dispX, dispY + displayHeight, 0);
+				Vec2d left;
+				Vec2d right;
+				Vec2d top;
+				Vec2d bottom;
+				if(rotation < 90) {
+					top = new Vec2d(dispX, dispY);
+					right = new Vec2d(dispX + displayWidth, dispY);
+					bottom = new Vec2d(dispX + displayWidth, dispY + displayHeight);
+					left  = new Vec2d(dispX, dispY + displayHeight);
+				} else if(rotation < 180){
+					right = new Vec2d(dispX, dispY);
+					bottom = new Vec2d(dispX + displayWidth, dispY);
+					left = new Vec2d(dispX + displayWidth, dispY + displayHeight);
+					top = new Vec2d(dispX, dispY + displayHeight);
+				} else if(rotation < 270){
+					bottom = new Vec2d(dispX, dispY);
+					left = new Vec2d(dispX + displayWidth, dispY);
+					top = new Vec2d(dispX + displayWidth, dispY + displayHeight);
+					right = new Vec2d(dispX, dispY + displayHeight);
 				} else {
-					left = new Vec3d(dispX, dispY, 0);
-					top = new Vec3d(dispX + displayWidth, dispY, 0);
-					right= new Vec3d(dispX + displayWidth, dispY + displayHeight, 0);
-					bottom = new Vec3d(dispX, dispY + displayHeight, 0);
+					left = new Vec2d(dispX, dispY);
+					top = new Vec2d(dispX + displayWidth, dispY);
+					right= new Vec2d(dispX + displayWidth, dispY + displayHeight);
+					bottom = new Vec2d(dispX, dispY + displayHeight);
 				}
-				top = top.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
-				right = right.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
-				bottom = bottom.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
-				left = left.add(-viewPortWidth / 2, -viewPortHeight/ 2, 0);
-				if(bottom.dotProduct(yvec) < -this.height / 2) continue;
-				if(top.dotProduct(yvec) > this.height / 2) continue;
-				if(right.dotProduct(xvec) < -this.width / 2) continue;
-				if(left.dotProduct(xvec) > this.width / 2) continue;
+				top = top.add(-extendedWidth / 2, -extendedHeight/ 2);
+				right = right.add(-extendedWidth / 2, -extendedHeight/ 2);
+				bottom = bottom.add(-extendedWidth / 2, -extendedHeight/ 2);
+				left = left.add(-extendedWidth / 2, -extendedHeight/ 2);
+				if(bottom.dotProd(yvec) < -heightViewPort / 2) continue;
+				if(top.dotProd(yvec) > heightViewPort / 2) continue;
+				if(right.dotProd(xvec) < -widthViewPort / 2) continue;
+				if(left.dotProd(xvec) > widthViewPort / 2) continue;
 
 				neededTiles.add(bestTile);
 				boolean lowerResRender = false;
