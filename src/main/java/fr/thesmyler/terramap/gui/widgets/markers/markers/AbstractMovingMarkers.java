@@ -57,6 +57,10 @@ public abstract class AbstractMovingMarkers extends Marker {
 		return this.latitude;
 	}
 	
+	public float getAzimuth() {
+		return this.azimuth;
+	}
+	
 	protected abstract float getActualAzimuth() throws OutOfProjectionBoundsException;
 
 }

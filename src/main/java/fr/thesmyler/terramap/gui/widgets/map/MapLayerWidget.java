@@ -142,6 +142,8 @@ abstract class MapLayerWidget implements IWidget {
 	}
 	
 	public void setRotation(float rotation) {
+		while(rotation >= 360f) rotation -= 360;
+		while(rotation < 0f) rotation += 360;
 		this.rotation = rotation;
 		this.updateViewPort();
 	}

@@ -85,6 +85,11 @@ public class TerramapConfig {
 		@Config.Comment("Whether or not player directions should show up on the minimap")
 		public boolean playerDirections = true;
 		
+		@Config.Name("minimap_player_rotation")
+		@Config.LangKey("terramap.config.minimap.rotation")
+		@Config.Comment("Whether or not to turn the minimap as the player looks around")
+		public boolean playerRotation = false;
+		
 		public double getEffectiveTileScaling() {
 			if(this.tileScaling == 0) {
 				return SmyLibGui.getMinecraftGuiScale();
