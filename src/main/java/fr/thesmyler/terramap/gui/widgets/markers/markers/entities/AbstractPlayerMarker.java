@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
+//TODO Take map rotation into account when rendering direction arrow
 public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 
 	private int downScaleFactor;
@@ -34,9 +36,11 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
 
 		// Draw the direction arrow
 		if(this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
+			float azimuth = this.azimuth;
+			if(parent instanceof MapWidget) azimuth += ((MapWidget)parent).getRotation();
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(x + this.width / 2, y + this.height / 2, 0);
-			GlStateManager.rotate(this.azimuth, 0, 0, 1);
+			GlStateManager.rotate(azimuth, 0, 0, 1);
 			GlStateManager.disableTexture2D();
 			GlStateManager.enableBlend();
 			GlStateManager.disableAlpha();
