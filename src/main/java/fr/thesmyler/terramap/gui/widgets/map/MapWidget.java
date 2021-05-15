@@ -16,6 +16,7 @@ import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
+import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
@@ -41,6 +42,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
@@ -479,6 +481,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 		double zoomLongitude, zoomLatitude;
 		double zoomTarget = 0;
 		float speedX, speedY;
+		float rotateAroundX = Float.NaN;
+		float rotateAroundY = Float.NaN;
+		double rotateAroundLongitude, rotateAroundLatitude;
 
 		public ControllerMapLayer(double tileScaling) {
 			super(tileScaling);
@@ -487,7 +492,20 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 		@Override
 		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-			// Literally nothing to do here, this is strictly used to handle user input
+			if(!Float.isNaN(this.rotateAroundX) && !Float.isNaN(this.rotateAroundY)) {
+				int vertexCount = 5;
+				float radius = 3;
+				double[] vertices = new double[vertexCount*2];
+				Vec2d pos = new Vec2d(0, -radius);
+				Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
+				for(int i = 0; i < vertexCount; i++) {
+					Vec2d absPos = pos.add(x + this.rotateAroundX, y + this.rotateAroundY);
+					vertices[2*i] = absPos.x;
+					vertices[2*i + 1] = absPos.y;
+					pos = rot.prod(pos);
+				}
+				RenderUtil.drawPolygon(Color.DARK_OVERLAY, vertices);
+			}
 		}
 
 		@Override
@@ -501,6 +519,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 			}
 			if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && Math.abs(MapWidget.this.getMouseLatitude()) <= WebMercatorUtils.LIMIT_LATITUDE) {
 				parent.showMenu(mouseX, mouseY, MapWidget.this.rightClickMenu);
+			}
+			if(MapWidget.this.isInteractive() && mouseButton == 2 && Float.isNaN(this.rotateAroundX) && Float.isNaN(this.rotateAroundY)) {
+				this.rotateAroundX = mouseX;
+				this.rotateAroundY = mouseY;
+				double[] lola = this.getScreenGeoPos(mouseX, mouseY);
+				this.rotateAroundLongitude = lola[0];
+				this.rotateAroundLatitude = lola[1];
+				MapWidget.this.trackingMarker = null;
 			}
 			return false;
 		}
@@ -525,6 +551,26 @@ public class MapWidget extends FlexibleWidgetContainer {
 				this.speedX = dX / dt;
 				this.speedY = dY / dt;
 			}
+			if(MapWidget.this.isInteractive() && mouseButton == 2) {
+				Vec2d pos = new Vec2d(mouseX - this.rotateAroundX, mouseY - this.rotateAroundY);
+				Vec2d previousPos = pos.add(-dX, -dY);
+				if(pos.normSquared() != 0d && previousPos.normSquared() != 0d) {
+					pos = pos.normalize();
+					previousPos = previousPos.normalize();
+					double acosa = pos.dotProd(previousPos);
+					float angle = (float) Math.toDegrees(Math.acos(acosa));
+					if(pos.crossProd(previousPos) > 0) angle *= -1;
+					if(Double.isFinite(angle)) {
+						this.setRotation(this.getRotation() + angle);
+						Vec2d newPos = this.getScreenPos(this.rotateAroundLongitude, this.rotateAroundLatitude);
+						double ndX = newPos.x - this.rotateAroundX;
+						double ndY = newPos.y - this.rotateAroundY;
+						double[] lola = this.getScreenGeoPos(this.getWidth() / 2 + ndX, this.getHeight() / 2 + ndY);
+						this.setCenterLongitude(lola[0]);
+						this.setCenterLatitude(lola[1]);
+					}
+				}
+			}
 		}
 
 		@Override
@@ -535,23 +581,23 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
 			if(MapWidget.this.isInteractive()) {
 				double z = amount > 0? 1: -1;
-				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-					float rotation = this.getRotation();
-					rotation += z;
-					if(rotation >= 360f) rotation -= 360f;
-					if(rotation < 0f) rotation += 360f;
-					this.setRotation(rotation);
+				z *= MapWidget.this.zoomSnapping;
+				if(MapWidget.this.focusedZoom) {
+					double[] lola = this.getScreenGeoPos(mouseX, mouseY);
+					this.zoom(lola[0], lola[1], z);
 				} else {
-					z *= MapWidget.this.zoomSnapping;
-					if(MapWidget.this.focusedZoom) {
-						double[] lola = this.getScreenGeoPos(mouseX, mouseY);
-						this.zoom(lola[0], lola[1], z);
-					} else {
-						this.zoom(z);
-					}
+					this.zoom(z);
 				}
 			}
 			return false;
+		}
+
+		@Override
+		public void onMouseReleased(float mouseX, float mouseY, int button, IWidget draggedWidget) {
+			if(button == 2) {
+				this.rotateAroundLatitude = this.rotateAroundLongitude = Double.NaN;
+				this.rotateAroundX = this.rotateAroundY = Float.NaN;
+			}
 		}
 
 		public void zoom(double val) {
