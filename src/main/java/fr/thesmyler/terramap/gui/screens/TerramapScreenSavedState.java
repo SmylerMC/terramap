@@ -12,6 +12,7 @@ public class TerramapScreenSavedState {
 	public double zoomLevel = 0;
 	public double centerLongitude = 0;
 	public double centerLatitude = 0;
+	public float rotation = 0;
 	public String mapStyle = "";
 	
 	public boolean infoPannel = false;
@@ -24,6 +25,7 @@ public class TerramapScreenSavedState {
 			double zoomLevel,
 			double centerLongitude,
 			double centerLatitude,
+			float rotation,
 			String mapStyle,
 			boolean infoPannel,
 			boolean debug,
@@ -34,6 +36,7 @@ public class TerramapScreenSavedState {
 		this.zoomLevel = zoomLevel;
 		this.centerLongitude = centerLongitude;
 		this.centerLatitude = centerLatitude;
+		this.rotation = rotation;
 		this.mapStyle = mapStyle;
 		this.infoPannel = infoPannel;
 		this.debug = debug;
