@@ -431,6 +431,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 				this.map.getZoom(),
 				this.map.getCenterLongitude(),
 				this.map.getCenterLatitude(),
+				this.map.getRotation(),
 				this.map.getBackgroundStyle().getId(),
 				this.infoPanel.getTarget().equals(PanelTarget.OPENED),
 				TerramapConfig.CLIENT.saveUiState ? this.debugMode : false,
@@ -445,6 +446,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.map.setZoom(state.zoomLevel);
 		this.map.setCenterLongitude(state.centerLongitude);
 		this.map.setCenterLatitude(state.centerLatitude);
+		this.map.setRotation(state.rotation);
 		this.map.restoreTracking(state.trackedMarker);
 		this.infoPanel.setStateNoAnimation(state.infoPannel);
 		TexturedButtonWidget newButton;
