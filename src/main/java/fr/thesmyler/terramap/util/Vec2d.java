@@ -49,5 +49,11 @@ public final class Vec2d {
 	public double maximumNorm() {
 		return Math.max(Math.abs(this.x), Math.abs(this.y));
 	}
+	
+	public Vec2d normalize() {
+		double norm = this.norm();
+		if(norm == 0d) throw new ArithmeticException("Cannot normalize null vector");
+		return this.scale(1d / norm);
+	}
 
 }
