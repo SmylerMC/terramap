@@ -87,6 +87,8 @@ public abstract class HudScreenHandler {
 		map.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
 		map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
 		map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
+		map.setTrackRotation(TerramapConfig.CLIENT.minimap.playerRotation);
+		if(!TerramapConfig.CLIENT.minimap.playerRotation) map.setRotation(0f);
 		Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
 		IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
 		if(bg == null || ! bg.isAllowedOnMinimap()) {

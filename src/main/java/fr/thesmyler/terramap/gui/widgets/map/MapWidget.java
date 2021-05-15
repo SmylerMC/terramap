@@ -35,6 +35,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerCo
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
@@ -60,6 +61,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private boolean showCopyright = true;
 	private boolean debugMode = false;
 	private boolean visible = true;
+	private boolean trackRotation = false;
 
 	private final ControllerMapLayer controller;
 	protected RasterMapLayerWidget background;
@@ -456,6 +458,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 			if(this.widgets.contains(this.trackingMarker) && Double.isFinite(this.trackingMarker.getLongitude()) && Double.isFinite(this.trackingMarker.getLatitude())) {
 				this.setCenterLongitude(this.trackingMarker.getLongitude());
 				this.setCenterLatitude(this.trackingMarker.getLatitude());
+				if(this.trackRotation && this.trackingMarker instanceof AbstractMovingMarkers) {
+					float azimuth = ((AbstractMovingMarkers)this.trackingMarker).getAzimuth();
+					if(Float.isFinite(azimuth)) this.setRotation(-azimuth);
+				}
 			} else {
 				this.trackingMarker = null;
 			}
@@ -980,6 +986,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 	
 	public void setRotation(float rotation) {
 		this.controller.setRotation(rotation);
+	}
+	
+	public boolean doesMapTrackRotation() {
+		return this.trackRotation;
+	}
+	
+	public void setTrackRotation(boolean yesNo) {
+		this.trackRotation = yesNo;
 	}
 
 }
