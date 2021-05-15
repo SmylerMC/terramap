@@ -38,6 +38,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
+import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
@@ -75,6 +76,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 	private TexturedButtonWidget zoomOutButton = new TexturedButtonWidget(50, IncludedTexturedButtons.MINUS);
 	private TexturedButtonWidget centerButton = new TexturedButtonWidget(50, IncludedTexturedButtons.CENTER);
 	private TexturedButtonWidget styleButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PAPER);
+	private CircularCompassWidget compass = new CircularCompassWidget(100, 100, 50, 100);
 	
 	// Info panel widgets
 	private TextWidget zoomText;
@@ -106,6 +108,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
 		if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
 		TerramapClientContext.getContext().registerForUpdates(true);
+		this.compass.setOnClick(() -> this.map.setRotation(0));
+		this.compass.setFadeAwayOnZero(true);
 	}
 	
 	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
@@ -129,7 +133,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.closeButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.close.tooltip"));
 		this.closeButton.enable();
 		content.addWidget(this.closeButton);
-		this.zoomInButton.setX(this.closeButton.getX()).setY(this.closeButton.getY() + closeButton.getHeight() + 15);
+		this.compass.setX(this.closeButton.getX());
+		this.compass.setY(this.closeButton.getY() + this.closeButton.getHeight() + 5);
+		this.compass.setSize(this.closeButton.getWidth());
+		content.addWidget(this.compass);
+		this.zoomInButton.setX(this.compass.getX()).setY(this.compass.getY() + this.compass.getHeight() + 5);
 		this.zoomInButton.setOnClick(() -> this.map.zoom(1));
 		this.zoomInButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomin.tooltip"));
 		this.zoomInButton.enable();
@@ -257,6 +265,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
 		this.zoomText.setText(new TextComponentString(GeoServices.formatZoomLevelForDisplay(this.map.getZoom())));
 		this.centerButton.setEnabled(!(this.map.getTracking() instanceof MainPlayerMarker));
+		
+		this.compass.setAzimuth(this.map.getRotation());
 
 		double mouseLat = this.map.getMouseLatitude();
 		double mouseLon = this.map.getMouseLongitude();
