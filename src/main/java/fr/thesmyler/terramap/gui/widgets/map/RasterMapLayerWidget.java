@@ -68,11 +68,11 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		double extendedHeight = this.getExtendedHeight();
 
 		// These are the x and y original elementary vectors expressed in the rotated coordinate system
-		Mat2d inverseRotationMatrix = this.getInverseRotationMatrix();
-		Vec2d xvec = inverseRotationMatrix.column1();
-		Vec2d yvec = inverseRotationMatrix.column2();
+		Mat2d rotationMatrix = this.getRotationMatrix();
+		Vec2d xvec = rotationMatrix.line1();
+		Vec2d yvec = rotationMatrix.line2();
 
-		GlStateManager.translate(widthViewPort / 2, heightViewPort / 2, 0);
+		GlStateManager.translate(x + widthViewPort / 2, y + heightViewPort / 2, 0);
 		GlStateManager.rotate(rotation, 0, 0, 1);
 		GlStateManager.translate(-extendedWidth / 2, -extendedHeight / 2, 0);
 
@@ -223,8 +223,8 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				}
 				textureManager.bindTexture(texture);
 				RenderUtil.drawModalRectWithCustomSizedTexture(
-						x + dispX,
-						y + dispY,
+						dispX,
+						dispY,
 						dX, dY,
 						displayWidth,
 						displayHeight,
