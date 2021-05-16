@@ -409,7 +409,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 			if(keyCode == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
 			if(keyCode == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
 			if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
-			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) this.chat.setOpen(!this.chat.isOpen());
+			if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) {
+				this.map.stopPassiveInputs();
+				this.chat.setOpen(!this.chat.isOpen());
+			}
 		} else {
 			super.keyTyped(typedChar, keyCode);
 		}
