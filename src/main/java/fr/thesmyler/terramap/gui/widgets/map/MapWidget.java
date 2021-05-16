@@ -487,6 +487,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 		float rotateAroundX = Float.NaN;
 		float rotateAroundY = Float.NaN;
 		double rotateAroundLongitude, rotateAroundLatitude;
+		private float lastUpdateMouseX = Float.NaN;
+		private float lastUpdateMouseY = Float.NaN;
 
 		public ControllerMapLayer(double tileScaling) {
 			super(tileScaling);
@@ -497,23 +499,30 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 			if(!Float.isNaN(this.rotateAroundX) && !Float.isNaN(this.rotateAroundY)) {
 				int vertexCount = 5;
-				float radius = 3;
-				double[] vertices = new double[vertexCount*2];
-				Vec2d pos = new Vec2d(0, -radius);
+				float radiusLarge = 5;
+				float radiusSmall = 2;
+				double[] verticesLarge = new double[vertexCount*2];
+				double[] verticesSmall = new double[vertexCount*2];
+				Vec2d pos = new Vec2d(0, -1);
 				Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
 				for(int i = 0; i < vertexCount; i++) {
-					Vec2d absPos = pos.add(x + this.rotateAroundX, y + this.rotateAroundY);
-					vertices[2*i] = absPos.x;
-					vertices[2*i + 1] = absPos.y;
+					Vec2d absPosLarge = pos.scale(radiusLarge).add(x + this.rotateAroundX, y + this.rotateAroundY);
+					Vec2d absPosSmall = pos.scale(radiusSmall).add(x + this.rotateAroundX, y + this.rotateAroundY);
+					verticesLarge[2*i] = absPosLarge.x;
+					verticesLarge[2*i + 1] = absPosLarge.y;
+					verticesSmall[2*i] = absPosSmall.x;
+					verticesSmall[2*i + 1] = absPosSmall.y;
 					pos = rot.prod(pos);
 				}
-				RenderUtil.drawPolygon(Color.DARK_OVERLAY, vertices);
+				RenderUtil.drawPolygon(Color.DARK_OVERLAY, verticesLarge);
+				RenderUtil.drawPolygon(Color.DARK_OVERLAY, verticesSmall);
 			}
 		}
 
 		@Override
 		public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 			this.cancelMovement();
+			this.cancelRotationInput();
 			if(MapWidget.this.isShortcutEnabled()) {
 				MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLongitude, MapWidget.this.mouseLatitude);
 				if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
@@ -537,6 +546,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		@Override
 		public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
 			this.cancelMovement();
+			this.cancelRotationInput();
 			// We don't care about double right clicks
 			if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
 
@@ -548,15 +558,32 @@ public class MapWidget extends FlexibleWidgetContainer {
 		}
 
 		@Override
+		public boolean onParentClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
+			this.cancelRotationInput();
+			return super.onParentClick(mouseX, mouseY, mouseButton, parent);
+		}
+
+		@Override
+		public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
+			this.cancelRotationInput();
+			return super.onParentDoubleClick(mouseX, mouseY, mouseButton, parent);
+		}
+
+		@Override
 		public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
+			this.cancelRotationInput();
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				this.moveMap(dX, dY);
 				this.speedX = dX / dt;
 				this.speedY = dY / dt;
 			}
-			if(MapWidget.this.isInteractive() && mouseButton == 2) {
+		}
+
+		@Override
+		public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
+			if(MapWidget.this.isInteractive() && !Float.isNaN(this.rotateAroundX) && !Float.isNaN(this.rotateAroundY) && !Float.isNaN(this.lastUpdateMouseX) && !Float.isNaN(this.lastUpdateMouseY)) {
 				Vec2d pos = new Vec2d(mouseX - this.rotateAroundX, mouseY - this.rotateAroundY);
-				Vec2d previousPos = pos.add(-dX, -dY);
+				Vec2d previousPos = new Vec2d(this.lastUpdateMouseX - this.rotateAroundX, this.lastUpdateMouseY - this.rotateAroundY);
 				if(pos.normSquared() != 0d && previousPos.normSquared() != 0d) {
 					pos = pos.normalize();
 					previousPos = previousPos.normalize();
@@ -574,10 +601,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 					}
 				}
 			}
-		}
-
-		@Override
-		public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
+			this.lastUpdateMouseX = mouseX;
+			this.lastUpdateMouseY = mouseY;
 		}
 
 		@Override
@@ -595,19 +620,12 @@ public class MapWidget extends FlexibleWidgetContainer {
 			return false;
 		}
 
-		@Override
-		public void onMouseReleased(float mouseX, float mouseY, int button, IWidget draggedWidget) {
-			if(button == 2) {
-				this.rotateAroundLatitude = this.rotateAroundLongitude = Double.NaN;
-				this.rotateAroundX = this.rotateAroundY = Float.NaN;
-			}
-		}
-
 		public void zoom(double val) {
 			this.zoom(this.getCenterLongitude(), this.getCenterLatitude(), val);
 		}
 		
 		public void zoom(double longitude, double latitude, double zoom) {
+			this.cancelRotationInput();
 			this.zoomLongitude = longitude;
 			this.zoomLatitude = latitude;
 			this.zoomTarget += zoom;
@@ -693,6 +711,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 				return;
 			}
 			
+			this.cancelRotationInput();
+			
 			float maxDRot = actualRotationTarget - currentRotation;
 			float drot = MapWidget.this.rotationResponsiveness * maxDRot * dt;
 			drot = maxDRot > 0 ? Math.min(drot, maxDRot) : Math.max(drot, maxDRot);
@@ -719,6 +739,11 @@ public class MapWidget extends FlexibleWidgetContainer {
 		
 		public void cancelMovement() {
 			this.speedX = this.speedY = 0f;
+		}
+		
+		public void cancelRotationInput() {
+			this.rotateAroundLatitude = this.rotateAroundLongitude = Double.NaN;
+			this.rotateAroundX = this.rotateAroundY = Float.NaN;
 		}
 		
 		@Override
@@ -1082,6 +1107,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 	
 	public void setZoomWithAnimation(double zoom) {
 		this.controller.zoomTarget = zoom;
+	}
+	
+	public void stopPassiveInputs() {
+		this.controller.cancelRotationInput();
 	}
 
 }
