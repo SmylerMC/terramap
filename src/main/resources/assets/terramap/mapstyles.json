@@ -18,7 +18,8 @@
                 "de_de": "OpenStreetMap",
                 "zh_cn": "OpenStreetMap",
                 "cz_cz": "OpenStreetMap",
-                "sk_sk": "OpenStreetMap"
+                "sk_sk": "OpenStreetMap",
+                "ko_kr": "OpenStreetMap"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org\"}},{\"text\":\" contributors\",\"color\":\"white\"}]",
@@ -46,7 +47,8 @@
                 "de_de": "Humanitär",
                 "zh_cn": "Humanitarian",
                 "cz_cz": "Humanitární",
-                "sk_sk": "Humanitárna"
+                "sk_sk": "Humanitárna",
+                "ko_kr": "Humanitarian"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \"},{\"text\":\"OpenStreetMap contributors\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.org/copyright\"}},{\"text\":\". Tiles style by \"},{\"text\":\"Humanitarian OpenStreetMap Team\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.hotosm.org/\"}},{\"text\":\" hosted by \"},{\"text\":\"OpenStreetMap France\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.openstreetmap.fr/\"}}]",
@@ -75,7 +77,8 @@
                 "de_de": "Terrain",
                 "zh_cn": "地形",
                 "cz_cz": "Terén",
-                "sk_sk": "Terén"
+                "sk_sk": "Terén",
+                "ko_kr": "지형"
             },
             "copyright": {
                 "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"Map tiles by \"},{\"text\":\"Stamen Design\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://stamen.com/\"}},{\"text\":\", under \"},{\"text\":\"CC BY 3.0\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://creativecommons.org/licenses/by/3.0\"}},{\"text\":\".\",\"underlined\":true,\"color\":\"aqua\"},{\"text\":\" Data by \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://openstreetmap.org/\"}},{\"text\":\", under \"},{\"text\":\"ODbL\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright\"}}]"
