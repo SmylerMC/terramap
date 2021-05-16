@@ -54,7 +54,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.TextComponentString;
 
-//TODO Disable "Center map here" if not interactive
 public class MapWidget extends FlexibleWidgetContainer {
 
 	private boolean interactive = true;
@@ -141,9 +140,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
 			this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
 		});
-		this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.center"), () -> {
+		MenuEntry centerHere = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.center"), () -> {
 			this.setCenterPosition(this.mouseLongitude, this.mouseLatitude);
 		});
+		centerHere.enabled = this.interactive;
 		MenuWidget copySubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
 		copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.geo"), () -> {
 			GuiScreen.setClipboardString("" + this.mouseLatitude + " " + this.mouseLongitude);
