@@ -79,7 +79,7 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
 	public int getDisplayPriority();
 
 	/**
-	 * @return whether or not the tile is allowed on the minimap
+	 * @return whether or not the map is allowed on the minimap
 	 */
 	public boolean isAllowedOnMinimap();
 	
