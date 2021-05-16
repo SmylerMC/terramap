@@ -160,6 +160,7 @@ terramap.terramapscreen.mapstylefailed.exception=Exception: %1$s
 
 ## Buttons
 terramap.terramapscreen.buttons.close.tooltip=Close map
+terramap.terramapscreen.buttons.compass.tooltip=Reset map rotation
 terramap.terramapscreen.buttons.zoomin.tooltip=Zoom in
 terramap.terramapscreen.buttons.zoomout.tooltip=Zoom out
 terramap.terramapscreen.buttons.track.tooltip=Track player
