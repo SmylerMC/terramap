@@ -38,7 +38,7 @@ public class Screen extends GuiScreen {
         float mouseX = (float)Mouse.getX() * this.width / this.mc.displayWidth;
         float mouseY = this.height - (float)Mouse.getY() * this.height / this.mc.displayHeight - 1;
         this.onUpdate();
-		this.container.onUpdate(null);
+		this.container.onUpdate(mouseX, mouseY, null);
 		this.container.draw(0, 0, mouseX, mouseY, true, true, null);
 		IWidget hoveredWidget = this.container.getHoveredWidget();
 		boolean mouseMoved = mouseX != this.lastRenderMouseX && mouseY != this.lastRenderMouseY;

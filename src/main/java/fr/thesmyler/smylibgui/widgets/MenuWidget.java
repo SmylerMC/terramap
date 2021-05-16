@@ -182,10 +182,6 @@ public class MenuWidget implements IWidget {
 		return true;
 	}
 
-	@Override
-	public void onUpdate(WidgetContainer parent) {
-	}
-
 	public MenuEntry addEntry(String text, Runnable action) {
 		return this.addEntry(text, action, null, true);
 	}

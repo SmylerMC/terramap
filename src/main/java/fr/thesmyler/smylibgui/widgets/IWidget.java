@@ -159,13 +159,14 @@ public interface IWidget {
 	 * 
 	 */
 	public default void onMouseReleased(float mouseX, float mouseY, int button, @Nullable IWidget draggedWidget) {}
-	
+
 	/**
 	 * Called between the time the events are processed and the screen is drawn
-	 * 
+	 * @param mouseX
+	 * @param mouseY
 	 * @param parent screen
 	 */
-	public default void onUpdate(@Nullable WidgetContainer parent) {}
+	public default void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {}
 	
 	/**
 	 * Called when a key is typed
