@@ -62,7 +62,6 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
-//FIXME Tooltips are broken
 public class TerramapScreen extends Screen implements ITabCompleter {
 
 	private GuiScreen parent;
@@ -108,8 +107,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
 		if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
 		TerramapClientContext.getContext().registerForUpdates(true);
-		this.compass.setOnClick(() -> this.map.setRotationWithAnimation(0f));
-		this.compass.setFadeAwayOnZero(true);
 	}
 	
 	public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
@@ -133,6 +130,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.closeButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.close.tooltip"));
 		this.closeButton.enable();
 		content.addWidget(this.closeButton);
+		this.compass.setOnClick(() -> this.map.setRotationWithAnimation(0f));
+		this.compass.setFadeAwayOnZero(true);
+		this.compass.setTooltip(I18n.format("terramap.terramapscreen.buttons.compass.tooltip"));
 		this.compass.setX(this.closeButton.getX());
 		this.compass.setY(this.closeButton.getY() + this.closeButton.getHeight() + 5);
 		this.compass.setSize(this.closeButton.getWidth());

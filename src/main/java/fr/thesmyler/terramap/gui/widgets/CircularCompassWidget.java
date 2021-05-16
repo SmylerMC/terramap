@@ -28,6 +28,7 @@ public class CircularCompassWidget implements IWidget {
 	private Runnable onClick;
 	private boolean visible = true;
 	private boolean fadeAwayOnZero = false;
+	private String tooltip = null;
 	
 	private Animation fader = new Animation(1000);
 
@@ -240,6 +241,20 @@ public class CircularCompassWidget implements IWidget {
 
 	public void setFadeAwayOnZero(boolean fadeAwayOnZero) {
 		this.fadeAwayOnZero = fadeAwayOnZero;
+	}
+
+	@Override
+	public String getTooltipText() {
+		return this.tooltip;
+	}
+
+	@Override
+	public long getTooltipDelay() {
+		return IWidget.super.getTooltipDelay();
+	}
+	
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 
 }

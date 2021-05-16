@@ -54,6 +54,8 @@ public class Screen extends GuiScreen {
 				this.drawHoveringText(hoveredWidget.getTooltipText(), mouseX, mouseY);
 		}
 		this.lastHoveredWidget = hoveredWidget;
+		this.lastRenderMouseX = mouseX;
+		this.lastRenderMouseY = mouseY;
 	}
 	
 	public void onUpdate() {}
@@ -102,8 +104,12 @@ public class Screen extends GuiScreen {
 	public void drawHoveringText(String text, double x, double y) {
 		// This is a workaround for vanilla not allowing double coordinates
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, 0);
-		this.drawHoveringText(text, 0, 0);
+		int px = (int) Math.floor(x);
+		int py = (int) Math.floor(y);
+		double rx = x - px;
+		double ry = y - py;
+		GlStateManager.translate(rx, ry, 0);
+		this.drawHoveringText(text, px, py);
 		GlStateManager.popMatrix();
 	}
 	
