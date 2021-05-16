@@ -56,11 +56,10 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 			String name = this.entity.getDisplayName().getFormattedText();
 			float strWidth = parent.getFont().getStringWidth(name);
 			float nameY = y - parent.getFont().height() - 2;
-			RenderUtil.drawRect(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, Color.LIGHT_OVERLAY);
+			RenderUtil.drawRect(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, Color.DARK_OVERLAY);
 			parent.getFont().drawCenteredString(x + this.width / 2, nameY, name, Color.WHITE, false);
+			GlStateManager.popMatrix();
 		}
-		
-		GlStateManager.color(1, 1, 1, 1);
 	}
 	
 	@Override
