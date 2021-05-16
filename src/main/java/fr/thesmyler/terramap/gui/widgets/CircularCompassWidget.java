@@ -99,7 +99,7 @@ public class CircularCompassWidget implements IWidget {
 	}
 	
 	@Override
-	public void onUpdate(WidgetContainer parent) {
+	public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 		if(this.fadeAwayOnZero) {
         	if(this.fader.getState() == AnimationState.STOPPED) {
         		if(this.fader.getProgress() <= 0f && this.azimuth != 0f)

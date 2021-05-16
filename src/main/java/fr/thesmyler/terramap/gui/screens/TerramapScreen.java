@@ -526,7 +526,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		}
 
 		@Override
-		public void onUpdate(WidgetContainer parent) {
+		public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 			for(IWidget w: this.widgets) {
 				if(w instanceof MapPreview) {
 					MapPreview map = (MapPreview)w;
@@ -534,7 +534,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 					map.setCenterPosition(TerramapScreen.this.map.getCenterPosition());
 				}
 			}
-			super.onUpdate(parent);
+			super.onUpdate(mouseX, mouseY, parent);
 		}
 
 		@Override

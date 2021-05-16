@@ -53,7 +53,7 @@ public final class HudScreen {
 		}
         float mouseX = (float)Mouse.getX() / res.getScaleFactor();
         float mouseY = height - (float)Mouse.getY() / res.getScaleFactor() - 1;
-		CONTAINER.onUpdate(null);
+		CONTAINER.onUpdate(mouseX, mouseY, null);
 		CONTAINER.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1f, 1f, 1f, .5f); // Reset color to what it was

@@ -61,7 +61,7 @@ public abstract class Marker implements IWidget {
 	public abstract float getDeltaY();
 
 	@Override
-	public void onUpdate(WidgetContainer parent) {
+	public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 		if(parent instanceof MapWidget) {
 			MapWidget map = (MapWidget) parent;
 			this.update(map);

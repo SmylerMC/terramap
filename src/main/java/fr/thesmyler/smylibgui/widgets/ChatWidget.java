@@ -42,7 +42,7 @@ public class ChatWidget implements IWidget, ITabCompleter {
 	}
 	
 	@Override
-	public void onUpdate(WidgetContainer parent) {
+	public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 		float[] bbox = HudScreen.getChatLinesBoundingBox();
 		this.lineSectionX = bbox[0];
 		this.lineSectionY = bbox[1];
