@@ -97,7 +97,7 @@ public class HudConfigScreen extends Screen {
 		this.directionsButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, b));
 		this.rotationButton.setOnChange(b -> {
 			this.minimap.setTrackRotation(b);
-			if(!b) this.minimap.setRotation(0);
+			if(!b) this.minimap.setRotationWithAnimation(0);
 		});
 		this.minimapWindow.setEnableTopBar(false);
 		this.minimapWindow.setCenterDragColor(Color.TRANSPARENT);

@@ -108,7 +108,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
 		if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
 		TerramapClientContext.getContext().registerForUpdates(true);
-		this.compass.setOnClick(() -> this.map.setRotation(0));
+		this.compass.setOnClick(() -> this.map.setRotationWithAnimation(0f));
 		this.compass.setFadeAwayOnZero(true);
 	}
 	
