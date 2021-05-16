@@ -23,7 +23,6 @@ import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
@@ -42,6 +41,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.GeoServices;
+import fr.thesmyler.terramap.util.GeoUtil;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
@@ -53,6 +54,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.TextComponentString;
+
 
 public class MapWidget extends FlexibleWidgetContainer {
 
@@ -1102,7 +1104,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	}
 	
 	public void setRotationWithAnimation(float rotation) {
-		this.controller.rotationTarget = GeoServices.getAzimuthInRange(rotation);
+		this.controller.rotationTarget = GeoUtil.getAzimuthInRange(rotation);
 	}
 	
 	public void setZoomWithAnimation(double zoom) {
