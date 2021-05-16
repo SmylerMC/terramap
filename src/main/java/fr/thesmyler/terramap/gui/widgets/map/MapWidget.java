@@ -434,7 +434,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.profiler.endStartSection("update-markers");
 		for(IWidget w: this.widgets) {
 			if(w instanceof Marker) {
-				w.onUpdate(this); 
+				w.onUpdate(0, 0, this); 
 			}
 		}
 		if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
@@ -446,8 +446,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 	}
 
 	@Override
-	public void onUpdate(WidgetContainer parent) {
-		super.onUpdate(parent);
+	public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
+		super.onUpdate(mouseX, mouseY, parent);
 		long ctime = System.currentTimeMillis();
 		long dt = ctime - this.lastUpdateTime;
 		

@@ -64,7 +64,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 	}
 	
 	@Override
-	public void onUpdate(WidgetContainer parent) {
+	public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 		double x = this.entity.posX;
 		double z = this.entity.posZ;
 		double[] lola = {Double.NaN, Double.NaN};
@@ -78,7 +78,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarkers {
 			this.actualLatitude = this.actualLongitude = Double.NaN;
 			this.actualAzimuth = Float.NaN;
 		}
-		super.onUpdate(parent);
+		super.onUpdate(mouseX, mouseY, parent);
 		if(this.entity.isDead) parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
 	}
 

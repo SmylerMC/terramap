@@ -85,7 +85,7 @@ public abstract class WidgetContainer implements IWidget{
 	}
 
 	@Override
-	public void onUpdate(@Nullable WidgetContainer parent) {
+	public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
 
 		long ctime = System.currentTimeMillis();
 		int j = 0;
@@ -158,7 +158,7 @@ public abstract class WidgetContainer implements IWidget{
 			}
 		}
 		this.delayedActions.clear();
-		for(IWidget w: this.widgets) w.onUpdate(this);
+		for(IWidget w: this.widgets) w.onUpdate(mouseX - this.getX(), mouseY - this.getY(), this);
 
 		if(this.menuToShow != null) {
 			if(parent != null) parent.showMenu(this.getX() + this.menuToShowX, this.getY() + this.menuToShowY, this.menuToShow);

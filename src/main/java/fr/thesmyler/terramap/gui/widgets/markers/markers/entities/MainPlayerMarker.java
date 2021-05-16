@@ -26,7 +26,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 	}
 
 	@Override
-	public void onUpdate(WidgetContainer parent) {
+	public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 		if(Minecraft.getMinecraft().player == null) {
 			parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
 			return;
@@ -45,7 +45,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 		} catch(OutOfProjectionBoundsException e) {
 			this.playerAzimuth = Float.NaN;
 		}
-		super.onUpdate(parent);
+		super.onUpdate(mouseX, mouseY, parent);
 	}
 
 	@Override

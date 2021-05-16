@@ -38,9 +38,9 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
 	}
 	
 	@Override
-	public void onUpdate(WidgetContainer parent) {
+	public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 		this.mainAnimation.update();
-		super.onUpdate(parent);
+		super.onUpdate(mouseX, mouseY, parent);
 	}
 
 	public PanelTarget getTarget() {
