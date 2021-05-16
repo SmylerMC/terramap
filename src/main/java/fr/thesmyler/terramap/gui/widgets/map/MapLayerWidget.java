@@ -1,8 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.GeoServices;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.GeoUtil;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
 
@@ -65,7 +65,7 @@ abstract class MapLayerWidget implements IWidget {
 				this.extendedWidth / 2 + this.getUpperLeftX(),
 				this.extendedHeight / 2 + this.getUpperLeftY());
 		pos = pos.scale(this.tileScaling);
-		double lon = GeoServices.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(pos.x, this.zoom));
+		double lon = GeoUtil.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(pos.x, this.zoom));
 		double lat = WebMercatorUtils.getLatitudeFromY(pos.y, this.zoom);
 		return new double[] {lon, lat};
 	}
@@ -132,6 +132,7 @@ abstract class MapLayerWidget implements IWidget {
 	}
 
 	public void setDimensions(float width, float height) {
+		if(width == this.viewPortWidth && height == this.viewPortHeight) return;
 		this.viewPortWidth = width;
 		this.viewPortHeight = height;
 		this.updateViewPort();
@@ -142,7 +143,8 @@ abstract class MapLayerWidget implements IWidget {
 	}
 	
 	public void setRotation(float rotation) {
-		this.rotation = GeoServices.getAzimuthInRange(rotation);
+		if(rotation == this.rotation) return;
+		this.rotation = GeoUtil.getAzimuthInRange(rotation);
 		this.updateViewPort();
 	}
 	

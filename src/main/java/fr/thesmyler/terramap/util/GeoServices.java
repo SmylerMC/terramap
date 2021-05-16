@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap;
+package fr.thesmyler.terramap.util;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.files.kml.KmlDocument;
 import fr.thesmyler.terramap.files.kml.KmlFile;
 import fr.thesmyler.terramap.files.kml.KmlPlacemark;
@@ -147,32 +148,9 @@ public abstract class GeoServices {
 		return decFormat1.format(zoomLevel);
 	}
 
-	public static double getLongitudeInRange(double longitude) {
-		if(!Double.isFinite(longitude)) throw new RuntimeException("longitude cannot be infinite");
-		double l = longitude;
-		while(l> 180d) l -= 360d;
-		while(l<-180d) l += 360d;
-		return l;
-	}
-
-	public static double getLatitudeInRange(double latitude) {
-		if(!Double.isFinite(latitude)) throw new RuntimeException("longitude cannot be infinite");
-		double l = latitude;
-		while(l> 90d) l -= 180d;
-		while(l<-90d) l += 180d;
-		return l;
-	}
-	
-	public static float getAzimuthInRange(float azimuth) {
-		if(!Float.isFinite(azimuth)) throw new RuntimeException("azimuth cannot be infinite");
-		while(azimuth >= 360f) azimuth -= 360f;
-		while(azimuth < 0f) azimuth += 360f;
-		return azimuth;
-	}
-
 	public static String numeric2NSEW(double longitude, double latitude) {
-		double fixedLon = getLongitudeInRange(longitude);
-		double fixedLat = getLatitudeInRange(latitude);
+		double fixedLon = GeoUtil.getLongitudeInRange(longitude);
+		double fixedLat = GeoUtil.getLatitudeInRange(latitude);
 		String eo = fixedLon < 0 ? "W": "E";
 		String ns = fixedLat < 0 ? "S" : "N";
 		double absLon = Math.abs(fixedLon);
