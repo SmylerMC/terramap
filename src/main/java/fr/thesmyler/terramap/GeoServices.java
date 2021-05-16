@@ -162,6 +162,13 @@ public abstract class GeoServices {
 		while(l<-90d) l += 180d;
 		return l;
 	}
+	
+	public static float getAzimuthInRange(float azimuth) {
+		if(!Float.isFinite(azimuth)) throw new RuntimeException("azimuth cannot be infinite");
+		while(azimuth >= 360f) azimuth -= 360f;
+		while(azimuth < 0f) azimuth += 360f;
+		return azimuth;
+	}
 
 	public static String numeric2NSEW(double longitude, double latitude) {
 		double fixedLon = getLongitudeInRange(longitude);

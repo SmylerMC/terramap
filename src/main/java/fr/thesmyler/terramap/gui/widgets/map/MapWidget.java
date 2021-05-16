@@ -83,6 +83,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private float drag = 0.3f;
 	private float zoomSnapping = 1f;
 	private float zoomResponsiveness = 0.01f;
+	private float rotationResponsiveness = 0.005f;
 	protected double tileScaling;
 
 	private final MenuWidget rightClickMenu;
@@ -451,9 +452,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 		long dt = ctime - this.lastUpdateTime;
 		
 		// Both these things do time dependent integration operations, so if the integration step is irrelevant, skip
-		if(dt < 1000) {
+		if(dt > 0 && dt < 1000) {
 			this.controller.processInertia(dt);
 			this.controller.processZoom(dt);
+			this.controller.processRotation(dt);
 		}
 		
 		if(this.trackingMarker != null) {
@@ -480,6 +482,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		
 		double zoomLongitude, zoomLatitude;
 		double zoomTarget = 0;
+		float rotationTarget = 0;
 		float speedX, speedY;
 		float rotateAroundX = Float.NaN;
 		float rotateAroundY = Float.NaN;
@@ -646,7 +649,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 			// Compute a delta to the new zoom value, exponential decay, and ensure it is within bounds
 			double maxDzoom = zoomTarget - this.getZoom();
-			double dzoom = MapWidget.this.zoomResponsiveness*(maxDzoom)*dt;
+			double dzoom = MapWidget.this.zoomResponsiveness * maxDzoom * dt;
 			dzoom = maxDzoom > 0 ? Math.min(dzoom, maxDzoom) : Math.max(dzoom, maxDzoom);
 
 			// The position that needs to stay static and how far it is from the center of the screen
@@ -670,6 +673,31 @@ public class MapWidget extends FlexibleWidgetContainer {
 			double[] lola = this.getScreenGeoPos((double)this.getWidth()/2 - ndX, (double)this.getHeight()/2 - ndY);
 			this.setCenterLongitude(lola[0]);
 			this.setCenterLatitude(lola[1]);
+		}
+		
+		private void processRotation(long dt) {
+			float currentRotation = this.getRotation();
+			
+			float actualRotationTarget = this.rotationTarget;
+			float d0 = Math.abs(this.rotationTarget - currentRotation);
+			float d1 = Math.abs(this.rotationTarget - currentRotation - 360f);
+			float d2 = Math.abs(this.rotationTarget - currentRotation + 360f);
+			if(d1 < d0) {
+				actualRotationTarget -= 360f;
+			} else if(d2 < d0) {
+				actualRotationTarget += 360f;
+			}
+			
+			if(Math.abs(currentRotation - actualRotationTarget) < 0.1f) {
+				this.setRotation(actualRotationTarget);
+				return;
+			}
+			
+			float maxDRot = actualRotationTarget - currentRotation;
+			float drot = MapWidget.this.rotationResponsiveness * maxDRot * dt;
+			drot = maxDRot > 0 ? Math.min(drot, maxDRot) : Math.max(drot, maxDRot);
+			
+			super.setRotation(currentRotation + drot);
 		}
 
 		public void moveMap(float dX, float dY) {
@@ -697,6 +725,12 @@ public class MapWidget extends FlexibleWidgetContainer {
 		public void setZoom(double zoom) {
 			super.setZoom(zoom);
 			this.zoomTarget = zoom;
+		}
+		
+		@Override
+		public void setRotation(float rotation) {
+			super.setRotation(rotation);
+			this.rotationTarget = rotation;
 		}
 
 	}
@@ -1040,6 +1074,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 	
 	public void setTrackRotation(boolean yesNo) {
 		this.trackRotation = yesNo;
+	}
+	
+	public void setRotationWithAnimation(float rotation) {
+		this.controller.rotationTarget = GeoServices.getAzimuthInRange(rotation);
+	}
+	
+	public void setZoomWithAnimation(double zoom) {
+		this.controller.zoomTarget = zoom;
 	}
 
 }
