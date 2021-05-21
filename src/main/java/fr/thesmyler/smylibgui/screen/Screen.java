@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.screen;
 import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -102,7 +103,8 @@ public class Screen extends GuiScreen {
 	}
 	
 	public void drawHoveringText(String text, double x, double y) {
-		// This is a workaround for vanilla not allowing double coordinates
+		// This is a workaround for vanilla not allowing double coordinates and re-enabling lighting without any check
+		boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
 		GlStateManager.pushMatrix();
 		int px = (int) Math.floor(x);
 		int py = (int) Math.floor(y);
@@ -111,6 +113,7 @@ public class Screen extends GuiScreen {
 		GlStateManager.translate(rx, ry, 0);
 		this.drawHoveringText(text, px, py);
 		GlStateManager.popMatrix();
+		if(!lighting) GlStateManager.disableLighting();
 	}
 	
 	private void drawBackground() {
