@@ -11,6 +11,7 @@ import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
+import fr.thesmyler.terramap.maps.utils.TilePos;
 import fr.thesmyler.terramap.maps.utils.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.util.GeoServices;
@@ -48,13 +49,10 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		Set<IRasterTile> neededTiles = new HashSet<>();
 
 		boolean debug = false;
-		MapWidget parentMap = null;
+		MapWidget parentMap = (MapWidget) parent;
 		Profiler profiler = new Profiler();
-		if(parent instanceof MapWidget) {
-			parentMap = (MapWidget) parent;
-			debug = parentMap.isDebugMode();
-			profiler = parentMap.getProfiler();
-		}
+		debug = parentMap.isDebugMode();
+		profiler = parentMap.getProfiler();
 
 		profiler.startSection("render-raster-layer_" + this.map.getId());
 
@@ -153,16 +151,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 				if(!bestTile.isTextureAvailable()) {
 					lowerResRender = true;
 					perfectDraw = false;
-					if(zoomLevel <= this.map.getMaxZoom()) {
-						try {
-							bestTile.getTexture(); // Will start loading the texture from cache / network
-						} catch(Throwable e) {
-							if(parentMap != null) {
-								parentMap.reportError(this, e.toString());
-							}
-							perfectDraw = false;
-						}
-					} else {
+					if(zoomLevel > this.map.getMaxZoom()) {
 						unlockedZoomRender = true;
 					}
 
@@ -247,6 +236,29 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 			}
 		}
 
+		if(zoomLevel <= this.map.getMaxZoom()) {
+			double centerX = WebMercatorUtils.getXFromLongitude(this.getCenterLongitude(), 0d) / 256d;
+			double centerY = WebMercatorUtils.getYFromLatitude(this.getCenterLatitude(), 0d) / 256d;
+			Vec2d minusCenterPos = new Vec2d(-centerX, -centerY);
+			neededTiles.stream().filter(t -> !t.isTextureAvailable()).sorted((t1, t2) -> {
+				TilePos pos1 = t1.getPosition();
+				TilePos pos2 = t2.getPosition();
+				int dz = Integer.compare(pos1.getZoom(), pos2.getZoom());
+				if(dz != 0) return dz;
+				double factor = 1d / (1 << pos1.getZoom());
+				Vec2d dis1 = new Vec2d(pos1.getX() + 0.5d, pos1.getY() + 0.5d).scale(factor).add(minusCenterPos);
+				Vec2d dis2 = new Vec2d(pos2.getX() + 0.5d, pos2.getY() + 0.5d).scale(factor).add(minusCenterPos);
+				return Double.compare(dis1.normSquared(), dis2.normSquared());
+			}).forEachOrdered(tile -> {
+				try {
+					tile.getTexture(); // Will start loading the tile
+				} catch (Throwable e) {
+					if(parentMap != null) {
+						parentMap.reportError(this, e.toString());
+					}
+				}
+			});
+		}
 		if(perfectDraw && parentMap != null) parentMap.discardPreviousErrors(this);
 		this.lastNeededTiles.removeAll(neededTiles);
 		this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
