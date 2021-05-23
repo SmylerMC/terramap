@@ -526,6 +526,8 @@ public class TextFieldWidget implements IWidget {
 	public TextFieldWidget setText(String text) {
 		this.text = text;
 		this.setCursorToEnd();
+		this.setSelectionEnd(this.getCursor());
+		this.selecting = false;
 		return this;
 	}
 

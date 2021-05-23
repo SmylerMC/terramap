@@ -26,6 +26,7 @@ import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.Scrollbar;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
 import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
+import fr.thesmyler.smylibgui.widgets.WarningWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.AbstractButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
@@ -76,11 +77,12 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 	private TexturedButtonWidget centerButton = new TexturedButtonWidget(50, IncludedTexturedButtons.CENTER);
 	private TexturedButtonWidget styleButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PAPER);
 	private CircularCompassWidget compass = new CircularCompassWidget(100, 100, 50, 100);
+	private WarningWidget offsetWarning = new WarningWidget(0, 0, 50);
 	
 	// Info panel widgets
 	private TextWidget zoomText;
 	private SlidingPanelWidget infoPanel = new SlidingPanelWidget(70, 200);
-	private TexturedButtonWidget panelButton = new TexturedButtonWidget(220, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
+	private TexturedButtonWidget panelButton = new TexturedButtonWidget(230, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
 	private TextWidget mouseGeoLocationText;
 	private TextWidget mouseMCLocationText;
 	private TextWidget distortionText;
@@ -162,6 +164,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		this.styleButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.style.tooltip"));
 		this.styleButton.enable();
 		content.addWidget(this.styleButton);
+		this.offsetWarning.setTooltip("A rendering offset is set for the current background!"); //TODO localize
+		content.addWidget(this.offsetWarning.setPosition(this.styleButton.getX(), this.styleButton.getY() + this.styleButton.getHeight() + 5));
 		this.debugText = new TextWidget(49, Util.getSmallestFont());
 		this.debugText.setAnchorX(3).setAnchorY(0);
 		this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
@@ -171,8 +175,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		// Info panel
 		Font infoFont = content.getFont();
 		this.infoPanel.removeAllWidgets();
-		this.infoPanel.setSize(240, this.height);
-		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-infoPanel.getWidth() + 25).setClosedY(0);
+		this.infoPanel.setSize(250, this.height);
+		this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-this.infoPanel.getWidth() + 25).setClosedY(0);
 		this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
 		this.infoPanel.addWidget(panelButton);
 		TexturedButtonWidget openConfigButton = new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig);
@@ -332,6 +336,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 		} else {
 			this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.noplayer"));
 		}
+		
+		this.offsetWarning.setVisibility(this.map.doesBackgroundHaveRenderingOffset());
 
 		if(this.debugMode) {
 			String dbText = "";

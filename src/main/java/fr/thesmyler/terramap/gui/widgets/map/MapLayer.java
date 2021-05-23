@@ -5,6 +5,7 @@ import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.util.GeoUtil;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * A layer of a map.
@@ -17,19 +18,20 @@ import fr.thesmyler.terramap.util.Vec2d;
  * @author SmylerMC
  *
  */
-abstract class MapLayerWidget implements IWidget {
+abstract class MapLayer implements IWidget {
 	
 	protected int z;
 	private float viewPortWidth, viewPortHeight;
 	private double extendedWidth, extendedHeight;
 	private double centerLatitude, centerLongitude, zoom;
+	private double renderDeltaLon, renderDeltaLat;
 	private float rotation;
 	private double tileScaling;
 	
 	private Mat2d directRotation = Mat2d.INDENTITY;
 	private Mat2d inverseRotation = Mat2d.INDENTITY;
 	
-	public MapLayerWidget(double tileScaling) {
+	public MapLayer(double tileScaling) {
 		if(Double.isInfinite(tileScaling)) throw new RuntimeException("tileScaling cannot be null");
 		this.tileScaling = tileScaling;
 	}
@@ -44,18 +46,18 @@ abstract class MapLayerWidget implements IWidget {
 	
 	protected Vec2d getScreenPos(double longitude, double latitude) {
 		Vec2d pos = new Vec2d(
-				this.getMapX(longitude) - this.getMapX(this.centerLongitude),
-				this.getMapY(latitude) - this.getMapY(this.centerLatitude));
+				this.getMapX(longitude) - this.getMapX(this.centerLongitude + this.renderDeltaLon),
+				this.getMapY(latitude) - this.getMapY(this.centerLatitude + this.renderDeltaLat));
 		pos = this.directRotation.prod(pos);
 		return pos.add(this.viewPortWidth / 2, this.viewPortHeight / 2);
 	}
 	
 	protected double getUpperLeftX() {
-		return this.getMapX(this.centerLongitude) - this.extendedWidth / 2;
+		return this.getMapX(this.centerLongitude + this.renderDeltaLon) - this.extendedWidth / 2;
 	}
 
 	protected double getUpperLeftY() {
-		return this.getMapY(this.centerLatitude) - this.extendedHeight / 2;
+		return this.getMapY(this.centerLatitude + this.renderDeltaLat) - this.extendedHeight / 2;
 	}
 	
 	public double[] getScreenGeoPos(double x, double y) {
@@ -76,6 +78,12 @@ abstract class MapLayerWidget implements IWidget {
 		Vec2d dim = new Vec2d(this.viewPortWidth, this.viewPortHeight);
 		this.extendedWidth = dim.hadamardProd(this.directRotation.column1()).taxicabNorm();
 		this.extendedHeight = dim.hadamardProd(this.directRotation.column2()).taxicabNorm();
+	}
+	
+	protected void applyRotationGl(float drawX, float drawY) {
+		GlStateManager.translate(drawX + this.viewPortWidth / 2, drawY + this.viewPortHeight / 2, 0);
+		GlStateManager.rotate(this.rotation, 0, 0, 1);
+		GlStateManager.translate(-this.extendedWidth / 2, -this.extendedHeight / 2, 0);
 	}
 
 	@Override
@@ -170,6 +178,22 @@ abstract class MapLayerWidget implements IWidget {
 	
 	public Mat2d getInverseRotationMatrix() {
 		return this.inverseRotation;
+	}
+
+	public double getRenderDeltaLongitude() {
+		return renderDeltaLon;
+	}
+
+	public void setRenderDeltaLongitude(double renderDeltaLon) {
+		this.renderDeltaLon = renderDeltaLon;
+	}
+
+	public double getRenderDeltaLatitude() {
+		return renderDeltaLat;
+	}
+
+	public void setRenderDeltaLatitude(double renderDeltaLat) {
+		this.renderDeltaLat = renderDeltaLat;
 	}
 
 }

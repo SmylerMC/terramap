@@ -35,11 +35,11 @@ public abstract class GeoServices {
 
 	public static final String OSM_CR_LINK = "https://www.openstreetmap.org/copyright";
 
-	private static DecimalFormat decFormat4 = new DecimalFormat();
+	private static DecimalFormat decFormat6 = new DecimalFormat();
 	private static DecimalFormat decFormat1 = new DecimalFormat();
 
 	static {
-		decFormat4.setMaximumFractionDigits(4);
+		decFormat6.setMaximumFractionDigits(6);
 		decFormat1.setMaximumFractionDigits(1);
 		DecimalFormatSymbols usSymbols = new DecimalFormatSymbols(Locale.US);
 		decFormat1.setDecimalFormatSymbols(usSymbols);
@@ -135,7 +135,7 @@ public abstract class GeoServices {
 
 	public static String formatGeoCoordForDisplay(double x) {
 		if(x==Double.NaN) return "-";
-		return decFormat4.format(x);
+		return decFormat6.format(x);
 	}
 	
 	public static String formatAzimuthForDisplay(float 	az) {
