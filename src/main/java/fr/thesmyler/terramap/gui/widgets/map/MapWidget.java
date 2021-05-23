@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -14,6 +15,7 @@ import org.lwjgl.input.Mouse;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -21,7 +23,9 @@ import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
+import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
+import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -54,6 +58,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 
 public class MapWidget extends FlexibleWidgetContainer {
@@ -61,13 +66,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 	private boolean interactive = true;
 	private boolean focusedZoom = true; // Zoom where the cursor is (true) or at the center of the map (false) when using the wheel
 	private boolean enableRightClickMenu = true;
+	private boolean allowsQuickTp = true;
 	private boolean showCopyright = true;
 	private boolean debugMode = false;
 	private boolean visible = true;
 	private boolean trackRotation = false;
 
 	private final ControllerMapLayer controller;
-	protected RasterMapLayerWidget background;
+	protected RasterMapLayer background;
 	private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
 	private RightClickMarkerController rcmMarkerController;
 	private MainPlayerMarkerController mainPlayerMarkerController;
@@ -159,7 +165,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 				strToCopy = dispX + " " + dispY;
 				GuiScreen.setClipboardString(strToCopy);
 			} catch(OutOfProjectionBoundsException e) {
-				String s = System.currentTimeMillis() + ""; //Just a random string
+				String s = System.currentTimeMillis() + ""; // Just a random string
 				this.reportError(s, I18n.format("terramap.mapwidget.error.copyblock"));
 				this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
 			}
@@ -267,11 +273,14 @@ public class MapWidget extends FlexibleWidgetContainer {
 				TerramapClientContext.getContext().saveSettings();
 			}));
 		});
+		
+		//TODO Localize
+		this.rightClickMenu.addEntry("Set background offset", () -> this.getOffsetPopup(this.background).show());
 
 		this.controller = new ControllerMapLayer(this.tileScaling);
 		super.addWidget(this.controller);
 
-		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
+		this.setMapBackgroud(new RasterMapLayer(map, this.tileScaling));
 
 		this.scale.setX(15).setY(this.getHeight() - 30);
 		this.addWidget(scale);
@@ -311,7 +320,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	 * @return this
 	 * @throws InvalidLayerLevelException
 	 */
-	private MapWidget addMapLayer(MapLayerWidget layer) {
+	private MapWidget addMapLayer(MapLayer layer) {
 		switch(layer.getZ()) {
 		case BACKGROUND_Z:
 			throw new InvalidLayerLevelException("Z level " + layer.getZ() + " is reserved for background layer");
@@ -322,7 +331,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		return this;
 	}
 
-	private MapWidget setMapBackgroud(RasterMapLayerWidget background) {
+	private MapWidget setMapBackgroud(RasterMapLayer background) {
 		background.z = BACKGROUND_Z;
 		background.setTileScaling(this.tileScaling);
 		super.removeWidget(this.background);
@@ -335,12 +344,12 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 	public void setBackground(IRasterTiledMap map) {
 		this.discardPreviousErrors(this.background); // We don't care about errors for this background anymore
-		this.setMapBackgroud(new RasterMapLayerWidget(map, this.tileScaling));
+		this.setMapBackgroud(new RasterMapLayer(map, this.tileScaling));
 	}
 
 	/**
 	 * Adds a widget to the screen. Since this is a map before being a screen,
-	 * {@link #addMapLayer(MapLayerWidget) addMapLayer} should be used instead
+	 * {@link #addMapLayer(MapLayer) addMapLayer} should be used instead
 	 * and other types of widget should not be added to the map directly
 	 * but rather on the parent screen.
 	 * 
@@ -349,8 +358,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 	 */
 	@Override @Deprecated
 	public WidgetContainer addWidget(IWidget widget) {
-		if(widget instanceof MapLayerWidget) {
-			this.addMapLayer((MapLayerWidget)widget);
+		if(widget instanceof MapLayer) {
+			this.addMapLayer((MapLayer)widget);
 		} else {
 			switch(widget.getZ()) {
 			case BACKGROUND_Z:
@@ -384,8 +393,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 			markers.put(controller.getMarkerType(), new ArrayList<Marker>());
 		}
 		for(IWidget widget: this.widgets) {
-			if(widget instanceof MapLayerWidget) {
-				MapLayerWidget layer = (MapLayerWidget) widget;
+			if(widget instanceof MapLayer) {
+				MapLayer layer = (MapLayer) widget;
 				layer.setDimensions(this.getWidth(), this.getHeight());
 				layer.setTileScaling(this.tileScaling);
 				if(!layer.equals(this.controller)) {
@@ -480,7 +489,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 		this.lastUpdateTime = ctime;
 	}
 
-	private class ControllerMapLayer extends MapLayerWidget {
+	private class ControllerMapLayer extends MapLayer {
 		
 		double zoomLongitude, zoomLatitude;
 		double zoomTarget = 0;
@@ -554,7 +563,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 			if(MapWidget.this.isInteractive() && mouseButton == 0) {
 				double[] lola = this.getScreenGeoPos(mouseX, mouseY);
-				this.zoom(lola[0], lola[1], 1);
+				if(MapWidget.this.focusedZoom) this.zoom(lola[0], lola[1], 1);
+				else this.zoom(1);
 			}
 			return false;
 		}
@@ -800,6 +810,99 @@ public class MapWidget extends FlexibleWidgetContainer {
 		}
 		CHAT_SENDER_GUI.sendChatMessage(cmd, false);
 	}
+	
+	private PopupScreen getOffsetPopup(RasterMapLayer layer) {
+		//TODO Localize
+		float interline = 20;
+		float margin = 8;
+		float spacing = 7;
+		PopupScreen popup = new PopupScreen(300, 150);
+		WidgetContainer content = popup.getContent();
+		TextWidget title = new TextWidget(content.getWidth() / 2, margin, 0, new TextComponentTranslation("Set layer rendering offset"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+		content.addWidget(title);
+		TextWidget latText = new TextWidget(margin, title.getY() + title.getHeight() + interline, 0, new TextComponentTranslation("Latitude (°):"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
+		content.addWidget(latText);
+		TextWidget lonText = new TextWidget(margin, latText.getY() + latText.getHeight() + interline, 0, new TextComponentTranslation("Longitude (°):"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
+		content.addWidget(lonText);
+		float inputsX = Math.max(latText.getX() + latText.getWidth(), lonText.getX() + lonText.getWidth()) + spacing;
+		TextFieldWidget latInput = new TextFieldWidget(inputsX, latText.getY() - 6, 0, 70);
+		content.addWidget(latInput);
+		TextFieldWidget lonInput = new TextFieldWidget(inputsX, lonText.getY() - 6, 0, latInput.getWidth());
+		content.addWidget(lonInput);
+		float mapSize = Math.min(
+				content.getWidth() - (inputsX + lonInput.getWidth() + spacing * 2) - margin,
+				content.getHeight() - latInput.getY() - margin);
+		MapWidget map = new MapWidget(content.getWidth() - mapSize - margin, latInput.getY(), 0, mapSize, mapSize, layer.getMap(), MapContext.PREVIEW, layer.getTileScaling());
+		RenderingDeltaPreviewLayer previewLayer = new RenderingDeltaPreviewLayer(layer.getTileScaling(), layer.getCenterLongitude(), layer.getCenterLatitude());
+		map.addMapLayer(previewLayer);
+		map.setScaleVisibility(false);
+		map.setCopyrightVisibility(false);
+		map.setRightClickMenuEnabled(false);
+		map.setFocusedZoom(false);
+		map.setAllowsQuickTp(false);
+		map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
+		map.setRotation(layer.getRotation());
+		map.setZoom(layer.getZoom());
+		content.addWidget(map);
+		content.scheduleAtUpdate(() -> map.setTileScaling(layer.getTileScaling()));
+		content.scheduleAtUpdate(() -> {
+			IWidget focused = content.getFocusedWidget();
+			if(focused == latInput || focused == lonInput) return;
+			Vec2d layerCenter = new Vec2d(layer.getCenterLongitude(), layer.getCenterLatitude());
+			Vec2d previewCenter = new Vec2d(map.getCenterLongitude(), map.getCenterLatitude());
+			Vec2d delta = previewCenter.add(layerCenter.scale(-1));
+			lonInput.setText(GeoServices.formatGeoCoordForDisplay(delta.x));
+			latInput.setText(GeoServices.formatGeoCoordForDisplay(delta.y));
+		});
+		float midWidth = content.getWidth() - map.getWidth() - margin*3;
+		TextButtonWidget resetButton = new TextButtonWidget(margin, lonInput.getY() + lonInput.getHeight() + interline, 0, (midWidth - spacing) / 2, "Reset", () -> {
+			map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
+		});
+		content.addWidget(resetButton);
+		TextButtonWidget set0Button = new TextButtonWidget(resetButton.getX() + resetButton.getWidth() + spacing, resetButton.getY(), 0, resetButton.getWidth(), "Set to 0", () -> {
+			map.setCenterPosition(layer.getCenterLongitude(), layer.getCenterLatitude());
+		});
+		content.addWidget(set0Button);
+		TextButtonWidget cancelButton = new TextButtonWidget(resetButton.getX(), resetButton.getY() + resetButton.getHeight() + 4, 0, resetButton.getWidth(), "Cancel", () -> {
+			popup.close();
+		});
+		content.addWidget(cancelButton);
+		TextButtonWidget doneButton = new TextButtonWidget(set0Button.getX(), cancelButton.getY(), 0, set0Button.getWidth(), "Done", () -> {
+			layer.setRenderDeltaLongitude(Double.parseDouble(lonInput.getText()));
+			layer.setRenderDeltaLatitude(Double.parseDouble(latInput.getText()));
+			popup.close();
+		});
+		content.addWidget(doneButton);
+		Consumer<String> onUpdate = unused -> {
+			boolean okLon = false, okLat = false;
+			try {
+				double dlon = Double.parseDouble(lonInput.getText());
+				if(Math.abs(dlon) > 180d) throw new NumberFormatException();
+				okLon = true;
+				lonInput.setEnabledTextColor(Color.WHITE);
+				lonInput.setFocusedTextColor(Color.WHITE);
+				map.setCenterLongitude(layer.getCenterLongitude() + dlon);
+			} catch(NumberFormatException e) {
+				lonInput.setEnabledTextColor(Color.RED);
+				lonInput.setFocusedTextColor(Color.RED);
+			}
+			try {
+				double dlat = Double.parseDouble(latInput.getText());
+				if(Math.abs(dlat) > 90d) throw new NumberFormatException();
+				okLat = true;
+				latInput.setEnabledTextColor(Color.WHITE);
+				latInput.setFocusedTextColor(Color.WHITE);
+				map.setCenterLatitude(layer.getCenterLatitude() + dlat);
+			} catch(NumberFormatException e) {
+				latInput.setEnabledTextColor(Color.RED);
+				latInput.setFocusedTextColor(Color.RED);
+			}
+			doneButton.setEnabled(okLat && okLon);
+		};
+		latInput.setOnChangeCallback(onUpdate);
+		lonInput.setOnChangeCallback(onUpdate);
+		return popup;
+	}
 
 	public Map<String, FeatureVisibilityController> getVisibilityControllers() {
 		Map<String, FeatureVisibilityController> m = new LinkedHashMap<>();
@@ -1019,7 +1122,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 	}
 
 	private boolean isShortcutEnabled() {
-		return this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode());
+		return this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode()) && this.allowsQuickTp;
 	}
 
 	@Override
@@ -1113,6 +1216,26 @@ public class MapWidget extends FlexibleWidgetContainer {
 	
 	public void stopPassiveInputs() {
 		this.controller.cancelRotationInput();
+	}
+
+	public boolean isFocusedZoom() {
+		return focusedZoom;
+	}
+
+	public void setFocusedZoom(boolean focusedZoom) {
+		this.focusedZoom = focusedZoom;
+	}
+
+	public boolean allowsQuickTp() {
+		return allowsQuickTp;
+	}
+
+	public void setAllowsQuickTp(boolean allowsQuickTp) {
+		this.allowsQuickTp = allowsQuickTp;
+	}
+	
+	public boolean doesBackgroundHaveRenderingOffset() {
+		return this.background.getRenderDeltaLatitude() != 0d || this.background.getRenderDeltaLongitude() != 0d;
 	}
 
 }
