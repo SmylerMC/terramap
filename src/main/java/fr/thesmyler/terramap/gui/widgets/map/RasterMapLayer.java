@@ -23,12 +23,12 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 
-public class RasterMapLayerWidget extends MapLayerWidget {
+public class RasterMapLayer extends MapLayer {
 
 	protected IRasterTiledMap map;
 	protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
 
-	public RasterMapLayerWidget(IRasterTiledMap map, double tileScaling) {
+	public RasterMapLayer(IRasterTiledMap map, double tileScaling) {
 		super(tileScaling);
 		this.map = map;
 	}
@@ -48,11 +48,9 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		boolean perfectDraw = true;
 		Set<IRasterTile> neededTiles = new HashSet<>();
 
-		boolean debug = false;
 		MapWidget parentMap = (MapWidget) parent;
-		Profiler profiler = new Profiler();
-		debug = parentMap.isDebugMode();
-		profiler = parentMap.getProfiler();
+		boolean debug = parentMap.isDebugMode();
+		Profiler profiler = parentMap.getProfiler();
 
 		profiler.startSection("render-raster-layer_" + this.map.getId());
 
@@ -70,9 +68,7 @@ public class RasterMapLayerWidget extends MapLayerWidget {
 		Vec2d xvec = rotationMatrix.line1();
 		Vec2d yvec = rotationMatrix.line2();
 
-		GlStateManager.translate(x + widthViewPort / 2, y + heightViewPort / 2, 0);
-		GlStateManager.rotate(rotation, 0, 0, 1);
-		GlStateManager.translate(-extendedWidth / 2, -extendedHeight / 2, 0);
+		this.applyRotationGl(x, y);
 
 		double upperLeftX = this.getUpperLeftX();
 		double upperLeftY = this.getUpperLeftY();
