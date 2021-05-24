@@ -74,7 +74,7 @@ public class CircularCompassWidget implements IWidget {
         GlStateManager.rotate(this.azimuth, 0, 0, 1);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
-        GlStateManager.color(1f, 1f, 1f, 1f);
+        Color.WHITE.applyGL();
         GlStateManager.shadeModel(7425);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();

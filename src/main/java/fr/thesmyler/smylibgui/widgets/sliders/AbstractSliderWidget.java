@@ -106,7 +106,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        Color.WHITE.applyGL();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -118,7 +118,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 
         float sliderPosition = this.getPosition();
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        Color.WHITE.applyGL();
         RenderUtil.drawTexturedModalRect(x + sliderPosition * (this.width - 8), y, 0, 66, 4, 20);
         RenderUtil.drawTexturedModalRect(x + sliderPosition * (this.width - 8) + 4, y, 196, 66, 4, 20);
 

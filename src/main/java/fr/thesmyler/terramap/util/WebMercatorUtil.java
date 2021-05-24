@@ -1,13 +1,16 @@
-package fr.thesmyler.terramap.maps.utils;
+package fr.thesmyler.terramap.util;
 
 /**
  * A set of methods to work with the web mercator map projection.
- * See https://en.wikipedia.org/wiki/Web_Mercator for more details
  * 
- * @author Smyler
+ * @see <a href="https://en.wikipedia.org/wiki/Web_Mercator for more details">Wikipedia's article on Web Mercator</a>
+ * 
+ * @author SmylerMC
  *
  */
-public class WebMercatorUtils {
+public final class WebMercatorUtil {
+    
+    private WebMercatorUtil() {}
 
     /* Constants */
     public static final int TILE_DIMENSIONS = 256;
@@ -21,37 +24,34 @@ public class WebMercatorUtils {
      */
     public static final int MAX_ZOOM = 30;
 
-
     /**
      * 
      * @param longitude The longitude in degrees, between -180.0 and 180.0
-     * @param zoomLevel The web-mercator zoom level, a positive integer
+     * @param zoomLevel The web-mercator zoom level
      * 
      * @return The X pixel position corresponding to the given longitude
      * on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
      */
     public static double getXFromLongitude(double longitude, double zoomLevel){
-        return WebMercatorUtils.getXFromLongitudeRads(Math.toRadians(longitude), zoomLevel);
+        return WebMercatorUtil.getXFromLongitudeRads(Math.toRadians(longitude), zoomLevel);
     }
-
 
     /**
      * 
      * @param latitude The latitude in degrees, between -90.0 and 90.0
-     * @param zoomlevel The web-mercator zoom level, a positive integer
+     * @param zoomlevel The web-mercator zoom level
      * 
      * @return The Y pixel position corresponding to the given latitude
      * on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
      */
     public static double getYFromLatitude(double latitude, double zoomlevel){
-        return WebMercatorUtils.getYFromLatitudeRads(Math.toRadians(latitude), zoomlevel);
+        return WebMercatorUtil.getYFromLatitudeRads(Math.toRadians(latitude), zoomlevel);
     }
-
 
     /**
      * 
      * @param longitude The longitude in radians, between -pi and pi
-     * @param zoomLevel The web-mercator zoom level, a positive integer
+     * @param zoomLevel The web-mercator zoom level
      * 
      * @return The X position corresponding to the given longitude
      * on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
@@ -64,7 +64,7 @@ public class WebMercatorUtils {
     /**
      * 
      * @param latitude The latitude in radians, between -pi/2 and pi/2
-     * @param zoom The web-mercator zoom level, a positive integer
+     * @param zoom The web-mercator zoom level
      * 
      * @return The Y position corresponding to the given latitude
      * on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
@@ -76,29 +76,29 @@ public class WebMercatorUtils {
 
     /** 
      * @param y a coordinate on a web-mercator map, as an integer with 0;0 as the top left corner
-     * @param zoom The web-mercator zoom level, a positive integer
+     * @param zoom The web-mercator zoom level
      * 
      * @return The corresponding latitude in degrees, between -180.0 and 180.0
      */
     public static double getLatitudeFromY(double y, double zoom){
-        return Math.toDegrees(WebMercatorUtils.getLatitudeFromYRads(y, zoom));
+        return Math.toDegrees(WebMercatorUtil.getLatitudeFromYRads(y, zoom));
     }
 
 
     /**
      * @param x a coordinate on a web-mercator map, as an integer with 0;0 as the top left corner
-     * @param zoom The web-mercator zoom level, a positive integer
+     * @param zoom The web-mercator zoom level
      * 
      * @return The corresponding longitude in degrees, between -90.0 and 90.0
      */
     public static double getLongitudeFromX(double x, double zoom){
-        return Math.toDegrees(WebMercatorUtils.getLongitudeFromXRads(x, zoom));
+        return Math.toDegrees(WebMercatorUtil.getLongitudeFromXRads(x, zoom));
     }
 
 
     /** 
      * @param y a coordinate on a web-mercator map, as an integer with 0;0 as the top left corner
-     * @param zoom The web-mercator zoom level, a positive integer
+     * @param zoom The web-mercator zoom level
      * 
      * @return The corresponding latitude in radians, between -pi and pi
      */
@@ -109,7 +109,7 @@ public class WebMercatorUtils {
 
     /**
      * @param x a coordinate on a web-mercator map, as an integer with 0;0 as the top left corner
-     * @param zoom The web-mercator zoom level, a positive integer
+     * @param zoom The web-mercator zoom level
      * 
      * @return The corresponding longitude in radians, between -pi/2 and pi/2
      */
@@ -125,7 +125,7 @@ public class WebMercatorUtils {
      * @return the x coordinate of the tile at the given x position in the world, assuming map is scaled at zoom level zoomLevel
      */
     public static int getTileXAt(long x){
-        return (int) Math.floor((double)x / WebMercatorUtils.TILE_DIMENSIONS);
+        return (int) Math.floor((double)x / WebMercatorUtil.TILE_DIMENSIONS);
     }
 
     /**
@@ -134,7 +134,7 @@ public class WebMercatorUtils {
      * @return the y coordinate of the tile at the given z position in the world, assuming map is scaled at zoom level zoomLevel
      */
     public static int getTileYAt(long y){
-        return (int) Math.floor((double)y / WebMercatorUtils.TILE_DIMENSIONS);
+        return (int) Math.floor((double)y / WebMercatorUtil.TILE_DIMENSIONS);
     }
 
 
@@ -172,7 +172,7 @@ public class WebMercatorUtils {
      * @return The size of a side of the map, in pixel
      */
     public static long getMapDimensionInPixel(int zoomLvl) {
-        return WebMercatorUtils.getDimensionsInTile(zoomLvl) * WebMercatorUtils.TILE_DIMENSIONS;
+        return WebMercatorUtil.getDimensionsInTile(zoomLvl) * WebMercatorUtil.TILE_DIMENSIONS;
     }
 
 

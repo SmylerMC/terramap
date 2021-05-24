@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.maps;
 
-import fr.thesmyler.terramap.maps.utils.TilePos;
-import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
+import fr.thesmyler.terramap.util.TilePos;
+import fr.thesmyler.terramap.util.TilePosUnmutable;
 
 public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
 

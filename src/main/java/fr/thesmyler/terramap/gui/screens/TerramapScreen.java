@@ -48,8 +48,8 @@ import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.util.GeoServices;
+import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -278,7 +278,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         String formatZ = "-";
         String formatScale = "-"; 
         String formatOrientation = "-";
-        if(Math.abs(mouseLat) > WebMercatorUtils.LIMIT_LATITUDE) {
+        if(Math.abs(mouseLat) > WebMercatorUtil.LIMIT_LATITUDE) {
             this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
             this.mouseGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_geo", "-", "-"));
             this.mouseMCLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_mc", "-", "-"));

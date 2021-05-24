@@ -13,8 +13,8 @@ import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.ICopyrightHolder;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
-import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
+import fr.thesmyler.terramap.util.TilePosUnmutable;
 import net.buildtheearth.terraplusplus.util.http.Http;
 import net.minecraft.util.text.ITextComponent;
 

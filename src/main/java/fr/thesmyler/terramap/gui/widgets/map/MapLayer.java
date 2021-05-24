@@ -1,10 +1,10 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.util.GeoUtil;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -37,11 +37,11 @@ public abstract class MapLayer implements IWidget {
     }
 
     protected double getMapX(double longitude) {
-        return WebMercatorUtils.getXFromLongitude(longitude, this.zoom) / this.tileScaling;
+        return WebMercatorUtil.getXFromLongitude(longitude, this.zoom) / this.tileScaling;
     }
 
     protected double getMapY(double latitude) {
-        return WebMercatorUtils.getYFromLatitude(latitude, this.zoom) / this.tileScaling;
+        return WebMercatorUtil.getYFromLatitude(latitude, this.zoom) / this.tileScaling;
     }
 
     protected Vec2d getScreenPos(double longitude, double latitude) {
@@ -67,8 +67,8 @@ public abstract class MapLayer implements IWidget {
                 this.extendedWidth / 2 + this.getUpperLeftX(),
                 this.extendedHeight / 2 + this.getUpperLeftY());
         pos = pos.scale(this.tileScaling);
-        double lon = GeoUtil.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(pos.x, this.zoom));
-        double lat = WebMercatorUtils.getLatitudeFromY(pos.y, this.zoom);
+        double lon = GeoUtil.getLongitudeInRange(WebMercatorUtil.getLongitudeFromX(pos.x, this.zoom));
+        double lat = WebMercatorUtil.getLatitudeFromY(pos.y, this.zoom);
         return new double[] {lon, lat};
     }
 

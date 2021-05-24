@@ -6,7 +6,9 @@ package fr.thesmyler.terramap.util;
  * @author SmylerMC
  *
  */
-public class GeoUtil {
+public final class GeoUtil {
+    
+    private GeoUtil() {}
 
     /**
      * Radius of the Earth in meters

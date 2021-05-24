@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.maps;
 
-import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
+import fr.thesmyler.terramap.util.TilePosUnmutable;
 import net.minecraft.util.ResourceLocation;
 
 public interface IRasterTile {

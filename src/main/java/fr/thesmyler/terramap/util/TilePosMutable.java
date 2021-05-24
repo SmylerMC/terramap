@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.utils;
+package fr.thesmyler.terramap.util;
 
 import com.google.common.base.Preconditions;
 
@@ -68,7 +68,7 @@ public class TilePosMutable extends TilePos {
      * @throws IllegalArgumentException if the given zoom level is not valid
      */
     public void setZoom(int zoom) {
-        Preconditions.checkArgument(WebMercatorUtils.isValidTilePosition(zoom, this.xPosition, this.yPosition), "Invalid zoom level " + zoom);
+        Preconditions.checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, this.yPosition), "Invalid zoom level " + zoom);
         synchronized(this) {
             int delta = zoom - this.zoom;
             this.zoom = zoom;
@@ -90,7 +90,7 @@ public class TilePosMutable extends TilePos {
      */
     public void setZoomSafe(int zoom) {
         synchronized(this) {
-            int newZoom = Math.max(0, Math.min(WebMercatorUtils.MAX_ZOOM, zoom));
+            int newZoom = Math.max(0, Math.min(WebMercatorUtil.MAX_ZOOM, zoom));
             int delta = newZoom - this.zoom;
             this.zoom = newZoom;
             if(delta > 0) {
@@ -111,7 +111,7 @@ public class TilePosMutable extends TilePos {
      * @throws IllegalArgumentException if the given X position is not in the acceptable range
      */
     public void setX(int x) {
-        Preconditions.checkArgument(WebMercatorUtils.isValidTilePosition(zoom, x, this.yPosition), "Invalid x value " + x + " for zoom level " + this.zoom);
+        Preconditions.checkArgument(WebMercatorUtil.isValidTilePosition(zoom, x, this.yPosition), "Invalid x value " + x + " for zoom level " + this.zoom);
         synchronized(this) {
             this.xPosition = x;
         }
@@ -123,7 +123,7 @@ public class TilePosMutable extends TilePos {
      */
     public void setXSafe(int x) {
         synchronized (this) {
-            this.xPosition = Math.floorMod(x, WebMercatorUtils.getDimensionsInTile(this.zoom));
+            this.xPosition = Math.floorMod(x, WebMercatorUtil.getDimensionsInTile(this.zoom));
         }
     }
 
@@ -133,7 +133,7 @@ public class TilePosMutable extends TilePos {
      * @throws IllegalAccessException if the given Y position is not in the acceptable range
      */
     public void setY(int y) {
-        Preconditions.checkArgument(WebMercatorUtils.isValidTilePosition(zoom, this.xPosition, y), "Invalid y value " + y + " for zoom level " + this.zoom);
+        Preconditions.checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, y), "Invalid y value " + y + " for zoom level " + this.zoom);
         synchronized(this) {
             this.yPosition = y;
         }
@@ -145,7 +145,7 @@ public class TilePosMutable extends TilePos {
      */
     public void setYSafe(int y) {
         synchronized (this) {
-            this.yPosition = Math.max(0, Math.min(WebMercatorUtils.getDimensionsInTile(this.zoom) - 1, y));
+            this.yPosition = Math.max(0, Math.min(WebMercatorUtil.getDimensionsInTile(this.zoom) - 1, y));
         }
     }
 

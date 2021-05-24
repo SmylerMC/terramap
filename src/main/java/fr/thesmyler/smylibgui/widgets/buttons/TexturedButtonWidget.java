@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -82,7 +83,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(this.texture);
-        GlStateManager.color(255, 255, 255, 255);
+        Color.WHITE.applyGL();
         int u = this.u;
         int v = this.v;
         if(!this.isEnabled()) {

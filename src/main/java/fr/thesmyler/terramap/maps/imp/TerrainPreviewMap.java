@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.maps.imp;
 
 import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
-import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
+import fr.thesmyler.terramap.util.TilePosUnmutable;
 import net.minecraft.client.resources.I18n;
 
 public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile> {
