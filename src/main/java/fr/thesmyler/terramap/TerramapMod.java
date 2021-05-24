@@ -23,56 +23,56 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
 public class TerramapMod {
-	
+
     public static final String MODID = "terramap";
-	public static final String AUTHOR_EMAIL = "smyler at mail dot com";
-	public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
-	private static TerramapVersion version; // Read from the metadata
-	
-	// These are notable versions
-	public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
-	public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
-	public static final TerramapVersion OLDEST_TERRA121_TERRAMAP_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 7);
+    public static final String AUTHOR_EMAIL = "smyler at mail dot com";
+    public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
+    private static TerramapVersion version; // Read from the metadata
+
+    // These are notable versions
+    public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
+    public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
+    public static final TerramapVersion OLDEST_TERRA121_TERRAMAP_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 7);
 
     public static Logger logger;
-    
+
     /* Proxy things */
     private static final String CLIENT_PROXY_CLASS = "fr.thesmyler.terramap.proxy.TerramapClientProxy";
-	private static final String SERVER_PROXY_CLASS = "fr.thesmyler.terramap.proxy.TerramapServerProxy";
+    private static final String SERVER_PROXY_CLASS = "fr.thesmyler.terramap.proxy.TerramapServerProxy";
     @SidedProxy(clientSide = TerramapMod.CLIENT_PROXY_CLASS, serverSide = TerramapMod.SERVER_PROXY_CLASS)
-	public static TerramapProxy proxy;
-    
+    public static TerramapProxy proxy;
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) throws InvalidVersionString {
-    	logger = event.getModLog();
-    	TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
-    	TerramapMod.logger.info("Terramap version: " + getVersion());
-    	TerramapMod.proxy.preInit(event);
-    	File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
-    	MapStylesLibrary.setConfigMapFile(mapStyleFile);
+        logger = event.getModLog();
+        TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
+        TerramapMod.logger.info("Terramap version: " + getVersion());
+        TerramapMod.proxy.preInit(event);
+        File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
+        MapStylesLibrary.setConfigMapFile(mapStyleFile);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-    	MinecraftForge.EVENT_BUS.register(new CommonTerramapEventHandler());
-    	TerramapMod.proxy.init(event);
-    	PermissionManager.registerNodes();
-    	MapStylesLibrary.loadFromConfigFile();
+        MinecraftForge.EVENT_BUS.register(new CommonTerramapEventHandler());
+        TerramapMod.proxy.init(event);
+        PermissionManager.registerNodes();
+        MapStylesLibrary.loadFromConfigFile();
     }
-    
+
     public static TerramapVersion getVersion() {
-    	return TerramapMod.version;
+        return TerramapMod.version;
     }
-    
+
     @NetworkCheckHandler
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
-    	return true; // Anything should be ok, the actual check is done in the server event handler
+        return true; // Anything should be ok, the actual check is done in the server event handler
     }
-    
+
     @EventHandler
     public void onServerStarts(FMLServerStartingEvent event) {
-    	proxy.onServerStarting(event);
+        proxy.onServerStarting(event);
     }
-    
-        
+
+
 }

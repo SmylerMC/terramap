@@ -19,181 +19,181 @@ import net.minecraft.client.renderer.GlStateManager;
  *
  */
 public abstract class MapLayer implements IWidget {
-	
-	protected int z;
-	private float viewPortWidth, viewPortHeight;
-	private double extendedWidth, extendedHeight;
-	private double centerLatitude, centerLongitude, zoom;
-	private double renderDeltaLon, renderDeltaLat;
-	private float rotation;
-	private double tileScaling;
-	
-	private Mat2d directRotation = Mat2d.INDENTITY;
-	private Mat2d inverseRotation = Mat2d.INDENTITY;
-	
-	public MapLayer(double tileScaling) {
-		if(Double.isInfinite(tileScaling)) throw new RuntimeException("tileScaling cannot be null");
-		this.tileScaling = tileScaling;
-	}
 
-	protected double getMapX(double longitude) {
-		return WebMercatorUtils.getXFromLongitude(longitude, this.zoom) / this.tileScaling;
-	}
+    protected int z;
+    private float viewPortWidth, viewPortHeight;
+    private double extendedWidth, extendedHeight;
+    private double centerLatitude, centerLongitude, zoom;
+    private double renderDeltaLon, renderDeltaLat;
+    private float rotation;
+    private double tileScaling;
 
-	protected double getMapY(double latitude) {
-		return WebMercatorUtils.getYFromLatitude(latitude, this.zoom) / this.tileScaling;
-	}
-	
-	protected Vec2d getScreenPos(double longitude, double latitude) {
-		Vec2d pos = new Vec2d(
-				this.getMapX(longitude) - this.getMapX(this.centerLongitude + this.renderDeltaLon),
-				this.getMapY(latitude) - this.getMapY(this.centerLatitude + this.renderDeltaLat));
-		pos = this.directRotation.prod(pos);
-		return pos.add(this.viewPortWidth / 2, this.viewPortHeight / 2);
-	}
-	
-	protected double getUpperLeftX() {
-		return this.getMapX(this.centerLongitude + this.renderDeltaLon) - this.extendedWidth / 2;
-	}
+    private Mat2d directRotation = Mat2d.INDENTITY;
+    private Mat2d inverseRotation = Mat2d.INDENTITY;
 
-	protected double getUpperLeftY() {
-		return this.getMapY(this.centerLatitude + this.renderDeltaLat) - this.extendedHeight / 2;
-	}
-	
-	public double[] getScreenGeoPos(double x, double y) {
-		Vec2d pos = new Vec2d(x - this.viewPortWidth / 2, y - this.viewPortHeight / 2);
-		pos = this.inverseRotation.prod(pos);
-		pos = pos.add(
-				this.extendedWidth / 2 + this.getUpperLeftX(),
-				this.extendedHeight / 2 + this.getUpperLeftY());
-		pos = pos.scale(this.tileScaling);
-		double lon = GeoUtil.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(pos.x, this.zoom));
-		double lat = WebMercatorUtils.getLatitudeFromY(pos.y, this.zoom);
-		return new double[] {lon, lat};
-	}
-	
-	private void updateViewPort() {
-		this.directRotation = Mat2d.forRotation(Math.toRadians(this.rotation));
-		this.inverseRotation = this.directRotation.transpose(); // For rotations, the inverse is the transposed
-		Vec2d dim = new Vec2d(this.viewPortWidth, this.viewPortHeight);
-		this.extendedWidth = dim.hadamardProd(this.directRotation.column1()).taxicabNorm();
-		this.extendedHeight = dim.hadamardProd(this.directRotation.column2()).taxicabNorm();
-	}
-	
-	protected void applyRotationGl(float drawX, float drawY) {
-		GlStateManager.translate(drawX + this.viewPortWidth / 2, drawY + this.viewPortHeight / 2, 0);
-		GlStateManager.rotate(this.rotation, 0, 0, 1);
-		GlStateManager.translate(-this.extendedWidth / 2, -this.extendedHeight / 2, 0);
-	}
+    public MapLayer(double tileScaling) {
+        if(Double.isInfinite(tileScaling)) throw new RuntimeException("tileScaling cannot be null");
+        this.tileScaling = tileScaling;
+    }
 
-	@Override
-	public float getX() {
-		return 0;
-	}
+    protected double getMapX(double longitude) {
+        return WebMercatorUtils.getXFromLongitude(longitude, this.zoom) / this.tileScaling;
+    }
 
-	@Override
-	public float getY() {
-		return 0;
-	}
+    protected double getMapY(double latitude) {
+        return WebMercatorUtils.getYFromLatitude(latitude, this.zoom) / this.tileScaling;
+    }
 
-	@Override
-	public int getZ() {
-		return this.z;
-	}
+    protected Vec2d getScreenPos(double longitude, double latitude) {
+        Vec2d pos = new Vec2d(
+                this.getMapX(longitude) - this.getMapX(this.centerLongitude + this.renderDeltaLon),
+                this.getMapY(latitude) - this.getMapY(this.centerLatitude + this.renderDeltaLat));
+        pos = this.directRotation.prod(pos);
+        return pos.add(this.viewPortWidth / 2, this.viewPortHeight / 2);
+    }
 
-	@Override
-	public float getWidth() {
-		return this.viewPortWidth;
-	}
+    protected double getUpperLeftX() {
+        return this.getMapX(this.centerLongitude + this.renderDeltaLon) - this.extendedWidth / 2;
+    }
 
-	@Override
-	public float getHeight() {
-		return this.viewPortHeight;
-	}
+    protected double getUpperLeftY() {
+        return this.getMapY(this.centerLatitude + this.renderDeltaLat) - this.extendedHeight / 2;
+    }
 
-	public double getCenterLatitude() {
-		return centerLatitude;
-	}
+    public double[] getScreenGeoPos(double x, double y) {
+        Vec2d pos = new Vec2d(x - this.viewPortWidth / 2, y - this.viewPortHeight / 2);
+        pos = this.inverseRotation.prod(pos);
+        pos = pos.add(
+                this.extendedWidth / 2 + this.getUpperLeftX(),
+                this.extendedHeight / 2 + this.getUpperLeftY());
+        pos = pos.scale(this.tileScaling);
+        double lon = GeoUtil.getLongitudeInRange(WebMercatorUtils.getLongitudeFromX(pos.x, this.zoom));
+        double lat = WebMercatorUtils.getLatitudeFromY(pos.y, this.zoom);
+        return new double[] {lon, lat};
+    }
 
-	public void setCenterLatitude(double centerLatitude) {
-		this.centerLatitude = centerLatitude;
-	}
+    private void updateViewPort() {
+        this.directRotation = Mat2d.forRotation(Math.toRadians(this.rotation));
+        this.inverseRotation = this.directRotation.transpose(); // For rotations, the inverse is the transposed
+        Vec2d dim = new Vec2d(this.viewPortWidth, this.viewPortHeight);
+        this.extendedWidth = dim.hadamardProd(this.directRotation.column1()).taxicabNorm();
+        this.extendedHeight = dim.hadamardProd(this.directRotation.column2()).taxicabNorm();
+    }
 
-	public double getCenterLongitude() {
-		return centerLongitude;
-	}
+    protected void applyRotationGl(float drawX, float drawY) {
+        GlStateManager.translate(drawX + this.viewPortWidth / 2, drawY + this.viewPortHeight / 2, 0);
+        GlStateManager.rotate(this.rotation, 0, 0, 1);
+        GlStateManager.translate(-this.extendedWidth / 2, -this.extendedHeight / 2, 0);
+    }
 
-	public void setCenterLongitude(double centerLongitude) {
-		this.centerLongitude = centerLongitude;
-	}
+    @Override
+    public float getX() {
+        return 0;
+    }
 
-	public double getZoom() {
-		return zoom;
-	}
+    @Override
+    public float getY() {
+        return 0;
+    }
 
-	public void setZoom(double zoom) {
-		this.zoom = zoom;
-	}
+    @Override
+    public int getZ() {
+        return this.z;
+    }
 
-	public void setZ(int z) {
-		this.z = z;
-	}
+    @Override
+    public float getWidth() {
+        return this.viewPortWidth;
+    }
 
-	public void setDimensions(float width, float height) {
-		if(width == this.viewPortWidth && height == this.viewPortHeight) return;
-		this.viewPortWidth = width;
-		this.viewPortHeight = height;
-		this.updateViewPort();
-	}
-	
-	public float getRotation() {
-		return this.rotation;
-	}
-	
-	public void setRotation(float rotation) {
-		if(rotation == this.rotation) return;
-		this.rotation = GeoUtil.getAzimuthInRange(rotation);
-		this.updateViewPort();
-	}
-	
-	public double getTileScaling() {
-		return this.tileScaling;
-	}
-	
-	public void setTileScaling(double tileScaling) {
-		this.tileScaling = tileScaling;
-	}
-	
-	public double getExtendedWidth() {
-		return this.extendedWidth;
-	}
-	
-	public double getExtendedHeight() {
-		return this.extendedHeight;
-	}
-	
-	public Mat2d getRotationMatrix() {
-		return this.directRotation;
-	}
-	
-	public Mat2d getInverseRotationMatrix() {
-		return this.inverseRotation;
-	}
+    @Override
+    public float getHeight() {
+        return this.viewPortHeight;
+    }
 
-	public double getRenderDeltaLongitude() {
-		return renderDeltaLon;
-	}
+    public double getCenterLatitude() {
+        return centerLatitude;
+    }
 
-	public void setRenderDeltaLongitude(double renderDeltaLon) {
-		this.renderDeltaLon = renderDeltaLon;
-	}
+    public void setCenterLatitude(double centerLatitude) {
+        this.centerLatitude = centerLatitude;
+    }
 
-	public double getRenderDeltaLatitude() {
-		return renderDeltaLat;
-	}
+    public double getCenterLongitude() {
+        return centerLongitude;
+    }
 
-	public void setRenderDeltaLatitude(double renderDeltaLat) {
-		this.renderDeltaLat = renderDeltaLat;
-	}
+    public void setCenterLongitude(double centerLongitude) {
+        this.centerLongitude = centerLongitude;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(double zoom) {
+        this.zoom = zoom;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
+
+    public void setDimensions(float width, float height) {
+        if(width == this.viewPortWidth && height == this.viewPortHeight) return;
+        this.viewPortWidth = width;
+        this.viewPortHeight = height;
+        this.updateViewPort();
+    }
+
+    public float getRotation() {
+        return this.rotation;
+    }
+
+    public void setRotation(float rotation) {
+        if(rotation == this.rotation) return;
+        this.rotation = GeoUtil.getAzimuthInRange(rotation);
+        this.updateViewPort();
+    }
+
+    public double getTileScaling() {
+        return this.tileScaling;
+    }
+
+    public void setTileScaling(double tileScaling) {
+        this.tileScaling = tileScaling;
+    }
+
+    public double getExtendedWidth() {
+        return this.extendedWidth;
+    }
+
+    public double getExtendedHeight() {
+        return this.extendedHeight;
+    }
+
+    public Mat2d getRotationMatrix() {
+        return this.directRotation;
+    }
+
+    public Mat2d getInverseRotationMatrix() {
+        return this.inverseRotation;
+    }
+
+    public double getRenderDeltaLongitude() {
+        return renderDeltaLon;
+    }
+
+    public void setRenderDeltaLongitude(double renderDeltaLon) {
+        this.renderDeltaLon = renderDeltaLon;
+    }
+
+    public double getRenderDeltaLatitude() {
+        return renderDeltaLat;
+    }
+
+    public void setRenderDeltaLatitude(double renderDeltaLat) {
+        this.renderDeltaLat = renderDeltaLat;
+    }
 
 }

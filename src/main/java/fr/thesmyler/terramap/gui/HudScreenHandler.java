@@ -25,112 +25,112 @@ import net.minecraft.client.gui.GuiChat;
 
 public abstract class HudScreenHandler {
 
-	private static MapWidget map;
-	private static RibbonCompassWidget compass;
+    private static MapWidget map;
+    private static RibbonCompassWidget compass;
 
-	public static void init(WidgetContainer screen) {
+    public static void init(WidgetContainer screen) {
 
-		screen.removeAllWidgets();
-		screen.cancellAllScheduled();
+        screen.removeAllWidgets();
+        screen.cancellAllScheduled();
 
-		if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
-			if(map == null) {
-				map = new MapWidget(10, TerramapClientContext.getContext().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
-				map.setCopyrightVisibility(false);
-				map.setScaleVisibility(false);
-				map.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
-				map.scheduleAtUpdate(() -> {
-					if(TerramapClientContext.getContext().getProjection() != null && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat)) {
-						map.track(map.getMainPlayerMarker());
-					}
-				});
-			}
-			updateMinimap();
-			screen.addWidget(map);
-			
-			int compassX = (int) Math.round(TerramapConfig.CLIENT.compass.posX * 0.01 * screen.getWidth());
-			int compassY = (int) Math.round(TerramapConfig.CLIENT.compass.posY * 0.01 * screen.getHeight());
-			int compassWidth = (int) Math.round(TerramapConfig.CLIENT.compass.width * 0.01 * screen.getWidth());
+        if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
+            if(map == null) {
+                map = new MapWidget(10, TerramapClientContext.getContext().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
+                map.setCopyrightVisibility(false);
+                map.setScaleVisibility(false);
+                map.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
+                map.scheduleAtUpdate(() -> {
+                    if(TerramapClientContext.getContext().getProjection() != null && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat)) {
+                        map.track(map.getMainPlayerMarker());
+                    }
+                });
+            }
+            updateMinimap();
+            screen.addWidget(map);
 
-			compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
-			screen.addWidget(compass);
-			screen.scheduleAtUpdate(() -> {
-				GeographicProjection p = TerramapClientContext.getContext().getProjection();
-				if(p != null) {
-					double x = Minecraft.getMinecraft().player.posX;
-					double z = Minecraft.getMinecraft().player.posZ;
-					float a = Minecraft.getMinecraft().player.rotationYaw;
-					try {
-						compass.setAzimuth(p.azimuth(x, z, a));
-						compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
-					} catch (OutOfProjectionBoundsException e) {
-						compass.setVisibility(false);
-					}
-				}
-			});
-			compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
-			screen.addWidget(compass);
-		}
-	}
+            int compassX = (int) Math.round(TerramapConfig.CLIENT.compass.posX * 0.01 * screen.getWidth());
+            int compassY = (int) Math.round(TerramapConfig.CLIENT.compass.posY * 0.01 * screen.getHeight());
+            int compassWidth = (int) Math.round(TerramapConfig.CLIENT.compass.width * 0.01 * screen.getWidth());
 
-	public static void updateMinimap() {
-		WidgetContainer screen = HudScreen.getContent();
-		if(map == null) {
-			init(screen);
-			return;
-		}
-		map.setX(Math.round((float)TerramapConfig.CLIENT.minimap.posX / 100 * screen.getWidth()));
-		map.setY(Math.round((float)TerramapConfig.CLIENT.minimap.posY / 100 * screen.getHeight()));
-		map.setWidth(Math.round((float)TerramapConfig.CLIENT.minimap.width / 100 * screen.getWidth()));
-		map.setHeight(Math.round((float)TerramapConfig.CLIENT.minimap.height / 100 * screen.getHeight()));
-		map.trySetFeatureVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
-		map.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
-		map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
-		map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
-		map.setTrackRotation(TerramapConfig.CLIENT.minimap.playerRotation);
-		if(!TerramapConfig.CLIENT.minimap.playerRotation) map.setRotation(0f);
-		Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
-		IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
-		if(bg == null || ! bg.isAllowedOnMinimap()) {
-			ArrayList<IRasterTiledMap> maps = new ArrayList<IRasterTiledMap>(styles.values());
-			Collections.sort(maps, Collections.reverseOrder());
-			bg = maps.get(0);
-		}
-		map.setBackground(bg);
-		float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
-		zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
-		map.setZoom(zoomLevel);
-		map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
+            compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
+            screen.addWidget(compass);
+            screen.scheduleAtUpdate(() -> {
+                GeographicProjection p = TerramapClientContext.getContext().getProjection();
+                if(p != null) {
+                    double x = Minecraft.getMinecraft().player.posX;
+                    double z = Minecraft.getMinecraft().player.posZ;
+                    float a = Minecraft.getMinecraft().player.rotationYaw;
+                    try {
+                        compass.setAzimuth(p.azimuth(x, z, a));
+                        compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
+                    } catch (OutOfProjectionBoundsException e) {
+                        compass.setVisibility(false);
+                    }
+                }
+            });
+            compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
+            screen.addWidget(compass);
+        }
+    }
 
-		map.setTileScaling(TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
-		map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP));
-	}
+    public static void updateMinimap() {
+        WidgetContainer screen = HudScreen.getContent();
+        if(map == null) {
+            init(screen);
+            return;
+        }
+        map.setX(Math.round(TerramapConfig.CLIENT.minimap.posX / 100 * screen.getWidth()));
+        map.setY(Math.round(TerramapConfig.CLIENT.minimap.posY / 100 * screen.getHeight()));
+        map.setWidth(Math.round(TerramapConfig.CLIENT.minimap.width / 100 * screen.getWidth()));
+        map.setHeight(Math.round(TerramapConfig.CLIENT.minimap.height / 100 * screen.getHeight()));
+        map.trySetFeatureVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+        map.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
+        map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
+        map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
+        map.setTrackRotation(TerramapConfig.CLIENT.minimap.playerRotation);
+        if(!TerramapConfig.CLIENT.minimap.playerRotation) map.setRotation(0f);
+        Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
+        IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
+        if(bg == null || ! bg.isAllowedOnMinimap()) {
+            ArrayList<IRasterTiledMap> maps = new ArrayList<IRasterTiledMap>(styles.values());
+            Collections.sort(maps, Collections.reverseOrder());
+            bg = maps.get(0);
+        }
+        map.setBackground(bg);
+        float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
+        zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
+        map.setZoom(zoomLevel);
+        map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
 
-	public static void zoomInMinimap() {
-		if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
-		map.zoom(1);
-		TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoom(); //TODO Use target zoom instead
-		TerramapConfig.sync();
-	}
+        map.setTileScaling(TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
+        map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP));
+    }
 
-	public static void zoomOutMinimap() {
-		if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
-		map.zoom(-1);
-		TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoom(); //TODO Use target zoom instead
-		TerramapConfig.sync();
-	}
+    public static void zoomInMinimap() {
+        if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
+        map.zoom(1);
+        TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoom(); //TODO Use target zoom instead
+        TerramapConfig.sync();
+    }
 
-	/**
-	 * Toggles the minimap visibility and updates the config accordingly.
-	 * If the compass is enabled in the config, sync it's visibility to the minimap, else ignores it.
-	 */
-	public static void toggleWidgets() {
-		if(map != null && compass != null && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
-			map.setVisibility(!map.isVisible(null));
-			compass.setVisibility(map.isVisible(null));
-			TerramapConfig.CLIENT.minimap.enable = map.isVisible(null);
-			TerramapConfig.CLIENT.compass.enable = compass.isVisible(null);
-			TerramapConfig.sync();
-		}
-	}
+    public static void zoomOutMinimap() {
+        if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
+        map.zoom(-1);
+        TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoom(); //TODO Use target zoom instead
+        TerramapConfig.sync();
+    }
+
+    /**
+     * Toggles the minimap visibility and updates the config accordingly.
+     * If the compass is enabled in the config, sync it's visibility to the minimap, else ignores it.
+     */
+    public static void toggleWidgets() {
+        if(map != null && compass != null && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
+            map.setVisibility(!map.isVisible(null));
+            compass.setVisibility(map.isVisible(null));
+            TerramapConfig.CLIENT.minimap.enable = map.isVisible(null);
+            TerramapConfig.CLIENT.compass.enable = compass.isVisible(null);
+            TerramapConfig.sync();
+        }
+    }
 }

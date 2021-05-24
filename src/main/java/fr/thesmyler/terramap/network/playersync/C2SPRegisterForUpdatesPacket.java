@@ -10,35 +10,35 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class C2SPRegisterForUpdatesPacket implements IMessage {
 
-	public boolean update = false;
-	
-	public C2SPRegisterForUpdatesPacket() {}
-	
-	public C2SPRegisterForUpdatesPacket(boolean update) {
-		this.update = update;
-	}
-	
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		this.update = buf.readBoolean();
-	}
+    public boolean update = false;
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		buf.writeBoolean(this.update);
-	}
-	
-	public static class C2SRegisterForUpdatesPacketHandler implements IMessageHandler<C2SPRegisterForUpdatesPacket, IMessage>{
+    public C2SPRegisterForUpdatesPacket() {}
 
-		@Override
-		public C2SPRegisterForUpdatesPacket onMessage(C2SPRegisterForUpdatesPacket message, MessageContext ctx) {
-			EntityPlayerMP player = ctx.getServerHandler().player;
-			WorldServer world = player.getServerWorld();
-			if(message.update) world.addScheduledTask(()->{RemoteSynchronizer.registerPlayerForUpdates(player);});
-			else world.addScheduledTask(()->{RemoteSynchronizer.unregisterPlayerForUpdates(player);});
-			return null;
-		}
-		
-	}
+    public C2SPRegisterForUpdatesPacket(boolean update) {
+        this.update = update;
+    }
+
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        this.update = buf.readBoolean();
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+        buf.writeBoolean(this.update);
+    }
+
+    public static class C2SRegisterForUpdatesPacketHandler implements IMessageHandler<C2SPRegisterForUpdatesPacket, IMessage>{
+
+        @Override
+        public C2SPRegisterForUpdatesPacket onMessage(C2SPRegisterForUpdatesPacket message, MessageContext ctx) {
+            EntityPlayerMP player = ctx.getServerHandler().player;
+            WorldServer world = player.getServerWorld();
+            if(message.update) world.addScheduledTask(()->{RemoteSynchronizer.registerPlayerForUpdates(player);});
+            else world.addScheduledTask(()->{RemoteSynchronizer.unregisterPlayerForUpdates(player);});
+            return null;
+        }
+
+    }
 
 }

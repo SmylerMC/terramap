@@ -16,56 +16,52 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 public class CommonTerramapEventHandler {
 
-	private long tickCounter = 0;
+    private long tickCounter = 0;
 
-	@SubscribeEvent
-	public void onPlayerLoggedIn(PlayerLoggedInEvent event){
-		if(!event.player.world.isRemote) {
-			EntityPlayerMP player = (EntityPlayerMP) event.player;
-			RemoteSynchronizer.sendHelloToClient(player);
-			RemoteSynchronizer.sendTpCommandToClient(player);
-		}
-	}
-	
-	@SubscribeEvent
-	public void onChangeDimension(PlayerChangedDimensionEvent event) {
-		if(!event.player.world.isRemote)
-			RemoteSynchronizer.sendHelloToClient((EntityPlayerMP) event.player);
-	}
+    @SubscribeEvent
+    public void onPlayerLoggedIn(PlayerLoggedInEvent event){
+        if(!event.player.world.isRemote) {
+            EntityPlayerMP player = (EntityPlayerMP) event.player;
+            RemoteSynchronizer.sendHelloToClient(player);
+            RemoteSynchronizer.sendTpCommandToClient(player);
+        }
+    }
 
-	@SubscribeEvent
-	public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
-		RemoteSynchronizer.playersToUpdate.remove(event.player.getPersistentID());
-	}
+    @SubscribeEvent
+    public void onChangeDimension(PlayerChangedDimensionEvent event) {
+        if(!event.player.world.isRemote)
+            RemoteSynchronizer.sendHelloToClient((EntityPlayerMP) event.player);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoggedOut(PlayerLoggedOutEvent event) {
+        RemoteSynchronizer.playersToUpdate.remove(event.player.getPersistentID());
+    }
 
 
-	@SubscribeEvent
-	public void onWorldTick(WorldTickEvent event) {
-		if(event.phase.equals(TickEvent.Phase.END) || event.world.isRemote) return;
-		WorldServer world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
-		if(TerramapConfig.SERVER.synchronizePlayers && TerramapUtil.isServerEarthWorld(world) && this.tickCounter == 0) {
-			RemoteSynchronizer.syncPlayers(world);
-		}
-		this.tickCounter = (this.tickCounter+1) % TerramapConfig.SERVER.syncInterval;
-	}
-	
-	@SubscribeEvent
-	public void onWorldLoads(WorldEvent.Load event) {
-		if(!event.getWorld().isRemote) {
-			WorldServer world = ((WorldServer)event.getWorld());
-	    	TerramapServerPreferences.loadWorldPreferences(world);
-		}
-	}
-	
-	@SubscribeEvent
-	public void onWorldUnloads(WorldEvent.Unload event) {
-		/*
-		 *  We would ideally like to free that memory, but unfortunately we can't easily tell which dimension is being unloaded
-		 */
-//		if(!event.getWorld().isRemote) {
-//			WorldServer world = ((WorldServer)event.getWorld());
-//	    	TerramapServerPreferences.unloadWorldPreferences(world);
-//		}
-	}
+    @SubscribeEvent
+    public void onWorldTick(WorldTickEvent event) {
+        if(event.phase.equals(TickEvent.Phase.END) || event.world.isRemote) return;
+        WorldServer world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
+        if(TerramapConfig.SERVER.synchronizePlayers && TerramapUtil.isServerEarthWorld(world) && this.tickCounter == 0) {
+            RemoteSynchronizer.syncPlayers(world);
+        }
+        this.tickCounter = (this.tickCounter+1) % TerramapConfig.SERVER.syncInterval;
+    }
+
+    @SubscribeEvent
+    public void onWorldLoads(WorldEvent.Load event) {
+        if(!event.getWorld().isRemote) {
+            WorldServer world = ((WorldServer)event.getWorld());
+            TerramapServerPreferences.loadWorldPreferences(world);
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldUnloads(WorldEvent.Unload event) {
+        /*
+         *  We would ideally like to free that memory, but unfortunately we can't easily tell which dimension is being unloaded
+         */
+    }
 
 }
