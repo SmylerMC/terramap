@@ -55,5 +55,9 @@ public final class Vec2d {
 		if(norm == 0d) throw new ArithmeticException("Cannot normalize null vector");
 		return this.scale(1d / norm);
 	}
+	
+	public double[] asArray() {
+		return new double[] {this.x, this.y};
+	}
 
 }

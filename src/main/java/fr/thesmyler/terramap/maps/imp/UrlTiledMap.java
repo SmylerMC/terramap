@@ -10,6 +10,7 @@ import com.google.common.base.Strings;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
+import fr.thesmyler.terramap.maps.ICopyrightHolder;
 import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
@@ -23,7 +24,7 @@ import net.minecraft.util.text.ITextComponent;
  * @author SmylerMC
  *
  */
-public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> {
+public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements ICopyrightHolder {
 
 	private final String[] urlPatterns;
 	private final int maxZoom;

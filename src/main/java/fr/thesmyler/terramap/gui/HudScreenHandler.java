@@ -97,7 +97,7 @@ public abstract class HudScreenHandler {
 			bg = maps.get(0);
 		}
 		map.setBackground(bg);
-		int zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
+		float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
 		zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
 		map.setZoom(zoomLevel);
 		map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
@@ -109,14 +109,14 @@ public abstract class HudScreenHandler {
 	public static void zoomInMinimap() {
 		if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
 		map.zoom(1);
-		TerramapConfig.CLIENT.minimap.zoomLevel = (int) map.getZoom();
+		TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoom(); //TODO Use target zoom instead
 		TerramapConfig.sync();
 	}
 
 	public static void zoomOutMinimap() {
 		if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
 		map.zoom(-1);
-		TerramapConfig.CLIENT.minimap.zoomLevel = (int) map.getZoom();
+		TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoom(); //TODO Use target zoom instead
 		TerramapConfig.sync();
 	}
 

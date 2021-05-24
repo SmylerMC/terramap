@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.maps;
 
 import fr.thesmyler.terramap.maps.utils.TilePos;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
-import net.minecraft.util.text.ITextComponent;
 
 public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
 	
@@ -39,15 +38,6 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
 	 * @return the String id of this map
 	 */
 	public String getId();
-	
-	/**
-	 * Gets a copyright notice for this map, translated in the appropriate language,
-	 * or English if it isn't available.
-	 * 
-	 * @param localeKey - the language key to get the copyright for
-	 * @return a copyright as a {@link ITextComponent}, translated to the appropriate language.
-	 */
-	public ITextComponent getCopyright(String localeKey);
 	
 	/**
 	 * Gets a name for this map, translated in the appropriate language,
