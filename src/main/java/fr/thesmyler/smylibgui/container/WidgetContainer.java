@@ -176,7 +176,7 @@ public abstract class WidgetContainer implements IWidget{
 		}
 	}
 
-	@Override // From IWidget
+	@Override
 	public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
 		if(this.focusedWidget != null) {
 			this.focusedWidget.onKeyTyped(typedChar, keyCode, this);

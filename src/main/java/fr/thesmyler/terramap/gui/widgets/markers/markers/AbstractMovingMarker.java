@@ -5,7 +5,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
-public abstract class AbstractMovingMarkers extends Marker {
+public abstract class AbstractMovingMarker extends Marker {
 
 	protected Animation movingAnimation;
 
@@ -13,12 +13,12 @@ public abstract class AbstractMovingMarkers extends Marker {
 	protected float azimuth;
 	protected double oldLongitude, oldLatitude;
 
-	public AbstractMovingMarkers(MarkerController<?> controller, float width, float height, int minZoom, int maxZoom) {
+	public AbstractMovingMarker(MarkerController<?> controller, float width, float height, int minZoom, int maxZoom) {
 		super(controller, width, height, minZoom, maxZoom);
 		this.movingAnimation = new Animation(10000);
 	}
 
-	public AbstractMovingMarkers(MarkerController<?> controller, float width, float height) {
+	public AbstractMovingMarker(MarkerController<?> controller, float width, float height) {
 		this(controller, width, height, Integer.MIN_VALUE, Integer.MAX_VALUE);
 	}
 

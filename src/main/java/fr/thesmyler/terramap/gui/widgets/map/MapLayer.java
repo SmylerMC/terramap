@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.GlStateManager;
  * @author SmylerMC
  *
  */
-abstract class MapLayer implements IWidget {
+public abstract class MapLayer implements IWidget {
 	
 	protected int z;
 	private float viewPortWidth, viewPortHeight;

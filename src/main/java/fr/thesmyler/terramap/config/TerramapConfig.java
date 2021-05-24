@@ -62,7 +62,7 @@ public class TerramapConfig {
 		@Config.Comment("Minimap zoom level")
 		@Config.RangeInt(min=0, max=19)
 		@Config.SlidingOption
-		public int zoomLevel = 18;
+		public float zoomLevel = 18;
 
 		@Config.Name("minimap_show_entities")
 		@Config.LangKey("terramap.config.minimap.show_entities")
