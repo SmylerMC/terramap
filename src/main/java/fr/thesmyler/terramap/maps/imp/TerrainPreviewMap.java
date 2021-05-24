@@ -4,8 +4,6 @@ import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile> {
 	
@@ -23,11 +21,6 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
 	@Override
 	public String getId() {
 		return "terrain_preview_debug";
-	}
-
-	@Override
-	public ITextComponent getCopyright(String localeKey) {
-		return new TextComponentString("Terra++");
 	}
 
 	@Override

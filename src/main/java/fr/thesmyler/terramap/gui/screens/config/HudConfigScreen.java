@@ -246,7 +246,7 @@ public class HudConfigScreen extends Screen {
 		this.compassWindow.setVisibility(TerramapConfig.CLIENT.compass.enable);
 		this.minimapButton.setState(TerramapConfig.CLIENT.minimap.enable);
 		this.compassButton.setState(TerramapConfig.CLIENT.compass.enable);
-		this.zoomSlider.setValue(TerramapConfig.CLIENT.minimap.zoomLevel);
+		this.zoomSlider.setValue(Math.round(TerramapConfig.CLIENT.minimap.zoomLevel));
 		this.otherPlayersButton.setState(TerramapConfig.CLIENT.minimap.showOtherPlayers);
 		this.minimap.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
 		this.entitiesButton.setState(TerramapConfig.CLIENT.minimap.showEntities);

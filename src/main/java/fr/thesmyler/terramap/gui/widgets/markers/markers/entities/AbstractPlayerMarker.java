@@ -8,7 +8,7 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarkers;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 //TODO Take map rotation into account when rendering direction arrow
-public abstract class AbstractPlayerMarker extends AbstractMovingMarkers {
+public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
 	private int downScaleFactor;
 

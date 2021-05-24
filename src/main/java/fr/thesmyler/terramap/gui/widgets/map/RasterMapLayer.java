@@ -8,6 +8,7 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
+import fr.thesmyler.terramap.maps.ICopyrightHolder;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
@@ -22,8 +23,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
-public class RasterMapLayer extends MapLayer {
+public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
 	protected IRasterTiledMap map;
 	protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
@@ -263,6 +266,14 @@ public class RasterMapLayer extends MapLayer {
 		GlStateManager.popMatrix();
 		profiler.endSection();
 
+	}
+
+	@Override
+	public ITextComponent getCopyright(String localeKey) {
+		if(this.map instanceof ICopyrightHolder) {
+			return ((ICopyrightHolder)this.map).getCopyright(localeKey);
+		}
+		return new TextComponentString("");
 	}
 
 }
