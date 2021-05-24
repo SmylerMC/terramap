@@ -13,6 +13,8 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
 
     protected float showX, hiddenX, showY, hiddenY;
     protected Color backgroundColor = Color.DARKER_OVERLAY;
+    protected Color contourColor = Color.DARK_GRAY;
+    protected float contourSize = 2f;
     protected Animation mainAnimation;
     protected boolean closeOnClickOther = false;
     protected boolean visible = true;
@@ -32,7 +34,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent){
-        RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor);
+        RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor, this.contourSize, this.contourColor);
         super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
         this.mainAnimation.update();
     }
@@ -139,6 +141,22 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
     public SlidingPanelWidget setBackgroundColor(Color color) {
         this.backgroundColor = color;
         return this;
+    }
+    
+    public Color getContourColor() {
+        return contourColor;
+    }
+
+    public void setContourColor(Color contourColor) {
+        this.contourColor = contourColor;
+    }
+
+    public float getContourSize() {
+        return contourSize;
+    }
+
+    public void setContourSize(float contourSize) {
+        this.contourSize = contourSize;
     }
 
     @Override
