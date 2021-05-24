@@ -109,6 +109,19 @@ public final class RenderUtil {
     public static void drawRect(double xLeft, double yTop, double xRight, double yBottom, Color color) {
         drawGradientRect(0, xLeft, yTop, xRight, yBottom, color, color, color, color);
     }
+    
+    public static void drawRectWithContour(int z, double xLeft, double yTop, double xRight, double yBottom, Color color, float contourSize, Color contourColor) {
+        drawRect(z, xLeft, yTop, xRight, yBottom, color);
+        drawClosedStrokeLine(z, contourColor, contourSize, 
+                xLeft, yTop,
+                xLeft, yBottom,
+                xRight, yBottom,
+                xRight, yTop);
+    }
+    
+    public static void drawRectWithContour(double xLeft, double yTop, double xRight, double yBottom, Color color, float contourSize, Color contourColor) {
+        drawRectWithContour(0, xLeft, yTop, xRight, yBottom, color, contourSize, contourColor);
+    }
 
     public static void drawGradientRect(int z, double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
         GlStateManager.enableAlpha();
