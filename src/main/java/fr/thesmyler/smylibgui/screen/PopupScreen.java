@@ -15,135 +15,135 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 
 public class PopupScreen extends Screen {
-	
-	private GuiScreen other;
-	private WidgetContainer content;
-	private float contentWidth, contentHeight;
-	private boolean closeOnClickOutContent = true;
-	private Color contentBackgroundColor = Color.DARKER_OVERLAY;
-	private Color shadeColor = Color.TRANSPARENT;
 
-	public PopupScreen(float contentWidth, float contentHeight) {
-		super(BackgroundOption.NONE);
-		this.content = new ContentContainer();
-		this.contentWidth = contentWidth;
-		this.contentHeight = contentHeight;
-		super.getContent().addWidget(this.content);
-	}
-	
-	public void show() {
-		this.other = Minecraft.getMinecraft().currentScreen;
-		Minecraft.getMinecraft().displayGuiScreen(this);
-	}
-	
-	@Override
-	public void initGui() {
-		if(this.other != null) this.other.setWorldAndResolution(this.mc, this.width, this.height);
-		super.initGui();
-	}
-	
-	@Override
-	public void drawScreen(int x, int y, float partialTicks) {
-		if(this.other != null) this.other.drawScreen(x, y, partialTicks);
-		RenderUtil.drawRect(0, 0, this.width, this.height, this.shadeColor);
-		super.drawScreen(x, y, partialTicks);
-	}
-	
-	
-	@Override
-	public void updateScreen() {
-		this.other.updateScreen();
-		super.updateScreen();
-	}
+    private GuiScreen other;
+    private WidgetContainer content;
+    private float contentWidth, contentHeight;
+    private boolean closeOnClickOutContent = true;
+    private Color contentBackgroundColor = Color.DARKER_OVERLAY;
+    private Color shadeColor = Color.TRANSPARENT;
 
-	@Override
-	public WidgetContainer getContent() {
-		return this.content;
-	}
-	
-	public void close() {
-		if(Minecraft.getMinecraft().currentScreen != this) return;
-		Minecraft.getMinecraft().displayGuiScreen(this.other);
-	}
-	
-	public boolean isCloseOnClickOutContent() {
-		return closeOnClickOutContent;
-	}
+    public PopupScreen(float contentWidth, float contentHeight) {
+        super(BackgroundOption.NONE);
+        this.content = new ContentContainer();
+        this.contentWidth = contentWidth;
+        this.contentHeight = contentHeight;
+        super.getContent().addWidget(this.content);
+    }
 
-	public void setCloseOnClickOutContent(boolean closeOnClickOutContent) {
-		this.closeOnClickOutContent = closeOnClickOutContent;
-	}
-	
-	public static void showMessage(ITextComponent message) {
-		TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
-		float padding = 10;
-		text.setMaxWidth(300);
-		text.setAnchorX(text.getWidth() / 2 + padding).setAnchorY(padding);
-		TextButtonWidget button = new TextButtonWidget(
-				text.getWidth() / 2 + padding - 20,
-				text.getY() + text.getHeight() + padding,
-				1, 40, I18n.format("smylibgui.popup.info.ok"));
-		PopupScreen screen = new PopupScreen(text.getWidth() + padding*2, button.getY() + padding + button.getHeight());
-		button.setOnClick(() -> screen.close());
-		button.enable();
-		screen.getContent().addWidget(text);
-		screen.getContent().addWidget(button);
-		screen.show();
-	}
+    public void show() {
+        this.other = Minecraft.getMinecraft().currentScreen;
+        Minecraft.getMinecraft().displayGuiScreen(this);
+    }
 
-	private class ContentContainer extends WidgetContainer {
+    @Override
+    public void initGui() {
+        if(this.other != null) this.other.setWorldAndResolution(this.mc, this.width, this.height);
+        super.initGui();
+    }
 
-		public ContentContainer() {
-			super(0);
-		}
+    @Override
+    public void drawScreen(int x, int y, float partialTicks) {
+        if(this.other != null) this.other.drawScreen(x, y, partialTicks);
+        RenderUtil.drawRect(0, 0, this.width, this.height, this.shadeColor);
+        super.drawScreen(x, y, partialTicks);
+    }
 
-		@Override
-		public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-			RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), PopupScreen.this.contentBackgroundColor);
-			super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
-		}
-		
-		@Override
-		public float getX() {
-			return (PopupScreen.this.width - this.getWidth()) / 2;
-		}
 
-		@Override
-		public float getY() {
-			return (PopupScreen.this.height - this.getHeight()) / 2;
-		}
+    @Override
+    public void updateScreen() {
+        this.other.updateScreen();
+        super.updateScreen();
+    }
 
-		@Override
-		public float getWidth() {
-			return PopupScreen.this.contentWidth;
-		}
+    @Override
+    public WidgetContainer getContent() {
+        return this.content;
+    }
 
-		@Override
-		public float getHeight() {
-			return PopupScreen.this.contentHeight;
-		}
+    public void close() {
+        if(Minecraft.getMinecraft().currentScreen != this) return;
+        Minecraft.getMinecraft().displayGuiScreen(this.other);
+    }
 
-		@Override
-		public boolean onParentClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-			if(PopupScreen.this.closeOnClickOutContent) {
-				PopupScreen.this.close();
-				return false;
-			}
-			return super.onParentClick(mouseX, mouseY, mouseButton, parent);
-		}
+    public boolean isCloseOnClickOutContent() {
+        return closeOnClickOutContent;
+    }
 
-		@Override
-		public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-			if(PopupScreen.this.closeOnClickOutContent) return this.onParentClick(mouseX, mouseY, mouseButton, parent);
-			return super.onParentDoubleClick(mouseX, mouseY, mouseButton, parent);
-		}
+    public void setCloseOnClickOutContent(boolean closeOnClickOutContent) {
+        this.closeOnClickOutContent = closeOnClickOutContent;
+    }
 
-		@Override
-		public void onKeyTyped(char typedChar, int keyCode, WidgetContainer parent) {
-			if(keyCode == Keyboard.KEY_ESCAPE) PopupScreen.this.close();
-			else super.onKeyTyped(typedChar, keyCode, parent);
-		}
-		
-	}
+    public static void showMessage(ITextComponent message) {
+        TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        float padding = 10;
+        text.setMaxWidth(300);
+        text.setAnchorX(text.getWidth() / 2 + padding).setAnchorY(padding);
+        TextButtonWidget button = new TextButtonWidget(
+                text.getWidth() / 2 + padding - 20,
+                text.getY() + text.getHeight() + padding,
+                1, 40, I18n.format("smylibgui.popup.info.ok"));
+        PopupScreen screen = new PopupScreen(text.getWidth() + padding*2, button.getY() + padding + button.getHeight());
+        button.setOnClick(() -> screen.close());
+        button.enable();
+        screen.getContent().addWidget(text);
+        screen.getContent().addWidget(button);
+        screen.show();
+    }
+
+    private class ContentContainer extends WidgetContainer {
+
+        public ContentContainer() {
+            super(0);
+        }
+
+        @Override
+        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+            RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), PopupScreen.this.contentBackgroundColor);
+            super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+        }
+
+        @Override
+        public float getX() {
+            return (PopupScreen.this.width - this.getWidth()) / 2;
+        }
+
+        @Override
+        public float getY() {
+            return (PopupScreen.this.height - this.getHeight()) / 2;
+        }
+
+        @Override
+        public float getWidth() {
+            return PopupScreen.this.contentWidth;
+        }
+
+        @Override
+        public float getHeight() {
+            return PopupScreen.this.contentHeight;
+        }
+
+        @Override
+        public boolean onParentClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
+            if(PopupScreen.this.closeOnClickOutContent) {
+                PopupScreen.this.close();
+                return false;
+            }
+            return super.onParentClick(mouseX, mouseY, mouseButton, parent);
+        }
+
+        @Override
+        public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
+            if(PopupScreen.this.closeOnClickOutContent) return this.onParentClick(mouseX, mouseY, mouseButton, parent);
+            return super.onParentDoubleClick(mouseX, mouseY, mouseButton, parent);
+        }
+
+        @Override
+        public void onKeyTyped(char typedChar, int keyCode, WidgetContainer parent) {
+            if(keyCode == Keyboard.KEY_ESCAPE) PopupScreen.this.close();
+            else super.onKeyTyped(typedChar, keyCode, parent);
+        }
+
+    }
 
 }

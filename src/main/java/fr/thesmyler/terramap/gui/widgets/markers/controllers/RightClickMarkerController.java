@@ -6,32 +6,32 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.RightClickMarker;
 
 public class RightClickMarkerController extends MarkerController<RightClickMarker> {
-	
-	public static final String ID = "right_click_marker";
 
-	public RightClickMarkerController() {
-		super(ID, 1000, RightClickMarker.class);
-	}
+    public static final String ID = "right_click_marker";
 
-	@Override
-	public RightClickMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-		if(existingMarkers.length > 0) return new RightClickMarker[] {};
-		return new RightClickMarker[] { new RightClickMarker(this)};
-	}
+    public RightClickMarkerController() {
+        super(ID, 1000, RightClickMarker.class);
+    }
 
-	@Override
-	public boolean showButton() {
-		return false;
-	}
+    @Override
+    public RightClickMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
+        if(existingMarkers.length > 0) return new RightClickMarker[] {};
+        return new RightClickMarker[] { new RightClickMarker(this)};
+    }
 
-	@Override
-	public ToggleButtonWidget getButton() {
-		return null;
-	}
-	
-	@Override
-	public String getSaveName() {
-		return ID;
-	}
+    @Override
+    public boolean showButton() {
+        return false;
+    }
+
+    @Override
+    public ToggleButtonWidget getButton() {
+        return null;
+    }
+
+    @Override
+    public String getSaveName() {
+        return ID;
+    }
 
 }

@@ -21,38 +21,38 @@ import fr.thesmyler.terramap.TerramapMod;
 @XmlRootElement(name="kml")
 public class KmlFile {
 
-	@XmlElement(name="Document")
-	private KmlDocument document = new KmlDocument();
+    @XmlElement(name="Document")
+    private KmlDocument document = new KmlDocument();
 
-	@XmlAttribute
-	private final String XLMNS = "http://www.opengis.net/kml/2.2";
+    @XmlAttribute
+    private final String XLMNS = "http://www.opengis.net/kml/2.2";
 
-	@XmlTransient
-	public KmlDocument getDocument() {
-		return this.document;
-	}
+    @XmlTransient
+    public KmlDocument getDocument() {
+        return this.document;
+    }
 
-	public void save(File file, boolean compressed) throws IOException {
-		try {
-			JAXBContext context = JAXBContext.newInstance(KmlFile.class);
-			Marshaller marshaller = context.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			try(OutputStream stream = new FileOutputStream(file)) {
-				if(compressed) {
-					try(ZipArchiveOutputStream compressedStream = new ZipArchiveOutputStream(stream)) {
-						ZipArchiveEntry entry = new ZipArchiveEntry("terramap.kml");
-						compressedStream.putArchiveEntry(entry);
-						marshaller.marshal(this, compressedStream);
-						compressedStream.closeArchiveEntry();
-					}
-				} else {
-					marshaller.marshal(this, stream);
-				}
-			}
-		} catch(JAXBException e) {
-			TerramapMod.logger.error("Something went seriously wrong when saving a kml file. Save aborted.");
-			TerramapMod.logger.catching(e);
-		}
-	}
+    public void save(File file, boolean compressed) throws IOException {
+        try {
+            JAXBContext context = JAXBContext.newInstance(KmlFile.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            try(OutputStream stream = new FileOutputStream(file)) {
+                if(compressed) {
+                    try(ZipArchiveOutputStream compressedStream = new ZipArchiveOutputStream(stream)) {
+                        ZipArchiveEntry entry = new ZipArchiveEntry("terramap.kml");
+                        compressedStream.putArchiveEntry(entry);
+                        marshaller.marshal(this, compressedStream);
+                        compressedStream.closeArchiveEntry();
+                    }
+                } else {
+                    marshaller.marshal(this, stream);
+                }
+            }
+        } catch(JAXBException e) {
+            TerramapMod.logger.error("Something went seriously wrong when saving a kml file. Save aborted.");
+            TerramapMod.logger.catching(e);
+        }
+    }
 
 }

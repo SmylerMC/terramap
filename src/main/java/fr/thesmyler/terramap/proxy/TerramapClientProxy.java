@@ -30,58 +30,58 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapClientProxy extends TerramapProxy {
 
-	@Override
-	public Side getSide() {
-		return Side.CLIENT;
-	}
+    @Override
+    public Side getSide() {
+        return Side.CLIENT;
+    }
 
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
-		TerramapMod.logger.debug("Terramap client pre-init");
-		TerramapNetworkManager.registerHandlers(Side.CLIENT);
-		File clientPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapClientPreferences.FILENAME);
-		TerramapClientPreferences.setFile(clientPrefs);
-		TerramapClientPreferences.load();
-	}
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        TerramapMod.logger.debug("Terramap client pre-init");
+        TerramapNetworkManager.registerHandlers(Side.CLIENT);
+        File clientPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapClientPreferences.FILENAME);
+        TerramapClientPreferences.setFile(clientPrefs);
+        TerramapClientPreferences.load();
+    }
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		TerramapMod.logger.debug("Terramap client init");
-		SmyLibGui.init(TerramapMod.logger, false);
-		MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
-		KeyBindings.registerBindings();
-		UrlRasterTile.registerErrorTexture();
-		MarkerControllerManager.registerBuiltInControllers();
-		MapStylesLibrary.reload();
-		ClientCommandHandler.instance.registerCommand(new OpenMapCommand());
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+        TerramapMod.logger.debug("Terramap client init");
+        SmyLibGui.init(TerramapMod.logger, false);
+        MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
+        KeyBindings.registerBindings();
+        UrlRasterTile.registerErrorTexture();
+        MarkerControllerManager.registerBuiltInControllers();
+        MapStylesLibrary.reload();
+        ClientCommandHandler.instance.registerCommand(new OpenMapCommand());
+    }
 
-	@Override
-	public void onServerStarting(FMLServerStartingEvent event) {
-		// Nothing to do here
-	}
+    @Override
+    public void onServerStarting(FMLServerStartingEvent event) {
+        // Nothing to do here
+    }
 
-	@Override
-	public GameType getGameMode(EntityPlayer e) {
-		if(e instanceof AbstractClientPlayer) {
-			NetworkPlayerInfo i = Minecraft.getMinecraft().getConnection().getPlayerInfo(e.getUniqueID());
-			if(i != null) return i.getGameType();
-		}
-		if(e instanceof EntityPlayerMP) {
-			EntityPlayerMP player = (EntityPlayerMP)e;
-			return player.interactionManager.getGameType();
-		}
-		TerramapMod.logger.error("Failed to determine player gamemode.");
-		return GameType.SURVIVAL;
-	}
+    @Override
+    public GameType getGameMode(EntityPlayer e) {
+        if(e instanceof AbstractClientPlayer) {
+            NetworkPlayerInfo i = Minecraft.getMinecraft().getConnection().getPlayerInfo(e.getUniqueID());
+            if(i != null) return i.getGameType();
+        }
+        if(e instanceof EntityPlayerMP) {
+            EntityPlayerMP player = (EntityPlayerMP)e;
+            return player.interactionManager.getGameType();
+        }
+        TerramapMod.logger.error("Failed to determine player gamemode.");
+        return GameType.SURVIVAL;
+    }
 
-	@Override
-	public void onConfigChanged(OnConfigChangedEvent event) {
-		if (event.getModID().equals(TerramapMod.MODID)) {
-			if(TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
-				HudScreenHandler.updateMinimap();
-			}
-		}
-	}
+    @Override
+    public void onConfigChanged(OnConfigChangedEvent event) {
+        if (event.getModID().equals(TerramapMod.MODID)) {
+            if(TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
+                HudScreenHandler.updateMinimap();
+            }
+        }
+    }
 
 }
