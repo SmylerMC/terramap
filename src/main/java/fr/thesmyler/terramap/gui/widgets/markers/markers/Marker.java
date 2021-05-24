@@ -4,7 +4,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class Marker implements IWidget {
@@ -76,7 +76,7 @@ public abstract class Marker implements IWidget {
     @Override
     public boolean isVisible(WidgetContainer parent) {
         if(!this.controller.getVisibility()) return false;
-        if(!WebMercatorUtils.isPositionOnMap(this.getLongitude(), this.getLatitude())) return false;
+        if(!WebMercatorUtil.isPositionOnMap(this.getLongitude(), this.getLatitude())) return false;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget)parent;
             double zoom = map.getZoom();

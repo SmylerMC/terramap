@@ -8,6 +8,7 @@ import org.lwjgl.input.Mouse;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
+import fr.thesmyler.smylibgui.util.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
@@ -54,9 +55,10 @@ public final class HudScreen {
         float mouseX = (float)Mouse.getX() / res.getScaleFactor();
         float mouseY = height - (float)Mouse.getY() / res.getScaleFactor() - 1;
         CONTAINER.onUpdate(mouseX, mouseY, null);
+        Color color = Color.currentGL();
         CONTAINER.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
         GlStateManager.enableAlpha();
-        GlStateManager.color(1f, 1f, 1f, .5f); // Reset color to what it was
+        color.applyGL(); // Reset color to what it was
     }
 
     @SubscribeEvent

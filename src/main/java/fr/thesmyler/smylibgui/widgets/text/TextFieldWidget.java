@@ -129,7 +129,7 @@ public class TextFieldWidget implements IWidget {
         }
 
         if(this.isSearchBar) {
-            GlStateManager.color(1, 1, 1, 1);
+            Color.WHITE.applyGL();
             Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.WIDGET_TEXTURES);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
@@ -190,7 +190,7 @@ public class TextFieldWidget implements IWidget {
         dispX1 = Math.min(dispX1, x + this.getEffectiveWidth());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        GlStateManager.color(0, 0, 1, 1);
+        Color.BLUE.applyGL();
         GlStateManager.disableTexture2D();
         GlStateManager.enableColorLogic();
         GlStateManager.colorLogicOp(GlStateManager.LogicOp.OR_REVERSE);

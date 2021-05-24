@@ -62,7 +62,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         }
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.getSkin());
-        GlStateManager.color(1, 1, 1, this.getTransparency());
+        Color.WHITE.withAlpha(this.getTransparency()).applyGL();
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 80 / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
 
@@ -75,7 +75,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             parent.getFont().drawCenteredString(x + halfSize, nameY, name, Color.WHITE, false);
         }
 
-        GlStateManager.color(1, 1, 1, 1);
+        Color.WHITE.applyGL();
     }
 
     protected abstract ResourceLocation getSkin();

@@ -10,8 +10,8 @@ import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.IRasterTile;
-import fr.thesmyler.terramap.maps.utils.TerramapImageUtils;
-import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
+import fr.thesmyler.terramap.util.ImageUtil;
+import fr.thesmyler.terramap.util.TilePosUnmutable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import net.buildtheearth.terraplusplus.util.http.Disk;
@@ -138,7 +138,7 @@ public class UrlRasterTile implements IRasterTile {
     public static void registerErrorTexture() {
         TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
         int color[] = {170, 211, 223};
-        UrlRasterTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(TerramapImageUtils.imageFromColor(256,  256, color)));
+        UrlRasterTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(ImageUtil.imageFromColor(256,  256, color)));
     }
 
 }

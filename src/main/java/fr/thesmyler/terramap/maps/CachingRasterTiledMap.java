@@ -6,9 +6,9 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.maps.utils.TilePos;
-import fr.thesmyler.terramap.maps.utils.TilePosUnmutable;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
+import fr.thesmyler.terramap.util.TilePos;
+import fr.thesmyler.terramap.util.TilePosUnmutable;
+import fr.thesmyler.terramap.util.WebMercatorUtil;
 
 /**
  * This class is in charge of keeping track of and loading the tiles used for rendering a specific map.
@@ -101,7 +101,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
         this.lowZoom = Math.min(3, TerramapConfig.CLIENT.lowZoomLevel); // We hard-code that here because we really don't want that to go above 3, 4 would already be 341 tiles
         if(this.useLowZoom) {
             for(int zoom=this.getMinZoom(); zoom<=Math.min(this.getMaxZoom(), this.lowZoom); zoom++) {
-                int size = WebMercatorUtils.getDimensionsInTile(zoom);
+                int size = WebMercatorUtil.getDimensionsInTile(zoom);
                 for(int x=0; x<size; x++) for(int y=0; y<size; y++) {
                     try {
                         this.getTile(zoom, x, y).getTexture();

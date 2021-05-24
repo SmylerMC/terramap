@@ -12,12 +12,12 @@ import fr.thesmyler.terramap.maps.ICopyrightHolder;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.imp.UrlRasterTile;
-import fr.thesmyler.terramap.maps.utils.TilePos;
-import fr.thesmyler.terramap.maps.utils.TilePos.InvalidTilePositionException;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.util.GeoServices;
 import fr.thesmyler.terramap.util.Mat2d;
+import fr.thesmyler.terramap.util.TilePos;
+import fr.thesmyler.terramap.util.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -79,9 +79,9 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         int zoomLevel = (int) Math.round(zoom);
         double zoomSizeFactor = zoom - zoomLevel;
 
-        double renderSize = WebMercatorUtils.TILE_DIMENSIONS / this.getTileScaling() * Math.pow(2, zoomSizeFactor);
+        double renderSize = WebMercatorUtil.TILE_DIMENSIONS / this.getTileScaling() * Math.pow(2, zoomSizeFactor);
 
-        int maxTileXY = WebMercatorUtils.getDimensionsInTile(zoomLevel);
+        int maxTileXY = WebMercatorUtil.getDimensionsInTile(zoomLevel);
         double maxX = upperLeftX + extendedWidth;
         double maxY = upperLeftY + extendedHeight;
 
@@ -200,7 +200,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                     dY += factorY * renderSizedSize;
                 }
 
-                GlStateManager.color(1, 1, 1, 1);
+                Color.WHITE.applyGL();
                 ResourceLocation texture = UrlRasterTile.errorTileTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
@@ -231,13 +231,13 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                     smallFont.drawString((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
                     smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
-                GlStateManager.color(1, 1, 1, 1);
+                Color.WHITE.applyGL();
             }
         }
 
         if(zoomLevel <= this.map.getMaxZoom()) {
-            double centerX = WebMercatorUtils.getXFromLongitude(this.getCenterLongitude(), 0d) / 256d;
-            double centerY = WebMercatorUtils.getYFromLatitude(this.getCenterLatitude(), 0d) / 256d;
+            double centerX = WebMercatorUtil.getXFromLongitude(this.getCenterLongitude(), 0d) / 256d;
+            double centerY = WebMercatorUtil.getYFromLatitude(this.getCenterLatitude(), 0d) / 256d;
             Vec2d minusCenterPos = new Vec2d(-centerX, -centerY);
             neededTiles.stream().filter(t -> !t.isTextureAvailable()).sorted((t1, t2) -> {
                 TilePos pos1 = t1.getPosition();
