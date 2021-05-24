@@ -91,9 +91,13 @@ public class ScaleIndicatorWidget implements IWidget {
             if(Math.abs(point1[1]) < WebMercatorUtil.LIMIT_LATITUDE && Math.abs(point2[1]) < WebMercatorUtil.LIMIT_LATITUDE) {
 
                 double scale = GeoUtil.distanceHaversine(point1[0], point1[1], point2[0], point2[1]);
-                String[] units = {"m", "km"};
-                int j=0;
+                String[] units = {"cm", "m", "km"};
+                int j=1;
                 for(; scale >= 1000 && j<units.length-1; j++) scale /= 1000;
+                if(scale < 1) {
+                    scale *= 100;
+                    j = 0;
+                }
                 lengthstr = "" + Math.round(scale) + " " + units[j];
             }
         }
