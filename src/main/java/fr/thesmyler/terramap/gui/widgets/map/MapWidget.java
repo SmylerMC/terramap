@@ -91,7 +91,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     private boolean trackRotation = false;
 
     private final ControllerMapLayer controller;
-    protected RasterMapLayer background;
+    private RasterMapLayer background;
     private List<MapLayer> overlayLayers = new ArrayList<>();
     private List<Marker> markers = new ArrayList<>();
     private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
@@ -258,6 +258,17 @@ public class MapWidget extends FlexibleWidgetContainer {
     public void setBackground(IRasterTiledMap map) {
         this.setBackgroud(new RasterMapLayer(map, this.tileScaling));
     }
+    
+    /**
+     * @return this map's background layer
+     */
+    public RasterMapLayer getBackgroundLayer() {
+        return this.background;
+    }
+    
+    public MapLayer[] getOverlayLayers() {
+        return this.overlayLayers.toArray(new MapLayer[0]);
+    }
 
     private void addMarker(Marker marker) {
         this.markers.add(marker);
@@ -292,7 +303,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         long dt = ctime - this.lastUpdateTime;
 
         /* 
-         * Both these things do time dependent integration operations, so if the integration step is irrelevant, skip
+         * These things do time dependent integration operations, so if the integration step is irrelevant, skip
          * We also want to do that before calling the super method, so any position change is taken into account when updating markers
          */
         if(dt > 0 && dt < 1000) {
@@ -300,8 +311,10 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.controller.processZoom(dt);
             this.controller.processRotation(dt);
         }
+        
         if(this.trackingMarker != null) {
             if(this.widgets.contains(this.trackingMarker) && Double.isFinite(this.trackingMarker.getLongitude()) && Double.isFinite(this.trackingMarker.getLatitude())) {
+                this.trackingMarker.onUpdate(mouseX - this.trackingMarker.getX(), mouseY - this.trackingMarker.getY(), this); // Force update so we don't lag behind, this one needs to be updated twice
                 this.setCenterLongitude(this.trackingMarker.getLongitude());
                 this.setCenterLatitude(this.trackingMarker.getLatitude());
                 if(this.trackRotation && this.trackingMarker instanceof AbstractMovingMarker) {
@@ -357,6 +370,11 @@ public class MapWidget extends FlexibleWidgetContainer {
         public ControllerMapLayer(double tileScaling) {
             super(tileScaling);
             this.z = CONTROLLER_Z;
+        }
+        
+        @Override
+        public String getId() {
+            return "controller";
         }
 
         @Override
@@ -673,7 +691,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             layer.setCenterLongitude(this.controller.getCenterLongitude());
             layer.setCenterLatitude(this.controller.getCenterLatitude());
             layer.setZoom(this.controller.getZoom());
-            layer.setRotation(this.controller.getRotation());
+            layer.setRotation(this.controller.getRotation()); //FIXME lags behind
         }
         this.background.setDimensions(this.getWidth(), this.getHeight());
         this.background.setTileScaling(this.tileScaling);

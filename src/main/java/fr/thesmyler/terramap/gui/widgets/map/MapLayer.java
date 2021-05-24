@@ -86,6 +86,8 @@ public abstract class MapLayer implements IWidget {
         GlStateManager.translate(-this.extendedWidth / 2, -this.extendedHeight / 2, 0);
     }
 
+    public abstract String getId();
+    
     @Override
     public float getX() {
         return 0;
