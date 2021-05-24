@@ -17,6 +17,11 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
         this.realLongitude = realCenterLongitude;
         this.realLatitude = realCenterLatitude;
     }
+    
+    @Override
+    public String getId() {
+        return "delta-preview";
+    }
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
@@ -30,8 +35,9 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
         double extendedWidth = this.getExtendedWidth();
         double extendedHeight = this.getExtendedHeight();
 
-        Vec2d realCenter = this.getScreenPos(this.realLongitude, this.realLatitude);
         GlStateManager.pushMatrix();
+        Vec2d realCenter = new Vec2d(this.getMapX(this.realLongitude), this.getMapY(this.realLatitude))
+                .add(-this.getUpperLeftX(), -this.getUpperLeftY());
         this.applyRotationGl(x, y);
         RenderUtil.drawStrokeLine(Color.RED, 2f,
                 extendedWidth / 2, extendedHeight / 2,
