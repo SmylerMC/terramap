@@ -17,37 +17,37 @@ import net.minecraftforge.fml.relauncher.Side;
 
 public class TerramapServerProxy extends TerramapProxy {
 
-	@Override
-	public Side getSide() {
-		return Side.SERVER;
-	}
-	
-	@Override
-	public void preInit(FMLPreInitializationEvent event) {
-		TerramapMod.logger.debug("Terramap server pre-init");
-		TerramapNetworkManager.registerHandlers(Side.SERVER);
-	}
+    @Override
+    public Side getSide() {
+        return Side.SERVER;
+    }
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		TerramapMod.logger.debug("Terramap server init");
-		MinecraftForge.EVENT_BUS.register(new ServerTerramapEventHandler());
-	}
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        TerramapMod.logger.debug("Terramap server pre-init");
+        TerramapNetworkManager.registerHandlers(Side.SERVER);
+    }
 
-	@Override
-	public void onServerStarting(FMLServerStartingEvent event) {
-    	event.registerServerCommand(new TerrashowCommand());
-    	event.registerServerCommand(new TilesetReloadCommand());
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+        TerramapMod.logger.debug("Terramap server init");
+        MinecraftForge.EVENT_BUS.register(new ServerTerramapEventHandler());
+    }
 
-	@Override
-	public GameType getGameMode(EntityPlayer e) {
-		EntityPlayerMP player = (EntityPlayerMP)e;
-		return player.interactionManager.getGameType();
-	}
+    @Override
+    public void onServerStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new TerrashowCommand());
+        event.registerServerCommand(new TilesetReloadCommand());
+    }
 
-	@Override
-	public void onConfigChanged(OnConfigChangedEvent event) {
-	}
+    @Override
+    public GameType getGameMode(EntityPlayer e) {
+        EntityPlayerMP player = (EntityPlayerMP)e;
+        return player.interactionManager.getGameType();
+    }
+
+    @Override
+    public void onConfigChanged(OnConfigChangedEvent event) {
+    }
 
 }

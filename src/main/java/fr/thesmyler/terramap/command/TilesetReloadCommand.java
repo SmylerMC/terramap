@@ -23,48 +23,48 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
 public class TilesetReloadCommand extends CommandBase {
-	
-	private final TranslationContextBuilder translationContextBuilder = new TranslationContextBuilder(new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 3));
 
-	@Override
-	public String getName() {
-		return "reloadmapstyles";
-	}
+    private final TranslationContextBuilder translationContextBuilder = new TranslationContextBuilder(new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 3));
 
-	@Override
-	public String getUsage(ICommandSender sender) {
-		return this.translationContextBuilder.createNewContext(sender).getText("terramap.commands.reloadmapstyles.usage");
-	}
-
-	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-		TranslationContext ctx = this.translationContextBuilder.createNewContext(sender);
-		if(sender instanceof EntityPlayer && !this.checkPermission(server, sender)) {
-			ctx.commandException("terramap.commands.reloadmapstyles.forbidden");
-		}
-		ITextComponent msg = ctx.getComponent("terramap.commands.reloadmapstyles.done");
-		MapStylesLibrary.loadFromConfigFile();
-		if(TiledMapProvider.CUSTOM.getLastError() == null) {
-			msg.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false));
-		} else {
-			msg = ctx.getComponent("terramap.commands.reloadmapstyles.error");
-			msg.setStyle(new Style().setColor(TextFormatting.RED).setBold(false));
-		}
-		msg = CommandUtils.addHeader(msg);
-		sender.sendMessage(msg);
-	}
-	
-	@Override
-	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
-		return new ArrayList<String>();
+    @Override
+    public String getName() {
+        return "reloadmapstyles";
     }
 
-	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-		if(!(sender instanceof EntityPlayer)) return true;
-		return PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES);
-	}
-	
-	
+    @Override
+    public String getUsage(ICommandSender sender) {
+        return this.translationContextBuilder.createNewContext(sender).getText("terramap.commands.reloadmapstyles.usage");
+    }
+
+    @Override
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+        TranslationContext ctx = this.translationContextBuilder.createNewContext(sender);
+        if(sender instanceof EntityPlayer && !this.checkPermission(server, sender)) {
+            ctx.commandException("terramap.commands.reloadmapstyles.forbidden");
+        }
+        ITextComponent msg = ctx.getComponent("terramap.commands.reloadmapstyles.done");
+        MapStylesLibrary.loadFromConfigFile();
+        if(TiledMapProvider.CUSTOM.getLastError() == null) {
+            msg.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false));
+        } else {
+            msg = ctx.getComponent("terramap.commands.reloadmapstyles.error");
+            msg.setStyle(new Style().setColor(TextFormatting.RED).setBold(false));
+        }
+        msg = CommandUtils.addHeader(msg);
+        sender.sendMessage(msg);
+    }
+
+    @Override
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+        return new ArrayList<String>();
+    }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+        if(!(sender instanceof EntityPlayer)) return true;
+        return PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES);
+    }
+
+
 
 }

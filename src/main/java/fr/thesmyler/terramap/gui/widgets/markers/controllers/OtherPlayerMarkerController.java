@@ -16,57 +16,57 @@ import net.minecraft.client.resources.I18n;
 
 public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<OtherPlayerMarker> {
 
-	public static final String ID = "other_players";
+    public static final String ID = "other_players";
 
-	public OtherPlayerMarkerController() {
-		super(ID, 800, OtherPlayerMarker.class, new ToggleButtonWidget(10, 14, 14,
-				88, 108, 88, 122,
-				88, 108, 88, 122,
-				88, 136, 88, 150,
-				false, null));
-		this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
-	}
+    public OtherPlayerMarkerController() {
+        super(ID, 800, OtherPlayerMarker.class, new ToggleButtonWidget(10, 14, 14,
+                88, 108, 88, 122,
+                88, 108, 88, 122,
+                88, 136, 88, 150,
+                false, null));
+        this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
+    }
 
-	@Override
-	public OtherPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-		
-		boolean minimap = map.getContext() == MapContext.MINIMAP;
+    @Override
+    public OtherPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
 
-		int factor = minimap? 2: 1;
+        boolean minimap = map.getContext() == MapContext.MINIMAP;
 
-		Map<UUID, TerramapPlayer> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap(): TerramapClientContext.getContext().getPlayerMap();
-		for(Marker marker: existingMarkers) {
-			TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
-			players.remove(player.getUUID());
-		}
+        int factor = minimap? 2: 1;
 
-		// The main player has its own controller
-		EntityPlayerSP self = Minecraft.getMinecraft().player;
-		if(self != null) players.remove(self.getUniqueID());
-		
-		OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
-		int i = 0;
-		for(TerramapPlayer player: players.values()) {
-			newMarkers[i++] = new OtherPlayerMarker(this, player, factor);
-		}
+        Map<UUID, TerramapPlayer> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap(): TerramapClientContext.getContext().getPlayerMap();
+        for(Marker marker: existingMarkers) {
+            TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
+            players.remove(player.getUUID());
+        }
 
-		return newMarkers;
-	}
+        // The main player has its own controller
+        EntityPlayerSP self = Minecraft.getMinecraft().player;
+        if(self != null) players.remove(self.getUniqueID());
 
-	@Override
-	public boolean showButton() {
-		return TerramapClientContext.getContext().allowsPlayerRadar();
-	}
+        OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
+        int i = 0;
+        for(TerramapPlayer player: players.values()) {
+            newMarkers[i++] = new OtherPlayerMarker(this, player, factor);
+        }
+
+        return newMarkers;
+    }
+
+    @Override
+    public boolean showButton() {
+        return TerramapClientContext.getContext().allowsPlayerRadar();
+    }
 
 
-	@Override
-	public boolean getVisibility() {
-		return super.getVisibility() && TerramapClientContext.getContext().allowsPlayerRadar();
-	}
+    @Override
+    public boolean getVisibility() {
+        return super.getVisibility() && TerramapClientContext.getContext().allowsPlayerRadar();
+    }
 
-	@Override
-	public String getSaveName() {
-		return ID;
-	}
+    @Override
+    public String getSaveName() {
+        return ID;
+    }
 
 }

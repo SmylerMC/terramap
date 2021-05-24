@@ -7,20 +7,20 @@ package fr.thesmyler.terramap;
  *
  */
 public enum MapContext {
-	
-	/**
-	 * Main fullscreen map
-	 */
-	FULLSCREEN,
-	
-	/**
-	 * HUD minimap
-	 */
-	MINIMAP,
-	
-	/**
-	 * Map preview
-	 */
-	PREVIEW;
+
+    /**
+     * Main fullscreen map
+     */
+    FULLSCREEN,
+
+    /**
+     * HUD minimap
+     */
+    MINIMAP,
+
+    /**
+     * Map preview
+     */
+    PREVIEW;
 
 }

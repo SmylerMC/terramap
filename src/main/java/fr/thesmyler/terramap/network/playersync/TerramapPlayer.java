@@ -11,21 +11,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class TerramapPlayer {
 
-	public abstract UUID getUUID();
+    public abstract UUID getUUID();
 
-	public abstract ITextComponent getDisplayName();
+    public abstract ITextComponent getDisplayName();
 
-	public abstract double[] getGeoCoordinates() throws OutOfProjectionBoundsException;
-	
-	public abstract float getAzimut();
-	
-	public abstract GameType getGamemode();
-	
-	public boolean isSpectator() {
-		return this.getGamemode().equals(GameType.SPECTATOR);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public abstract ResourceLocation getSkin();
+    public abstract double[] getGeoCoordinates() throws OutOfProjectionBoundsException;
+
+    public abstract float getAzimut();
+
+    public abstract GameType getGamemode();
+
+    public boolean isSpectator() {
+        return this.getGamemode().equals(GameType.SPECTATOR);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public abstract ResourceLocation getSkin();
 
 }

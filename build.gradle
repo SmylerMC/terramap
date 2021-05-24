@@ -8,7 +8,7 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'checkstyle'
 
 
 version = project.mod_version
@@ -17,10 +17,6 @@ archivesBaseName = project.mod_id
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
-// A note on the jdk version:
-// Gradle seems to have issues with the latests versions of OpenJDK on Linux.
-// If you experience errors related to LWJGL when launching the game in a developpement environement,
-// make sure you are using at most the 18.8_232 jdk, if not, you can download it and set it at the jdk in your IDE's run build path section
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
@@ -54,7 +50,7 @@ dependencies {
     deobfProvided ("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
         transitive = false
     }
-    deobfProvided ("com.github.BuildTheEarth:terraplusplus:8207d314bac2e7681d4211b658eb3f26d3f18f1a") {
+    deobfProvided ("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4") {
         transitive = true
     }
     runtime "org.apache.commons:commons-imaging:1.0-alpha2"
