@@ -20,8 +20,16 @@ import fr.thesmyler.terramap.files.kml.KmlFile;
 import fr.thesmyler.terramap.files.kml.KmlPlacemark;
 import fr.thesmyler.terramap.files.kml.KmlPoint;
 
+/**
+ * Utility class to open various geo services such as osm, Google Maps, Earth, etc...
+ * 
+ * @author SmylerMC
+ *
+ */
 //TODO Open places on services other than gmaps
-public abstract class GeoServices {
+public final class GeoServices {
+    
+    private GeoServices() {}
 
     public static final String GMAPS_BASE_URL = "https://www.google.com/maps/@{latitude},{longitude},{zoom}z";
     public static final String GMAPS_PLACE_URL = "https://www.google.com/maps/place/{place}/@{latitude},{longitude},{zoom}z";

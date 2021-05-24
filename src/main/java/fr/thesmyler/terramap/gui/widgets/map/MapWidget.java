@@ -45,11 +45,11 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.ICopyrightHolder;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
-import fr.thesmyler.terramap.maps.utils.WebMercatorUtils;
 import fr.thesmyler.terramap.util.GeoServices;
 import fr.thesmyler.terramap.util.GeoUtil;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
@@ -394,7 +394,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                     Minecraft.getMinecraft().displayGuiScreen(null);
                 }
             }
-            if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && Math.abs(MapWidget.this.getMouseLatitude()) <= WebMercatorUtils.LIMIT_LATITUDE) {
+            if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && Math.abs(MapWidget.this.getMouseLatitude()) <= WebMercatorUtil.LIMIT_LATITUDE) {
                 parent.showMenu(mouseX, mouseY, MapWidget.this.rightClickMenu);
             }
             if(MapWidget.this.isInteractive() && mouseButton == 2 && Float.isNaN(this.rotateAroundX) && Float.isNaN(this.rotateAroundY)) {

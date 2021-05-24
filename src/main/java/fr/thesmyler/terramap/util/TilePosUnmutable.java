@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.utils;
+package fr.thesmyler.terramap.util;
 
 public class TilePosUnmutable extends TilePos {
 

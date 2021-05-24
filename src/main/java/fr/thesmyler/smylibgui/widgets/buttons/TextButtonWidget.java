@@ -45,7 +45,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
-        GlStateManager.color(1, 1, 1, 1); // White, non transparent
+        Color.WHITE.applyGL();
         int textureDelta = 1;
         Color textColor = this.enabledTextColor;
         if (!this.isEnabled()) {

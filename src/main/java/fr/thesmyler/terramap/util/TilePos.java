@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.utils;
+package fr.thesmyler.terramap.util;
 
 /**
  * A Web-Mercator tile position.
@@ -24,8 +24,8 @@ public abstract class TilePos {
      * @throws InvalidTilePositionException if the given argument do not meet their respective criteria
      */
     public TilePos(int zoom, int x, int y) {
-        if(zoom < 0 || zoom > WebMercatorUtils.MAX_ZOOM) throw new InvalidTilePositionException("Invalid zoom level: " + zoom);
-        int mapSize = WebMercatorUtils.getDimensionsInTile(zoom);
+        if(zoom < 0 || zoom > WebMercatorUtil.MAX_ZOOM) throw new InvalidTilePositionException("Invalid zoom level: " + zoom);
+        int mapSize = WebMercatorUtil.getDimensionsInTile(zoom);
         if(x < 0 || x >= mapSize) throw new InvalidTilePositionException("Invalid coordinate: " + x + " for zoom level " + zoom);
         if(y < 0 || y >= mapSize) throw new InvalidTilePositionException("Invalid coordinate: " + y + " for zoom level " + zoom);
         this.zoom = zoom;

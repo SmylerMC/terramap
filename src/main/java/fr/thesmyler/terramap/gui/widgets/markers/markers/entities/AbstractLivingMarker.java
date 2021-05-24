@@ -39,7 +39,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        GlStateManager.color(1, 1, 1, 1);
+        Color.WHITE.applyGL();
         boolean drawName = hovered;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
@@ -48,7 +48,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
         GlStateManager.enableAlpha();
         if(hovered) RenderUtil.drawRect(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
-        GlStateManager.color(1, 1, 1, 1);
+        Color.WHITE.applyGL();
         GlStateManager.enableBlend();
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.u, this.v, this.width, this.height, this.textureWidth, this.textureHeight);
 

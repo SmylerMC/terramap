@@ -1,6 +1,9 @@
 package fr.thesmyler.smylibgui.util;
 
+import org.lwjgl.opengl.GL11;
+
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class Color {
 
@@ -104,6 +107,10 @@ public class Color {
     public Color withAlpha(float alpha) {
         return new Color(this.redf(), this.greenf(), this.bluef(), alpha);
     }
+    
+    public void applyGL() {
+        GlStateManager.color(this.redf(), this.bluef(), this.greenf(), this.alphaf());
+    }
 
     public static final Color RED = new Color(0xFFFF0000);
     public static final Color GREEN = new Color(0xFF00FF00);
@@ -138,6 +145,10 @@ public class Color {
         }
 
         return new Color(r, g, b);
+    }
+    
+    public static Color currentGL() {
+       return new Color(GL11.glGetInteger(GL11.GL_CURRENT_COLOR));
     }
 
     public static float hue2rgb(float p, float q, float r){
