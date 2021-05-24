@@ -39,6 +39,11 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
     public IRasterTiledMap getMap() {
         return this.map;
     }
+    
+    @Override
+    public String getId() {
+        return "tiled-raster-" + this.map.getId();
+    }
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {

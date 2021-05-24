@@ -39,7 +39,9 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.map.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
@@ -49,6 +51,7 @@ import fr.thesmyler.terramap.maps.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.GeoServices;
+import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -91,7 +94,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private TextFieldWidget searchBox = new TextFieldWidget(10);
 
     // Style panel
-    private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200); 
+    private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200);
+    private StyleScreen styleScreen;
     private Scrollbar styleScrollbar = new Scrollbar(100);
 
     // Screen states
@@ -107,6 +111,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
         IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
         this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
+        this.styleScreen = new StyleScreen();
         if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
         TerramapClientContext.getContext().registerForUpdates(true);
     }
@@ -234,10 +239,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.styleScrollbar.setPosition(this.stylePanel.getWidth() - 15, 0);
         this.styleScrollbar.setHeight(this.height);
         this.stylePanel.addWidget(this.styleScrollbar);
-        StyleScreen s = new StyleScreen();
-        this.styleScrollbar.setViewPort((double) this.height / (s.getHeight() - 10));
+        this.styleScrollbar.setViewPort((double) this.height / (this.styleScreen.getHeight() - 10));
         if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
-        this.stylePanel.addWidget(s);
+        this.stylePanel.addWidget(this.styleScreen);
         content.addWidget(this.stylePanel);
 
         if(TerramapConfig.CLIENT.chatOnMap) content.addWidget(this.chat);
@@ -435,6 +439,18 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         for(String key: visibilityControllers.keySet()) {
             visibility.put(key, visibilityControllers.get(key).getVisibility());
         }
+        
+        List<MapWidget> maps = new ArrayList<>();
+        maps.addAll(this.styleScreen.maps);
+        maps.add(this.map); // Add it last to make sure it prevails in the final Map<String, Vec2d>
+        Map<String, Vec2d> offsets = new HashMap<>();
+        for(MapWidget map: maps) {
+            for(MapLayer layer: map.getOverlayLayers()) {
+                offsets.put(layer.getId(), new Vec2d(layer.getRenderDeltaLongitude(), layer.getRenderDeltaLatitude()));
+            }
+            RasterMapLayer background = map.getBackgroundLayer();
+            offsets.put(background.getId(), new Vec2d(background.getRenderDeltaLongitude(), background.getRenderDeltaLatitude()));
+        }        
 
         return new TerramapScreenSavedState(
                 this.map.getZoom(),
@@ -444,10 +460,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 this.map.getBackgroundStyle().getId(),
                 this.infoPanel.getTarget().equals(PanelTarget.OPENED),
                 TerramapConfig.CLIENT.saveUiState ? this.debugMode : false,
-                        TerramapConfig.CLIENT.saveUiState ? this.f1Mode : false,
-                                visibility,
-                                tracking
-                );
+                TerramapConfig.CLIENT.saveUiState ? this.f1Mode : false,
+                visibility,
+                tracking,
+                offsets
+        );
     }
 
     public void resumeFromSavedState(TerramapScreenSavedState state) {
@@ -473,6 +490,21 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.setDebugMode(state.debug);
         for(FeatureVisibilityController c: this.map.getVisibilityControllers().values()) {
             if(state.visibilitySettings.containsKey(c.getSaveName())) c.setVisibility(state.visibilitySettings.get(c.getSaveName()));
+        }
+        if(state.layerOffsets != null) {
+            List<MapLayer> layers = new ArrayList<>();
+            for(MapWidget map: 
+                this.styleScreen
+                .maps)
+                layers.add(
+                        map
+                        .getBackgroundLayer());
+            for(MapLayer layer: this.map.getOverlayLayers()) layers.add(layer);
+            layers.add(this.map.getBackgroundLayer());
+            for(MapLayer layer: layers) for(String id: state.layerOffsets.keySet()) if(id.equals(layer.getId())){
+                layer.setRenderDeltaLongitude(state.layerOffsets.get(id).x);
+                layer.setRenderDeltaLatitude(state.layerOffsets.get(id).y);
+            }
         }
     }
 
@@ -500,6 +532,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         float mapWidth = 175;
         float mapHeight = 100;
+        
+        List<MapWidget> maps = new ArrayList<>();
 
         StyleScreen() {
             super(0, 0, 0, 0, 0);
@@ -530,17 +564,21 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 }
                 this.addWidget(w);
                 lw = w;
+                this.maps.add(w);
             }
             this.setSize(this.mapWidth, lw.getY() + lw.getHeight() + 10f);
         }
 
         @Override
         public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-            for(IWidget w: this.widgets) {
-                if(w instanceof MapPreview) {
-                    MapPreview map = (MapPreview)w;
-                    map.setZoom(TerramapScreen.this.map.getZoom());
-                    map.setCenterPosition(TerramapScreen.this.map.getCenterPosition());
+            MapLayer bg = TerramapScreen.this.map.getBackgroundLayer();
+            for(MapWidget map: this.maps) {
+                map.setZoom(TerramapScreen.this.map.getZoom());
+                map.setCenterPosition(TerramapScreen.this.map.getCenterPosition());
+                map.setTileScaling(TerramapScreen.this.map.getTileScaling());
+                if(map.getBackgroundLayer().getId().equals(bg.getId())) {
+                    map.getBackgroundLayer().setRenderDeltaLongitude(bg.getRenderDeltaLongitude());
+                    map.getBackgroundLayer().setRenderDeltaLatitude(bg.getRenderDeltaLatitude());
                 }
             }
             super.onUpdate(mouseX, mouseY, parent);
@@ -645,7 +683,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
             Color textColor = hovered? Color.SELECTION: Color.WHITE;
-            String text = this.background.getMap().getLocalizedName(SmyLibGui.getLanguage());
+            String text = this.getBackgroundStyle().getLocalizedName(SmyLibGui.getLanguage());
             float width = this.getWidth();
             float height = this.getHeight();
             RenderUtil.drawRect(x, y, x + width, y + 4, Color.DARK_GRAY);
@@ -659,7 +697,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         @Override
         public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
             if(mouseButton == 0) {
-                TerramapScreen.this.map.setBackground(this.background.getMap());
+                TerramapScreen.this.map.setBackground(this.getBackgroundStyle());
+                TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLongitude(this.getBackgroundLayer().getRenderDeltaLongitude());
+                TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLatitude(this.getBackgroundLayer().getRenderDeltaLatitude());
                 TerramapScreen.this.stylePanel.close();
             }
             return false;
@@ -667,7 +707,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public String getTooltipText() {
-            return this.background.getMap().getId();
+            return this.getBackgroundLayer().getMap().getId();
         }
 
         @Override
