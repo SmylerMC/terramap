@@ -22,6 +22,8 @@ public class PopupScreen extends Screen {
     private boolean closeOnClickOutContent = true;
     private Color contentBackgroundColor = Color.DARKER_OVERLAY;
     private Color shadeColor = Color.TRANSPARENT;
+    private Color contourColor = Color.DARK_GRAY;
+    private float contourSize = 2f;
 
     public PopupScreen(float contentWidth, float contentHeight) {
         super(BackgroundOption.NONE);
@@ -99,7 +101,7 @@ public class PopupScreen extends Screen {
 
         @Override
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), PopupScreen.this.contentBackgroundColor);
+            RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), PopupScreen.this.contentBackgroundColor, PopupScreen.this.contourSize, PopupScreen.this.contourColor);
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
         }
 
@@ -144,6 +146,38 @@ public class PopupScreen extends Screen {
             else super.onKeyTyped(typedChar, keyCode, parent);
         }
 
+    }
+
+    public Color getContentBackgroundColor() {
+        return contentBackgroundColor;
+    }
+
+    public void setContentBackgroundColor(Color contentBackgroundColor) {
+        this.contentBackgroundColor = contentBackgroundColor;
+    }
+
+    public Color getShadeColor() {
+        return shadeColor;
+    }
+
+    public void setShadeColor(Color shadeColor) {
+        this.shadeColor = shadeColor;
+    }
+
+    public Color getContourColor() {
+        return contourColor;
+    }
+
+    public void setContourColor(Color contourColor) {
+        this.contourColor = contourColor;
+    }
+
+    public float getContourSize() {
+        return contourSize;
+    }
+
+    public void setContourSize(float contourSize) {
+        this.contourSize = contourSize;
     }
 
 }
