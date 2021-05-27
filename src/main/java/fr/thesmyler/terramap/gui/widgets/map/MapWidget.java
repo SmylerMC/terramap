@@ -663,9 +663,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         } else {
             switch(widget.getZ()) {
                 case BACKGROUND_Z:
-                    throw new InvalidLayerLevelException("Z level " + widget.getZ() + " is reserved for background layer");
+                    throw new IllegalArgumentException("Z level " + widget.getZ() + " is reserved for background layer");
                 case CONTROLLER_Z:
-                    throw new InvalidLayerLevelException("Z level " + widget.getZ() + " is reserved for controller layer");
+                    throw new IllegalArgumentException("Z level " + widget.getZ() + " is reserved for controller layer");
             }
             super.addWidget(widget);
         }
