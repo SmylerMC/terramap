@@ -59,7 +59,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
             boolean debug) {
         Preconditions.checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
         Preconditions.checkArgument(minZoom >= 0, "Zoom level must be at least 0");
-        Preconditions.checkArgument(maxZoom >= 0, "Zoom level must be at most 25");
+        Preconditions.checkArgument(maxZoom >= 0 || maxZoom > 25, "Zoom level must be at most 25");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "A valid map id needs to be provided");
         Preconditions.checkArgument(names != null, "Valid map names needs to be provided");
         Preconditions.checkArgument(copyright != null, "Valid map coprights needs to be provided");
@@ -70,8 +70,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         for(String pattern: urlPatterns) {
             String url = pattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
             try {
-                @SuppressWarnings("unused")
-                URL u = new URL(url);
+                new URL(url); // Checking if the URL is valid
             } catch (MalformedURLException e) {
                 throw new IllegalArgumentException(url + " is not a valid url pattern");
             }
