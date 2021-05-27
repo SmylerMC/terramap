@@ -691,7 +691,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             layer.setCenterLongitude(this.controller.getCenterLongitude());
             layer.setCenterLatitude(this.controller.getCenterLatitude());
             layer.setZoom(this.controller.getZoom());
-            layer.setRotation(this.controller.getRotation()); //FIXME lags behind
+            layer.setRotation(this.controller.getRotation());
         }
         this.background.setDimensions(this.getWidth(), this.getHeight());
         this.background.setTileScaling(this.tileScaling);

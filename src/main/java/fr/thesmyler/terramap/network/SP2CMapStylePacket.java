@@ -28,7 +28,7 @@ public class SP2CMapStylePacket implements IMessage {
     private int displayPriority;
     private boolean isAllowedOnMinimap;
     private String comment;
-    private int maxConcurrentConnection;
+    private int maxConcurrentConnections;
     private boolean debug;
     private boolean backwardCompat = false;
 
@@ -43,7 +43,7 @@ public class SP2CMapStylePacket implements IMessage {
         this.displayPriority = map.getDisplayPriority();
         this.isAllowedOnMinimap = map.isAllowedOnMinimap();
         this.comment = map.getComment();
-        this.maxConcurrentConnection = map.getMaxConcurrentRequests();
+        this.maxConcurrentConnections = map.getMaxConcurrentRequests();
         this.debug = map.isDebug();
     }
 
@@ -76,11 +76,11 @@ public class SP2CMapStylePacket implements IMessage {
         this.isAllowedOnMinimap = buf.readBoolean();
         this.comment = TerramapNetworkManager.decodeStringFromByteBuf(buf);
         if(Strings.isBlank(urlPattern)) { // The following fields were added in 1.0.0-beta7
-            this.maxConcurrentConnection = buf.readInt();
+            this.maxConcurrentConnections = buf.readInt();
             this.urlPatterns = TerramapNetworkManager.decodeStringArrayFromByteBuf(buf);
             this.debug = buf.readBoolean();
         } else {
-            this.maxConcurrentConnection = 2;
+            this.maxConcurrentConnections = 2;
             this.urlPatterns = new String[] {urlPattern};
             this.debug = false;
             return;
@@ -109,7 +109,7 @@ public class SP2CMapStylePacket implements IMessage {
         buf.writeBoolean(this.isAllowedOnMinimap);
         TerramapNetworkManager.encodeStringToByteBuf(this.comment, buf);
         if(!this.backwardCompat) {
-            buf.writeInt(this.maxConcurrentConnection);
+            buf.writeInt(this.maxConcurrentConnections);
             TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
             buf.writeBoolean(this.debug);
         }
@@ -136,7 +136,7 @@ public class SP2CMapStylePacket implements IMessage {
                 provider,
                 this.providerVersion,
                 this.comment,
-                this.maxConcurrentConnection,
+                this.maxConcurrentConnections,
                 this.debug
                 );
     }

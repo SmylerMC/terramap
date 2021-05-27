@@ -208,7 +208,7 @@ public class MapStylesLibrary {
             if(saved.url != null) {
                 // This is a legacy source, it only has one url
                 patterns = new String[] {saved.url};
-            } else throw new RuntimeException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
+            } else throw new IllegalArgumentException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
         }
         return new UrlTiledMap(
                 patterns,
