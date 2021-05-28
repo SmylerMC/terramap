@@ -41,8 +41,6 @@ import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.map.layer.DistortionLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
@@ -129,12 +127,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.map.setPosition(0, 0);
         this.map.setSize(this.width, this.height);
         this.map.setTileScaling(TerramapConfig.CLIENT.getEffectiveTileScaling());
-        McChunksLayer chunks = new McChunksLayer(this.map.getTileScaling());
-        chunks.setZ(-1);
-        this.map.addOverlayLayer(chunks);
         
-        DistortionLayer dist = new DistortionLayer(this.map.getTileScaling());
-        dist.setZ(-1);
+//        DistortionLayer dist = new DistortionLayer(this.map.getTileScaling());
+//        dist.setZ(-1);
 //        this.map.addOverlayLayer(dist);
         
         content.addWidget(this.map);

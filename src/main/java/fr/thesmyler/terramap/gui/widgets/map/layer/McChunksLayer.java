@@ -8,23 +8,41 @@ import java.util.Set;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 
-public class McChunksLayer extends MapLayer {
+public class McChunksLayer extends MapLayer implements FeatureVisibilityController {
+    
+    public static final String ID = "mcchunks";
     
     private ProjectionCache cache2dr = new ProjectionCache();
     private ProjectionCache cache3dr = new ProjectionCache();
     private ProjectionCache cacheChunks = new ProjectionCache();
+    
+    private ToggleButtonWidget button;
+    
+    private boolean visible = false;
 
     public McChunksLayer(double tileScaling) {
         super(tileScaling);
+        
+        this.button = new ToggleButtonWidget(10, 14, 14,
+                186, 108, 186, 122,
+                186, 108, 186, 122,
+                186, 136, 186, 150,
+                this.visible,
+                b -> this.visible = b
+                );
+        this.button.setTooltip(I18n.format("Show region and chunk borders")); //TODO localize
     }
 
     @Override
@@ -47,6 +65,7 @@ public class McChunksLayer extends MapLayer {
         boolean renderChunks = false;
         double renderThreshold = 128d;
 
+        // First decide on what we are going to render depending on the scale at the center of the map
         Vec2d centerMc;
         try {
             centerMc = new Vec2d(projection.fromGeo(this.getCenterLongitude(), this.getCenterLatitude()));
@@ -74,6 +93,7 @@ public class McChunksLayer extends MapLayer {
             this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, Color.DARK_GRAY, 1f);
         }
 
+        // Let the caches do some cleanup
         this.cache2dr.cycle();
         this.cache3dr.cycle();
         this.cacheChunks.cycle();
@@ -99,6 +119,8 @@ public class McChunksLayer extends MapLayer {
         int safety = 0;
         boolean inTop, inBottom, inLeft, inRight;
         inTop = inBottom = inLeft = inRight = true;
+        
+        // Spirale out from the center tile until we aren't rendering anything onto the screen
         while((inTop || inBottom || inRight || inLeft) && safety++ < maxTiles) {
             
             boolean[] linesInlineIn = new boolean[4];
@@ -157,7 +179,7 @@ public class McChunksLayer extends MapLayer {
     
     @Override
     public String getId() {
-        return "mcchunks";
+        return ID;
     }
     
     private class ProjectionCache {
@@ -206,5 +228,37 @@ public class McChunksLayer extends MapLayer {
         
         
     }
+
+    @Override
+    public boolean showButton() {
+        return true;
+    }
+
+    @Override
+    public ToggleButtonWidget getButton() {
+        return this.button;
+    }
+
+    @Override
+    public String getSaveName() {
+        return this.getId();
+    }
+
+    @Override
+    public void setVisibility(boolean visibility) {
+        this.visible = visibility;
+    }
+
+    @Override
+    public boolean getVisibility() {
+        return this.visible;
+    }
+
+    @Override
+    public boolean isVisible(WidgetContainer parent) {
+        return this.visible;
+    }
+    
+    
 
 }
