@@ -31,6 +31,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
@@ -193,6 +194,10 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
             this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
         }
+        
+        McChunksLayer chunks = new McChunksLayer(tileScaling);
+        chunks.setZ(-2);
+        this.addOverlayLayer(chunks);
 
     }
 
@@ -1037,6 +1042,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         m.putAll(this.markerControllers);
         if(this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
         if(this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
+        for(MapLayer layer: this.overlayLayers) {
+            if(layer instanceof FeatureVisibilityController) m.put(layer.getId(), (FeatureVisibilityController)layer);
+        }
         return m;
     }
 
