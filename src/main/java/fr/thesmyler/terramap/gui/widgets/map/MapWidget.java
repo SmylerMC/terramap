@@ -31,6 +31,8 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
@@ -1049,14 +1051,14 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @return The maximum zoom this map can operate at, based on the current settings
      */
     public double getMaxZoom() {
-        return TerramapConfig.CLIENT.unlockZoom? 25: this.background.map.getMaxZoom();
+        return TerramapConfig.CLIENT.unlockZoom? 25: this.background.getMap().getMaxZoom();
     }
 
     /**
      * @return The minimum zoom this map can operate at, based on the current settings
      */
     public double getMinZoom() {
-        return this.background.map.getMinZoom();
+        return this.background.getMap().getMinZoom();
     }
 
     /**

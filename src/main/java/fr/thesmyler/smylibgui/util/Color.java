@@ -21,7 +21,7 @@ public class Color {
                 green >= 0 && green < 256 &&
                 blue >= 0 && blue < 256 &&
                 alpha >= 0 && alpha < 256,
-                "Invalid color operand");
+                String.format("Invalid color operand, R=%s, G=%s, B=%s, A=%s", red, green, blue, alpha));
         this.color = blue;
         this.color += green << 8;
         this.color += red << 16;

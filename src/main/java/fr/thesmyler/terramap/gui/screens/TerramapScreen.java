@@ -41,7 +41,7 @@ import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.map.RasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
@@ -127,6 +127,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.map.setPosition(0, 0);
         this.map.setSize(this.width, this.height);
         this.map.setTileScaling(TerramapConfig.CLIENT.getEffectiveTileScaling());
+//        DistortionLayer distortion = new DistortionLayer(this.map.getTileScaling());
+//        distortion.setZ(-1);
+//        this.map.addOverlayLayer(distortion);
         content.addWidget(this.map);
 
         // Map control buttons

@@ -36,14 +36,34 @@ public abstract class MapLayer implements IWidget {
         this.tileScaling = tileScaling;
     }
 
+    /**
+     * Computes the x coordinate on the Web-Mercator map scaled by zoom level and tile scaling from a longitude
+     * 
+     * @param longitude
+     * @return x
+     */
     protected double getMapX(double longitude) {
         return WebMercatorUtil.getXFromLongitude(longitude, this.zoom) / this.tileScaling;
     }
 
+    /**
+     * Computes the y coordinate on the Web-Mercator map scaled by zoom level and tile scaling from a longitude
+     * 
+     * @param latitude
+     * @return y
+     */
     protected double getMapY(double latitude) {
         return WebMercatorUtil.getYFromLatitude(latitude, this.zoom) / this.tileScaling;
     }
 
+    /**
+     * Computes the position on this widget of a given geographic point
+     * 
+     * @param longitude
+     * @param latitude
+     * 
+     * @return a Vec2d with longitude and latitude as x and y, in degrees
+     */
     protected Vec2d getScreenPos(double longitude, double latitude) {
         Vec2d pos = new Vec2d(
                 this.getMapX(longitude) - this.getMapX(this.centerLongitude + this.renderDeltaLon),
@@ -71,11 +91,28 @@ public abstract class MapLayer implements IWidget {
         double lat = WebMercatorUtil.getLatitudeFromY(pos.y, this.zoom);
         return new double[] {lon, lat};
     }
+    
+    protected double getRenderX(double longitude) {
+        return this.getMapX(longitude) - this.getUpperLeftX();
+    }
+    
+    protected double getRenderY(double latitude) {
+        return this.getMapY(latitude) - this.getUpperLeftY();
+    }
+    
+    protected double getRenderLongitude(double x) {
+        return WebMercatorUtil.getLongitudeFromX((this.getUpperLeftX() + x) * this.tileScaling, this.zoom);
+    }
+    
+    protected double getRenderLatitude(double y) {
+        return WebMercatorUtil.getLatitudeFromY((this.getUpperLeftY() + y) * this.tileScaling, this.zoom);
+    }
 
     private void updateViewPort() {
         this.directRotation = Mat2d.forRotation(Math.toRadians(this.rotation));
         this.inverseRotation = this.directRotation.transpose(); // For rotations, the inverse is the transposed
         Vec2d dim = new Vec2d(this.viewPortWidth, this.viewPortHeight);
+        //FIXME often crops out the corners, probably a floating point precision problem
         this.extendedWidth = dim.hadamardProd(this.directRotation.column1()).taxicabNorm();
         this.extendedHeight = dim.hadamardProd(this.directRotation.column2()).taxicabNorm();
     }
