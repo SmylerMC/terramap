@@ -37,6 +37,14 @@ public final class Vec2d {
     public Vec2d add(double x, double y) {
         return new Vec2d(this.x + x, this.y + y);
     }
+    
+    public Vec2d substract(Vec2d other) {
+        return new Vec2d(this.x - other.x, this.y - other.y);
+    }
+    
+    public Vec2d substract(double x, double y) {
+        return new Vec2d(this.x - x, this.y - y);
+    }
 
     public double dotProd(Vec2d other) {
         return this.x*other.x + this.y*other.y;
@@ -62,6 +70,10 @@ public final class Vec2d {
         double norm = this.norm();
         if(norm == 0d) throw new ArithmeticException("Cannot normalize null vector");
         return this.scale(1d / norm);
+    }
+    
+    public double distanceTo(Vec2d other) {
+        return this.substract(other).norm();
     }
 
     public double[] asArray() {

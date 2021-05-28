@@ -35,7 +35,7 @@ public class DistortionLayer extends MapLayer {
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
         
-        double res = 2d;
+        double res = 20d;
         for(double dx = -1; dx < this.getExtendedWidth(); dx += res) {
             double lon = GeoUtil.getLongitudeInRange(this.getRenderLongitude(dx + res / 2));
             for(double dy = -1; dy < this.getExtendedHeight(); dy += res) {
