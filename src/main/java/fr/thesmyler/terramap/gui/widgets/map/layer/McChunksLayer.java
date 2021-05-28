@@ -1,7 +1,9 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
@@ -15,6 +17,8 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.minecraft.client.renderer.GlStateManager;
 
 public class McChunksLayer extends MapLayer {
+    
+    private ProjectionCache cache = new ProjectionCache();
 
     public McChunksLayer(double tileScaling) {
         super(tileScaling);
@@ -26,6 +30,8 @@ public class McChunksLayer extends MapLayer {
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
         map.getProfiler().startSection("layer-" + this.getId());
+        
+        this.cache.projection = projection;
 
         double extendedWidth = this.getExtendedWidth();
         double extendedHeight = this.getExtendedHeight();        
@@ -34,7 +40,7 @@ public class McChunksLayer extends MapLayer {
         boolean render2dr = false;
         boolean render3dr = false;
         boolean renderChunks = false;
-        double renderThreshold = 128d;
+        double renderThreshold = 256d;
         int maxTiles = 50;
 
         Vec2d centerMc;
@@ -50,7 +56,6 @@ public class McChunksLayer extends MapLayer {
             return;
         }
 
-        Map<Vec2d, Vec2d> positions = new HashMap<>();
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
 
@@ -75,21 +80,14 @@ public class McChunksLayer extends MapLayer {
                 lineInLeft = lineInRight = lineInTop = lineInBottom = false;
                 while(2*dX*direction < size) {
                     Vec2d[] renderCorners = new Vec2d[4];
-                    for(int i=0; i<renderCorners.length; i++) {
-                        renderCorners[i] = positions.get(corners[i]);
-                        if(renderCorners[i] == null) {
-                            try {
-                                double[] lola = projection.toGeo(corners[i].x, corners[i].y);
-                                renderCorners[i] = new Vec2d(this.getRenderX(lola[0]), this.getRenderY(lola[1]));
-                                positions.put(corners[i], renderCorners[i]);
-                            } catch(OutOfProjectionBoundsException silenced) {
-                                // Skip it
-                                break;
-                            }
+                    try {
+                        for(int i=0; i<renderCorners.length; i++) {
+                            renderCorners[i] = this.cache.getRenderPos(corners[i]);
                         }
+                    } catch(OutOfProjectionBoundsException silenced) {
+                        dX += direction;
+                        continue; // Skip the tile
                     }
-                    
-                    if(renderCorners[0] == null || renderCorners[1] == null || renderCorners[2] == null || renderCorners[3] == null) continue;
                     
                     for(Vec2d corner: renderCorners) {
                         lineInLeft = lineInLeft || corner.x >= 0;
@@ -118,21 +116,14 @@ public class McChunksLayer extends MapLayer {
 
                 while(2*dY*direction < size) {
                     Vec2d[] renderCorners = new Vec2d[4];
-                    for(int i=0; i<renderCorners.length; i++) {
-                        renderCorners[i] = positions.get(corners[i]);
-                        if(renderCorners[i] == null) {
-                            try {
-                                double[] lola = projection.toGeo(corners[i].x, corners[i].y);
-                                renderCorners[i] = new Vec2d(this.getRenderX(lola[0]), this.getRenderY(lola[1]));
-                                positions.put(corners[i], renderCorners[i]);
-                            } catch(OutOfProjectionBoundsException silenced) {
-                                // Skip it
-                                break;
-                            }
+                    try {
+                        for(int i=0; i<renderCorners.length; i++) {
+                            renderCorners[i] = this.cache.getRenderPos(corners[i]);
                         }
+                    } catch(OutOfProjectionBoundsException silenced) {
+                        dY += direction;
+                        continue; // Skip the tile
                     }
-                    
-                    if(renderCorners[0] == null || renderCorners[1] == null || renderCorners[2] == null || renderCorners[3] == null) continue;
                     
                     for(Vec2d corner: renderCorners) {
                         lineInLeft = lineInLeft || corner.x >= 0;
@@ -162,10 +153,9 @@ public class McChunksLayer extends MapLayer {
                 size++;
             }
             
-            //TODO remove
-            if(safety >= maxTiles) RenderUtil.drawRect(x + extendedWidth / 2, y + extendedHeight / 2, x + extendedWidth / 2 + 10, y + extendedHeight / 2 + 10, Color.RED);
         }
 
+        this.cache.cycle();
         GlStateManager.popMatrix();
         map.getProfiler().endSection();
     }
@@ -173,6 +163,52 @@ public class McChunksLayer extends MapLayer {
     @Override
     public String getId() {
         return "mcchunks";
+    }
+    
+    private class ProjectionCache {
+        
+        GeographicProjection projection;
+        
+        Map<Vec2d, double[]> mcToGeo = new HashMap<>();
+        Set<Vec2d> accessedInCycle = new HashSet<>();
+        
+        int maxProjectionsPerCycle = 30;
+        int projectionsThisCycle = 0;
+        
+        Vec2d getRenderPos(Vec2d mcPos) throws OutOfProjectionBoundsException {
+            this.accessedInCycle.add(mcPos);
+            
+            // Not really out of bounds but we don't need to differentiate the two
+            if(this.projectionsThisCycle >= this.maxProjectionsPerCycle) throw OutOfProjectionBoundsException.get();
+            
+            double[] lola;
+            
+            // Try getting a cached value
+            if(this.mcToGeo.containsKey(mcPos)) {
+                lola = this.mcToGeo.get(mcPos);
+                if(lola == null) throw OutOfProjectionBoundsException.get();
+            } else {
+                // Fallback to computing it
+                try {
+                    this.projectionsThisCycle++;
+                    lola = this.projection.toGeo(mcPos.x, mcPos.y);
+                    this.mcToGeo.put(mcPos, lola);
+                } catch(OutOfProjectionBoundsException e) {
+                    this.mcToGeo.put(mcPos, null);
+                    throw e;
+                }
+            }
+            
+            return new Vec2d(McChunksLayer.this.getRenderX(lola[0]), McChunksLayer.this.getRenderY(lola[1]));
+        }
+        
+        void cycle() {
+            this.mcToGeo.keySet().retainAll(this.accessedInCycle);
+            this.accessedInCycle.clear();
+            this.projectionsThisCycle = 0;
+        }
+        
+        
     }
 
 }
