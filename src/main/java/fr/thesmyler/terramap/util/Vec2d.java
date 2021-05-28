@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.util;
 
+import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
+
 public final class Vec2d {
 
     public final double x;
@@ -8,6 +10,12 @@ public final class Vec2d {
     public Vec2d(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+    
+    public Vec2d(double[] coords) {
+        PValidation.checkArg(coords.length == 2, "Excpected a double array of length 2");
+        this.x = coords[0];
+        this.y = coords[1];
     }
 
     public double normSquared() {
