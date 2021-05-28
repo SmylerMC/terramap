@@ -1,9 +1,10 @@
-package fr.thesmyler.terramap.gui.widgets.map;
+package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.profiler.Profiler;
 
@@ -34,15 +35,15 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
         float height = this.getHeight();
         double extendedWidth = this.getExtendedWidth();
         double extendedHeight = this.getExtendedHeight();
+        double realCenterX = this.getRenderX(this.realLongitude);
+        double realCenterY = this.getRenderY(this.realLatitude);
 
         GlStateManager.pushMatrix();
-        Vec2d realCenter = new Vec2d(this.getMapX(this.realLongitude), this.getMapY(this.realLatitude))
-                .add(-this.getUpperLeftX(), -this.getUpperLeftY());
         this.applyRotationGl(x, y);
         RenderUtil.drawStrokeLine(Color.RED, 2f,
                 extendedWidth / 2, extendedHeight / 2,
-                realCenter.x, extendedHeight / 2,
-                realCenter.x, realCenter.y);
+                realCenterX, extendedHeight / 2,
+                realCenterX, realCenterY);
         GlStateManager.popMatrix();
 
         float centerHole = 10;

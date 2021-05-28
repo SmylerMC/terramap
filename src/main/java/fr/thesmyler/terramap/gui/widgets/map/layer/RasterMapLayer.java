@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.map;
+package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,6 +8,8 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.ICopyrightHolder;
 import fr.thesmyler.terramap.maps.IRasterTile;
 import fr.thesmyler.terramap.maps.IRasterTiledMap;
