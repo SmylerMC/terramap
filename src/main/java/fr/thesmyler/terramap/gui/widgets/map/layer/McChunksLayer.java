@@ -12,13 +12,16 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class McChunksLayer extends MapLayer {
     
-    private ProjectionCache cache = new ProjectionCache();
+    private ProjectionCache cache2dr = new ProjectionCache();
+    private ProjectionCache cache3dr = new ProjectionCache();
+    private ProjectionCache cacheChunks = new ProjectionCache();
 
     public McChunksLayer(double tileScaling) {
         super(tileScaling);
@@ -31,7 +34,9 @@ public class McChunksLayer extends MapLayer {
         if(projection == null) return;
         map.getProfiler().startSection("layer-" + this.getId());
         
-        this.cache.projection = projection;
+        this.cache2dr.projection = projection;
+        this.cache3dr.projection = projection;
+        this.cacheChunks.projection = projection;
 
         double extendedWidth = this.getExtendedWidth();
         double extendedHeight = this.getExtendedHeight();        
@@ -40,8 +45,7 @@ public class McChunksLayer extends MapLayer {
         boolean render2dr = false;
         boolean render3dr = false;
         boolean renderChunks = false;
-        double renderThreshold = 256d;
-        int maxTiles = 50;
+        double renderThreshold = 128d;
 
         Vec2d centerMc;
         try {
@@ -59,107 +63,98 @@ public class McChunksLayer extends MapLayer {
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
 
-        if(render2dr) {
-            Vec2d center2dr = new Vec2d(Math.floorDiv((long)Math.floor(centerMc.x), 512), Math.floorDiv((long)Math.floor(centerMc.y), 512));
-            int dX = 0;
-            int dY = 0;
-            Vec2d[] corners = {
-                    new Vec2d(center2dr.x * 512, center2dr.y * 512),
-                    new Vec2d(center2dr.x * 512, (center2dr.y + 1) * 512),
-                    new Vec2d((center2dr.x + 1) * 512, (center2dr.y + 1) * 512),
-                    new Vec2d((center2dr.x + 1) * 512, center2dr.y * 512)
-            };
-            int direction = 1;
-            int size = 1;
-            int safety = 0;
-            boolean inTop, inBottom, inLeft, inRight;
-            inTop = inBottom = inLeft = inRight = true;
-            while((inTop || inBottom || inRight || inLeft) && safety++ < maxTiles) {
-                
-                boolean lineInLeft, lineInRight, lineInTop, lineInBottom;
-                lineInLeft = lineInRight = lineInTop = lineInBottom = false;
-                while(2*dX*direction < size) {
-                    Vec2d[] renderCorners = new Vec2d[4];
-                    try {
-                        for(int i=0; i<renderCorners.length; i++) {
-                            renderCorners[i] = this.cache.getRenderPos(corners[i]);
-                        }
-                    } catch(OutOfProjectionBoundsException silenced) {
-                        dX += direction;
-                        continue; // Skip the tile
-                    }
-                    
-                    for(Vec2d corner: renderCorners) {
-                        lineInLeft = lineInLeft || corner.x >= 0;
-                        lineInRight = lineInRight || corner.x <= extendedWidth;
-                        lineInTop = lineInTop || corner.y >= 0;
-                        lineInBottom = lineInBottom || corner.y <= extendedHeight;
-                    }
-
-                    RenderUtil.drawClosedStrokeLine(Color.DARK_GRAY, 2f,
-                            x + renderCorners[0].x, y + renderCorners[0].y,
-                            x + renderCorners[1].x, y + renderCorners[1].y,
-                            x + renderCorners[2].x, y + renderCorners[2].y,
-                            x + renderCorners[3].x, y + renderCorners[3].y
-                    );
-                    
-                    dX += direction;
-                    int step = 512*direction;
-                    for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(step, 0);
-                }
-                
-                if(!lineInLeft) inLeft = false;
-                if(!lineInRight) inRight = false;
-                if(!lineInTop) inTop = false;
-                if(!lineInBottom) inBottom = false;
-                lineInLeft = lineInRight = lineInTop = lineInBottom = false;
-
-                while(2*dY*direction < size) {
-                    Vec2d[] renderCorners = new Vec2d[4];
-                    try {
-                        for(int i=0; i<renderCorners.length; i++) {
-                            renderCorners[i] = this.cache.getRenderPos(corners[i]);
-                        }
-                    } catch(OutOfProjectionBoundsException silenced) {
-                        dY += direction;
-                        continue; // Skip the tile
-                    }
-                    
-                    for(Vec2d corner: renderCorners) {
-                        lineInLeft = lineInLeft || corner.x >= 0;
-                        lineInRight = lineInRight || corner.x <= extendedWidth;
-                        lineInTop = lineInTop || corner.y >= 0;
-                        lineInBottom = lineInBottom || corner.y <= extendedHeight;
-                    }
-
-                    RenderUtil.drawClosedStrokeLine(Color.DARK_GRAY, 2f,
-                            x + renderCorners[0].x, y + renderCorners[0].y,
-                            x + renderCorners[1].x, y + renderCorners[1].y,
-                            x + renderCorners[2].x, y + renderCorners[2].y,
-                            x + renderCorners[3].x, y + renderCorners[3].y
-                    );
-                    
-                    dY += direction;
-                    int step = 512*direction;
-                    for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(0, step);
-                }
-                
-                if(!lineInLeft) inLeft = false;
-                if(!lineInRight) inRight = false;
-                if(!lineInTop) inTop = false;
-                if(!lineInBottom) inBottom = false;
-
-                direction *= -1;
-                size++;
-            }
-            
+        if(renderChunks) {
+            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, Color.DARK_GRAY, 3f);
+            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, Color.DARK_GRAY, 2f);
+            this.renderGrid(x, y, this.cacheChunks, centerMc, 16, extendedWidth, extendedHeight, Color.DARK_GRAY, 1f);
+        } else if(render3dr) {
+            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, Color.DARK_GRAY, 2f);
+            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, Color.DARK_GRAY, 1f);
+        } else if(render2dr) {
+            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, Color.DARK_GRAY, 1f);
         }
 
-        this.cache.cycle();
+        this.cache2dr.cycle();
+        this.cache3dr.cycle();
+        this.cacheChunks.cycle();
         GlStateManager.popMatrix();
         map.getProfiler().endSection();
     }
+    
+    private void renderGrid(float x, float y, ProjectionCache cache, Vec2d mcCenter, long tileSize, double extendedWidth, double extendedHeight, Color color, float lineWidth) {
+        
+        int maxTiles = 50; // Maximum draw iterations, for safety
+        
+        Vec2d centerTile = new Vec2d(Math.floorDiv((long)Math.floor(mcCenter.x), tileSize), Math.floorDiv((long)Math.floor(mcCenter.y), tileSize));
+        int dX = 0;
+        int dY = 0;
+        Vec2d[] corners = {
+                new Vec2d(centerTile.x * tileSize, centerTile.y * tileSize),
+                new Vec2d(centerTile.x * tileSize, (centerTile.y + 1) * tileSize),
+                new Vec2d((centerTile.x + 1) * tileSize, (centerTile.y + 1) * tileSize),
+                new Vec2d((centerTile.x + 1) * tileSize, centerTile.y * tileSize)
+        };
+        int direction = 1;
+        int size = 1;
+        int safety = 0;
+        boolean inTop, inBottom, inLeft, inRight;
+        inTop = inBottom = inLeft = inRight = true;
+        while((inTop || inBottom || inRight || inLeft) && safety++ < maxTiles) {
+            
+            boolean[] linesInlineIn = new boolean[4];
+            while(2*dX*direction < size) {
+                this.renderTile(x, y, cache, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                dX += direction;
+                long step = tileSize*direction;
+                for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(step, 0);
+            }
+            
+            if(!linesInlineIn[0]) inLeft = false;
+            if(!linesInlineIn[1]) inRight = false;
+            if(!linesInlineIn[2]) inTop = false;
+            if(!linesInlineIn[3]) inBottom = false;
+            linesInlineIn = new boolean[4];
 
+            while(2*dY*direction < size) {
+                this.renderTile(x, y, cache, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                dY += direction;
+                long step = tileSize*direction;
+                for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(0, step);
+            }
+            
+            if(!linesInlineIn[0]) inLeft = false;
+            if(!linesInlineIn[1]) inRight = false;
+            if(!linesInlineIn[2]) inTop = false;
+            if(!linesInlineIn[3]) inBottom = false;
+
+            direction *= -1;
+            size++;
+        }
+    }
+
+    private void renderTile(float x, float y, ProjectionCache cache, Vec2d[] corners, Color color, float lineWidth, boolean[] loopingConditions, double extendedWidth, double extendedHeight) {
+        Vec2d[] renderCorners = new Vec2d[4];
+        try {
+            for(int i=0; i<renderCorners.length; i++) {
+                renderCorners[i] = cache.getRenderPos(corners[i]);
+            }
+        } catch(OutOfProjectionBoundsException silenced) {
+            return; // Skip the tile
+        }
+        for(Vec2d corner: renderCorners) {
+            loopingConditions[0] = loopingConditions[0] || corner.x >= 0;
+            loopingConditions[1] = loopingConditions[1] || corner.x <= extendedWidth;
+            loopingConditions[2] = loopingConditions[2] || corner.y >= 0;
+            loopingConditions[3] = loopingConditions[3] || corner.y <= extendedHeight;
+        }
+        RenderUtil.drawClosedStrokeLine(color, lineWidth,
+                x + renderCorners[0].x, y + renderCorners[0].y,
+                x + renderCorners[1].x, y + renderCorners[1].y,
+                x + renderCorners[2].x, y + renderCorners[2].y,
+                x + renderCorners[3].x, y + renderCorners[3].y
+        );
+    }
+    
     @Override
     public String getId() {
         return "mcchunks";
@@ -172,7 +167,7 @@ public class McChunksLayer extends MapLayer {
         Map<Vec2d, double[]> mcToGeo = new HashMap<>();
         Set<Vec2d> accessedInCycle = new HashSet<>();
         
-        int maxProjectionsPerCycle = 30;
+        int maxProjectionsPerCycle = 20;
         int projectionsThisCycle = 0;
         
         Vec2d getRenderPos(Vec2d mcPos) throws OutOfProjectionBoundsException {
@@ -199,6 +194,7 @@ public class McChunksLayer extends MapLayer {
                 }
             }
             
+            if(Math.abs(lola[1]) > WebMercatorUtil.LIMIT_LATITUDE) throw OutOfProjectionBoundsException.get();
             return new Vec2d(McChunksLayer.this.getRenderX(lola[0]), McChunksLayer.this.getRenderY(lola[1]));
         }
         

@@ -135,7 +135,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         
         DistortionLayer dist = new DistortionLayer(this.map.getTileScaling());
         dist.setZ(-1);
-        //this.map.addOverlayLayer(dist);
+//        this.map.addOverlayLayer(dist);
         
         content.addWidget(this.map);
 
