@@ -15,9 +15,9 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 import fr.thesmyler.terramap.util.GeoServices;
 import fr.thesmyler.terramap.util.Vec2d;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 
-//TODO Localize
 public class LayerRenderingOffsetPopup extends PopupScreen {
     
     private final RasterMapLayer layer;
@@ -33,11 +33,11 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         float margin = 8;
         float spacing = 7;
         WidgetContainer content = this.getContent();
-        TextWidget title = new TextWidget(content.getWidth() / 2, margin, 0, new TextComponentTranslation("Set layer rendering offset"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        TextWidget title = new TextWidget(content.getWidth() / 2, margin, 0, new TextComponentTranslation("terramap.popup.renderoffset.title"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
         content.addWidget(title);
-        TextWidget latText = new TextWidget(margin, title.getY() + title.getHeight() + interline, 0, new TextComponentTranslation("Latitude (°):"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
+        TextWidget latText = new TextWidget(margin, title.getY() + title.getHeight() + interline, 0, new TextComponentTranslation("terramap.popup.renderoffset.latitude"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
         content.addWidget(latText);
-        TextWidget lonText = new TextWidget(margin, latText.getY() + latText.getHeight() + interline, 0, new TextComponentTranslation("Longitude (°):"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
+        TextWidget lonText = new TextWidget(margin, latText.getY() + latText.getHeight() + interline, 0, new TextComponentTranslation("terramap.popup.renderoffset.longitude"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
         content.addWidget(lonText);
         float inputsX = Math.max(latText.getX() + latText.getWidth(), lonText.getX() + lonText.getWidth()) + spacing;
         this.latInput = new TextFieldWidget(inputsX, latText.getY() - 6, 0, 70);
@@ -70,19 +70,19 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
             this.latInput.setText(GeoServices.formatGeoCoordForDisplay(delta.y));
         });
         float midWidth = content.getWidth() - this.map.getWidth() - margin*3;
-        TextButtonWidget resetButton = new TextButtonWidget(margin, this.lonInput.getY() + this.lonInput.getHeight() + interline, 0, (midWidth - spacing) / 2, "Reset", () -> {
+        TextButtonWidget resetButton = new TextButtonWidget(margin, this.lonInput.getY() + this.lonInput.getHeight() + interline, 0, (midWidth - spacing) / 2, I18n.format("terramap.popup.renderoffset.reset"), () -> {
             this.map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
         });
         content.addWidget(resetButton);
-        TextButtonWidget set0Button = new TextButtonWidget(resetButton.getX() + resetButton.getWidth() + spacing, resetButton.getY(), 0, resetButton.getWidth(), "Set to 0", () -> {
+        TextButtonWidget set0Button = new TextButtonWidget(resetButton.getX() + resetButton.getWidth() + spacing, resetButton.getY(), 0, resetButton.getWidth(), I18n.format("terramap.popup.renderoffset.set0"), () -> {
             this.map.setCenterPosition(layer.getCenterLongitude(), layer.getCenterLatitude());
         });
         content.addWidget(set0Button);
-        TextButtonWidget cancelButton = new TextButtonWidget(resetButton.getX(), resetButton.getY() + resetButton.getHeight() + 4, 0, resetButton.getWidth(), "Cancel", () -> {
+        TextButtonWidget cancelButton = new TextButtonWidget(resetButton.getX(), resetButton.getY() + resetButton.getHeight() + 4, 0, resetButton.getWidth(), I18n.format("terramap.popup.renderoffset.cancel"), () -> {
             this.close();
         });
         content.addWidget(cancelButton);
-        this.doneButton = new TextButtonWidget(set0Button.getX(), cancelButton.getY(), 0, set0Button.getWidth(), "Done", () -> {
+        this.doneButton = new TextButtonWidget(set0Button.getX(), cancelButton.getY(), 0, set0Button.getWidth(), I18n.format("terramap.popup.renderoffset.done"), () -> {
             layer.setRenderDeltaLongitude(Double.parseDouble(this.lonInput.getText()));
             layer.setRenderDeltaLatitude(Double.parseDouble(this.latInput.getText()));
             this.close();

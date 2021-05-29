@@ -896,8 +896,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             }));
         });
 
-        //TODO Localize
-        this.rightClickMenu.addEntry("Set background offset", () -> this.getOffsetPopup(this.background).show());
+        this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.offset"), () -> this.getOffsetPopup(this.background).show());
     }
 
     private void updateRightClickMenuEntries() {
