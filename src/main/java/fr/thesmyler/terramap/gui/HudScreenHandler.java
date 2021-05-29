@@ -14,6 +14,7 @@ import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
@@ -93,6 +94,7 @@ public abstract class HudScreenHandler {
         map.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
         map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
         map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
+        map.trySetFeatureVisibility(McChunksLayer.ID, TerramapConfig.CLIENT.minimap.chunksRender);
         map.setTrackRotation(TerramapConfig.CLIENT.minimap.playerRotation);
         if(!TerramapConfig.CLIENT.minimap.playerRotation) map.setRotation(0f);
         Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
