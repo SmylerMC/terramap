@@ -89,6 +89,11 @@ public class TerramapConfig {
         @Config.LangKey("terramap.config.minimap.rotation")
         @Config.Comment("Whether or not to turn the minimap as the player looks around")
         public boolean playerRotation = false;
+        
+        @Config.Name("minimap_chunks")
+        @Config.LangKey("terramap.config.minimap.chunk")
+        @Config.Comment("Whether or not to show Minecraft region and chunk borders on the minimap")
+        public boolean chunksRender = false;
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {

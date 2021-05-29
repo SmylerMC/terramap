@@ -28,6 +28,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen.TileScalingOption;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
@@ -57,6 +58,7 @@ public class HudConfigScreen extends Screen {
     private ToggleButtonWidget compassButton = new ToggleButtonWidget(10, false);
     private ToggleButtonWidget directionsButton = new ToggleButtonWidget(10, false);
     private ToggleButtonWidget rotationButton = new ToggleButtonWidget(10, false);
+    private ToggleButtonWidget chunksButton = new ToggleButtonWidget(10, false);
     private SlidingPanelWidget buttonPanel = new SlidingPanelWidget(20, 100);
     private SlidingPanelWidget settingsPanel = new SlidingPanelWidget(20, 100);
     private int lastWidth, lastHeight = -1; // Used to re-calculate the relative minimap position when the game's window is resized
@@ -95,6 +97,7 @@ public class HudConfigScreen extends Screen {
         this.otherPlayersButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(OtherPlayerMarkerController.ID, b));
         this.entitiesButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, b).trySetFeatureVisibility(MobMarkerController.ID, b));
         this.directionsButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, b));
+        this.chunksButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(McChunksLayer.ID, b));
         this.rotationButton.setOnChange(b -> {
             this.minimap.setTrackRotation(b);
             if(!b) this.minimap.setRotationWithAnimation(0);
@@ -151,12 +154,14 @@ public class HudConfigScreen extends Screen {
         buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.entities"), SmyLibGui.DEFAULT_FONT));
         buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.directions"), SmyLibGui.DEFAULT_FONT));
         buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.rotation"), SmyLibGui.DEFAULT_FONT));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.chunks"), SmyLibGui.DEFAULT_FONT));
         this.minimapButton.setTooltip(I18n.format("terramap.hudconfig.minimap.tooltip"));
         this.compassButton.setTooltip(I18n.format("terramap.hudconfig.compass.tooltip"));
         this.otherPlayersButton.setTooltip(I18n.format("terramap.hudconfig.players.tooltip"));
         this.entitiesButton.setTooltip(I18n.format("terramap.hudconfig.entities.tooltip"));
         this.directionsButton.setTooltip(I18n.format("terramap.hudconfig.directions.tooltip"));
         this.rotationButton.setTooltip(I18n.format("terramap.hudconfig.rotation.tooltip"));
+        this.chunksButton.setTooltip(I18n.format("terramap.hudconfig.chunks.tooltip"));
         LinkedList<ToggleButtonWidget> buttons = new LinkedList<>();
         buttons.add(this.minimapButton);
         buttons.add(this.compassButton);
@@ -164,6 +169,7 @@ public class HudConfigScreen extends Screen {
         buttons.add(this.entitiesButton);
         buttons.add(this.directionsButton);
         buttons.add(this.rotationButton);
+        buttons.add(this.chunksButton);
         float lineY = 3;
         float textButtonSpace = 3;
         float lineSpace = 4;
@@ -231,6 +237,7 @@ public class HudConfigScreen extends Screen {
         TerramapConfig.CLIENT.minimap.height = this.minimapWindow.getHeight() / this.height * 100;
         TerramapConfig.CLIENT.minimap.playerDirections = this.directionsButton.getState();
         TerramapConfig.CLIENT.minimap.playerRotation = this.rotationButton.getState();
+        TerramapConfig.CLIENT.minimap.chunksRender = this.chunksButton.getState();
         TerramapConfig.CLIENT.compass.enable = this.compassButton.getState();
         TerramapConfig.CLIENT.compass.posX = this.compassWindow.getX() / this.width * 100;
         TerramapConfig.CLIENT.compass.posY = this.compassWindow.getY() / this.height * 100;
@@ -255,6 +262,7 @@ public class HudConfigScreen extends Screen {
         this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
         this.minimap.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
         this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
+        this.minimap.trySetFeatureVisibility(McChunksLayer.ID, TerramapConfig.CLIENT.minimap.chunksRender);
         this.minimap.setTrackRotation(TerramapConfig.CLIENT.minimap.playerRotation);
         if(!TerramapConfig.CLIENT.minimap.playerRotation) this.minimap.setRotation(0f);
         for(MapStyleSliderEntry map: this.mapStyles) if(map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
@@ -264,6 +272,7 @@ public class HudConfigScreen extends Screen {
         this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.CLIENT.minimap.tileScaling));
         this.directionsButton.setState(TerramapConfig.CLIENT.minimap.playerDirections);
         this.rotationButton.setState(TerramapConfig.CLIENT.minimap.playerRotation);
+        this.chunksButton.setState(TerramapConfig.CLIENT.minimap.chunksRender);
         this.recalcWidgetsPos();
     }
 
