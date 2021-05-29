@@ -109,6 +109,8 @@ public class HudConfigScreen extends Screen {
         this.compassWindow.setMinInnerHeight(1);
         this.compassWindow.trySetInnerDimensions(50, this.compassScreen.compass.getHeight());
         this.compassWindow.setCenterDragColor(Color.TRANSPARENT);
+        this.buttonPanel.setContourColor(Color.TRANSPARENT);
+        this.settingsPanel.setContourColor(Color.TRANSPARENT);
         this.reset();
     }
 
