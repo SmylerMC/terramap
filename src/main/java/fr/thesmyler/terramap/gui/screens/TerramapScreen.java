@@ -86,8 +86,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private TextWidget zoomText;
     private SlidingPanelWidget infoPanel = new SlidingPanelWidget(70, 200);
     private TexturedButtonWidget panelButton = new TexturedButtonWidget(230, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
-    private TextWidget mouseGeoLocationText;
-    private TextWidget mouseMCLocationText;
     private TextWidget distortionText;
     private TextWidget debugText;
     private TextWidget playerGeoLocationText;
@@ -113,6 +111,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
         this.styleScreen = new StyleScreen();
         if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
+        this.infoPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
         TerramapClientContext.getContext().registerForUpdates(true);
     }
 
@@ -192,15 +191,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         TexturedButtonWidget openConfigButton = new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig);
         openConfigButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.config.tooltip"));
         this.infoPanel.addWidget(openConfigButton);
-        this.mouseGeoLocationText = new TextWidget(49, infoFont);
-        this.mouseGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
-        this.infoPanel.addWidget(this.mouseGeoLocationText);
-        this.mouseMCLocationText = new TextWidget(49, infoFont);
-        this.mouseMCLocationText.setAnchorX(5).setAnchorY(this.mouseGeoLocationText.getAnchorY() + infoFont.height() + 5).setAlignment(TextAlignment.RIGHT);
-        this.infoPanel.addWidget(this.mouseMCLocationText);
         this.playerGeoLocationText = new TextWidget(49, infoFont);
         this.playerGeoLocationText = new TextWidget(49, infoFont);
-        this.playerGeoLocationText.setAnchorX(5).setAnchorY(this.mouseMCLocationText.getAnchorY() + infoFont.height() + 5).setAlignment(TextAlignment.RIGHT);
+        this.playerGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
         this.infoPanel.addWidget(this.playerGeoLocationText);
         this.distortionText = new TextWidget(49, infoFont);
         this.distortionText.setAnchorX(5).setAnchorY(this.playerGeoLocationText.getAnchorY() + infoFont.height() + 5).setAlignment(TextAlignment.RIGHT);
@@ -283,25 +276,12 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         double mouseLat = this.map.getMouseLatitude();
         double mouseLon = this.map.getMouseLongitude();
-        String formatX = "-";
-        String formatZ = "-";
         String formatScale = "-"; 
         String formatOrientation = "-";
         if(Math.abs(mouseLat) > WebMercatorUtil.LIMIT_LATITUDE) {
             this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
-            this.mouseGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_geo", "-", "-"));
-            this.mouseMCLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_mc", "-", "-"));
         } else {
-            String displayLat = GeoServices.formatGeoCoordForDisplay(mouseLat);
-            String displayLon = GeoServices.formatGeoCoordForDisplay(mouseLon);
-            this.mouseGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_geo", displayLat, displayLon));
             if(projection != null) {
-                try {
-                    double[] pos = projection.fromGeo(mouseLon, mouseLat);
-                    formatX = "" + Math.round(pos[0]);
-                    formatZ = "" + Math.round(pos[1]);
-                } catch(OutOfProjectionBoundsException e) {}
-                this.mouseMCLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_mc", formatX, formatZ));
                 try {
                     try {
                         double[] dist = projection.tissot(mouseLon, mouseLat);
@@ -315,7 +295,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 }
             } else {
                 this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
-                this.mouseMCLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.mouse_mc", "-", "-"));
             }
         }
 
