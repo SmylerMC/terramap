@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -23,17 +22,15 @@ import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
-import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
@@ -64,7 +61,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * The core component of Terramap: the map widget itself.
@@ -805,7 +801,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                 strToCopy = dispX + " " + dispY;
                 GuiScreen.setClipboardString(strToCopy);
             } catch(OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; //Just a random string
+                String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copychunk"));
                 this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
             }
@@ -819,7 +815,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                 strToCopy = "r." + dispX + "." + dispY + ".mca";
                 GuiScreen.setClipboardString(strToCopy);
             } catch(OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; //Just a random string
+                String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copyregion"));
                 this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
             }
@@ -938,96 +934,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     private PopupScreen getOffsetPopup(RasterMapLayer layer) {
-        //TODO Localize
-        float interline = 20;
-        float margin = 8;
-        float spacing = 7;
-        PopupScreen popup = new PopupScreen(300, 150);
-        WidgetContainer content = popup.getContent();
-        TextWidget title = new TextWidget(content.getWidth() / 2, margin, 0, new TextComponentTranslation("Set layer rendering offset"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
-        content.addWidget(title);
-        TextWidget latText = new TextWidget(margin, title.getY() + title.getHeight() + interline, 0, new TextComponentTranslation("Latitude (°):"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
-        content.addWidget(latText);
-        TextWidget lonText = new TextWidget(margin, latText.getY() + latText.getHeight() + interline, 0, new TextComponentTranslation("Longitude (°):"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
-        content.addWidget(lonText);
-        float inputsX = Math.max(latText.getX() + latText.getWidth(), lonText.getX() + lonText.getWidth()) + spacing;
-        TextFieldWidget latInput = new TextFieldWidget(inputsX, latText.getY() - 6, 0, 70);
-        content.addWidget(latInput);
-        TextFieldWidget lonInput = new TextFieldWidget(inputsX, lonText.getY() - 6, 0, latInput.getWidth());
-        content.addWidget(lonInput);
-        float mapSize = Math.min(
-                content.getWidth() - (inputsX + lonInput.getWidth() + spacing * 2) - margin,
-                content.getHeight() - latInput.getY() - margin);
-        MapWidget map = new MapWidget(content.getWidth() - mapSize - margin, latInput.getY(), 0, mapSize, mapSize, layer.getMap(), MapContext.PREVIEW, layer.getTileScaling());
-        RenderingDeltaPreviewLayer previewLayer = new RenderingDeltaPreviewLayer(layer.getTileScaling(), layer.getCenterLongitude(), layer.getCenterLatitude());
-        map.addOverlayLayer(previewLayer);
-        map.setScaleVisibility(false);
-        map.setCopyrightVisibility(false);
-        map.setRightClickMenuEnabled(false);
-        map.setFocusedZoom(false);
-        map.setAllowsQuickTp(false);
-        map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
-        map.setRotation(layer.getRotation());
-        map.setZoom(layer.getZoom());
-        content.addWidget(map);
-        content.scheduleAtUpdate(() -> map.setTileScaling(layer.getTileScaling()));
-        content.scheduleAtUpdate(() -> {
-            IWidget focused = content.getFocusedWidget();
-            if(focused == latInput || focused == lonInput) return;
-            Vec2d layerCenter = new Vec2d(layer.getCenterLongitude(), layer.getCenterLatitude());
-            Vec2d previewCenter = new Vec2d(map.getCenterLongitude(), map.getCenterLatitude());
-            Vec2d delta = previewCenter.add(layerCenter.scale(-1));
-            lonInput.setText(GeoServices.formatGeoCoordForDisplay(delta.x));
-            latInput.setText(GeoServices.formatGeoCoordForDisplay(delta.y));
-        });
-        float midWidth = content.getWidth() - map.getWidth() - margin*3;
-        TextButtonWidget resetButton = new TextButtonWidget(margin, lonInput.getY() + lonInput.getHeight() + interline, 0, (midWidth - spacing) / 2, "Reset", () -> {
-            map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
-        });
-        content.addWidget(resetButton);
-        TextButtonWidget set0Button = new TextButtonWidget(resetButton.getX() + resetButton.getWidth() + spacing, resetButton.getY(), 0, resetButton.getWidth(), "Set to 0", () -> {
-            map.setCenterPosition(layer.getCenterLongitude(), layer.getCenterLatitude());
-        });
-        content.addWidget(set0Button);
-        TextButtonWidget cancelButton = new TextButtonWidget(resetButton.getX(), resetButton.getY() + resetButton.getHeight() + 4, 0, resetButton.getWidth(), "Cancel", () -> {
-            popup.close();
-        });
-        content.addWidget(cancelButton);
-        TextButtonWidget doneButton = new TextButtonWidget(set0Button.getX(), cancelButton.getY(), 0, set0Button.getWidth(), "Done", () -> {
-            layer.setRenderDeltaLongitude(Double.parseDouble(lonInput.getText()));
-            layer.setRenderDeltaLatitude(Double.parseDouble(latInput.getText()));
-            popup.close();
-        });
-        content.addWidget(doneButton);
-        Consumer<String> onUpdate = unused -> {
-            boolean okLon = false, okLat = false;
-            try {
-                double dlon = Double.parseDouble(lonInput.getText());
-                if(Math.abs(dlon) > 180d) throw new NumberFormatException();
-                okLon = true;
-                lonInput.setEnabledTextColor(Color.WHITE);
-                lonInput.setFocusedTextColor(Color.WHITE);
-                map.setCenterLongitude(layer.getCenterLongitude() + dlon);
-            } catch(NumberFormatException e) {
-                lonInput.setEnabledTextColor(Color.RED);
-                lonInput.setFocusedTextColor(Color.RED);
-            }
-            try {
-                double dlat = Double.parseDouble(latInput.getText());
-                if(Math.abs(dlat) > 90d) throw new NumberFormatException();
-                okLat = true;
-                latInput.setEnabledTextColor(Color.WHITE);
-                latInput.setFocusedTextColor(Color.WHITE);
-                map.setCenterLatitude(layer.getCenterLatitude() + dlat);
-            } catch(NumberFormatException e) {
-                latInput.setEnabledTextColor(Color.RED);
-                latInput.setFocusedTextColor(Color.RED);
-            }
-            doneButton.setEnabled(okLat && okLon);
-        };
-        latInput.setOnChangeCallback(onUpdate);
-        lonInput.setOnChangeCallback(onUpdate);
-        return popup;
+        return new LayerRenderingOffsetPopup(layer);
     }
 
     private boolean isShortcutEnabled() {
