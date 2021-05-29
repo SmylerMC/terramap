@@ -3,6 +3,10 @@ package fr.thesmyler.terramap.util;
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 
 public final class Vec2d {
+    
+    public static final Vec2d NULL = new Vec2d(0d, 0d);
+    public static final Vec2d UNIT_X = new Vec2d(1d, 0d);
+    public static final Vec2d UNIT_Y = new Vec2d(0d, 1d);
 
     public final double x;
     public final double y;

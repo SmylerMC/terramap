@@ -13,6 +13,7 @@ import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
+import fr.thesmyler.terramap.util.Vec2d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -62,6 +63,19 @@ public class TerramapClientPreferences {
             return false;
         }
     }
+    
+    public static Vec2d getMinimapRenderingOffset(String serverId, String layerName) {
+        try {
+            initPreferences();
+            ServerPreferences server = preferences.servers.get(serverId);
+            if(server == null) return Vec2d.NULL;
+            return server.minimapRenderOffsets.containsKey(layerName) ? server.minimapRenderOffsets.get(layerName): Vec2d.NULL;
+        } catch(Exception e) {
+            TerramapMod.logger.warn("Failed to query whether or not welcome was shown for " + serverId);
+            TerramapMod.logger.catching(e);
+            return Vec2d.NULL;
+        }
+    }
 
     public static void setServerSavedScreen(String serverId, TerramapScreenSavedState mapState) {
         try {
@@ -95,6 +109,18 @@ public class TerramapClientPreferences {
             if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
         } catch(Exception e) {
             TerramapMod.logger.warn("Failed to set gen settings");
+            TerramapMod.logger.catching(e);
+        }
+    }
+    
+    public static void setMinimapRenderingOffset(String serverId, String layerId, Vec2d offset) {
+        try {
+            initPreferences();
+            ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
+            serv.minimapRenderOffsets.put(layerId, offset);
+            if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
+        } catch(Exception e) {
+            TerramapMod.logger.warn("Failed to set minimap rendering delta!");
             TerramapMod.logger.catching(e);
         }
     }
@@ -151,6 +177,7 @@ public class TerramapClientPreferences {
         public String genSettings = "";
         public TerramapScreenSavedState mapState = new TerramapScreenSavedState();
         public boolean hasShownWelcome =  false;
+        public Map<String, Vec2d> minimapRenderOffsets = new HashMap<>();
     }
 
 }
