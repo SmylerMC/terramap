@@ -118,5 +118,9 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         }
         this.doneButton.setEnabled(okLat && okLon);
     }
+    
+    public RasterMapLayer getLayer() {
+        return this.layer;
+    }
 
 }
