@@ -341,7 +341,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.syncOverlaysWithController();
 
         this.profiler.endStartSection("update-markers");
-        this.updateMarkers();
+        this.updateMarkers(mouseX, mouseY);
 
         this.profiler.endStartSection("update-errors");
         if(this.reportedErrors.size() > 0) {
@@ -704,7 +704,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.background.setRotation(this.controller.getRotation());
     }
 
-    private void updateMarkers() {
+    private void updateMarkers(float mouseX, float mouseY) {
         // Gather the existing classes
         Map<Class<?>, List<Marker>> markers = new HashMap<Class<?>, List<Marker>>();
         for(MarkerController<?> controller: this.markerControllers.values()) {
@@ -744,6 +744,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         // Update right click marker visibility
         if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
+        
+        for(Marker marker: this.markers) marker.onUpdate(mouseX, mouseY, this);
 
     }
 
