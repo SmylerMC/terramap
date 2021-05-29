@@ -173,7 +173,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.styleButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.style.tooltip"));
         this.styleButton.enable();
         content.addWidget(this.styleButton);
-        this.offsetWarning.setTooltip("A rendering offset is set for the current background!"); //TODO localize
+        this.offsetWarning.setTooltip(I18n.format("terramap.terramapscreen.warning.offset.tooltip"));
         content.addWidget(this.offsetWarning.setPosition(this.styleButton.getX(), this.styleButton.getY() + this.styleButton.getHeight() + 5));
         this.debugText = new TextWidget(49, Util.getSmallestFont());
         this.debugText.setAnchorX(3).setAnchorY(0);

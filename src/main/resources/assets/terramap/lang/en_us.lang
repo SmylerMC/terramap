@@ -102,7 +102,7 @@ terramap.hudconfig.directions.tooltip=Change the visibility of players' directio
 terramap.hudconfig.rotation=Follow player rotation: 
 terramap.hudconfig.rotation.tooltip=Whether or not to turn the minimap as the player looks around
 terramap.hudconfig.chunks=Regions and chunks
-terramap.hudconfig.chunks.tooltips=Whether or not to show Minecraft regions and chunks limits
+terramap.hudconfig.chunks.tooltip=Whether or not to show Minecraft regions and chunks limits
 terramap.hudconfig.scaling=Scaling: 
 terramap.hudconfig.scaling.tooltip=Change minimap rendering "tile scaling" factor
 terramap.hudconfig.zoom=Zoom: 
@@ -142,6 +142,7 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Set projection
+terramap.mapwidget.rclickmenu.offset=Set background offset
 terramap.mapwidget.error.header=Error:
 terramap.mapwidget.shortcuts.tp=Click to teleport
 terramap.mapwidget.mcchunks.tooltip=Show region and chunk borders
@@ -174,6 +175,8 @@ terramap.terramapscreen.buttons.track.tooltip=Track player
 terramap.terramapscreen.buttons.style.tooltip=Change map style
 terramap.terramapscreen.buttons.info.tooltip=Collapse information and search pannel
 terramap.terramapscreen.buttons.config.tooltip=Open config menu
+terramap.terramapscreen.warning.offset.tooltip=A rendering offset is set for the current background!
+
 terramap.terramapscreen.search.wip=Work in progress
 
 ## Info panel
@@ -202,6 +205,15 @@ terramap.ingameactions.copy.mc=Copied Minecraft coordinates to clipboard
 terramap.ingameactions.copy.geo=Copied geographic coordinates to clipboard
 terramap.toasts.welcome.title=Terramap
 terramap.toasts.welcome.text=Press %1$s to open the map
+
+#### Rendering offset popup ####
+terramap.popup.renderoffset.title=Set layer rendering offset
+terramap.popup.renderoffset.latitude=Latitude (°):
+terramap.popup.renderoffset.longitude=Longitude (°):
+terramap.popup.renderoffset.reset=Reset
+terramap.popup.renderoffset.set0=Set to 0
+terramap.popup.renderoffset.cancel=Cancel
+terramap.popup.renderoffset.done=Done
 
 #### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [player name (optional)]
