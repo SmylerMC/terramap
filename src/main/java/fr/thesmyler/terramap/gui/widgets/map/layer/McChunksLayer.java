@@ -31,6 +31,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     private ToggleButtonWidget button;
     
     private boolean visible = false;
+    
+    private Color color = Color.DARK_GRAY.withAlpha(0.25f);
 
     public McChunksLayer(double tileScaling) {
         super(tileScaling);
@@ -42,7 +44,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 this.visible,
                 b -> this.visible = b
                 );
-        this.button.setTooltip(I18n.format("Show region and chunk borders")); //TODO localize
+        this.button.setTooltip(I18n.format("terramap.mapwidget.mcchunks.tooltip"));
     }
 
     @Override
@@ -59,7 +61,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         double extendedWidth = this.getExtendedWidth();
         double extendedHeight = this.getExtendedHeight();        
 
-        //TODO Fade away instead
         boolean render2dr = false;
         boolean render3dr = false;
         boolean renderChunks = false;
@@ -83,14 +84,14 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         this.applyRotationGl(x, y);
 
         if(renderChunks) {
-            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, Color.DARK_GRAY, 3f);
-            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, Color.DARK_GRAY, 2f);
-            this.renderGrid(x, y, this.cacheChunks, centerMc, 16, extendedWidth, extendedHeight, Color.DARK_GRAY, 1f);
+            this.renderGrid(x, y, this.cacheChunks, centerMc, 16, extendedWidth, extendedHeight, this.color, 1f);
+            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, this.color, 2f);
+            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, this.color, 3f);
         } else if(render3dr) {
-            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, Color.DARK_GRAY, 2f);
-            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, Color.DARK_GRAY, 1f);
+            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, this.color, 1f);
+            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, this.color, 2f);
         } else if(render2dr) {
-            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, Color.DARK_GRAY, 1f);
+            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, this.color, 1f);
         }
 
         // Let the caches do some cleanup
@@ -247,6 +248,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     @Override
     public void setVisibility(boolean visibility) {
         this.visible = visibility;
+        this.button.setState(visibility);
     }
 
     @Override
@@ -258,7 +260,13 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     public boolean isVisible(WidgetContainer parent) {
         return this.visible;
     }
-    
-    
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
 }
