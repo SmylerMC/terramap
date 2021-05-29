@@ -6,14 +6,20 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
+import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.util.GeoServices;
+import fr.thesmyler.terramap.util.Vec2d;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -97,6 +103,17 @@ public class ClientTerramapEventHandler {
             this.testScreenWasShown = true;
         } else if(event.getGui() instanceof GuiDownloadTerrain) {
             TerramapClientContext.getContext().resetWorld();
+        }
+    }
+    
+    @SubscribeEvent
+    public void onGuiOpen(GuiOpenEvent event) {
+        if(event.getGui() instanceof GuiChat && Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup) {
+            LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) Minecraft.getMinecraft().currentScreen;
+            RasterMapLayer layer = popup.getLayer();
+            Vec2d offset = new Vec2d(layer.getRenderDeltaLongitude(), layer.getRenderDeltaLatitude());
+            TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), offset);
+            TerramapClientPreferences.save();
         }
     }
 

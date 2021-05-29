@@ -27,6 +27,7 @@ import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import fr.thesmyler.terramap.util.TerramapUtil;
+import fr.thesmyler.terramap.util.Vec2d;
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
@@ -249,7 +250,14 @@ public class TerramapClientContext {
     public void setSavedScreenState(TerramapScreenSavedState svd) {
         TerramapClientPreferences.setServerSavedScreen(this.getContextIdentifier(), svd);
     }
+    
+    public Vec2d getMinimapRenderOffset(String layer) {
+        return TerramapClientPreferences.getMinimapRenderingOffset(this.getContextIdentifier(), layer);
+    }
 
+    public void setMinimapRenderOffset(String layer, Vec2d offset) {
+        TerramapClientPreferences.setMinimapRenderingOffset(this.getContextIdentifier(), layer, offset);
+    }
     public void registerForUpdates(boolean yesNo) {
         this.isRegisteredForUpdates = yesNo;
         if(this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
