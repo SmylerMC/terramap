@@ -1049,6 +1049,13 @@ public class MapWidget extends FlexibleWidgetContainer {
     public void setZoomResponsiveness(float value) {
         this.zoomResponsiveness = value;
     }
+    
+    /**
+     * @return the zoom level this map is trying to reach once the zooming animation is over
+     */
+    public double getZoomTarget() {
+        return this.controller.zoomTarget;
+    }
 
     /**
      * @return the longitude of the center of this map
