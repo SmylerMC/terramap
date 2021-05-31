@@ -99,9 +99,13 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         for(String urlPattern: this.getUrlPatterns()) {
             String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
             try {
-                Http.setMaximumConcurrentRequestsTo(url, this.getMaxConcurrentRequests());
-            } catch(IllegalArgumentException e) {
+                URL parsed = new URL(url);
+                if(parsed.getProtocol().startsWith("http")) {
+                    Http.setMaximumConcurrentRequestsTo(url, this.getMaxConcurrentRequests());
+                }
+            } catch(IllegalArgumentException | MalformedURLException e) {
                 TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + url);
+                TerramapMod.logger.catching(e);
             }
         }
         super.setup();
