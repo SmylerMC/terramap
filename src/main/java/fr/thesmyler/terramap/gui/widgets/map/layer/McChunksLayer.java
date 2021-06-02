@@ -24,9 +24,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     
     public static final String ID = "mcchunks";
     
-    private ProjectionCache cache2dr = new ProjectionCache();
-    private ProjectionCache cache3dr = new ProjectionCache();
-    private ProjectionCache cacheChunks = new ProjectionCache();
+    private ProjectionCache cache = new ProjectionCache(4);
     
     private ToggleButtonWidget button;
     
@@ -54,9 +52,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         if(projection == null) return;
         map.getProfiler().startSection("layer-" + this.getId());
         
-        this.cache2dr.projection = projection;
-        this.cache3dr.projection = projection;
-        this.cacheChunks.projection = projection;
+        this.cache.projection = projection;
 
         double extendedWidth = this.getExtendedWidth();
         double extendedHeight = this.getExtendedHeight();        
@@ -64,6 +60,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         boolean render2dr = false;
         boolean render3dr = false;
         boolean renderChunks = false;
+        boolean renderBlocks = false;
         double renderThreshold = 128d;
 
         // First decide on what we are going to render depending on the scale at the center of the map
@@ -75,6 +72,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             if(d < renderThreshold) render2dr = true;
             if(d < renderThreshold / 2) render3dr = true;
             if(d < renderThreshold / 16) renderChunks = true;
+            if(d < renderThreshold / 128) renderBlocks = true;
         } catch(OutOfProjectionBoundsException silenced) {
             // The center is out of bounds, let's not render anything
             return;
@@ -83,28 +81,30 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
 
-        if(renderChunks) {
-            this.renderGrid(x, y, this.cacheChunks, centerMc, 16, extendedWidth, extendedHeight, this.color, 1f);
-            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, this.color, 2f);
-            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, this.color, 3f);
+        if(renderBlocks) {
+            this.renderGrid(x, y, 0, centerMc, 1, extendedWidth, extendedHeight, this.color, 1f);
+            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, this.color, 2f);
+            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, this.color, 3f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 4f);
+        } else if(renderChunks) {
+            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, this.color, 1f);
+            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, this.color, 2f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 3f);
         } else if(render3dr) {
-            this.renderGrid(x, y, this.cache3dr, centerMc, 256, extendedWidth, extendedHeight, this.color, 1f);
-            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, this.color, 2f);
+            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, this.color, 1f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 2f);
         } else if(render2dr) {
-            this.renderGrid(x, y, this.cache2dr, centerMc, 512, extendedWidth, extendedHeight, this.color, 1f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 1f);
         }
 
-        // Let the caches do some cleanup
-        this.cache2dr.cycle();
-        this.cache3dr.cycle();
-        this.cacheChunks.cycle();
+        this.cache.cycle();
         GlStateManager.popMatrix();
         map.getProfiler().endSection();
     }
     
-    private void renderGrid(float x, float y, ProjectionCache cache, Vec2d mcCenter, long tileSize, double extendedWidth, double extendedHeight, Color color, float lineWidth) {
+    private void renderGrid(float x, float y, int discriminator, Vec2d mcCenter, long tileSize, double extendedWidth, double extendedHeight, Color color, float lineWidth) {
         
-        int maxTiles = 50; // Maximum draw iterations, for safety
+        int maxTiles = 50; // Maximum drawing iterations, for safety
         
         Vec2d centerTile = new Vec2d(Math.floorDiv((long)Math.floor(mcCenter.x), tileSize), Math.floorDiv((long)Math.floor(mcCenter.y), tileSize));
         int dX = 0;
@@ -126,7 +126,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             
             boolean[] linesInlineIn = new boolean[4];
             while(2*dX*direction < size) {
-                this.renderTile(x, y, cache, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
                 dX += direction;
                 long step = tileSize*direction;
                 for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(step, 0);
@@ -139,7 +139,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             linesInlineIn = new boolean[4];
 
             while(2*dY*direction < size) {
-                this.renderTile(x, y, cache, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
                 dY += direction;
                 long step = tileSize*direction;
                 for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(0, step);
@@ -155,11 +155,11 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         }
     }
 
-    private void renderTile(float x, float y, ProjectionCache cache, Vec2d[] corners, Color color, float lineWidth, boolean[] loopingConditions, double extendedWidth, double extendedHeight) {
+    private void renderTile(float x, float y, int discriminator, Vec2d[] corners, Color color, float lineWidth, boolean[] loopingConditions, double extendedWidth, double extendedHeight) {
         Vec2d[] renderCorners = new Vec2d[4];
         try {
             for(int i=0; i<renderCorners.length; i++) {
-                renderCorners[i] = cache.getRenderPos(corners[i]);
+                renderCorners[i] = this.cache.getRenderPos(corners[i], discriminator);
             }
         } catch(OutOfProjectionBoundsException silenced) {
             return; // Skip the tile
@@ -191,13 +191,17 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         Set<Vec2d> accessedInCycle = new HashSet<>();
         
         int maxProjectionsPerCycle = 20;
-        int projectionsThisCycle = 0;
+        int[] projectionsThisCycle;
         
-        Vec2d getRenderPos(Vec2d mcPos) throws OutOfProjectionBoundsException {
+        ProjectionCache(int diffCount) {
+            this.projectionsThisCycle = new int[diffCount];
+        }
+        
+        Vec2d getRenderPos(Vec2d mcPos, int discriminator) throws OutOfProjectionBoundsException {
             this.accessedInCycle.add(mcPos);
             
             // Not really out of bounds but we don't need to differentiate the two
-            if(this.projectionsThisCycle >= this.maxProjectionsPerCycle) throw OutOfProjectionBoundsException.get();
+            if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) throw OutOfProjectionBoundsException.get();
             
             double[] lola;
             
@@ -208,7 +212,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             } else {
                 // Fallback to computing it
                 try {
-                    this.projectionsThisCycle++;
+                    this.projectionsThisCycle[discriminator]++;
                     lola = this.projection.toGeo(mcPos.x, mcPos.y);
                     this.mcToGeo.put(mcPos, lola);
                 } catch(OutOfProjectionBoundsException e) {
@@ -224,7 +228,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         void cycle() {
             this.mcToGeo.keySet().retainAll(this.accessedInCycle);
             this.accessedInCycle.clear();
-            this.projectionsThisCycle = 0;
+            this.projectionsThisCycle = new int[this.projectionsThisCycle.length];
         }
         
         
