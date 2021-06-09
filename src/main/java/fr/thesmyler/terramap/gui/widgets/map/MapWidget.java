@@ -318,11 +318,15 @@ public class MapWidget extends FlexibleWidgetContainer {
         if(this.trackingMarker != null) {
             if(this.widgets.contains(this.trackingMarker) && Double.isFinite(this.trackingMarker.getLongitude()) && Double.isFinite(this.trackingMarker.getLatitude())) {
                 this.trackingMarker.onUpdate(mouseX - this.trackingMarker.getX(), mouseY - this.trackingMarker.getY(), this); // Force update so we don't lag behind, this one needs to be updated twice
-                this.setCenterLongitude(this.trackingMarker.getLongitude());
-                this.setCenterLatitude(this.trackingMarker.getLatitude());
-                if(this.trackRotation && this.trackingMarker instanceof AbstractMovingMarker) {
-                    float azimuth = ((AbstractMovingMarker)this.trackingMarker).getAzimuth();
-                    if(Float.isFinite(azimuth)) this.setRotation(-azimuth);
+                if(!Double.isFinite(this.trackingMarker.getLatitude()) || !Double.isFinite(this.trackingMarker.getLongitude())) {
+                    this.trackingMarker = null;
+                } else {
+                    this.setCenterLongitude(this.trackingMarker.getLongitude());
+                    this.setCenterLatitude(this.trackingMarker.getLatitude());
+                    if(this.trackRotation && this.trackingMarker instanceof AbstractMovingMarker) {
+                        float azimuth = ((AbstractMovingMarker)this.trackingMarker).getAzimuth();
+                        if(Float.isFinite(azimuth)) this.setRotation(-azimuth);
+                    }
                 }
             } else {
                 this.trackingMarker = null;
