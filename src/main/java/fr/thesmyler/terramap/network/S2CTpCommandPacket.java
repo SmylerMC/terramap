@@ -19,12 +19,12 @@ public class S2CTpCommandPacket implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.cmd = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+        this.cmd = NetworkUtil.decodeStringFromByteBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        TerramapNetworkManager.encodeStringToByteBuf(this.cmd, buf);
+        NetworkUtil.encodeStringToByteBuf(this.cmd, buf);
     }
 
     public static class S2CTpCommandPacketHandler implements IMessageHandler<S2CTpCommandPacket, IMessage> {

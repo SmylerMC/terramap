@@ -7,7 +7,9 @@ import java.util.Map;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.util.TilePos;
+import fr.thesmyler.terramap.util.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.util.TilePosUnmutable;
+import fr.thesmyler.terramap.util.WebMercatorBounds;
 import fr.thesmyler.terramap.util.WebMercatorUtil;
 
 /**
@@ -38,6 +40,8 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
     @Override
     public T getTile(TilePos position) {
         TilePosUnmutable pos = position.getUnmutable();
+        WebMercatorBounds b = this.getBounds(pos.getZoom());
+        if(b != null && !b.contains(pos)) throw new InvalidTilePositionException();
         T tile = this.tileMap.get(pos);
         if(tile != null) {
             this.needTile(tile);

@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.network.warps;
 
-import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import fr.thesmyler.terramap.network.NetworkUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -21,13 +21,13 @@ public class C2SPRequestWarpPacket implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.requestId = buf.readLong();
-        this.warpId = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+        this.warpId = NetworkUtil.decodeStringFromByteBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(this.requestId);
-        TerramapNetworkManager.encodeStringToByteBuf(this.warpId, buf);
+        NetworkUtil.encodeStringToByteBuf(this.warpId, buf);
     }
 
     public static class C2SPRequestWarpPacketHandler implements IMessageHandler<C2SPRequestWarpPacket, SP2CWarpPacket> {

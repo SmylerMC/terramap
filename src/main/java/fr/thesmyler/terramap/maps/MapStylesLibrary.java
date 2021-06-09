@@ -24,6 +24,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
+import fr.thesmyler.terramap.util.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import net.buildtheearth.terraplusplus.util.http.Http;
@@ -210,6 +211,11 @@ public class MapStylesLibrary {
                 patterns = new String[] {saved.url};
             } else throw new IllegalArgumentException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
         }
+        Map<Integer, WebMercatorBounds> bounds = new HashMap<>();
+        if(bounds != null) for(String key: saved.bounds.keySet()) {
+            int zoom = Integer.parseInt(key);
+            bounds.put(zoom, saved.bounds.get(key));
+        }
         return new UrlTiledMap(
                 patterns,
                 saved.min_zoom,
@@ -223,7 +229,8 @@ public class MapStylesLibrary {
                 version,
                 comment,
                 saved.max_concurrent_requests,
-                saved.debug
+                saved.debug,
+                bounds
                 );
     }
 
@@ -281,6 +288,7 @@ public class MapStylesLibrary {
         boolean allow_on_minimap;
         int max_concurrent_requests = 2;
         boolean debug;
+        Map<String, WebMercatorBounds> bounds;
 
     }
 

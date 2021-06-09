@@ -10,6 +10,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
+import fr.thesmyler.terramap.util.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -31,6 +32,7 @@ public class SP2CMapStylePacket implements IMessage {
     private int maxConcurrentConnections;
     private boolean debug;
     private boolean backwardCompat = false;
+    private Map<Integer, WebMercatorBounds> bounds;
 
     public SP2CMapStylePacket(UrlTiledMap map) {
         this.id = map.getId();
@@ -45,28 +47,34 @@ public class SP2CMapStylePacket implements IMessage {
         this.comment = map.getComment();
         this.maxConcurrentConnections = map.getMaxConcurrentRequests();
         this.debug = map.isDebug();
+        this.bounds = new HashMap<>();
+        for(int i=map.getMinZoom(); i <= map.getMaxZoom(); i++) {
+            WebMercatorBounds bound = map.getBounds(i);
+            if(bound != null) this.bounds.put(i, bound);
+        }
     }
 
     public SP2CMapStylePacket() {}
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.id = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+        this.bounds = new HashMap<>();
+        this.id = NetworkUtil.decodeStringFromByteBuf(buf);
         this.providerVersion = buf.readLong();
-        String urlPattern = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+        String urlPattern = NetworkUtil.decodeStringFromByteBuf(buf);
         int nameCount = buf.readInt();
         Map<String, String> names = new HashMap<String, String>();
         for(int i=0; i < nameCount; i++) {
-            String key = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-            String name = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+            String key = NetworkUtil.decodeStringFromByteBuf(buf);
+            String name = NetworkUtil.decodeStringFromByteBuf(buf);
             names.put(key, name);
         }
         this.names = names;
         int copyrightCount = buf.readInt();
         Map<String, String> copyrights = new HashMap<String, String>();
         for(int i=0; i < copyrightCount; i++) {
-            String key = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-            String copyright = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+            String key = NetworkUtil.decodeStringFromByteBuf(buf);
+            String copyright = NetworkUtil.decodeStringFromByteBuf(buf);
             copyrights.put(key, copyright);
         }
         this.copyrights = copyrights;
@@ -74,44 +82,62 @@ public class SP2CMapStylePacket implements IMessage {
         this.maxZoom = buf.readInt();
         this.displayPriority = buf.readInt();
         this.isAllowedOnMinimap = buf.readBoolean();
-        this.comment = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-        if(Strings.isBlank(urlPattern)) { // The following fields were added in 1.0.0-beta7
-            this.maxConcurrentConnections = buf.readInt();
-            this.urlPatterns = TerramapNetworkManager.decodeStringArrayFromByteBuf(buf);
-            this.debug = buf.readBoolean();
-        } else {
+        this.comment = NetworkUtil.decodeStringFromByteBuf(buf);
+        if(!Strings.isBlank(urlPattern)) { // Pre 1.0.0-beta7 packet
             this.maxConcurrentConnections = 2;
             this.urlPatterns = new String[] {urlPattern};
             this.debug = false;
             return;
         }
+        this.maxConcurrentConnections = buf.readInt();
+        this.urlPatterns = NetworkUtil.decodeStringArrayFromByteBuf(buf);
+        this.debug = buf.readBoolean();
+        
+        if(buf.isReadable()) {
+            int length = buf.readInt();
+            for(int i=0; i<length; i++) {
+                int zoom = buf.readInt();
+                int lowerX = buf.readInt();
+                int lowerY = buf.readInt();
+                int upperX = buf.readInt();
+                int upperY = buf.readInt();
+                this.bounds.put(zoom, new WebMercatorBounds(lowerX, lowerY, upperX, upperY));
+            }
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        TerramapNetworkManager.encodeStringToByteBuf(this.id, buf);
+        NetworkUtil.encodeStringToByteBuf(this.id, buf);
         buf.writeLong(this.providerVersion);
         String singleUrl = this.backwardCompat ? this.urlPatterns[0]: "";
-        TerramapNetworkManager.encodeStringToByteBuf(singleUrl, buf);
+        NetworkUtil.encodeStringToByteBuf(singleUrl, buf);
         buf.writeInt(this.names.size());
         for(String key: this.names.keySet()) {
-            TerramapNetworkManager.encodeStringToByteBuf(key, buf);
-            TerramapNetworkManager.encodeStringToByteBuf(this.names.get(key), buf);
+            NetworkUtil.encodeStringToByteBuf(key, buf);
+            NetworkUtil.encodeStringToByteBuf(this.names.get(key), buf);
         }
         buf.writeInt(this.copyrights.size());
         for(String key: this.copyrights.keySet()) {
-            TerramapNetworkManager.encodeStringToByteBuf(key, buf);
-            TerramapNetworkManager.encodeStringToByteBuf(this.copyrights.get(key), buf);
+            NetworkUtil.encodeStringToByteBuf(key, buf);
+            NetworkUtil.encodeStringToByteBuf(this.copyrights.get(key), buf);
         }
         buf.writeInt(this.minZoom);
         buf.writeInt(this.maxZoom);
         buf.writeInt(this.displayPriority);
         buf.writeBoolean(this.isAllowedOnMinimap);
-        TerramapNetworkManager.encodeStringToByteBuf(this.comment, buf);
-        if(!this.backwardCompat) {
-            buf.writeInt(this.maxConcurrentConnections);
-            TerramapNetworkManager.encodeStringArrayToByteBuf(this.urlPatterns, buf);
-            buf.writeBoolean(this.debug);
+        NetworkUtil.encodeStringToByteBuf(this.comment, buf);
+        buf.writeInt(this.maxConcurrentConnections);
+        NetworkUtil.encodeStringArrayToByteBuf(this.urlPatterns, buf);
+        buf.writeBoolean(this.debug);
+        buf.writeInt(this.bounds.size());
+        for(int zoom: this.bounds.keySet()) {
+            buf.writeInt(zoom);
+            WebMercatorBounds bounds = this.bounds.get(zoom);
+            buf.writeInt(bounds.lowerX);
+            buf.writeInt(bounds.lowerY);
+            buf.writeInt(bounds.upperX);
+            buf.writeInt(bounds.upperY);
         }
     }
 
@@ -137,7 +163,8 @@ public class SP2CMapStylePacket implements IMessage {
                 this.providerVersion,
                 this.comment,
                 this.maxConcurrentConnections,
-                this.debug
+                this.debug,
+                this.bounds
                 );
     }
 
