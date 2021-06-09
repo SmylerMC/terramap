@@ -212,7 +212,7 @@ public class MapStylesLibrary {
             } else throw new IllegalArgumentException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
         }
         Map<Integer, WebMercatorBounds> bounds = new HashMap<>();
-        if(bounds != null) for(String key: saved.bounds.keySet()) {
+        if(saved.bounds != null) for(String key: saved.bounds.keySet()) {
             int zoom = Integer.parseInt(key);
             bounds.put(zoom, saved.bounds.get(key));
         }
