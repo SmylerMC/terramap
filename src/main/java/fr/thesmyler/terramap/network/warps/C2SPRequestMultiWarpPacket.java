@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.network.warps;
 
-import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import fr.thesmyler.terramap.network.NetworkUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -27,7 +27,7 @@ public class C2SPRequestMultiWarpPacket implements IMessage {
         }
         this.keys = new String[buf.readInt()];
         for(int i=0; i<this.keys.length; i++) {
-            this.keys[i] = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+            this.keys[i] = NetworkUtil.decodeStringFromByteBuf(buf);
         }
     }
 
@@ -40,7 +40,7 @@ public class C2SPRequestMultiWarpPacket implements IMessage {
         }
         buf.writeInt(this.keys.length);
         for(String key: this.keys) {
-            TerramapNetworkManager.encodeStringToByteBuf(key, buf);
+            NetworkUtil.encodeStringToByteBuf(key, buf);
         }
     }
 

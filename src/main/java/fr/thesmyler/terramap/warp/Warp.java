@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import fr.thesmyler.terramap.network.NetworkUtil;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -62,11 +62,11 @@ public class Warp {
 
     public void encodeToByteBuf(ByteBuf buf) {
         buf.writeInt(this.properties.size() - 1); // Id is assumed
-        TerramapNetworkManager.encodeStringToByteBuf(this.getId(), buf);
+        NetworkUtil.encodeStringToByteBuf(this.getId(), buf);
         for(String key: this.properties.keySet()) {
             if(key.equals("id")) continue;
-            TerramapNetworkManager.encodeStringToByteBuf(key, buf);
-            TerramapNetworkManager.encodeStringToByteBuf(this.properties.get(key), buf);
+            NetworkUtil.encodeStringToByteBuf(key, buf);
+            NetworkUtil.encodeStringToByteBuf(this.properties.get(key), buf);
         }
     }
 
@@ -78,20 +78,20 @@ public class Warp {
             }
         }
         buf.writeInt(validProperties.size());
-        TerramapNetworkManager.encodeStringToByteBuf(this.getId(), buf);
+        NetworkUtil.encodeStringToByteBuf(this.getId(), buf);
         for(String key: validProperties.keySet()) {
-            TerramapNetworkManager.encodeStringToByteBuf(key, buf);
-            TerramapNetworkManager.encodeStringToByteBuf(validProperties.get(key), buf);
+            NetworkUtil.encodeStringToByteBuf(key, buf);
+            NetworkUtil.encodeStringToByteBuf(validProperties.get(key), buf);
         }
     }
 
     public static Warp readWarpFromByteBuf(ByteBuf buf) {
         int keyCount = buf.readInt();
-        String id = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+        String id = NetworkUtil.decodeStringFromByteBuf(buf);
         Warp warp = new Warp(id);
         for(int i=0; i<keyCount; i++) {
-            String key = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-            String value = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+            String key = NetworkUtil.decodeStringFromByteBuf(buf);
+            String value = NetworkUtil.decodeStringFromByteBuf(buf);
             warp.setProperty(key, value);
         }
         return warp;

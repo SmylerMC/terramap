@@ -54,8 +54,8 @@ public class S2CTerramapHelloPacket implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.serverVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
-        String jsonWorldSettings = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+        this.serverVersion = NetworkUtil.decodeStringFromByteBuf(buf);
+        String jsonWorldSettings = NetworkUtil.decodeStringFromByteBuf(buf);
         if(jsonWorldSettings.length() > 0) {
             this.worldSettings = EarthGeneratorSettings.parse(jsonWorldSettings);
         } else {
@@ -75,10 +75,10 @@ public class S2CTerramapHelloPacket implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        TerramapNetworkManager.encodeStringToByteBuf(this.serverVersion, buf);
+        NetworkUtil.encodeStringToByteBuf(this.serverVersion, buf);
         String stgs = this.isLegacyTerraClient ? this.worldSettings.getLegacyGeneratorString(): this.worldSettings.toString();
         if(stgs == null) stgs = "";
-        TerramapNetworkManager.encodeStringToByteBuf(stgs, buf);
+        NetworkUtil.encodeStringToByteBuf(stgs, buf);
         buf.writeLong(this.worldUUID.getLeastSignificantBits());
         buf.writeLong(this.worldUUID.getMostSignificantBits());
         buf.writeByte(this.syncPlayers.VALUE);

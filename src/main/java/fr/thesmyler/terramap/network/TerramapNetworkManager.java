@@ -35,8 +35,6 @@ import fr.thesmyler.terramap.network.warps.SP2CWarpCommandPacket.SP2CWarpCommand
 import fr.thesmyler.terramap.network.warps.SP2CWarpPacket;
 import fr.thesmyler.terramap.network.warps.SP2CWarpPacket.SP2CWarpPacketProxyHandler;
 import fr.thesmyler.terramap.network.warps.SP2CWarpPacket.SP2CWarpPacketServerHandler;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -142,46 +140,6 @@ public abstract class TerramapNetworkManager {
 
     private static <REQ extends IMessage, REPLY extends IMessage> void registerSledgehammerC2P(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
         CHANNEL_SLEDGEHAMMER.registerMessage(handlerclass, msgclass, discriminator, Side.SERVER);
-    }
-
-    public static void encodeStringToByteBuf(String str, ByteBuf buf) {
-        int readerIndex = buf.readerIndex();
-        int writerIndex = buf.writerIndex();
-        PacketBuffer packetBuffer = new PacketBuffer(buf);
-        packetBuffer.setIndex(readerIndex, writerIndex);
-        packetBuffer.writeString(str);
-    }
-
-    public static String decodeStringFromByteBuf(ByteBuf buf) {
-        PacketBuffer packetBuffer = getPacketBuffer(buf);
-        return packetBuffer.readString(Integer.MAX_VALUE/4);
-    }
-
-    public static void encodeStringArrayToByteBuf(String[] strings, ByteBuf buf) {
-        int readerIndex = buf.readerIndex();
-        int writerIndex = buf.writerIndex();
-        PacketBuffer packetBuffer = new PacketBuffer(buf);
-        packetBuffer.setIndex(readerIndex, writerIndex);
-        packetBuffer.writeVarInt(strings.length);
-        for(String str: strings) packetBuffer.writeString(str);
-    }
-
-    public static String[] decodeStringArrayFromByteBuf(ByteBuf buf) {
-        PacketBuffer packetBuffer = getPacketBuffer(buf);
-        int strCount = packetBuffer.readVarInt();
-        String[] strings = new String[strCount]; 
-        for(int i=0; i<strCount; i++) {
-            strings[i] = packetBuffer.readString(Integer.MAX_VALUE/4);
-        }
-        return strings;
-    }
-
-    private static PacketBuffer getPacketBuffer(ByteBuf buf) {
-        int readerIndex = buf.readerIndex();
-        int writerIndex = buf.writerIndex();
-        PacketBuffer packetBuffer = new PacketBuffer(buf);
-        packetBuffer.setIndex(readerIndex, writerIndex);
-        return packetBuffer;
     }
 
 }

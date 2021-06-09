@@ -162,7 +162,11 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                     }
 
                     while(tile.getPosition().getZoom() > 0 && !tile.isTextureAvailable()) {
-                        tile = this.map.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
+                        try {
+                            tile = this.map.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
+                        } catch(InvalidTilePositionException silenced) {
+                            break;
+                        }
                         if(tile.getPosition().getZoom() == this.map.getMaxZoom()) {
                             try {
                                 tile.getTexture();

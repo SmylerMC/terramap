@@ -25,7 +25,7 @@ public class P2CSledgehammerHelloPacket implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.sledgehammerVersion = TerramapNetworkManager.decodeStringFromByteBuf(buf);
+        this.sledgehammerVersion = NetworkUtil.decodeStringFromByteBuf(buf);
         this.syncPlayers = PlayerSyncStatus.getFromNetworkCode(buf.readByte());
         this.syncSpectators = PlayerSyncStatus.getFromNetworkCode(buf.readByte());
         this.globalMap = buf.readBoolean();
@@ -39,7 +39,7 @@ public class P2CSledgehammerHelloPacket implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         // This should never be sent by the server, only by the proxy
-        TerramapNetworkManager.encodeStringToByteBuf("Terramap!", buf);
+        NetworkUtil.encodeStringToByteBuf("Terramap!", buf);
         buf.writeByte(this.syncPlayers.VALUE);
         buf.writeByte(this.syncSpectators.VALUE);
         buf.writeBoolean(this.globalMap);

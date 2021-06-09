@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.network.playersync;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.network.TerramapNetworkManager;
+import fr.thesmyler.terramap.network.NetworkUtil;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -30,11 +30,11 @@ public class SP2CPlayerSyncPacket implements IMessage {
         for(int i=0; i<this.remotePlayers.length; i++) {
             long leastUUID = buf.readLong();
             long mostUUID = buf.readLong();
-            ITextComponent name = ITextComponent.Serializer.jsonToComponent(TerramapNetworkManager.decodeStringFromByteBuf(buf));
+            ITextComponent name = ITextComponent.Serializer.jsonToComponent(NetworkUtil.decodeStringFromByteBuf(buf));
             double longitude = buf.readDouble();
             double latitude = buf.readDouble();
             float azimut = buf.readFloat();
-            GameType gamemode = GameType.getByName(TerramapNetworkManager.decodeStringFromByteBuf(buf));
+            GameType gamemode = GameType.getByName(NetworkUtil.decodeStringFromByteBuf(buf));
             this.remotePlayers[i] = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name, longitude, latitude, azimut, gamemode);
         }
     }
@@ -52,11 +52,11 @@ public class SP2CPlayerSyncPacket implements IMessage {
             buf.writeLong(player.getUUID().getLeastSignificantBits());
             buf.writeLong(player.getUUID().getMostSignificantBits());
             String playerDisplayName = ITextComponent.Serializer.componentToJson(player.getDisplayName());
-            TerramapNetworkManager.encodeStringToByteBuf(playerDisplayName, buf);
+            NetworkUtil.encodeStringToByteBuf(playerDisplayName, buf);
             buf.writeDouble(coordinates[0]);
             buf.writeDouble(coordinates[1]);
             buf.writeFloat(player.getAzimut());
-            TerramapNetworkManager.encodeStringToByteBuf(player.getGamemode().getName(), buf);
+            NetworkUtil.encodeStringToByteBuf(player.getGamemode().getName(), buf);
         }
     }
 
