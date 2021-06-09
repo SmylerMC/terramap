@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.maps;
 
 import fr.thesmyler.terramap.util.TilePos;
 import fr.thesmyler.terramap.util.TilePosUnmutable;
+import fr.thesmyler.terramap.util.WebMercatorBounds;
 
 public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
 
@@ -77,6 +78,15 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
      * @return true if this map should be considered a debug map
      */
     public boolean isDebug();
+    
+    /**
+     * @param zoom the zoom level to consider
+     * 
+     * @return the bounds of this map style, or null if it has none (uses the default web mercator bounds
+     */
+    public default WebMercatorBounds getBounds(int zoom) {
+        return null;
+    }
 
 
 }

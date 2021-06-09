@@ -15,6 +15,7 @@ import fr.thesmyler.terramap.maps.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
 import fr.thesmyler.terramap.util.TilePosUnmutable;
+import fr.thesmyler.terramap.util.WebMercatorBounds;
 import net.buildtheearth.terraplusplus.util.http.Http;
 import net.minecraft.util.text.ITextComponent;
 
@@ -40,6 +41,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     private final String comment;
     private final int maxConcurrentRequests; // How many concurrent http connections are allowed by this map provider. This should be two by default, as that's what OSM requires
     private boolean debug;
+    private Map<Integer, WebMercatorBounds> bounds;
 
     private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
@@ -56,7 +58,8 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
             long version,
             String comment,
             int maxConcurrentDownloads,
-            boolean debug) {
+            boolean debug,
+            Map<Integer, WebMercatorBounds> bounds) {
         Preconditions.checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
         Preconditions.checkArgument(minZoom >= 0, "Zoom level must be at least 0");
         Preconditions.checkArgument(maxZoom >= 0 || maxZoom > 25, "Zoom level must be at most 25");
@@ -88,6 +91,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         this.displayPriority = displayPriority;
         this.maxConcurrentRequests = maxConcurrentDownloads;
         this.debug = debug;
+        this.bounds = bounds;
     }
 
     /**
@@ -260,6 +264,11 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     @Override
     public boolean isAllowedOnMinimap() {
         return this.allowOnMinimap;
+    }
+
+    @Override
+    public WebMercatorBounds getBounds(int zoom) {
+        return this.bounds.get(zoom);
     }
 
 }
