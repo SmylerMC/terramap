@@ -20,6 +20,12 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
+/**
+ * Renders Minecraft region (both 2dr and 3dr), chunks, and blocks outlines onto a map widget.
+ * 
+ * @author SmylerMC
+ *
+ */
 public class McChunksLayer extends MapLayer implements FeatureVisibilityController {
     
     public static final String ID = "mcchunks";
@@ -104,7 +110,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     
     private void renderGrid(float x, float y, int discriminator, Vec2d mcCenter, long tileSize, double extendedWidth, double extendedHeight, Color color, float lineWidth) {
         
-        int maxTiles = 50; // Maximum drawing iterations, for safety
+        int maxTiles = 100; // Maximum drawing iterations, for safety
         
         Vec2d centerTile = new Vec2d(Math.floorDiv((long)Math.floor(mcCenter.x), tileSize), Math.floorDiv((long)Math.floor(mcCenter.y), tileSize));
         int dX = 0;
@@ -126,7 +132,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             
             boolean[] linesInlineIn = new boolean[4];
             while(2*dX*direction < size) {
-                this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                if((direction < 0 && inBottom) || (direction > 0 && inTop))
+                    this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
                 dX += direction;
                 long step = tileSize*direction;
                 for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(step, 0);
@@ -139,7 +146,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             linesInlineIn = new boolean[4];
 
             while(2*dY*direction < size) {
-                this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                if((direction < 0 && inLeft) || (direction > 0 && inRight))
+                    this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
                 dY += direction;
                 long step = tileSize*direction;
                 for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(0, step);
@@ -190,7 +198,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         Map<Vec2d, double[]> mcToGeo = new HashMap<>();
         Set<Vec2d> accessedInCycle = new HashSet<>();
         
-        int maxProjectionsPerCycle = 20;
+        int maxProjectionsPerCycle = 50;
         int[] projectionsThisCycle;
         
         ProjectionCache(int diffCount) {
