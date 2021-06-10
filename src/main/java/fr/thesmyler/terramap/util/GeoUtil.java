@@ -19,41 +19,33 @@ public final class GeoUtil {
      * @param longitude in degrees
      * @return the same longitude, between -180 and 180
      * 
-     * @throws RuntimeException if the longitude is not a finite double
+     * @throws IllegalStateException if the longitude is not a finite double
      */
     public static double getLongitudeInRange(double longitude) {
-        if(!Double.isFinite(longitude)) throw new RuntimeException("longitude cannot be infinite");
-        double l = longitude;
-        while(l> 180d) l -= 360d;
-        while(l<-180d) l += 360d;
-        return l;
+        if(!Double.isFinite(longitude)) throw new IllegalStateException("longitude cannot be infinite or NaN");
+        return longitude - (long)(longitude / 180) * 360;
     }
 
     /**
      * @param latitude in degrees
      * @return the same latitude, between -90 and 90
      * 
-     * @throws RuntimeException if the latitude is not a finite double
+     * @throws IllegalStateException if the latitude is not a finite double
      */
     public static double getLatitudeInRange(double latitude) {
-        if(!Double.isFinite(latitude)) throw new RuntimeException("longitude cannot be infinite");
-        double l = latitude;
-        while(l> 90d) l -= 180d;
-        while(l<-90d) l += 180d;
-        return l;
+        if(!Double.isFinite(latitude)) throw new IllegalStateException("latitude cannot be infinite or NaN");
+        return Math.max(-90, Math.min(latitude, 90));
     }
 
     /**
      * @param azimuth in degrees
      * @return the same azimuth, between 0 and 360
      * 
-     * @throws RuntimeException if the azimuth is not a finite double
+     * @throws IllegalStateException if the azimuth is not a finite double
      */
     public static float getAzimuthInRange(float azimuth) {
-        if(!Float.isFinite(azimuth)) throw new RuntimeException("azimuth cannot be infinite");
-        while(azimuth >= 360f) azimuth -= 360f;
-        while(azimuth < 0f) azimuth += 360f;
-        return azimuth;
+        if(!Float.isFinite(azimuth)) throw new IllegalStateException("azimuth cannot be infinite or NaN");
+        return (float) (azimuth - Math.floor(azimuth / 360)*360);
     }
 
     /**
