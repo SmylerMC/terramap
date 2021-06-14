@@ -10,12 +10,16 @@ public class FloatSliderWidget extends AbstractSliderWidget {
     private int resolution;
     protected Consumer<Double> onChange;
 
-    public FloatSliderWidget(int x, int y, int z, int width, double min, double max, double startValue) {
-        super(x, y, z, width);
+    public FloatSliderWidget(float x, float y, int z, float width, float height, double min, double max, double startValue) {
+        super(x, y, z, width, height);
         this.min = min;
         this.max = max;
         this.value = startValue;
         this.resolution = (int) Math.pow(10, Math.max(1, Math.ceil(Math.log10(width / (max - min)))));
+    }
+    
+    public FloatSliderWidget(float x, float y, int z, float width, double min, double max, double startValue) {
+        this(x, y, z, width, 20, min, max, startValue);
     }
 
     public FloatSliderWidget(int z, double min, double max, double startValue) {

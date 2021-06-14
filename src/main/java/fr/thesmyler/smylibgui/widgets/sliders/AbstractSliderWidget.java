@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
 import net.minecraft.client.Minecraft;
@@ -22,7 +23,7 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public abstract class AbstractSliderWidget extends WidgetContainer {
 
-    protected float x, y, width;
+    protected float x, y, width, height;
 
     protected String displayPrefix = "";
     protected String tooltip;
@@ -33,11 +34,16 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
     protected Color activeTextColor = Color.SELECTION;
     protected Color disabledTextColor = Color.MEDIUM_GRAY;
 
-    public AbstractSliderWidget(float x, float y, int z, float width) {
+    public AbstractSliderWidget(float x, float y, int z, float width, float height) {
         super(z);
         this.x = x;
         this.y = y;
         this.width = width;
+        this.height = height;
+    }
+    
+    public AbstractSliderWidget(float x, float y, int z, float width) {
+        this(x, y, z, width, 20);
     }
 
     /**
@@ -113,21 +119,40 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
         float leftWidth = this.width / 2;
         float rightWidth = leftWidth;
         leftWidth += this.width % 2;
-        RenderUtil.drawTexturedModalRect(x, y, 0, 46, leftWidth, 20);
-        RenderUtil.drawTexturedModalRect(x + leftWidth, y, 200 - rightWidth, 46, rightWidth, 20);
+        float splitHeight = Math.min(10, this.height / 2);
+        RenderUtil.drawTexturedModalRect(x, y, 0, 46, leftWidth, splitHeight);
+        RenderUtil.drawTexturedModalRect(x + leftWidth, y, 200 - rightWidth, 46, rightWidth, splitHeight);
+        for(int i=0; i*18 < this.height - 20; i++) {
+            RenderUtil.drawTexturedModalRect(x, y + splitHeight + 18*i, 0, 47, leftWidth, 18);
+            RenderUtil.drawTexturedModalRect(x + leftWidth, y + splitHeight + 18*i, 200 - rightWidth, 47, rightWidth, 18);
+        }
+        RenderUtil.drawTexturedModalRect(x, y + this.height - splitHeight, 0, 46 + 20 - splitHeight, leftWidth, splitHeight);
+        RenderUtil.drawTexturedModalRect(x + leftWidth, y + this.height - splitHeight, 200 - rightWidth, 46 + 20 - splitHeight, rightWidth, splitHeight);
 
         float sliderPosition = this.getPosition();
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
         Color.WHITE.applyGL();
-        RenderUtil.drawTexturedModalRect(x + sliderPosition * (this.width - 8), y, 0, 66, 4, 20);
-        RenderUtil.drawTexturedModalRect(x + sliderPosition * (this.width - 8) + 4, y, 196, 66, 4, 20);
+        
+        float sliderX = x + sliderPosition * (this.width - 8);
+        RenderUtil.drawTexturedModalRect(sliderX, y, 0, 66, 4, splitHeight);
+        RenderUtil.drawTexturedModalRect(sliderX + 4, y, 196, 66, 4, splitHeight);
+        for(int i=0; i*18 < this.height - 20; i++) {
+            RenderUtil.drawTexturedModalRect(sliderX, y + splitHeight + 18*i, 0, 68, 4, 15);
+            RenderUtil.drawTexturedModalRect(sliderX + 4, y + splitHeight + 18*i, 196, 68, 4, 15);
+        }
+        RenderUtil.drawTexturedModalRect(sliderX, y + this.height - splitHeight, 0, 66 + 20 - splitHeight, 4, splitHeight);
+        RenderUtil.drawTexturedModalRect(sliderX + 4, y + this.height - splitHeight, 196, 66 + 20 -splitHeight, 4, splitHeight);
 
         Color textColor = this.enabledTextColor;
         if (!this.isEnabled()) textColor = this.disabledTextColor;
         else if (hovered || hasFocus) textColor = this.activeTextColor;
 
-        parent.getFont().drawCenteredString(x + this.width / 2, y + (20 - 8) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
-
+        float fontSize = SmyLibGui.DEFAULT_FONT.height();
+        double gameScale = SmyLibGui.getMinecraftGuiScale();
+        float fontScale = 1f;
+        while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) fontScale++;
+        Font font = new Font(1 / fontScale + 0.0001f);
+        font.drawCenteredString(x + this.width / 2, y + (this.height - font.height() + 1) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
 
     }
 
@@ -142,6 +167,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
      * Triggered when the mouse is wheeled
      */
     public abstract void goToPrevious();
+    
     public AbstractSliderWidget setX(float x) {
         this.x = x;
         return this;
@@ -216,10 +242,8 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 
     @Override
     public float getHeight() {
-        return 20;
+        return this.height;
     }
-
-
 
     @Override
     public boolean isVisible(WidgetContainer parent) {

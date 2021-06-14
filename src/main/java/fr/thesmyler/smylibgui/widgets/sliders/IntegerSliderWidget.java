@@ -9,11 +9,15 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
     protected long min, max, value;
     protected Consumer<Long> onChange;
 
-    public IntegerSliderWidget(int x, int y, int z, int width, int min, int max, int startValue) {
-        super(x, y, z, width);
+    public IntegerSliderWidget(float x, float y, int z, float width, float height, int min, int max, int startValue) {
+        super(x, y, z, width, height);
         this.min = min;
         this.max = max;
         this.value = startValue;
+    }
+    
+    public IntegerSliderWidget(float x, float y, int z, float width, int min, int max, int startValue) {
+        this(x, y, z, width, 20, min, max, startValue);
     }
 
     public IntegerSliderWidget(int z, int min, int max, int startValue) {
