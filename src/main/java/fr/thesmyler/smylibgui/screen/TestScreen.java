@@ -127,6 +127,8 @@ public class TestScreen extends Screen {
         sliderScreen.addWidget(new IntegerSliderWidget(0, 0, 1, 150, 0, 100, 50));
         sliderScreen.addWidget(new FloatSliderWidget(0, 30, 1, 150, 0, 1, 0.5));
         sliderScreen.addWidget(new OptionSliderWidget<String>(0, 60, 1, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
+        sliderScreen.addWidget(new IntegerSliderWidget(0, 90, 1, 150, 30, 0, 100, 50));
+        sliderScreen.addWidget(new IntegerSliderWidget(0, 140, 1, 150, 10, 0, 100, 50));
 
 
         // === Menu screen: example on how to use menu widgets === //
