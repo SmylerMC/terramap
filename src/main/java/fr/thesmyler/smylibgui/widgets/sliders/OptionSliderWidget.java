@@ -13,15 +13,15 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
     protected int option;
     protected Consumer<T> onCycle;
 
-    public OptionSliderWidget(int x, int y, int z, int width, T[] options, int startOptionIndex, Consumer<T> onCycle) {
+    public OptionSliderWidget(float x, float y, int z, float width, float height, T[] options, int startOptionIndex, Consumer<T> onCycle) {
         super(x, y, z, width);
         this.options = options;
         this.option = startOptionIndex;
         this.onCycle = onCycle;
     }
 
-    public OptionSliderWidget(int x, int y, int z, int width, T[] options, Consumer<T> onCycle) {
-        this(x, y, z, width, options, 0, onCycle);
+    public OptionSliderWidget(float x, float y, int z, float width, T[] options, Consumer<T> onCycle) {
+        this(x, y, z, width, 20, options, 0, onCycle);
     }
 
     public OptionSliderWidget(int x, int y, int z, int width, T[] options) {
@@ -29,7 +29,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
     }
 
     public OptionSliderWidget(int z, T[] options, int startOption, Consumer<T> onCycle) {
-        this(0, 0, z, 0, options, startOption, onCycle);
+        this(0, 0, z, 0, 0, options, startOption, onCycle);
         int maxWidth = 0;
         for(T o: options) {
             int w = Minecraft.getMinecraft().fontRenderer.getStringWidth(o.toString());
