@@ -35,7 +35,6 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         super(x, y, z, subScreen.getWidth(), subScreen.getHeight());
         this.subScreen = subScreen;
         this.windowTitle = title;
-        this.z = z;
         this.removeAllWidgets();
         this.addWidget(this.subScreen);
         this.addWidget(new RightBorderBar());
