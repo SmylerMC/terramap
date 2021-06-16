@@ -1,9 +1,7 @@
-package fr.thesmyler.smylibgui.widgets;
+package fr.thesmyler.smylibgui.container;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import fr.thesmyler.smylibgui.util.Color;

@@ -7,13 +7,13 @@ import java.util.List;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import fr.thesmyler.smylibgui.container.SlidingPanelWidget;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.container.WindowedContainer;
+import fr.thesmyler.smylibgui.container.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
-import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;

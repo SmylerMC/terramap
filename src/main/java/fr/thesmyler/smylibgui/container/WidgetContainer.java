@@ -33,10 +33,10 @@ public abstract class WidgetContainer implements IWidget{
                 return r == 0? w1.hashCode() - w2.hashCode(): r;
             }
             );
-    protected List<ScheduledTask> scheduledForNextUpdate = new ArrayList<ScheduledTask>();
+    private List<ScheduledTask> scheduledForNextUpdate = new ArrayList<ScheduledTask>();
 
-    protected int z;
-    protected boolean doScissor = true;
+    private int z;
+    private boolean doScissor = true;
 
     private float[] lastClickX = new float[Mouse.getButtonCount()];
     private float[] lastClickY = new float[Mouse.getButtonCount()];
@@ -88,14 +88,13 @@ public abstract class WidgetContainer implements IWidget{
     public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
 
         long ctime = System.currentTimeMillis();
-        int j = 0;
-        while(j < this.scheduledForNextUpdate.size()) {
-            ScheduledTask task = this.scheduledForNextUpdate.get(j);
+        List<ScheduledTask> scheduled = this.scheduledForNextUpdate;
+        int j = scheduled.size();
+        while(--j >= 0) {
+            ScheduledTask task = scheduled.get(j);
             if(ctime > task.getWhen()) {
                 task.execute();
-                this.scheduledForNextUpdate.remove(j);
-            } else {
-                j++;
+                scheduled.remove(j);
             }
         }
 
@@ -158,10 +157,12 @@ public abstract class WidgetContainer implements IWidget{
             }
         }
         this.delayedActions.clear();
-        for(IWidget w: this.widgets) w.onUpdate(mouseX - this.getX(), mouseY - this.getY(), this);
+        float thisx = this.getX();
+        float thisy = this.getY();
+        for(IWidget w: this.widgets) w.onUpdate(mouseX - thisx, mouseY - thisy, this);
 
         if(this.menuToShow != null) {
-            if(parent != null) parent.showMenu(this.getX() + this.menuToShowX, this.getY() + this.menuToShowY, this.menuToShow);
+            if(parent != null) parent.showMenu(thisx + this.menuToShowX, thisy + this.menuToShowY, this.menuToShow);
             else {
                 this.addWidget(this.menuToShow);
                 float w = this.menuToShow.getWidth();
@@ -405,7 +406,7 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     public void cancellAllScheduled() {
-        this.scheduledForNextUpdate.clear();
+        this.scheduledForNextUpdate = new ArrayList<>();
     }
 
     public Font getFont() {
