@@ -13,6 +13,9 @@ import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
+import fr.thesmyler.smylibgui.container.SlidingPanelWidget;
+import fr.thesmyler.smylibgui.container.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
@@ -23,11 +26,11 @@ import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import fr.thesmyler.smylibgui.widgets.ChatWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.smylibgui.widgets.Scrollbar;
-import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget;
-import fr.thesmyler.smylibgui.widgets.SlidingPanelWidget.PanelTarget;
+import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
+import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import fr.thesmyler.smylibgui.widgets.WarningWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.AbstractButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
@@ -94,9 +97,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     // Style panel
     private SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200);
     private StyleScreen styleScreen;
-    private Scrollbar styleScrollbar = new Scrollbar(100);
-
-    // Screen states
+    private ScrollbarWidget styleScrollbar = new ScrollbarWidget(100, ScrollbarOrientation.VERTICAL);
+    
+    // Overlay panel
+    private SlidingPanelWidget overlayPanel = new SlidingPanelWidget(70, 200);
+    private OverlayList overlayList;
+    private ScrollableWidgetContainer overlayListContainer;
+    
+    // UI states
     private boolean f1Mode = false;
     private boolean debugMode = false;
 
@@ -112,6 +120,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.styleScreen = new StyleScreen();
         if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
         this.infoPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
+        this.overlayPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
+        this.overlayList = new OverlayList(0, 0, 0, 100, this.map);
+        this.overlayListContainer = new ScrollableWidgetContainer(0, 0, 10, 10, 10, this.overlayList);
         TerramapClientContext.getContext().registerForUpdates(true);
     }
 
@@ -187,10 +198,19 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.infoPanel.setSize(250, this.height);
         this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-this.infoPanel.getWidth() + 25).setClosedY(0);
         this.panelButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.info.tooltip"));
-        this.infoPanel.addWidget(panelButton);
+        this.infoPanel.addWidget(this.panelButton);
         TexturedButtonWidget openConfigButton = new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig);
         openConfigButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.config.tooltip"));
         this.infoPanel.addWidget(openConfigButton);
+        TexturedButtonWidget openOverlayButton = new TexturedButtonWidget(
+                openConfigButton.getX(), openConfigButton.getY() + openConfigButton.getHeight() + 3, 100,
+                IncludedTexturedButtons.PAPER, () -> {
+                    if(this.overlayPanel.getTarget() == PanelTarget.CLOSED) {
+                        this.overlayPanel.open();
+                        if(this.infoPanel.getTarget() == PanelTarget.CLOSED) this.toggleInfoPannel();
+                    }
+                });
+        this.infoPanel.addWidget(openOverlayButton);
         this.playerGeoLocationText = new TextWidget(49, infoFont);
         this.playerGeoLocationText = new TextWidget(49, infoFont);
         this.playerGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
@@ -228,16 +248,44 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.infoPanel.addWidget(searchButton);
         this.infoPanel.setHeight(this.searchBox.getY() + this.searchBox.getHeight() + 5);
         content.addWidget(this.infoPanel);
+        
+        // Overlay panel
+        this.overlayPanel.removeAllWidgets();
+        this.overlayPanel.cancellAllScheduled();
+        this.overlayPanel.setSize(
+                this.infoPanel.getWidth(),
+                this.height - this.infoPanel.getHeight());
+        this.overlayPanel.setClosedX(-this.overlayPanel.getWidth()).setClosedY(this.infoPanel.getHeight());
+        this.overlayPanel.setOpenX(0).setOpenY(this.overlayPanel.getClosedY());
+        this.overlayPanel.addWidget(new TextWidget(
+                this.overlayPanel.getWidth() / 2, 7, 1,
+                new TextComponentTranslation("Advanced layer settings"), TextAlignment.CENTER,
+                content.getFont()));
+        this.overlayPanel.addWidget(new TexturedButtonWidget(
+                this.overlayPanel.getWidth() - 20, 5, 1,
+                IncludedTexturedButtons.CROSS, this.overlayPanel::close));
+        this.overlayListContainer.setPosition(5f, 25f);
+        this.overlayListContainer.setSize(this.overlayPanel.getWidth() - 10, this.overlayPanel.getHeight() - 55f);
+        this.overlayListContainer.setContourColor(Color.DARK_OVERLAY).setContourSize(1f);
+        this.overlayList.setWidth(this.overlayListContainer.getWidth() - 15);
+        this.overlayListContainer.setDoScissor(true);
+        this.overlayList.setPosition(0, 0);
+        this.overlayPanel.addWidget(this.overlayListContainer);
+        int buttonWidth = (int) ((this.overlayListContainer.getWidth() - 10) / 3);
+        this.overlayPanel.addWidget(new TextButtonWidget(5f, this.overlayPanel.getHeight() - 25, 1, buttonWidth, I18n.format("New layer")));
+        this.overlayPanel.addWidget(new TextButtonWidget(10f + buttonWidth, this.overlayPanel.getHeight() - 25f, 1, buttonWidth, I18n.format("Export")));
+        this.overlayPanel.addWidget(new TextButtonWidget(15f + buttonWidth*2, this.overlayPanel.getHeight() - 25f, 1, buttonWidth, I18n.format("Import")));
+        content.addWidget(this.overlayPanel);
 
         // Style panel
         this.stylePanel.setSize(200, this.height);
         this.stylePanel.setClosedX(this.width + 1).setClosedY(0).setOpenX(this.width - this.stylePanel.getWidth()).setOpenY(0);
         this.stylePanel.setCloseOnClickOther(false);
         this.stylePanel.removeAllWidgets();
-        this.styleScrollbar.setPosition(this.stylePanel.getWidth() - 15, 0);
-        this.styleScrollbar.setHeight(this.height);
+        this.styleScrollbar.setPosition(this.stylePanel.getWidth() - 15f, 0);
+        this.styleScrollbar.setLength(this.height);
         this.stylePanel.addWidget(this.styleScrollbar);
-        this.styleScrollbar.setViewPort((double) this.height / (this.styleScreen.getHeight() - 10));
+        this.styleScrollbar.setViewPort(this.height / (this.styleScreen.getHeight() - 10f));
         if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
         this.stylePanel.addWidget(this.styleScreen);
         content.addWidget(this.stylePanel);
@@ -380,6 +428,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         TexturedButtonWidget newButton;
         if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
             this.infoPanel.close();
+            if(this.overlayPanel.getTarget() == PanelTarget.OPENED) this.overlayPanel.close();
             newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
         } else {
             this.infoPanel.open();
@@ -571,8 +620,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         @Override
         public boolean onMouseWheeled(float mouseX, float mouseY, int amount, WidgetContainer parent) {
             if(TerramapScreen.this.styleScrollbar.getViewPort() < 1) {
-                if(amount > 0) TerramapScreen.this.styleScrollbar.scrollUp();
-                else TerramapScreen.this.styleScrollbar.scrollDown();
+                if(amount > 0) TerramapScreen.this.styleScrollbar.scrollBackward();
+                else TerramapScreen.this.styleScrollbar.scrollForward();
             }
             return super.onMouseWheeled(mouseX, mouseY, amount, parent);
         }
@@ -584,7 +633,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public float getY() {
-            return (float) (5 - (this.getHeight() - TerramapScreen.this.height) * TerramapScreen.this.styleScrollbar.getProgress());
+            return 5 - (this.getHeight() - TerramapScreen.this.height) * TerramapScreen.this.styleScrollbar.getProgress();
         }
 
     }
@@ -685,6 +734,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLongitude(this.getBackgroundLayer().getRenderDeltaLongitude());
                 TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLatitude(this.getBackgroundLayer().getRenderDeltaLatitude());
                 TerramapScreen.this.stylePanel.close();
+                TerramapScreen.this.overlayList.init();
             }
             return false;
         }

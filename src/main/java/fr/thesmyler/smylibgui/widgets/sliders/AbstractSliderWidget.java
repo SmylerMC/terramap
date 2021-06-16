@@ -117,8 +117,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         float leftWidth = this.width / 2;
-        float rightWidth = leftWidth;
-        leftWidth += this.width % 2;
+        float rightWidth = this.width - leftWidth;
         float splitHeight = Math.min(10, this.height / 2);
         RenderUtil.drawTexturedModalRect(x, y, 0, 46, leftWidth, splitHeight);
         RenderUtil.drawTexturedModalRect(x + leftWidth, y, 200 - rightWidth, 46, rightWidth, splitHeight);
