@@ -13,21 +13,25 @@ import net.minecraft.util.math.MathHelper;
 //TODO Use a texture
 public class ScrollbarWidget extends WidgetContainer {
 
-    protected static final Color BAR_BG_COLOR = Color.DARKER_OVERLAY;
-    protected static final Color BAR_BORDER_COLOR = Color.BLACK;
-    protected static final Color DRAG_BG_COLOR = Color.DARK_GRAY;
-    protected static final Color DRAG_BG_COLOR_HOVER = Color.SELECTION;
-    protected static final Color DRAG_BORDER_COLOR = Color.MEDIUM_GRAY;
+    private static final Color BAR_BG_COLOR = Color.DARKER_OVERLAY;
+    private static final Color BAR_BORDER_COLOR = Color.BLACK;
+    private static final Color DRAG_BG_COLOR = Color.DARK_GRAY;
+    private static final Color DRAG_BG_COLOR_HOVER = Color.SELECTION;
+    private static final Color DRAG_BORDER_COLOR = Color.MEDIUM_GRAY;
     
     private float x, y, length;
 
-    protected TexturedButtonWidget backwardButton;
-    protected TexturedButtonWidget forwardButton;
-    protected Draggable drag = new Draggable();
-    protected float progress = 0;
-    protected float viewPort = 0.1f;
+    private TexturedButtonWidget backwardButton;
+    private TexturedButtonWidget forwardButton;
+    private Draggable drag = new Draggable();
+    private float progress = 0f;
+    private float targetProgress;
+    private float scrollResponsiveness = 0.02f;
+    private float viewPort = 0.1f;
     private ScrollbarOrientation orientation;
 
+    private long lastUpdateTime = 0;
+    
     public ScrollbarWidget(float x, float y, int z, ScrollbarOrientation orientation, float length) {
         super(z);
         this.orientation = orientation;
@@ -66,6 +70,23 @@ public class ScrollbarWidget extends WidgetContainer {
     }
 
     @Override
+    public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
+        long ctime = System.currentTimeMillis();
+        long dt = ctime - this.lastUpdateTime;
+        super.onUpdate(mouseX, mouseY, parent);
+        if(Math.abs(this.targetProgress - this.progress) < 0.001f) {
+            this.progress = this.targetProgress;
+        } else if(dt < 1000) {
+            double maxDprog = this.targetProgress - this.progress;
+            double dprog = this.scrollResponsiveness * maxDprog * dt;
+            dprog = maxDprog > 0 ? Math.min(dprog, maxDprog) : Math.max(dprog, maxDprog);
+            this.progress += dprog;
+        }
+        this.lastUpdateTime = ctime;
+        
+    }
+
+    @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         return this.onClick(mouseX, mouseY, mouseButton, parent);
     }
@@ -81,19 +102,25 @@ public class ScrollbarWidget extends WidgetContainer {
     }
 
     public void scrollBackward() {
-        this.progress = Math.max(0f, this.progress - this.viewPort * 0.5f);
+        this.targetProgress = Math.max(0f, this.targetProgress - this.viewPort * 0.5f);
     }
 
     public void scrollForward() {
-        this.progress = Math.min(1f, this.progress + this.viewPort * 0.5f);
+        this.targetProgress = Math.min(1f, this.targetProgress + this.viewPort * 0.5f);
     }
 
     public float getProgress() {
         return this.progress;
     }
 
-    public ScrollbarWidget setProgress(double progress) {
-        this.progress = (float) MathHelper.clamp(progress, 0, 1);
+    public ScrollbarWidget setProgress(float progress) {
+        this.targetProgress = MathHelper.clamp(progress, 0, 1);
+        return this;
+    }
+    
+    public ScrollbarWidget setProgressNoAnimation(float progress) {
+        this.progress = MathHelper.clamp(progress, 0, 1);
+        this.targetProgress = this.progress;
         return this;
     }
 
