@@ -115,6 +115,8 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
         WRENCH(15, 15, 210, 0, 210, 15, 210, 30, SmyLibGui.WIDGET_TEXTURES),
         OPTIONS1_15(15, 15, 225, 0, 225, 15, 225, 30, SmyLibGui.WIDGET_TEXTURES),
         OPTIONS2_15(15, 15, 240, 0, 240, 15, 240, 30, SmyLibGui.WIDGET_TEXTURES),
+        TRASH(15, 15, 241, 45, 241, 60, 241, 75, SmyLibGui.WIDGET_TEXTURES),
+        OFFSET(15, 15, 226, 45, 226, 60, 226, 75, SmyLibGui.WIDGET_TEXTURES),
 
         // 20x20
         BLANK_20(20, 20, 60, 164, 60, 184, 60, 204, SmyLibGui.WIDGET_TEXTURES),

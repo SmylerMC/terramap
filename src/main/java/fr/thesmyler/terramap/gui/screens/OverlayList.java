@@ -38,7 +38,7 @@ class OverlayList extends FlexibleWidgetContainer {
         this.removeAllWidgets();
         this.cancellAllScheduled();
         List<MapLayer> layers = Arrays.asList(map.getOverlayLayers());
-        layers.sort((l1, l2) -> Integer.compare(l1.getZ(), l2.getZ()));
+        layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
         float ly = 5f;
 
         for(MapLayer layer: layers) {
@@ -85,24 +85,35 @@ class OverlayList extends FlexibleWidgetContainer {
     }
     
     private class GenericOverlayEntry extends OverlayEntry {
+        
+        MapLayer layer;
 
         public GenericOverlayEntry(float y, MapLayer layer) {
             super(y, 20);
+            this.layer = layer;
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.getId()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentString(layer.getId()), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
+            TexturedButtonWidget remove = new TexturedButtonWidget(this.getWidth() - 38, 3, 0, IncludedTexturedButtons.TRASH, this::remove);
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, IncludedTexturedButtons.UP));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, IncludedTexturedButtons.DOWN));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 38, 3, 0, IncludedTexturedButtons.CROSS));
+            this.addWidget(remove.setEnabled(layer.isUserOverlay()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.BLANK_15));
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 86, 3, 0, IncludedTexturedButtons.BLANK_15));
             FloatSliderWidget alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, 1d); //TODO Allow sliders to have and odd length
             alphaSlider.setDisplayPrefix("Alpha: ");
             this.addWidget(alphaSlider);
             this.setHeight(37);
+        }
+        
+        public void remove() {
+            OverlayList.this.scheduleForNextScreenUpdate(() -> {
+                OverlayList.this.map.removeOverlayLayer(this.layer);
+                OverlayList.this.init();
+            });
         }
         
     }
