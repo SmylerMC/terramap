@@ -61,9 +61,9 @@ public class ScrollbarWidget extends WidgetContainer {
         float i = 4;
         float y = this.drag.getY();
         if(mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.forwardButton.getHeight()) {
-            for(; i>0; i--)this.scrollForward();
+            for(; i>0; i--) this.scrollForward();
         } else if(mouseY < y && mouseY > this.backwardButton.getHeight()){
-            for(; i>0; i--)this.scrollBackward();
+            for(; i>0; i--) this.scrollBackward();
         }
         super.onClick(mouseX, mouseY, mouseButton, parent);
         return false;
@@ -74,16 +74,15 @@ public class ScrollbarWidget extends WidgetContainer {
         long ctime = System.currentTimeMillis();
         long dt = ctime - this.lastUpdateTime;
         super.onUpdate(mouseX, mouseY, parent);
-        if(Math.abs(this.targetProgress - this.progress) < 0.001f) {
+        if(Math.abs(this.targetProgress - this.progress) < 0.00001f * this.viewPort) {
             this.progress = this.targetProgress;
-        } else if(dt < 1000) {
+        } else if(dt < 10000) {
             double maxDprog = this.targetProgress - this.progress;
             double dprog = this.scrollResponsiveness * maxDprog * dt;
             dprog = maxDprog > 0 ? Math.min(dprog, maxDprog) : Math.max(dprog, maxDprog);
             this.progress += dprog;
         }
         this.lastUpdateTime = ctime;
-        
     }
 
     @Override
@@ -215,6 +214,7 @@ public class ScrollbarWidget extends WidgetContainer {
             ScrollbarWidget.this.progress = MathHelper.clamp(
                     ScrollbarWidget.this.orientation.dragMoveToProgress(ScrollbarWidget.this.length, ScrollbarWidget.this.progress, ScrollbarWidget.this.viewPort, dX, dY),
                     0, 1);
+            ScrollbarWidget.this.targetProgress = ScrollbarWidget.this.progress;
         }
 
         @Override

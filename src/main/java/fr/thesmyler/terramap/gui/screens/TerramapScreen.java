@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -18,6 +19,8 @@ import fr.thesmyler.smylibgui.container.SlidingPanelWidget;
 import fr.thesmyler.smylibgui.container.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.BackgroundOption;
+import fr.thesmyler.smylibgui.screen.MultiChoicePopupScreen;
+import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
@@ -272,7 +275,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.overlayList.setPosition(0, 0);
         this.overlayPanel.addWidget(this.overlayListContainer);
         int buttonWidth = (int) ((this.overlayListContainer.getWidth() - 10) / 3);
-        this.overlayPanel.addWidget(new TextButtonWidget(5f, this.overlayPanel.getHeight() - 25, 1, buttonWidth, I18n.format("New layer")));
+        this.overlayPanel.addWidget(new TextButtonWidget(5f, this.overlayPanel.getHeight() - 25, 1, buttonWidth, I18n.format("New layer"), this::openInitialNewLayerSelector));
         this.overlayPanel.addWidget(new TextButtonWidget(10f + buttonWidth, this.overlayPanel.getHeight() - 25f, 1, buttonWidth, I18n.format("Export")));
         this.overlayPanel.addWidget(new TextButtonWidget(15f + buttonWidth*2, this.overlayPanel.getHeight() - 25f, 1, buttonWidth, I18n.format("Import")));
         content.addWidget(this.overlayPanel);
@@ -526,12 +529,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
         if(state.layerOffsets != null) {
             List<MapLayer> layers = new ArrayList<>();
-            for(MapWidget map: 
-                this.styleScreen
-                .maps)
-                layers.add(
-                        map
-                        .getBackgroundLayer());
+            for(MapWidget map: this.styleScreen.maps) layers.add(map.getBackgroundLayer());
             for(MapLayer layer: this.map.getOverlayLayers()) layers.add(layer);
             layers.add(this.map.getBackgroundLayer());
             for(MapLayer layer: layers) for(String id: state.layerOffsets.keySet()) if(id.equals(layer.getId())){
@@ -560,6 +558,56 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         //TODO Search
         return true; // Let the search box loose focus
     }
+    
+    private void addMapLayer(MapLayer mapLayer) {
+        //TODO Have multiple categories
+        int z = Integer.MIN_VALUE + 1;
+        MapLayer[] layers = this.map.getOverlayLayers();
+        for(MapLayer layer: layers) {
+            z = Math.max(z, layer.getZ());
+        }
+        mapLayer.setZ(Math.min(-1, z + 1));
+        mapLayer.setUserOverlay(true);
+        this.map.addOverlayLayer(mapLayer);
+        this.overlayList.init();
+    }
+    
+    private void openInitialNewLayerSelector() {
+        Map<String, Runnable> options = new HashMap<>();
+        options.put("Tiled raster map ", () -> {
+            FlexibleWidgetContainer container = new FlexibleWidgetContainer(0f, 0f, 0, 285f, 10f);
+            container.setDoScissor(false);
+            ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapScreen.this.backgrounds.values());
+            Collections.sort(maps, (m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
+            float y = 5f;
+            float x = 20f;
+            PopupScreen pop = new PopupScreen(300f, 200f);
+            for(IRasterTiledMap m: maps) {
+                MapPreview map = new MapPreview(0, m, e -> {
+                    this.addMapLayer(new RasterMapLayer(m, TerramapScreen.this.map.getTileScaling()));
+                    pop.close();
+                });
+                map.setPosition(x, y);
+                map.setSize(125f, 75f);
+                map.setCenterPosition(this.map.getCenterPosition());
+                map.setZoom(this.map.getZoomTarget());
+                if(x == 20f) {
+                    x = 155f;
+                } else {
+                    x = 20f;
+                    y += map.getHeight() + 5f;
+                }
+                container.addWidget(map);
+            }
+            container.setHeight(y);
+            ScrollableWidgetContainer scrollContainer = new ScrollableWidgetContainer(0f, 0f, 0, 300f, 200f, container);
+            pop.getContent().addWidget(scrollContainer);
+            pop.show();
+        });
+        this.getContent().scheduleForNextScreenUpdate(() -> 
+            new MultiChoicePopupScreen("Choose a type for the new  layer", options).show()
+        );
+    }
 
     private class StyleScreen extends FlexibleWidgetContainer {
 
@@ -587,7 +635,13 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapScreen.this.backgrounds.values());
             Collections.sort(maps, (m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
             for(IRasterTiledMap map: maps) {
-                MapWidget w = new MapPreview(50, map);
+                MapWidget w = new MapPreview(50, map, m -> {
+                    TerramapScreen.this.map.setBackground(m.getBackgroundStyle());
+                    TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLongitude(m.getBackgroundLayer().getRenderDeltaLongitude());
+                    TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLatitude(m.getBackgroundLayer().getRenderDeltaLatitude());
+                    TerramapScreen.this.stylePanel.close();
+                    TerramapScreen.this.overlayList.init();
+                });
                 w.setWidth(mapWidth);
                 w.setHeight(mapHeight);
                 if(lw == null) {
@@ -703,13 +757,16 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private class MapPreview extends MapWidget {
+        
+        Consumer<MapPreview> onClick;
 
-        public MapPreview(int z, IRasterTiledMap map) {
+        public MapPreview(int z, IRasterTiledMap map, Consumer<MapPreview> onClick) {
             super(z, map, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
             this.setInteractive(false);
             this.setRightClickMenuEnabled(false);
             this.setCopyrightVisibility(false);
             this.setScaleVisibility(false);
+            this.onClick = onClick;
         }
 
         @Override
@@ -730,11 +787,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         @Override
         public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
             if(mouseButton == 0) {
-                TerramapScreen.this.map.setBackground(this.getBackgroundStyle());
-                TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLongitude(this.getBackgroundLayer().getRenderDeltaLongitude());
-                TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLatitude(this.getBackgroundLayer().getRenderDeltaLatitude());
-                TerramapScreen.this.stylePanel.close();
-                TerramapScreen.this.overlayList.init();
+                this.onClick.accept(this);
             }
             return false;
         }
