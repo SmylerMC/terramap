@@ -103,8 +103,9 @@ class OverlayList extends FlexibleWidgetContainer {
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 86, 3, 0, IncludedTexturedButtons.BLANK_15));
-            FloatSliderWidget alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, 1d); //TODO Allow sliders to have and odd length
+            FloatSliderWidget alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, layer.getAlpha());
             alphaSlider.setDisplayPrefix("Alpha: ");
+            alphaSlider.setOnChange(d -> this.layer.setAlpha(d.floatValue()));
             this.addWidget(alphaSlider);
             this.setHeight(37);
         }

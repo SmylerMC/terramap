@@ -35,6 +35,7 @@ public abstract class MapLayer implements IWidget {
     private double renderCenterX, renderCenterY;
     
     private boolean isUserOverlay = false;
+    private float alpha = 1.0f;
 
     public MapLayer(double tileScaling) {
         if(Double.isInfinite(tileScaling)) throw new RuntimeException("tileScaling cannot be null");
@@ -256,6 +257,14 @@ public abstract class MapLayer implements IWidget {
 
     public void setUserOverlay(boolean isUserOverlay) {
         this.isUserOverlay = isUserOverlay;
+    }
+
+    public float getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
     }
 
 }
