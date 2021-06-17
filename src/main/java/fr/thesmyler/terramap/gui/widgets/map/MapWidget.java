@@ -192,7 +192,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
         
         McChunksLayer chunks = new McChunksLayer(tileScaling);
-        chunks.setZ(-2);
+        chunks.setZ(-1000);
         this.addOverlayLayer(chunks);
 
     }

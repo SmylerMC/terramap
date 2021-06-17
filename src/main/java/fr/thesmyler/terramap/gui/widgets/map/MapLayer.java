@@ -33,6 +33,8 @@ public abstract class MapLayer implements IWidget {
     private double upperLeftX;
     private double upperLeftY;
     private double renderCenterX, renderCenterY;
+    
+    private boolean isUserOverlay = false;
 
     public MapLayer(double tileScaling) {
         if(Double.isInfinite(tileScaling)) throw new RuntimeException("tileScaling cannot be null");
@@ -246,6 +248,14 @@ public abstract class MapLayer implements IWidget {
     public void setRenderDeltaLatitude(double renderDeltaLat) {
         this.renderDeltaLat = renderDeltaLat;
         this.updateViewPort();
+    }
+
+    public boolean isUserOverlay() {
+        return isUserOverlay;
+    }
+
+    public void setUserOverlay(boolean isUserOverlay) {
+        this.isUserOverlay = isUserOverlay;
     }
 
 }
