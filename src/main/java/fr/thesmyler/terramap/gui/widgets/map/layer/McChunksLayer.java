@@ -36,11 +36,11 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     
     private boolean visible = false;
     
-    private Color color = Color.DARK_GRAY.withAlpha(0.25f);
+    private Color color = Color.DARK_GRAY;
 
     public McChunksLayer(double tileScaling) {
         super(tileScaling);
-        
+        this.setAlpha(0.25f);
         this.button = new ToggleButtonWidget(10, 14, 14,
                 186, 108, 186, 122,
                 186, 108, 186, 122,
@@ -86,21 +86,23 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
+        
+        Color c = this.color.withAlpha(this.getAlpha());
 
         if(renderBlocks) {
-            this.renderGrid(x, y, 0, centerMc, 1, extendedWidth, extendedHeight, this.color, 1f);
-            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, this.color, 2f);
-            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, this.color, 3f);
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 4f);
+            this.renderGrid(x, y, 0, centerMc, 1, extendedWidth, extendedHeight, c, 1f);
+            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, c, 2f);
+            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, c, 3f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 4f);
         } else if(renderChunks) {
-            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, this.color, 1f);
-            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, this.color, 2f);
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 3f);
+            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, c, 1f);
+            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, c, 2f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 3f);
         } else if(render3dr) {
-            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, this.color, 1f);
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 2f);
+            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, c, 1f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 2f);
         } else if(render2dr) {
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, this.color, 1f);
+            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 1f);
         }
 
         this.cache.cycle();
