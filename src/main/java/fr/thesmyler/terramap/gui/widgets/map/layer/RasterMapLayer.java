@@ -94,6 +94,8 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
         int lowerTileX = (int) Math.floor(upperLeftX / renderSize);
         int lowerTileY = (int) Math.floor(upperLeftY / renderSize);
+        
+        Color whiteWithAlpha = Color.WHITE.withAlpha(this.getAlpha());
 
         for(int tileX = lowerTileX; tileX * renderSize < maxX; tileX++) {
 
@@ -211,7 +213,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                     dY += factorY * renderSizedSize;
                 }
 
-                Color.WHITE.applyGL();
+                whiteWithAlpha.applyGL();
                 ResourceLocation texture = UrlRasterTile.errorTileTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
