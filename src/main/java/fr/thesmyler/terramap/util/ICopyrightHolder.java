@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps;
+package fr.thesmyler.terramap.util;
 
 import net.minecraft.util.text.ITextComponent;
 

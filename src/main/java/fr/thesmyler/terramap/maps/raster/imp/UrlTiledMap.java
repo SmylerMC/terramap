@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.imp;
+package fr.thesmyler.terramap.maps.raster.imp;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -9,11 +9,11 @@ import com.google.common.base.Strings;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
-import fr.thesmyler.terramap.maps.ICopyrightHolder;
-import fr.thesmyler.terramap.maps.MapStylesLibrary;
-import fr.thesmyler.terramap.maps.TiledMapProvider;
+import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
+import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
+import fr.thesmyler.terramap.util.ICopyrightHolder;
 import fr.thesmyler.terramap.util.TilePosUnmutable;
 import fr.thesmyler.terramap.util.WebMercatorBounds;
 import net.buildtheearth.terraplusplus.util.http.Http;

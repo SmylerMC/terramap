@@ -1,7 +1,7 @@
-package fr.thesmyler.terramap.maps.imp;
+package fr.thesmyler.terramap.maps.raster.imp;
 
-import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
-import fr.thesmyler.terramap.maps.TiledMapProvider;
+import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.util.TilePosUnmutable;
 import net.minecraft.client.resources.I18n;
 

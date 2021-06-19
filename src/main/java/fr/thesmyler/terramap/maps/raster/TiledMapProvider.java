@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps;
+package fr.thesmyler.terramap.maps.raster;
 
 public enum TiledMapProvider {
 
