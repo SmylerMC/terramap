@@ -52,10 +52,10 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityCo
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.CachingRasterTiledMap;
-import fr.thesmyler.terramap.maps.IRasterTiledMap;
-import fr.thesmyler.terramap.maps.TiledMapProvider;
-import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
+import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
+import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.GeoServices;
 import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.WebMercatorUtil;

@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.imp;
+package fr.thesmyler.terramap.maps.raster.imp;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.maps.IRasterTile;
+import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.util.ImageUtil;
 import fr.thesmyler.terramap.util.TilePosUnmutable;
 import io.netty.buffer.ByteBuf;

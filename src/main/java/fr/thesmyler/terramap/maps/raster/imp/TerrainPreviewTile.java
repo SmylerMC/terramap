@@ -1,11 +1,11 @@
-package fr.thesmyler.terramap.maps.imp;
+package fr.thesmyler.terramap.maps.raster.imp;
 
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.maps.IRasterTile;
+import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.util.TilePosUnmutable;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.minecraft.client.Minecraft;
