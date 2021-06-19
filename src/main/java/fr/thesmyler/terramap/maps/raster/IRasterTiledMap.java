@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps;
+package fr.thesmyler.terramap.maps.raster;
 
 import fr.thesmyler.terramap.util.TilePos;
 import fr.thesmyler.terramap.util.TilePosUnmutable;

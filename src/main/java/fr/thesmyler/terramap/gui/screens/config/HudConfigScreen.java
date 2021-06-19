@@ -34,7 +34,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
-import fr.thesmyler.terramap.maps.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;

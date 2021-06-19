@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps;
+package fr.thesmyler.terramap.maps.raster;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,8 +22,8 @@ import com.google.gson.GsonBuilder;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.maps.imp.TerrainPreviewMap;
-import fr.thesmyler.terramap.maps.imp.UrlTiledMap;
+import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
+import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
