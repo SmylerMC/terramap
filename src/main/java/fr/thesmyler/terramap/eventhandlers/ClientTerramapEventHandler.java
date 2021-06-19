@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.util.GeoServices;
 import fr.thesmyler.terramap.util.Vec2d;
@@ -110,7 +110,7 @@ public class ClientTerramapEventHandler {
     public void onGuiOpen(GuiOpenEvent event) {
         if(event.getGui() instanceof GuiChat && Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup) {
             LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) Minecraft.getMinecraft().currentScreen;
-            RasterMapLayer layer = popup.getLayer();
+            MapLayer layer = popup.getLayer();
             Vec2d offset = new Vec2d(layer.getRenderDeltaLongitude(), layer.getRenderDeltaLatitude());
             TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), offset);
             TerramapClientPreferences.save();

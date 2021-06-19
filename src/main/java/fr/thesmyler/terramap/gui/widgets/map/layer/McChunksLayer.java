@@ -283,4 +283,21 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         this.color = color;
     }
 
+    @Override
+    public MapLayer copy() {
+        McChunksLayer layer = new McChunksLayer(this.getTileScaling());
+        this.copyPropertiesToOther(layer);
+        return layer;
+    }
+
+    @Override
+    public String name() {
+        return "Minecraft outlines"; //TODO localized
+    }
+
+    @Override
+    public String description() {
+        return "Regions and chunks"; //TODO localized
+    }
+
 }

@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 import java.util.HashSet;
 import java.util.Set;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
@@ -287,6 +288,23 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
             return ((ICopyrightHolder)this.map).getCopyright(localeKey);
         }
         return new TextComponentString("");
+    }
+
+    @Override
+    public MapLayer copy() {
+        RasterMapLayer other = new RasterMapLayer(this.map, this.getTileScaling());
+        this.copyPropertiesToOther(other);
+        return other;
+    }
+
+    @Override
+    public String name() {
+        return this.map.getLocalizedName(SmyLibGui.getLanguage()); //TODO localized
+    }
+
+    @Override
+    public String description() {
+        return "Raster tiled map"; //TODO localized
     }
 
 }
