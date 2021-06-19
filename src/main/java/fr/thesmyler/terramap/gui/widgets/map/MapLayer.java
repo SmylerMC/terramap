@@ -266,5 +266,23 @@ public abstract class MapLayer implements IWidget {
     public void setAlpha(float alpha) {
         this.alpha = alpha;
     }
-
+    
+    public abstract MapLayer copy();
+    
+    public abstract String name();
+    
+    public abstract String description();
+    
+    protected void copyPropertiesToOther(MapLayer other) {
+        other.centerLongitude = this.centerLongitude;
+        other.centerLatitude=  this.centerLatitude;
+        other.alpha = this.alpha;
+        other.rotation = this.rotation;
+        other.renderDeltaLon = this.renderDeltaLon;
+        other.renderDeltaLat = this.renderDeltaLat;
+        other.viewPortWidth = this.viewPortWidth;
+        other.viewPortHeight = this.viewPortHeight;
+        other.isUserOverlay = this.isUserOverlay;
+        other.updateViewPort();
+    }
 }

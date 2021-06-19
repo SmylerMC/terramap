@@ -13,6 +13,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PopupScreen extends Screen {
 
@@ -35,7 +38,16 @@ public class PopupScreen extends Screen {
 
     public void show() {
         this.other = Minecraft.getMinecraft().currentScreen;
-        Minecraft.getMinecraft().displayGuiScreen(this);
+        Object o = new Object() {
+            
+            @SubscribeEvent
+            public void onPostGuiDraw(GuiScreenEvent.DrawScreenEvent.Post event) {
+                Minecraft.getMinecraft().displayGuiScreen(PopupScreen.this);
+                MinecraftForge.EVENT_BUS.unregister(this);
+            }
+            
+        };
+        MinecraftForge.EVENT_BUS.register(o);
     }
 
     @Override

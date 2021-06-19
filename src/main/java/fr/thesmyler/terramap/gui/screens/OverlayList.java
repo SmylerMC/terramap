@@ -7,6 +7,7 @@ import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.widgets.WarningWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
@@ -37,7 +38,7 @@ class OverlayList extends FlexibleWidgetContainer {
         }
         this.removeAllWidgets();
         this.cancellAllScheduled();
-        List<MapLayer> layers = Arrays.asList(map.getOverlayLayers());
+        List<MapLayer> layers = Arrays.asList(this.map.getOverlayLayers());
         layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
         float ly = 5f;
 
@@ -50,6 +51,17 @@ class OverlayList extends FlexibleWidgetContainer {
         this.addWidget(bgEntry);
         this.cancelNextInit = true;
         this.setHeight(ly + bgEntry.getHeight() + 5);
+    }
+    
+    private void swapLayers(MapLayer layer1, MapLayer layer2) {
+        this.map.removeOverlayLayer(layer1);
+        this.map.removeOverlayLayer(layer2);
+        int swap = layer1.getZ();
+        layer1.setZ(layer2.getZ());
+        layer2.setZ(swap);
+        this.map.addOverlayLayer(layer1);
+        this.map.addOverlayLayer(layer2);
+        OverlayList.this.scheduleForNextScreenUpdate(OverlayList.this::init);
     }
     
     private abstract class OverlayEntry extends FlexibleWidgetContainer {
@@ -65,20 +77,23 @@ class OverlayList extends FlexibleWidgetContainer {
             super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }
         
-        
-        
     }
     
     private class BackgroundOverlayEntry extends OverlayEntry {
 
         public BackgroundOverlayEntry(float y, RasterMapLayer layer) {
             super(y, 20);
-            TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.getId()), TextAlignment.RIGHT, this.getFont());
+            TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentString("Raster background"), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, IncludedTexturedButtons.WRENCH));
+            if(layer.getRenderDeltaLatitude() != 0d || layer.getRenderDeltaLongitude() != 0d) {
+                WarningWidget warn = new WarningWidget(this.getWidth() - 37, 3, 0);
+                warn.setTooltip("A rendering offset is set for this layer");
+                this.addWidget(warn);
+            }
             this.setHeight(37);
         }
         
@@ -91,18 +106,24 @@ class OverlayList extends FlexibleWidgetContainer {
         public GenericOverlayEntry(float y, MapLayer layer) {
             super(y, 20);
             this.layer = layer;
-            TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.getId()), TextAlignment.RIGHT, this.getFont());
-            TextWidget type = new TextWidget(5, 23, 0, new TextComponentString(layer.getId()), TextAlignment.RIGHT, this.getFont());
+            TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
+            TextWidget type = new TextWidget(5, 23, 0, new TextComponentString(layer.description()), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
             TexturedButtonWidget remove = new TexturedButtonWidget(this.getWidth() - 38, 3, 0, IncludedTexturedButtons.TRASH, this::remove);
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, IncludedTexturedButtons.UP));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, IncludedTexturedButtons.DOWN));
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, IncludedTexturedButtons.UP, this::moveUp));
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, IncludedTexturedButtons.DOWN, this::moveDown));
             this.addWidget(remove.setEnabled(layer.isUserOverlay()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 86, 3, 0, IncludedTexturedButtons.BLANK_15));
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () -> {
+                OverlayList.this.scheduleForNextScreenUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show());
+            }));
+            if(layer.getRenderDeltaLatitude() != 0d || layer.getRenderDeltaLongitude() != 0d) {
+                WarningWidget warn = new WarningWidget(this.getWidth() - 86, 3, 0);
+                warn.setTooltip("A rendering offset is set for this layer");
+                this.addWidget(warn);
+            }
             FloatSliderWidget alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, layer.getAlpha());
             alphaSlider.setDisplayPrefix("Alpha: ");
             alphaSlider.setOnChange(d -> this.layer.setAlpha(d.floatValue()));
@@ -115,6 +136,27 @@ class OverlayList extends FlexibleWidgetContainer {
                 OverlayList.this.map.removeOverlayLayer(this.layer);
                 OverlayList.this.init();
             });
+        }
+        
+        
+        void moveUp() {
+            List<MapLayer> layers = Arrays.asList(OverlayList.this.map.getOverlayLayers());
+            layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
+            int i = layers.indexOf(this.layer);
+            if(i > 0) {
+                MapLayer other = layers.get(i - 1);
+                OverlayList.this.swapLayers(this.layer, other);
+            }
+        }
+        
+        void moveDown() {
+            List<MapLayer> layers = Arrays.asList(OverlayList.this.map.getOverlayLayers());
+            layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
+            int i = layers.indexOf(this.layer);
+            if(i < layers.size() - 1) {
+                MapLayer other = layers.get(i + 1);
+                OverlayList.this.swapLayers(this.layer, other);
+            }
         }
         
     }

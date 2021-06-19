@@ -14,7 +14,6 @@ import org.lwjgl.input.Mouse;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -652,6 +651,21 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.rotationTarget = rotation;
         }
 
+        @Override
+        public MapLayer copy() {
+            return new ControllerMapLayer(this.getTileScaling());
+        }
+
+        @Override
+        public String name() {
+            return "Controller";
+        }
+
+        @Override
+        public String description() {
+            return "Controller";
+        }
+
     }
 
     /**
@@ -902,7 +916,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             }));
         });
 
-        this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.offset"), () -> this.getOffsetPopup(this.background).show());
+        this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.offset"), () -> new LayerRenderingOffsetPopup(this.background).show());
     }
 
     private void updateRightClickMenuEntries() {
@@ -936,10 +950,6 @@ public class MapWidget extends FlexibleWidgetContainer {
             }
         }
         CHAT_SENDER_GUI.sendChatMessage(cmd, false);
-    }
-
-    private PopupScreen getOffsetPopup(RasterMapLayer layer) {
-        return new LayerRenderingOffsetPopup(layer);
     }
 
     private boolean isShortcutEnabled() {
