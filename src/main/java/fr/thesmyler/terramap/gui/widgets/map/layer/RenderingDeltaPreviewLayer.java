@@ -80,4 +80,21 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
         this.realLatitude = realLatitude;
     }
 
+    @Override
+    public MapLayer copy() {
+        RenderingDeltaPreviewLayer layer = new RenderingDeltaPreviewLayer(this.getTileScaling(), this.realLongitude, this.realLatitude);
+        this.copyPropertiesToOther(layer);
+        return layer;
+    }
+
+    @Override
+    public String name() {
+        return "Rendering delta"; //TODO localized
+    }
+
+    @Override
+    public String description() {
+        return "Offset preview"; //TODO localized
+    }
+
 }

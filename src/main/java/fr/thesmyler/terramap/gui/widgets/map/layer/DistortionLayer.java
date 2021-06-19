@@ -64,4 +64,21 @@ public class DistortionLayer extends MapLayer {
         return "distortion";
     }
 
+    @Override
+    public MapLayer copy() {
+        DistortionLayer other = new DistortionLayer(this.getTileScaling());
+        this.copyPropertiesToOther(other);
+        return other;
+    }
+
+    @Override
+    public String name() {
+        return "Distorion"; //TODO localized
+    }
+
+    @Override
+    public String description() {
+        return "Distortion preview"; //TODO localized
+    }
+
 }

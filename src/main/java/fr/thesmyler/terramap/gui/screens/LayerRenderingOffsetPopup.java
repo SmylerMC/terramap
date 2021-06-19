@@ -10,6 +10,7 @@ import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
@@ -20,13 +21,13 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 public class LayerRenderingOffsetPopup extends PopupScreen {
     
-    private final RasterMapLayer layer;
+    private final MapLayer layer;
     private final TextFieldWidget lonInput;
     private final TextFieldWidget latInput;
     private final MapWidget map;
     private final TextButtonWidget doneButton;
 
-    public LayerRenderingOffsetPopup(RasterMapLayer layer) {
+    public LayerRenderingOffsetPopup(RasterMapLayer background, MapLayer layer) {
         super(300f, 150f);
         this.layer = layer;
         float interline = 20;
@@ -47,15 +48,22 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         float mapSize = Math.min(
                 content.getWidth() - (inputsX + this.lonInput.getWidth() + spacing * 2) - margin,
                 content.getHeight() - this.latInput.getY() - margin);
-        this.map = new MapWidget(content.getWidth() - mapSize - margin, latInput.getY(), 0, mapSize, mapSize, layer.getMap(), MapContext.PREVIEW, layer.getTileScaling());
+        this.map = new MapWidget(content.getWidth() - mapSize - margin, latInput.getY(), 0, mapSize, mapSize, background.getMap(), MapContext.PREVIEW, layer.getTileScaling());
+        this.map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
+        background = this.map.getBackgroundLayer();
+        background.setRenderDeltaLongitude(background.getRenderDeltaLongitude());
+        background.setRenderDeltaLatitude(background.getRenderDeltaLatitude());
         RenderingDeltaPreviewLayer previewLayer = new RenderingDeltaPreviewLayer(layer.getTileScaling(), layer.getCenterLongitude(), layer.getCenterLatitude());
         this.map.addOverlayLayer(previewLayer);
+        MapLayer layerCopy = layer.copy();
+        layerCopy.setAlpha(0.5f);
+        layerCopy.setZ(-3);
+        this.map.addOverlayLayer(layerCopy);
         this.map.setScaleVisibility(false);
         this.map.setCopyrightVisibility(false);
         this.map.setRightClickMenuEnabled(false);
         this.map.setFocusedZoom(false);
         this.map.setAllowsQuickTp(false);
-        this.map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
         this.map.setRotation(layer.getRotation());
         this.map.setZoom(layer.getZoom());
         content.addWidget(this.map);
@@ -68,6 +76,9 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
             Vec2d delta = previewCenter.add(layerCenter.scale(-1));
             this.lonInput.setText(GeoServices.formatGeoCoordForDisplay(delta.x));
             this.latInput.setText(GeoServices.formatGeoCoordForDisplay(delta.y));
+            this.map.getBackgroundLayer().setRenderDeltaLongitude(-delta.x);
+            this.map.getBackgroundLayer().setRenderDeltaLatitude(-delta.y);
+            
         });
         float midWidth = content.getWidth() - this.map.getWidth() - margin*3;
         TextButtonWidget resetButton = new TextButtonWidget(margin, this.lonInput.getY() + this.lonInput.getHeight() + interline, 0, (midWidth - spacing) / 2, I18n.format("terramap.popup.renderoffset.reset"), () -> {
@@ -90,6 +101,10 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         content.addWidget(this.doneButton);
         this.latInput.setOnChangeCallback(this::onTextFieldsChange);
         this.lonInput.setOnChangeCallback(this::onTextFieldsChange);
+    }
+    
+    public LayerRenderingOffsetPopup(RasterMapLayer background) {
+        this((RasterMapLayer)background.copy(), background);
     }
     
     private void onTextFieldsChange(String unused) {
@@ -119,7 +134,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         this.doneButton.setEnabled(okLat && okLon);
     }
     
-    public RasterMapLayer getLayer() {
+    public MapLayer getLayer() {
         return this.layer;
     }
 
