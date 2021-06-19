@@ -370,8 +370,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         float rotateAroundX = Float.NaN;
         float rotateAroundY = Float.NaN;
         double rotateAroundLongitude, rotateAroundLatitude;
-        private float lastUpdateMouseX = Float.NaN;
-        private float lastUpdateMouseY = Float.NaN;
+        private float rotationAngleOrigin = 0f;
 
         public ControllerMapLayer(double tileScaling) {
             super(tileScaling);
@@ -427,6 +426,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                 double[] lola = this.getScreenGeoPos(mouseX, mouseY);
                 this.rotateAroundLongitude = lola[0];
                 this.rotateAroundLatitude = lola[1];
+                this.rotationAngleOrigin = this.getRotation();
                 MapWidget.this.trackingMarker = null;
             }
             return false;
@@ -472,17 +472,13 @@ public class MapWidget extends FlexibleWidgetContainer {
         @Override
         public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
             // If we are currently taking rotation inputs, rotate the map
-            if(MapWidget.this.isInteractive() && !Float.isNaN(this.rotateAroundX) && !Float.isNaN(this.rotateAroundY) && !Float.isNaN(this.lastUpdateMouseX) && !Float.isNaN(this.lastUpdateMouseY)) {
-                Vec2d pos = new Vec2d(mouseX - this.rotateAroundX, mouseY - this.rotateAroundY);
-                Vec2d previousPos = new Vec2d(this.lastUpdateMouseX - this.rotateAroundX, this.lastUpdateMouseY - this.rotateAroundY);
-                if(pos.normSquared() != 0d && previousPos.normSquared() != 0d) {
-                    pos = pos.normalize();
-                    previousPos = previousPos.normalize();
-                    double acosa = pos.dotProd(previousPos);
-                    float angle = (float) Math.toDegrees(Math.acos(acosa));
-                    if(pos.crossProd(previousPos) > 0) angle *= -1;
-                    if(Double.isFinite(angle)) {
-                        this.setRotation(this.getRotation() + angle);
+            if(MapWidget.this.isInteractive() && !Float.isNaN(this.rotateAroundX) && !Float.isNaN(this.rotateAroundY)) {
+                if(mouseX != this.rotateAroundX || mouseY != this.rotateAroundY) {
+                    float angle = (float) Math.toDegrees(Math.atan2(mouseY - this.rotateAroundY, mouseX - this.rotateAroundX)) + 90f + this.rotationAngleOrigin;
+                    if(Float.isFinite(angle)) {
+                        float closetsCardinal = Math.round(angle / 90f) * 90f;
+                        if(Math.abs(closetsCardinal - angle) < 5f) angle = closetsCardinal;
+                        this.setRotation(angle);
                         Vec2d newPos = this.getScreenPos(this.rotateAroundLongitude, this.rotateAroundLatitude);
                         double ndX = newPos.x - this.rotateAroundX;
                         double ndY = newPos.y - this.rotateAroundY;
@@ -492,10 +488,6 @@ public class MapWidget extends FlexibleWidgetContainer {
                     }
                 }
             }
-
-            // Use to keep track of the mouse latitude and longitude
-            this.lastUpdateMouseX = mouseX;
-            this.lastUpdateMouseY = mouseY;
         }
 
         @Override
