@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package fr.thesmyler.terramap.util.geo;
 
 import java.awt.Desktop;
 import java.io.File;

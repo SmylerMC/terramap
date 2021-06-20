@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package fr.thesmyler.terramap.util.geo;
 
 /**
  * A collection of algorithm to solve geographic problems
@@ -22,8 +22,8 @@ public final class GeoUtil {
      * @throws IllegalStateException if the longitude is not a finite double
      */
     public static double getLongitudeInRange(double longitude) {
-        if(!Double.isFinite(longitude)) throw new IllegalStateException("longitude cannot be infinite or NaN");
-        return longitude - (long)(longitude / 180) * 360;
+        if(!Double.isFinite(longitude)) throw new IllegalArgumentException("longitude cannot be infinite or NaN");
+        return longitude - (long)(longitude / 180) * 360d;
     }
 
     /**
@@ -33,8 +33,8 @@ public final class GeoUtil {
      * @throws IllegalStateException if the latitude is not a finite double
      */
     public static double getLatitudeInRange(double latitude) {
-        if(!Double.isFinite(latitude)) throw new IllegalStateException("latitude cannot be infinite or NaN");
-        return Math.max(-90, Math.min(latitude, 90));
+        if(!Double.isFinite(latitude)) throw new IllegalArgumentException("latitude cannot be infinite or NaN");
+        return Math.max(-90d, Math.min(latitude, 90d));
     }
 
     /**
@@ -44,7 +44,7 @@ public final class GeoUtil {
      * @throws IllegalStateException if the azimuth is not a finite double
      */
     public static float getAzimuthInRange(float azimuth) {
-        if(!Float.isFinite(azimuth)) throw new IllegalStateException("azimuth cannot be infinite or NaN");
+        if(!Float.isFinite(azimuth)) throw new IllegalArgumentException("azimuth cannot be infinite or NaN");
         return (float) (azimuth - Math.floor(azimuth / 360)*360);
     }
 
@@ -52,10 +52,10 @@ public final class GeoUtil {
      * Computes the distance between two points on the surface of the Earth, assuming a spherical Earth.
      * An implementation of Haversine's formula to compute the great circle distance between two points.
      * 
-     * @param longitude1
-     * @param latitude1
-     * @param longitude2
-     * @param latitude2
+     * @param longitude1 in derees
+     * @param latitude1 in degrees
+     * @param longitude2 in degees
+     * @param latitude2 in degrees
      * 
      * @return an approximation of the distance between the two points, in meters
      */

@@ -1,10 +1,10 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.GeoUtil;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
-import fr.thesmyler.terramap.util.WebMercatorUtil;
+import fr.thesmyler.terramap.util.geo.GeoUtil;
+import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
