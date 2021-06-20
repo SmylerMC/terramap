@@ -3,7 +3,9 @@ package fr.thesmyler.terramap.util.geo;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 
 /**
- * A point in the WGS:84 coordinate system
+ * A point in the WGS:84 coordinate system.
+ * Two points are considered equal when they represent the same place,
+ * which means that points corresponding to the north pole will be equal even if they have different longitudes.
  * 
  * @author SmylerMC
  * 
@@ -12,21 +14,40 @@ import net.buildtheearth.terraplusplus.util.geo.LatLng;
  */
 public class GeoPoint {
     
+    public static final GeoPoint ORIGIN = new GeoPoint(0d, 0d);
+    public static final GeoPoint NORTH_POLE = new GeoPoint(0d, 90d);
+    public static final GeoPoint SOUTH_POLE = new GeoPoint(0d, -90d);
+    
     public final double longitude, latitude;
+    
+    private final transient int hashCode;
     
     /**
      * Constructs a new point from the given coordinates in degrees.
-     * The coordinates are adjusted to be in the ]-180°, 180°] x [-90°, 90°] ranges.
+     * The longitude get adjusted to be in the ]-180°, 180°] range.
+     * Latitude needs to be within the [-90°, 90°] range.
      * The coordinates do not change if they already are in the appropriate ranges.
      * 
      * @param longitude in degrees
      * @param latitude in degrees
      * 
-     * @throws IllegalArgumentException if either latitude or longitude is not a finite number
+     * @throws IllegalArgumentException if either latitude or longitude is not a finite number,
+     *  or if latitude is not within the appropriate range.
      */
     public GeoPoint(double longitude, double latitude) {
-        this.longitude = GeoUtil.getLongitudeInRange(longitude);
         this.latitude = GeoUtil.getLatitudeInRange(latitude);
+        this.longitude = GeoUtil.getLongitudeInRange(longitude);
+        
+        // Cache hashCode result
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        double lon = Math.abs(this.latitude) == 90d ? 0d: this.longitude;
+        temp = Double.doubleToLongBits(lon);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(lon);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        this.hashCode =  result;
     }
     
     /**
@@ -64,5 +85,23 @@ public class GeoPoint {
     public double[] asArray() {
         return new double[] { this.longitude, this.latitude };
     }
+
+    @Override
+    public int hashCode() {
+        return this.hashCode;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) return true;
+        if(obj == null) return false;
+        if(getClass() != obj.getClass()) return false;
+        GeoPoint other = (GeoPoint) obj;
+        if(this.latitude != other.latitude) return false;
+        if(Math.abs(this.latitude) == 90d) return true; // We don't care about longitude at the poles
+        return this.longitude == other.longitude;
+    }
+    
+    
 
 }

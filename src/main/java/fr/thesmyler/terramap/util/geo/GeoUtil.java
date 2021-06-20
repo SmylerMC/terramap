@@ -28,13 +28,14 @@ public final class GeoUtil {
 
     /**
      * @param latitude in degrees
-     * @return the same latitude, between -90 and 90
+     * @return the same latitude
      * 
-     * @throws IllegalStateException if the latitude is not a finite double
+     * @throws IllegalStateException if the latitude is not a finite double or is not within the [-90°, 90°] range
      */
     public static double getLatitudeInRange(double latitude) {
         if(!Double.isFinite(latitude)) throw new IllegalArgumentException("latitude cannot be infinite or NaN");
-        return Math.max(-90d, Math.min(latitude, 90d));
+        if(Math.abs(latitude) > 90d) throw new IllegalArgumentException("latitude cannot be greater than 90°");
+        return latitude;
     }
 
     /**
