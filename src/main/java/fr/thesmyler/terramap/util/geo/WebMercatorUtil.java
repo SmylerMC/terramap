@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package fr.thesmyler.terramap.util.geo;
 
 /**
  * A set of methods to work with the web mercator map projection.

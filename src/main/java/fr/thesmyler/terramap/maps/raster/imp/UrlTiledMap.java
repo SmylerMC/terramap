@@ -14,8 +14,8 @@ import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
-import fr.thesmyler.terramap.util.TilePosUnmutable;
-import fr.thesmyler.terramap.util.WebMercatorBounds;
+import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 import net.buildtheearth.terraplusplus.util.http.Http;
 import net.minecraft.util.text.ITextComponent;
 

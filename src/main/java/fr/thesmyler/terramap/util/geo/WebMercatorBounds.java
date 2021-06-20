@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package fr.thesmyler.terramap.util.geo;
 
 public final class WebMercatorBounds {
     
@@ -12,11 +12,13 @@ public final class WebMercatorBounds {
     }
 
     public boolean contains(TilePos pos) {
+        double x = pos.getX();
+        double y = pos.getY();
         return 
-                this.lowerX <= pos.xPosition
-                && this.lowerY <= pos.yPosition
-                && pos.xPosition <= this.upperX
-                && pos.yPosition <= this.upperY;
+                this.lowerX <= x
+                && this.lowerY <= y
+                && x <= this.upperX
+                && y <= this.upperY;
     }
     
 }
