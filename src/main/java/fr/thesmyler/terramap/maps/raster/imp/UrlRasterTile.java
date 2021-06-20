@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.util.ImageUtil;
-import fr.thesmyler.terramap.util.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import net.buildtheearth.terraplusplus.util.http.Disk;
