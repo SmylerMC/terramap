@@ -252,7 +252,12 @@ public class MapStylesLibrary {
 		InetAddress inetAddress = InetAddress.getByName(hostname);
 		InitialDirContext iDirC = new InitialDirContext();
 		Attributes attributes = iDirC.getAttributes("dns:/" + inetAddress.getHostName(), new String[] {"TXT"});
-		String attribute =  attributes.get("TXT").get().toString();
+		String attribute;
+		try {
+		    attribute =  attributes.get("TXT").get().toString();
+		} catch(NullPointerException e) {
+		    throw new UnknownHostException(String.format("No txt record was found at %s ?? Something is wrong, either with the name server or with your dns provider!", hostname));
+		}
 		try {
 			return attribute.split("\\|")[1].replace("${version}", TerramapMod.getVersion().toString());
 		} catch(IndexOutOfBoundsException e) {
