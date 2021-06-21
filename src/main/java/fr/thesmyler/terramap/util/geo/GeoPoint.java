@@ -6,10 +6,13 @@ import net.buildtheearth.terraplusplus.util.geo.LatLng;
  * A point in the WGS:84 coordinate system.
  * Two points are considered equal when they represent the same place,
  * which means that points corresponding to the north pole will be equal even if they have different longitudes.
+ * Similarly, points at the same latitude on the antimeridian will be equal,
+ * independently of whether or not their longitude is -180 or 180.
  * 
  * @author SmylerMC
  * 
  * TODO Refactor most of the code to use this class
+ * FIXME points of the antimeridian should be equals
  *
  */
 public class GeoPoint {
@@ -20,7 +23,7 @@ public class GeoPoint {
     
     public final double longitude, latitude;
     
-    private final transient int hashCode;
+    private transient int hashCode = 0;
     
     /**
      * Constructs a new point from the given coordinates in degrees.
@@ -37,17 +40,6 @@ public class GeoPoint {
     public GeoPoint(double longitude, double latitude) {
         this.latitude = GeoUtil.getLatitudeInRange(latitude);
         this.longitude = GeoUtil.getLongitudeInRange(longitude);
-        
-        // Cache hashCode result
-        final int prime = 31;
-        int result = 1;
-        long temp;
-        double lon = Math.abs(this.latitude) == 90d ? 0d: this.longitude;
-        temp = Double.doubleToLongBits(lon);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(lon);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        this.hashCode =  result;
     }
     
     /**
@@ -88,6 +80,19 @@ public class GeoPoint {
 
     @Override
     public int hashCode() {
+        if(this.hashCode == 0) {
+            // Cache hashCode result
+            final int prime = 31;
+            int result = 1;
+            long temp;
+            double lon = Math.abs(this.latitude) == 90d ? 0d: this.longitude;
+            if(lon == -180d) lon = 180d;
+            temp = Double.doubleToLongBits(lon);
+            result = prime * result + (int) (temp ^ (temp >>> 32));
+            temp = Double.doubleToLongBits(this.latitude);
+            result = prime * result + (int) (temp ^ (temp >>> 32));
+            this.hashCode =  result;
+        }
         return this.hashCode;
     }
 
@@ -99,6 +104,9 @@ public class GeoPoint {
         GeoPoint other = (GeoPoint) obj;
         if(this.latitude != other.latitude) return false;
         if(Math.abs(this.latitude) == 90d) return true; // We don't care about longitude at the poles
+        if((this.longitude == -180d || this.longitude == 180d)
+                && this.longitude + other.longitude == 0d)
+            return true; // Antimeridian can be both 180 or -180
         return this.longitude == other.longitude;
     }
     
