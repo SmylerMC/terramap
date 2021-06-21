@@ -58,6 +58,7 @@ dependencies {
         exclude group: "io.netty"
     }
     testCompile "junit:junit:4.12"
+    testCompile "com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4"
     
 }
 
