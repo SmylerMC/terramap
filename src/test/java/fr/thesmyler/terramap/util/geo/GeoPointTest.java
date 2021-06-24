@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import fr.thesmyler.terramap.util.Vec2d;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 
 public class GeoPointTest {
@@ -149,6 +150,38 @@ public class GeoPointTest {
             assertNotEquals(points[1], points[0]);
         }
         assertFalse(new GeoPoint(168.4d, -26d).equals(null));
+    }
+    
+    @Test
+    public void testWith() {
+        GeoPoint point1 = new GeoPoint(-56d, 37d);
+        GeoPoint point2 = point1.withLatitude(-67d);
+        GeoPoint point3 = point1.withLongitude(89d);
+        assertEquals(-56d, point2.longitude, 0d);
+        assertEquals(-67d, point2.latitude, 0d);
+        assertEquals(89d, point3.longitude, 0d);
+        assertEquals(37d, point3.latitude, 0d);
+    }
+    
+    @Test
+    public void testAs() {
+        GeoPoint point = new GeoPoint(18d, 39d);
+        double[] arr = point.asArray();
+        assertEquals(2, arr.length);
+        assertEquals(18d, arr[0], 0d);
+        assertEquals(39d, arr[1], 0d);
+        assertEquals(point.asVec2d(), new Vec2d(18d, 39d));
+        LatLng tppPos = point.asLatLng();
+        assertEquals(18d, tppPos.getLng(), 0d);
+        assertEquals(39d, tppPos.getLat(), 0d);
+    }
+    
+    @Test
+    public void testToString() {
+        assertEquals(
+                "GeoPoint{lon=78.0°, lat=-45.0°}",
+                new GeoPoint(78d, -45).toString()
+            );
     }
 
 }
