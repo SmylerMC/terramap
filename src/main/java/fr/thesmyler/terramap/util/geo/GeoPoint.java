@@ -1,5 +1,8 @@
 package fr.thesmyler.terramap.util.geo;
 
+import java.util.Locale;
+
+import fr.thesmyler.terramap.util.Vec2d;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 
 /**
@@ -12,7 +15,6 @@ import net.buildtheearth.terraplusplus.util.geo.LatLng;
  * @author SmylerMC
  * 
  * TODO Refactor most of the code to use this class
- * FIXME points of the antimeridian should be equals
  *
  */
 public class GeoPoint {
@@ -61,6 +63,24 @@ public class GeoPoint {
     }
     
     /**
+     * @param longitude
+     * 
+     * @return a new GeoPoint with the same latitude as this one but a different longitude
+     */
+    public GeoPoint withLongitude(double longitude) {
+        return new GeoPoint(longitude, this.latitude);
+    }
+    
+    /**
+     * @param latitude
+     * 
+     * @return a new GeoPoint with the same longitude as this one but a different latitude
+     */
+    public GeoPoint withLatitude(double latitude) {
+        return new GeoPoint(this.longitude, latitude);
+    }
+    
+    /**
      * Estimates the distance between this point and an other one as best as possible, ignoring altitude
      * 
      * @param other an other point
@@ -76,6 +96,21 @@ public class GeoPoint {
      */
     public double[] asArray() {
         return new double[] { this.longitude, this.latitude };
+    }
+    
+    /**
+     * @return a {@link LatLng} that represents the same point
+     */
+    public LatLng asLatLng() {
+        return new LatLng(this.latitude, this.longitude);
+    }
+    
+    /**
+     * @return a {@link Vec2d} of which the X component is the longitude of this point
+     * and the Y component its latitude
+     */
+    public Vec2d asVec2d() {
+        return new Vec2d(this.longitude, this.latitude);
     }
 
     @Override
@@ -110,6 +145,9 @@ public class GeoPoint {
         return this.longitude == other.longitude;
     }
     
-    
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "GeoPoint{lon=%s°, lat=%s°}", this.longitude, this.latitude);
+    }
 
 }
