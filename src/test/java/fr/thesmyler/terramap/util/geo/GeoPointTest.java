@@ -97,7 +97,7 @@ public class GeoPointTest {
     }
     
     @Test
-    public void testDistance() {
+    public void distanceTest() {
         GeoPoint paris = new GeoPoint(2.350987d, 48.856667d);
         GeoPoint newYork = new GeoPoint(-74.005974d, 40.714268d);
         GeoPoint london = new GeoPoint(-0.166670d, 51.500000d);
@@ -121,7 +121,7 @@ public class GeoPointTest {
     }
    
     @Test
-    public void testEqualsAndHashCode() {
+    public void equalsAndHashCodeTest() {
         GeoPoint[][] same = {
                 {new GeoPoint(0d, 0d), new GeoPoint(0d, 0d)},
                 {new GeoPoint(0d, 0d), new GeoPoint(0d, -0d)},
@@ -153,7 +153,7 @@ public class GeoPointTest {
     }
     
     @Test
-    public void testWith() {
+    public void withTest() {
         GeoPoint point1 = new GeoPoint(-56d, 37d);
         GeoPoint point2 = point1.withLatitude(-67d);
         GeoPoint point3 = point1.withLongitude(89d);
@@ -164,7 +164,7 @@ public class GeoPointTest {
     }
     
     @Test
-    public void testAs() {
+    public void asTest() {
         GeoPoint point = new GeoPoint(18d, 39d);
         double[] arr = point.asArray();
         assertEquals(2, arr.length);
@@ -177,7 +177,7 @@ public class GeoPointTest {
     }
     
     @Test
-    public void testToString() {
+    public void toStringTest() {
         assertEquals(
                 "GeoPoint{lon=78.0°, lat=-45.0°}",
                 new GeoPoint(78d, -45).toString()
