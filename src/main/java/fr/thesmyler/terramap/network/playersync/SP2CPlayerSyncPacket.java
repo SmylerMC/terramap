@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.NetworkUtil;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -35,7 +36,13 @@ public class SP2CPlayerSyncPacket implements IMessage {
             double latitude = buf.readDouble();
             float azimut = buf.readFloat();
             GameType gamemode = GameType.getByName(NetworkUtil.decodeStringFromByteBuf(buf));
-            this.remotePlayers[i] = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name, longitude, latitude, azimut, gamemode);
+            GeoPoint location;
+            if(Double.isFinite(longitude) && Double.isFinite(latitude)) {
+                location = new GeoPoint(longitude, latitude);
+            } else {
+                location = null;
+            }
+            this.remotePlayers[i] = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name, location, azimut, gamemode);
         }
     }
 
@@ -45,7 +52,9 @@ public class SP2CPlayerSyncPacket implements IMessage {
         for(TerramapPlayer player: this.localPlayers) {
             double[] coordinates;
             try {
-                coordinates = player.getGeoCoordinates();
+                GeoPoint location = player.getLocation();
+                if(location == null) throw OutOfProjectionBoundsException.get();
+                coordinates = location.asArray();
             } catch(OutOfProjectionBoundsException e) {
                 coordinates = new double[] {Double.NaN, Double.NaN};
             }

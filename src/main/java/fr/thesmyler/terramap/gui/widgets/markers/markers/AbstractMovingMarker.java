@@ -3,15 +3,16 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
 public abstract class AbstractMovingMarker extends Marker {
 
     protected Animation movingAnimation;
 
-    protected double longitude, latitude;
+    protected GeoPoint location;
     protected float azimuth;
-    protected double oldLongitude, oldLatitude;
+    protected GeoPoint oldLocation;
 
     public AbstractMovingMarker(MarkerController<?> controller, float width, float height, int minZoom, int maxZoom) {
         super(controller, width, height, minZoom, maxZoom);
@@ -27,13 +28,10 @@ public abstract class AbstractMovingMarker extends Marker {
 
         //TODO Animate for smoother movements
         try {
-            double[] coordinates = this.getActualCoordinates();
-            double realLo = coordinates[0];
-            double realLa = coordinates[1];
-            this.longitude = realLo;
-            this.latitude = realLa;
+            GeoPoint location = this.getActualLocation();
+            this.location = location;
         } catch(OutOfProjectionBoundsException e) {
-            this.latitude = this.longitude = Double.NaN;
+            this.location = null;
         }
         try {
             float realAzimuth = this.getActualAzimuth();
@@ -42,19 +40,13 @@ public abstract class AbstractMovingMarker extends Marker {
             this.azimuth = Float.NaN;
         }
 
-
     }
 
-    protected abstract double[] getActualCoordinates() throws OutOfProjectionBoundsException;
+    protected abstract GeoPoint getActualLocation() throws OutOfProjectionBoundsException;
 
     @Override
-    public double getLongitude() {
-        return this.longitude;
-    }
-
-    @Override
-    public double getLatitude() {
-        return this.latitude;
+    public GeoPoint getLocation() {
+        return this.location;
     }
 
     public float getAzimuth() {

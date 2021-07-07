@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoUtil;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,21 +19,22 @@ import net.minecraft.client.renderer.GlStateManager;
  * @author SmylerMC
  *
  */
+//FIXME rendering delta should not use angle measurements
 public abstract class MapLayer implements IWidget {
 
     protected int z;
     private float viewPortWidth, viewPortHeight;
     private double extendedWidth, extendedHeight;
-    private double centerLatitude, centerLongitude, zoom;
+    private GeoPoint center = GeoPoint.ORIGIN;
+    private double zoom;
     private double renderDeltaLon, renderDeltaLat;
     private float rotation;
     private double tileScaling;
 
     private Mat2d directRotation = Mat2d.INDENTITY;
     private Mat2d inverseRotation = Mat2d.INDENTITY;
-    private double upperLeftX;
-    private double upperLeftY;
-    private double renderCenterX, renderCenterY;
+    private Vec2d upperLeftRenderCorner = Vec2d.NULL;
+    private Vec2d renderCenter = Vec2d.NULL;
     
     private boolean isUserOverlay = false;
     private float alpha = 1.0f;
@@ -41,25 +43,9 @@ public abstract class MapLayer implements IWidget {
         if(Double.isInfinite(tileScaling)) throw new RuntimeException("tileScaling cannot be null");
         this.tileScaling = tileScaling;
     }
-
-    /**
-     * Computes the x coordinate on the Web-Mercator map scaled by zoom level and tile scaling from a longitude
-     * 
-     * @param longitude
-     * @return x
-     */
-    protected double getMapX(double longitude) {
-        return WebMercatorUtil.getXFromLongitude(longitude, this.zoom) / this.tileScaling;
-    }
-
-    /**
-     * Computes the y coordinate on the Web-Mercator map scaled by zoom level and tile scaling from a longitude
-     * 
-     * @param latitude
-     * @return y
-     */
-    protected double getMapY(double latitude) {
-        return WebMercatorUtil.getYFromLatitude(latitude, this.zoom) / this.tileScaling;
+    
+    protected Vec2d getPositionOnMap(GeoPoint geoPos) {
+        return WebMercatorUtil.fromGeo(geoPos, this.zoom).scale(1d / this.tileScaling);
     }
 
     /**
@@ -70,61 +56,50 @@ public abstract class MapLayer implements IWidget {
      * 
      * @return a Vec2d with longitude and latitude as x and y, in degrees
      */
-    protected Vec2d getScreenPos(double longitude, double latitude) {
-        Vec2d pos = new Vec2d(
-                this.getMapX(longitude) - this.renderCenterX,
-                this.getMapY(latitude) - this.renderCenterY);
+    protected Vec2d getScreenPosition(GeoPoint geoPos) {
+        Vec2d pos = this.getPositionOnMap(geoPos).substract(this.renderCenter);
         pos = this.directRotation.prod(pos);
         return pos.add(this.viewPortWidth / 2, this.viewPortHeight / 2);
     }
-
-    protected double getUpperLeftX() {
-        return this.upperLeftX;
+    
+    /**
+     * @return the coordinates of the upper left corner of the rendering viewport in the web Mercator map
+     */
+    protected Vec2d getUpperLeftRenderCorner() {
+        return this.upperLeftRenderCorner;
     }
-
-    protected double getUpperLeftY() {
-        return this.upperLeftY;
-    }
-
-    public double[] getScreenGeoPos(double x, double y) {
+    
+    public GeoPoint getScreenlocation(double x, double y) {
         Vec2d pos = new Vec2d(x - this.viewPortWidth / 2, y - this.viewPortHeight / 2);
         pos = this.inverseRotation.prod(pos);
         pos = pos.add(
-                this.extendedWidth / 2 + this.upperLeftX,
-                this.extendedHeight / 2 + this.upperLeftY);
+                this.extendedWidth / 2 + this.upperLeftRenderCorner.x,
+                this.extendedHeight / 2 + this.upperLeftRenderCorner.y);
         pos = pos.scale(this.tileScaling);
-        double lon = GeoUtil.getLongitudeInRange(WebMercatorUtil.getLongitudeFromX(pos.x, this.zoom));
-        double lat = WebMercatorUtil.getLatitudeFromY(pos.y, this.zoom);
-        return new double[] {lon, lat};
+        return WebMercatorUtil.toGeo(pos, this.zoom);
     }
     
-    protected double getRenderX(double longitude) {
-        return this.getMapX(longitude) - this.upperLeftX;
+    protected Vec2d getRenderPos(GeoPoint geoPos) {
+        return this.getPositionOnMap(geoPos).substract(this.upperLeftRenderCorner);
     }
     
-    protected double getRenderY(double latitude) {
-        return this.getMapY(latitude) - this.upperLeftY;
-    }
-    
-    protected double getRenderLongitude(double x) {
-        return WebMercatorUtil.getLongitudeFromX((this.upperLeftX + x) * this.tileScaling, this.zoom);
-    }
-    
-    protected double getRenderLatitude(double y) {
-        return WebMercatorUtil.getLatitudeFromY((this.upperLeftY + y) * this.tileScaling, this.zoom);
+    protected GeoPoint getRenderLocation(Vec2d renderScreenPos) {
+        return WebMercatorUtil.toGeo(renderScreenPos.add(this.upperLeftRenderCorner).scale(this.tileScaling), this.zoom);
     }
 
-    private void updateViewPort() {
+    private void updateViewPorts() {
         this.directRotation = Mat2d.forRotation(Math.toRadians(this.rotation));
         this.inverseRotation = this.directRotation.transpose(); // For rotations, the inverse is the transposed
         Vec2d dim = new Vec2d(this.viewPortWidth, this.viewPortHeight);
         //FIXME often crops out the corners, probably a floating point precision problem
         this.extendedWidth = dim.hadamardProd(this.directRotation.column1()).taxicabNorm();
         this.extendedHeight = dim.hadamardProd(this.directRotation.column2()).taxicabNorm();
-        this.upperLeftX = this.getMapX(this.centerLongitude + this.renderDeltaLon) - this.extendedWidth / 2;
-        this.upperLeftY = this.getMapY(this.centerLatitude + this.renderDeltaLat) - this.extendedHeight / 2;
-        this.renderCenterX = this.getMapX(this.centerLongitude + this.renderDeltaLon);
-        this.renderCenterY = this.getMapY(this.centerLatitude + this.renderDeltaLat);
+        this.renderCenter = this.getPositionOnMap(this.center);
+        this.upperLeftRenderCorner = this.renderCenter.substract(this.extendedWidth / 2, this.extendedHeight / 2);
+//        this.upperLeftX = this.getMapX(this.center.longitude + this.renderDeltaLon) - this.extendedWidth / 2;
+//        this.upperLeftY = this.getMapY(this.center.latitude + this.renderDeltaLat) - this.extendedHeight / 2;
+//        this.renderCenterX = this.getMapX(this.center.longitude + this.renderDeltaLon);
+//        this.renderCenterY = this.getMapY(this.center.latitude + this.renderDeltaLat);
     }
 
     protected void applyRotationGl(float drawX, float drawY) {
@@ -159,23 +134,14 @@ public abstract class MapLayer implements IWidget {
     public float getHeight() {
         return this.viewPortHeight;
     }
-
-    public double getCenterLatitude() {
-        return centerLatitude;
+    
+    public GeoPoint getCenterLocation() {
+        return this.center;
     }
-
-    public void setCenterLatitude(double centerLatitude) {
-        this.centerLatitude = centerLatitude;
-        this.updateViewPort();
-    }
-
-    public double getCenterLongitude() {
-        return centerLongitude;
-    }
-
-    public void setCenterLongitude(double centerLongitude) {
-        this.centerLongitude = centerLongitude;
-        this.updateViewPort();
+    
+    public void setCenter(GeoPoint position) {
+        this.center = position;
+        this.updateViewPorts();
     }
 
     public double getZoom() {
@@ -184,7 +150,7 @@ public abstract class MapLayer implements IWidget {
 
     public void setZoom(double zoom) {
         this.zoom = zoom;
-        this.updateViewPort();
+        this.updateViewPorts();
     }
 
     public void setZ(int z) {
@@ -195,7 +161,7 @@ public abstract class MapLayer implements IWidget {
         if(width == this.viewPortWidth && height == this.viewPortHeight) return;
         this.viewPortWidth = width;
         this.viewPortHeight = height;
-        this.updateViewPort();
+        this.updateViewPorts();
     }
 
     public float getRotation() {
@@ -205,7 +171,7 @@ public abstract class MapLayer implements IWidget {
     public void setRotation(float rotation) {
         if(rotation == this.rotation) return;
         this.rotation = GeoUtil.getAzimuthInRange(rotation);
-        this.updateViewPort();
+        this.updateViewPorts();
     }
 
     public double getTileScaling() {
@@ -214,7 +180,7 @@ public abstract class MapLayer implements IWidget {
 
     public void setTileScaling(double tileScaling) {
         this.tileScaling = tileScaling;
-        this.updateViewPort();
+        this.updateViewPorts();
     }
 
     public double getExtendedWidth() {
@@ -233,22 +199,26 @@ public abstract class MapLayer implements IWidget {
         return this.inverseRotation;
     }
 
+    @Deprecated
     public double getRenderDeltaLongitude() {
         return renderDeltaLon;
     }
 
+    @Deprecated
     public void setRenderDeltaLongitude(double renderDeltaLon) {
         this.renderDeltaLon = renderDeltaLon;
-        this.updateViewPort();
+        this.updateViewPorts();
     }
 
+    @Deprecated
     public double getRenderDeltaLatitude() {
         return renderDeltaLat;
     }
 
+    @Deprecated
     public void setRenderDeltaLatitude(double renderDeltaLat) {
         this.renderDeltaLat = renderDeltaLat;
-        this.updateViewPort();
+        this.updateViewPorts();
     }
 
     public boolean isUserOverlay() {
@@ -274,8 +244,7 @@ public abstract class MapLayer implements IWidget {
     public abstract String description();
     
     protected void copyPropertiesToOther(MapLayer other) {
-        other.centerLongitude = this.centerLongitude;
-        other.centerLatitude=  this.centerLatitude;
+        other.center = this.center;
         other.alpha = this.alpha;
         other.rotation = this.rotation;
         other.renderDeltaLon = this.renderDeltaLon;
@@ -283,6 +252,6 @@ public abstract class MapLayer implements IWidget {
         other.viewPortWidth = this.viewPortWidth;
         other.viewPortHeight = this.viewPortHeight;
         other.isUserOverlay = this.isUserOverlay;
-        other.updateViewPort();
+        other.updateViewPorts();
     }
 }

@@ -4,7 +4,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.geo.GeoUtil;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 
 //TODO Make this even more accurate
@@ -85,12 +85,12 @@ public class ScaleIndicatorWidget implements IWidget {
 
             MapWidget map = (MapWidget) parent;
 
-            double[] point1 = map.getScreenGeoPos(this.getX(), this.getY() + 5);
-            double[] point2 = map.getScreenGeoPos(this.getX() + this.getWidth(), this.getY() + 5);
+            GeoPoint point1 = map.getScreenLocation(this.getX(), this.getY() + 5);
+            GeoPoint point2 = map.getScreenLocation(this.getX() + this.getWidth(), this.getY() + 5);
 
-            if(Math.abs(point1[1]) < WebMercatorUtil.LIMIT_LATITUDE && Math.abs(point2[1]) < WebMercatorUtil.LIMIT_LATITUDE) {
+            if(WebMercatorUtil.PROJECTION_BOUNDS.contains(point1) && WebMercatorUtil.PROJECTION_BOUNDS.contains(point2)) {
 
-                double scale = GeoUtil.distanceHaversine(point1[0], point1[1], point2[0], point2[1]);
+                double scale = point1.distanceTo(point2);
                 String[] units = {"cm", "m", "km"};
                 int j=1;
                 for(; scale >= 1000 && j<units.length-1; j++) scale /= 1000;

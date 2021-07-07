@@ -46,6 +46,7 @@ import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
 import fr.thesmyler.terramap.util.Mat2d;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoServices;
 import fr.thesmyler.terramap.util.geo.GeoUtil;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
@@ -102,7 +103,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     private PlayerDirectionsVisibilityController directionVisibility;
     private PlayerNameVisibilityController nameVisibility;
 
-    private double mouseLongitude, mouseLatitude;
+    private GeoPoint mouseLocation = GeoPoint.ORIGIN;
     private long lastUpdateTime = Long.MIN_VALUE;
 
     private float drag = 0.3f;
@@ -241,6 +242,13 @@ public class MapWidget extends FlexibleWidgetContainer {
         return this;
     }
 
+    /**
+     * Sets this map's background style
+     * 
+     * @param background
+     * 
+     * @return this map, for chaining
+     */
     private MapWidget setBackgroud(RasterMapLayer background) {
         background.z = BACKGROUND_Z;
         this.discardPreviousErrors(this.background); // We don't care about errors for this background anymore
@@ -268,10 +276,18 @@ public class MapWidget extends FlexibleWidgetContainer {
         return this.background;
     }
     
+    /**
+     * @return all overlay layers active on this map
+     */
     public MapLayer[] getOverlayLayers() {
         return this.overlayLayers.toArray(new MapLayer[0]);
     }
 
+    /**
+     * Adds a marker to this map
+     * 
+     * @param marker
+     */
     private void addMarker(Marker marker) {
         this.markers.add(marker);
         this.addWidget(marker);
@@ -315,13 +331,13 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
         
         if(this.trackingMarker != null) {
-            if(this.widgets.contains(this.trackingMarker) && Double.isFinite(this.trackingMarker.getLongitude()) && Double.isFinite(this.trackingMarker.getLatitude())) {
+            if(this.widgets.contains(this.trackingMarker) && this.trackingMarker.getLocation() != null) { //TODO Do we really need to check the location here ?
                 this.trackingMarker.onUpdate(mouseX - this.trackingMarker.getX(), mouseY - this.trackingMarker.getY(), this); // Force update so we don't lag behind, this one needs to be updated twice
-                if(!Double.isFinite(this.trackingMarker.getLatitude()) || !Double.isFinite(this.trackingMarker.getLongitude())) {
+                GeoPoint trackingLocation = this.trackingMarker.getLocation();
+                if(trackingLocation == null) {
                     this.trackingMarker = null;
                 } else {
-                    this.setCenterLongitude(this.trackingMarker.getLongitude());
-                    this.setCenterLatitude(this.trackingMarker.getLatitude());
+                    this.setCenterLocation(trackingLocation);
                     if(this.trackRotation && this.trackingMarker instanceof AbstractMovingMarker) {
                         float azimuth = ((AbstractMovingMarker)this.trackingMarker).getAzimuth();
                         if(Float.isFinite(azimuth)) this.setRotation(-azimuth);
@@ -363,13 +379,13 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     private class ControllerMapLayer extends MapLayer {
 
-        double zoomLongitude, zoomLatitude;
+        GeoPoint zoomLocation;
         double zoomTarget = 0;
         float rotationTarget = 0;
         float speedX, speedY;
         float rotateAroundX = Float.NaN;
         float rotateAroundY = Float.NaN;
-        double rotateAroundLongitude, rotateAroundLatitude;
+        GeoPoint rotateLocation;
         private float rotationAngleOrigin = 0f;
 
         public ControllerMapLayer(double tileScaling) {
@@ -412,20 +428,18 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.cancelMovement();
             this.cancelRotationInput();
             if(MapWidget.this.isShortcutEnabled()) {
-                MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLongitude, MapWidget.this.mouseLatitude);
+                MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLocation);
                 if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
                     Minecraft.getMinecraft().displayGuiScreen(null);
                 }
             }
-            if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && Math.abs(MapWidget.this.getMouseLatitude()) <= WebMercatorUtil.LIMIT_LATITUDE) {
+            if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && WebMercatorUtil.PROJECTION_BOUNDS.contains(MapWidget.this.mouseLocation)) {
                 parent.showMenu(mouseX, mouseY, MapWidget.this.rightClickMenu);
             }
             if(MapWidget.this.isInteractive() && mouseButton == 2 && Float.isNaN(this.rotateAroundX) && Float.isNaN(this.rotateAroundY)) {
                 this.rotateAroundX = mouseX;
                 this.rotateAroundY = mouseY;
-                double[] lola = this.getScreenGeoPos(mouseX, mouseY);
-                this.rotateAroundLongitude = lola[0];
-                this.rotateAroundLatitude = lola[1];
+                this.rotateLocation = this.getScreenlocation(mouseX, mouseY);
                 this.rotationAngleOrigin = this.getRotation();
                 MapWidget.this.trackingMarker = null;
             }
@@ -440,8 +454,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
 
             if(MapWidget.this.isInteractive() && mouseButton == 0) {
-                double[] lola = this.getScreenGeoPos(mouseX, mouseY);
-                if(MapWidget.this.focusedZoom) this.zoom(lola[0], lola[1], 1);
+                GeoPoint zoomLocation = this.getScreenlocation(mouseX, mouseY);
+                if(MapWidget.this.focusedZoom) this.zoom(zoomLocation, 1);
                 else this.zoom(1);
             }
             return false;
@@ -479,12 +493,10 @@ public class MapWidget extends FlexibleWidgetContainer {
                         float closetsCardinal = Math.round(angle / 90f) * 90f;
                         if(Math.abs(closetsCardinal - angle) < 5f) angle = closetsCardinal;
                         this.setRotation(angle);
-                        Vec2d newPos = this.getScreenPos(this.rotateAroundLongitude, this.rotateAroundLatitude);
+                        Vec2d newPos = this.getScreenPosition(this.rotateLocation);
                         double ndX = newPos.x - this.rotateAroundX;
                         double ndY = newPos.y - this.rotateAroundY;
-                        double[] lola = this.getScreenGeoPos(this.getWidth() / 2 + ndX, this.getHeight() / 2 + ndY);
-                        this.setCenterLongitude(lola[0]);
-                        this.setCenterLatitude(lola[1]);
+                        this.setCenter(this.getScreenlocation(this.getWidth() / 2 + ndX, this.getHeight() / 2 + ndY));
                     }
                 }
             }
@@ -496,8 +508,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                 double z = amount > 0? 1: -1;
                 z *= MapWidget.this.zoomSnapping;
                 if(MapWidget.this.focusedZoom) {
-                    double[] lola = this.getScreenGeoPos(mouseX, mouseY);
-                    this.zoom(lola[0], lola[1], z);
+                    this.zoom(this.getScreenlocation(mouseX, mouseY), z);
                 } else {
                     this.zoom(z);
                 }
@@ -506,13 +517,12 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
 
         public void zoom(double val) {
-            this.zoom(this.getCenterLongitude(), this.getCenterLatitude(), val);
+            this.zoom(this.getCenterLocation(), val);
         }
 
-        public void zoom(double longitude, double latitude, double zoom) {
+        public void zoom(GeoPoint location, double zoom) {
             this.cancelRotationInput();
-            this.zoomLongitude = longitude;
-            this.zoomLatitude = latitude;
+            this.zoomLocation = location;
             this.zoomTarget += zoom;
         }
 
@@ -556,7 +566,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             dzoom = maxDzoom > 0 ? Math.min(dzoom, maxDzoom) : Math.max(dzoom, maxDzoom);
 
             // The position that needs to stay static and how far it is from the center of the screen
-            Vec2d pos = this.getScreenPos(this.zoomLongitude, this.zoomLatitude);
+            Vec2d pos = this.getScreenPosition(this.zoomLocation);
             double dX = pos.x - this.getWidth()/2;
             double dY = pos.y - this.getHeight()/2;
 
@@ -573,9 +583,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             super.setZoom(this.getZoom() + dzoom); // That's what we are here for
 
             // And move so the static point is static
-            double[] lola = this.getScreenGeoPos((double)this.getWidth()/2 - ndX, (double)this.getHeight()/2 - ndY);
-            this.setCenterLongitude(lola[0]);
-            this.setCenterLatitude(lola[1]);
+            this.setCenter(this.getScreenlocation((double)this.getWidth()/2 - ndX, (double)this.getHeight()/2 - ndY));
         }
 
         private void processRotation(long dt) {
@@ -607,9 +615,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         public void moveMap(float dX, float dY) {
             MapWidget.this.trackingMarker = null;
-            double[] lola = this.getScreenGeoPos(this.getWidth()/2 - dX, this.getHeight()/2 - dY);
-            this.setCenterLongitude(lola[0]);
-            this.setCenterLatitude(lola[1]);
+            this.setCenter(this.getScreenlocation(this.getWidth()/2 - dX, this.getHeight()/2 - dY));
         }
 
         @Override
@@ -627,7 +633,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
 
         public void cancelRotationInput() {
-            this.rotateAroundLatitude = this.rotateAroundLongitude = Double.NaN;
+            this.rotateLocation = null;
             this.rotateAroundX = this.rotateAroundY = Float.NaN;
         }
 
@@ -701,15 +707,13 @@ public class MapWidget extends FlexibleWidgetContainer {
         for(MapLayer layer: this.overlayLayers) {
             layer.setDimensions(this.getWidth(), this.getHeight());
             layer.setTileScaling(this.tileScaling);
-            layer.setCenterLongitude(this.controller.getCenterLongitude());
-            layer.setCenterLatitude(this.controller.getCenterLatitude());
+            layer.setCenter(this.controller.getCenterLocation());
             layer.setZoom(this.controller.getZoom());
             layer.setRotation(this.controller.getRotation());
         }
         this.background.setDimensions(this.getWidth(), this.getHeight());
         this.background.setTileScaling(this.tileScaling);
-        this.background.setCenterLongitude(this.controller.getCenterLongitude());
-        this.background.setCenterLatitude(this.controller.getCenterLatitude());
+        this.background.setCenter(this.controller.getCenterLocation());
         this.background.setZoom(this.controller.getZoom());
         this.background.setRotation(this.controller.getRotation());
     }
@@ -771,29 +775,27 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     private void updateMouseGeoPos(float mouseX, float mouseY) {
-        double lola[] = this.controller.getScreenGeoPos(mouseX, mouseY);
-        this.mouseLongitude = lola[0];
-        this.mouseLatitude = lola[1];
+        this.mouseLocation = this.controller.getScreenlocation(mouseX, mouseY);
     }
 
     private void createRightClickMenu() {
         Font font = SmyLibGui.DEFAULT_FONT;
         this.rightClickMenu = new MenuWidget(1500, font);
         this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
-            this.teleportPlayerTo(this.mouseLongitude, this.mouseLatitude);
+            this.teleportPlayerTo(this.mouseLocation);
         });
         MenuEntry centerHere = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.center"), () -> {
-            this.setCenterPosition(this.mouseLongitude, this.mouseLatitude);
+            this.setCenterLocation(this.mouseLocation);
         });
         centerHere.enabled = this.interactive;
         MenuWidget copySubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
         copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.geo"), () -> {
-            GuiScreen.setClipboardString("" + this.mouseLatitude + " " + this.mouseLongitude);
+            GuiScreen.setClipboardString("" + this.mouseLocation.latitude + " " + this.mouseLocation.longitude);
         });
         this.copyBlockMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
             try {
                 String strToCopy = "Outside projection";
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.round(coords[0]);
                 String dispY = "" + Math.round(coords[1]);
                 strToCopy = dispX + " " + dispY;
@@ -807,7 +809,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
             try {
                 String strToCopy = "Outside projection";
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
                 strToCopy = dispX + " " + dispY;
@@ -821,7 +823,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
             try {
                 String strToCopy = "Outside projection";
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
                 strToCopy = "r." + dispX + "." + dispY + ".mca";
@@ -835,7 +837,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
             try {
                 String strToCopy = "Outside projection";
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
                 strToCopy = dispX + ".0." + dispY + ".3dr";
@@ -849,7 +851,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
             try {
                 String strToCopy = "Outside projection";
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLongitude, this.mouseLatitude);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
                 strToCopy = dispX + "." + dispY + ".2dr";
@@ -864,39 +866,38 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.rightClickMenu.addSeparator();
         MenuWidget openSubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_osm"), () -> {
-            GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+            GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bte"), () -> {
-            GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+            GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gmaps"), () -> {
             if(this.getMainPlayerMarker() != null) {
-                double markerLon = this.getMainPlayerMarker().getLongitude();
-                double markerLat = this.getMainPlayerMarker().getLatitude();
-                if(Double.isFinite(markerLon) && Double.isFinite(markerLat)) {
-                    GeoServices.openPlaceInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude(), markerLon, markerLat);
+                GeoPoint markerLocation = this.getMainPlayerMarker().getLocation();
+                if(markerLocation != null) {
+                    GeoServices.openPlaceInGoogleMaps(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, markerLocation.longitude, markerLocation.latitude);
                 } else {
-                    GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+                    GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude);
                 }
             } else {
-                GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.getMouseLongitude(), this.getMouseLatitude());
+                GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude);
             }
 
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_web"), () -> {
-            GeoServices.opentInGoogleEarthWeb(this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+            GeoServices.opentInGoogleEarthWeb(this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_pro"), () -> {
-            GeoServices.openInGoogleEarthPro(this.getMouseLongitude(), this.getMouseLatitude());
+            GeoServices.openInGoogleEarthPro(this.mouseLocation.longitude, this.mouseLocation.latitude);
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bing"), () -> {
-            GeoServices.openInBingMaps((int) this.getZoom(), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+            GeoServices.openInBingMaps((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_wikimapia"), () -> {
-            GeoServices.openInWikimapia((int) this.getZoom(), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+            GeoServices.openInWikimapia((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_yandex"), () -> {
-            GeoServices.openInYandex((int) this.getZoom(), this.getMouseLongitude(), this.getMouseLatitude(), this.getMouseLongitude(), this.getMouseLatitude());
+            GeoServices.openInYandex((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
         });
         this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
         this.rightClickMenu.addSeparator();
@@ -922,8 +923,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.setProjectionMenuEntry.enabled = (!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().isOnEarthWorld());
     }
 
-    private void teleportPlayerTo(double longitude, double latitude) {
-        String cmd = TerramapClientContext.getContext().getTpCommand().replace("{longitude}", ""+longitude).replace("{latitude}", ""+latitude);
+    private void teleportPlayerTo(GeoPoint position) {
+        String cmdFormat = TerramapClientContext.getContext().getTpCommand();
+        String cmd = cmdFormat.replace("{longitude}", "" + position.longitude).replace("{latitude}", "" + position.latitude);
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
             String s = System.currentTimeMillis() + ""; // Just a random string
@@ -933,7 +935,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
         if(projection != null) {
             try {
-                double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(longitude, latitude);
+                double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(position.longitude, position.latitude);
                 cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
             } catch (OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
@@ -992,8 +994,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public MapWidget setZoom(double zoom) {
         this.controller.setZoom(Math.max(this.getMinZoom(), Math.min(this.getMaxZoom(), zoom)));
-        this.controller.zoomLongitude = this.controller.getCenterLongitude();
-        this.controller.zoomLatitude = this.controller.getCenterLatitude();
+        this.controller.zoomLocation = this.controller.getCenterLocation();
         return this;
     }
 
@@ -1063,72 +1064,21 @@ public class MapWidget extends FlexibleWidgetContainer {
     public double getZoomTarget() {
         return this.controller.zoomTarget;
     }
-
+    
     /**
-     * @return the longitude of the center of this map
+     * @return the location at the center of this map
      */
-    public double getCenterLongitude() {
-        return this.controller.getCenterLongitude();
+    public GeoPoint getCenterLocation() {
+        return this.controller.getCenterLocation();
     }
-
+    
     /**
-     * Set's this map center longitude
+     * Moves this map so the given location is at the center (no animation).
      * 
-     * @param longitude
-     * @return this map, for chaining
+     * @param location
      */
-    public MapWidget setCenterLongitude(double longitude) {
-        this.controller.setCenterLongitude(longitude);
-        return this;
-    }
-
-    /**
-     * @return the latitude of the center of this map
-     */
-    public double getCenterLatitude() {
-        return this.controller.getCenterLatitude();
-    }
-
-    /**
-     * Set's this map center latitude
-     * 
-     * @param latitude
-     * @return this map, for chaining
-     */
-    public MapWidget setCenterLatitude(double latitude) {
-        this.controller.setCenterLatitude(latitude);
-        return this;
-    }
-
-    /**
-     * @return the geographic position at the center of this map, as a double array {longitude, latitude}
-     */
-    public double[] getCenterPosition() {
-        return new double[] {this.getCenterLongitude(), this.getCenterLatitude()};
-    }
-
-    /**
-     * Sets this map's center position
-     * 
-     * @param longitude
-     * @param latitude
-     * 
-     * @return this map, for chaining
-     */
-    public MapWidget setCenterPosition(double longitude, double latitude) {
-        return this.setCenterLongitude(longitude).setCenterLatitude(latitude);
-    }
-
-    /**
-     * Sets this map's center position.
-     * 
-     * @param position - a double array of the form {longitude, latitude}
-     * 
-     * @return this map, for chaining
-     */
-    public MapWidget setCenterPosition(double[] position) {
-        this.setCenterPosition(position[0], position[1]);
-        return this;
+    public void setCenterLocation(GeoPoint location) {
+        this.controller.setCenter(location);
     }
 
     /**
@@ -1155,26 +1105,12 @@ public class MapWidget extends FlexibleWidgetContainer {
     public void setRotationWithAnimation(float rotation) {
         this.controller.rotationTarget = GeoUtil.getAzimuthInRange(rotation);
     }
-
+    
     /**
-     * @return the last known mouse longitude
+     * @return the location hovered by the mouse
      */
-    public double getMouseLongitude() {
-        return this.mouseLongitude;
-    }
-
-    /**
-     * @return the last known mouse latitude
-     */
-    public double getMouseLatitude() {
-        return this.mouseLatitude;
-    }
-
-    /**
-     * @return the last known mouse position as a double array {longitude, latitude}
-     */
-    public double[] getMousePosition() {
-        return new double[] {this.mouseLongitude, this.mouseLatitude};
+    public GeoPoint getMouseLocation() {
+        return this.mouseLocation;
     }
 
     /**
@@ -1270,25 +1206,25 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @param dY
      */
     public void moveMap(float dX, float dY) {
-        controller.moveMap(dX, dY);
-    }
-
-    /** 
-     * @param longitude
-     * @param latitude
-     * @return the position of a geographic place on this widget's coordinate system
-     */
-    public double[] getScreenPos(double longitude, double latitude) {
-        return this.controller.getScreenPos(longitude, latitude).asArray();
+        this.controller.moveMap(dX, dY);
     }
 
     /**
-     * @param x
-     * @param y
-     * @return the geographic coordinates of a given point in the map's coordinate system as a double array {longitude, latitude}
+     * @param location
+     * @return the position of the given location on this widget's coordinate system
      */
-    public double[] getScreenGeoPos(double x, double y) {
-        return this.controller.getScreenGeoPos(x, y);
+    public Vec2d getScreenPosition(GeoPoint location) {
+        return this.controller.getScreenPosition(location);
+    }
+
+    /**
+     * @param x - a coordinate on this map's coordinate system
+     * @param y - a coordinate on this map's coordinate system
+     * 
+     * @return the geographic location at the given coordinates
+     */
+    public GeoPoint getScreenLocation(double x, double y) {
+        return this.controller.getScreenlocation(x, y);
     }
 
     /**

@@ -16,11 +16,12 @@ import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
 import fr.thesmyler.terramap.util.Mat2d;
+import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoServices;
 import fr.thesmyler.terramap.util.geo.TilePos;
-import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
-import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -80,9 +81,8 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         Vec2d yvec = rotationMatrix.line2();
 
         this.applyRotationGl(x, y);
-
-        double upperLeftX = this.getUpperLeftX();
-        double upperLeftY = this.getUpperLeftY();
+        
+        Vec2d upperLeft = this.getUpperLeftRenderCorner();
 
         int zoomLevel = (int) Math.round(zoom);
         double zoomSizeFactor = zoom - zoomLevel;
@@ -90,11 +90,11 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         double renderSize = WebMercatorUtil.TILE_DIMENSIONS / this.getTileScaling() * Math.pow(2, zoomSizeFactor);
 
         int maxTileXY = WebMercatorUtil.getDimensionsInTile(zoomLevel);
-        double maxX = upperLeftX + extendedWidth;
-        double maxY = upperLeftY + extendedHeight;
+        double maxX = upperLeft.x + extendedWidth;
+        double maxY = upperLeft.y + extendedHeight;
 
-        int lowerTileX = (int) Math.floor(upperLeftX / renderSize);
-        int lowerTileY = (int) Math.floor(upperLeftY / renderSize);
+        int lowerTileX = (int) Math.floor(upperLeft.x / renderSize);
+        int lowerTileY = (int) Math.floor(upperLeft.y / renderSize);
         
         Color whiteWithAlpha = Color.WHITE.withAlpha(this.getAlpha());
 
@@ -110,8 +110,8 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
                 // This is the tile we would like to render, but it is not possible if it hasn't been cached yet
                 IRasterTile bestTile = tile;
-                double dispX = tileX * renderSize - upperLeftX;
-                double dispY = tileY * renderSize - upperLeftY;
+                double dispX = tileX * renderSize - upperLeft.x;
+                double dispY = tileY * renderSize - upperLeft.y;
                 double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
                 double displayHeight = Math.min(renderSize, maxY - tileY * renderSize);
 
@@ -250,9 +250,9 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         }
 
         if(zoomLevel <= this.map.getMaxZoom()) {
-            double centerX = WebMercatorUtil.getXFromLongitude(this.getCenterLongitude(), 0d) / 256d;
-            double centerY = WebMercatorUtil.getYFromLatitude(this.getCenterLatitude(), 0d) / 256d;
-            Vec2d minusCenterPos = new Vec2d(-centerX, -centerY);
+            GeoPoint centerLocation = this.getCenterLocation();
+            Vec2d center = WebMercatorUtil.fromGeo(centerLocation, 0d).scale(1 / 256d);
+            Vec2d minusCenterPos = new Vec2d(-center.x, -center.y);
             neededTiles.stream().filter(t -> !t.isTextureAvailable()).sorted((t1, t2) -> {
                 TilePos pos1 = t1.getPosition();
                 TilePos pos2 = t2.getPosition();

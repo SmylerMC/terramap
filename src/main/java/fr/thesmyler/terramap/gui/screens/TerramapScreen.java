@@ -57,6 +57,7 @@ import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoServices;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
@@ -325,17 +326,16 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         this.compass.setAzimuth(this.map.getRotation());
 
-        double mouseLat = this.map.getMouseLatitude();
-        double mouseLon = this.map.getMouseLongitude();
+        GeoPoint mouseLocation = this.map.getMouseLocation();
         String formatScale = "-"; 
         String formatOrientation = "-";
-        if(Math.abs(mouseLat) > WebMercatorUtil.LIMIT_LATITUDE) {
+        if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
             this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
         } else {
             if(projection != null) {
                 try {
                     try {
-                        double[] dist = projection.tissot(mouseLon, mouseLat);
+                        double[] dist = projection.tissot(mouseLocation.longitude, mouseLocation.latitude);
                         formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
                         formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
                     } catch(OutOfProjectionBoundsException e) {}
@@ -351,25 +351,23 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         if(this.map.isTracking()) {
             Marker marker = this.map.getTracking();
-            double markerLon = marker.getLongitude();
-            double markerLat = marker.getLatitude();
+            GeoPoint markerLocation = marker.getLocation();
             String markerName = marker.getDisplayName().getFormattedText();
-            if(!Double.isFinite(markerLon) || !Double.isFinite(markerLat)) {
+            if(markerLocation == null) {
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
             } else {
-                String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLon);
-                String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLat);
+                String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude);
+                String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude);
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
             }
         } else if(this.map.getMainPlayerMarker() != null){
             Marker marker = this.map.getMainPlayerMarker();
-            double markerLong = marker.getLongitude();
-            double markerLat = marker.getLatitude();
-            if(Double.isNaN(markerLong) || Double.isNaN(markerLat)) {
+            GeoPoint markerLocation = marker.getLocation();
+            if(markerLocation == null) {
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playerout"));
             } else {
-                String formatedLon = GeoServices.formatGeoCoordForDisplay(marker.getLongitude());
-                String formatedLat = GeoServices.formatGeoCoordForDisplay(marker.getLatitude());
+                String formatedLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude);
+                String formatedLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude);
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
             }
         } else {
@@ -490,8 +488,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         return new TerramapScreenSavedState(
                 this.map.getZoom(),
-                this.map.getCenterLongitude(),
-                this.map.getCenterLatitude(),
+                this.map.getCenterLocation(),
                 this.map.getRotation(),
                 this.map.getBackgroundStyle().getId(),
                 this.infoPanel.getTarget().equals(PanelTarget.OPENED),
@@ -506,8 +503,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     public void resumeFromSavedState(TerramapScreenSavedState state) {
         this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
         this.map.setZoom(state.zoomLevel);
-        this.map.setCenterLongitude(state.centerLongitude);
-        this.map.setCenterLatitude(state.centerLatitude);
+        GeoPoint centerLocation = new GeoPoint(state.centerLongitude, state.centerLatitude);
+        this.map.setCenterLocation(centerLocation);
         this.map.setRotation(state.rotation);
         this.map.restoreTracking(state.trackedMarker);
         this.infoPanel.setStateNoAnimation(state.infoPannel);
@@ -589,7 +586,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 });
                 map.setPosition(x, y);
                 map.setSize(125f, 75f);
-                map.setCenterPosition(this.map.getCenterPosition());
+                map.setCenterLocation(this.map.getCenterLocation());
                 map.setZoom(this.map.getZoomTarget());
                 if(x == 20f) {
                     x = 155f;
@@ -661,7 +658,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             MapLayer bg = TerramapScreen.this.map.getBackgroundLayer();
             for(MapWidget map: this.maps) {
                 map.setZoom(TerramapScreen.this.map.getZoom());
-                map.setCenterPosition(TerramapScreen.this.map.getCenterPosition());
+                map.setCenterLocation(TerramapScreen.this.map.getCenterLocation());
                 map.setTileScaling(TerramapScreen.this.map.getTileScaling());
                 if(map.getBackgroundLayer().getId().equals(bg.getId())) {
                     map.getBackgroundLayer().setRenderDeltaLongitude(bg.getRenderDeltaLongitude());

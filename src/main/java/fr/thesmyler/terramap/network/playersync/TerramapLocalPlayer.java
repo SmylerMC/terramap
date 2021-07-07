@@ -5,6 +5,7 @@ import java.util.UUID;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.util.TerramapUtil;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -34,15 +35,15 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     }
 
     @Override
-    public double[] getGeoCoordinates() throws OutOfProjectionBoundsException {
+    public GeoPoint getLocation() throws OutOfProjectionBoundsException {
         GeographicProjection proj;
         if(this.player.world.isRemote) {
             proj = TerramapClientContext.getContext().getProjection();
         } else {
             proj = TerramapUtil.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
         }
-        if(proj == null) return new double[] {Double.NaN, Double.NaN};
-        return proj.toGeo(this.player.posX, this.player.posZ);
+        if(proj == null) return null;
+        return new GeoPoint(proj.toGeo(this.player.posX, this.player.posZ));
     }
 
     @Override
