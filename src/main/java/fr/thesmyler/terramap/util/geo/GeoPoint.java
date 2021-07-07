@@ -29,7 +29,7 @@ public class GeoPoint {
     
     /**
      * Constructs a new point from the given coordinates in degrees.
-     * The longitude get adjusted to be in the ]-180°, 180°] range.
+     * The longitude get adjusted to be in the [-180°, 180°] range.
      * Latitude needs to be within the [-90°, 90°] range.
      * The coordinates do not change if they already are in the appropriate ranges.
      * 
