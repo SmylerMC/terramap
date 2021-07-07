@@ -4,6 +4,8 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import net.minecraft.util.text.ITextComponent;
 
@@ -52,9 +54,7 @@ public abstract class Marker implements IWidget {
         return this.height;
     }
 
-    public abstract double getLongitude();
-
-    public abstract double getLatitude();
+    public abstract GeoPoint getLocation();
 
     public abstract float getDeltaX();
 
@@ -65,9 +65,12 @@ public abstract class Marker implements IWidget {
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
             this.update(map);
-            double[] xy = map.getScreenPos(this.getLongitude(), this.getLatitude());
-            this.x = (float) (xy[0] + this.getDeltaX());
-            this.y = (float) (xy[1] + this.getDeltaY());
+            GeoPoint location = this.getLocation();
+            if(location != null) {
+                Vec2d xy = map.getScreenPosition(this.getLocation());
+                this.x = (float) (xy.x + this.getDeltaX());
+                this.y = (float) (xy.y + this.getDeltaY());
+            }
         }
     }
 
@@ -76,7 +79,8 @@ public abstract class Marker implements IWidget {
     @Override
     public boolean isVisible(WidgetContainer parent) {
         if(!this.controller.getVisibility()) return false;
-        if(!WebMercatorUtil.isPositionOnMap(this.getLongitude(), this.getLatitude())) return false;
+        GeoPoint location = this.getLocation();
+        if(location == null || !WebMercatorUtil.PROJECTION_BOUNDS.contains(this.getLocation())) return false;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget)parent;
             double zoom = map.getZoom();

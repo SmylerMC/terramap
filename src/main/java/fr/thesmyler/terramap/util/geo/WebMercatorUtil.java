@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.util.geo;
 
+import fr.thesmyler.terramap.util.Vec2d;
+
 /**
  * A set of methods to work with the web mercator map projection.
  * 
@@ -16,6 +18,8 @@ public final class WebMercatorUtil {
     public static final int TILE_DIMENSIONS = 256;
     public static final double LIMIT_LATITUDE_RADIANS = 2 * Math.atan(Math.pow(Math.E, Math.PI)) - Math.PI/2;
     public static final double LIMIT_LATITUDE = Math.toDegrees(LIMIT_LATITUDE_RADIANS);
+    
+    public static final GeoBounds PROJECTION_BOUNDS = new GeoBounds(new GeoPoint(-180d, -LIMIT_LATITUDE), new GeoPoint(180d, LIMIT_LATITUDE));
 
     /* 
      * This is not really a limit of web Mercator,
@@ -23,6 +27,34 @@ public final class WebMercatorUtil {
      * this is the max value that avoid overflows.
      */
     public static final int MAX_ZOOM = 30;
+    
+    /**
+     * Projects the given geoPoint onto a web-Mercator map
+     * 
+     * @param geo - a geographic position
+     * @param zoomLevel - the zoom level to use when projecting
+     * 
+     * @return the corresponding position on the 2d plane
+     */
+    public static Vec2d fromGeo(GeoPoint geo, double zoomLevel) {
+        double x = getXFromLongitude(geo.longitude, zoomLevel);
+        double y = getYFromLatitude(geo.latitude, zoomLevel);
+        return new Vec2d(x, y);
+    }
+    
+    /**
+     * Reverses the Web-Mercator projection for a given projected point
+     * 
+     * @param position - a position on the 2d plane to reverse
+     * @param zoomLevel - the zoom level to use for the projection
+     * 
+     * @return the corresponding geographic position
+     */
+    public static GeoPoint toGeo(Vec2d position, double zoomLevel) {
+        double longitude = getLongitudeFromX(position.x, zoomLevel);
+        double latitude = getLatitudeFromY(position.y, zoomLevel);
+        return new GeoPoint(longitude, latitude);
+    }
 
     /**
      * 
@@ -103,7 +135,7 @@ public final class WebMercatorUtil {
      * @return The corresponding latitude in radians, between -pi and pi
      */
     public static double getLatitudeFromYRads(double y, double zoom){
-        return 2 * Math.atan(Math.pow(Math.E, - (y * Math.PI / Math.pow(2, zoom + 7) - Math.PI))) - Math.PI / 2;
+        return 2 * Math.atan(Math.exp(-(y * Math.PI / Math.pow(2, zoom + 7) - Math.PI))) - Math.PI / 2;
     }
 
 

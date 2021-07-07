@@ -6,7 +6,8 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.util.geo.GeoUtil;
+import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -37,13 +38,12 @@ public class DistortionLayer extends MapLayer {
         
         double res = 20d;
         for(double dx = -1; dx < this.getExtendedWidth(); dx += res) {
-            double lon = GeoUtil.getLongitudeInRange(this.getRenderLongitude(dx + res / 2));
             for(double dy = -1; dy < this.getExtendedHeight(); dy += res) {
-                double lat = this.getRenderLatitude(dy + res / 2);
-                if(Math.abs(lat) > WebMercatorUtil.LIMIT_LATITUDE) continue;
+                GeoPoint location = this.getRenderLocation(new Vec2d(dx + res / 2, dy + res / 2));
+                if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) continue;
                 Color color = Color.TRANSPARENT;
                 try {
-                    double[] distortion = projection.tissot(lon, lat);
+                    double[] distortion = projection.tissot(location.longitude, location.latitude);
                     float red = (float) Math.min(distortion[0] / 4f, 1f);
                     float green = (float) Math.min(distortion[1] / 2/Math.PI, 1f);
                     float alpha = Math.min(red + green, 1f);
