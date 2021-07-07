@@ -19,6 +19,7 @@ import fr.thesmyler.terramap.util.geo.GeoServices;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 
+//FIXME This is broken as angular rendering offset are being deprecated
 public class LayerRenderingOffsetPopup extends PopupScreen {
     
     private final MapLayer layer;
@@ -49,11 +50,12 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
                 content.getWidth() - (inputsX + this.lonInput.getWidth() + spacing * 2) - margin,
                 content.getHeight() - this.latInput.getY() - margin);
         this.map = new MapWidget(content.getWidth() - mapSize - margin, latInput.getY(), 0, mapSize, mapSize, background.getMap(), MapContext.PREVIEW, layer.getTileScaling());
-        this.map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
+        this.map.setCenterLocation(layer.getCenterLocation());
+//        this.map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
         background = this.map.getBackgroundLayer();
         background.setRenderDeltaLongitude(background.getRenderDeltaLongitude());
         background.setRenderDeltaLatitude(background.getRenderDeltaLatitude());
-        RenderingDeltaPreviewLayer previewLayer = new RenderingDeltaPreviewLayer(layer.getTileScaling(), layer.getCenterLongitude(), layer.getCenterLatitude());
+        RenderingDeltaPreviewLayer previewLayer = new RenderingDeltaPreviewLayer(layer.getTileScaling(), layer.getCenterLocation());
         this.map.addOverlayLayer(previewLayer);
         MapLayer layerCopy = layer.copy();
         layerCopy.setAlpha(0.5f);
@@ -71,9 +73,10 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         content.scheduleAtUpdate(() -> {
             IWidget focused = content.getFocusedWidget();
             if(focused == this.latInput || focused == this.lonInput) return;
-            Vec2d layerCenter = new Vec2d(layer.getCenterLongitude(), layer.getCenterLatitude());
-            Vec2d previewCenter = new Vec2d(this.map.getCenterLongitude(), this.map.getCenterLatitude());
-            Vec2d delta = previewCenter.add(layerCenter.scale(-1));
+//            Vec2d layerCenter = new Vec2d(layer.getCenterLongitude(), layer.getCenterLatitude());
+//            Vec2d previewCenter = new Vec2d(this.map.getCenterLongitude(), this.map.getCenterLatitude());
+//            Vec2d delta = previewCenter.add(layerCenter.scale(-1));
+            Vec2d delta = Vec2d.NULL;
             this.lonInput.setText(GeoServices.formatGeoCoordForDisplay(delta.x));
             this.latInput.setText(GeoServices.formatGeoCoordForDisplay(delta.y));
             this.map.getBackgroundLayer().setRenderDeltaLongitude(-delta.x);
@@ -82,11 +85,11 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         });
         float midWidth = content.getWidth() - this.map.getWidth() - margin*3;
         TextButtonWidget resetButton = new TextButtonWidget(margin, this.lonInput.getY() + this.lonInput.getHeight() + interline, 0, (midWidth - spacing) / 2, I18n.format("terramap.popup.renderoffset.reset"), () -> {
-            this.map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
+//            this.map.setCenterPosition(layer.getCenterLongitude() + layer.getRenderDeltaLongitude(), layer.getCenterLatitude() + layer.getRenderDeltaLatitude());
         });
         content.addWidget(resetButton);
         TextButtonWidget set0Button = new TextButtonWidget(resetButton.getX() + resetButton.getWidth() + spacing, resetButton.getY(), 0, resetButton.getWidth(), I18n.format("terramap.popup.renderoffset.set0"), () -> {
-            this.map.setCenterPosition(layer.getCenterLongitude(), layer.getCenterLatitude());
+//            this.map.setCenterPosition(layer.getCenterLongitude(), layer.getCenterLatitude());
         });
         content.addWidget(set0Button);
         TextButtonWidget cancelButton = new TextButtonWidget(resetButton.getX(), resetButton.getY() + resetButton.getHeight() + 4, 0, resetButton.getWidth(), I18n.format("terramap.popup.renderoffset.cancel"), () -> {
@@ -115,7 +118,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
             okLon = true;
             this.lonInput.setEnabledTextColor(Color.WHITE);
             this.lonInput.setFocusedTextColor(Color.WHITE);
-            this.map.setCenterLongitude(this.layer.getCenterLongitude() + dlon);
+//            this.map.setCenterLongitude(this.layer.getCenterLongitude() + dlon);
         } catch(NumberFormatException e) {
             this.lonInput.setEnabledTextColor(Color.RED);
             this.lonInput.setFocusedTextColor(Color.RED);
@@ -126,7 +129,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
             okLat = true;
             this.latInput.setEnabledTextColor(Color.WHITE);
             this.latInput.setFocusedTextColor(Color.WHITE);
-            this.map.setCenterLatitude(this.layer.getCenterLatitude() + dlat);
+//            this.map.setCenterLatitude(this.layer.getCenterLatitude() + dlat);
         } catch(NumberFormatException e) {
             this.latInput.setEnabledTextColor(Color.RED);
             this.latInput.setFocusedTextColor(Color.RED);

@@ -1,33 +1,24 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 
 public abstract class AbstractFixedMarker extends Marker {
 
-    private double longitude, latitude;
+    private GeoPoint location;
 
-    public AbstractFixedMarker(MarkerController<?> controller, float width, float height, double longitude, double latitude) {
+    public AbstractFixedMarker(MarkerController<?> controller, float width, float height, GeoPoint location) {
         super(controller, width, height);
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.location = location;
     }
 
     @Override
-    public double getLongitude() {
-        return this.longitude;
+    public GeoPoint getLocation() {
+        return this.location;
     }
 
-    @Override
-    public double getLatitude() {
-        return this.latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setLocation(GeoPoint location) {
+        this.location = location;
     }
 
 }

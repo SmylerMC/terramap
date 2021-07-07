@@ -5,6 +5,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
@@ -13,7 +14,7 @@ import net.minecraft.util.text.TextComponentString;
 public class RightClickMarker extends AbstractFixedMarker {
 
     public RightClickMarker(MarkerController<?> controller) {
-        super(controller, 15, 23, 0, 0);
+        super(controller, 15, 23, GeoPoint.ORIGIN);
     }
 
     @Override
@@ -37,8 +38,7 @@ public class RightClickMarker extends AbstractFixedMarker {
 
     @Override
     public void update(MapWidget map) {
-        this.setLongitude(map.getMouseLongitude());
-        this.setLatitude(map.getMouseLatitude());
+        this.setLocation(map.getMouseLocation());
     }
 
     @Override

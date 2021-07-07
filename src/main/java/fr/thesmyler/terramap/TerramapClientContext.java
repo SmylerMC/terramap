@@ -166,8 +166,7 @@ public class TerramapClientContext {
             if(toRemove.remove(player.getUUID())) {
                 TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
                 savedPlayer.setDisplayName(player.getDisplayName());
-                savedPlayer.setLongitude(player.getLongitude());
-                savedPlayer.setLatitude(player.getLatitude());
+                savedPlayer.setLocation(player.getLocation());
                 savedPlayer.setAzimut(player.getAzimut());
                 savedPlayer.setGamemode(player.getGamemode());
             } else toAdd.add(player);

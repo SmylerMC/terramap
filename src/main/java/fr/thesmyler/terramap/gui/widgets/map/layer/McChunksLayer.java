@@ -14,6 +14,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -72,8 +73,10 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         // First decide on what we are going to render depending on the scale at the center of the map
         Vec2d centerMc;
         try {
-            centerMc = new Vec2d(projection.fromGeo(this.getCenterLongitude(), this.getCenterLatitude()));
-            Vec2d pos2 = new Vec2d(projection.fromGeo(this.getRenderLongitude(extendedWidth / 2 + 10), this.getRenderLatitude(extendedHeight / 2 + 10)));
+            GeoPoint centerLocation = this.getCenterLocation();
+            centerMc = new Vec2d(projection.fromGeo(centerLocation.longitude, centerLocation.latitude));
+            GeoPoint nearCenterLocation = this.getRenderLocation(new Vec2d(extendedWidth / 2 + 10, extendedHeight / 2 + 10));
+            Vec2d pos2 = new Vec2d(projection.fromGeo(nearCenterLocation.longitude, nearCenterLocation.latitude));
             double d = centerMc.distanceTo(pos2);
             if(d < renderThreshold) render2dr = true;
             if(d < renderThreshold / 2) render3dr = true;
@@ -197,7 +200,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         
         GeographicProjection projection;
         
-        Map<Vec2d, double[]> mcToGeo = new HashMap<>();
+        Map<Vec2d, GeoPoint> mcToGeo = new HashMap<>();
         Set<Vec2d> accessedInCycle = new HashSet<>();
         
         int maxProjectionsPerCycle = 50;
@@ -213,26 +216,26 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             // Not really out of bounds but we don't need to differentiate the two
             if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) throw OutOfProjectionBoundsException.get();
             
-            double[] lola;
+            GeoPoint location;
             
             // Try getting a cached value
             if(this.mcToGeo.containsKey(mcPos)) {
-                lola = this.mcToGeo.get(mcPos);
-                if(lola == null) throw OutOfProjectionBoundsException.get();
+                location = this.mcToGeo.get(mcPos);
+                if(location == null) throw OutOfProjectionBoundsException.get();
             } else {
                 // Fallback to computing it
                 try {
                     this.projectionsThisCycle[discriminator]++;
-                    lola = this.projection.toGeo(mcPos.x, mcPos.y);
-                    this.mcToGeo.put(mcPos, lola);
+                    location = new GeoPoint(this.projection.toGeo(mcPos.x, mcPos.y));
+                    this.mcToGeo.put(mcPos, location);
                 } catch(OutOfProjectionBoundsException e) {
                     this.mcToGeo.put(mcPos, null);
                     throw e;
                 }
             }
             
-            if(Math.abs(lola[1]) > WebMercatorUtil.LIMIT_LATITUDE) throw OutOfProjectionBoundsException.get();
-            return new Vec2d(McChunksLayer.this.getRenderX(lola[0]), McChunksLayer.this.getRenderY(lola[1]));
+            if(! WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) throw OutOfProjectionBoundsException.get();
+            return McChunksLayer.this.getRenderPos(location);
         }
         
         void cycle() {

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 
 public class TerramapScreenSavedState {
 
@@ -25,8 +26,7 @@ public class TerramapScreenSavedState {
 
     public TerramapScreenSavedState(
             double zoomLevel,
-            double centerLongitude,
-            double centerLatitude,
+            GeoPoint centerLocation,
             float rotation,
             String mapStyle,
             boolean infoPannel,
@@ -36,8 +36,8 @@ public class TerramapScreenSavedState {
             String trackedMarker,
             Map<String, Vec2d> layerOffsets) {
         this.zoomLevel = zoomLevel;
-        this.centerLongitude = centerLongitude;
-        this.centerLatitude = centerLatitude;
+        this.centerLongitude = centerLocation.longitude;
+        this.centerLatitude = centerLocation.latitude;
         this.rotation = rotation;
         this.mapStyle = mapStyle;
         this.infoPannel = infoPannel;

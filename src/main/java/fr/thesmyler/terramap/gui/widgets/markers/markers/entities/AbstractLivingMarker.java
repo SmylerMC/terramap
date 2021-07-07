@@ -9,6 +9,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -24,7 +25,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     protected ResourceLocation texture;
     protected int u, v, textureWidth, textureHeight;
     protected Entity entity;
-    protected double actualLongitude, actualLatitude;
+    protected GeoPoint actualLocation;
     protected float actualAzimuth;
 
     public AbstractLivingMarker(MarkerController<?> controller, float width, float height, ResourceLocation texture, int u, int v, int textureWidth, int textureHeight, Entity entity) {
@@ -65,15 +66,12 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         double x = this.entity.posX;
         double z = this.entity.posZ;
-        double[] lola = {Double.NaN, Double.NaN};
         GeographicProjection proj = TerramapClientContext.getContext().getProjection();
         try {
-            lola = proj.toGeo(x, z);
-            this.actualLongitude = lola[0];
-            this.actualLatitude = lola[1];
+            this.actualLocation = new GeoPoint(proj.toGeo(x, z));
             this.actualAzimuth = proj.azimuth(x, z, this.entity.rotationYaw);
         } catch(OutOfProjectionBoundsException | NullPointerException e) {
-            this.actualLatitude = this.actualLongitude = Double.NaN;
+            this.actualLocation = null;
             this.actualAzimuth = Float.NaN;
         }
         super.onUpdate(mouseX, mouseY, parent);
@@ -81,8 +79,8 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     }
 
     @Override
-    protected double[] getActualCoordinates() {
-        return new double[] {this.actualLongitude, this.actualLatitude};
+    protected GeoPoint getActualLocation() {
+        return this.actualLocation;
     }
 
     @Override

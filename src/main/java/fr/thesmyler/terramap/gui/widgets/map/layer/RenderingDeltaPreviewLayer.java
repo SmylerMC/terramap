@@ -5,18 +5,18 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.profiler.Profiler;
 
 public class RenderingDeltaPreviewLayer extends MapLayer {
 
-    private double realLongitude, realLatitude;
+    private GeoPoint realCenter = GeoPoint.ORIGIN;
 
-    public RenderingDeltaPreviewLayer(double tileScaling, double realCenterLongitude, double realCenterLatitude) {
+    public RenderingDeltaPreviewLayer(double tileScaling, GeoPoint realCenter) {
         super(tileScaling);
         this.z = -1;
-        this.realLongitude = realCenterLongitude;
-        this.realLatitude = realCenterLatitude;
     }
     
     @Override
@@ -35,15 +35,14 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
         float height = this.getHeight();
         double extendedWidth = this.getExtendedWidth();
         double extendedHeight = this.getExtendedHeight();
-        double realCenterX = this.getRenderX(this.realLongitude);
-        double realCenterY = this.getRenderY(this.realLatitude);
+        Vec2d realCenter = this.getRenderPos(this.realCenter);
 
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
         RenderUtil.drawStrokeLine(Color.RED, 2f,
                 extendedWidth / 2, extendedHeight / 2,
-                realCenterX, extendedHeight / 2,
-                realCenterX, realCenterY);
+                realCenter.x, extendedHeight / 2,
+                realCenter.x, realCenter.y);
         GlStateManager.popMatrix();
 
         float centerHole = 10;
@@ -63,26 +62,18 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
 
         profiler.endSection();
     }
-
-    public double getRealCenterLongitude() {
-        return realLongitude;
+    
+    public GeoPoint getRealCenter() {
+        return this.realCenter;
     }
-
-    public void setRealCenterLongitude(double realLongitude) {
-        this.realLongitude = realLongitude;
-    }
-
-    public double getRealCenterLatitude() {
-        return realLatitude;
-    }
-
-    public void setRealCenterLatitude(double realLatitude) {
-        this.realLatitude = realLatitude;
+    
+    public void setRealCenter(GeoPoint realCenter) {
+        this.realCenter = realCenter;
     }
 
     @Override
     public MapLayer copy() {
-        RenderingDeltaPreviewLayer layer = new RenderingDeltaPreviewLayer(this.getTileScaling(), this.realLongitude, this.realLatitude);
+        RenderingDeltaPreviewLayer layer = new RenderingDeltaPreviewLayer(this.getTileScaling(), this.realCenter);
         this.copyPropertiesToOther(layer);
         return layer;
     }

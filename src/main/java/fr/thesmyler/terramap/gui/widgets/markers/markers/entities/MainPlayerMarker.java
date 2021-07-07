@@ -3,6 +3,8 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import fr.thesmyler.terramap.util.geo.GeoPoint;
+import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -18,7 +20,7 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class MainPlayerMarker extends AbstractPlayerMarker {
 
-    private double playerLongitude, playerLatitude;
+    private GeoPoint playerLocation;
     private float playerAzimuth;
 
     public MainPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
@@ -34,11 +36,10 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
         if(TerramapClientContext.getContext().getProjection() == null) return;
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         try {
-            double[] lola = TerramapClientContext.getContext().getProjection().toGeo(player.posX, player.posZ);
-            this.playerLongitude = lola[0];
-            this.playerLatitude = lola[1];
+            GeographicProjection proj = TerramapClientContext.getContext().getProjection();
+            this.playerLocation =  new GeoPoint(proj.toGeo(player.posX, player.posZ));
         } catch(OutOfProjectionBoundsException e) {
-            this.playerLatitude = this.playerLongitude = Double.NaN;
+            this.playerLocation = null;
         }
         try {
             this.playerAzimuth = TerramapClientContext.getContext().getProjection().azimuth(player.posX, player.posZ, player.rotationYaw);
@@ -54,8 +55,8 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected double[] getActualCoordinates() {
-        return new double[] {this.playerLongitude, this.playerLatitude};
+    protected GeoPoint getActualLocation() {
+        return this.playerLocation;
     }
 
     @Override

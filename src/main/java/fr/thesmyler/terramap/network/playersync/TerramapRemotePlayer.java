@@ -6,6 +6,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
+import fr.thesmyler.terramap.util.geo.GeoPoint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
@@ -18,18 +19,16 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 
     protected UUID uuid;
     protected ITextComponent displayName;
-    protected double longitude;
-    protected double latitude;
+    protected GeoPoint location;
     protected float azimut;
     protected GameType gamemode;
     protected ResourceLocation texture;
     protected boolean texureRequested = false;
 
-    public TerramapRemotePlayer(UUID uuid, ITextComponent name, double longitude, double latitude, float azimut, GameType gameMode) {
+    public TerramapRemotePlayer(UUID uuid, ITextComponent name, GeoPoint location, float azimut, GameType gameMode) {
         this.uuid = uuid;
         this.displayName = name;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.location = location;
         this.azimut = azimut;
         this.gamemode = gameMode;
     }
@@ -47,21 +46,14 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     public void setDisplayName(ITextComponent displayName) {
         this.displayName = displayName;
     }
-
-    public double getLongitude() {
-        return longitude;
+    
+    @Override
+    public GeoPoint getLocation() {
+        return this.location;
     }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    
+    public void setLocation(GeoPoint location) {
+        this.location = location;
     }
 
     @Override
@@ -89,11 +81,6 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 
     public void setGamemode(GameType mode) {
         this.gamemode = mode;
-    }
-
-    @Override
-    public double[] getGeoCoordinates() {
-        return new double[] {this.longitude, this.latitude};
     }
 
     @Override
