@@ -174,13 +174,12 @@ public abstract class WidgetContainer implements IWidget{
     }
     
     private void processTasks(long currentTime, List<ScheduledTask> tasks) {
-        List<ScheduledTask> scheduled = tasks;
-        int j = scheduled.size();
+        int j = tasks.size();
         while(--j >= 0) {
-            ScheduledTask task = scheduled.get(j);
+            ScheduledTask task = tasks.get(j);
             if(currentTime > task.getWhen()) {
                 task.execute();
-                scheduled.remove(j);
+                tasks.remove(j);
             }
         }
     }
@@ -478,8 +477,9 @@ public abstract class WidgetContainer implements IWidget{
     }
     
     public void cancellAllScheduled() {
-        this.scheduledForUpdatePre.clear();
-        this.scheduledForUpdatePost.clear();
+        // We create new instances instead of clearing because we could be iterating the lists
+        this.scheduledForUpdatePre = new ArrayList<>();
+        this.scheduledForUpdatePost = new ArrayList<>();
     }
 
     public Font getFont() {
