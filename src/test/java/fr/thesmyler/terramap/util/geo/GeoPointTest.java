@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 
 public class GeoPointTest {

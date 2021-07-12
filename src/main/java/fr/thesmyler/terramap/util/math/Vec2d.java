@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package fr.thesmyler.terramap.util.math;
 
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 
@@ -32,6 +32,10 @@ public final class Vec2d {
 
     public Vec2d scale(double factor) {
         return new Vec2d(this.x*factor, this.y*factor);
+    }
+    
+    public Vec2d downscale(double factor) {
+        return new Vec2d(this.x / factor, this.y / factor);
     }
 
     public Vec2d add(Vec2d other) {

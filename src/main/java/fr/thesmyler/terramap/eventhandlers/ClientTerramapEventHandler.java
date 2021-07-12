@@ -11,7 +11,6 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoServices;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -111,8 +110,7 @@ public class ClientTerramapEventHandler {
         if(event.getGui() instanceof GuiChat && Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup) {
             LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) Minecraft.getMinecraft().currentScreen;
             MapLayer layer = popup.getLayer();
-            Vec2d offset = new Vec2d(layer.getRenderDeltaLongitude(), layer.getRenderDeltaLatitude());
-            TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), offset);
+            TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), layer.getRenderingOffset());
             TerramapClientPreferences.save();
         }
     }
