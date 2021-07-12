@@ -22,7 +22,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerCo
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
-import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -108,14 +108,12 @@ public abstract class HudScreenHandler {
         
         for(MapLayer layer: map.getOverlayLayers()) {
             Vec2d offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());
-            layer.setRenderDeltaLongitude(offset.x);
-            layer.setRenderDeltaLatitude(offset.y);
+            layer.setRenderingOffset(offset);
         }
         
         RasterMapLayer backLayer = map.getBackgroundLayer();
         Vec2d offset = TerramapClientContext.getContext().getMinimapRenderOffset(backLayer.getId());
-        backLayer.setRenderDeltaLongitude(offset.x);
-        backLayer.setRenderDeltaLatitude(offset.y);
+        backLayer.setRenderingOffset(offset);
         
         float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
         zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);

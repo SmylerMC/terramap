@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package fr.thesmyler.terramap.util.math;
 
 /**
  * A 2 by 2 double matrix 

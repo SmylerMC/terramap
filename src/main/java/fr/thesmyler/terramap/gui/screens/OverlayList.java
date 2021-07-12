@@ -89,7 +89,7 @@ class OverlayList extends FlexibleWidgetContainer {
             this.addWidget(name);
             this.addWidget(type);
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, IncludedTexturedButtons.WRENCH));
-            if(layer.getRenderDeltaLatitude() != 0d || layer.getRenderDeltaLongitude() != 0d) {
+            if(layer.getRenderingOffset().normSquared()  != 0d) {
                 WarningWidget warn = new WarningWidget(this.getWidth() - 37, 3, 0);
                 warn.setTooltip("A rendering offset is set for this layer");
                 this.addWidget(warn);
@@ -119,7 +119,7 @@ class OverlayList extends FlexibleWidgetContainer {
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () -> {
                 OverlayList.this.scheduleForNextScreenUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show());
             }));
-            if(layer.getRenderDeltaLatitude() != 0d || layer.getRenderDeltaLongitude() != 0d) {
+            if(layer.getRenderingOffset().normSquared()  != 0d) {
                 WarningWidget warn = new WarningWidget(this.getWidth() - 86, 3, 0);
                 warn.setTooltip("A rendering offset is set for this layer");
                 this.addWidget(warn);

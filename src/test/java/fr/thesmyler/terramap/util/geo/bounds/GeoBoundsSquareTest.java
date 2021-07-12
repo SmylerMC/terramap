@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import fr.thesmyler.terramap.util.HashMapBuilder;
+import fr.thesmyler.terramap.util.collections.HashMapBuilder;
 import fr.thesmyler.terramap.util.geo.GeoBounds;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 

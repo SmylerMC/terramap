@@ -1,11 +1,11 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.Mat2d;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoUtil;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
+import fr.thesmyler.terramap.util.math.Mat2d;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.minecraft.client.renderer.GlStateManager;
 
 /**
@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.GlStateManager;
  * @author SmylerMC
  *
  */
-//FIXME rendering delta should not use angle measurements
 public abstract class MapLayer implements IWidget {
 
     protected int z;
@@ -27,7 +26,7 @@ public abstract class MapLayer implements IWidget {
     private double extendedWidth, extendedHeight;
     private GeoPoint center = GeoPoint.ORIGIN;
     private double zoom;
-    private double renderDeltaLon, renderDeltaLat;
+    private Vec2d renderingOffset = Vec2d.NULL;
     private float rotation;
     private double tileScaling;
 
@@ -91,15 +90,10 @@ public abstract class MapLayer implements IWidget {
         this.directRotation = Mat2d.forRotation(Math.toRadians(this.rotation));
         this.inverseRotation = this.directRotation.transpose(); // For rotations, the inverse is the transposed
         Vec2d dim = new Vec2d(this.viewPortWidth, this.viewPortHeight);
-        //FIXME often crops out the corners, probably a floating point precision problem
         this.extendedWidth = dim.hadamardProd(this.directRotation.column1()).taxicabNorm();
         this.extendedHeight = dim.hadamardProd(this.directRotation.column2()).taxicabNorm();
-        this.renderCenter = this.getPositionOnMap(this.center);
+        this.renderCenter = this.getPositionOnMap(this.center).add(this.renderingOffset.scale(256d * Math.pow(2d, this.zoom) / this.tileScaling));
         this.upperLeftRenderCorner = this.renderCenter.substract(this.extendedWidth / 2, this.extendedHeight / 2);
-//        this.upperLeftX = this.getMapX(this.center.longitude + this.renderDeltaLon) - this.extendedWidth / 2;
-//        this.upperLeftY = this.getMapY(this.center.latitude + this.renderDeltaLat) - this.extendedHeight / 2;
-//        this.renderCenterX = this.getMapX(this.center.longitude + this.renderDeltaLon);
-//        this.renderCenterY = this.getMapY(this.center.latitude + this.renderDeltaLat);
     }
 
     protected void applyRotationGl(float drawX, float drawY) {
@@ -198,26 +192,30 @@ public abstract class MapLayer implements IWidget {
     public Mat2d getInverseRotationMatrix() {
         return this.inverseRotation;
     }
-
-    @Deprecated
-    public double getRenderDeltaLongitude() {
-        return renderDeltaLon;
+    
+    public Vec2d getRenderingOffset() {
+        return this.renderingOffset;
     }
-
-    @Deprecated
-    public void setRenderDeltaLongitude(double renderDeltaLon) {
-        this.renderDeltaLon = renderDeltaLon;
+    
+    /**
+     * Sets the rendering offset for this layer.
+     * The offset should be normalized (an offset of 1 being shifting by the entire map's size)
+     * 
+     * @param offset
+     */
+    public void setRenderingOffset(Vec2d offset) {
+        this.renderingOffset = offset;
         this.updateViewPorts();
     }
-
-    @Deprecated
-    public double getRenderDeltaLatitude() {
-        return renderDeltaLat;
-    }
-
-    @Deprecated
-    public void setRenderDeltaLatitude(double renderDeltaLat) {
-        this.renderDeltaLat = renderDeltaLat;
+    
+    /**
+     * Sets the rendering offset for this layer.
+     * The offset is given in pixel for the current zoom level
+     * 
+     * @param offset
+     */
+    public void setPixelRenderingOffset(Vec2d offset) {
+        this.renderingOffset = offset.downscale(Math.pow(2d, this.zoom) * 256);
         this.updateViewPorts();
     }
 
@@ -247,8 +245,7 @@ public abstract class MapLayer implements IWidget {
         other.center = this.center;
         other.alpha = this.alpha;
         other.rotation = this.rotation;
-        other.renderDeltaLon = this.renderDeltaLon;
-        other.renderDeltaLat = this.renderDeltaLat;
+        other.renderingOffset = this.renderingOffset;
         other.viewPortWidth = this.viewPortWidth;
         other.viewPortHeight = this.viewPortHeight;
         other.isUserOverlay = this.isUserOverlay;

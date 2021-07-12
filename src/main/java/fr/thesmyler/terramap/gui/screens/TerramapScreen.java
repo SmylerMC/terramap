@@ -56,10 +56,10 @@ import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoServices;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -480,10 +480,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         Map<String, Vec2d> offsets = new HashMap<>();
         for(MapWidget map: maps) {
             for(MapLayer layer: map.getOverlayLayers()) {
-                offsets.put(layer.getId(), new Vec2d(layer.getRenderDeltaLongitude(), layer.getRenderDeltaLatitude()));
+                offsets.put(layer.getId(), layer.getRenderingOffset());
             }
             RasterMapLayer background = map.getBackgroundLayer();
-            offsets.put(background.getId(), new Vec2d(background.getRenderDeltaLongitude(), background.getRenderDeltaLatitude()));
+            offsets.put(background.getId(), background.getRenderingOffset());
         }        
 
         return new TerramapScreenSavedState(
@@ -530,8 +530,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             for(MapLayer layer: this.map.getOverlayLayers()) layers.add(layer);
             layers.add(this.map.getBackgroundLayer());
             for(MapLayer layer: layers) for(String id: state.layerOffsets.keySet()) if(id.equals(layer.getId())){
-                layer.setRenderDeltaLongitude(state.layerOffsets.get(id).x);
-                layer.setRenderDeltaLatitude(state.layerOffsets.get(id).y);
+                layer.setRenderingOffset(state.layerOffsets.get(id));
             }
         }
     }
@@ -634,8 +633,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             for(IRasterTiledMap map: maps) {
                 MapWidget w = new MapPreview(50, map, m -> {
                     TerramapScreen.this.map.setBackground(m.getBackgroundStyle());
-                    TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLongitude(m.getBackgroundLayer().getRenderDeltaLongitude());
-                    TerramapScreen.this.map.getBackgroundLayer().setRenderDeltaLatitude(m.getBackgroundLayer().getRenderDeltaLatitude());
+                    TerramapScreen.this.map.getBackgroundLayer().setRenderingOffset(m.getBackgroundLayer().getRenderingOffset());
                     TerramapScreen.this.stylePanel.close();
                     TerramapScreen.this.overlayList.init();
                 });
@@ -661,8 +659,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 map.setCenterLocation(TerramapScreen.this.map.getCenterLocation());
                 map.setTileScaling(TerramapScreen.this.map.getTileScaling());
                 if(map.getBackgroundLayer().getId().equals(bg.getId())) {
-                    map.getBackgroundLayer().setRenderDeltaLongitude(bg.getRenderDeltaLongitude());
-                    map.getBackgroundLayer().setRenderDeltaLatitude(bg.getRenderDeltaLatitude());
+                    map.getBackgroundLayer().setRenderingOffset(bg.getRenderingOffset());
                 }
             }
             super.onUpdate(mouseX, mouseY, parent);

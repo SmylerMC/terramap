@@ -5,8 +5,8 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.profiler.Profiler;
 
@@ -17,6 +17,7 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
     public RenderingDeltaPreviewLayer(double tileScaling, GeoPoint realCenter) {
         super(tileScaling);
         this.z = -1;
+        this.realCenter = realCenter;
     }
     
     @Override

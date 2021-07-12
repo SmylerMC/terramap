@@ -208,8 +208,9 @@ terramap.toasts.welcome.text=Press %1$s to open the map
 
 #### Rendering offset popup ####
 terramap.popup.renderoffset.title=Set layer rendering offset
-terramap.popup.renderoffset.latitude=Latitude (°):
-terramap.popup.renderoffset.longitude=Longitude (°):
+terramap.popup.renderoffset.x=X (pixels): 
+terramap.popup.renderoffset.y=Y (pixels): 
+terramap.popup.renderoffset.zoom=Current zoom: %s
 terramap.popup.renderoffset.reset=Reset
 terramap.popup.renderoffset.set0=Set to 0
 terramap.popup.renderoffset.cancel=Cancel

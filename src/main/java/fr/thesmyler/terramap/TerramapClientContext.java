@@ -27,7 +27,7 @@ import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import fr.thesmyler.terramap.util.TerramapUtil;
-import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
