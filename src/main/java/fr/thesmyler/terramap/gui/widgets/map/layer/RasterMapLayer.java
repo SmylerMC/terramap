@@ -15,13 +15,13 @@ import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
-import fr.thesmyler.terramap.util.Mat2d;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoServices;
 import fr.thesmyler.terramap.util.geo.TilePos;
 import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
+import fr.thesmyler.terramap.util.math.Mat2d;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -120,6 +120,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                  * To do that, we project each corner of the tile onto the corresponding unit vector or the non-rotated coordinate system,
                  * and if the result of the projection is further than the limit, we skip the tile.
                  */
+                //FIXME often crops out the corners, probably a floating point precision problem
                 Vec2d left;
                 Vec2d right;
                 Vec2d top;

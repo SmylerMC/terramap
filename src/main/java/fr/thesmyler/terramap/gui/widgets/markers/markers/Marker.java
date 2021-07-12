@@ -4,9 +4,9 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class Marker implements IWidget {

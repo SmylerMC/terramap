@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.math.Vec2d;
 
 public class TerramapScreenSavedState {
 

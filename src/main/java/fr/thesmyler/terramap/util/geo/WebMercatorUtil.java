@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.util.geo;
 
-import fr.thesmyler.terramap.util.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2d;
 
 /**
  * A set of methods to work with the web mercator map projection.

@@ -44,12 +44,12 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
-import fr.thesmyler.terramap.util.Mat2d;
-import fr.thesmyler.terramap.util.Vec2d;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoServices;
 import fr.thesmyler.terramap.util.geo.GeoUtil;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
+import fr.thesmyler.terramap.util.math.Mat2d;
+import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
@@ -1525,7 +1525,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @return whether or not this map's background has a rendering offset set.
      */
     public boolean doesBackgroundHaveRenderingOffset() {
-        return this.background.getRenderDeltaLatitude() != 0d || this.background.getRenderDeltaLongitude() != 0d;
+        return this.background.getRenderingOffset().normSquared() != 0d;
     }
 
 }
