@@ -169,8 +169,8 @@ public class TestScreen extends Screen {
         content.addWidget(subScreens[this.currentSubScreen]); // A screen is also a widget, that allows for a lot of flexibility
 
         // Same as Javascript's setInterval
-        content.scheduleAtInterval(() -> {counterStr.setText(new TextComponentString("Scheduled callback called " + this.counter++));}, 1000);
-        content.scheduleAtUpdate(() -> { // Called at every update
+        content.scheduleAtIntervalBeforeUpdate(() -> {counterStr.setText(new TextComponentString("Scheduled callback called " + this.counter++));}, 1000);
+        content.scheduleBeforeEachUpdate(() -> { // Called at every update
             this.animation.update();
             this.fpsCounter.setText(new TextComponentString("FPS: " + Minecraft.getDebugFPS()));
             this.focus.setText(new TextComponentString("Focused: " + content.getFocusedWidget()));

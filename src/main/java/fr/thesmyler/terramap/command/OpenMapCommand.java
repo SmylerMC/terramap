@@ -41,7 +41,7 @@ public class OpenMapCommand implements IClientCommand {
         double lon = CommandBase.parseDouble(args[2], -180, 180);
         if(TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
             // The current screen is the chat, if we change screen now Minecraft will close it immediately, thinking it is closing the chat
-            HudScreen.getContent().scheduleForNextScreenUpdate(() -> TerramapClientContext.getContext().openMapAt(zoom, lon, lat));
+            HudScreen.getContent().scheduleBeforeNextUpdate(() -> TerramapClientContext.getContext().openMapAt(zoom, lon, lat));
         } else {
             throw new CommandException("terramap.commands.opentmap.couldnotopen");
         }

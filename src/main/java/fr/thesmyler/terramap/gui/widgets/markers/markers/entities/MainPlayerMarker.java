@@ -30,7 +30,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         if(Minecraft.getMinecraft().player == null) {
-            parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
+            parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
             return;
         }
         if(TerramapClientContext.getContext().getProjection() == null) return;

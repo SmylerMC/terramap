@@ -85,8 +85,8 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         this.map.setZoom(layer.getZoom());
         this.resetMap();
         content.addWidget(this.map);
-        content.scheduleAtUpdate(() -> this.map.setTileScaling(layer.getTileScaling()));
-        content.scheduleAtUpdate(this::updateMap);
+        content.scheduleBeforeEachUpdate(() -> this.map.setTileScaling(layer.getTileScaling()));
+        content.scheduleAfterEachUpdate(this::updateMap);
         float midWidth = content.getWidth() - this.map.getWidth() - margin*3;
         TextButtonWidget resetButton = new TextButtonWidget(margin, this.yInput.getY() + this.xInput.getHeight() + interline, 0, (midWidth - spacing) / 2, I18n.format("terramap.popup.renderoffset.reset"), this::resetMap);
         content.addWidget(resetButton);

@@ -77,7 +77,7 @@ public class HudConfigScreen extends Screen {
         this.minimap.setRightClickMenuEnabled(false);
         this.minimap.setScaleVisibility(false);
         this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
-        this.minimap.scheduleAtUpdate(() -> {
+        this.minimap.scheduleBeforeEachUpdate(() -> {
             if(TerramapClientContext.getContext().getProjection() != null) {
                 this.minimap.track(this.minimap.getMainPlayerMarker());
             }
@@ -304,7 +304,7 @@ public class HudConfigScreen extends Screen {
             super(0, 0, 0, 30, 30);
             this.addWidget(this.compass);
             this.setSize(this.compass.getWidth(), this.compass.getHeight());
-            this.scheduleAtUpdate(() -> {
+            this.scheduleBeforeEachUpdate(() -> {
                 GeographicProjection p = TerramapClientContext.getContext().getProjection();
                 if(p != null) {
                     double x = Minecraft.getMinecraft().player.posX;
