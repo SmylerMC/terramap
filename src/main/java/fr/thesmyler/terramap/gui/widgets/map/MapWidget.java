@@ -803,7 +803,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copyblock"));
-                this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
         });
         this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
@@ -817,7 +817,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copychunk"));
-                this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
         });
         this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
@@ -831,7 +831,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copyregion"));
-                this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
         });
         this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
@@ -845,7 +845,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; //Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copy2dregion"));
-                this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
         });
         this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
@@ -859,7 +859,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; //Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copy2dregion"));
-                this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
         });
         this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy"), copySubMenu);
@@ -930,7 +930,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
             String s = System.currentTimeMillis() + ""; // Just a random string
             this.reportError(s, I18n.format("terramap.mapwidget.error.tp"));
-            this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+            this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             return;
         }
         if(projection != null) {
@@ -940,7 +940,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             } catch (OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.tp"));
-                this.scheduleWithDelay(() -> this.discardPreviousErrors(s), 5000);
+                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
         }
         CHAT_SENDER_GUI.sendChatMessage(cmd, false);

@@ -61,7 +61,7 @@ class OverlayList extends FlexibleWidgetContainer {
         layer2.setZ(swap);
         this.map.addOverlayLayer(layer1);
         this.map.addOverlayLayer(layer2);
-        OverlayList.this.scheduleForNextScreenUpdate(OverlayList.this::init);
+        OverlayList.this.scheduleBeforeNextUpdate(OverlayList.this::init);
     }
     
     private abstract class OverlayEntry extends FlexibleWidgetContainer {
@@ -117,7 +117,7 @@ class OverlayList extends FlexibleWidgetContainer {
             this.addWidget(remove.setEnabled(layer.isUserOverlay()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () -> {
-                OverlayList.this.scheduleForNextScreenUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show());
+                OverlayList.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show());
             }));
             if(layer.getRenderingOffset().normSquared()  != 0d) {
                 WarningWidget warn = new WarningWidget(this.getWidth() - 86, 3, 0);
@@ -132,7 +132,7 @@ class OverlayList extends FlexibleWidgetContainer {
         }
         
         public void remove() {
-            OverlayList.this.scheduleForNextScreenUpdate(() -> {
+            OverlayList.this.scheduleBeforeNextUpdate(() -> {
                 OverlayList.this.map.removeOverlayLayer(this.layer);
                 OverlayList.this.init();
             });

@@ -44,7 +44,7 @@ public abstract class HudScreenHandler {
                 map.setCopyrightVisibility(false);
                 map.setScaleVisibility(false);
                 map.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
-                map.scheduleAtUpdate(() -> {
+                map.scheduleBeforeEachUpdate(() -> {
                     if(TerramapClientContext.getContext().getProjection() != null
                             && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat)
                             && !(Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup)) {
@@ -61,7 +61,7 @@ public abstract class HudScreenHandler {
 
             compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
             screen.addWidget(compass);
-            screen.scheduleAtUpdate(() -> {
+            screen.scheduleBeforeEachUpdate(() -> {
                 GeographicProjection p = TerramapClientContext.getContext().getProjection();
                 if(p != null) {
                     double x = Minecraft.getMinecraft().player.posX;

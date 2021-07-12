@@ -75,7 +75,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             this.actualAzimuth = Float.NaN;
         }
         super.onUpdate(mouseX, mouseY, parent);
-        if(this.entity.isDead) parent.scheduleForNextScreenUpdate(() -> parent.removeWidget(this));
+        if(this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
     }
 
     @Override

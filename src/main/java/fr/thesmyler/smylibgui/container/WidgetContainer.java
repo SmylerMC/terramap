@@ -33,7 +33,9 @@ public abstract class WidgetContainer implements IWidget{
                 return r == 0? w1.hashCode() - w2.hashCode(): r;
             }
             );
-    private List<ScheduledTask> scheduledForNextUpdate = new ArrayList<ScheduledTask>();
+    
+    private List<ScheduledTask> scheduledForUpdatePre = new ArrayList<>();
+    private List<ScheduledTask> scheduledForUpdatePost = new ArrayList<>();
 
     private int z;
     private boolean doScissor = true;
@@ -88,15 +90,7 @@ public abstract class WidgetContainer implements IWidget{
     public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
 
         long ctime = System.currentTimeMillis();
-        List<ScheduledTask> scheduled = this.scheduledForNextUpdate;
-        int j = scheduled.size();
-        while(--j >= 0) {
-            ScheduledTask task = scheduled.get(j);
-            if(ctime > task.getWhen()) {
-                task.execute();
-                scheduled.remove(j);
-            }
-        }
+        this.processTasks(ctime, this.scheduledForUpdatePre);
 
         for(MouseAction event: this.delayedActions) {
             boolean processed = false;
@@ -174,6 +168,20 @@ public abstract class WidgetContainer implements IWidget{
             this.menuToShow = null;
             this.menuToShowX = 0;
             this.menuToShowY = 0;
+        }
+        
+        this.processTasks(ctime, this.scheduledForUpdatePost);
+    }
+    
+    private void processTasks(long currentTime, List<ScheduledTask> tasks) {
+        List<ScheduledTask> scheduled = tasks;
+        int j = scheduled.size();
+        while(--j >= 0) {
+            ScheduledTask task = scheduled.get(j);
+            if(currentTime > task.getWhen()) {
+                task.execute();
+                scheduled.remove(j);
+            }
         }
     }
 
@@ -264,7 +272,7 @@ public abstract class WidgetContainer implements IWidget{
      * @param widget
      */
     public void setFocus(IWidget widget) {
-        this.scheduleForNextScreenUpdate(() -> {
+        this.scheduleBeforeNextUpdate(() -> {
             this.focusedWidget = widget;
         });
     }
@@ -374,39 +382,104 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * Allows the user to add callback to be run at the next screen update, before the widgets are updated
-     * if you have to remove or add widgets after the screen is initialized, this is how to do it
+     * Schedule a task to be ran the next time the container updates, before the rest of is updated.
      * 
      * @param run
      */
-    public void scheduleForNextScreenUpdate(Runnable run) {
-        this.scheduledForNextUpdate.add(new ScheduledTask(System.currentTimeMillis(), run));
+    public void scheduleBeforeNextUpdate(Runnable run) {
+        this.scheduledForUpdatePre.add(new ScheduledTask(System.currentTimeMillis(), run));
     }
 
-    public void scheduleWithDelay(Runnable run, long delay) {
+    /**
+     * Schedule a task to be ran after a given delay when the container updates, before the rest is updated.
+     * 
+     * @param run
+     * @param delay - delay to wait before executing the task in milliseconds
+     */
+    public void scheduleBeforeUpdate(Runnable run, long delay) {
         long t = System.currentTimeMillis() + delay;
-        this.scheduledForNextUpdate.add(new ScheduledTask(t, run));
+        this.scheduledForUpdatePre.add(new ScheduledTask(t, run));
     }
 
-    public void scheduleAtInterval(Runnable run, long delay) {
+    /**
+     * Schedule a task to run at a given interval (as best as possible), when the container updates, before the rest is updated
+     * 
+     * @param run
+     * @param delay -  delay to wait between each execution of the task
+     */
+    public void scheduleAtIntervalBeforeUpdate(Runnable run, long delay) {
         Runnable task = new Runnable() {
 
             @Override
             public void run() {
                 run.run();
-                WidgetContainer.this.scheduleWithDelay(this, delay);
+                WidgetContainer.this.scheduleBeforeUpdate(this, delay);
             }
 
         };
-        this.scheduledForNextUpdate.add(new ScheduledTask(System.currentTimeMillis(), task));
+        this.scheduledForUpdatePre.add(new ScheduledTask(System.currentTimeMillis(), task));
     }
 
-    public void scheduleAtUpdate(Runnable run) {
-        this.scheduleAtInterval(run, 0);
+    /**
+     * Schedule a task to be ran before each container update
+     * 
+     * @param run
+     */
+    public void scheduleBeforeEachUpdate(Runnable run) {
+        this.scheduleAtIntervalBeforeUpdate(run, 0);
     }
 
+    /**
+     * Schedule a task to be ran after the next container update (could be just after the current one).
+     * 
+     * @param run
+     */
+    public void scheduleAfterNextUpdate(Runnable run) {
+        this.scheduledForUpdatePost.add(new ScheduledTask(System.currentTimeMillis(), run));
+    }
+
+    /**
+     * Schedule a task to be ran after a given delay when the container updates, after the rest is updated.
+     * 
+     * @param run
+     * @param delay - delay to wait before executing the task in milliseconds
+     */
+    public void scheduleAfterUpdate(Runnable run, long delay) {
+        long t = System.currentTimeMillis() + delay;
+        this.scheduledForUpdatePost.add(new ScheduledTask(t, run));
+    }
+
+    /**
+     * Schedule a task to run at a given interval (as best as possible), when the container updates, after the rest is updated
+     * 
+     * @param run
+     * @param delay -  delay to wait between each execution of the task
+     */
+    public void scheduleAtIntervalAfterUpdate(Runnable run, long delay) {
+        Runnable task = new Runnable() {
+
+            @Override
+            public void run() {
+                run.run();
+                WidgetContainer.this.scheduleAfterUpdate(this, delay);
+            }
+
+        };
+        this.scheduledForUpdatePost.add(new ScheduledTask(System.currentTimeMillis(), task));
+    }
+
+    /**
+     * Schedule a task to be ran after each container update
+     * 
+     * @param run
+     */
+    public void scheduleAfterEachUpdate(Runnable run) {
+        this.scheduleAtIntervalAfterUpdate(run, 0);
+    }
+    
     public void cancellAllScheduled() {
-        this.scheduledForNextUpdate = new ArrayList<>();
+        this.scheduledForUpdatePre.clear();
+        this.scheduledForUpdatePost.clear();
     }
 
     public Font getFont() {
