@@ -600,7 +600,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             pop.getContent().addWidget(scrollContainer);
             pop.show();
         });
-        this.getContent().scheduleForNextScreenUpdate(() -> 
+        this.getContent().scheduleBeforeNextUpdate(() -> 
             new MultiChoicePopupScreen("Choose a type for the new  layer", options).show()
         );
     }

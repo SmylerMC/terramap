@@ -99,7 +99,7 @@ public class MenuWidget implements IWidget {
                 }
                 if(subMenu != null && hovered && this.displayedSubMenu == null) {
                     this.displayedSubMenu = subMenu;
-                    parent.scheduleForNextScreenUpdate(()->{parent.addWidget(subMenu);});
+                    parent.scheduleBeforeNextUpdate(()->{parent.addWidget(subMenu);});
                     float subX = x + width - parent.getX();
                     float subY = ty - parent.getY();
                     float subH = subMenu.getHeight();
@@ -246,7 +246,7 @@ public class MenuWidget implements IWidget {
 
     public void hide(@Nullable WidgetContainer parent) {
         this.hideSubMenu(parent);
-        if(parent != null) parent.scheduleForNextScreenUpdate(()->{
+        if(parent != null) parent.scheduleBeforeNextUpdate(()->{
             this.visible = false;
         });
         else this.visible = false;
@@ -261,7 +261,7 @@ public class MenuWidget implements IWidget {
         if(m != null) {
             m.hide(parent);
             if(parent != null) {
-                parent.scheduleForNextScreenUpdate(()->{
+                parent.scheduleBeforeNextUpdate(()->{
                     parent.removeWidget(m);
                 });
             }
