@@ -109,7 +109,7 @@ public class Color {
     }
     
     public void applyGL() {
-        GlStateManager.color(this.redf(), this.bluef(), this.greenf(), this.alphaf());
+        GlStateManager.color(this.redf(), this.greenf(), this.bluef(), this.alphaf());
     }
 
     public static final Color RED = new Color(0xFFFF0000);
