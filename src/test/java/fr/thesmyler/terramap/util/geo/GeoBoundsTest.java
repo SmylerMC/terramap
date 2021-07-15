@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.geo.bounds;
+package fr.thesmyler.terramap.util.geo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,10 +10,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import fr.thesmyler.terramap.util.collections.HashMapBuilder;
-import fr.thesmyler.terramap.util.geo.GeoBounds;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
 
-public class GeoBoundsSquareTest {
+public class GeoBoundsTest {
     
     @Test
     public void constructionAndCrossesAntimeridianTest() {
@@ -154,6 +152,12 @@ public class GeoBoundsSquareTest {
                     // First square crosses the antimeridian, second one is in the upper part
                     new GeoBounds(leftDown, farLeftUp),
                     new GeoBounds(rightNegMid, farRightPosMid),
+                    new GeoBounds(leftDown, farLeftUp)
+                },
+                {
+                    // First square crosses the antimeridian, second one is in the upper part
+                    new GeoBounds(leftDown, farLeftUp),
+                    GeoBounds.EMPTY,
                     new GeoBounds(leftDown, farLeftUp)
                 }
         };
@@ -445,6 +449,19 @@ public class GeoBoundsSquareTest {
         assertEquals(empty1.hashCode(), empty2.hashCode());
         assertEquals(empty1, empty2);
         assertNotEquals(empty1, square1);
+    }
+    
+    @Test
+    public void builderTest() {
+        GeoBounds.Builder builder = new GeoBounds.Builder();
+        GeoBounds bounds = builder.addPoint(new GeoPoint(32d, 67d)).addPoint(new GeoPoint(-23d, 89d)).build();
+        assertEquals(new GeoBounds(new GeoPoint(-23d, 67d), new GeoPoint(32, 89d)), bounds);
+        bounds = builder.addPoint(new GeoPoint(170d, 67d)).addPoint(new GeoPoint(-171d, 89d)).addPoint(new GeoPoint(-170d, -18d)).build();
+        assertEquals(new GeoBounds(new GeoPoint(170d, -18d), new GeoPoint(-170d, 89d)), bounds);
+        bounds = builder.addPoint(new GeoPoint(-170d, -18d)).addPoint(new GeoPoint(170d, 67d)).addPoint(new GeoPoint(-171d, 89d)).build();
+        assertEquals(new GeoBounds(new GeoPoint(170d, -18d), new GeoPoint(-170d, 89d)), bounds);
+        bounds = builder.addPoint(new GeoPoint(-10d, -18d)).addPoint(new GeoPoint(10d, 67d)).addPoint(new GeoPoint(0d, 89d)).build();
+        assertEquals(new GeoBounds(new GeoPoint(-10d, -18d), new GeoPoint(10d, 89d)), bounds);
     }
     
     @Test

@@ -288,5 +288,92 @@ public class GeoBounds {
     public String toString() {
         return String.format(Locale.US, "GeoBoundsSquare{lower=%s, upper=%s}", this.lowerCorner, this.upperCorner);
     }
+    
+    /**
+     * Utility class to construct a {@link GeoBounds} that contains a list of points
+     * 
+     * @author SmylerMC
+     *
+     */
+    public static class Builder {
+        
+        private double minLat = Double.NaN;
+        private double minLon = Double.NaN;
+        private double maxLat = Double.NaN;
+        private double maxLon = Double.NaN;
+        
+        /**
+         * Add a point that needs to be in the bounds
+         * 
+         * @param point - point to add
+         * 
+         * @return this builder, for chaining
+         */
+        public Builder addPoint(GeoPoint point) {
+            if(Double.isNaN(this.minLat)) {
+                this.minLat = this.maxLat = point.latitude;
+                this.minLon = this.maxLon = point.longitude;
+            } else {
+                this.minLat = Math.min(this.minLat, point.latitude);
+                this.maxLat = Math.max(this.maxLat, point.latitude);
+                if(this.minLon > this.maxLon) { // Crosses antimeridian
+                    if(point.longitude > this.maxLon && this.minLon > point.longitude) { // Not inside
+                        double distanceLeft = point.longitude - this.maxLon;
+                        double distanceRight = this.minLon - point.longitude;
+                        if(distanceLeft >= distanceRight) {
+                            this.minLon = point.longitude;
+                        } else {
+                            this.maxLon = point.longitude;
+                        }
+                    }
+                } else if(this.minLon > point.longitude) { // Does not cross the antimeridian, West side
+                    double distanceLeft = this.minLon - point.longitude;
+                    double distanceRight = 360d - this.maxLon + point.longitude;
+                    if(distanceLeft >= distanceRight) {
+                        this.maxLon = point.longitude;
+                    } else {
+                        this.minLon = point.longitude;
+                    }
+                } else if(this.maxLon < point.longitude) { // Does not cross the antimeridian, East side
+                    double distanceLeft = 360d - point.longitude + this.minLon;
+                    double distanceRight = point.longitude - this.maxLon;
+                    if(distanceLeft >= distanceRight) {
+                        this.maxLon = point.longitude;
+                    } else {
+                        this.minLon = point.longitude;
+                    }
+                }
+            }
+            return this;
+        }
+        
+        public Builder addAllPoints(Iterable<GeoPoint> iterable) {
+            for(GeoPoint point: iterable) this.addPoint(point);
+            return this;
+        }
+        
+        /**
+         * Rests this builder (forgets about all previously added points)
+         */
+        public void reset() {
+            this.minLat = this.minLon = this.maxLat = this.maxLon = Double.NaN;
+        }
+        
+        /**
+         * Constructs a {@link GeoBounds} that contains all the points passed to the builder via {@link #addPoint(GeoPoint)}
+         * and resets this builder.
+         * 
+         * @return bounds that contains all points
+         * 
+         * @see #reset()
+         */
+        public GeoBounds build() {
+            if(Double.isNaN(this.minLat)) return GeoBounds.EMPTY;
+            GeoBounds bounds = new GeoBounds(new GeoPoint(this.minLon, this.minLat), new GeoPoint(this.maxLon, this.maxLat));
+            this.reset();
+            return bounds;
+        }
+        
+    }
 
 }
