@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.util.geo;
 
+import fr.thesmyler.terramap.util.math.DoubleRange;
 import fr.thesmyler.terramap.util.math.Vec2d;
 
 /**
@@ -27,6 +28,7 @@ public final class WebMercatorUtil {
      * this is the max value that avoid overflows.
      */
     public static final int MAX_ZOOM = 30;
+    public static final DoubleRange ZOOM_RANGE = new DoubleRange(0d, MAX_ZOOM);
     
     /**
      * Projects the given geoPoint onto a web-Mercator map
