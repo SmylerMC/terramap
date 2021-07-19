@@ -1,8 +1,9 @@
-package fr.thesmyler.terramap.maps.vector;
+package fr.thesmyler.terramap.maps.vector.features;
 
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.terramap.util.geo.GeoBounds;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 
 /**
@@ -28,5 +29,14 @@ public interface Point extends VectorFeature {
      * If null is returned, a simple point will be rendered with the color specified by {@link #getColor()}
      */
     @Nullable String getIconName();
+    
+    @Override default boolean isIn(GeoBounds bounds) {
+        return bounds.contains(this.getPosition());
+    }
+    
+    @Override default GeoBounds bounds() {
+        GeoPoint point = this.getPosition();
+        return new GeoBounds(point, point);
+    }
 
 }

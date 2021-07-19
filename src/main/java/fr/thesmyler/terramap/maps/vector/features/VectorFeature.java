@@ -1,10 +1,11 @@
-package fr.thesmyler.terramap.maps.vector;
+package fr.thesmyler.terramap.maps.vector.features;
 
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import fr.thesmyler.terramap.util.geo.GeoBounds;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.math.DoubleRange;
 
 /**
@@ -16,9 +17,9 @@ import fr.thesmyler.terramap.util.math.DoubleRange;
 public interface VectorFeature {
     
     /**
-     * @return the name that should be displayed for this feature
+     * @return the name that should be displayed for this feature, or null if no such name exist
      */
-    String getDisplayName();
+    @Nullable String getDisplayName();
     
     /**
      * @return the range for which this feature should be displayed depending on the zoom level
@@ -29,14 +30,6 @@ public interface VectorFeature {
      * @return a uuid that should be unique to this feature
      */
     UUID uid();
-    
-    /**
-     * Indicates if this feature contains a point
-     * 
-     * @param point
-     * @return true if this feature contains the point
-     */
-    boolean contains(GeoPoint point);
     
     /**
      * @return this feature's metadata
