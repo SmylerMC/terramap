@@ -153,7 +153,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         double zoom = this.map.getZoom();
         Vec2d layerCenter = WebMercatorUtil.fromGeo(this.layer.getCenterLocation(), zoom);
         Vec2d previewCenter = WebMercatorUtil.fromGeo(this.map.getCenterLocation(), zoom);
-        Vec2d delta = previewCenter.substract(layerCenter);
+        Vec2d delta = previewCenter.subtract(layerCenter);
         this.xInput.setText(OFFSET_FORMATTER.format(delta.x));
         this.yInput.setText(OFFSET_FORMATTER.format(delta.y));
         this.map.getBackgroundLayer().setPixelRenderingOffset(delta.scale(-1d));

@@ -46,11 +46,11 @@ public final class Vec2d {
         return new Vec2d(this.x + x, this.y + y);
     }
     
-    public Vec2d substract(Vec2d other) {
+    public Vec2d subtract(Vec2d other) {
         return new Vec2d(this.x - other.x, this.y - other.y);
     }
     
-    public Vec2d substract(double x, double y) {
+    public Vec2d subtract(double x, double y) {
         return new Vec2d(this.x - x, this.y - y);
     }
 
@@ -81,7 +81,7 @@ public final class Vec2d {
     }
     
     public double distanceTo(Vec2d other) {
-        return this.substract(other).norm();
+        return this.subtract(other).norm();
     }
 
     public double[] asArray() {
