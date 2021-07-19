@@ -92,6 +92,7 @@ public class GeoBounds {
      * 
      * @return whether or not this box and the other intersects
      */
+    //FIXME GeoBounds#intersects(GeoBounds) is wrong, missing edge cases
     public boolean intersects(GeoBounds other) {
         return this.contains(other.lowerCorner) || this.contains(other.upperCorner) || other.contains(this.lowerCorner) || other.contains(this.upperCorner);
     }

@@ -48,6 +48,8 @@ import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.vector.TerraOSMLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.vector.VectorLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
@@ -121,6 +123,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
         IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
         this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
+        TerraOSMLayer vectorTestLayer = new TerraOSMLayer(this.map.getTileScaling());
+        vectorTestLayer.setZ(-96);
+        this.map.addOverlayLayer(vectorTestLayer);
         this.styleScreen = new StyleScreen();
         if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
         this.infoPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
@@ -404,6 +409,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             List<String> profilingResults = new ArrayList<>();
             this.formatProfilingResult(profilingResults, "", "");
             dbText += "\n" + String.join("\n", profilingResults);
+            int points = 0, lines = 0, polygons = 0;
+            for(MapLayer layer: this.map.getOverlayLayers()) if(layer instanceof VectorLayer) {
+                VectorLayer vectorLayer = (VectorLayer) layer;
+                points += vectorLayer.getPointsRendered();
+                lines += vectorLayer.getLinesRendered();
+                polygons += vectorLayer.getPolygonsRendered();
+            }
+            dbText += "\nPoints: " + points + " / LineStrings: " + lines + " / Polygons: " + polygons; 
             this.debugText.setText(new TextComponentString(dbText));
             this.debugText.setAnchorY(this.height - this.debugText.getHeight());
         }
