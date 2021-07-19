@@ -56,7 +56,7 @@ public abstract class MapLayer implements IWidget {
      * @return a Vec2d with longitude and latitude as x and y, in degrees
      */
     protected Vec2d getScreenPosition(GeoPoint geoPos) {
-        Vec2d pos = this.getPositionOnMap(geoPos).substract(this.renderCenter);
+        Vec2d pos = this.getPositionOnMap(geoPos).subtract(this.renderCenter);
         pos = this.directRotation.prod(pos);
         return pos.add(this.viewPortWidth / 2, this.viewPortHeight / 2);
     }
@@ -79,7 +79,7 @@ public abstract class MapLayer implements IWidget {
     }
     
     protected Vec2d getRenderPos(GeoPoint geoPos) {
-        return this.getPositionOnMap(geoPos).substract(this.upperLeftRenderCorner);
+        return this.getPositionOnMap(geoPos).subtract(this.upperLeftRenderCorner);
     }
     
     protected GeoPoint getRenderLocation(Vec2d renderScreenPos) {
@@ -93,7 +93,7 @@ public abstract class MapLayer implements IWidget {
         this.extendedWidth = dim.hadamardProd(this.directRotation.column1()).taxicabNorm();
         this.extendedHeight = dim.hadamardProd(this.directRotation.column2()).taxicabNorm();
         this.renderCenter = this.getPositionOnMap(this.center).add(this.renderingOffset.scale(256d * Math.pow(2d, this.zoom) / this.tileScaling));
-        this.upperLeftRenderCorner = this.renderCenter.substract(this.extendedWidth / 2, this.extendedHeight / 2);
+        this.upperLeftRenderCorner = this.renderCenter.subtract(this.extendedWidth / 2, this.extendedHeight / 2);
     }
 
     protected void applyRotationGl(float drawX, float drawY) {
