@@ -13,7 +13,7 @@ public class UnmutablePolygonRing implements PolygonRing {
     
     public UnmutablePolygonRing(GeoPoint[] points) {
         this.points = points;
-        if(this.isValid()) throw new IllegalArgumentException("Invalid polygon ring");
+        if(!this.isValid()) throw new IllegalArgumentException("Invalid polygon ring");
     }
 
     @Override
