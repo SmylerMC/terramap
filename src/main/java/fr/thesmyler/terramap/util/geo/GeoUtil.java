@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.util.geo;
 
+import net.minecraft.util.math.Vec3d;
+
 /**
  * A collection of algorithm to solve geographic problems
  * 
@@ -72,6 +74,46 @@ public final class GeoUtil {
         double sinDLat = Math.sin(dLat);
         double arc = sinDLat*sinDLat + cosLat1*cosLat2 * sinDLon*sinDLon;
         return 2 * EARTH_RADIUS * Math.asin(Math.sqrt(arc));
+    }
+    
+    /**
+     * Computes the distance between two points on the surface of the Earth, assuming a spherical Earth.
+     * An implementation of Haversine's formula to compute the great circle distance between two points.
+     * 
+     * @param point1
+     * @param point2
+     * 
+     * @return an approximation of the distance between the two points, in meters
+     */
+    public static double distanceHaversine(GeoPoint point1, GeoPoint point2) {
+        return distanceHaversine(point1.longitude, point1.latitude, point2.longitude, point2.latitude);
+    }
+    
+    public static double distanceToGreateCircle(GeoPoint point, GeoPoint geo1, GeoPoint geo2) {
+        //TODO Test and javadoc
+        Vec3d vec = point.unitCartesianPosition();
+        Vec3d vec1 = geo1.unitCartesianPosition();
+        Vec3d vec2 = geo2.unitCartesianPosition();
+        Vec3d normal = vec1.crossProduct(vec2).normalize();
+        if(normal.lengthSquared() == 0d) return point.distanceTo(geo1);
+        double angle = Math.asin(vec.dotProduct(normal));
+        return Math.abs(angle) * EARTH_RADIUS;
+    }
+    
+    public static double distanceToGeodesic(GeoPoint point, GeoPoint geo1, GeoPoint geo2) {
+        //TODO Test and javadoc
+        Vec3d vec = point.unitCartesianPosition();
+        Vec3d vec1 = geo1.unitCartesianPosition();
+        Vec3d vec2 = geo2.unitCartesianPosition();
+        Vec3d vec12 = vec2.subtract(vec1);
+        Vec3d pos = vec.subtract(vec1);
+        double projected = vec12.dotProduct(pos) / vec12.length();
+        if(projected < 0d) return geo1.distanceTo(point);
+        if(projected > 1d) return geo2.distanceTo(point);
+        Vec3d normal = vec1.crossProduct(vec2).normalize();
+        if(normal.lengthSquared() == 0d) return point.distanceTo(geo1);
+        double angle = Math.asin(vec.dotProduct(normal));
+        return Math.abs(angle) * EARTH_RADIUS;
     }
 
 }
