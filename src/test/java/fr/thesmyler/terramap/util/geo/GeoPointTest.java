@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
+import net.minecraft.util.math.Vec3d;
 
 public class GeoPointTest {
     
@@ -174,6 +175,15 @@ public class GeoPointTest {
         LatLng tppPos = point.asLatLng();
         assertEquals(18d, tppPos.getLng(), 0d);
         assertEquals(39d, tppPos.getLat(), 0d);
+    }
+    
+    @Test
+    public void unitCartesianPositionTest() {
+        GeoPoint point = new GeoPoint(36d, -67d);
+        Vec3d vec = point.unitCartesianPosition();
+        assertEquals(0.3161081232, vec.x, 1e-10);
+        assertEquals(0.229665995, vec.y, 1e-10);
+        assertEquals(-0.9205048535, vec.z, 1e-10);
     }
     
     @Test

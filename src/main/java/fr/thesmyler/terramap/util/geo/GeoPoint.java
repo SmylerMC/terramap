@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
+import net.minecraft.util.math.Vec3d;
 
 /**
  * A point in the WGS:84 coordinate system.
@@ -13,8 +14,6 @@ import net.buildtheearth.terraplusplus.util.geo.LatLng;
  * independently of whether or not their longitude is -180 or 180.
  * 
  * @author SmylerMC
- * 
- * TODO Refactor most of the code to use this class
  *
  */
 public class GeoPoint {
@@ -88,7 +87,7 @@ public class GeoPoint {
      * @return the distance between this point and the other, in meters
      */
     public double distanceTo(GeoPoint other) {
-        return GeoUtil.distanceHaversine(this.longitude, this.latitude, other.longitude, other.latitude);
+        return GeoUtil.distanceHaversine(this, other);
     }
     
     /**
@@ -111,6 +110,23 @@ public class GeoPoint {
      */
     public Vec2d asVec2d() {
         return new Vec2d(this.longitude, this.latitude);
+    }
+    
+    /**
+     * @return the Cartesian coordinates corresponding to these spherical coordinates on a unit sphere
+     */
+    public Vec3d unitCartesianPosition() {
+        double radLon = Math.toRadians(this.longitude);
+        double radLat = Math.toRadians(this.latitude);
+        double cosLon = Math.cos(radLon);
+        double sinLon = Math.sin(radLon);
+        double cosLat = Math.cos(radLat);
+        double sinLat = Math.sin(radLat);
+        return new Vec3d(
+                cosLon * cosLat,
+                sinLon * cosLat,
+                sinLat
+        );
     }
 
     @Override
