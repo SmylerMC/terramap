@@ -28,12 +28,12 @@ public class TerraJsonPoint extends TerraJsonVectorFeature implements Point {
 
     @Override
     public Color getColor() {
-        return Color.RED; //TODO
+        return Color.RED; //TODO proper color for GeoJson points
     }
 
     @Override
     public String getIconName() {
-        // TODO Auto-generated method stub
+        // TODO proper icons for GeoJson points
         return null;
     }
 

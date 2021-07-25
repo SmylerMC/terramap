@@ -1,9 +1,12 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer.vector;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
@@ -18,20 +21,27 @@ import fr.thesmyler.terramap.maps.vector.features.MultiPolygon;
 import fr.thesmyler.terramap.maps.vector.features.Point;
 import fr.thesmyler.terramap.maps.vector.features.Polygon;
 import fr.thesmyler.terramap.maps.vector.features.VectorFeature;
+import fr.thesmyler.terramap.maps.vector.simplified.SimplifiedVectorFeature;
 import fr.thesmyler.terramap.util.geo.GeoBounds;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.math.Vec2d;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.profiler.Profiler;
 
-//TODO Respect zoom range
 public abstract class VectorLayer extends MapLayer {
-    
+
     private static final int MAX_FEATURE_DEPTH = 50;
-    
+
     private int pointsRendered = 0;
     private int linesRendered = 0;
     private int polygonsRendered = 0;
+
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentMap<UUID, VectorFeature> features = new ConcurrentHashMap<>();
+    private final ConcurrentMap<UUID, Future<VectorFeature>> loading = new ConcurrentHashMap<>();
+
+    private GeoBounds lastBounds = GeoBounds.EMPTY;
+    private double lastZoom = Double.MIN_VALUE;
 
     public VectorLayer(double tileScaling) {
         super(tileScaling);
@@ -53,23 +63,19 @@ public abstract class VectorLayer extends MapLayer {
         GeoPoint lowerLocation = this.getRenderLocation(new Vec2d(0, extendedHeight));
         GeoPoint upperLocation = this.getRenderLocation(new Vec2d(extendedWidth, 0));
         GeoBounds renderBounds = new GeoBounds(lowerLocation, upperLocation);
-        
+        double zoom = this.getZoom();
+
         this.pointsRendered = 0;
         this.linesRendered = 0;
         this.polygonsRendered = 0;
-        
-        Iterator<VectorFeature> featureIterator = this.getVisibleFeatures(renderBounds);
+
+        if(!this.lastBounds.equals(renderBounds)) {
+            this.load(renderBounds, this.lastBounds, zoom, this.lastZoom);
+        }
+        this.removeLoaded();
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
-        Map<UUID, VectorFeature> features = new HashMap<>();
-        while(featureIterator.hasNext()) {
-            VectorFeature feature = featureIterator.next();
-            if(renderBounds.intersects(feature.bounds()))
-                features.put(feature.uid(), feature);
-        }
-        
-        for(VectorFeature feature: features.values()) this.drawFeature(feature, 0);
-        
+        this.features.forEach((uid, feature) -> this.drawFeature(feature, 0));        
         if(debug) {
             Vec2d lowerCorner = this.getRenderPos(lowerLocation);
             Vec2d upperCorner = this.getRenderPos(upperLocation);
@@ -82,10 +88,62 @@ public abstract class VectorLayer extends MapLayer {
         }
         GlStateManager.popMatrix();
         profiler.endSection();
+        this.lastBounds = renderBounds;
+        this.lastZoom = zoom;
+    }
+
+    public abstract Iterable<CompletableFuture<Iterable<VectorFeature>>> getVisibleFeatures(GeoBounds bounds);
+
+    private void load(GeoBounds currentBounds, GeoBounds formerBounds, double currentZoom, double formerZoom) {
+        this.loading.forEach((u, f) -> f.cancel(true));
+        this.loading.clear();
+        for(CompletableFuture<Iterable<VectorFeature>> future: this.getVisibleFeatures(currentBounds)) {
+            future.thenAcceptAsync(features -> {
+                for(VectorFeature feature: features) {
+                    this.simplifyAsync(feature, currentBounds, currentZoom, false);
+                }
+            });
+        }
+        this.reloadCurrentFeatures(currentBounds, currentZoom);
     }
     
-    public abstract Iterator<VectorFeature> getVisibleFeatures(GeoBounds bounds);
+    private void reloadCurrentFeatures(GeoBounds bounds, double zoom) {
+        this.features.forEach((uuid, feature) -> {
+            this.simplifyAsync(feature, bounds, zoom, true);
+        });
+    }
     
+    private void simplifyAsync(VectorFeature feature, GeoBounds bounds, double zoom, boolean replaceIfExists) {
+        UUID uuid = feature.uid();
+        @SuppressWarnings("unchecked")
+        Future<VectorFeature> f = (Future<VectorFeature>) this.executor.submit(() -> {
+            if(!replaceIfExists && this.features.containsKey(uuid)) return;
+            VectorFeature simplifiable;
+            if(feature instanceof SimplifiedVectorFeature) {
+                simplifiable = ((SimplifiedVectorFeature) feature).getOriginal();
+            } else {
+                simplifiable = feature;
+            }
+            VectorFeature simplified = SimplifiedVectorFeature.simplify(simplifiable, bounds, zoom, 5f);
+            if(simplified != null) {
+                if(replaceIfExists) {
+                    this.features.put(uuid, simplified);
+                } else {
+                    this.features.putIfAbsent(uuid, simplified);
+                }
+            } else if(replaceIfExists) {
+                this.features.remove(uuid);
+            }
+        });
+        this.loading.put(uuid, f);
+    }
+    
+    private void removeLoaded() {
+        this.loading.forEach((uuid, future) -> {
+            if(future.isDone()) this.loading.remove(uuid);
+        });
+    }
+
     private void drawFeature(VectorFeature feature, int depth) {
         if(feature instanceof MultiGeometry) {
             if(this.checkDepth(depth)) this.drawMultiGeometry((MultiGeometry) feature, depth++);
@@ -103,30 +161,29 @@ public abstract class VectorLayer extends MapLayer {
             this.drawPoint((Point) feature);
         }
     }
-    
+
     private void drawMultiGeometry(MultiGeometry geometries, int depth) {
         for(VectorFeature feature: geometries) this.drawFeature(feature, depth);
     }
-    
+
     private void drawMultiPolyon(MultiPolygon polygons) {
         for(Polygon polygon: polygons) this.drawPolygon(polygon);
     }
-    
+
     private void drawMultiLineString(MultiLineString lines) {
         for(LineString line: lines) this.drawLineString(line);
     }
-    
+
     private void drawMultiPoint(MultiPoint points) {
         for(Point point: points) this.drawPoint(point);
     }
-    
+
     private void drawPolygon(Polygon polygon) {
-        //TODO
+        //TODO draw Polygons
         this.polygonsRendered++;
     }
-    
+
     private void drawLineString(LineString line) {
-        //TODO
         GeoPoint[] geo = line.getPoints();
         double[] cart = new double[geo.length*2];
         for(int i=0; i<geo.length; i++) {
@@ -138,13 +195,13 @@ public abstract class VectorLayer extends MapLayer {
         RenderUtil.drawStrokeLine(color, line.getWidth(), cart);
         this.linesRendered++;
     }
-    
+
     private void drawPoint(Point point) {
         Vec2d pos = this.getRenderPos(point.getPosition());
         RenderUtil.drawRect(pos.x - 1, pos.y - 1, pos.x + 1, pos.y + 1, point.getColor().withAlpha(this.getAlpha()));
         this.pointsRendered++;
     }
-    
+
     private boolean checkDepth(int depth) {
         return depth <= MAX_FEATURE_DEPTH;
     }
@@ -159,6 +216,10 @@ public abstract class VectorLayer extends MapLayer {
 
     public int getPolygonsRendered() {
         return polygonsRendered;
+    }
+    
+    public int getLoadingCount() {
+        return this.loading.size();
     }
 
 }
