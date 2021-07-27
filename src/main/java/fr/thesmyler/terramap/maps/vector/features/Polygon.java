@@ -33,6 +33,11 @@ public interface Polygon extends VectorFeature {
      */
     Color getContourColor();
     
+    /**
+     * @return the width of the contours of this polygon for drawing
+     */
+    float getContourWidth();
+    
     @Override default boolean isIn(GeoBounds bounds) {
         for(GeoPoint point: this.getOuterRing()) {
             if(!bounds.contains(point)) return false;

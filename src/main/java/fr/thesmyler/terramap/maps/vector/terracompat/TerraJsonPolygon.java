@@ -51,6 +51,12 @@ public class TerraJsonPolygon extends TerraJsonVectorFeature implements Polygon 
         // TODO Auto-generated method stub
         return Color.YELLOW;
     }
+    
+    @Override
+    public float getContourWidth() {
+        // TODO Auto-generated method stub
+        return 1;
+    }
 
     private PolygonRing convertToRing(net.buildtheearth.terraplusplus.dataset.geojson.geometry.LineString line) {
         net.buildtheearth.terraplusplus.dataset.geojson.geometry.Point[] points = line.points();
@@ -60,4 +66,5 @@ public class TerraJsonPolygon extends TerraJsonVectorFeature implements Polygon 
         }
         return new UnmutablePolygonRing(geoPoints);
     }
+
 }
