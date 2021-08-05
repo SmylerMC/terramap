@@ -92,9 +92,19 @@ public class GeoBounds {
      * 
      * @return whether or not this box and the other intersects
      */
-    //FIXME GeoBounds#intersects(GeoBounds) is wrong, missing edge cases
     public boolean intersects(GeoBounds other) {
-        return this.contains(other.lowerCorner) || this.contains(other.upperCorner) || other.contains(this.lowerCorner) || other.contains(this.upperCorner);
+        if(other.isEmpty() || this.isEmpty()) return false;
+        GeoBounds[] partsThis = this.splitAtAntimeridian();
+        GeoBounds[] partsOther = other.splitAtAntimeridian();
+        for(GeoBounds tpart: partsThis) for(GeoBounds opart: partsOther) {
+            if(!(
+                    tpart.lowerCorner.latitude > opart.upperCorner.latitude
+                 || tpart.upperCorner.latitude < opart.lowerCorner.latitude
+                 || tpart.lowerCorner.longitude > opart.upperCorner.longitude
+                 || tpart.upperCorner.longitude < opart.lowerCorner.longitude))
+                return true;
+        }
+        return false;
     }
 
 
@@ -287,7 +297,7 @@ public class GeoBounds {
     
     @Override
     public String toString() {
-        return String.format(Locale.US, "GeoBoundsSquare{lower=%s, upper=%s}", this.lowerCorner, this.upperCorner);
+        return String.format(Locale.US, "GeoBounds{lower=%s, upper=%s}", this.lowerCorner, this.upperCorner);
     }
     
     /**

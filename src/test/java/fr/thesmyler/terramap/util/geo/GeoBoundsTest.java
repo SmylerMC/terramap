@@ -389,6 +389,12 @@ public class GeoBoundsTest {
                     new GeoBounds(leftDown, farLeftUp),
                     new GeoBounds(rightNegMid, farRightPosMid),
                     new GeoBounds(rightNegMid, farRightPosMid),
+                },
+                {
+                    // Squares intersect but do not contains each other's points
+                    new GeoBounds(leftDown, rightUp),
+                    new GeoBounds(farLeftNegMid, farRightPosMid),
+                    new GeoBounds(leftNegMid, rightPosMid)
                 }
         };
         for(GeoBounds[] bounds: tests) {
@@ -467,7 +473,7 @@ public class GeoBoundsTest {
     @Test
     public void toStringTest() {
         GeoBounds square = new GeoBounds(new GeoPoint(45d, -16d), new GeoPoint(-64d, 18d));
-        assertEquals("GeoBoundsSquare{lower=GeoPoint{lon=45.0°, lat=-16.0°}, upper=GeoPoint{lon=-64.0°, lat=18.0°}}", square.toString());
+        assertEquals("GeoBounds{lower=GeoPoint{lon=45.0°, lat=-16.0°}, upper=GeoPoint{lon=-64.0°, lat=18.0°}}", square.toString());
     }
 
 }
