@@ -34,7 +34,9 @@ public abstract class VectorLayer extends MapLayer {
 
     private int pointsRendered = 0;
     private int linesRendered = 0;
+    private int linePointsRendered = 0;
     private int polygonsRendered = 0;
+    private int polygonPointsRendered = 0;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final ConcurrentMap<UUID, VectorFeature> features = new ConcurrentHashMap<>();
@@ -67,7 +69,9 @@ public abstract class VectorLayer extends MapLayer {
 
         this.pointsRendered = 0;
         this.linesRendered = 0;
+        this.linePointsRendered = 0;
         this.polygonsRendered = 0;
+        this.polygonPointsRendered = 0;
 
         if(!this.lastBounds.equals(renderBounds)) {
             this.load(renderBounds, this.lastBounds, zoom, this.lastZoom);
@@ -190,6 +194,7 @@ public abstract class VectorLayer extends MapLayer {
             Vec2d pos = this.getRenderPos(geo[i]);
             cart[i*2] = pos.x;
             cart[i*2 + 1] = pos.y;
+            this.linePointsRendered++;
         }
         Color color = line.getColor().withAlpha(this.getAlpha());
         RenderUtil.drawStrokeLine(color, line.getWidth(), cart);
@@ -206,18 +211,44 @@ public abstract class VectorLayer extends MapLayer {
         return depth <= MAX_FEATURE_DEPTH;
     }
 
+    /**
+     * @return the number of points that were rendered the last time this layer was drawn
+     */
     public int getPointsRendered() {
         return pointsRendered;
     }
 
+    /**
+     * @return the number of lines that were rendered the last time this layer was drawn
+     */
     public int getLinesRendered() {
         return linesRendered;
     }
+    
+    /**
+     * @return the number of vertices used to draw lines the last time this layer was drawn
+     */
+    public int getLinePointsRendered() {
+        return this.linePointsRendered;
+    }
 
+    /**
+     * @return the number of polygons that were rendered the last time this layer was drawn
+     */
     public int getPolygonsRendered() {
         return polygonsRendered;
     }
     
+    /**
+     * @return the number of vertices used to draw polygons the last time this layer was drawn
+     */
+    public int getPolygonPointsRendered() {
+        return this.polygonPointsRendered;
+    }
+    
+    /**
+     * @return the number of geometry update tasks currently waiting to be processed or being processed
+     */
     public int getLoadingCount() {
         return this.loading.size();
     }

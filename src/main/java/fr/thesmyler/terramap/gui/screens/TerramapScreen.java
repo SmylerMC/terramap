@@ -409,15 +409,17 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             List<String> profilingResults = new ArrayList<>();
             this.formatProfilingResult(profilingResults, "", "");
             dbText += "\n" + String.join("\n", profilingResults);
-            int points = 0, lines = 0, polygons = 0, loading = 0;
+            int points = 0, lines = 0, linePoints = 0, polygons = 0, polygonPoints = 0, loading = 0;
             for(MapLayer layer: this.map.getOverlayLayers()) if(layer instanceof VectorLayer) {
                 VectorLayer vectorLayer = (VectorLayer) layer;
                 points += vectorLayer.getPointsRendered();
                 lines += vectorLayer.getLinesRendered();
+                linePoints += vectorLayer.getLinePointsRendered();
                 polygons += vectorLayer.getPolygonsRendered();
+                polygonPoints += vectorLayer.getPolygonPointsRendered();
                 loading += vectorLayer.getLoadingCount();
             }
-            dbText += "\nPoints: " + points + " / LineStrings: " + lines + " / Polygons: " + polygons + " / Loading: " + loading; 
+            dbText += String.format("\nPoints: %s | Lines: %s/%s | Polygons: %s/%s | Loading: %s", points, lines, linePoints, polygons, polygonPoints, loading); 
             this.debugText.setText(new TextComponentString(dbText));
             this.debugText.setAnchorY(this.height - this.debugText.getHeight());
         }
