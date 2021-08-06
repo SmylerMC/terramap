@@ -38,12 +38,21 @@ public abstract class VectorLayer extends MapLayer {
     private int polygonsRendered = 0;
     private int polygonPointsRendered = 0;
 
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(r);
+        t.setName(String.format("Terramap vector worker (%s)", this.getId()));
+        t.setDaemon(true);
+        t.setPriority(Thread.MIN_PRIORITY);
+        return t;
+    });
     private final ConcurrentMap<UUID, VectorFeature> features = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Future<VectorFeature>> loading = new ConcurrentHashMap<>();
 
     private GeoBounds lastBounds = GeoBounds.EMPTY;
     private double lastZoom = Double.MIN_VALUE;
+    private long lastUpdateTime = 0;
+    
+    private long updateInterval = 500L;
 
     public VectorLayer(double tileScaling) {
         super(tileScaling);
@@ -52,6 +61,7 @@ public abstract class VectorLayer extends MapLayer {
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
+        final long ctime = System.currentTimeMillis();
         MapWidget parentMap = (MapWidget) parent;
         Profiler profiler = parentMap.getProfiler();
         boolean debug = parentMap.isDebugMode();
@@ -73,8 +83,11 @@ public abstract class VectorLayer extends MapLayer {
         this.polygonsRendered = 0;
         this.polygonPointsRendered = 0;
 
-        if(!this.lastBounds.equals(renderBounds)) {
+        if(!this.lastBounds.equals(renderBounds) && ctime - this.lastUpdateTime > this.updateInterval) {
             this.load(renderBounds, this.lastBounds, zoom, this.lastZoom);
+            this.lastBounds = renderBounds;
+            this.lastZoom = zoom;
+            this.lastUpdateTime = ctime;
         }
         this.removeLoaded();
         GlStateManager.pushMatrix();
@@ -92,21 +105,19 @@ public abstract class VectorLayer extends MapLayer {
         }
         GlStateManager.popMatrix();
         profiler.endSection();
-        this.lastBounds = renderBounds;
-        this.lastZoom = zoom;
     }
 
     public abstract Iterable<CompletableFuture<Iterable<VectorFeature>>> getVisibleFeatures(GeoBounds bounds);
 
     private void load(GeoBounds currentBounds, GeoBounds formerBounds, double currentZoom, double formerZoom) {
-        this.loading.forEach((u, f) -> f.cancel(true));
+        this.loading.forEach((k, f) -> f.cancel(true));
         this.loading.clear();
         for(CompletableFuture<Iterable<VectorFeature>> future: this.getVisibleFeatures(currentBounds)) {
             future.thenAcceptAsync(features -> {
                 for(VectorFeature feature: features) {
                     this.simplifyAsync(feature, currentBounds, currentZoom, false);
                 }
-            });
+            }, this.executor);
         }
         this.reloadCurrentFeatures(currentBounds, currentZoom);
     }
@@ -119,16 +130,17 @@ public abstract class VectorLayer extends MapLayer {
     
     private void simplifyAsync(VectorFeature feature, GeoBounds bounds, double zoom, boolean replaceIfExists) {
         UUID uuid = feature.uid();
-        @SuppressWarnings("unchecked")
-        Future<VectorFeature> f = (Future<VectorFeature>) this.executor.submit(() -> {
-            if(!replaceIfExists && this.features.containsKey(uuid)) return;
+        CompletableFuture<VectorFeature> f = CompletableFuture.supplyAsync(() -> {
+            if(!replaceIfExists && this.features.containsKey(uuid)) return null;
             VectorFeature simplifiable;
             if(feature instanceof SimplifiedVectorFeature) {
                 simplifiable = ((SimplifiedVectorFeature) feature).getOriginal();
             } else {
                 simplifiable = feature;
             }
-            VectorFeature simplified = SimplifiedVectorFeature.simplify(simplifiable, bounds, zoom, 5f);
+            return SimplifiedVectorFeature.simplify(simplifiable, bounds, zoom, 5f);
+        }, this.executor);
+        f.thenAccept(simplified -> {
             if(simplified != null) {
                 if(replaceIfExists) {
                     this.features.put(uuid, simplified);
@@ -251,6 +263,14 @@ public abstract class VectorLayer extends MapLayer {
      */
     public int getLoadingCount() {
         return this.loading.size();
+    }
+    
+    public long getUpdateInterval() {
+        return updateInterval;
+    }
+
+    public void setUpdateInterval(long updateInterval) {
+        this.updateInterval = updateInterval;
     }
 
 }
