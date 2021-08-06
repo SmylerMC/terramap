@@ -65,11 +65,12 @@ public abstract class SimplifiedVectorFeature implements VectorFeature {
         Vec2d lastPos = WebMercatorUtil.fromGeo(points[0], zoom);
         boolean in = viewPort.contains(lastPoint);
         if(in) builder.addPointToLine(lastPoint);
-        for(int i=1; i < points.length - 1; i++) {
+        for(int i=1; i < points.length; i++) {
             GeoPoint point = points[i];
             Vec2d pos = WebMercatorUtil.fromGeo(point, zoom);
             int interCount = countEdgeIntersections(lastPoint, point, viewPort);
-            if(in && interCount == 0 && pos.substract(lastPos).taxicabNorm() >= distance) {
+            boolean isLast = i == points.length - 1;
+            if(in && interCount == 0 && (pos.substract(lastPos).taxicabNorm() >= distance || isLast)) {
                 builder.addPointToLine(point);
                 lastPos = pos;
                 lastPoint = point;
@@ -82,14 +83,13 @@ public abstract class SimplifiedVectorFeature implements VectorFeature {
                 if(interCount > 0) {
                     builder.addPointToLine(lastPoint);
                     builder.addPointToLine(point);
-                    builder.endLine();
                 }
                 lastPos = pos;
                 lastPoint = point;
             }
             in = viewPort.contains(point);
         }
-        return builder.addPointToLine(points[points.length - 1]).endLine().build();
+        return builder.endLine().build();
     }
 
     private static int countEdgeIntersections(GeoPoint point1, GeoPoint point2, GeoBounds bounds) {
