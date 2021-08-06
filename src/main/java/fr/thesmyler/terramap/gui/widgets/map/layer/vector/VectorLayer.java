@@ -21,6 +21,7 @@ import fr.thesmyler.terramap.maps.vector.features.MultiPolygon;
 import fr.thesmyler.terramap.maps.vector.features.Point;
 import fr.thesmyler.terramap.maps.vector.features.Polygon;
 import fr.thesmyler.terramap.maps.vector.features.VectorFeature;
+import fr.thesmyler.terramap.maps.vector.simplified.FeatureSimplifier;
 import fr.thesmyler.terramap.maps.vector.simplified.SimplifiedVectorFeature;
 import fr.thesmyler.terramap.util.geo.GeoBounds;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
@@ -45,6 +46,7 @@ public abstract class VectorLayer extends MapLayer {
         t.setPriority(Thread.MIN_PRIORITY);
         return t;
     });
+    private FeatureSimplifier simplifier = new FeatureSimplifier();
     private final ConcurrentMap<UUID, VectorFeature> features = new ConcurrentHashMap<>();
     private final ConcurrentMap<UUID, Future<VectorFeature>> loading = new ConcurrentHashMap<>();
 
@@ -138,7 +140,7 @@ public abstract class VectorLayer extends MapLayer {
             } else {
                 simplifiable = feature;
             }
-            return SimplifiedVectorFeature.simplify(simplifiable, bounds, zoom, 5f);
+            return this.simplifier.simplify(simplifiable, bounds, zoom, 5f);
         }, this.executor);
         f.thenAccept(simplified -> {
             if(simplified != null) {

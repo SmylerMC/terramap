@@ -18,7 +18,7 @@ import fr.thesmyler.terramap.util.geo.GeoPoint;
  *
  */
 //TODO Test unit
-public class SimplifiedFeatureBuilder {
+class SimplifiedFeatureBuilder {
 
     private List<GeoPoint> points = new ArrayList<>();
     private List<GeoPoint[]> lines = new ArrayList<>();
