@@ -18,7 +18,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
     public static final String ID = "creatures";
 
-    protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
+    protected final ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
             116, 108, 116, 122,
             116, 108, 116, 122,
             116, 136, 116, 150,
@@ -26,14 +26,14 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
     public AnimalMarkerController() {
         super(ID, 700, AnimalMarker.class);
-        this.button.setOnChange(b -> this.setVisibility(b));
+        this.button.setOnChange(this::setVisibility);
         this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.animals"));
     }
 
     @Override
     public AnimalMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
         if(TerramapClientContext.getContext().getProjection() == null) return new AnimalMarker[0];
-        Map<UUID, Entity> entities = new HashMap<UUID, Entity>();
+        Map<UUID, Entity> entities = new HashMap<>();
         for(Entity entity: TerramapClientContext.getContext().getEntities()) {
             if(entity instanceof IAnimals && !(entity instanceof IMob)) {
                 entities.put(entity.getPersistentID(), entity);

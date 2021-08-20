@@ -63,7 +63,7 @@ public class SP2CMapStylePacket implements IMessage {
         this.providerVersion = buf.readLong();
         String urlPattern = NetworkUtil.decodeStringFromByteBuf(buf);
         int nameCount = buf.readInt();
-        Map<String, String> names = new HashMap<String, String>();
+        Map<String, String> names = new HashMap<>();
         for(int i=0; i < nameCount; i++) {
             String key = NetworkUtil.decodeStringFromByteBuf(buf);
             String name = NetworkUtil.decodeStringFromByteBuf(buf);
@@ -71,7 +71,7 @@ public class SP2CMapStylePacket implements IMessage {
         }
         this.names = names;
         int copyrightCount = buf.readInt();
-        Map<String, String> copyrights = new HashMap<String, String>();
+        Map<String, String> copyrights = new HashMap<>();
         for(int i=0; i < copyrightCount; i++) {
             String key = NetworkUtil.decodeStringFromByteBuf(buf);
             String copyright = NetworkUtil.decodeStringFromByteBuf(buf);

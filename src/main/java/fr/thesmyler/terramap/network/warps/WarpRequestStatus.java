@@ -15,7 +15,7 @@ public enum WarpRequestStatus {
     private final byte code;
     private final boolean success;
 
-    private WarpRequestStatus(int networkCode, boolean success) {
+    WarpRequestStatus(int networkCode, boolean success) {
         this.code = (byte)networkCode;
         this.success = success;
     }

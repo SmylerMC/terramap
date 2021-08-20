@@ -26,19 +26,20 @@ import net.minecraft.util.text.TextComponentString;
 
 public class TestScreen extends Screen {
 
-    private GuiScreen parent;
-    private Animation animation = new Animation(10000);
+    private final GuiScreen parent;
+    private Animation animation;
     private int counter = 0;
-    private TextWidget fpsCounter;
-    private TextWidget focus;
+    private final TextWidget fpsCounter;
+    private final TextWidget focus;
     private TextWidget hovered;
     private TextWidget colored;
-    private TextFieldWidget textField;
+    private final TextFieldWidget textField;
     private TextButtonWidget testButton;
     private WidgetContainer[] subScreens;
     private int currentSubScreen = 0;
 
-    private TexturedButtonWidget previous, next;
+    private final TexturedButtonWidget previous;
+    private final TexturedButtonWidget next;
 
     public TestScreen(GuiScreen parent) {
         super(BackgroundOption.DEFAULT);
@@ -70,15 +71,14 @@ public class TestScreen extends Screen {
         this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen};
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
-        TextWidget title = new TextWidget(this.width/2, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        TextWidget title = new TextWidget(this.width / 2f, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
         content.addWidget(title);
-        content.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> {Minecraft.getMinecraft().displayGuiScreen(this.parent);}));
+        content.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
         content.addWidget(next.setX(this.width - 20).setY(this.height - 20));
         content.addWidget(previous.setX(5).setY(this.height - 20));
         content.addWidget(
                 new TextButtonWidget(13, 13, 10, 100, "Reset screen",
-                        ()-> {Minecraft.getMinecraft().displayGuiScreen(new TestScreen(this.parent));}
-                        )
+                        () -> Minecraft.getMinecraft().displayGuiScreen(new TestScreen(this.parent)))
                 );
 
         // === Text related stuff and general features examples === //
@@ -99,9 +99,7 @@ public class TestScreen extends Screen {
         // === Button screen: examples on how to use button widgets === //
 
         this.testButton = new TextButtonWidget(0, 0, 1, 150, "Click me!",
-                () -> {
-                    this.testButton.setText("Nice, double click me now!");
-                },
+                () -> this.testButton.setText("Nice, double click me now!"),
                 () -> {
                     this.testButton.setText("I'm done now :(");
                     this.testButton.disable();
@@ -118,15 +116,15 @@ public class TestScreen extends Screen {
         buttonScreen.addWidget(new TexturedButtonWidget(180, 30, 1, IncludedTexturedButtons.RIGHT, null));
         ToggleButtonWidget tb1 = new ToggleButtonWidget(0, 60, 1, true);
         buttonScreen.addWidget(tb1);
-        buttonScreen.addWidget(new ToggleButtonWidget(30, 60, 1, true, b -> tb1.setEnabled(b)));
-        buttonScreen.addWidget(new OptionButtonWidget<String>(0, 90, 2, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
+        buttonScreen.addWidget(new ToggleButtonWidget(30, 60, 1, true, tb1::setEnabled));
+        buttonScreen.addWidget(new OptionButtonWidget<>(0, 90, 2, 150, new String[]{"Option 1", "Option 2", "Option 3", "Option 4"}));
 
 
         // === Slider screen: examples on how to use slider widgets === //
 
         sliderScreen.addWidget(new IntegerSliderWidget(0, 0, 1, 150, 0, 100, 50));
         sliderScreen.addWidget(new FloatSliderWidget(0, 30, 1, 150, 0, 1, 0.5));
-        sliderScreen.addWidget(new OptionSliderWidget<String>(0, 60, 1, 150, new String[] {"Option 1", "Option 2", "Option 3", "Option 4"}));
+        sliderScreen.addWidget(new OptionSliderWidget<>(0, 60, 1, 150, new String[]{"Option 1", "Option 2", "Option 3", "Option 4"}));
         sliderScreen.addWidget(new IntegerSliderWidget(0, 90, 1, 150, 30, 0, 100, 50));
         sliderScreen.addWidget(new IntegerSliderWidget(0, 140, 1, 150, 10, 0, 100, 50));
 
@@ -140,16 +138,14 @@ public class TestScreen extends Screen {
         MenuWidget a = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
         MenuWidget very = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
         MenuWidget nested = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
-        animationMenu.addEntry("Show", () -> {animation.start(AnimationState.ENTER);});
-        animationMenu.addEntry("Hide", () -> {animation.start(AnimationState.LEAVE);});
-        animationMenu.addEntry("Flash", () -> {animation.start(AnimationState.FLASH);});
-        animationMenu.addEntry("Continuous", ()-> {animation.start(AnimationState.CONTINUOUS_ENTER);});
-        animationMenu.addEntry("Continuous backward", () -> {animation.start(AnimationState.CONTINUOUS_LEAVE);});
-        animationMenu.addEntry("Back and forth", () -> {animation.start(AnimationState.BACK_AND_FORTH);});
-        animationMenu.addEntry("Stop", () -> {animation.start(AnimationState.STOPPED);});
-        rcm.addEntry("Close", () -> {
-            Minecraft.getMinecraft().displayGuiScreen(this.parent);
-        });
+        animationMenu.addEntry("Show", () -> animation.start(AnimationState.ENTER));
+        animationMenu.addEntry("Hide", () -> animation.start(AnimationState.LEAVE));
+        animationMenu.addEntry("Flash", () -> animation.start(AnimationState.FLASH));
+        animationMenu.addEntry("Continuous", () -> animation.start(AnimationState.CONTINUOUS_ENTER));
+        animationMenu.addEntry("Continuous backward", () -> animation.start(AnimationState.CONTINUOUS_LEAVE));
+        animationMenu.addEntry("Back and forth", () -> animation.start(AnimationState.BACK_AND_FORTH));
+        animationMenu.addEntry("Stop", () -> animation.start(AnimationState.STOPPED));
+        rcm.addEntry("Close", () -> Minecraft.getMinecraft().displayGuiScreen(this.parent));
         rcm.addEntry("Disabled Entry");
         rcm.addEntry("Here", here);
         here.addEntry("is", is);
@@ -169,7 +165,7 @@ public class TestScreen extends Screen {
         content.addWidget(subScreens[this.currentSubScreen]); // A screen is also a widget, that allows for a lot of flexibility
 
         // Same as Javascript's setInterval
-        content.scheduleAtIntervalBeforeUpdate(() -> {counterStr.setText(new TextComponentString("Scheduled callback called " + this.counter++));}, 1000);
+        content.scheduleAtIntervalBeforeUpdate(() -> counterStr.setText(new TextComponentString("Scheduled callback called " + this.counter++)), 1000);
         content.scheduleBeforeEachUpdate(() -> { // Called at every update
             this.animation.update();
             this.fpsCounter.setText(new TextComponentString("FPS: " + Minecraft.getDebugFPS()));

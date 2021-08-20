@@ -10,10 +10,10 @@ import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValid
 
 public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
     
-    private FlexibleWidgetContainer content;
-    private ScrollbarWidget verticalScrollbar = new ScrollbarWidget(Integer.MAX_VALUE, ScrollbarOrientation.VERTICAL);
-    private ScrollbarWidget horizontalScrollbar = new ScrollbarWidget(Integer.MAX_VALUE, ScrollbarOrientation.HORIZONTAL);
-    private TexturedButtonWidget button = new TexturedButtonWidget(Integer.MAX_VALUE, IncludedTexturedButtons.BLANK_15);
+    private final FlexibleWidgetContainer content;
+    private final ScrollbarWidget verticalScrollbar = new ScrollbarWidget(Integer.MAX_VALUE, ScrollbarOrientation.VERTICAL);
+    private final ScrollbarWidget horizontalScrollbar = new ScrollbarWidget(Integer.MAX_VALUE, ScrollbarOrientation.HORIZONTAL);
+    private final TexturedButtonWidget button = new TexturedButtonWidget(Integer.MAX_VALUE, IncludedTexturedButtons.BLANK_15);
 
     private boolean verticalWasVisibleLastUpdate = false;
     private boolean horizontalWasVisibleLastUpdate = false;

@@ -7,9 +7,9 @@ public class PlayerNameVisibilityController implements FeatureVisibilityControll
 
     public static final String ID = "player_names";
 
-    private MainPlayerMarkerController main;
-    private OtherPlayerMarkerController other;
-    private ToggleButtonWidget button;
+    private final MainPlayerMarkerController main;
+    private final OtherPlayerMarkerController other;
+    private final ToggleButtonWidget button;
 
     public PlayerNameVisibilityController(MainPlayerMarkerController main, OtherPlayerMarkerController other) {
         this.main = main;

@@ -30,7 +30,7 @@ public class CircularCompassWidget implements IWidget {
     private boolean fadeAwayOnZero = false;
     private String tooltip = null;
 
-    private Animation fader = new Animation(1000);
+    private final Animation fader = new Animation(1000);
 
     public CircularCompassWidget(float x, float y, int z, float size) {
         this.x = x;
@@ -246,11 +246,6 @@ public class CircularCompassWidget implements IWidget {
     @Override
     public String getTooltipText() {
         return this.tooltip;
-    }
-
-    @Override
-    public long getTooltipDelay() {
-        return IWidget.super.getTooltipDelay();
     }
 
     public void setTooltip(String tooltip) {

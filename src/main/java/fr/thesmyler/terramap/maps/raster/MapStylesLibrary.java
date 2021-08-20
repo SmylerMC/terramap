@@ -33,8 +33,8 @@ public class MapStylesLibrary {
 
     private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
     private static File configMapsFile;
-    private static Map<String, IRasterTiledMap> baseMaps = new HashMap<>();
-    private static Map<String, UrlTiledMap> userMaps = new HashMap<>();
+    private static final Map<String, IRasterTiledMap> baseMaps = new HashMap<>();
+    private static final Map<String, UrlTiledMap> userMaps = new HashMap<>();
 
     /**
      * Get the default Terramap maps, loaded from the jar and from the online source
@@ -44,9 +44,7 @@ public class MapStylesLibrary {
      * @return a new map that contains id => TiledMap couples
      */
     public static Map<String, IRasterTiledMap> getBaseMaps() {
-        Map<String, IRasterTiledMap> maps = new HashMap<>();
-        maps.putAll(baseMaps);
-        return maps;
+        return new HashMap<>(baseMaps);
     }
 
     /**
@@ -56,9 +54,7 @@ public class MapStylesLibrary {
      * @return a new map that contains id => TiledMap couples
      */
     public static Map<String, UrlTiledMap> getUserMaps() {
-        Map<String, UrlTiledMap> maps = new HashMap<>();
-        maps.putAll(userMaps);
-        return maps;
+        return new HashMap<>(userMaps);
     }
 
     /**
@@ -236,14 +232,13 @@ public class MapStylesLibrary {
 
     private static Map<String, UrlTiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
         String json = String.join("", Files.readAllLines(file.toPath()));
-        Map<String, UrlTiledMap> maps =  loadFromJson(json, provider);
-        return maps;
+        return loadFromJson(json, provider);
     }
 
     private static Map<String, UrlTiledMap> loadFromJson(String json, TiledMapProvider provider) {
         Gson gson = new Gson();
         MapStyleFile savedStyles = gson.fromJson(json, MapStyleFile.class);
-        Map<String, UrlTiledMap> styles = new HashMap<String, UrlTiledMap>();
+        Map<String, UrlTiledMap> styles = new HashMap<>();
         for(String id: savedStyles.maps.keySet()) {
             UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
             if(!TerramapConfig.enableDebugMaps && style.isDebug()) {
@@ -299,7 +294,7 @@ public class MapStylesLibrary {
 
         MapStyleFile(MapFileMetadata metadata) {
             this.metadata = metadata;
-            this.maps = new HashMap<String, SavedMapStyle>();
+            this.maps = new HashMap<>();
         }
 
     }

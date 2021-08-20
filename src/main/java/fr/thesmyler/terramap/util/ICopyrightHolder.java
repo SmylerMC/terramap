@@ -11,6 +11,6 @@ public interface ICopyrightHolder {
      * @param localeKey - the language key to get the copyright for
      * @return a copyright as a {@link ITextComponent}, translated to the appropriate language.
      */
-    public ITextComponent getCopyright(String localeKey);
+    ITextComponent getCopyright(String localeKey);
 
 }

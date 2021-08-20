@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TerramapRemotePlayer extends TerramapPlayer {
 
-    protected UUID uuid;
+    protected final UUID uuid;
     protected ITextComponent displayName;
     protected GeoPoint location;
     protected float azimut;

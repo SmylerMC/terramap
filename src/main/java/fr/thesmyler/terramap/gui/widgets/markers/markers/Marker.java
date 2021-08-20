@@ -15,7 +15,7 @@ public abstract class Marker implements IWidget {
     protected int minZoom;
     protected int maxZoom;
     private float x, y;
-    private MarkerController<?> controller;
+    private final MarkerController<?> controller;
 
     public Marker(MarkerController<?> controller, float width, float height, int minZoom, int maxZoom) {
         this.controller = controller;

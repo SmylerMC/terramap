@@ -43,8 +43,8 @@ public final class GeoServices {
 
     public static final String OSM_CR_LINK = "https://www.openstreetmap.org/copyright";
 
-    private static DecimalFormat decFormat6 = new DecimalFormat();
-    private static DecimalFormat decFormat1 = new DecimalFormat();
+    private static final DecimalFormat decFormat6 = new DecimalFormat();
+    private static final DecimalFormat decFormat1 = new DecimalFormat();
 
     static {
         decFormat6.setMaximumFractionDigits(6);
@@ -142,17 +142,17 @@ public final class GeoServices {
     }
 
     public static String formatGeoCoordForDisplay(double x) {
-        if(x==Double.NaN) return "-";
+        if(Double.isNaN(x)) return "-";
         return decFormat6.format(x);
     }
 
     public static String formatAzimuthForDisplay(float az) {
-        if(az==Float.NaN) return "-";
+        if(Float.isNaN(az)) return "-";
         return decFormat1.format(az);
     }
 
     public static String formatZoomLevelForDisplay(double zoomLevel) {
-        if(zoomLevel==Float.NaN) return "-";
+        if(Double.isNaN(zoomLevel)) return "-";
         return decFormat1.format(zoomLevel);
     }
 

@@ -12,7 +12,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class OtherPlayerMarker extends AbstractPlayerMarker {
 
-    protected TerramapPlayer player;
+    protected final TerramapPlayer player;
 
     public OtherPlayerMarker(MarkerController<?> controller, TerramapPlayer player, int downscaleFactor) {
         super(controller, null, downscaleFactor);

@@ -21,6 +21,6 @@ public enum MapContext {
     /**
      * Map preview
      */
-    PREVIEW;
+    PREVIEW
 
 }

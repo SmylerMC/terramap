@@ -15,7 +15,7 @@ import net.minecraft.util.text.translation.I18n;
 public class TranslationContextBuilder {
 
     // First version that supports translation in this context
-    private TerramapVersion translationVersion;
+    private final TerramapVersion translationVersion;
 
     public TranslationContextBuilder(TerramapVersion minVersion) {
         this.translationVersion = minVersion;

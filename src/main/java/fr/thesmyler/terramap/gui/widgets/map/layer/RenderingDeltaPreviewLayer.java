@@ -12,7 +12,7 @@ import net.minecraft.profiler.Profiler;
 
 public class RenderingDeltaPreviewLayer extends MapLayer {
 
-    private GeoPoint realCenter = GeoPoint.ORIGIN;
+    private GeoPoint realCenter;
 
     public RenderingDeltaPreviewLayer(double tileScaling, GeoPoint realCenter) {
         super(tileScaling);
@@ -81,12 +81,12 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
 
     @Override
     public String name() {
-        return "Rendering delta"; //TODO localized
+        return ""; // Never shown
     }
 
     @Override
     public String description() {
-        return "Offset preview"; //TODO localized
+        return ""; // Never shown
     }
 
 }

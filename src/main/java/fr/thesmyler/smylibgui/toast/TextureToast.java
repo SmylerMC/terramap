@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class TextureToast extends AbstractToast {
 
-    protected ResourceLocation icon;
+    protected final ResourceLocation icon;
 
     public TextureToast(String titleKey, String descriptionKey, ResourceLocation icon) {
         super(titleKey, descriptionKey);

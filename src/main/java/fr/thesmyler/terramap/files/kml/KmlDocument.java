@@ -12,7 +12,7 @@ public class KmlDocument {
     private String name;
 
     @XmlElement(name="Placemark")
-    private final List<KmlPlacemark> placemarks = new ArrayList<KmlPlacemark>();
+    private final List<KmlPlacemark> placemarks = new ArrayList<>();
 
     public KmlDocument(String name) {
         this.name = name;

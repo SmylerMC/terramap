@@ -91,9 +91,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     private final ControllerMapLayer controller;
     private RasterMapLayer background;
-    private List<MapLayer> overlayLayers = new ArrayList<>();
-    private List<Marker> markers = new ArrayList<>();
-    private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<String, MarkerController<?>>();
+    private final List<MapLayer> overlayLayers = new ArrayList<>();
+    private final List<Marker> markers = new ArrayList<>();
+    private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<>();
     private RightClickMarkerController rcmMarkerController;
     private MainPlayerMarkerController mainPlayerMarkerController;
     private OtherPlayerMarkerController otherPlayerMarkerController;
@@ -109,7 +109,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     private float drag = 0.3f;
     private float zoomSnapping = 1f;
     private float zoomResponsiveness = 0.01f;
-    private float rotationResponsiveness = 0.005f;
+    private final float rotationResponsiveness = 0.005f;
     protected double tileScaling;
 
     private MenuWidget rightClickMenu;
@@ -121,16 +121,16 @@ public class MapWidget extends FlexibleWidgetContainer {
     private MenuEntry copy2drMenuEntry;
     private MenuEntry setProjectionMenuEntry;
 
-    private TextWidget copyright;
-    private ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
+    private final TextWidget copyright;
+    private final ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 
     private final Profiler profiler = new Profiler();
     private static final GuiScreen CHAT_SENDER_GUI = new GuiScreen() {}; // The only reason this exists is so we can use it to send chat messages
     static { CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
 
-    private TextWidget errorText;
+    private final TextWidget errorText;
 
-    private List<ReportedError> reportedErrors = new ArrayList<>();
+    private final List<ReportedError> reportedErrors = new ArrayList<>();
     private static final int MAX_ERRORS_KEPT = 10;
 
     private final MapContext context;
@@ -213,7 +213,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * 
      * @param layer - the overlay to add
      * @return this map, for chaining
-     * @throws InvalidLayerLevelException if the layer's Z level is set to a reserved value, like {@link #BACKGROUND_Z} or {@link #CONTROLLER_Z}
+     * @throws IllegalArgumentException if the layer's Z level is set to a reserved value, like {@link #BACKGROUND_Z} or {@link #CONTROLLER_Z}
      */
     public MapWidget addOverlayLayer(MapLayer layer) {
         switch(layer.getZ()) {
@@ -673,7 +673,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * but rather on the parent screen.
      * 
      * @param widget to add
-     * @throws InvalidLayerLevelException if the widget has an incompatible z value
+     * @throws IllegalArgumentException if the widget has an incompatible z value
      */
     @Override @Deprecated
     public WidgetContainer addWidget(IWidget widget) {
@@ -720,9 +720,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     private void updateMarkers(float mouseX, float mouseY) {
         // Gather the existing classes
-        Map<Class<?>, List<Marker>> markers = new HashMap<Class<?>, List<Marker>>();
+        Map<Class<?>, List<Marker>> markers = new HashMap<>();
         for(MarkerController<?> controller: this.markerControllers.values()) {
-            markers.put(controller.getMarkerType(), new ArrayList<Marker>());
+            markers.put(controller.getMarkerType(), new ArrayList<>());
         }
 
         // Sort the markers by class
@@ -781,25 +781,23 @@ public class MapWidget extends FlexibleWidgetContainer {
     private void createRightClickMenu() {
         Font font = SmyLibGui.DEFAULT_FONT;
         this.rightClickMenu = new MenuWidget(1500, font);
-        this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () -> {
-            this.teleportPlayerTo(this.mouseLocation);
-        });
-        MenuEntry centerHere = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.center"), () -> {
-            this.setCenterLocation(this.mouseLocation);
-        });
+        this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () ->
+            this.teleportPlayerTo(this.mouseLocation)
+        );
+        MenuEntry centerHere = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.center"), () ->
+            this.setCenterLocation(this.mouseLocation)
+        );
         centerHere.enabled = this.interactive;
         MenuWidget copySubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
-        copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.geo"), () -> {
-            GuiScreen.setClipboardString("" + this.mouseLocation.latitude + " " + this.mouseLocation.longitude);
-        });
+        copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.geo"), () ->
+            GuiScreen.setClipboardString("" + this.mouseLocation.latitude + " " + this.mouseLocation.longitude)
+        );
         this.copyBlockMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
             try {
-                String strToCopy = "Outside projection";
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.round(coords[0]);
                 String dispY = "" + Math.round(coords[1]);
-                strToCopy = dispX + " " + dispY;
-                GuiScreen.setClipboardString(strToCopy);
+                GuiScreen.setClipboardString(dispX + " " + dispY);
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copyblock"));
@@ -808,12 +806,10 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
             try {
-                String strToCopy = "Outside projection";
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
-                strToCopy = dispX + " " + dispY;
-                GuiScreen.setClipboardString(strToCopy);
+                GuiScreen.setClipboardString(dispX + " " + dispY);
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copychunk"));
@@ -822,12 +818,10 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
             try {
-                String strToCopy = "Outside projection";
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
-                strToCopy = "r." + dispX + "." + dispY + ".mca";
-                GuiScreen.setClipboardString(strToCopy);
+                GuiScreen.setClipboardString("r." + dispX + "." + dispY + ".mca");
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copyregion"));
@@ -836,12 +830,10 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
             try {
-                String strToCopy = "Outside projection";
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
-                strToCopy = dispX + ".0." + dispY + ".3dr";
-                GuiScreen.setClipboardString(strToCopy);
+                GuiScreen.setClipboardString(dispX + ".0." + dispY + ".3dr");
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; //Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copy2dregion"));
@@ -850,12 +842,10 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
             try {
-                String strToCopy = "Outside projection";
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
                 String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
                 String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
-                strToCopy = dispX + "." + dispY + ".2dr";
-                GuiScreen.setClipboardString(strToCopy);
+                GuiScreen.setClipboardString(dispX + "." + dispY + ".2dr");
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; //Just a random string
                 this.reportError(s, I18n.format("terramap.mapwidget.error.copy2dregion"));
@@ -865,12 +855,12 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy"), copySubMenu);
         this.rightClickMenu.addSeparator();
         MenuWidget openSubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
-        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_osm"), () -> {
-            GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
-        });
-        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bte"), () -> {
-            GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
-        });
+        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_osm"), () ->
+            GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+        );
+        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bte"), () ->
+            GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+        );
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gmaps"), () -> {
             if(this.getMainPlayerMarker() != null) {
                 GeoPoint markerLocation = this.getMainPlayerMarker().getLocation();
@@ -884,21 +874,21 @@ public class MapWidget extends FlexibleWidgetContainer {
             }
 
         });
-        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_web"), () -> {
-            GeoServices.opentInGoogleEarthWeb(this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
-        });
-        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_pro"), () -> {
-            GeoServices.openInGoogleEarthPro(this.mouseLocation.longitude, this.mouseLocation.latitude);
-        });
-        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bing"), () -> {
-            GeoServices.openInBingMaps((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
-        });
-        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_wikimapia"), () -> {
-            GeoServices.openInWikimapia((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
-        });
-        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_yandex"), () -> {
-            GeoServices.openInYandex((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude);
-        });
+        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_web"), () ->
+            GeoServices.opentInGoogleEarthWeb(this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+        );
+        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_pro"), () ->
+            GeoServices.openInGoogleEarthPro(this.mouseLocation.longitude, this.mouseLocation.latitude)
+        );
+        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bing"), () ->
+            GeoServices.openInBingMaps((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+        );
+        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_wikimapia"), () ->
+            GeoServices.openInWikimapia((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+        );
+        openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_yandex"), () ->
+            GeoServices.openInYandex((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+        );
         this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
         this.rightClickMenu.addSeparator();
         this.setProjectionMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
@@ -954,8 +944,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @return the {@link FeatureVisibilityController} active for this map (the {@link Map} returned is a copy)
      */
     public Map<String, FeatureVisibilityController> getVisibilityControllers() {
-        Map<String, FeatureVisibilityController> m = new LinkedHashMap<>();
-        m.putAll(this.markerControllers);
+        Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers);
         if(this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
         if(this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
         for(MapLayer layer: this.overlayLayers) {
@@ -1303,7 +1292,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * @return whether or not this map will rotate with the markers it tracks if they implement {@link AbstractMovingMaker}
+     * @return whether or not this map will rotate with the markers it tracks if they implement {@link AbstractMovingMarker}
      */
     public boolean doesMapTrackRotation() {
         return this.trackRotation;
@@ -1470,8 +1459,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     private class ReportedError {
 
-        private Object source;
-        private String message;
+        private final Object source;
+        private final String message;
 
         private ReportedError(Object source, String message) {
             this.source = source;

@@ -1,6 +1,7 @@
 package fr.thesmyler.smylibgui.container;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -17,39 +18,39 @@ import fr.thesmyler.smylibgui.widgets.MenuWidget;
 
 public abstract class WidgetContainer implements IWidget{
 
-    protected TreeSet<IWidget> widgets = new TreeSet<IWidget>(
+    protected final TreeSet<IWidget> widgets = new TreeSet<>(
             (w2, w1) -> {
-                if(w2 != null && w2.equals(w1)) return 0;
-                if(w1 == null && w2 == null) return 0;
-                if(w1 == null) return Integer.MIN_VALUE;
-                if(w2 == null) return Integer.MAX_VALUE;
+                if (w2 != null && w2.equals(w1)) return 0;
+                if (w1 == null && w2 == null) return 0;
+                if (w1 == null) return Integer.MIN_VALUE;
+                if (w2 == null) return Integer.MAX_VALUE;
                 int z1 = w1.getZ();
                 int z2 = w2.getZ();
-                if(z1 == Integer.MAX_VALUE) return Integer.MAX_VALUE;
-                if(z1 == Integer.MIN_VALUE) return Integer.MIN_VALUE;
-                if(z2 == Integer.MAX_VALUE) return Integer.MIN_VALUE;
-                if(z2 == Integer.MIN_VALUE) return Integer.MAX_VALUE;
+                if (z1 == Integer.MAX_VALUE) return Integer.MAX_VALUE;
+                if (z1 == Integer.MIN_VALUE) return Integer.MIN_VALUE;
+                if (z2 == Integer.MAX_VALUE) return Integer.MIN_VALUE;
+                if (z2 == Integer.MIN_VALUE) return Integer.MAX_VALUE;
                 int r = z1 - z2;
-                return r == 0? w1.hashCode() - w2.hashCode(): r;
+                return r == 0 ? w1.hashCode() - w2.hashCode() : r;
             }
-            );
+    );
     
     private List<ScheduledTask> scheduledForUpdatePre = new ArrayList<>();
     private List<ScheduledTask> scheduledForUpdatePost = new ArrayList<>();
 
-    private int z;
+    private final int z;
     private boolean doScissor = true;
 
-    private float[] lastClickX = new float[Mouse.getButtonCount()];
-    private float[] lastClickY = new float[Mouse.getButtonCount()];
-    private long[] lastClickTime = new long[Mouse.getButtonCount()];
+    private final float[] lastClickX = new float[Mouse.getButtonCount()];
+    private final float[] lastClickY = new float[Mouse.getButtonCount()];
+    private final long[] lastClickTime = new long[Mouse.getButtonCount()];
 
-    private IWidget[] draggedWidget = new IWidget[Mouse.getButtonCount()];
-    private float[] dClickX = new float[Mouse.getButtonCount()];
-    private float[] dClickY = new float[Mouse.getButtonCount()];
-    private long[] dClickT = new long[Mouse.getButtonCount()];
+    private final IWidget[] draggedWidget = new IWidget[Mouse.getButtonCount()];
+    private final float[] dClickX = new float[Mouse.getButtonCount()];
+    private final float[] dClickY = new float[Mouse.getButtonCount()];
+    private final long[] dClickT = new long[Mouse.getButtonCount()];
 
-    private List<MouseAction> delayedActions = new ArrayList<MouseAction>();
+    private final List<MouseAction> delayedActions = new ArrayList<>();
 
     private IWidget focusedWidget;
     private IWidget hoveredWidget = null; // Used when drawing to check if a widget has already been considered as hovered
@@ -61,7 +62,7 @@ public abstract class WidgetContainer implements IWidget{
     private Font font = SmyLibGui.DEFAULT_FONT;
 
     public WidgetContainer(int z) {
-        for(int i=0; i<this.lastClickTime.length; i++) this.lastClickTime[i] = Long.MIN_VALUE;
+        Arrays.fill(this.lastClickTime, Long.MIN_VALUE);
         this.z = z;
     }
 
@@ -138,7 +139,7 @@ public abstract class WidgetContainer implements IWidget{
                     break;
                 }
             }
-            if(!processed && (event.type.equals(MouseActionType.CLICK) || event.type.equals(MouseActionType.CLICK))) {
+            if(!processed && (event.type.equals(MouseActionType.CLICK) || event.type.equals(MouseActionType.DOUBLE_CLICK))) {
                 this.focusedWidget = null;
             }
         }
@@ -271,9 +272,7 @@ public abstract class WidgetContainer implements IWidget{
      * @param widget
      */
     public void setFocus(IWidget widget) {
-        this.scheduleBeforeNextUpdate(() -> {
-            this.focusedWidget = widget;
-        });
+        this.scheduleBeforeNextUpdate(() -> this.focusedWidget = widget);
     }
 
     /**
@@ -302,10 +301,10 @@ public abstract class WidgetContainer implements IWidget{
 
     private class MouseAction {
 
-        MouseActionType type;
-        int button;
-        float mouseX;
-        float mouseY;
+        final MouseActionType type;
+        final int button;
+        final float mouseX;
+        final float mouseY;
 
         public MouseAction(MouseActionType type, int button, float mouseX, float mouseY) {
             this.button = button;
@@ -316,7 +315,7 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     private enum MouseActionType {
-        CLICK, RELEASE, DOUBLE_CLICK, SCROLL;
+        CLICK, RELEASE, DOUBLE_CLICK, SCROLL
     }
 
     @Override

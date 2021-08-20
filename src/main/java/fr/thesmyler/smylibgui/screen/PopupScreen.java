@@ -20,8 +20,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class PopupScreen extends Screen {
 
     private GuiScreen other;
-    private WidgetContainer content;
-    private float contentWidth, contentHeight;
+    private final WidgetContainer content;
+    private final float contentWidth;
+    private final float contentHeight;
     private boolean closeOnClickOutContent = true;
     private Color contentBackgroundColor = Color.DARKER_OVERLAY;
     private Color shadeColor = Color.TRANSPARENT;
@@ -98,7 +99,7 @@ public class PopupScreen extends Screen {
                 text.getY() + text.getHeight() + padding,
                 1, 40, I18n.format("smylibgui.popup.info.ok"));
         PopupScreen screen = new PopupScreen(text.getWidth() + padding*2, button.getY() + padding + button.getHeight());
-        button.setOnClick(() -> screen.close());
+        button.setOnClick(screen::close);
         button.enable();
         screen.getContent().addWidget(text);
         screen.getContent().addWidget(button);

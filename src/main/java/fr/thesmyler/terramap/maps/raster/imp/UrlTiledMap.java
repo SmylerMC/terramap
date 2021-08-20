@@ -40,8 +40,8 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     private final long version;
     private final String comment;
     private final int maxConcurrentRequests; // How many concurrent http connections are allowed by this map provider. This should be two by default, as that's what OSM requires
-    private boolean debug;
-    private Map<Integer, WebMercatorBounds> bounds;
+    private final boolean debug;
+    private final Map<Integer, WebMercatorBounds> bounds;
 
     private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
 
@@ -62,7 +62,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
             Map<Integer, WebMercatorBounds> bounds) {
         Preconditions.checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
         Preconditions.checkArgument(minZoom >= 0, "Zoom level must be at least 0");
-        Preconditions.checkArgument(maxZoom >= 0 || maxZoom > 25, "Zoom level must be at most 25");
+        Preconditions.checkArgument(maxZoom >= 0 && maxZoom <= 25, "Zoom level must be at most 25");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "A valid map id needs to be provided");
         Preconditions.checkArgument(names != null, "Valid map names needs to be provided");
         Preconditions.checkArgument(copyright != null, "Valid map coprights needs to be provided");

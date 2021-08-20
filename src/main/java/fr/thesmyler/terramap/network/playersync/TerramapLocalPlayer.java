@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TerramapLocalPlayer extends TerramapPlayer {
 
-    protected EntityPlayer player;
+    protected final EntityPlayer player;
 
     public TerramapLocalPlayer(EntityPlayer player) {
         this.player = player;

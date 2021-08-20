@@ -16,7 +16,7 @@ import io.netty.buffer.ByteBuf;
  */
 public class Warp {
 
-    private Map<String, String> properties = new HashMap<String, String>();
+    private final Map<String, String> properties = new HashMap<>();
 
     public Warp(String id) {
         this.setProperty("id", id);
@@ -71,7 +71,7 @@ public class Warp {
     }
 
     public void encodeToByteBuf(ByteBuf buf, String ... properties) {
-        Map<String, String> validProperties = new HashMap<String, String>();
+        Map<String, String> validProperties = new HashMap<>();
         for(String key: properties) {
             if(!key.equals("id") && this.properties.containsKey(key)) {
                 validProperties.put(key, this.getProperty(key));

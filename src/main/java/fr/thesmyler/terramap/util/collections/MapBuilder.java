@@ -19,14 +19,14 @@ public interface MapBuilder<T extends Map<K, V>, K, V> {
      * 
      * @return the map that was being built
      */
-    public T build();
+    T build();
     
     /**
      * Resets this builder: loose all references to the map that was being built.
      * 
      * @return this builder for chaining
      */
-    public MapBuilder<T, K, V> reset();
+    MapBuilder<T, K, V> reset();
     
     /**
      * Puts a key => value pair into the map that was being built.
@@ -37,7 +37,7 @@ public interface MapBuilder<T extends Map<K, V>, K, V> {
      * 
      * @return this builder for chaining
      */
-    public MapBuilder<T, K, V> put(K key, V value);
+    MapBuilder<T, K, V> put(K key, V value);
     
     /**
      * Counts how many entries will be in the map according to the current state of this builder.
@@ -45,6 +45,6 @@ public interface MapBuilder<T extends Map<K, V>, K, V> {
      * 
      * @return the number of items that would be in the map if {@link #build()} was called
      */
-    public int count();
+    int count();
 
 }

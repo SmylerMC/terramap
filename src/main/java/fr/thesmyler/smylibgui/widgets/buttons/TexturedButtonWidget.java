@@ -99,7 +99,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
         RenderUtil.drawTexturedModalRect(x, y, u, v, this.getWidth(), this.getHeight());
     }
 
-    public static enum IncludedTexturedButtons {
+    public enum IncludedTexturedButtons {
 
         // 15x15
         BLANK_15(15, 15, 60, 0, 60, 15, 60, 30, SmyLibGui.WIDGET_TEXTURES),
@@ -126,10 +126,10 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
         BLANK_21(21, 21, 60, 45, 60, 66, 60, 87, SmyLibGui.WIDGET_TEXTURES),
         SEARCH(21, 21, 81, 45, 81, 66, 81, 87, SmyLibGui.WIDGET_TEXTURES);
 
-        int width, height, u, v, hoverU, hoverV, disabledU, disabledV;
+        final int width, height, u, v, hoverU, hoverV, disabledU, disabledV;
         ResourceLocation texture;
 
-        private IncludedTexturedButtons(
+        IncludedTexturedButtons(
                 int width,
                 int height,
                 int u,

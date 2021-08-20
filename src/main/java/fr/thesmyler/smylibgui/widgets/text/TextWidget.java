@@ -17,7 +17,7 @@ public class TextWidget implements IWidget {
     protected ITextComponent component;
     protected ITextComponent[] lines;
     protected float anchorX, x, anchorY, y;
-    protected int z;
+    protected final int z;
     protected float width, height, maxWidth;
     protected boolean visible = true;
 

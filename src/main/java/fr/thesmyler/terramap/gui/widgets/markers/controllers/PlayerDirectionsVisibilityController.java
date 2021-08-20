@@ -8,9 +8,9 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
 
     public static final String ID = "player_directions";
 
-    private MainPlayerMarkerController main;
-    private OtherPlayerMarkerController other;
-    private ToggleButtonWidget button;
+    private final MainPlayerMarkerController main;
+    private final OtherPlayerMarkerController other;
+    private final ToggleButtonWidget button;
 
     public PlayerDirectionsVisibilityController(MainPlayerMarkerController main, OtherPlayerMarkerController other) {
         this.main = main;

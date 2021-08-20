@@ -132,12 +132,12 @@ public class UrlRasterTile implements IRasterTile {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return this.url.hashCode();
     }
 
     public static void registerErrorTexture() {
         TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-        int color[] = {170, 211, 223};
+        int[] color = {170, 211, 223};
         UrlRasterTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(ImageUtil.imageFromColor(256,  256, color)));
     }
 

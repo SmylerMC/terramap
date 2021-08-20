@@ -11,7 +11,7 @@ import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 public class ScaleIndicatorWidget implements IWidget {
 
     private float x, y;
-    private int z;
+    private final int z;
     private float width;
     private boolean visible = true;
 
