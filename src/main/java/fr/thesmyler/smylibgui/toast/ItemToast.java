@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemToast extends AbstractToast {
 
-    protected ItemStack icon;
+    protected final ItemStack icon;
 
     public ItemToast(String titleKey, String descriptionKey, ItemStack icon) {
         super(titleKey, descriptionKey);
@@ -36,7 +36,7 @@ public class ItemToast extends AbstractToast {
             manager.getMinecraft().fontRenderer.drawString(this.getLocalizedTitle(), 30, 7, 0x000000);
             manager.getMinecraft().fontRenderer.drawString(this.getLocalizedDescription(), 30, 18, 0xFF222222);
         }
-        if(this.icon != null) manager.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI((EntityLivingBase)null, this.icon, 8, 8);
+        if(this.icon != null) manager.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(null, this.icon, 8, 8);
         return currentTime - this.startTime < 5000L ? IToast.Visibility.SHOW : IToast.Visibility.HIDE;
     }
 

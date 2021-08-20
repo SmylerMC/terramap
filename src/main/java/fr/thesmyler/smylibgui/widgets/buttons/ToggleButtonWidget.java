@@ -12,8 +12,18 @@ import net.minecraft.client.renderer.GlStateManager;
 public class ToggleButtonWidget extends AbstractButtonWidget {
 
     protected boolean value;
-    private int onEnableU, onEnableV, offEnableU, offEnableV, onDisableU, onDisableV, offDisableU, offDisableV,
-    onEnableUFocus, onEnableVFocus, offEnableUFocus, offEnableVFocus;
+    private final int onEnableU;
+    private final int onEnableV;
+    private final int offEnableU;
+    private final int offEnableV;
+    private final int onDisableU;
+    private final int onDisableV;
+    private final int offDisableU;
+    private final int offDisableV;
+    private final int onEnableUFocus;
+    private final int onEnableVFocus;
+    private final int offEnableUFocus;
+    private final int offEnableVFocus;
     protected Consumer<Boolean> onChange;
 
     public ToggleButtonWidget(

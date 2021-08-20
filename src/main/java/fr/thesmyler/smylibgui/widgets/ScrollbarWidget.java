@@ -23,12 +23,12 @@ public class ScrollbarWidget extends WidgetContainer {
 
     private TexturedButtonWidget backwardButton;
     private TexturedButtonWidget forwardButton;
-    private Draggable drag = new Draggable();
+    private final Draggable drag = new Draggable();
     private float progress = 0f;
     private float targetProgress;
-    private float scrollResponsiveness = 0.02f;
+    private final float scrollResponsiveness = 0.02f;
     private float viewPort = 0.1f;
-    private ScrollbarOrientation orientation;
+    private final ScrollbarOrientation orientation;
 
     private long lastUpdateTime = 0;
     
@@ -232,7 +232,7 @@ public class ScrollbarWidget extends WidgetContainer {
 
     }
     
-    public static enum ScrollbarOrientation {
+    public enum ScrollbarOrientation {
         
         HORIZONTAL {
             

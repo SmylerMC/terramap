@@ -4,14 +4,14 @@ import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 
 public interface FeatureVisibilityController {
 
-    public boolean showButton();
+    boolean showButton();
 
-    public ToggleButtonWidget getButton();
+    ToggleButtonWidget getButton();
 
-    public String getSaveName();
+    String getSaveName();
 
-    public void setVisibility(boolean visibility);
+    void setVisibility(boolean visibility);
 
-    public boolean getVisibility();
+    boolean getVisibility();
 
 }

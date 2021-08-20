@@ -6,7 +6,7 @@ import fr.thesmyler.smylibgui.util.Util;
 
 public class FloatSliderWidget extends AbstractSliderWidget {
 
-    protected double min, max, value;
+    private double min, max, value;
     private int resolution;
     protected Consumer<Double> onChange;
 
@@ -15,7 +15,6 @@ public class FloatSliderWidget extends AbstractSliderWidget {
         this.min = min;
         this.max = max;
         this.value = startValue;
-        this.resolution = (int) Math.pow(10, Math.max(1, Math.ceil(Math.log10(width / (max - min)))));
     }
     
     public FloatSliderWidget(float x, float y, int z, float width, double min, double max, double startValue) {
@@ -49,6 +48,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
     public FloatSliderWidget setMin(double min) {
         this.min = min;
         this.setValue(this.value);
+        this.onChange();
         return this;
     }
 
@@ -59,6 +59,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
     public FloatSliderWidget setMax(double max) {
         this.max = max;
         this.setValue(this.value);
+        this.onChange();
         return this;
     }
 
@@ -84,6 +85,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
     }
 
     protected void onChange() {
+        this.resolution = (int) Math.pow(10, Math.max(1, Math.ceil(Math.log10(width / (max - min)))));
         if(this.onChange != null) this.onChange.accept(this.getValue());
     }
 

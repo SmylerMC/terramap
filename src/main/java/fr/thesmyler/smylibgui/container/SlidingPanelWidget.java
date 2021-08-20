@@ -13,7 +13,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
     protected Color backgroundColor = Color.DARKER_OVERLAY;
     protected Color contourColor = Color.DARK_GRAY;
     protected float contourSize = 2f;
-    protected Animation mainAnimation;
+    protected final Animation mainAnimation;
     protected boolean closeOnClickOther = false;
     protected boolean visible = true;
 
@@ -176,7 +176,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
     }
 
     public enum PanelTarget {
-        OPENED, CLOSED;
+        OPENED, CLOSED
     }
 
 }

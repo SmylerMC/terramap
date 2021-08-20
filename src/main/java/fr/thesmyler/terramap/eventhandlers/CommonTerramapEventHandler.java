@@ -57,11 +57,4 @@ public class CommonTerramapEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public void onWorldUnloads(WorldEvent.Unload event) {
-        /*
-         *  We would ideally like to free that memory, but unfortunately we can't easily tell which dimension is being unloaded
-         */
-    }
-
 }

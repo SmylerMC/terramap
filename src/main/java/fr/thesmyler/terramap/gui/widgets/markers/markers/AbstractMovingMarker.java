@@ -8,7 +8,7 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 
 public abstract class AbstractMovingMarker extends Marker {
 
-    protected Animation movingAnimation;
+    protected final Animation movingAnimation;
 
     protected GeoPoint location;
     protected float azimuth;

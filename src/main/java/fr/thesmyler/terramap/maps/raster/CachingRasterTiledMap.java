@@ -89,9 +89,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
 
     private void needTile(T tile) {
         if(tile.getPosition().getZoom() <= this.lowZoom) return; // Those should stay where they are
-        if(this.tileList.contains(tile)) {
-            this.tileList.remove(tile);
-        }
+        this.tileList.remove(tile);
         if(this.tileList.size() >= this.baseLoad) {
             this.tileList.add(this.baseLoad, tile);
         } else {
@@ -110,7 +108,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
                     try {
                         this.getTile(zoom, x, y).getTexture();
                     } catch (Throwable e) {
-                        TerramapMod.logger.error("Failed to load a low level texture for map: ", this.getId() + "-" + this.getProvider() + "v" + this.getProviderVersion() + " at " + " " + zoom + "/" + x + "/" + y);
+                        TerramapMod.logger.error("Failed to load a low level texture for map: %s-%sv%s at %s/%s/%s", this.getId(), this.getProvider(), this.getProviderVersion(),zoom, x, y);
                         TerramapMod.logger.catching(e);
                     }
                 }

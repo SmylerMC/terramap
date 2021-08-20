@@ -1,5 +1,5 @@
 ## Smylib GUI
-smylibgui.popup.info.ok
+smylibgui.popup.info.ok=Ok
 
 ## Config
 terramap.config.minimap.enable=Minimap: enable
@@ -153,6 +153,11 @@ terramap.mapwidget.error.copy3dregion=Failed to copy 3d region coordinates outsi
 terramap.mapwidget.error.copy2dregion=Failed to copy 2d region coordinates outside the projection
 terramap.mapwidget.error.tp=Could not teleport outside the projection
 terramap.maps.debug.terrain=Terrain debug
+terramap.mapwidget.layers.raster.desc=Raster tiled map
+terramap.mapwidget.layers.mcchunks.name=Minecraft outlines
+terramap.mapwidget.layers.mcchunks.desc=Regions and chunks
+terramap.mapwidget.layers.distortion.name=Distorion
+terramap.mapwidget.layers.distortion.desc=Distortion preview
 
 #### Full-screen map ####
 
@@ -196,6 +201,12 @@ terramap.terramapscreen.markercontrollers.buttons.animals=Toggle animals visibil
 terramap.terramapscreen.markercontrollers.buttons.mobs=Toggle mobs visibility
 terramap.terramapscreen.markercontrollers.buttons.direction=Toggle players' direction arrow visibility
 terramap.terramapscreen.markercontrollers.buttons.name=Toggle players' name visibility
+
+## Layer panel
+terramap.terramapscreen.layerscreen.title=Advanced layer settings
+terramap.terramapscreen.layerscreen.new=New layer
+terramap.terramapscreen.layerscreen.export=Export
+terramap.terramapscreen.layerscreen.import=Import
 
 #### In game ####
 terramap.ingameactions.copy.noplayer=Could not copy coordinates: no player

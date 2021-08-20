@@ -17,20 +17,19 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
-//TODO Take map rotation into account when rendering direction arrow
 public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
-    private int downScaleFactor;
+    private final int downScaleFactor;
 
     public AbstractPlayerMarker(MarkerController<?> controller, TerramapPlayer player, int downscaleFactor) {
-        super(controller, 16 / downscaleFactor, 16 / downscaleFactor);
+        super(controller, 16f / downscaleFactor, 16f / downscaleFactor);
         this.downScaleFactor = downscaleFactor;
     }
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         boolean drawName = this.showName(hovered);
-        float textureSize = 128 / this.downScaleFactor;
+        float textureSize = 128f / this.downScaleFactor;
         GlStateManager.enableAlpha();
         if(hovered) RenderUtil.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.DARK_OVERLAY);
 
@@ -64,7 +63,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.getSkin());
         Color.WHITE.withAlpha(this.getTransparency()).applyGL();
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
-        RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 80 / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
+        RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 80f / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
 
         if(drawName) {
             float halfSize = this.width / 2;

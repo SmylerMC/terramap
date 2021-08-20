@@ -25,6 +25,7 @@ import fr.thesmyler.terramap.util.math.Vec2d;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -32,7 +33,7 @@ import net.minecraft.util.text.TextComponentString;
 
 public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
-    protected IRasterTiledMap map;
+    protected final IRasterTiledMap map;
     protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
 
     public RasterMapLayer(IRasterTiledMap map, double tileScaling) {
@@ -275,7 +276,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         }
         if(perfectDraw && parentMap != null) parentMap.discardPreviousErrors(this);
         this.lastNeededTiles.removeAll(neededTiles);
-        this.lastNeededTiles.forEach(tile -> tile.cancelTextureLoading());
+        this.lastNeededTiles.forEach(IRasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;
 
         GlStateManager.popMatrix();
@@ -300,12 +301,12 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     @Override
     public String name() {
-        return this.map.getLocalizedName(SmyLibGui.getLanguage()); //TODO localized
+        return this.map.getLocalizedName(SmyLibGui.getLanguage());
     }
 
     @Override
     public String description() {
-        return "Raster tiled map"; //TODO localized
+        return I18n.format("terramap.mapwidget.layers.raster.desc");
     }
 
 }

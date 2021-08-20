@@ -44,23 +44,23 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 public class HudConfigScreen extends Screen {
 
-    private MapWidget minimap = new MapWidget(0, TerramapClientContext.getContext().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
-    private WindowedContainer minimapWindow = new WindowedContainer(15, this.minimap, "");
-    private CompassScreen compassScreen = new CompassScreen();
-    private WindowedContainer compassWindow = new WindowedContainer(16, this.compassScreen, "");
-    private OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<TileScalingOption>(10, TileScalingOption.values());
-    private IntegerSliderWidget zoomSlider = new IntegerSliderWidget(11, 0, 20, 10);
-    private OptionSliderWidget<MapStyleSliderEntry> styleSlider;
+    private final MapWidget minimap = new MapWidget(0, TerramapClientContext.getContext().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
+    private final WindowedContainer minimapWindow = new WindowedContainer(15, this.minimap, "");
+    private final CompassScreen compassScreen = new CompassScreen();
+    private final WindowedContainer compassWindow = new WindowedContainer(16, this.compassScreen, "");
+    private final OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<>(10, TileScalingOption.values());
+    private final IntegerSliderWidget zoomSlider = new IntegerSliderWidget(11, 0, 20, 10);
+    private final OptionSliderWidget<MapStyleSliderEntry> styleSlider;
     private MapStyleSliderEntry[] mapStyles = new MapStyleSliderEntry[0];
-    private ToggleButtonWidget otherPlayersButton = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget entitiesButton = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget minimapButton = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget compassButton = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget directionsButton = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget rotationButton = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget chunksButton = new ToggleButtonWidget(10, false);
-    private SlidingPanelWidget buttonPanel = new SlidingPanelWidget(20, 100);
-    private SlidingPanelWidget settingsPanel = new SlidingPanelWidget(20, 100);
+    private final ToggleButtonWidget otherPlayersButton = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget entitiesButton = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget minimapButton = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget compassButton = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget directionsButton = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget rotationButton = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget chunksButton = new ToggleButtonWidget(10, false);
+    private final SlidingPanelWidget buttonPanel = new SlidingPanelWidget(20, 100);
+    private final SlidingPanelWidget settingsPanel = new SlidingPanelWidget(20, 100);
     private int lastWidth, lastHeight = -1; // Used to re-calculate the relative minimap position when the game's window is resized
 
     public HudConfigScreen() {
@@ -68,7 +68,7 @@ public class HudConfigScreen extends Screen {
         List<MapStyleSliderEntry> maps = new ArrayList<>();
         TerramapClientContext.getContext().getMapStyles().values().stream()
         .sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
-        .filter(m -> m.isAllowedOnMinimap())
+        .filter(IRasterTiledMap::isAllowedOnMinimap)
         .forEachOrdered(m -> maps.add(new MapStyleSliderEntry(m)));
         this.mapStyles = maps.toArray(this.mapStyles);
         this.styleSlider = new OptionSliderWidget<>(0, 0, 15, 10, this.mapStyles);
@@ -92,8 +92,8 @@ public class HudConfigScreen extends Screen {
             if(v == TileScalingOption.AUTO) this.minimap.setTileScaling(SmyLibGui.getMinecraftGuiScale());
             else this.minimap.setTileScaling(v.value);
         });
-        this.minimapButton.setOnChange(b -> this.minimapWindow.setVisibility(b));
-        this.compassButton.setOnChange(b -> this.compassWindow.setVisibility(b));
+        this.minimapButton.setOnChange(this.minimapWindow::setVisibility);
+        this.compassButton.setOnChange(this.compassWindow::setVisibility);
         this.otherPlayersButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(OtherPlayerMarkerController.ID, b));
         this.entitiesButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, b).trySetFeatureVisibility(MobMarkerController.ID, b));
         this.directionsButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, b));
@@ -200,9 +200,9 @@ public class HudConfigScreen extends Screen {
             lineY = lastButton.getY() + lastButton.getHeight() + lineSpace;
         }
         // Second line
-        this.settingsPanel.addWidget(this.tileScalingSlider.setX(this.width / 2 - 153).setY(lastButton.getY() + lastButton.getHeight() + lineSpace).setWidth(100).setDisplayPrefix(I18n.format("terramap.hudconfig.scaling")).setTooltip(I18n.format("terramap.hudconfig.scaling.tooltip")));
-        this.settingsPanel.addWidget(this.zoomSlider.setWidth(100).setX(this.width/2 - 50).setY(this.tileScalingSlider.getY()).setDisplayPrefix(I18n.format("terramap.hudconfig.zoom")).setTooltip(I18n.format("terramap.hudconfig.zoom.tooltip")));
-        this.settingsPanel.addWidget(this.styleSlider.setWidth(100).setX(this.width/2 + 53).setY(this.tileScalingSlider.getY()).setTooltip(I18n.format("terramap.hudconfig.mapstyle.tooltip")));
+        this.settingsPanel.addWidget(this.tileScalingSlider.setX(this.width / 2f - 153).setY(lastButton.getY() + lastButton.getHeight() + lineSpace).setWidth(100).setDisplayPrefix(I18n.format("terramap.hudconfig.scaling")).setTooltip(I18n.format("terramap.hudconfig.scaling.tooltip")));
+        this.settingsPanel.addWidget(this.zoomSlider.setWidth(100).setX(this.width / 2f - 50f).setY(this.tileScalingSlider.getY()).setDisplayPrefix(I18n.format("terramap.hudconfig.zoom")).setTooltip(I18n.format("terramap.hudconfig.zoom.tooltip")));
+        this.settingsPanel.addWidget(this.styleSlider.setWidth(100).setX(this.width / 2f + 53f).setY(this.tileScalingSlider.getY()).setTooltip(I18n.format("terramap.hudconfig.mapstyle.tooltip")));
 
         // Setup panels
         this.buttonPanel.setBackgroundColor(Color.DARKER_OVERLAY);
@@ -214,8 +214,8 @@ public class HudConfigScreen extends Screen {
         this.buttonPanel.setOpenX(this.buttonPanel.getClosedX()).setOpenY(this.height - this.settingsPanel.getHeight() - this.buttonPanel.getHeight());
         this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 
-        TextWidget explain = new TextWidget(this.width/2, this.height/2 - 100, 10, new TextComponentTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
-        content.addWidget(explain.setMaxWidth(this.width * .8f).setAnchorY(this.height/2 - explain.getHeight() - 10));
+        TextWidget explain = new TextWidget(this.width / 2f, this.height / 2f - 100f, 10, new TextComponentTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        content.addWidget(explain.setMaxWidth(this.width * .8f).setAnchorY(this.height / 2f - explain.getHeight() - 10f));
 
         content.addWidget(this.buttonPanel);
         content.addWidget(this.settingsPanel);
@@ -298,7 +298,7 @@ public class HudConfigScreen extends Screen {
 
     private class CompassScreen extends FlexibleWidgetContainer {
 
-        RibbonCompassWidget compass = new RibbonCompassWidget(0, 0, 0, 30);
+        final RibbonCompassWidget compass = new RibbonCompassWidget(0, 0, 0, 30);
 
         CompassScreen() {
             super(0, 0, 0, 30, 30);
@@ -327,7 +327,7 @@ public class HudConfigScreen extends Screen {
     }
 
     private class MapStyleSliderEntry {
-        private IRasterTiledMap map;
+        private final IRasterTiledMap map;
         private MapStyleSliderEntry(IRasterTiledMap map) {
             this.map = map;
         }

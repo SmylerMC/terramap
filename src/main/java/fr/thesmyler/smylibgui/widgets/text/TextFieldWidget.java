@@ -35,17 +35,25 @@ import net.minecraft.util.math.MathHelper;
 public class TextFieldWidget implements IWidget {
 
     private String text;
-    private float x, y, width, height;
-    private int z;
+    private float x;
+    private float y;
+    private float width;
+    private final float height;
+    private final int z;
     private int selectionStart, selectionEnd, firstCharacterIndex, maxLength;
-    private Color focusedTextColor, enabledTextColor, disabledTextColor, backgroundColor, borderColorNormal, borderColorHovered;
+    private Color focusedTextColor;
+    private Color enabledTextColor;
+    private Color disabledTextColor;
+    private Color backgroundColor;
+    private final Color borderColorNormal;
+    private Color borderColorHovered;
     private boolean hasBackground, selecting;
     private boolean enabled, visible, menuEnabled;
-    private Animation cursorAnimation = new Animation(600);
-    private Font font;
+    private final Animation cursorAnimation = new Animation(600);
+    private final Font font;
     private Predicate<String> textValidator, onPressEnterCallback;
     private Consumer<String> onChangeCallback;
-    private MenuWidget rightClickMenu;
+    private final MenuWidget rightClickMenu;
     private boolean isSearchBar;
 
     public TextFieldWidget(float x, float y, int z, float width, String defaultText,
@@ -75,11 +83,11 @@ public class TextFieldWidget implements IWidget {
         this.visible = true;
         this.menuEnabled = true;
         this.rightClickMenu = new MenuWidget(5000, this.font);
-        this.rightClickMenu.addEntry("Copy", () -> {this.copySelectionToClipboard();});
-        this.rightClickMenu.addEntry("Cut", () -> {this.cutSelectionToClipboard();});
-        this.rightClickMenu.addEntry("Paste", () -> {this.pasteIn();});
+        this.rightClickMenu.addEntry("Copy", this::copySelectionToClipboard);
+        this.rightClickMenu.addEntry("Cut", this::cutSelectionToClipboard);
+        this.rightClickMenu.addEntry("Paste", this::pasteIn);
         this.rightClickMenu.addSeparator();
-        this.rightClickMenu.addEntry("Select all", () -> {this.selectAll();});
+        this.rightClickMenu.addEntry("Select all", this::selectAll);
         this.setCursorToEnd();
     }
 
@@ -223,7 +231,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     @Override
-    public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+    public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         if(!this.isEnabled()) return false;
         if(mouseButton == 0) {
             this.setSelectionStart(this.getWordSkipPosition(-1, this.getCursor(), false));
@@ -233,7 +241,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     @Override
-    public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
+    public void onKeyTyped(char typedChar, int keyCode, WidgetContainer parent) {
         if(!this.isEnabled()) return;
         this.selecting = GuiScreen.isShiftKeyDown();
         if (GuiScreen.isKeyComboCtrlA(keyCode)) {

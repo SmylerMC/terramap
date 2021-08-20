@@ -9,27 +9,27 @@ public interface IWidget {
     /**
      * @return the x position of this widget in the parent container
      */
-    public float getX();
+    float getX();
 
     /**
      * @return the y position of this widget in the parent container
      */
-    public float getY();
+    float getY();
 
     /**
      * @return the z position of this widget in the parent container
      */
-    public int getZ();
+    int getZ();
 
     /**
      * @return the width of this widget
      */
-    public float getWidth();
+    float getWidth();
 
     /**
      * @return the height of this widget
      */
-    public float getHeight();
+    float getHeight();
 
     /**
      * This method should draw the widget on the screen
@@ -42,7 +42,7 @@ public interface IWidget {
      * @param focused indicates whether or not this widget has its parent's focus (it will get keystrokes and so on)
      * @param parent the parent Screen
      */
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent);
+    void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent);
 
     /**
      * If this returns false, this widget will not be rendered and or notified of user actions
@@ -51,7 +51,7 @@ public interface IWidget {
      * 
      * @return true if the widget is visible
      */
-    public default boolean isVisible(WidgetContainer parent) {
+    default boolean isVisible(WidgetContainer parent) {
         return true;
     }
 
@@ -60,7 +60,7 @@ public interface IWidget {
      * 
      * @return true if this widget needs to process user inputs
      */
-    public default boolean takesInputs() {
+    default boolean takesInputs() {
         return true;
     }
 
@@ -78,7 +78,7 @@ public interface IWidget {
      * 
      * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
      */
-    public default boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+    default boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return true;
     }
 
@@ -90,14 +90,13 @@ public interface IWidget {
      * @param mouseY mouse y position relative to the parent's origin
      * @param mouseButton
      * @param parent the containing screen that was clicked. It may not be the direct parent
-     * @param parent screen
-     * 
+     *
      * @see #isVisible(WidgetContainer)
      * @see #takesInputs()
      * 
      * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
      */
-    public default boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+    default boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return true;
     }
 
@@ -115,7 +114,7 @@ public interface IWidget {
      * 
      * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
      */
-    public default boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+    default boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return this.onClick(mouseX, mouseY, mouseButton, parent);
     }
 
@@ -127,14 +126,13 @@ public interface IWidget {
      * @param mouseY position relative to the parent's origin
      * @param mouseButton
      * @param parent the containing screen that was clicked. It may not be the direct parent
-     * @param parent screen
-     * 
+     *
      * @see #isVisible(WidgetContainer)
      * @see #takesInputs()
      * 
      * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
      */
-    public default boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+    default boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return this.onParentClick(mouseX, mouseY, mouseButton, parent);
     }
 
@@ -146,7 +144,7 @@ public interface IWidget {
      * @param parent screen
      * @param timeSinceLastMove
      */
-    public default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long timeSinceLastMove) {}
+    default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long timeSinceLastMove) {}
 
     /**
      * Called when the mouse is released over this widget
@@ -155,10 +153,9 @@ public interface IWidget {
      * @param mouseY position relative to the parent's origin
      * @param button
      * @param draggedWidget the widget the user was dragging and drop on this widget
-     * @param parent screen
-     * 
+     *
      */
-    public default void onMouseReleased(float mouseX, float mouseY, int button, @Nullable IWidget draggedWidget) {}
+    default void onMouseReleased(float mouseX, float mouseY, int button, @Nullable IWidget draggedWidget) {}
 
     /**
      * Called between the time the events are processed and the screen is drawn
@@ -166,7 +163,7 @@ public interface IWidget {
      * @param mouseY
      * @param parent screen
      */
-    public default void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {}
+    default void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {}
 
     /**
      * Called when a key is typed
@@ -175,7 +172,7 @@ public interface IWidget {
      * @param keyCode
      * @param parent screen
      */
-    public default void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {}
+    default void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {}
 
     /**
      * Called when the mouse is over this widget and the wheel is turned
@@ -185,14 +182,15 @@ public interface IWidget {
      * @param parent screen
      * @param amount
      */
-    public default boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
+    default boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
         return true;
     }
 
     /**
      * @return the text to draw as a tooltip when this widget is hovered, or null if no tooltip should be displayed
      */
-    @Nullable public default String getTooltipText() {
+    @Nullable
+    default String getTooltipText() {
         return null;
     }
 
@@ -200,14 +198,14 @@ public interface IWidget {
      * 
      * @return the delay for which the mouse needs to stay over the widget without moving before the tooltip is displayed in milliseconds
      */
-    public default long getTooltipDelay() {
+    default long getTooltipDelay() {
         return 750;
     }
 
     /**
      * Called when the screen is closed or this widget is removed from the screen
      */
-    public default void onRemoved() {}
+    default void onRemoved() {}
 
 
 }

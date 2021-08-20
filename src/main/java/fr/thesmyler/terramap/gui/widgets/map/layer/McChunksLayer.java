@@ -31,9 +31,9 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     
     public static final String ID = "mcchunks";
     
-    private ProjectionCache cache = new ProjectionCache(4);
+    private final ProjectionCache cache = new ProjectionCache(4);
     
-    private ToggleButtonWidget button;
+    private final ToggleButtonWidget button;
     
     private boolean visible = false;
     
@@ -200,10 +200,10 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         
         GeographicProjection projection;
         
-        Map<Vec2d, GeoPoint> mcToGeo = new HashMap<>();
-        Set<Vec2d> accessedInCycle = new HashSet<>();
+        final Map<Vec2d, GeoPoint> mcToGeo = new HashMap<>();
+        final Set<Vec2d> accessedInCycle = new HashSet<>();
         
-        int maxProjectionsPerCycle = 50;
+        final int maxProjectionsPerCycle = 50;
         int[] projectionsThisCycle;
         
         ProjectionCache(int diffCount) {
@@ -295,12 +295,12 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
     @Override
     public String name() {
-        return "Minecraft outlines"; //TODO localized
+        return I18n.format("terramap.mapwidget.layers.mcchunks.name");
     }
 
     @Override
     public String description() {
-        return "Regions and chunks"; //TODO localized
+        return I18n.format("terramap.mapwidget.layers.mcchunks.desc");
     }
 
 }

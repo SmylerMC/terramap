@@ -22,7 +22,7 @@ import fr.thesmyler.terramap.TerramapMod;
 public class KmlFile {
 
     @XmlElement(name="Document")
-    private KmlDocument document = new KmlDocument();
+    private final KmlDocument document = new KmlDocument();
 
     @XmlAttribute
     private final String XLMNS = "http://www.opengis.net/kml/2.2";

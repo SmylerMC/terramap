@@ -7,8 +7,8 @@ public abstract class AbstractToast implements IToast {
 
     protected boolean justUpdated = true;
     protected long startTime;
-    protected String titleKey;
-    protected String descriptionKey;
+    protected final String titleKey;
+    protected final String descriptionKey;
 
     public AbstractToast(String titleKey, String descriptionKey) {
         this.titleKey = titleKey;

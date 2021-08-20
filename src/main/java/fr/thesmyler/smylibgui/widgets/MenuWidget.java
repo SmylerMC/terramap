@@ -15,14 +15,14 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class MenuWidget implements IWidget {
 
-    protected List<MenuEntry> entries = new ArrayList<MenuEntry>();
+    protected List<MenuEntry> entries = new ArrayList<>();
     protected MenuEntry hoveredEntry;
     protected MenuWidget displayedSubMenu;
 
     protected boolean visible = false;
     protected float x, y;
-    protected int z = 0;
-    protected Font font;
+    protected int z;
+    protected final Font font;
     private boolean isSubMenu = false;
     private boolean openOnClick = false;
 
@@ -43,13 +43,12 @@ public class MenuWidget implements IWidget {
     protected Color disabledTextColor = DEFAULT_COLOR_TEXT_DISABLED;
     protected Color hoveredTextColor = DEFAULT_COLOR_TEXT_HOVERED;
 
-    protected Animation mainAnimation = new Animation(150);
-    protected Animation hoverAnimation = new Animation(150);
+    protected final Animation mainAnimation = new Animation(150);
+    protected final Animation hoverAnimation = new Animation(150);
 
     public MenuWidget(int z, Font font) {
         this.z = z;
         this.font = font;
-        this.entries = new ArrayList<MenuEntry>();
     }
 
     @Override
@@ -99,13 +98,13 @@ public class MenuWidget implements IWidget {
                 }
                 if(subMenu != null && hovered && this.displayedSubMenu == null) {
                     this.displayedSubMenu = subMenu;
-                    parent.scheduleBeforeNextUpdate(()->{parent.addWidget(subMenu);});
+                    parent.scheduleBeforeNextUpdate(() -> parent.addWidget(subMenu));
                     float subX = x + width - parent.getX();
                     float subY = ty - parent.getY();
                     float subH = subMenu.getHeight();
                     float subW = subMenu.getWidth();
                     if(subY + subH > parent.getHeight()) subY = parent.getHeight() - subH - 1;
-                    if(subX + subW > parent.getWidth()) subX = subX -= subW + width + 1;
+                    if(subX + subW > parent.getWidth()) subX = subX - subW + width + 1;
                     subMenu.z = this.z + 1;
                     subMenu.isSubMenu = true;
                     subMenu.show(subX, subY);
@@ -136,9 +135,7 @@ public class MenuWidget implements IWidget {
                     if(entry.text != null && entry.enabled && entry.action != null ) {
                         entry.exec();
                         this.hide(parent);
-                        if(this.isSubMenu) {
-                            return true;
-                        }
+                        return this.isSubMenu;
                     }
                     return false;
                 }
@@ -246,9 +243,7 @@ public class MenuWidget implements IWidget {
 
     public void hide(@Nullable WidgetContainer parent) {
         this.hideSubMenu(parent);
-        if(parent != null) parent.scheduleBeforeNextUpdate(()->{
-            this.visible = false;
-        });
+        if(parent != null) parent.scheduleBeforeNextUpdate(() -> this.visible = false);
         else this.visible = false;
         if(parent != null && this.equals(parent.getFocusedWidget())) {
             parent.setFocus(null);
@@ -261,9 +256,7 @@ public class MenuWidget implements IWidget {
         if(m != null) {
             m.hide(parent);
             if(parent != null) {
-                parent.scheduleBeforeNextUpdate(()->{
-                    parent.removeWidget(m);
-                });
+                parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(m));
             }
         }
         this.displayedSubMenu = null;
@@ -353,10 +346,10 @@ public class MenuWidget implements IWidget {
 
     public class MenuEntry {
 
-        public String text;
-        private Runnable action;
+        public final String text;
+        private final Runnable action;
         public boolean enabled;
-        private MenuWidget subMenu = null;
+        private MenuWidget subMenu;
 
         private MenuEntry(String text, Runnable action, MenuWidget menu, boolean enabled) {
             this.text = text;

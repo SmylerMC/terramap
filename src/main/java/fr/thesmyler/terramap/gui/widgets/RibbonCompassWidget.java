@@ -22,7 +22,7 @@ public class RibbonCompassWidget implements IWidget {
     private static final ResourceLocation COMPASS_INDICATOR_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_indicator.png");
 
     private float x, y;
-    private int z;
+    private final int z;
     private float width, height, textureWidth, indicatorWidth, indicatorHeight;
     private float azimuth = 0;
     private boolean visibility = true;

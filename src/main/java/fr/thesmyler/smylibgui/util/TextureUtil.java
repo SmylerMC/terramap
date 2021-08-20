@@ -20,7 +20,9 @@ public final class TextureUtil {
 
     public static class TextureProperties {
 
-        private int width, height, format;
+        private final int width;
+        private final int height;
+        private final int format;
 
         public TextureProperties(int width, int height, int format) {
             this.width = width;

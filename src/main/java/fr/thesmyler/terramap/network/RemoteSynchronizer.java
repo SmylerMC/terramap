@@ -31,12 +31,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public abstract class RemoteSynchronizer {
 
-    public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<UUID, RegisteredForUpdatePlayer>();
+    public static final Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<>();
 
     public static void syncPlayers(WorldServer world) {
         if(playersToUpdate.size() <= 0) return;
         long ctime = System.currentTimeMillis();
-        List<TerramapLocalPlayer> players = new ArrayList<TerramapLocalPlayer>();
+        List<TerramapLocalPlayer> players = new ArrayList<>();
         for(EntityPlayer player: world.playerEntities) {
             if(!TerramapServerPreferences.shouldDisplayPlayer(world, player.getPersistentID())) continue;
             TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
@@ -165,8 +165,8 @@ public abstract class RemoteSynchronizer {
 
     public static class RegisteredForUpdatePlayer {
 
-        public EntityPlayerMP player;
-        public long lastRegisterTime;
+        public final EntityPlayerMP player;
+        public final long lastRegisterTime;
         boolean noticeSent = false;
 
         public RegisteredForUpdatePlayer(EntityPlayerMP player, long time) {

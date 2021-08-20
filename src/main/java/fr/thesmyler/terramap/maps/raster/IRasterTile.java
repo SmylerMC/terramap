@@ -5,14 +5,14 @@ import net.minecraft.util.ResourceLocation;
 
 public interface IRasterTile {
 
-    public boolean isTextureAvailable();
+    boolean isTextureAvailable();
 
-    public ResourceLocation getTexture() throws Throwable;
+    ResourceLocation getTexture() throws Throwable;
 
-    public void cancelTextureLoading();
+    void cancelTextureLoading();
 
-    public void unloadTexture();
+    void unloadTexture();
 
-    public TilePosUnmutable getPosition();
+    TilePosUnmutable getPosition();
 
 }

@@ -17,17 +17,17 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private float topBarHeight = 12;
     private float effectiveTopBarHeight = topBarHeight;
     private float minInnerWidth = 20;
-    private float maxInnerWidth = Float.MAX_VALUE;
+    private final float maxInnerWidth = Float.MAX_VALUE;
     private float minInnerHeight = 20;
-    private float maxInnerHeight = Float.MAX_VALUE;
+    private final float maxInnerHeight = Float.MAX_VALUE;
     private boolean allowVerticalResize = true;
     private boolean allowHorizontalResize = true;
-    private boolean enableCustomCursors = true;
+    private final boolean enableCustomCursors = true;
     private boolean enableCenterDrag = false;
     private Color borderColor = Color.DARKER_OVERLAY;
     private Color centerDragWidgetColor = Color.LIGHT_OVERLAY;
     private Color titleColor = Color.WHITE;
-    private FlexibleWidgetContainer subScreen;
+    private final FlexibleWidgetContainer subScreen;
     private String windowTitle;
     private boolean visible = true;
 
@@ -95,7 +95,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private abstract class BaseDecorationWidget implements IWidget {
 
         private boolean lastHovered = false;
-        private Cursor cursor = null;
+        private Cursor cursor;
 
         public BaseDecorationWidget(Cursor cursor) {
             this.cursor = cursor;

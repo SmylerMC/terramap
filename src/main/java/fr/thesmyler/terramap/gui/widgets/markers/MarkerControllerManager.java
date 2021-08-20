@@ -19,9 +19,9 @@ public abstract class MarkerControllerManager {
     private static final Map<MapContext, List<Class<? extends MarkerController<?>>>> CONTROLLER_CLASSES;
 
     static {
-        CONTROLLER_CLASSES = new HashMap<MapContext, List<Class<? extends MarkerController<?>>>>();
+        CONTROLLER_CLASSES = new HashMap<>();
         for(MapContext c: MapContext.values()) {
-            CONTROLLER_CLASSES.put(c, new ArrayList<Class<? extends MarkerController<?>>>());
+            CONTROLLER_CLASSES.put(c, new ArrayList<>());
         }
 
     }

@@ -2,8 +2,8 @@ package fr.thesmyler.smylibgui.container;
 
 class ScheduledTask {
 
-    private long after;
-    private Runnable action;
+    private final long after;
+    private final Runnable action;
 
     public ScheduledTask(long when, Runnable action) {
         this.after = when;

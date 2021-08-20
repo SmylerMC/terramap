@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class HudScreenInitEvent extends Event {
 
-    private WidgetContainer content;
+    private final WidgetContainer content;
 
     public HudScreenInitEvent(WidgetContainer screen) {
         this.content = screen;

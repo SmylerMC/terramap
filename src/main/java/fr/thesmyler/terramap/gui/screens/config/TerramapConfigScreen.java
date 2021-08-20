@@ -32,24 +32,24 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 public class TerramapConfigScreen extends Screen {
 
-    private GuiScreen parent;
+    private final GuiScreen parent;
     private FlexibleWidgetContainer[] pages;
     private String[] titles;
     private TextWidget title;
     private int currentSubScreen = 0;
-    private TexturedButtonWidget next = new TexturedButtonWidget(10, IncludedTexturedButtons.RIGHT, this::nextPage);
-    private TexturedButtonWidget previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
-    private ToggleButtonWidget unlockZoomToggle = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget saveUIStateToggle = new ToggleButtonWidget(10, false);
-    private ToggleButtonWidget showChatOnMapToggle = new ToggleButtonWidget(10, false);
-    private OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<>(10, TileScalingOption.values());
-    private IntegerSliderWidget doubleClickDelaySlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MIN, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MAX, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_DEFAULT);
-    private IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.TILE_LOAD_MIN, TerramapConfig.CLIENT.TILE_LOAD_MAX, TerramapConfig.CLIENT.TILE_LOAD_DEFAULT);
-    private IntegerSliderWidget lowZoomLevelSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MIN, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MAX, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_DEFAULT);
-    private ToggleButtonWidget debugMapStylesToggle = new ToggleButtonWidget(10, false);
+    private final TexturedButtonWidget next = new TexturedButtonWidget(10, IncludedTexturedButtons.RIGHT, this::nextPage);
+    private final TexturedButtonWidget previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
+    private final ToggleButtonWidget unlockZoomToggle = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget saveUIStateToggle = new ToggleButtonWidget(10, false);
+    private final ToggleButtonWidget showChatOnMapToggle = new ToggleButtonWidget(10, false);
+    private final OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<>(10, TileScalingOption.values());
+    private final IntegerSliderWidget doubleClickDelaySlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MIN, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MAX, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_DEFAULT);
+    private final IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.TILE_LOAD_MIN, TerramapConfig.CLIENT.TILE_LOAD_MAX, TerramapConfig.CLIENT.TILE_LOAD_DEFAULT);
+    private final IntegerSliderWidget lowZoomLevelSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MIN, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MAX, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_DEFAULT);
+    private final ToggleButtonWidget debugMapStylesToggle = new ToggleButtonWidget(10, false);
     private TextButtonWidget reloadMapStylesButton;
-    private TextFieldWidget tpCommandField;
-    private TextWidget pageText;
+    private final TextFieldWidget tpCommandField;
+    private final TextWidget pageText;
 
     public TerramapConfigScreen(GuiScreen parent) {
         super(BackgroundOption.DEFAULT);
@@ -65,14 +65,14 @@ public class TerramapConfigScreen extends Screen {
         WidgetContainer content = this.getContent();
         content.removeAllWidgets(); //Remove the widgets that were already there
         content.cancellAllScheduled(); //Cancel all callbacks that were already there
-        this.title = new TextWidget(this.width/2, 10, 5, new TextComponentTranslation("terramap.configmenu.title"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        this.title = new TextWidget(this.width / 2f, 10, 5, new TextComponentTranslation("terramap.configmenu.title"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
         content.addWidget(this.title);
-        TextButtonWidget save = new TextButtonWidget(this.width/2 + 30, this.height - 30, 10, 100, I18n.format("terramap.configmenu.save"), this::saveAndClose);
-        TextButtonWidget cancel = new TextButtonWidget(this.width/2 - 130, save.getY(), save.getZ(), save.getWidth(), I18n.format("terramap.configmenu.cancel"), this::close);
-        TextButtonWidget reset = new TextButtonWidget(this.width/2 - 25, save.getY(), save.getZ(), 50, I18n.format("terramap.configmenu.reset"), this::reset);
+        TextButtonWidget save = new TextButtonWidget(this.width / 2f + 30, this.height - 30, 10, 100, I18n.format("terramap.configmenu.save"), this::saveAndClose);
+        TextButtonWidget cancel = new TextButtonWidget(this.width / 2f - 130, save.getY(), save.getZ(), save.getWidth(), I18n.format("terramap.configmenu.cancel"), this::close);
+        TextButtonWidget reset = new TextButtonWidget(this.width / 2f - 25, save.getY(), save.getZ(), 50, I18n.format("terramap.configmenu.reset"), this::reset);
         content.addWidget(save.setTooltip(I18n.format("terramap.configmenu.save.tooltip")));
-        content.addWidget(cancel.setTooltip(I18n.format("terramap.configmenu.save.cancel")));
-        content.addWidget(reset.setTooltip(I18n.format("terramap.configmenu.save.reset")));
+        content.addWidget(cancel.setTooltip(I18n.format("terramap.configmenu.cancel")));
+        content.addWidget(reset.setTooltip(I18n.format("terramap.configmenu.reset")));
         content.addWidget(this.next.setX(save.getX() + save.getWidth() + 5).setY(save.getY() + 2));
         content.addWidget(this.previous.setX(cancel.getX() - 20).setY(this.next.getY()));
         FlexibleWidgetContainer mapConfigScreen = new FlexibleWidgetContainer(20, 20, 1, this.width - 40, this.height - 75);
@@ -91,13 +91,13 @@ public class TerramapConfigScreen extends Screen {
 
         // Map settings
         TextWidget unlockZoomText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.unlockzoom"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
-        unlockZoomText.setAnchorX((mapConfigScreen.getWidth() - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth())/2 - 71).setAnchorY(this.height / 4 - 30);
+        unlockZoomText.setAnchorX((mapConfigScreen.getWidth() - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth()) / 2f - 71f).setAnchorY(this.height / 4f - 30);
         mapConfigScreen.addWidget(unlockZoomText);
         this.unlockZoomToggle.setTooltip(I18n.format("terramap.configmenu.unlockzoom.tooltip"));
         mapConfigScreen.addWidget(this.unlockZoomToggle.setX(unlockZoomText.getX() + unlockZoomText.getWidth() + 5).setY(unlockZoomText.getAnchorY() - 4));
         TextWidget saveUIStateText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.saveui"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
         this.saveUIStateToggle.setTooltip(I18n.format("terramap.configmenu.saveui.tooltip"));
-        saveUIStateText.setAnchorX((mapConfigScreen.getWidth() - saveUIStateText.getWidth() - this.saveUIStateToggle.getWidth())/2 + 64).setAnchorY(unlockZoomText.getAnchorY());
+        saveUIStateText.setAnchorX((mapConfigScreen.getWidth() - saveUIStateText.getWidth() - this.saveUIStateToggle.getWidth()) / 2f + 64f).setAnchorY(unlockZoomText.getAnchorY());
         mapConfigScreen.addWidget(saveUIStateText);
         mapConfigScreen.addWidget(this.saveUIStateToggle.setX(saveUIStateText.getX() + saveUIStateText.getWidth() + 5).setY(saveUIStateText.getAnchorY() - 4));
         TextWidget chatOnMapText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.chatonmap"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
@@ -154,7 +154,7 @@ public class TerramapConfigScreen extends Screen {
         // Footer
         this.getContent().addWidget(this.pages[this.currentSubScreen]);
         this.title.setText(new TextComponentString(this.titles[this.currentSubScreen]));
-        this.getContent().addWidget(this.pageText.setAnchorX(this.width/2).setAnchorY(this.height - 45).setAlignment(TextAlignment.CENTER));
+        this.getContent().addWidget(this.pageText.setAnchorX(this.width / 2f).setAnchorY(this.height - 45f).setAlignment(TextAlignment.CENTER));
         this.updateButtons();
     }
 
@@ -245,7 +245,7 @@ public class TerramapConfigScreen extends Screen {
 
         AUTO(0), POINT5(0.5), ONE(1), TWO(2), FOUR(4), HEIGHT(8);
 
-        double value;
+        final double value;
 
         TileScalingOption(double v) {
             this.value = v;
