@@ -21,7 +21,7 @@ public class Screen extends GuiScreen {
 
     private final InputProcessor processor;
 
-    private BackgroundOption background;
+    private final BackgroundOption background;
 
     public Screen(BackgroundOption background) {
         this.background = background;

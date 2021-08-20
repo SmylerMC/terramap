@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.util;
 
 public class Animation {
 
-    protected long duration;
+    protected final long duration;
     protected AnimationState state = AnimationState.STOPPED;
     protected long started = Long.MIN_VALUE;
     protected long updated = Long.MIN_VALUE;
@@ -67,7 +67,7 @@ public class Animation {
     }
 
     public int blend(int x1, int x2) {
-        return (int) this.blend((long)x1, (long)x2);
+        return (int) this.blend(x1, (long)x2);
     }
 
     public double blend(double x1, double x2) {
@@ -75,7 +75,7 @@ public class Animation {
     }
 
     public float blend(float x1, float x2) {
-        return (float) this.blend((double)x1, (double)x2);
+        return (float) this.blend(x1, (double)x2);
     }
 
     public Color fadeColor(Color color) {
@@ -101,6 +101,6 @@ public class Animation {
     }
 
     public enum AnimationState {
-        ENTER, LEAVE, FLASH, CONTINUOUS_ENTER, CONTINUOUS_LEAVE, BACK_AND_FORTH, STOPPED;
+        ENTER, LEAVE, FLASH, CONTINUOUS_ENTER, CONTINUOUS_LEAVE, BACK_AND_FORTH, STOPPED
     }
 }

@@ -11,10 +11,10 @@ public class Mat2d {
     public static final Mat2d INDENTITY = new Mat2d(1d, 0d, 0d, 1d);
     public static final Mat2d NULL = new Mat2d(0d, 0d, 0d, 0d);
 
-    private double x11;
-    private double x12;
-    private double x21;
-    private double x22;
+    private final double x11;
+    private final double x12;
+    private final double x21;
+    private final double x22;
 
     public Mat2d(double x11, double x12, double x21, double x22) {
         super();

@@ -54,11 +54,11 @@ public class TerramapClientContext {
 
     private static final GeographicProjection TERRAIN_PREVIEW_PROJECTION = new WebMercatorProjection(TerrainPreviewMap.BASE_ZOOM_LEVEL);
 
-    private Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<UUID, TerramapRemotePlayer>();
+    private final Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<>();
     private PlayerSyncStatus serverSyncPlayers = PlayerSyncStatus.DISABLED;
     private PlayerSyncStatus serverSyncSpectators = PlayerSyncStatus.DISABLED;
     private PlayerSyncStatus proxySyncPlayers = PlayerSyncStatus.DISABLED;
-    private PlayerSyncStatus proxySyncSpectators = PlayerSyncStatus.DISABLED;
+    private final PlayerSyncStatus proxySyncSpectators = PlayerSyncStatus.DISABLED;
     private TerramapVersion serverVersion = null;
     private String sledgehammerVersion = null;
     private EarthGeneratorSettings genSettings = null;
@@ -66,8 +66,8 @@ public class TerramapClientContext {
     private TerrainPreview terrainPreview = null;
     private boolean isRegisteredForUpdates = false;
     private String tpCommand = null;
-    private Map<String, IRasterTiledMap> serverMaps = new HashMap<>();
-    private Map<String, IRasterTiledMap> proxyMaps = new HashMap<>();
+    private final Map<String, IRasterTiledMap> serverMaps = new HashMap<>();
+    private final Map<String, IRasterTiledMap> proxyMaps = new HashMap<>();
     private boolean proxyHasWarpSupport = false;
     private boolean serverHasWarpSupport = false;
     private boolean allowPlayerRadar = true;
@@ -86,7 +86,7 @@ public class TerramapClientContext {
     }
 
     public Map<UUID, TerramapPlayer> getPlayerMap() {
-        Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
+        Map<UUID, TerramapPlayer> players = new HashMap<>();
         if(this.arePlayersSynchronized()) {
             players.putAll(this.remotePlayers);
         }
@@ -105,7 +105,7 @@ public class TerramapClientContext {
     }
 
     public Map<UUID, TerramapPlayer> getLocalPlayersMap() {
-        Map<UUID, TerramapPlayer> players = new HashMap<UUID, TerramapPlayer>();
+        Map<UUID, TerramapPlayer> players = new HashMap<>();
         for(EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) {
             players.put(player.getPersistentID(), new TerramapLocalPlayer(player));
         }
@@ -159,9 +159,8 @@ public class TerramapClientContext {
     }
 
     public void syncPlayers(TerramapRemotePlayer[] players) {
-        Set<TerramapRemotePlayer> toAdd = new HashSet<TerramapRemotePlayer>();
-        Set<UUID> toRemove = new HashSet<UUID>();
-        toRemove.addAll(this.remotePlayers.keySet());
+        Set<TerramapRemotePlayer> toAdd = new HashSet<>();
+        Set<UUID> toRemove = new HashSet<>(this.remotePlayers.keySet());
         for(TerramapRemotePlayer player: players) {
             if(toRemove.remove(player.getUUID())) {
                 TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
@@ -183,12 +182,12 @@ public class TerramapClientContext {
     private String buildCurrentServerIdentifer() {
         String worldType = this.isOnEarthWorld() ? "earth": "other";
         if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
-            return worldType + "@proxy:" + this.proxyUUID.toString();
+            return worldType + "@proxy:" + this.proxyUUID;
         } else if(this.worldUUID != null) {
-            return worldType + "@server:" + this.worldUUID.toString();
+            return worldType + "@server:" + this.worldUUID;
         } else {
             if(this.proxyUUID != null) {
-                return worldType + "@proxy:" + this.proxyUUID.toString();
+                return worldType + "@proxy:" + this.proxyUUID;
             }
             ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
             if(Minecraft.getMinecraft().isIntegratedServerRunning()) {

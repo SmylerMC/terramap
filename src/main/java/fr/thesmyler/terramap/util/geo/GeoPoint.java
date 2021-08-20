@@ -14,7 +14,6 @@ import net.buildtheearth.terraplusplus.util.geo.LatLng;
  * 
  * @author SmylerMC
  * 
- * TODO Refactor most of the code to use this class
  *
  */
 public class GeoPoint {

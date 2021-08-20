@@ -17,7 +17,7 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 
     public static final String ID = "mobs";
 
-    protected ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
+    protected final ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
             102, 108, 102, 122,
             102, 108, 102, 122,
             102, 136, 102, 150,
@@ -25,14 +25,14 @@ public class MobMarkerController extends MarkerController<MobMarker> {
 
     public MobMarkerController() {
         super(ID, 700, MobMarker.class);
-        this.button.setOnChange(b -> this.setVisibility(b));
+        this.button.setOnChange(this::setVisibility);
         this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.mobs"));
     }
 
     @Override
     public MobMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
         if(TerramapClientContext.getContext().getProjection() == null) return new MobMarker[0];
-        Map<UUID, Entity> entities = new HashMap<UUID, Entity>();
+        Map<UUID, Entity> entities = new HashMap<>();
         for(Entity entity: TerramapClientContext.getContext().getEntities()) {
             if(entity instanceof IMob) {
                 entities.put(entity.getPersistentID(), entity);

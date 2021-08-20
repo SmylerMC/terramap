@@ -17,7 +17,7 @@ class InputProcessor {
     private final float[] lastClickY = new float[Mouse.getButtonCount()];
     private final long[] lastClickTime = new long[Mouse.getButtonCount()];
     private int lastClickedButton = -1;
-    private Minecraft mc = Minecraft.getMinecraft();
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     public InputProcessor(WidgetContainer container) {
         this.container = container;

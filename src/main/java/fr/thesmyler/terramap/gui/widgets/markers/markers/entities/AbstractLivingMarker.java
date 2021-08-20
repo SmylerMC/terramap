@@ -24,7 +24,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
     protected ResourceLocation texture;
     protected int u, v, textureWidth, textureHeight;
-    protected Entity entity;
+    protected final Entity entity;
     protected GeoPoint actualLocation;
     protected float actualAzimuth;
 
@@ -109,7 +109,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
     @Override
     public String getIdentifier() {
-        return this.getControllerId() + ":" + this.entity.getUniqueID().toString();
+        return this.getControllerId() + ":" + this.entity.getUniqueID();
     }
 
     @Override

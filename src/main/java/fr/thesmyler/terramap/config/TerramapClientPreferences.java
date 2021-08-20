@@ -56,7 +56,7 @@ public class TerramapClientPreferences {
     public static boolean getServerHasShownWelcome(String serverId) {
         try {
             initPreferences();
-            return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).hasShownWelcome: false;
+            return preferences.servers.containsKey(serverId) && preferences.servers.get(serverId).hasShownWelcome;
         } catch(Exception e) {
             TerramapMod.logger.warn("Failed to query whether or not welcome was shown for " + serverId);
             TerramapMod.logger.catching(e);
@@ -69,7 +69,7 @@ public class TerramapClientPreferences {
             initPreferences();
             ServerPreferences server = preferences.servers.get(serverId);
             if(server == null) return Vec2d.NULL;
-            return server.minimapRenderOffsets.containsKey(layerName) ? server.minimapRenderOffsets.get(layerName): Vec2d.NULL;
+            return server.minimapRenderOffsets.getOrDefault(layerName, Vec2d.NULL);
         } catch(Exception e) {
             TerramapMod.logger.warn("Failed to query whether or not welcome was shown for " + serverId);
             TerramapMod.logger.catching(e);
@@ -170,14 +170,14 @@ public class TerramapClientPreferences {
     }
 
     private static class ClientPreferences {
-        Map<String, ServerPreferences> servers = new HashMap<String, ServerPreferences>();
+        final Map<String, ServerPreferences> servers = new HashMap<>();
     }
 
     private static class ServerPreferences {
         public String genSettings = "";
         public TerramapScreenSavedState mapState = new TerramapScreenSavedState();
         public boolean hasShownWelcome =  false;
-        public Map<String, Vec2d> minimapRenderOffsets = new HashMap<>();
+        public final Map<String, Vec2d> minimapRenderOffsets = new HashMap<>();
     }
 
 }

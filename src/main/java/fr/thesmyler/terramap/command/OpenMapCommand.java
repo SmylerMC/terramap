@@ -28,7 +28,7 @@ public class OpenMapCommand implements IClientCommand {
 
     @Override
     public List<String> getAliases() {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class OpenMapCommand implements IClientCommand {
             ICommandSender sender,
             String[] args,
             BlockPos targetPos) {
-        return new ArrayList<String>();
+        return new ArrayList<>();
     }
 
     @Override

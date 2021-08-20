@@ -31,7 +31,7 @@ public class ChatWidget implements IWidget, ITabCompleter {
     private float lineSectionX, lineSectionY, lineSectionWidth, LineSectionHeight;
     private final int z;
     private boolean open;
-    private GuiChat guiChat = new GuiChat();
+    private final GuiChat guiChat = new GuiChat();
 
     private static final Method GUI_CHAT_KEYPRESSED_METHOD = ObfuscationReflectionHelper.findMethod(GuiChat.class, "func_73869_a", Void.TYPE, Character.TYPE, Integer.TYPE);
     private static final Method GUI_CHAT_MOUSE_CLICKED_METHOD = ObfuscationReflectionHelper.findMethod(GuiChat.class, "func_73864_a", Void.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE);

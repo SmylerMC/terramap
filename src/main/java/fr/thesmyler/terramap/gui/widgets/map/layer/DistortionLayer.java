@@ -12,6 +12,7 @@ import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 
 /**
  * Shows the area and angular distortion from the world's {@link GeographicProjection}.
@@ -73,12 +74,12 @@ public class DistortionLayer extends MapLayer {
 
     @Override
     public String name() {
-        return "Distorion"; //TODO localized
+        return I18n.format("terramap.mapwidget.layers.distortion.name");
     }
 
     @Override
     public String description() {
-        return "Distortion preview"; //TODO localized
+        return I18n.format("terramap.mapwidget.layers.distortion.desc");
     }
 
 }

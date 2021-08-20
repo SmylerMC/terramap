@@ -39,8 +39,7 @@ public final class SmyLibGui {
 
     public static double getMinecraftGuiScale() {
         ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-        double computedFactor = scaledRes.getScaleFactor();
-        return computedFactor;
+        return scaledRes.getScaleFactor();
     }
 
     public static String getLanguage() {

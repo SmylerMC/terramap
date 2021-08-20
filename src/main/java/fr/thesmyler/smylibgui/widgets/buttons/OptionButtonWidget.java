@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 
 public class OptionButtonWidget<T> extends TextButtonWidget {
 
-    protected T[] options;
+    protected final T[] options;
     protected int option;
     protected Consumer<T> onCycle;
 

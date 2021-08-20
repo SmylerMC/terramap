@@ -100,8 +100,8 @@ public abstract class HudScreenHandler {
         Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
         IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
         if(bg == null || ! bg.isAllowedOnMinimap()) {
-            ArrayList<IRasterTiledMap> maps = new ArrayList<IRasterTiledMap>(styles.values());
-            Collections.sort(maps, Collections.reverseOrder());
+            ArrayList<IRasterTiledMap> maps = new ArrayList<>(styles.values());
+            maps.sort(Collections.reverseOrder());
             bg = maps.get(0);
         }
         map.setBackground(bg);
@@ -116,7 +116,7 @@ public abstract class HudScreenHandler {
         backLayer.setRenderingOffset(offset);
         
         float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
-        zoomLevel = Math.min(bg.getMaxZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
+        zoomLevel = Math.min(bg.getMaxZoom(), zoomLevel);
         map.setZoom(zoomLevel);
         map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
 

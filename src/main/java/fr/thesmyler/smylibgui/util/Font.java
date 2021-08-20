@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class Font {
 
-    protected float scale;
+    protected final float scale;
 
     public Font(float size) {
         this.scale = size;

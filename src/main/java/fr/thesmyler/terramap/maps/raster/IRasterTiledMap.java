@@ -9,36 +9,35 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
     /**
      * Initializes the map.
      */
-    public void setup();
+    void setup();
 
     /**
      * Gets a specific tile from this map.
-     * 
-     * @param zoom
-     * @param x
-     * @param y
+     *
+     * @paraam position - the position of the tile
+     *
      * @return
      */
-    public IRasterTile getTile(TilePos position);
+    IRasterTile getTile(TilePos position);
 
-    public default IRasterTile getTile(int zoom, int x, int y) {
+    default IRasterTile getTile(int zoom, int x, int y) {
         return this.getTile(new TilePosUnmutable(zoom, x, y));
     }
 
     /**
      * @return the minimum zoom level that map supports, that's usually 0
      */
-    public int getMinZoom();
+    int getMinZoom();
 
     /**
      * @return the maximum zoom level this map supports
      */
-    public int getMaxZoom();
+    int getMaxZoom();
 
     /**
      * @return the String id of this map
      */
-    public String getId();
+    String getId();
 
     /**
      * Gets a name for this map, translated in the appropriate language,
@@ -47,44 +46,44 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
      * @param localeKey - the language key to get the copyright for
      * @return the name of this map, translated to the appropriate language.
      */
-    public String getLocalizedName(String localeKey);
+    String getLocalizedName(String localeKey);
 
     /**
      * @return the comment from the map provider metadata
      */
-    public String getComment();
+    String getComment();
 
     /**
      * @return this map's provider
      */
-    public TiledMapProvider getProvider();
+    TiledMapProvider getProvider();
 
     /**
      * @return the version of this map's provider
      */
-    public long getProviderVersion();
+    long getProviderVersion();
 
     /**
      * @return an integer used to calculate the order in which map styles should be displayed. Higher means first.
      */
-    public int getDisplayPriority();
+    int getDisplayPriority();
 
     /**
      * @return whether or not the map is allowed on the minimap
      */
-    public boolean isAllowedOnMinimap();
+    boolean isAllowedOnMinimap();
 
     /**
      * @return true if this map should be considered a debug map
      */
-    public boolean isDebug();
+    boolean isDebug();
     
     /**
      * @param zoom the zoom level to consider
      * 
      * @return the bounds of this map style, or null if it has none (uses the default web mercator bounds
      */
-    public default WebMercatorBounds getBounds(int zoom) {
+    default WebMercatorBounds getBounds(int zoom) {
         return null;
     }
 

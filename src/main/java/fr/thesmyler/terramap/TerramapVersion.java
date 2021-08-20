@@ -324,7 +324,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
         public final String name;
         public final int priority;
 
-        private ReleaseType(String name, int priority) {
+        ReleaseType(String name, int priority) {
             this.name = name;
             this.priority = priority;
         }
@@ -344,7 +344,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 
         public final String MODID;
 
-        private TerraDependency(String modid) {
+        TerraDependency(String modid) {
             this.MODID = modid;
         }
     }

@@ -13,8 +13,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 
-//FIXME Cannot cancel futures
-//FIXME Minimum zoom is broken and tiles are requested below it
 public class TerrainPreviewTile implements IRasterTile {
 
     private final TilePosUnmutable position;
@@ -56,10 +54,6 @@ public class TerrainPreviewTile implements IRasterTile {
 
     @Override
     public void cancelTextureLoading() {
-        if(this.textureTask != null) {
-//            this.textureTask.cancel(true); 
-//            this.textureTask = null;
-        }
     }
 
     @Override

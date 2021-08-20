@@ -20,7 +20,7 @@ public class TerramapScreenSavedState {
     public boolean infoPannel = false;
     public boolean debug = false;
     public boolean f1 = false;
-    public Map<String, Boolean> visibilitySettings = new HashMap<String, Boolean>();
+    public Map<String, Boolean> visibilitySettings = new HashMap<>();
     public String trackedMarker = null;
     public Map<String, Vec2d> layerOffsets;
 

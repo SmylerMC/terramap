@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextComponentString;
 
 class OverlayList extends FlexibleWidgetContainer {
     
-    private MapWidget map;
+    private final MapWidget map;
     
     private boolean cancelNextInit = false;
 
@@ -101,7 +101,7 @@ class OverlayList extends FlexibleWidgetContainer {
     
     private class GenericOverlayEntry extends OverlayEntry {
         
-        MapLayer layer;
+        final MapLayer layer;
 
         public GenericOverlayEntry(float y, MapLayer layer) {
             super(y, 20);
@@ -116,9 +116,9 @@ class OverlayList extends FlexibleWidgetContainer {
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, IncludedTexturedButtons.DOWN, this::moveDown));
             this.addWidget(remove.setEnabled(layer.isUserOverlay()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () -> {
-                OverlayList.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show());
-            }));
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () ->
+                OverlayList.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show())
+            ));
             if(layer.getRenderingOffset().normSquared()  != 0d) {
                 WarningWidget warn = new WarningWidget(this.getWidth() - 86, 3, 0);
                 warn.setTooltip("A rendering offset is set for this layer");

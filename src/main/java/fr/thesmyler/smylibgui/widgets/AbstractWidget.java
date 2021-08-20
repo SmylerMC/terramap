@@ -5,7 +5,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 public abstract class AbstractWidget implements IWidget {
 
     protected boolean visible = true;
-    protected int z;
+    protected final int z;
     protected float x, y, width, height;
     protected String tooltip = null;
 

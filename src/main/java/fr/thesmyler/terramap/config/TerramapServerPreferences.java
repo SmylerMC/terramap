@@ -24,19 +24,19 @@ public class TerramapServerPreferences {
 
     public static final String FILENAME = "terramap_server_preferences.json";
 
-    private static Map<String, WorldPreferences> preferences = new HashMap<String, WorldPreferences>();
+    private static final Map<String, WorldPreferences> preferences = new HashMap<>();
 
     private static boolean loggedDebugError = false;
     private static long lastErrorLog = Long.MIN_VALUE;
 
-    private static Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * Tells whether or not the given player should be visible on the map on a given world
      * Does not save anything, if nothing is saved for that player yet, it returns the config default value
      * 
-     * @param world
-     * @param uuid
+     * @param world - world to check for
+     * @param uuid - uuid of the player to check for
      * @return a boolean indicating if the player should be visible or not
      */
     public static boolean shouldDisplayPlayer(WorldServer world, UUID uuid) {
@@ -204,7 +204,7 @@ public class TerramapServerPreferences {
 
     private static class WorldPreferences {
         public UUID world_uuid = new UUID(0, 0);
-        public Map<UUID, PlayerPreferences> players = new HashMap<UUID, PlayerPreferences>();
+        public Map<UUID, PlayerPreferences> players = new HashMap<>();
     }
 
     private static class PlayerPreferences {
