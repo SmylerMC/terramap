@@ -1,9 +1,11 @@
 package fr.thesmyler.terramap;
 
-import org.junit.Test;
-
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
-import net.daporkchop.lib.common.util.PValidation;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TerramapVersionTest {
 
@@ -24,7 +26,7 @@ public class TerramapVersionTest {
         for(String versionString: validVersions) {
             TerramapVersion version = new TerramapVersion(versionString);
             String otherVersionString = version.toString();
-            PValidation.checkState(otherVersionString.equals(versionString), versionString + " and " + otherVersionString + " do not match");
+            assertEquals(otherVersionString, versionString);
         }
     }
 
@@ -42,14 +44,9 @@ public class TerramapVersionTest {
                 "1.0.",
                 "1..0"
         };
-        for(String versionString: invalidVersions) {
-            try {
-                new TerramapVersion(versionString);
-            } catch(InvalidVersionString e) {
-                continue;
-            }
-            throw new IllegalStateException("Version String " + versionString + " parsed successufly when it should have raised an exception");
-        }
+        Arrays.stream(invalidVersions).forEach(s -> assertThrows(InvalidVersionString.class,
+                () -> new TerramapVersion(s)
+        ));
     }
 
     @Test
@@ -78,11 +75,11 @@ public class TerramapVersionTest {
             TerramapVersion v1 = new TerramapVersion(versions[i]);
             for(int j=0; j<versions.length; j++) {
                 TerramapVersion v2 = j==0 ? null: new TerramapVersion(versions[j]);
-                PValidation.checkState(v1.isOlder(v2) == i < j, v1 + " isOlder " + v2 + " failed");
-                PValidation.checkState(v1.isOlderOrSame(v2) == i <= j, v1 + " isOlderOrSame " + v2 + " failed");
-                PValidation.checkState(v1.equals(v2) == (i == j), v1 + " equals " + v2 + " failed");
-                PValidation.checkState(v1.isNewer(v2) == i > j, v1 + " isNewer " + v2 + " failed");
-                PValidation.checkState(v1.isNewerOrSame(v2) == i >= j, v1 + " isNewerOrSame " + v2 + " failed");
+                assertTrue(v1.isOlder(v2) == i < j, v1 + " isOlder " + v2 + " failed");
+                assertTrue(v1.isOlderOrSame(v2) == i <= j, v1 + " isOlderOrSame " + v2 + " failed");
+                assertTrue(v1.equals(v2) == (i == j), v1 + " equals " + v2 + " failed");
+                assertTrue(v1.isNewer(v2) == i > j, v1 + " isNewer " + v2 + " failed");
+                assertTrue(v1.isNewerOrSame(v2) == i >= j, v1 + " isNewerOrSame " + v2 + " failed");
             }
         }
     }

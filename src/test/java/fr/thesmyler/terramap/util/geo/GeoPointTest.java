@@ -1,14 +1,12 @@
 package fr.thesmyler.terramap.util.geo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
 import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GeoPointTest {
     
@@ -80,20 +78,9 @@ public class GeoPointTest {
                 {0d, Double.POSITIVE_INFINITY},
                 {0d, Double.NEGATIVE_INFINITY}
         };
-        for(double[] coords: invalidCoords) {
-            try {
-                new GeoPoint(coords[0], coords[1]);
-                fail(String.format("Illegal geographic point created: longitude=%s latitude=%s", coords[0], coords[1]));
-            } catch(IllegalArgumentException silenced) {}
-            try {
-                new GeoPoint(coords);
-                fail(String.format("Illegal geographic point created: longitude=%s latitude=%s", coords[0], coords[1]));
-            } catch(IllegalArgumentException silenced) {}
-            try {
-                new GeoPoint(new LatLng(coords[1], coords[0]));
-                fail(String.format("Illegal geographic point created: longitude=%s latitude=%s", coords[0], coords[1]));
-            } catch(IllegalArgumentException silenced) {}
-        }
+        Arrays.stream(invalidCoords).forEach(coordinates -> assertThrows(IllegalArgumentException.class,
+                () ->  new GeoPoint(coordinates[0], coordinates[1])
+        ));
     }
     
     @Test
@@ -149,7 +136,7 @@ public class GeoPointTest {
             assertNotEquals(points[0], points[1]);
             assertNotEquals(points[1], points[0]);
         }
-        assertFalse(new GeoPoint(168.4d, -26d).equals(null));
+        assertNotEquals(null, new GeoPoint(168.4d, -26d));
     }
     
     @Test
