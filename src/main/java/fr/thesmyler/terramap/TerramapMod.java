@@ -3,6 +3,7 @@ package fr.thesmyler.terramap;
 import java.io.File;
 import java.util.Map;
 
+import net.minecraft.client.resources.data.IMetadataSection;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
@@ -45,7 +46,17 @@ public class TerramapMod {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) throws InvalidVersionString {
         logger = event.getModLog();
-        TerramapMod.version = new TerramapVersion(event.getModMetadata().version);
+        String versionStr = event.getModMetadata().version;
+        if (System.getProperties().containsKey("terramap.debug")) {
+            logger.info("Debug flag is set, forcing a development version string.");
+            versionStr= "${version}";
+        }
+        try {
+            TerramapMod.version = new TerramapVersion(versionStr);
+        } catch(InvalidVersionString e) {
+            logger.error("Failed to parse Terramap version number from string " + versionStr + ", will be assuming a 1.0.0 release.");
+            TerramapMod.version = new TerramapVersion(1, 0, 0);
+        }
         TerramapMod.logger.info("Terramap version: " + getVersion());
         TerramapMod.proxy.preInit(event);
         File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
