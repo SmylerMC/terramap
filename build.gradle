@@ -39,6 +39,7 @@ minecraft {
             // A workaround to that is to trick MixinPlatformAgentFMLLegacy#isIgnoredReparseable(), either with a breakpoint, or with a symlink in the gradle cache directory
             property 'fml.coreMods.load', 'io.github.opencubicchunks.cubicchunks.core.asm.coremod.CubicChunksCoreMod,io.github.opencubicchunks.cubicchunks.cubicgen.asm.coremod.CubicGenCoreMod'
             property 'mixin.env.disableRefMap', 'true'
+            property 'terramap.debug', ''
 
             mods {
                 terramap {
@@ -52,6 +53,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'fml.coreMods.load', 'io.github.opencubicchunks.cubicchunks.core.asm.coremod.CubicChunksCoreMod,io.github.opencubicchunks.cubicchunks.cubicgen.asm.coremod.CubicGenCoreMod'
             property 'mixin.env.disableRefMap', 'true'
+            property 'terramap.debug', ''
             mods {
                 terramap {
                     source sourceSets.main
