@@ -1,30 +1,75 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        maven {
+            url = "https://maven.minecraftforge.net"
+        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'checkstyle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
 
 version = project.mod_version
 group = project.mod_group
 archivesBaseName = project.mod_id
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
-    version = project.forge_version
-    mappings = project.mcp_mappings
-    runDir = "run"
+
+    mappings channel: project.mappings_channel, version: project.mappings_version
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            // The markers can be added/remove as needed separated by commas.
+            // "SCAN": For mods scan.
+            // "REGISTRIES": For firing of registry events.
+            // "REGISTRYDUMP": For getting the contents of all registries.
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            // Recommended logging level for the console
+            // You can set various levels here.
+            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                examplemod {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 repositories {
@@ -43,36 +88,39 @@ repositories {
 }
 
 dependencies {
+
+    minecraft 'net.minecraftforge:forge:' + project.minecraft_version + '-' + project.forge_version
     
-	deobfProvided ("com.github.OpenCubicChunks.CubicChunks:cubicchunks:6e18a97abe31e1c7892ebcf8ed0f17a4ac379e10") {
+	implementation fg.deobf("com.github.OpenCubicChunks.CubicChunks:cubicchunks:6e18a97abe31e1c7892ebcf8ed0f17a4ac379e10") {
         transitive = false
     }
-    deobfProvided ("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
+    implementation fg.deobf("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
         transitive = false
     }
-    deobfProvided ("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4") {
+    implementation fg.deobf("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4") {
         transitive = true
     }
-    runtime "org.apache.commons:commons-imaging:1.0-alpha2"
-    runtime("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
+    runtimeOnly "org.apache.commons:commons-imaging:1.0-alpha2"
+    runtimeOnly("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
         exclude group: "io.netty"
     }
-    testCompile "junit:junit:4.12"
-    testCompile "com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4"
+    testImplementation "junit:junit:4.12"
+    testImplementation fg.deobf("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4")
     
 }
 
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", project.minecraft_version
+    duplicatesStrategy = 'include'
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft_version
     }
         
     // copy everything else except the mcmod.info
@@ -81,11 +129,36 @@ processResources {
     }
 }
 
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    from "build/source/main"
-    classifier "dev"
+// Example for how to get properties into the manifest for reading at runtime.
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : project.mod_id,
+                "Specification-Vendor"    : "examplemodsareus",
+                "Specification-Version"   : project.mod_version, // We are version 1 of ourselves
+                "Implementation-Title"    : project.mod_id,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : "examplemodsareus",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
 
-artifacts {
-    archives deobfJar
+// Example configuration to allow publishing using the maven-publish plugin
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+// publish.dependsOn('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
 }
