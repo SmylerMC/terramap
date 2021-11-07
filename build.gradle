@@ -85,6 +85,7 @@ repositories {
         name = "OpenCollab Snapshots"
         url = "https://repo.opencollab.dev/snapshot/"
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -104,7 +105,7 @@ dependencies {
     runtimeOnly("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
         exclude group: "io.netty"
     }
-    testImplementation "junit:junit:4.12"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     testImplementation fg.deobf("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4")
     
 }
@@ -134,11 +135,11 @@ jar {
     manifest {
         attributes([
                 "Specification-Title"     : project.mod_id,
-                "Specification-Vendor"    : "examplemodsareus",
+                "Specification-Vendor"    : project.mod_authors,
                 "Specification-Version"   : project.mod_version, // We are version 1 of ourselves
                 "Implementation-Title"    : project.mod_id,
                 "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "examplemodsareus",
+                "Implementation-Vendor"   : project.mod_authors,
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
@@ -161,4 +162,8 @@ publishing {
             url "file://${project.projectDir}/mcmodsrepo"
         }
     }
+}
+
+test {
+    useJUnitPlatform()
 }
