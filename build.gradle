@@ -82,23 +82,23 @@ repositories {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:' + project.minecraft_version + '-' + project.forge_version
+    minecraft group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version
 
-    implementation fg.deobf("com.github.OpenCubicChunks.CubicChunks:cubicchunks:355923c35ca350482a06ce120fd01474696cd86d") {
+    implementation fg.deobf(group: "com.github.OpenCubicChunks.CubicChunks", name: "cubicchunks", version: project.cc_version) {
         transitive = false
     }
-    implementation fg.deobf("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
+    implementation fg.deobf(group: "com.github.OpenCubicChunks", name: "CubicWorldGen", version: project.cwg_version) {
         transitive = false
     }
-    implementation fg.deobf("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4") {
+    implementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version) {
         transitive = true
     }
-    runtimeOnly "org.apache.commons:commons-imaging:1.0-alpha2"
-    runtimeOnly("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
+    runtimeOnly group: "org.apache.commons", name: "commons-imaging", version: "1.0-alpha2"
+    runtimeOnly(group: "net.daporkchop", name: "leveldb-mcpe-jni", version: "0.0.10-SNAPSHOT")  {
         exclude group: "io.netty"
     }
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-    testImplementation fg.deobf("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4")
+    testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.8.1"
+    testImplementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version)
     
 }
 
@@ -106,7 +106,7 @@ processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft_version
-    duplicatesStrategy = 'include'
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
