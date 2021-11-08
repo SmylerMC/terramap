@@ -1,30 +1,67 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "https://files.minecraftforge.net/maven" }
+        maven {
+            url = "https://maven.minecraftforge.net"
+        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'checkstyle'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
 
 version = project.mod_version
 group = project.mod_group
 archivesBaseName = project.mod_id
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
-    version = project.forge_version
-    mappings = project.mcp_mappings
-    runDir = "run"
+
+    mappings channel: project.mappings_channel, version: project.mappings_version
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // We don't do much with registries, let's let them be
+            //property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            property 'forge.logging.console.level', 'debug'
+
+            // Load the necessary coremods.
+            // IMPORTANT: For some reasons, MIXIN adds CC as a reparseable core mod when it loads, which causes FML to not load the regular CC mod.
+            // A workaround to that is to trick MixinPlatformAgentFMLLegacy#isIgnoredReparseable(), either with a breakpoint, or with a symlink in the gradle cache directory
+            property 'fml.coreMods.load', 'io.github.opencubicchunks.cubicchunks.core.asm.coremod.CubicChunksCoreMod,io.github.opencubicchunks.cubicchunks.cubicgen.asm.coremod.CubicGenCoreMod'
+            property 'mixin.env.disableRefMap', 'true'
+            property 'terramap.debug', ''
+
+            mods {
+                terramap {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            property 'fml.coreMods.load', 'io.github.opencubicchunks.cubicchunks.core.asm.coremod.CubicChunksCoreMod,io.github.opencubicchunks.cubicchunks.cubicgen.asm.coremod.CubicGenCoreMod'
+            property 'mixin.env.disableRefMap', 'true'
+            property 'terramap.debug', ''
+            mods {
+                terramap {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
 repositories {
@@ -40,39 +77,43 @@ repositories {
         name = "OpenCollab Snapshots"
         url = "https://repo.opencollab.dev/snapshot/"
     }
+    mavenCentral()
 }
 
 dependencies {
-    
-	deobfProvided ("com.github.OpenCubicChunks.CubicChunks:cubicchunks:6e18a97abe31e1c7892ebcf8ed0f17a4ac379e10") {
+
+    minecraft group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version
+
+    implementation fg.deobf(group: "com.github.OpenCubicChunks.CubicChunks", name: "cubicchunks", version: project.cc_version) {
         transitive = false
     }
-    deobfProvided ("com.github.OpenCubicChunks:CubicWorldGen:27de56d2f792513873584b2f8fd9f3082fb259ec") {
+    implementation fg.deobf(group: "com.github.OpenCubicChunks", name: "CubicWorldGen", version: project.cwg_version) {
         transitive = false
     }
-    deobfProvided ("com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4") {
+    implementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version) {
         transitive = true
     }
-    runtime "org.apache.commons:commons-imaging:1.0-alpha2"
-    runtime("net.daporkchop:leveldb-mcpe-jni:0.0.10-SNAPSHOT")  {
+    runtimeOnly group: "org.apache.commons", name: "commons-imaging", version: "1.0-alpha2"
+    runtimeOnly(group: "net.daporkchop", name: "leveldb-mcpe-jni", version: "0.0.10-SNAPSHOT")  {
         exclude group: "io.netty"
     }
-    testCompile "junit:junit:4.12"
-    testCompile "com.github.BuildTheEarth:terraplusplus:a48a5a2054f4655d230711c3c68af3ad3b476db4"
+    testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.8.1"
+    testImplementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version)
     
 }
 
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", project.minecraft_version
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft_version
     }
         
     // copy everything else except the mcmod.info
@@ -81,11 +122,44 @@ processResources {
     }
 }
 
-task deobfJar(type: Jar, dependsOn: 'jar') {
-    from "build/source/main"
-    classifier "dev"
+// Example for how to get properties into the manifest for reading at runtime.
+jar {
+    manifest {
+        attributes([
+                "Specification-Title"     : project.mod_id,
+                "Specification-Vendor"    : project.mod_authors,
+                "Specification-Version"   : project.mod_version,
+                "Implementation-Title"    : project.mod_id,
+                "Implementation-Version"  : project.jar.archiveVersion,
+                "Implementation-Vendor"   : project.mod_authors,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
 
-artifacts {
-    archives deobfJar
+jar.finalizedBy('reobfJar')
+// If you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+// publish.dependsOn('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+idea {
+    module {
+        inheritOutputDirs = true
+    }
 }
