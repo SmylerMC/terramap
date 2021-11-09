@@ -1,5 +1,8 @@
 package fr.thesmyler.terramap.util.math;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 /**
  * A 2 by 2 double matrix 
  * 
@@ -8,97 +11,97 @@ package fr.thesmyler.terramap.util.math;
  */
 public class Mat2d {
 
-    public static final Mat2d INDENTITY = new Mat2d(1d, 0d, 0d, 1d);
+    public static final Mat2d IDENTITY = new Mat2d(1d, 0d, 0d, 1d);
     public static final Mat2d NULL = new Mat2d(0d, 0d, 0d, 0d);
 
-    private final double x11;
-    private final double x12;
-    private final double x21;
-    private final double x22;
+    private final Vec2dImmutable col1;
+    private final Vec2dImmutable col2;
+    private final Vec2dImmutable lig1;
+    private final Vec2dImmutable lig2;
 
-    public Mat2d(double x11, double x12, double x21, double x22) {
-        super();
-        this.x11 = x11;
-        this.x12 = x12;
-        this.x21 = x21;
-        this.x22 = x22;
+
+    public Mat2d(double xx, double xy, double yx, double yy) {
+        this.col1 = new Vec2dImmutable(xx, yx);
+        this.col2 = new Vec2dImmutable(xy, yy);
+        this.lig1 = new Vec2dImmutable(xx, xy);
+        this.lig2 = new Vec2dImmutable(yx, yy);
     }
 
     public Mat2d scale(double factor) {
         return new Mat2d(
-                this.x11*factor, this.x12*factor,
-                this.x21*factor, this.x22*factor
+                this.lig1.x * factor, this.lig1.y * factor,
+                this.lig2.x * factor, this.lig2.y * factor
                 );
     }
 
     public Mat2d add(Mat2d other) {
         return new Mat2d(
-                this.x11 + other.x11, this.x12 + other.x12,
-                this.x21 + other.x21, this.x22 + other.x22
+                this.lig1.x + other.lig1.x, this.lig1.y + other.lig1.y,
+                this.lig2.x + other.lig2.x, this.lig2.y + other.lig2.y
                 );
     }
 
     public Mat2d prod(Mat2d other) {
         return new Mat2d(
-                this.x11*other.x11 + this.x12*other.x21, this.x11*other.x12 + this.x12*other.x22,
-                this.x21*other.x11 + this.x22*other.x21, this.x21*other.x12 + this.x22*other.x22
+                this.lig1.x*other.lig1.x + this.lig1.y*other.lig2.x, this.lig1.x*other.lig1.y + this.lig1.y*other.lig2.y,
+                this.lig2.x*other.lig1.x + this.lig2.y*other.lig2.x, this.lig2.x*other.lig1.y + this.lig2.y*other.lig2.y
                 );
     }
 
-    public Vec2d prod(Vec2d vec) {
-        return new Vec2d(
-                this.x11*vec.x + this.x12*vec.y,
-                this.x21*vec.x + this.x22*vec.y
+    public Vec2dImmutable prod(Vec2dImmutable vec) {
+        return new Vec2dImmutable(
+                this.lig1.x*vec.x + this.lig1.y*vec.y,
+                this.lig2.x*vec.x + this.lig2.y*vec.y
                 );
     }
 
     public double determinant() {
-        return this.x11*this.x22 - this.x12*this.x21;
+        return this.lig1.x*this.lig2.y - this.lig1.y*this.lig2.x;
     }
 
     public Mat2d inverse() {
         double det = this.determinant();
         if(det == 0) throw new IllegalStateException("Matrix has no inverse: determinant is 0");
         return new Mat2d(
-                this.x22, -this.x21,
-                -this.x12, this.x11)
+                this.lig2.y, -this.lig2.x,
+                -this.lig1.y, this.lig1.x)
                 .scale(1d / det);
     }
 
     public Mat2d transpose() {
         return new Mat2d(
-                x11, x21,
-                x12, x22);
+                this.lig1.x, this.lig2.x,
+                this.lig1.y, this.lig2.y);
     }
 
-    public Vec2d column1() {
-        return new Vec2d(this.x11, this.x21);
+    public Vec2dImmutable column1() {
+        return this.col1;
     }
 
-    public Vec2d column2() {
-        return new Vec2d(this.x12, this.x22);
+    public Vec2dImmutable column2() {
+        return this.col2;
     }
 
-    public Vec2d line1() {
-        return new Vec2d(this.x11, this.x12);
+    public Vec2dImmutable line1() {
+        return this.lig1;
     }
 
-    public Vec2d line2() {
-        return new Vec2d(this.x21, this.x22);
+    public Vec2dImmutable line2() {
+        return this.lig2;
     }
 
     public static Mat2d forRotation(double radAngle) {
-        double c = Math.cos(radAngle);
-        double s = Math.sin(radAngle);
+        double c = cos(radAngle);
+        double s = sin(radAngle);
         return new Mat2d(
                 c, -s,
                 s, c
                 );
     }
 
-    public static Mat2d forSymetry(double radAngle) {
-        double c = Math.cos(radAngle);
-        double s = Math.sin(radAngle);
+    public static Mat2d forSymmetry(double radAngle) {
+        double c = cos(radAngle);
+        double s = sin(radAngle);
         return new Mat2d(
                 c, s,
                 s, -c

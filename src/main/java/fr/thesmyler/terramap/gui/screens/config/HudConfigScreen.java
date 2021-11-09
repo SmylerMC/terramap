@@ -27,6 +27,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen.TileScalingOption;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
+import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
@@ -65,6 +66,7 @@ public class HudConfigScreen extends Screen {
 
     public HudConfigScreen() {
         super(BackgroundOption.NONE);
+        final MapController controller = this.minimap.getController();
         List<MapStyleSliderEntry> maps = new ArrayList<>();
         TerramapClientContext.getContext().getMapStyles().values().stream()
         .sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
@@ -79,10 +81,10 @@ public class HudConfigScreen extends Screen {
         this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
         this.minimap.scheduleBeforeEachUpdate(() -> {
             if(TerramapClientContext.getContext().getProjection() != null) {
-                this.minimap.track(this.minimap.getMainPlayerMarker());
+                controller.track(this.minimap.getMainPlayerMarker());
             }
         });
-        this.zoomSlider.setOnChange(this.minimap::setZoom);
+        this.zoomSlider.setOnChange(z -> controller.setZoom(z, true));
         this.styleSlider.setOnChange(map -> {
             this.minimap.setBackground(map.map);
             this.zoomSlider.setMin(map.map.getMinZoom());
@@ -95,12 +97,15 @@ public class HudConfigScreen extends Screen {
         this.minimapButton.setOnChange(this.minimapWindow::setVisibility);
         this.compassButton.setOnChange(this.compassWindow::setVisibility);
         this.otherPlayersButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(OtherPlayerMarkerController.ID, b));
-        this.entitiesButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, b).trySetFeatureVisibility(MobMarkerController.ID, b));
+        this.entitiesButton.setOnChange(b -> {
+            this.minimap.trySetFeatureVisibility(AnimalMarkerController.ID, b);
+            this.minimap.trySetFeatureVisibility(MobMarkerController.ID, b);
+        });
         this.directionsButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, b));
         this.chunksButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(McChunksLayer.ID, b));
         this.rotationButton.setOnChange(b -> {
-            this.minimap.setTrackRotation(b);
-            if(!b) this.minimap.setRotationWithAnimation(0);
+            controller.setTracksRotation(b);
+            if(!b) controller.setRotation(0, true);
         });
         this.minimapWindow.setEnableTopBar(false);
         this.minimapWindow.setCenterDragColor(Color.TRANSPARENT);
@@ -124,7 +129,7 @@ public class HudConfigScreen extends Screen {
         this.buttonPanel.removeAllWidgets();
         this.settingsPanel.removeAllWidgets();
         if(this.lastHeight <= 0 || this.lastWidth <= 0) {
-            this.recalcWidgetsPos();
+            this.recalculateWidgetsPositions();
         } else {
             this.minimapWindow.setX(this.minimapWindow.getX() * this.width / this.lastWidth);
             this.minimapWindow.setY(this.minimapWindow.getY() * this.height / this.lastHeight);
@@ -255,6 +260,7 @@ public class HudConfigScreen extends Screen {
         this.compassWindow.setVisibility(TerramapConfig.CLIENT.compass.enable);
         this.minimapButton.setState(TerramapConfig.CLIENT.minimap.enable);
         this.compassButton.setState(TerramapConfig.CLIENT.compass.enable);
+        this.minimap.getController().setZoom(TerramapConfig.CLIENT.minimap.zoomLevel, false);
         this.zoomSlider.setValue(Math.round(TerramapConfig.CLIENT.minimap.zoomLevel));
         this.otherPlayersButton.setState(TerramapConfig.CLIENT.minimap.showOtherPlayers);
         this.minimap.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
@@ -263,8 +269,9 @@ public class HudConfigScreen extends Screen {
         this.minimap.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
         this.minimap.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
         this.minimap.trySetFeatureVisibility(McChunksLayer.ID, TerramapConfig.CLIENT.minimap.chunksRender);
-        this.minimap.setTrackRotation(TerramapConfig.CLIENT.minimap.playerRotation);
-        if(!TerramapConfig.CLIENT.minimap.playerRotation) this.minimap.setRotation(0f);
+        MapController minimapController = this.minimap.getController();
+        minimapController.setTracksRotation(TerramapConfig.CLIENT.minimap.playerRotation);
+        if(!TerramapConfig.CLIENT.minimap.playerRotation) minimapController.setRotation(0f, false);
         for(MapStyleSliderEntry map: this.mapStyles) if(map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
             this.styleSlider.setCurrentOption(map);
             break;
@@ -273,10 +280,10 @@ public class HudConfigScreen extends Screen {
         this.directionsButton.setState(TerramapConfig.CLIENT.minimap.playerDirections);
         this.rotationButton.setState(TerramapConfig.CLIENT.minimap.playerRotation);
         this.chunksButton.setState(TerramapConfig.CLIENT.minimap.chunksRender);
-        this.recalcWidgetsPos();
+        this.recalculateWidgetsPositions();
     }
 
-    private void recalcWidgetsPos() {
+    private void recalculateWidgetsPositions() {
         this.minimapWindow.setX(this.width * TerramapConfig.CLIENT.minimap.posX / 100);
         this.minimapWindow.setY(this.height * TerramapConfig.CLIENT.minimap.posY / 100);
         this.minimapWindow.setWidth(this.width * TerramapConfig.CLIENT.minimap.width / 100);
@@ -296,7 +303,7 @@ public class HudConfigScreen extends Screen {
         }
     }
 
-    private class CompassScreen extends FlexibleWidgetContainer {
+    private static class CompassScreen extends FlexibleWidgetContainer {
 
         final RibbonCompassWidget compass = new RibbonCompassWidget(0, 0, 0, 30);
 
@@ -312,7 +319,7 @@ public class HudConfigScreen extends Screen {
                     float a = Minecraft.getMinecraft().player.rotationYaw;
                     try {
                         compass.setAzimuth(p.azimuth(x, z, a));
-                    } catch (OutOfProjectionBoundsException silenced) {}
+                    } catch (OutOfProjectionBoundsException ignored) {}
                 }
             });
         }
@@ -326,7 +333,7 @@ public class HudConfigScreen extends Screen {
 
     }
 
-    private class MapStyleSliderEntry {
+    private static class MapStyleSliderEntry {
         private final IRasterTiledMap map;
         private MapStyleSliderEntry(IRasterTiledMap map) {
             this.map = map;

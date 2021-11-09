@@ -54,7 +54,7 @@ public abstract class RemoteSynchronizer {
 		while (iterator.hasNext()) {
 			RegisteredForUpdatePlayer player = iterator.next();
             if(ctime - player.lastRegisterTime > TerramapConfig.SERVER.syncHeartbeatTimeout) {
-                TerramapMod.logger.debug("Unregistering " + player.player.getName() + "from map update as it did not renew its registration");
+                TerramapMod.logger.debug("Unregistering " + player.player.getName() + " from map update as it did not renew its registration");
                 iterator.remove();
                 TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
             }

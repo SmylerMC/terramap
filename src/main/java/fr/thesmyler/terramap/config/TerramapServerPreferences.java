@@ -32,7 +32,7 @@ public class TerramapServerPreferences {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     /**
-     * Tells whether or not the given player should be visible on the map on a given world
+     * Tells whether the given player should be visible on the map on a given world
      * Does not save anything, if nothing is saved for that player yet, it returns the config default value
      * 
      * @param world - world to check for

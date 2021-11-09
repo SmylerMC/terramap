@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets;
 
+import fr.thesmyler.terramap.util.math.Vec2dMutable;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -9,7 +10,6 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.util.math.Mat2d;
-import fr.thesmyler.terramap.util.math.Vec2d;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -32,11 +32,14 @@ public class CircularCompassWidget implements IWidget {
 
     private final Animation fader = new Animation(1000);
 
+    private double[] vertices;
+    private final Vec2dMutable vertexCalculationHelper = new Vec2dMutable();
+
     public CircularCompassWidget(float x, float y, int z, float size) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.size = size;
+        this.setSize(size);
     }
 
     @Override
@@ -56,20 +59,11 @@ public class CircularCompassWidget implements IWidget {
             southColor = this.fader.fadeColor(southColor);
         }
 
-        int vertexCount = (int) (2*Math.PI*this.size);
         float radius = this.size / 2;
-        double[] vertices = new double[vertexCount*2];
-        Vec2d pos = new Vec2d(0, -radius);
-        Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
-        for(int i = 0; i < vertexCount; i++) {
-            vertices[2*i] = pos.x;
-            vertices[2*i + 1] = pos.y;
-            pos = rot.prod(pos);
-        }
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + radius, y + radius, 0);
-        RenderUtil.drawPolygon(background, vertices);
+        RenderUtil.drawPolygon(background, this.vertices);
         //RenderUtil.drawClosedStrokeLine(Color.BLACK, 1f, vertices);
         GlStateManager.rotate(this.azimuth, 0, 0, 1);
         Tessellator tessellator = Tessellator.getInstance();
@@ -167,6 +161,16 @@ public class CircularCompassWidget implements IWidget {
 
     public void setSize(float size) {
         this.size = size;
+        int vertexCount = (int) (2*Math.PI*this.size);
+        float radius = this.size / 2;
+        this.vertices = new double[vertexCount*2];
+        this.vertexCalculationHelper.set(0, -radius);
+        Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
+        for(int i = 0; i < vertexCount; i++) {
+            this.vertices[2*i] = this.vertexCalculationHelper.x();
+            this.vertices[2*i + 1] = this.vertexCalculationHelper.y();
+            this.vertexCalculationHelper.apply(rot);
+        }
     }
 
     public Color getBackgroundColor() {

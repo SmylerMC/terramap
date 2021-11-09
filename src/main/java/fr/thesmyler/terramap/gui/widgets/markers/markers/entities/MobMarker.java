@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
@@ -41,7 +41,7 @@ import net.minecraft.util.ResourceLocation;
 public class MobMarker extends AbstractLivingMarker {
 
     public MobMarker(MarkerController<?> controller, Entity entity) {
-        super(controller, 10, 10, SmyLibGui.WIDGET_TEXTURES, 22, 69, 256, 256, entity);
+        super(controller, 10, 10, SmyLibGuiTextures.WIDGET_TEXTURES, 22, 69, 256, 256, entity);
         if(entity instanceof EntityBlaze) {
             this.width = this.height = 8;
             this.u = this.v = 8;

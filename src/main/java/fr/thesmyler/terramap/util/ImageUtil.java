@@ -15,8 +15,8 @@ public final class ImageUtil {
     /**
      * Creates an image and sets it background to the specified color
      * 
-     * @param width
-     * @param height
+     * @param width - width of the image
+     * @param height - height of the image
      * @param color
      * @return the new image
      */

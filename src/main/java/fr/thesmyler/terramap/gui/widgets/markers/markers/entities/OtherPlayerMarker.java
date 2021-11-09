@@ -15,7 +15,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
     protected final TerramapPlayer player;
 
     public OtherPlayerMarker(MarkerController<?> controller, TerramapPlayer player, int downscaleFactor) {
-        super(controller, null, downscaleFactor);
+        super(controller, downscaleFactor);
         this.player = player;
     }
 
@@ -59,13 +59,13 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected GeoPoint getActualLocation() throws OutOfProjectionBoundsException {
+    protected GeoPoint<?> getActualLocation() throws OutOfProjectionBoundsException {
         return this.player.getLocation();
     }
 
     @Override
-    protected float getActualAzimuth() throws OutOfProjectionBoundsException {
-        return this.player.getAzimut();
+    protected float getActualAzimuth() {
+        return this.player.getAzimuth();
     }
 
 }

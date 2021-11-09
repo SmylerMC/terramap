@@ -26,7 +26,7 @@ import fr.thesmyler.terramap.files.kml.KmlPoint;
  * @author SmylerMC
  *
  */
-//TODO Open places on services other than gmaps
+//TODO Open places on services other than gmaps and refactor this mess
 public final class GeoServices {
     
     private GeoServices() {}
@@ -141,9 +141,9 @@ public final class GeoServices {
 
     }
 
-    public static String formatGeoCoordForDisplay(double x) {
-        if(Double.isNaN(x)) return "-";
-        return decFormat6.format(x);
+    public static String formatGeoCoordForDisplay(double coordinate) {
+        if(Double.isNaN(coordinate)) return "-";
+        return decFormat6.format(coordinate);
     }
 
     public static String formatAzimuthForDisplay(float az) {

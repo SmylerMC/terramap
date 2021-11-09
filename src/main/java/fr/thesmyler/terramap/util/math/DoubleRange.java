@@ -3,8 +3,8 @@ package fr.thesmyler.terramap.util.math;
 public class DoubleRange {
     
     public static final DoubleRange REALS = new DoubleRange(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-    public static final DoubleRange POSITIV_REALS = new DoubleRange(0d, Double.POSITIVE_INFINITY);
-    public static final DoubleRange NEGATIV_REALS = new DoubleRange(Double.NEGATIVE_INFINITY, 0d);
+    public static final DoubleRange POSITIVE_REALS = new DoubleRange(0d, Double.POSITIVE_INFINITY);
+    public static final DoubleRange NEGATIVE_REALS = new DoubleRange(Double.NEGATIVE_INFINITY, 0d);
     
     public final double lowerBound, upperBound;
     

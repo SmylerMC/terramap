@@ -9,7 +9,6 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
-import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,7 +20,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
     private final int downScaleFactor;
 
-    public AbstractPlayerMarker(MarkerController<?> controller, TerramapPlayer player, int downscaleFactor) {
+    public AbstractPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
         super(controller, 16f / downscaleFactor, 16f / downscaleFactor);
         this.downScaleFactor = downscaleFactor;
     }
@@ -36,7 +35,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         // Draw the direction arrow
         if(this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
             float azimuth = this.azimuth;
-            if(parent instanceof MapWidget) azimuth += ((MapWidget)parent).getRotation();
+            if(parent instanceof MapWidget) azimuth += ((MapWidget)parent).getController().getRotation();
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + this.width / 2, y + this.height / 2, 0);
             GlStateManager.rotate(azimuth, 0, 0, 1);

@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -20,11 +20,11 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class MainPlayerMarker extends AbstractPlayerMarker {
 
-    private GeoPoint playerLocation;
+    private GeoPointImmutable playerLocation;
     private float playerAzimuth;
 
     public MainPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
-        super(controller, null, downscaleFactor);
+        super(controller, downscaleFactor);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         try {
             GeographicProjection proj = TerramapClientContext.getContext().getProjection();
-            this.playerLocation =  new GeoPoint(proj.toGeo(player.posX, player.posZ));
+            this.playerLocation =  new GeoPointImmutable(proj.toGeo(player.posX, player.posZ));
         } catch(OutOfProjectionBoundsException e) {
             this.playerLocation = null;
         }
@@ -55,7 +55,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected GeoPoint getActualLocation() {
+    protected GeoPointImmutable getActualLocation() {
         return this.playerLocation;
     }
 
@@ -84,6 +84,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 
     @Override
     protected float getActualAzimuth() throws OutOfProjectionBoundsException {
+        if (Double.isNaN(playerAzimuth)) throw OutOfProjectionBoundsException.get();
         return this.playerAzimuth;
     }
 

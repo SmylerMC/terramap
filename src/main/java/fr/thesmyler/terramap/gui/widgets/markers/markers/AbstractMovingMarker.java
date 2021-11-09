@@ -4,15 +4,17 @@ import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointMutable;
+import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
 public abstract class AbstractMovingMarker extends Marker {
 
     protected final Animation movingAnimation;
 
-    protected GeoPoint location;
+    private final GeoPointMutable location = new GeoPointMutable();
+    private boolean isOutOfBounds = false;
     protected float azimuth;
-    protected GeoPoint oldLocation;
 
     public AbstractMovingMarker(MarkerController<?> controller, float width, float height, int minZoom, int maxZoom) {
         super(controller, width, height, minZoom, maxZoom);
@@ -25,32 +27,27 @@ public abstract class AbstractMovingMarker extends Marker {
 
     @Override
     public void update(MapWidget map) {
-
         //TODO Animate for smoother movements
         try {
-            GeoPoint location = this.getActualLocation();
-            this.location = location;
-        } catch(OutOfProjectionBoundsException e) {
-            this.location = null;
-        }
-        try {
+            this.location.set(this.getActualLocation());
             float realAzimuth = this.getActualAzimuth();
-            this.azimuth = Math.round(realAzimuth);
-        } catch (OutOfProjectionBoundsException e) {
-            this.azimuth = Float.NaN;
+            this.azimuth = realAzimuth;
+            this.isOutOfBounds = false;
+        } catch(OutOfProjectionBoundsException e) {
+            this.isOutOfBounds = true;
         }
 
     }
 
-    protected abstract GeoPoint getActualLocation() throws OutOfProjectionBoundsException;
+    protected abstract GeoPoint<?> getActualLocation() throws OutOfProjectionBoundsException;
 
     @Override
-    public GeoPoint getLocation() {
-        return this.location;
+    public GeoPointReadOnly getLocation() {
+        return this.isOutOfBounds ? null: this.location.getReadOnly();
     }
 
     public float getAzimuth() {
-        return this.azimuth;
+        return this.isOutOfBounds ? Float.NaN: this.azimuth;
     }
 
     protected abstract float getActualAzimuth() throws OutOfProjectionBoundsException;

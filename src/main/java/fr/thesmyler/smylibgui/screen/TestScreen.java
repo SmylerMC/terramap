@@ -27,7 +27,7 @@ import net.minecraft.util.text.TextComponentString;
 public class TestScreen extends Screen {
 
     private final GuiScreen parent;
-    private Animation animation;
+    private final Animation animation;
     private int counter = 0;
     private final TextWidget fpsCounter;
     private final TextWidget focus;

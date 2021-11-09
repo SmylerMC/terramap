@@ -2,6 +2,9 @@ package fr.thesmyler.terramap.util.geo;
 
 import java.util.Locale;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 
 /**
  * A square bounding box, aligned with meridians and parallels.
@@ -14,14 +17,14 @@ import java.util.Locale;
  */
 public class GeoBounds {
     
-    public static final GeoBounds WORLD = new GeoBounds(new GeoPoint(-180d, -90d), new GeoPoint(180d, 90d));
-    public static final GeoBounds NORTHERN_HEMISPHERE = new GeoBounds(new GeoPoint(-180d, 0d), new GeoPoint(180d, 90d));
-    public static final GeoBounds SOUTHERN_HEMISPHERE = new GeoBounds(new GeoPoint(-180d, -90d), new GeoPoint(180d, 0d));
-    public static final GeoBounds EASTERN_HEMISPHERE = new GeoBounds(new GeoPoint(0d, -90d), new GeoPoint(180d, 90d));
-    public static final GeoBounds WESTERN_HEMISPHERE = new GeoBounds(new GeoPoint(-180d, -90d), new GeoPoint(0d, 90d));
-    public static final GeoBounds EMPTY = new GeoBounds(GeoPoint.NORTH_POLE, GeoPoint.SOUTH_POLE);
+    public static final GeoBounds WORLD = new GeoBounds(new GeoPointImmutable(-180d, -90d), new GeoPointImmutable(180d, 90d));
+    public static final GeoBounds NORTHERN_HEMISPHERE = new GeoBounds(new GeoPointImmutable(-180d, 0d), new GeoPointImmutable(180d, 90d));
+    public static final GeoBounds SOUTHERN_HEMISPHERE = new GeoBounds(new GeoPointImmutable(-180d, -90d), new GeoPointImmutable(180d, 0d));
+    public static final GeoBounds EASTERN_HEMISPHERE = new GeoBounds(new GeoPointImmutable(0d, -90d), new GeoPointImmutable(180d, 90d));
+    public static final GeoBounds WESTERN_HEMISPHERE = new GeoBounds(new GeoPointImmutable(-180d, -90d), new GeoPointImmutable(0d, 90d));
+    public static final GeoBounds EMPTY = new GeoBounds(GeoPointImmutable.NORTH_POLE, GeoPointImmutable.SOUTH_POLE);
 
-    public final GeoPoint lowerCorner, upperCorner;
+    public final GeoPointImmutable lowerCorner, upperCorner;
     private final transient boolean crossesAntimeridian;
     private transient GeoBounds lowerPart, upperPart;
 
@@ -29,41 +32,43 @@ public class GeoBounds {
      * Constructs new bounds. These bounds are oriented,
      * which means that upperCorner and lowerCorner are not interchangeable.
      * 
-     * @param lowerCorner - the lower corner
-     * @param upperCorner - the upper corner
+     * @param lowerCorner the lower corner
+     * @param upperCorner the upper corner
      */
-    public GeoBounds(GeoPoint lowerCorner, GeoPoint upperCorner) {
+    public GeoBounds(GeoPointImmutable lowerCorner, GeoPointImmutable upperCorner) {
         this.lowerCorner = lowerCorner;
         this.upperCorner = upperCorner;
-        this.crossesAntimeridian = this.lowerCorner.longitude > this.upperCorner.longitude;
+        this.crossesAntimeridian = this.lowerCorner.longitude() > this.upperCorner.longitude();
     }
 
     /**
-     * @param point - a {@link GeoPoint}
+     * @param point a {@link GeoPointImmutable}
      * 
-     * @return whether or not these bounds contains the given point
+     * @return whether these bounds contain the given point
      */
-    public boolean contains(GeoPoint point) {
-        if(this.lowerCorner.latitude > point.latitude || point.latitude > this.upperCorner.latitude) return false;
+    public boolean contains(GeoPoint<?> point) {
+        double pointLat = point.latitude();
+        double pointLong = point.longitude();
+        double lowerLong = this.lowerCorner.longitude();
+        double upperLong = this.upperCorner.longitude();
+        if(this.lowerCorner.latitude() > pointLat || pointLat > this.upperCorner.latitude()) return false;
         if(this.crossesAntimeridian) {
-            return point.longitude >= this.lowerCorner.longitude || point.longitude <= this.upperCorner.longitude;
+            return pointLong >= lowerLong || pointLong <= upperLong;
         } else {
-            double lon; // Deal with -180 / 180
-            if(point.longitude == -180d && this.lowerCorner.longitude > -180d) {
-                lon = 180d;
-            } else if(point.longitude == 180d && this.upperCorner.longitude < 180d) {
-                lon = -180d;
-            } else {
-                lon = point.longitude;
+            // Deal with -180 / 180
+            if(pointLong == -180d && lowerLong > -180d) {
+                pointLong = 180d;
+            } else if(pointLong == 180d && upperLong < 180d) {
+                pointLong = -180d;
             }
-            return this.lowerCorner.longitude <= lon && lon <= this.upperCorner.longitude;
+            return lowerLong <= pointLong && pointLong <= upperLong;
         }
     }
 
     /**
-     * @param other - an other {@link GeoBounds}
+     * @param other another {@link GeoBounds}
      * 
-     * @return whether or not this box contains the other
+     * @return whether this box contains the other
      */
     public boolean contains(GeoBounds other) {
         if(this.crossesAntimeridian) {
@@ -79,18 +84,18 @@ public class GeoBounds {
     }
 
     /**
-     * @param other - an other {@link GeoBounds}
+     * @param other another {@link GeoBounds}
      * 
-     * @return whether or not the other box contains this one
+     * @return whether the other box contains this one
      */
     public boolean within(GeoBounds other) {
         return other.contains(this);
     }
 
     /**
-     * @param other - an other {@link GeoBounds}
+     * @param other another {@link GeoBounds}
      * 
-     * @return whether or not this box and the other intersects
+     * @return whether this box and the other intersects
      */
     public boolean intersects(GeoBounds other) {
         return this.contains(other.lowerCorner) || this.contains(other.upperCorner) || other.contains(this.lowerCorner) || other.contains(this.upperCorner);
@@ -98,7 +103,7 @@ public class GeoBounds {
 
 
     /**
-     * @param other - an other {@link GeoBounds}
+     * @param other another {@link GeoBounds}
      * 
      * @return the intersections between this box and the other.
      * Most of the time the returned array will only contain zero or one intersection,
@@ -133,16 +138,16 @@ public class GeoBounds {
                 throw new IllegalStateException("Bounds intersect but cannot find intersection!");
             }
         } else {
-            double lowerLat = Math.max(this.lowerCorner.latitude, other.lowerCorner.latitude);
-            double upperLat = Math.min(this.upperCorner.latitude, other.upperCorner.latitude);
-            double lowerLon = Math.max(this.lowerCorner.longitude,  other.lowerCorner.longitude);
-            double upperLon = Math.min(this.upperCorner.longitude, other.upperCorner.longitude);
-            return new GeoBounds[] { new GeoBounds(new GeoPoint(lowerLon, lowerLat), new GeoPoint(upperLon, upperLat)) };
+            double lowerLat = max(this.lowerCorner.latitude(), other.lowerCorner.latitude());
+            double upperLat = min(this.upperCorner.latitude(), other.upperCorner.latitude());
+            double lowerLon = max(this.lowerCorner.longitude(),  other.lowerCorner.longitude());
+            double upperLon = min(this.upperCorner.longitude(), other.upperCorner.longitude());
+            return new GeoBounds[] { new GeoBounds(new GeoPointImmutable(lowerLon, lowerLat), new GeoPointImmutable(upperLon, upperLat)) };
         }
     }
     
     /**
-     * @param other - an other {@link GeoBounds}
+     * @param other another {@link GeoBounds}
      * 
      * @return the smallest bounds that contains all the intersections between these bounds and the others
      */
@@ -155,7 +160,7 @@ public class GeoBounds {
     }
 
     /**
-     * @return whether or not this box crosses the antimeridian
+     * @return whether this box crosses the antimeridian
      */
     public boolean crossesAntimeridian() {
         return this.crossesAntimeridian;
@@ -169,7 +174,7 @@ public class GeoBounds {
     public GeoBounds[] splitAtAntimeridian() {
         if(!this.crossesAntimeridian) return new GeoBounds[] { this };
         if(this.lowerPart == null || this.upperPart == null) {
-            this.lowerPart = new GeoBounds(this.lowerCorner.withLongitude(-180d), this.upperCorner.withLongitude(this.upperCorner.longitude));
+            this.lowerPart = new GeoBounds(this.lowerCorner.withLongitude(-180d), this.upperCorner.withLongitude(this.upperCorner.longitude()));
             this.upperPart = new GeoBounds(this.lowerCorner, this.upperCorner.withLongitude(180d));
 
         }
@@ -179,13 +184,13 @@ public class GeoBounds {
     /**
      * @param other - an other {@link GeoBounds}
      * 
-     * @returns the smallest {@link GeoBounds} that contains both this bounds and the other
+     * @return the smallest {@link GeoBounds} that contains both this bounds and the other
      */
     public GeoBounds smallestEncompassingSquare(GeoBounds other) {
         if(this.isEmpty()) return other;
         if(other.isEmpty()) return this;
-        double lowerLat = Math.min(this.lowerCorner.latitude, other.lowerCorner.latitude);
-        double upperLat = Math.max(this.upperCorner.latitude, other.upperCorner.latitude);
+        double lowerLat = min(this.lowerCorner.latitude(), other.lowerCorner.latitude());
+        double upperLat = max(this.upperCorner.latitude(), other.upperCorner.latitude());
         double lowerLong, upperLong;
         if(this.crossesAntimeridian ^ other.crossesAntimeridian) { // Exactly one crosses
             GeoBounds crossing;
@@ -198,67 +203,67 @@ public class GeoBounds {
                 notCrossing = this;
             }
             GeoBounds[] parts = crossing.splitAtAntimeridian(); // Ensure #lowerPart and #upperPart are not null
-            if(parts[0].upperCorner.longitude >= notCrossing.lowerCorner.longitude) { // Intersects with lower part
-                if(parts[0].upperCorner.longitude >= notCrossing.upperCorner.longitude) { // In lower part
-                    lowerLong = crossing.lowerCorner.longitude;
-                    upperLong = crossing.upperCorner.longitude;
-                } else if(parts[1].lowerCorner.longitude <= notCrossing.upperCorner.longitude) { // In both lower and upper part
+            if(parts[0].upperCorner.longitude() >= notCrossing.lowerCorner.longitude()) { // Intersects with lower part
+                if(parts[0].upperCorner.longitude() >= notCrossing.upperCorner.longitude()) { // In lower part
+                    lowerLong = crossing.lowerCorner.longitude();
+                    upperLong = crossing.upperCorner.longitude();
+                } else if(parts[1].lowerCorner.longitude() <= notCrossing.upperCorner.longitude()) { // In both lower and upper part
                     lowerLong = -180d;
                     upperLong = 180d;
                 } else {
-                    lowerLong = crossing.lowerCorner.longitude;
-                    upperLong = notCrossing.upperCorner.longitude;
+                    lowerLong = crossing.lowerCorner.longitude();
+                    upperLong = notCrossing.upperCorner.longitude();
                 }
-            } else if(parts[1].lowerCorner.longitude <= notCrossing.upperCorner.longitude) { // Crosses with upper part
-                if(parts[1].lowerCorner.longitude <= notCrossing.lowerCorner.longitude) { // In upper part
-                    lowerLong = crossing.lowerCorner.longitude;
-                    upperLong = crossing.upperCorner.longitude;
+            } else if(parts[1].lowerCorner.longitude() <= notCrossing.upperCorner.longitude()) { // Crosses with upper part
+                if(parts[1].lowerCorner.longitude() <= notCrossing.lowerCorner.longitude()) { // In upper part
+                    lowerLong = crossing.lowerCorner.longitude();
+                    upperLong = crossing.upperCorner.longitude();
                 } else { // Intersects with upper part
-                    lowerLong = notCrossing.lowerCorner.longitude;
-                    upperLong = crossing.upperCorner.longitude;
+                    lowerLong = notCrossing.lowerCorner.longitude();
+                    upperLong = crossing.upperCorner.longitude();
                 }
             } else { // Does not intersect, will be choosing the smallest square
-                double deltaLeft = notCrossing.lowerCorner.longitude - parts[0].upperCorner.longitude;
-                double deltaRight = parts[1].lowerCorner.longitude - notCrossing.upperCorner.longitude;
+                double deltaLeft = notCrossing.lowerCorner.longitude() - parts[0].upperCorner.longitude();
+                double deltaRight = parts[1].lowerCorner.longitude() - notCrossing.upperCorner.longitude();
                 if(deltaLeft < deltaRight) {
-                    lowerLong = crossing.lowerCorner.longitude;
-                    upperLong = notCrossing.upperCorner.longitude;
+                    lowerLong = crossing.lowerCorner.longitude();
+                    upperLong = notCrossing.upperCorner.longitude();
                 } else {
-                    lowerLong = notCrossing.lowerCorner.longitude;
-                    upperLong = crossing.upperCorner.longitude;
+                    lowerLong = notCrossing.lowerCorner.longitude();
+                    upperLong = crossing.upperCorner.longitude();
                 }
             }
         } else if(this.crossesAntimeridian) { // Both cross
-            lowerLong = Math.min(this.lowerCorner.longitude, other.lowerCorner.longitude);
-            upperLong = Math.max(this.upperCorner.longitude, other.upperCorner.longitude);
+            lowerLong = min(this.lowerCorner.longitude(), other.lowerCorner.longitude());
+            upperLong = max(this.upperCorner.longitude(), other.upperCorner.longitude());
         } else { // None cross
             GeoBounds lowest;
             GeoBounds highest;
-            if(this.lowerCorner.longitude <= other.lowerCorner.longitude) {
+            if(this.lowerCorner.longitude() <= other.lowerCorner.longitude()) {
                 lowest = this;
             } else {
                 lowest = other;
             }
-            if(this.upperCorner.longitude >= other.upperCorner.longitude) {
+            if(this.upperCorner.longitude() >= other.upperCorner.longitude()) {
                 highest = this;
             } else {
                 highest = other;
             }
             if(highest == lowest) { // Contains the other
-                lowerLong = highest.lowerCorner.longitude;
-                upperLong = highest.upperCorner.longitude;
-            } else if(highest.upperCorner.longitude - lowest.lowerCorner.longitude <= 360d - (highest.lowerCorner.longitude - lowest.upperCorner.longitude)){
+                lowerLong = highest.lowerCorner.longitude();
+                upperLong = highest.upperCorner.longitude();
+            } else if(highest.upperCorner.longitude() - lowest.lowerCorner.longitude() <= 360d - (highest.lowerCorner.longitude() - lowest.upperCorner.longitude())){
                 // Smallest does not cross
-                lowerLong = lowest.lowerCorner.longitude;
-                upperLong = highest.upperCorner.longitude;
+                lowerLong = lowest.lowerCorner.longitude();
+                upperLong = highest.upperCorner.longitude();
             } else { // Smallest crosses
-                lowerLong = highest.lowerCorner.longitude;
-                upperLong = lowest.upperCorner.longitude;
+                lowerLong = highest.lowerCorner.longitude();
+                upperLong = lowest.upperCorner.longitude();
             }
         }
         return new GeoBounds(
-                    new GeoPoint(lowerLong, lowerLat),
-                    new GeoPoint(upperLong, upperLat)
+                    new GeoPointImmutable(lowerLong, lowerLat),
+                    new GeoPointImmutable(upperLong, upperLat)
                 );
     }
 
@@ -266,7 +271,7 @@ public class GeoBounds {
      * @return whether these bounds are considered empty
      */
     public boolean isEmpty() {
-        return this.lowerCorner.latitude > this.upperCorner.latitude;
+        return this.lowerCorner.latitude() > this.upperCorner.latitude();
     }
 
     @Override

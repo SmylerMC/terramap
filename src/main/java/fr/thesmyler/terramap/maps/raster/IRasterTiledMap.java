@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.maps.raster;
 
 import fr.thesmyler.terramap.util.geo.TilePos;
-import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 
 public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
@@ -20,8 +20,9 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
      */
     IRasterTile getTile(TilePos position);
 
+    @Deprecated
     default IRasterTile getTile(int zoom, int x, int y) {
-        return this.getTile(new TilePosUnmutable(zoom, x, y));
+        return this.getTile(new TilePosImmutable(zoom, x, y));
     }
 
     /**

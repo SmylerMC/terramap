@@ -44,7 +44,7 @@ public class TerramapMod {
     public static TerramapProxy proxy;
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event) throws InvalidVersionString {
+    public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
         String versionStr = event.getModMetadata().version;
         if (System.getProperties().containsKey("terramap.debug")) {

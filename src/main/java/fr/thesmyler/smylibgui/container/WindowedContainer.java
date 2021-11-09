@@ -95,7 +95,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private abstract class BaseDecorationWidget implements IWidget {
 
         private boolean lastHovered = false;
-        private Cursor cursor;
+        private final Cursor cursor;
 
         public BaseDecorationWidget(Cursor cursor) {
             this.cursor = cursor;

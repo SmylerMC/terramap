@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -25,7 +25,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     protected ResourceLocation texture;
     protected int u, v, textureWidth, textureHeight;
     protected final Entity entity;
-    protected GeoPoint actualLocation;
+    protected GeoPointImmutable actualLocation;
     protected float actualAzimuth;
 
     public AbstractLivingMarker(MarkerController<?> controller, float width, float height, ResourceLocation texture, int u, int v, int textureWidth, int textureHeight, Entity entity) {
@@ -68,7 +68,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
         double z = this.entity.posZ;
         GeographicProjection proj = TerramapClientContext.getContext().getProjection();
         try {
-            this.actualLocation = new GeoPoint(proj.toGeo(x, z));
+            this.actualLocation = new GeoPointImmutable(proj.toGeo(x, z));
             this.actualAzimuth = proj.azimuth(x, z, this.entity.rotationYaw);
         } catch(OutOfProjectionBoundsException | NullPointerException e) {
             this.actualLocation = null;
@@ -79,7 +79,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     }
 
     @Override
-    protected GeoPoint getActualLocation() {
+    protected GeoPointImmutable getActualLocation() {
         return this.actualLocation;
     }
 
@@ -114,6 +114,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
     @Override
     public float getActualAzimuth() throws OutOfProjectionBoundsException {
+        if (Double.isNaN(this.actualAzimuth)) throw OutOfProjectionBoundsException.get();
         return this.actualAzimuth;
     }
 

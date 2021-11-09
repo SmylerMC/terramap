@@ -349,7 +349,7 @@ public class MenuWidget implements IWidget {
         public final String text;
         private final Runnable action;
         public boolean enabled;
-        private MenuWidget subMenu;
+        private final MenuWidget subMenu;
 
         private MenuEntry(String text, Runnable action, MenuWidget menu, boolean enabled) {
             this.text = text;

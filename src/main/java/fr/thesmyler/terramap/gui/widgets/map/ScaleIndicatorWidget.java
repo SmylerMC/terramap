@@ -4,7 +4,8 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
+import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 
 //TODO Make this even more accurate
@@ -14,6 +15,8 @@ public class ScaleIndicatorWidget implements IWidget {
     private final int z;
     private float width;
     private boolean visible = true;
+    private final GeoPointMutable point1 = new GeoPointMutable();
+    private final GeoPointMutable point2 = new GeoPointMutable();
 
     public ScaleIndicatorWidget(float x, float y, int z, float width) {
         this.x = x;
@@ -85,12 +88,12 @@ public class ScaleIndicatorWidget implements IWidget {
 
             MapWidget map = (MapWidget) parent;
 
-            GeoPoint point1 = map.getScreenLocation(this.getX(), this.getY() + 5);
-            GeoPoint point2 = map.getScreenLocation(this.getX() + this.getWidth(), this.getY() + 5);
+            map.getScreenLocation(this.point1, this.getX(), this.getY() + 5);
+            map.getScreenLocation(this.point2, this.getX() + this.getWidth(), this.getY() + 5);
 
-            if(WebMercatorUtil.PROJECTION_BOUNDS.contains(point1) && WebMercatorUtil.PROJECTION_BOUNDS.contains(point2)) {
+            if(WebMercatorUtil.PROJECTION_BOUNDS.contains(this.point1) && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.point2)) {
 
-                double scale = point1.distanceTo(point2);
+                double scale = this.point1.distanceTo(point2);
                 String[] units = {"cm", "m", "km"};
                 int j=1;
                 for(; scale >= 1000 && j<units.length-1; j++) scale /= 1000;

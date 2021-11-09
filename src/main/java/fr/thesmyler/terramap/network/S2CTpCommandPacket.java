@@ -33,7 +33,7 @@ public class S2CTpCommandPacket implements IMessage {
 
         @Override
         public IMessage onMessage(S2CTpCommandPacket message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(() -> {TerramapClientContext.getContext().setTpCommand(message.cmd);});
+            Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().setTpCommand(message.cmd));
             return null;
         }
 
