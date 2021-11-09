@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -138,7 +139,7 @@ public class TextFieldWidget implements IWidget {
 
         if(this.isSearchBar) {
             Color.WHITE.applyGL();
-            Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.WIDGET_TEXTURES);
+            Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
             RenderUtil.drawModalRectWithCustomSizedTexture(x + this.width - 17, y + 2, 131, 0, 15, 15, 256, 256);
@@ -434,6 +435,7 @@ public class TextFieldWidget implements IWidget {
     public void setCursor(int cursor) {
         this.setSelectionStart(cursor);
         if (!this.selecting) this.setSelectionEnd(this.selectionStart);
+        //FIXME this shouldn't get called here, why is it ?
         this.onChange();
     }
 

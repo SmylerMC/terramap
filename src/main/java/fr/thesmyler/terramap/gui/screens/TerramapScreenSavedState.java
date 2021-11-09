@@ -6,8 +6,8 @@ import java.util.Map;
 import com.google.gson.Gson;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
+import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 
 public class TerramapScreenSavedState {
 
@@ -22,11 +22,11 @@ public class TerramapScreenSavedState {
     public boolean f1 = false;
     public Map<String, Boolean> visibilitySettings = new HashMap<>();
     public String trackedMarker = null;
-    public Map<String, Vec2d> layerOffsets;
+    public Map<String, Vec2dImmutable> layerOffsets;
 
     public TerramapScreenSavedState(
             double zoomLevel,
-            GeoPoint centerLocation,
+            GeoPointImmutable centerLocation,
             float rotation,
             String mapStyle,
             boolean infoPannel,
@@ -34,10 +34,10 @@ public class TerramapScreenSavedState {
             boolean f1,
             Map<String, Boolean> markerSettings,
             String trackedMarker,
-            Map<String, Vec2d> layerOffsets) {
+            Map<String, Vec2dImmutable> layerOffsets) {
         this.zoomLevel = zoomLevel;
-        this.centerLongitude = centerLocation.longitude;
-        this.centerLatitude = centerLocation.latitude;
+        this.centerLongitude = centerLocation.longitude();
+        this.centerLatitude = centerLocation.latitude();
         this.rotation = rotation;
         this.mapStyle = mapStyle;
         this.infoPannel = infoPannel;

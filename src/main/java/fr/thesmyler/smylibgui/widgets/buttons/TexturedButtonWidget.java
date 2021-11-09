@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -102,29 +103,29 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
     public enum IncludedTexturedButtons {
 
         // 15x15
-        BLANK_15(15, 15, 60, 0, 60, 15, 60, 30, SmyLibGui.WIDGET_TEXTURES),
-        PLUS(15, 15, 75, 0, 75, 15, 75, 30, SmyLibGui.WIDGET_TEXTURES),
-        MINUS(15, 15, 90, 0, 90, 15, 90, 30, SmyLibGui.WIDGET_TEXTURES),
-        LEFT(15, 15, 105, 0, 105, 15, 105, 30, SmyLibGui.WIDGET_TEXTURES),
-        RIGHT(15, 15, 120, 0, 120, 15, 120, 30, SmyLibGui.WIDGET_TEXTURES),
-        UP(15, 15, 135, 0, 135, 15, 135, 30, SmyLibGui.WIDGET_TEXTURES),
-        DOWN(15, 15, 150, 0, 150, 15, 150, 30, SmyLibGui.WIDGET_TEXTURES),
-        CROSS(15, 15, 165, 0, 165, 15, 165, 30, SmyLibGui.WIDGET_TEXTURES),
-        CENTER(15, 15, 180, 0, 180, 15, 180, 30, SmyLibGui.WIDGET_TEXTURES),
-        PAPER(15, 15, 195, 0, 195, 15, 195, 30, SmyLibGui.WIDGET_TEXTURES),
-        WRENCH(15, 15, 210, 0, 210, 15, 210, 30, SmyLibGui.WIDGET_TEXTURES),
-        OPTIONS1_15(15, 15, 225, 0, 225, 15, 225, 30, SmyLibGui.WIDGET_TEXTURES),
-        OPTIONS2_15(15, 15, 240, 0, 240, 15, 240, 30, SmyLibGui.WIDGET_TEXTURES),
-        TRASH(15, 15, 241, 45, 241, 60, 241, 75, SmyLibGui.WIDGET_TEXTURES),
-        OFFSET(15, 15, 226, 45, 226, 60, 226, 75, SmyLibGui.WIDGET_TEXTURES),
+        BLANK_15(15, 15, 60, 0, 60, 15, 60, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        PLUS(15, 15, 75, 0, 75, 15, 75, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        MINUS(15, 15, 90, 0, 90, 15, 90, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        LEFT(15, 15, 105, 0, 105, 15, 105, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        RIGHT(15, 15, 120, 0, 120, 15, 120, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        UP(15, 15, 135, 0, 135, 15, 135, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        DOWN(15, 15, 150, 0, 150, 15, 150, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        CROSS(15, 15, 165, 0, 165, 15, 165, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        CENTER(15, 15, 180, 0, 180, 15, 180, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        PAPER(15, 15, 195, 0, 195, 15, 195, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        WRENCH(15, 15, 210, 0, 210, 15, 210, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        OPTIONS1_15(15, 15, 225, 0, 225, 15, 225, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        OPTIONS2_15(15, 15, 240, 0, 240, 15, 240, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
+        TRASH(15, 15, 241, 45, 241, 60, 241, 75, SmyLibGuiTextures.WIDGET_TEXTURES),
+        OFFSET(15, 15, 226, 45, 226, 60, 226, 75, SmyLibGuiTextures.WIDGET_TEXTURES),
 
         // 20x20
-        BLANK_20(20, 20, 60, 164, 60, 184, 60, 204, SmyLibGui.WIDGET_TEXTURES),
-        OPTIONS_20(20, 20, 80, 164, 80, 184, 80, 204, SmyLibGui.WIDGET_TEXTURES),
+        BLANK_20(20, 20, 60, 164, 60, 184, 60, 204, SmyLibGuiTextures.WIDGET_TEXTURES),
+        OPTIONS_20(20, 20, 80, 164, 80, 184, 80, 204, SmyLibGuiTextures.WIDGET_TEXTURES),
 
         // 21x21
-        BLANK_21(21, 21, 60, 45, 60, 66, 60, 87, SmyLibGui.WIDGET_TEXTURES),
-        SEARCH(21, 21, 81, 45, 81, 66, 81, 87, SmyLibGui.WIDGET_TEXTURES);
+        BLANK_21(21, 21, 60, 45, 60, 66, 60, 87, SmyLibGuiTextures.WIDGET_TEXTURES),
+        SEARCH(21, 21, 81, 45, 81, 66, 81, 87, SmyLibGuiTextures.WIDGET_TEXTURES);
 
         final int width, height, u, v, hoverU, hoverV, disabledU, disabledV;
         ResourceLocation texture;

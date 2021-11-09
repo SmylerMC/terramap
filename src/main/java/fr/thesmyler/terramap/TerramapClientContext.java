@@ -28,6 +28,7 @@ import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import fr.thesmyler.terramap.util.TerramapUtil;
 import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
@@ -41,6 +42,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nonnull;
 
 /**
  * Client side context that store important information about the current server, world, proxy, etc.
@@ -166,7 +169,7 @@ public class TerramapClientContext {
                 TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
                 savedPlayer.setDisplayName(player.getDisplayName());
                 savedPlayer.setLocation(player.getLocation());
-                savedPlayer.setAzimut(player.getAzimut());
+                savedPlayer.setAzimuth(player.getAzimuth());
                 savedPlayer.setGamemode(player.getGamemode());
             } else toAdd.add(player);
         }
@@ -249,11 +252,11 @@ public class TerramapClientContext {
         TerramapClientPreferences.setServerSavedScreen(this.getContextIdentifier(), svd);
     }
     
-    public Vec2d getMinimapRenderOffset(String layer) {
+    public Vec2dImmutable getMinimapRenderOffset(String layer) {
         return TerramapClientPreferences.getMinimapRenderingOffset(this.getContextIdentifier(), layer);
     }
 
-    public void setMinimapRenderOffset(String layer, Vec2d offset) {
+    public void setMinimapRenderOffset(String layer, Vec2d<?> offset) {
         TerramapClientPreferences.setMinimapRenderingOffset(this.getContextIdentifier(), layer, offset);
     }
     public void registerForUpdates(boolean yesNo) {
@@ -506,6 +509,7 @@ public class TerramapClientContext {
         Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapClientContext.getContext().getMapStyles(), state));
     }
 
+    @Nonnull
     public static TerramapClientContext getContext() {
         if(TerramapClientContext.instance == null) TerramapClientContext.resetContext();
         return TerramapClientContext.instance;

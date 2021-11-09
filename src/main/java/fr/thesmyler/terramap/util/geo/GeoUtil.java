@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.util.geo;
 
+import static java.lang.Math.*;
+
 /**
  * A collection of algorithm to solve geographic problems
  * 
@@ -19,24 +21,24 @@ public final class GeoUtil {
      * @param longitude in degrees
      * @return the same longitude, between -180 and 180
      * 
-     * @throws IllegalStateException if the longitude is not a finite double
+     * @throws IllegalArgumentException if the longitude is not a finite double
      */
     public static double getLongitudeInRange(double longitude) {
         if(!Double.isFinite(longitude)) throw new IllegalArgumentException("longitude cannot be infinite or NaN");
         if(longitude == 0d) return 0d; // In case of -0d
         if(-180d <= longitude && longitude <= 180d) return longitude;
-        return longitude - Math.floor(longitude / 360d + .5d) * 360d;
+        return longitude - floor(longitude / 360d + .5d) * 360d;
     }
 
     /**
      * @param latitude in degrees
      * @return the same latitude
      * 
-     * @throws IllegalStateException if the latitude is not a finite double or is not within the [-90°, 90°] range
+     * @throws IllegalArgumentException if the latitude is not a finite double or is not within the [-90°, 90°] range
      */
     public static double getLatitudeInRange(double latitude) {
         if(!Double.isFinite(latitude)) throw new IllegalArgumentException("latitude cannot be infinite or NaN");
-        if(Math.abs(latitude) > 90d) throw new IllegalArgumentException("latitude cannot be greater than 90°");
+        if(abs(latitude) > 90d) throw new IllegalArgumentException("latitude cannot be greater than 90°");
         if(latitude == 0d) return 0d; // In case of -0d
         return latitude;
     }
@@ -49,7 +51,7 @@ public final class GeoUtil {
      */
     public static float getAzimuthInRange(float azimuth) {
         if(!Float.isFinite(azimuth)) throw new IllegalArgumentException("azimuth cannot be infinite or NaN");
-        return (float) (azimuth - Math.floor(azimuth / 360)*360);
+        return (float) (azimuth - floor(azimuth / 360)*360);
     }
 
     /**
@@ -64,14 +66,14 @@ public final class GeoUtil {
      * @return an approximation of the distance between the two points, in meters
      */
     public static double distanceHaversine(double longitude1, double latitude1, double longitude2, double latitude2) {
-        double dLon = Math.toRadians(longitude1 - longitude2) / 2d;
-        double dLat = Math.toRadians(latitude1 - latitude2) / 2d;
-        double cosLat1 = Math.cos(Math.toRadians(latitude1));
-        double cosLat2 = Math.cos(Math.toRadians(latitude2));
-        double sinDLon = Math.sin(dLon);
-        double sinDLat = Math.sin(dLat);
+        double dLon = toRadians(longitude1 - longitude2) / 2d;
+        double dLat = toRadians(latitude1 - latitude2) / 2d;
+        double cosLat1 = cos(toRadians(latitude1));
+        double cosLat2 = cos(toRadians(latitude2));
+        double sinDLon = sin(dLon);
+        double sinDLat = sin(dLat);
         double arc = sinDLat*sinDLat + cosLat1*cosLat2 * sinDLon*sinDLon;
-        return 2 * EARTH_RADIUS * Math.asin(Math.sqrt(arc));
+        return 2 * EARTH_RADIUS * asin(sqrt(arc));
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.util.geo.TilePos;
-import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
@@ -25,7 +25,7 @@ import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
 public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IRasterTiledMap {
 
     private final LinkedList<T> tileList; // Uses for ordered access when unloading
-    private final Map<TilePosUnmutable, T> tileMap; // Used for unordered access
+    private final Map<TilePosImmutable, T> tileMap; // Used for unordered access
     private int lowZoom = 0;
     private boolean useLowZoom = true;
     private int maxLoaded;
@@ -39,7 +39,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
 
     @Override
     public T getTile(TilePos position) {
-        TilePosUnmutable pos = position.getUnmutable();
+        TilePosImmutable pos = position.getImmutable();
         WebMercatorBounds b = this.getBounds(pos.getZoom());
         if(b != null && !b.contains(pos)) throw new InvalidTilePositionException();
         T tile = this.tileMap.get(pos);
@@ -52,7 +52,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
         return tile;
     }
 
-    protected abstract T createNewTile(TilePosUnmutable pos);
+    protected abstract T createNewTile(TilePosImmutable pos);
 
     /**
      * Loads a tile and registers it as last used. Doesn't load its texture.

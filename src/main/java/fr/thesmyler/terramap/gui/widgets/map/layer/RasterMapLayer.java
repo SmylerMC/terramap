@@ -15,13 +15,12 @@ import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.GeoServices;
-import fr.thesmyler.terramap.util.geo.TilePos;
+import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
-import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import fr.thesmyler.terramap.util.math.Mat2d;
-import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dImmutable;
+import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -33,21 +32,36 @@ import net.minecraft.util.text.TextComponentString;
 
 public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
-    protected final IRasterTiledMap map;
+    protected final IRasterTiledMap tiledMap;
     protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
 
-    public RasterMapLayer(IRasterTiledMap map, double tileScaling) {
-        super(tileScaling);
-        this.map = map;
+    // Used for calculations
+    private final Vec2dMutable top = new Vec2dMutable();
+    private final Vec2dMutable left = new Vec2dMutable();
+    private final Vec2dMutable bottom = new Vec2dMutable();
+    private final Vec2dMutable right = new Vec2dMutable();
+    private final Vec2dMutable minusCenterPos = new Vec2dMutable();
+    private final Vec2dMutable distanceToCenterCalculator = new Vec2dMutable();
+    private final GeoPointReadOnly focusedPoint;
+    private final Vec2dReadOnly renderingSpaceDimensions;
+    private final Vec2dReadOnly halfRenderingSpaceDimensions;
+
+
+    public RasterMapLayer(MapWidget map, IRasterTiledMap tiledMap) {
+        super(map);
+        this.tiledMap = tiledMap;
+        this.focusedPoint = map.getController().getCenterLocation();
+        this.renderingSpaceDimensions = this.getRenderSpaceDimensions();
+        this.halfRenderingSpaceDimensions = this.getRenderSpaceHalfDimensions();
     }
 
-    public IRasterTiledMap getMap() {
-        return this.map;
+    public IRasterTiledMap getTiledMap() {
+        return this.tiledMap;
     }
     
     @Override
     public String getId() {
-        return "tiled-raster-" + this.map.getId();
+        return "tiled-raster-" + this.tiledMap.getId();
     }
 
     @Override
@@ -65,37 +79,33 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         boolean debug = parentMap.isDebugMode();
         Profiler profiler = parentMap.getProfiler();
 
-        profiler.startSection("render-raster-layer_" + this.map.getId());
+        profiler.startSection("render-raster-layer_" + this.tiledMap.getId());
 
         GlStateManager.pushMatrix();
         float widthViewPort = this.getWidth();
         float heightViewPort = this.getHeight();
-        double zoom = this.getZoom();
-
-        // The width and height of the rotated map that covers the area of the non-rotated one
-        double extendedWidth = this.getExtendedWidth();
-        double extendedHeight = this.getExtendedHeight();
+        double zoom = this.controller.getZoom();
 
         // These are the x and y original elementary vectors expressed in the rotated coordinate system
         Mat2d rotationMatrix = this.getRotationMatrix();
-        Vec2d xvec = rotationMatrix.line1();
-        Vec2d yvec = rotationMatrix.line2();
+        Vec2dImmutable xvec = rotationMatrix.line1();
+        Vec2dImmutable yvec = rotationMatrix.line2();
 
         this.applyRotationGl(x, y);
         
-        Vec2d upperLeft = this.getUpperLeftRenderCorner();
+        Vec2dReadOnly upperLeft = this.getUpperLeftRenderCornerPositionInMercatorSpace();
 
         int zoomLevel = (int) Math.round(zoom);
         double zoomSizeFactor = zoom - zoomLevel;
 
-        double renderSize = WebMercatorUtil.TILE_DIMENSIONS / this.getTileScaling() * Math.pow(2, zoomSizeFactor);
+        double renderSize = WebMercatorUtil.TILE_DIMENSIONS / this.map.getTileScaling() * Math.pow(2, zoomSizeFactor);
 
         int maxTileXY = WebMercatorUtil.getDimensionsInTile(zoomLevel);
-        double maxX = upperLeft.x + extendedWidth;
-        double maxY = upperLeft.y + extendedHeight;
+        double maxX = upperLeft.x() + this.renderingSpaceDimensions.x();
+        double maxY = upperLeft.y() + this.renderingSpaceDimensions.y();
 
-        int lowerTileX = (int) Math.floor(upperLeft.x / renderSize);
-        int lowerTileY = (int) Math.floor(upperLeft.y / renderSize);
+        int lowerTileX = (int) Math.floor(upperLeft.x() / renderSize);
+        int lowerTileY = (int) Math.floor(upperLeft.y() / renderSize);
         
         Color whiteWithAlpha = Color.WHITE.withAlpha(this.getAlpha());
 
@@ -106,55 +116,52 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                 IRasterTile tile;
 
                 try {
-                    tile = map.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
+                    tile = tiledMap.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
                 } catch(InvalidTilePositionException silenced) { continue ;}
 
                 // This is the tile we would like to render, but it is not possible if it hasn't been cached yet
                 IRasterTile bestTile = tile;
-                double dispX = tileX * renderSize - upperLeft.x;
-                double dispY = tileY * renderSize - upperLeft.y;
+                double dispX = tileX * renderSize - upperLeft.x();
+                double dispY = tileY * renderSize - upperLeft.y();
                 double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
                 double displayHeight = Math.min(renderSize, maxY - tileY * renderSize);
 
                 /* 
                  * Let's do some checks to ensure the tile is indeed visible when rotation is taken into account.
-                 * To do that, we project each corner of the tile onto the corresponding unit vector or the non-rotated coordinate system,
+                 * To do that, we project each corner of the tile onto the corresponding unit vector of the non-rotated coordinate system,
                  * and if the result of the projection is further than the limit, we skip the tile.
                  */
                 //FIXME often crops out the corners, probably a floating point precision problem
-                Vec2d left;
-                Vec2d right;
-                Vec2d top;
-                Vec2d bottom;
                 if(rotation < 90) {
-                    top = new Vec2d(dispX, dispY);
-                    right = new Vec2d(dispX + displayWidth, dispY);
-                    bottom = new Vec2d(dispX + displayWidth, dispY + displayHeight);
-                    left  = new Vec2d(dispX, dispY + displayHeight);
+                    this.top.set(dispX, dispY);
+                    this.right.set(dispX + displayWidth, dispY);
+                    this.bottom.set(dispX + displayWidth, dispY + displayHeight);
+                    this.left.set(dispX, dispY + displayHeight);
                 } else if(rotation < 180){
-                    right = new Vec2d(dispX, dispY);
-                    bottom = new Vec2d(dispX + displayWidth, dispY);
-                    left = new Vec2d(dispX + displayWidth, dispY + displayHeight);
-                    top = new Vec2d(dispX, dispY + displayHeight);
+                    this.right.set(dispX, dispY);
+                    this.bottom.set(dispX + displayWidth, dispY);
+                    this.left.set(dispX + displayWidth, dispY + displayHeight);
+                    this.top.set(dispX, dispY + displayHeight);
                 } else if(rotation < 270){
-                    bottom = new Vec2d(dispX, dispY);
-                    left = new Vec2d(dispX + displayWidth, dispY);
-                    top = new Vec2d(dispX + displayWidth, dispY + displayHeight);
-                    right = new Vec2d(dispX, dispY + displayHeight);
+                    this.bottom.set(dispX, dispY);
+                    this.left.set(dispX + displayWidth, dispY);
+                    this.top.set(dispX + displayWidth, dispY + displayHeight);
+                    this.right.set(dispX, dispY + displayHeight);
                 } else {
-                    left = new Vec2d(dispX, dispY);
-                    top = new Vec2d(dispX + displayWidth, dispY);
-                    right= new Vec2d(dispX + displayWidth, dispY + displayHeight);
-                    bottom = new Vec2d(dispX, dispY + displayHeight);
+                    this.left.set(dispX, dispY);
+                    this.top.set(dispX + displayWidth, dispY);
+                    this.right.set(dispX + displayWidth, dispY + displayHeight);
+                    this.bottom.set(dispX, dispY + displayHeight);
                 }
-                top = top.add(-extendedWidth / 2, -extendedHeight/ 2);
-                right = right.add(-extendedWidth / 2, -extendedHeight/ 2);
-                bottom = bottom.add(-extendedWidth / 2, -extendedHeight/ 2);
-                left = left.add(-extendedWidth / 2, -extendedHeight/ 2);
-                if(bottom.dotProd(yvec) < -heightViewPort / 2) continue;
-                if(top.dotProd(yvec) > heightViewPort / 2) continue;
-                if(right.dotProd(xvec) < -widthViewPort / 2) continue;
-                if(left.dotProd(xvec) > widthViewPort / 2) continue;
+                this.top.subtract(this.halfRenderingSpaceDimensions);
+                this.right.subtract(this.halfRenderingSpaceDimensions);
+                this.bottom.subtract(this.halfRenderingSpaceDimensions);
+                this.left.subtract(this.halfRenderingSpaceDimensions);
+
+                if(this.bottom.dotProd(yvec) < -heightViewPort / 2) continue;
+                if(this.top.dotProd(yvec) > heightViewPort / 2) continue;
+                if(this.right.dotProd(xvec) < -widthViewPort / 2) continue;
+                if(this.left.dotProd(xvec) > widthViewPort / 2) continue;
 
                 neededTiles.add(bestTile);
                 boolean lowerResRender = false;
@@ -162,24 +169,22 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                 if(!bestTile.isTextureAvailable()) {
                     lowerResRender = true;
                     perfectDraw = false;
-                    if(zoomLevel > this.map.getMaxZoom()) {
+                    if(zoomLevel > this.tiledMap.getMaxZoom()) {
                         unlockedZoomRender = true;
                     }
 
                     while(tile.getPosition().getZoom() > 0 && !tile.isTextureAvailable()) {
                         try {
-                            tile = this.map.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
+                            tile = this.tiledMap.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
                         } catch(InvalidTilePositionException silenced) {
                             break;
                         }
-                        if(tile.getPosition().getZoom() == this.map.getMaxZoom()) {
+                        if(tile.getPosition().getZoom() == this.tiledMap.getMaxZoom()) {
                             try {
                                 tile.getTexture();
                                 neededTiles.add(tile);
                             } catch (Throwable e) {
-                                if(parentMap != null) {
-                                    parentMap.reportError(this, e.toString());
-                                }
+                                parentMap.reportError(this, e.toString());
                             }
                         }
                     }
@@ -223,7 +228,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                     else perfectDraw = false;
                 } catch (Throwable e) {
                     perfectDraw = false;
-                    if(parentMap != null) parentMap.reportError(this, e.toString());
+                    parentMap.reportError(this, e.toString());
                 }
                 textureManager.bindTexture(texture);
                 RenderUtil.drawModalRectWithCustomSizedTexture(
@@ -251,30 +256,34 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
             }
         }
 
-        if(zoomLevel <= this.map.getMaxZoom()) {
-            GeoPoint centerLocation = this.getCenterLocation();
-            Vec2d center = WebMercatorUtil.fromGeo(centerLocation, 0d).scale(1 / 256d);
-            Vec2d minusCenterPos = new Vec2d(-center.x, -center.y);
+
+        WebMercatorUtil.fromGeo(this.minusCenterPos, this.focusedPoint, 0d).scale(- 1 / 256d);
+        // Filter out tiles that are not needed and order the needed ones for loading.
+        if(zoomLevel <= this.tiledMap.getMaxZoom()) {
             neededTiles.stream().filter(t -> !t.isTextureAvailable()).sorted((t1, t2) -> {
                 TilePos pos1 = t1.getPosition();
                 TilePos pos2 = t2.getPosition();
                 int dz = Integer.compare(pos1.getZoom(), pos2.getZoom());
                 if(dz != 0) return dz;
                 double factor = 1d / (1 << pos1.getZoom());
-                Vec2d dis1 = new Vec2d(pos1.getX() + 0.5d, pos1.getY() + 0.5d).scale(factor).add(minusCenterPos);
-                Vec2d dis2 = new Vec2d(pos2.getX() + 0.5d, pos2.getY() + 0.5d).scale(factor).add(minusCenterPos);
-                return Double.compare(dis1.normSquared(), dis2.normSquared());
+                double dis1 = this.distanceToCenterCalculator.set(pos1.getX() + 0.5d, pos1.getY() + 0.5d)
+                        .scale(factor)
+                        .add(this.minusCenterPos)
+                        .normSquared();
+                double dis2 = this.distanceToCenterCalculator.set(pos2.getX() + 0.5d, pos2.getY() + 0.5d)
+                        .scale(factor)
+                        .add(this.minusCenterPos)
+                        .normSquared();
+                return Double.compare(dis1, dis2);
             }).forEachOrdered(tile -> {
                 try {
                     tile.getTexture(); // Will start loading the tile
                 } catch (Throwable e) {
-                    if(parentMap != null) {
-                        parentMap.reportError(this, e.toString());
-                    }
+                    parentMap.reportError(this, e.toString());
                 }
             });
         }
-        if(perfectDraw && parentMap != null) parentMap.discardPreviousErrors(this);
+        if(perfectDraw) parentMap.discardPreviousErrors(this);
         this.lastNeededTiles.removeAll(neededTiles);
         this.lastNeededTiles.forEach(IRasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;
@@ -286,22 +295,22 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     @Override
     public ITextComponent getCopyright(String localeKey) {
-        if(this.map instanceof ICopyrightHolder) {
-            return ((ICopyrightHolder)this.map).getCopyright(localeKey);
+        if(this.tiledMap instanceof ICopyrightHolder) {
+            return ((ICopyrightHolder)this.tiledMap).getCopyright(localeKey);
         }
         return new TextComponentString("");
     }
 
     @Override
-    public MapLayer copy() {
-        RasterMapLayer other = new RasterMapLayer(this.map, this.getTileScaling());
+    public MapLayer copy(MapWidget forMap) {
+        RasterMapLayer other = new RasterMapLayer(forMap, this.tiledMap);
         this.copyPropertiesToOther(other);
         return other;
     }
 
     @Override
     public String name() {
-        return this.map.getLocalizedName(SmyLibGui.getLanguage());
+        return this.tiledMap.getLocalizedName(SmyLibGui.getLanguage());
     }
 
     @Override

@@ -41,14 +41,14 @@ public abstract class WidgetContainer implements IWidget{
     private final int z;
     private boolean doScissor = true;
 
-    private final float[] lastClickX = new float[Mouse.getButtonCount()];
-    private final float[] lastClickY = new float[Mouse.getButtonCount()];
-    private final long[] lastClickTime = new long[Mouse.getButtonCount()];
+    private final float[] lastClickX = new float[SmyLibGui.getMouseButtonCount()];
+    private final float[] lastClickY = new float[SmyLibGui.getMouseButtonCount()];
+    private final long[] lastClickTime = new long[SmyLibGui.getMouseButtonCount()];
 
-    private final IWidget[] draggedWidget = new IWidget[Mouse.getButtonCount()];
-    private final float[] dClickX = new float[Mouse.getButtonCount()];
-    private final float[] dClickY = new float[Mouse.getButtonCount()];
-    private final long[] dClickT = new long[Mouse.getButtonCount()];
+    private final IWidget[] draggedWidget = new IWidget[SmyLibGui.getMouseButtonCount()];
+    private final float[] dClickX = new float[SmyLibGui.getMouseButtonCount()];
+    private final float[] dClickY = new float[SmyLibGui.getMouseButtonCount()];
+    private final long[] dClickT = new long[SmyLibGui.getMouseButtonCount()];
 
     private final List<MouseAction> delayedActions = new ArrayList<>();
 

@@ -5,7 +5,8 @@ import java.util.UUID;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.util.TerramapUtil;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointMutable;
+import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -19,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TerramapLocalPlayer extends TerramapPlayer {
 
     protected final EntityPlayer player;
+    private final GeoPointMutable location = new GeoPointMutable();
 
     public TerramapLocalPlayer(EntityPlayer player) {
         this.player = player;
@@ -35,7 +37,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     }
 
     @Override
-    public GeoPoint getLocation() throws OutOfProjectionBoundsException {
+    public GeoPointReadOnly getLocation() throws OutOfProjectionBoundsException {
         GeographicProjection proj;
         if(this.player.world.isRemote) {
             proj = TerramapClientContext.getContext().getProjection();
@@ -43,7 +45,8 @@ public class TerramapLocalPlayer extends TerramapPlayer {
             proj = TerramapUtil.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
         }
         if(proj == null) return null;
-        return new GeoPoint(proj.toGeo(this.player.posX, this.player.posZ));
+        this.location.set(proj.toGeo(this.player.posX, this.player.posZ));
+        return this.location.getReadOnly();
     }
 
     @Override
@@ -62,7 +65,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     }
 
     @Override
-    public float getAzimut() {
+    public float getAzimuth() {
         GeographicProjection proj;
         if(this.player.world.isRemote) {
             proj = TerramapClientContext.getContext().getProjection();

@@ -1,15 +1,14 @@
 package fr.thesmyler.terramap.gui.screens;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.terramap.gui.widgets.map.MapController;
+import fr.thesmyler.terramap.util.geo.*;
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+import net.minecraft.util.text.*;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -56,10 +55,7 @@ import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.GeoServices;
-import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
-import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -67,11 +63,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
 
 public class TerramapScreen extends Screen implements ITabCompleter {
 
@@ -92,7 +83,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     // Info panel widgets
     private TextWidget zoomText;
     private final SlidingPanelWidget infoPanel = new SlidingPanelWidget(70, 200);
-    private TexturedButtonWidget panelButton = new TexturedButtonWidget(230, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
+    private TexturedButtonWidget panelButton = new TexturedButtonWidget(230, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPanel);
     private TextWidget distortionText;
     private TextWidget debugText;
     private TextWidget playerGeoLocationText;
@@ -100,7 +91,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     // Style panel
     private final SlidingPanelWidget stylePanel = new SlidingPanelWidget(80, 200);
-    private final StyleScreen styleScreen;
+    private final BackgroundStylePanelListContainer backgroundStylePanelListContainer;
     private final ScrollbarWidget styleScrollbar = new ScrollbarWidget(100, ScrollbarOrientation.VERTICAL);
     
     // Overlay panel
@@ -121,17 +112,13 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
         IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
         this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
-        this.styleScreen = new StyleScreen();
+        this.backgroundStylePanelListContainer = new BackgroundStylePanelListContainer();
         if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
         this.infoPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
         this.overlayPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
         this.overlayList = new OverlayList(0, 0, 0, 100, this.map);
         this.overlayListContainer = new ScrollableWidgetContainer(0, 0, 10, 10, 10, this.overlayList);
         TerramapClientContext.getContext().registerForUpdates(true);
-    }
-
-    public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps) {
-        this(parent, maps, null);
     }
 
     @Override
@@ -150,7 +137,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.closeButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.close.tooltip"));
         this.closeButton.enable();
         content.addWidget(this.closeButton);
-        this.compass.setOnClick(() -> this.map.setRotationWithAnimation(0f));
+        this.compass.setOnClick(() -> this.map.getController().setRotation(0f, true));
         this.compass.setFadeAwayOnZero(true);
         this.compass.setTooltip(I18n.format("terramap.terramapscreen.buttons.compass.tooltip"));
         this.compass.setX(this.closeButton.getX());
@@ -158,7 +145,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.compass.setSize(this.closeButton.getWidth());
         content.addWidget(this.compass);
         this.zoomInButton.setX(this.compass.getX()).setY(this.compass.getY() + this.compass.getHeight() + 5);
-        this.zoomInButton.setOnClick(() -> this.map.zoom(1));
+        this.zoomInButton.setOnClick(() -> {
+            this.map.getController().setZoomStaticLocation(this.map.getController().getCenterLocation());
+            this.map.getController().zoom(1, true);
+        });
         this.zoomInButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomin.tooltip"));
         this.zoomInButton.enable();
         content.addWidget(this.zoomInButton);
@@ -168,12 +158,15 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.zoomText.setVisibility(!this.f1Mode);
         content.addWidget(this.zoomText);
         this.zoomOutButton.setX(this.zoomInButton.getX()).setY(this.zoomText.getY() + zoomText.getHeight() + 2);
-        this.zoomOutButton.setOnClick(() -> this.map.zoom(-1));
+        this.zoomOutButton.setOnClick(() -> {
+            this.map.getController().setZoomStaticLocation(this.map.getController().getCenterLocation());
+            this.map.getController().zoom(-1, true);
+        });
         this.zoomOutButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomout.tooltip"));
         this.zoomOutButton.enable();
         content.addWidget(this.zoomOutButton);
         this.centerButton.setX(this.zoomOutButton.getX()).setY(this.zoomOutButton.getY() + this.zoomOutButton.getHeight() + 15);
-        this.centerButton.setOnClick(() -> map.track(this.map.getMainPlayerMarker()));
+        this.centerButton.setOnClick(() -> this.map.getController().track(this.map.getMainPlayerMarker()));
         this.centerButton.enable();
         this.centerButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.track.tooltip"));
         content.addWidget(this.centerButton);
@@ -205,7 +198,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 IncludedTexturedButtons.PAPER, () -> {
                     if(this.overlayPanel.getTarget() == PanelTarget.CLOSED) {
                         this.overlayPanel.open();
-                        if(this.infoPanel.getTarget() == PanelTarget.CLOSED) this.toggleInfoPannel();
+                        if(this.infoPanel.getTarget() == PanelTarget.CLOSED) this.toggleInfoPanel();
                     }
                 });
         this.infoPanel.addWidget(openOverlayButton);
@@ -283,20 +276,20 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.styleScrollbar.setPosition(this.stylePanel.getWidth() - 15f, 0);
         this.styleScrollbar.setLength(this.height);
         this.stylePanel.addWidget(this.styleScrollbar);
-        this.styleScrollbar.setViewPort(this.height / (this.styleScreen.getHeight() - 10f));
+        this.styleScrollbar.setViewPort(this.height / (this.backgroundStylePanelListContainer.getHeight() - 10f));
         if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
-        this.stylePanel.addWidget(this.styleScreen);
+        this.stylePanel.addWidget(this.backgroundStylePanelListContainer);
         content.addWidget(this.stylePanel);
 
         if(TerramapConfig.CLIENT.chatOnMap) content.addWidget(this.chat);
 
         if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
-            String warning = "";
+            StringBuilder warningBuilder = new StringBuilder();
             for(int i=1; I18n.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
-                if(warning.length() > 0) warning += "\n";
-                warning += I18n.format("terramap.terramapscreen.projection_warning.line" + i);
+                if(warningBuilder.length() > 0) warningBuilder.append('\n');
+                warningBuilder.append(I18n.format("terramap.terramapscreen.projection_warning.line" + i));
             }
-            ITextComponent c = new TextComponentString(warning);
+            ITextComponent c = new TextComponentString(warningBuilder.toString());
             Style style = new Style();
             style.setColor(TextFormatting.YELLOW);
             c.setStyle(style);
@@ -313,14 +306,15 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
 
-        this.zoomInButton.setEnabled(this.map.getZoom() < this.map.getMaxZoom());
-        this.zoomOutButton.setEnabled(this.map.getZoom() > this.map.getMinZoom());
-        this.zoomText.setText(new TextComponentString(GeoServices.formatZoomLevelForDisplay(this.map.getZoom())));
-        this.centerButton.setEnabled(!(this.map.getTracking() instanceof MainPlayerMarker));
+        MapController controller = this.map.getController();
+        this.zoomInButton.setEnabled(controller.getZoom() < controller.getMaxZoom());
+        this.zoomOutButton.setEnabled(controller.getZoom() > controller.getMinZoom());
+        this.zoomText.setText(new TextComponentString(GeoServices.formatZoomLevelForDisplay(controller.getZoom())));
+        this.centerButton.setEnabled(!(controller.getTrackedMarker() instanceof MainPlayerMarker));
 
-        this.compass.setAzimuth(this.map.getRotation());
+        this.compass.setAzimuth(controller.getRotation());
 
-        GeoPoint mouseLocation = this.map.getMouseLocation();
+        GeoPointReadOnly mouseLocation = this.map.getMouseLocation();
         String formatScale = "-"; 
         String formatOrientation = "-";
         if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
@@ -328,10 +322,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         } else {
             if(projection != null) {
                 try {
-                    double[] dist = projection.tissot(mouseLocation.longitude, mouseLocation.latitude);
+                    double[] dist = projection.tissot(mouseLocation.longitude(), mouseLocation.latitude());
                     formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
                     formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
-                } catch (OutOfProjectionBoundsException e) {
+                } catch (OutOfProjectionBoundsException ignored) {
                 }
                 this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
             } else {
@@ -339,25 +333,25 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             }
         }
 
-        if(this.map.isTracking()) {
-            Marker marker = this.map.getTracking();
-            GeoPoint markerLocation = marker.getLocation();
+        if(controller.isTracking()) {
+            Marker marker = controller.getTrackedMarker();
+            GeoPoint<?> markerLocation = marker.getLocation();
             String markerName = marker.getDisplayName().getFormattedText();
             if(markerLocation == null) {
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
             } else {
-                String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude);
-                String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude);
+                String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
+                String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
             }
         } else if(this.map.getMainPlayerMarker() != null){
             Marker marker = this.map.getMainPlayerMarker();
-            GeoPoint markerLocation = marker.getLocation();
+            GeoPoint<?> markerLocation = marker.getLocation();
             if(markerLocation == null) {
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playerout"));
             } else {
-                String formatedLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude);
-                String formatedLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude);
+                String formatedLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
+                String formatedLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
                 this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
             }
         } else {
@@ -367,52 +361,55 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.offsetWarning.setVisibility(this.map.doesBackgroundHaveRenderingOffset());
 
         if(this.debugMode) {
-            String dbText = "";
+            StringBuilder debugBuilder = new StringBuilder();
+            Locale locale = Locale.US;
             TerramapClientContext srv = TerramapClientContext.getContext();
-            dbText += "FPS: " + Minecraft.getDebugFPS();
-            dbText += "\nClient: " + TerramapMod.getVersion();
-            dbText += "\nServer: " + srv.getServerVersion();
-            dbText += "\nSledgehammer: " + srv.getSledgehammerVersion();
-            String proj = null;
-            if(srv != null && srv.getGeneratorSettings() != null) {
-                proj = srv.getGeneratorSettings().projection().toString();
-            }
-            dbText += "\nProjection: " + proj;
-            dbText += "\nMap id: " + this.map.getBackgroundStyle().getId();
-            dbText += "\nMap provider: " + this.map.getBackgroundStyle().getProvider() + " v" + this.map.getBackgroundStyle().getProviderVersion();
+            EarthGeneratorSettings generationSettings = srv.getGeneratorSettings();
+            debugBuilder.append(String.format(locale, "FPS: %s", Minecraft.getDebugFPS()));
+            debugBuilder.append(String.format(locale, "\nClient: %s", TerramapMod.getVersion()));
+            debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
+            debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
+            debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
+            debugBuilder.append(String.format(locale, "\nMap id: %s", this.map.getBackgroundStyle().getId()));
+            debugBuilder.append(String.format(locale, "\nMap provider: %sv%s",this.map.getBackgroundStyle().getProvider(), this.map.getBackgroundStyle().getProviderVersion()));
             if(this.map.getBackgroundStyle() instanceof CachingRasterTiledMap) {
                 CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) this.map.getBackgroundStyle();
-                dbText += "\nLoaded tiles: " + cachingMap.getBaseLoad() + "/" + cachingMap.getLoadedCount() + "/" + cachingMap.getMaxLoad();
+                debugBuilder.append(String.format(locale, "\nLoaded tiles: %d/%d/%d", cachingMap.getBaseLoad(), cachingMap.getLoadedCount(), cachingMap.getMaxLoad()));
                 if(cachingMap instanceof UrlTiledMap) {
                     UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
                     String[] urls = urlMap.getUrlPatterns();
-                    dbText += "\nMap urls (" + urls.length + "): " + urls[(int) ((System.currentTimeMillis()/3000) % urls.length)];
+                    int showingIndex = (int) ((System.currentTimeMillis() / 3000) % urls.length);
+                    debugBuilder.append(String.format(locale, "\nMap urls (%d) %s", urls.length, urls[showingIndex]));
                 }
             }
-            dbText += "\nScaling: " + this.map.getTileScaling() + "/" + SmyLibGui.getMinecraftGuiScale();
-            dbText += "\n";
-            List<String> profilingResults = new ArrayList<>();
-            this.formatProfilingResult(profilingResults, "", "");
-            dbText += "\n" + String.join("\n", profilingResults);
-            this.debugText.setText(new TextComponentString(dbText));
+            debugBuilder.append(String.format(locale, "\nScaling: %.2f/%.2f", this.map.getTileScaling(), SmyLibGui.getMinecraftGuiScale()));
+            debugBuilder.append("\n\n");
+            debugBuilder.append("Locations: ")
+                    .append(TextFormatting.RED).append("center ")
+                    .append(TextFormatting.BLUE).append("center target ")
+                    .append(TextFormatting.GREEN).append("zoom target ")
+                    .append(TextFormatting.GOLD).append("rotation target ")
+                    .append(TextFormatting.RESET);
+            debugBuilder.append('\n');
+            this.buildProfilingResult(debugBuilder, "", "");
+            this.debugText.setText(new TextComponentString(debugBuilder.toString()));
             this.debugText.setAnchorY(this.height - this.debugText.getHeight());
         }
     }
 
-    private List<String> formatProfilingResult(List<String> list, String sectionName, String padding) {
+    private void buildProfilingResult(StringBuilder builder, String sectionName, String padding) {
         List<Result> results = this.map.getProfiler().getProfilingData(sectionName);
         for(Result result: results) {
             String name = result.profilerName;
             if("".equals(name) || name.equals(sectionName) || (sectionName + ".").equals(name)) continue;
             long use = Math.round(result.usePercentage);
             if("unspecified".equals(name) && use >= 100) continue;
-            list.add(padding + name + ": " + use + "%");
-            this.formatProfilingResult(list, name, padding + "  ");
+            builder.append('\n').append(padding).append(String.format(Locale.US, "%1$s: %2$d%%", name, use));
+            this.buildProfilingResult(builder, name, padding + "  ");
         }
-        return list;
     }
 
-    private void toggleInfoPannel() {
+    private void toggleInfoPanel() {
         float x = this.panelButton.getX();
         float y = this.panelButton.getY();
         int z = this.panelButton.getZ();
@@ -420,10 +417,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
             this.infoPanel.close();
             if(this.overlayPanel.getTarget() == PanelTarget.OPENED) this.overlayPanel.close();
-            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPannel);
+            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPanel);
         } else {
             this.infoPanel.open();
-            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPannel);
+            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPanel);
         }
         newButton.setTooltip(this.panelButton.getTooltipText());
         this.infoPanel.removeWidget(this.panelButton);
@@ -434,12 +431,13 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     @Override
     public void keyTyped(char typedChar, int keyCode) {
         if(this.getContent().getFocusedWidget() == null || (!this.getContent().getFocusedWidget().equals(this.searchBox) && !this.chat.isOpen())) {
+            MapController controller = this.map.getController();
             if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
             if(keyCode == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) this.map.moveMap(0, 10);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) this.map.moveMap(0, -10);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) this.map.moveMap(-10, 0);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || keyCode == Keyboard.KEY_LEFT) this.map.moveMap(10, 0);
+            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) controller.moveMap(0, 30, true);
+            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) controller.moveMap(0, -30, true);
+            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) controller.moveMap(-30, 0, true);
+            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || keyCode == Keyboard.KEY_LEFT) controller.moveMap(30, 0, true);
             if(keyCode == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
             if(keyCode == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
             if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
@@ -453,8 +451,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     public TerramapScreenSavedState saveToState() {
+
+        MapController controller = this.map.getController();
         String tracking = null;
-        Marker trackingMarker = this.map.getTracking();
+        Marker trackingMarker = controller.getTrackedMarker();
         if(trackingMarker != null) {
             tracking = trackingMarker.getIdentifier();
         }
@@ -464,21 +464,21 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             visibility.put(key, visibilityControllers.get(key).getVisibility());
         }
         
-        List<MapWidget> maps = new ArrayList<>(this.styleScreen.maps);
+        List<MapWidget> maps = new ArrayList<>(this.backgroundStylePanelListContainer.maps);
         maps.add(this.map); // Add it last to make sure it prevails in the final Map<String, Vec2d>
-        Map<String, Vec2d> offsets = new HashMap<>();
+        Map<String, Vec2dImmutable> offsets = new HashMap<>();
         for(MapWidget map: maps) {
             for(MapLayer layer: map.getOverlayLayers()) {
-                offsets.put(layer.getId(), layer.getRenderingOffset());
+                offsets.put(layer.getId(), layer.getRenderingOffset().getImmutable());
             }
             RasterMapLayer background = map.getBackgroundLayer();
-            offsets.put(background.getId(), background.getRenderingOffset());
+            offsets.put(background.getId(), background.getRenderingOffset().getImmutable());
         }        
 
         return new TerramapScreenSavedState(
-                this.map.getZoom(),
-                this.map.getCenterLocation(),
-                this.map.getRotation(),
+                controller.getZoom(),
+                controller.getCenterLocation().getImmutable(),
+                controller.getRotation(),
                 this.map.getBackgroundStyle().getId(),
                 this.infoPanel.getTarget().equals(PanelTarget.OPENED),
                 TerramapConfig.CLIENT.saveUiState && this.debugMode,
@@ -490,11 +490,12 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     public void resumeFromSavedState(TerramapScreenSavedState state) {
+        MapController controller = this.map.getController();
         this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
-        this.map.setZoom(state.zoomLevel);
-        GeoPoint centerLocation = new GeoPoint(state.centerLongitude, state.centerLatitude);
-        this.map.setCenterLocation(centerLocation);
-        this.map.setRotation(state.rotation);
+        controller.setZoom(state.zoomLevel, false);
+        GeoPointImmutable centerLocation = new GeoPointImmutable(state.centerLongitude, state.centerLatitude);
+        controller.moveLocationToCenter(centerLocation, false);
+        controller.setRotation(state.rotation, false);
         this.map.restoreTracking(state.trackedMarker);
         this.infoPanel.setStateNoAnimation(state.infoPannel);
         TexturedButtonWidget newButton;
@@ -502,7 +503,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             float x = this.panelButton.getX();
             float y = this.panelButton.getY();
             int z = this.panelButton.getZ();
-            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPannel);
+            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPanel);
             newButton.setTooltip(this.panelButton.getTooltipText());
             this.infoPanel.removeWidget(this.panelButton);
             this.panelButton = newButton;
@@ -515,7 +516,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
         if(state.layerOffsets != null) {
             List<MapLayer> layers = new ArrayList<>();
-            for(MapWidget map: this.styleScreen.maps) layers.add(map.getBackgroundLayer());
+            for(MapWidget map: this.backgroundStylePanelListContainer.maps) layers.add(map.getBackgroundLayer());
             Collections.addAll(layers, this.map.getOverlayLayers());
             layers.add(this.map.getBackgroundLayer());
             for(MapLayer layer: layers) for(String id: state.layerOffsets.keySet()) if(id.equals(layer.getId())){
@@ -558,6 +559,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
     
     private void openInitialNewLayerSelector() {
+        final MapController thisController = this.map.getController();
         Map<String, Runnable> options = new HashMap<>();
         options.put("Tiled raster map ", () -> {
             FlexibleWidgetContainer container = new FlexibleWidgetContainer(0f, 0f, 0, 285f, 10f);
@@ -569,13 +571,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             PopupScreen pop = new PopupScreen(300f, 200f);
             for(IRasterTiledMap m: maps) {
                 MapPreview map = new MapPreview(0, m, e -> {
-                    this.addMapLayer(new RasterMapLayer(m, TerramapScreen.this.map.getTileScaling()));
+                    this.addMapLayer(new RasterMapLayer(this.map, m));
                     pop.close();
                 });
+                MapController controller = map.getController();
                 map.setPosition(x, y);
                 map.setSize(125f, 75f);
-                map.setCenterLocation(this.map.getCenterLocation());
-                map.setZoom(this.map.getZoomTarget());
+                controller.moveLocationToCenter(thisController.getCenterLocation(), false);
+                controller.setZoom(thisController.getZoom(), false);
                 if(x == 20f) {
                     x = 155f;
                 } else {
@@ -594,14 +597,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         );
     }
 
-    private class StyleScreen extends FlexibleWidgetContainer {
+    private class BackgroundStylePanelListContainer extends FlexibleWidgetContainer {
 
         final float mapWidth = 175;
         final float mapHeight = 100;
         
         final List<MapWidget> maps = new ArrayList<>();
 
-        StyleScreen() {
+        BackgroundStylePanelListContainer() {
             super(0, 0, 0, 0, 0);
             this.setDoScissor(false);
             IWidget lw = null;
@@ -643,9 +646,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         @Override
         public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
             MapLayer bg = TerramapScreen.this.map.getBackgroundLayer();
+            final MapController thisController = TerramapScreen.this.map.getController();
             for(MapWidget map: this.maps) {
-                map.setZoom(TerramapScreen.this.map.getZoom());
-                map.setCenterLocation(TerramapScreen.this.map.getCenterLocation());
+                MapController controller = map.getController();
+                controller.setZoom(thisController.getZoom(), false);
+                controller.moveLocationToCenter(thisController.getCenterLocation(), false);
                 map.setTileScaling(TerramapScreen.this.map.getTileScaling());
                 if(map.getBackgroundLayer().getId().equals(bg.getId())) {
                     map.getBackgroundLayer().setRenderingOffset(bg.getRenderingOffset());
@@ -675,7 +680,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     }
 
-    private class FailedMapLoadingNotice extends AbstractWidget {
+    private static class FailedMapLoadingNotice extends AbstractWidget {
 
         private final TiledMapProvider provider;
         private final Throwable exception;
@@ -734,8 +739,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private Collection<FeatureVisibilityController> getButtonProviders() {
-        List<FeatureVisibilityController> l = new ArrayList<>(this.map.getVisibilityControllers().values());
-        return l;
+        return Collections.unmodifiableCollection(this.map.getVisibilityControllers().values());
     }
 
     private class MapPreview extends MapWidget {
@@ -776,7 +780,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public String getTooltipText() {
-            return this.getBackgroundLayer().getMap().getId();
+            return this.getBackgroundLayer().getTiledMap().getId();
         }
 
         @Override

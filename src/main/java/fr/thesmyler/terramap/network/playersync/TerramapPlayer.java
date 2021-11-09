@@ -16,9 +16,9 @@ public abstract class TerramapPlayer {
 
     public abstract ITextComponent getDisplayName();
 
-    public abstract GeoPoint getLocation() throws OutOfProjectionBoundsException;
+    public abstract GeoPoint<?> getLocation() throws OutOfProjectionBoundsException;
 
-    public abstract float getAzimut();
+    public abstract float getAzimuth();
 
     public abstract GameType getGamemode();
 

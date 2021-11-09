@@ -24,7 +24,6 @@ class InputProcessor {
     }
 
     public void processMouseEvent() {
-        // We override that so we can make float math instead of being stuck with ints
         ScaledResolution resolution = new ScaledResolution(this.mc);
         float mouseX = (float)Mouse.getX() / resolution.getScaleFactor();
         float mouseY = resolution.getScaledHeight() - (float)Mouse.getY() / resolution.getScaleFactor() - 1;

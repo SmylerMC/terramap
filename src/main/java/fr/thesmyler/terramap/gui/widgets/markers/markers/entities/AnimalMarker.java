@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityIronGolem;
@@ -36,7 +36,7 @@ import net.minecraft.util.ResourceLocation;
 public class AnimalMarker extends AbstractLivingMarker {
 
     public AnimalMarker(MarkerController<?> controller, Entity entity) {
-        super(controller, 10, 10, SmyLibGui.WIDGET_TEXTURES, 11, 69, 256, 256, entity);
+        super(controller, 10, 10, SmyLibGuiTextures.WIDGET_TEXTURES, 11, 69, 256, 256, entity);
         if(entity instanceof EntitySkeletonHorse) {
             this.width = 6;
             this.height = 15;

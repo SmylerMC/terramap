@@ -6,17 +6,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.util.geo.*;
+import fr.thesmyler.terramap.util.math.DoubleRange;
+import fr.thesmyler.terramap.util.math.Vec2dMutable;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
@@ -26,7 +25,6 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
@@ -38,20 +36,11 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerCo
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.GeoServices;
-import fr.thesmyler.terramap.util.geo.GeoUtil;
-import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
-import fr.thesmyler.terramap.util.math.Mat2d;
-import fr.thesmyler.terramap.util.math.Vec2d;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
-import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -61,6 +50,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import static java.lang.Math.*;
 
 /**
  * The core component of Terramap: the map widget itself.
@@ -87,9 +78,9 @@ public class MapWidget extends FlexibleWidgetContainer {
     private boolean showCopyright = true;
     private boolean debugMode = false;
     private boolean visible = true;
-    private boolean trackRotation = false;
 
-    private final ControllerMapLayer controller;
+    private final InputLayer inputLayer;
+    private final MapController controller;
     private RasterMapLayer background;
     private final List<MapLayer> overlayLayers = new ArrayList<>();
     private final List<Marker> markers = new ArrayList<>();
@@ -98,18 +89,13 @@ public class MapWidget extends FlexibleWidgetContainer {
     private MainPlayerMarkerController mainPlayerMarkerController;
     private OtherPlayerMarkerController otherPlayerMarkerController;
     private MainPlayerMarker mainPlayerMarker;
-    private Marker trackingMarker;
     private String restoreTrackingId;
     private PlayerDirectionsVisibilityController directionVisibility;
     private PlayerNameVisibilityController nameVisibility;
 
-    private GeoPoint mouseLocation = GeoPoint.ORIGIN;
+    private final GeoPointMutable mouseLocation = new GeoPointMutable();
     private long lastUpdateTime = Long.MIN_VALUE;
 
-    private float drag = 0.3f;
-    private float zoomSnapping = 1f;
-    private float zoomResponsiveness = 0.01f;
-    private final float rotationResponsiveness = 0.005f;
     protected double tileScaling;
 
     private MenuWidget rightClickMenu;
@@ -137,9 +123,13 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     public static final int BACKGROUND_Z = Integer.MIN_VALUE;
     public static final int CONTROLLER_Z = 0;
+    static final DoubleRange ZOOM_RANGE = new DoubleRange(0d, 25d);
 
     public MapWidget(float x, float y, int z, float width, float height, IRasterTiledMap map, MapContext context, double tileScaling) {
         super(x, y, z, width, height);
+        this.controller = new MapController(this);
+        this.inputLayer = new InputLayer(this);
+        this.controller.inputLayer = this.inputLayer;
         this.setDoScissor(true);
         this.context = context;
         this.tileScaling = tileScaling;
@@ -165,10 +155,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.createRightClickMenu();
 
-        this.controller = new ControllerMapLayer(this.tileScaling);
-        super.addWidget(this.controller);
+        super.addWidget(this.inputLayer);
 
-        this.setBackgroud(new RasterMapLayer(map, this.tileScaling));
+        this.setBackground(new RasterMapLayer(this, map));
 
         this.scale.setX(15).setY(this.getHeight() - 30);
         super.addWidget(this.scale);
@@ -191,7 +180,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
         }
         
-        McChunksLayer chunks = new McChunksLayer(tileScaling);
+        McChunksLayer chunks = new McChunksLayer(this);
         chunks.setZ(-1000);
         this.addOverlayLayer(chunks);
 
@@ -222,6 +211,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             case CONTROLLER_Z:
                 throw new IllegalArgumentException("Z level " + layer.getZ() + " is reserved for controller layer");
         }
+        if (layer.map != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
         this.overlayLayers.add(layer);
         super.addWidget(layer);
         this.updateCopyright();
@@ -231,33 +221,30 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * Removes the given overlay layer from this map.
      * 
-     * @param layer
-     * @return this map, for chaining
+     * @param layer a layer to remove from this map
      */
-    public MapWidget removeOverlayLayer(MapLayer layer) {
+    public void removeOverlayLayer(MapLayer layer) {
         this.overlayLayers.remove(layer);
         this.discardPreviousErrors(layer); // We don't care about errors for this overlay anymore
         super.removeWidget(layer);
         this.updateCopyright();
-        return this;
     }
 
     /**
      * Sets this map's background style
      * 
-     * @param background
-     * 
-     * @return this map, for chaining
+     * @param background a layer to set as this map's background
      */
-    private MapWidget setBackgroud(RasterMapLayer background) {
+    private void setBackground(RasterMapLayer background) {
+        if (background.map != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
         background.z = BACKGROUND_Z;
         this.discardPreviousErrors(this.background); // We don't care about errors for this background anymore
-        background.setTileScaling(this.tileScaling);
         super.removeWidget(this.background);
         super.addWidget(background);
         this.background = background;
         this.updateCopyright();
-        return this;
+        this.controller.setMinZoom(this.background.getTiledMap().getMinZoom());
+        this.controller.setMaxZoom(TerramapConfig.CLIENT.unlockZoom ? 25: this.background.getTiledMap().getMaxZoom());
     }
 
     /**
@@ -266,7 +253,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @param map - a raster tiled map
      */
     public void setBackground(IRasterTiledMap map) {
-        this.setBackgroud(new RasterMapLayer(map, this.tileScaling));
+        this.setBackground(new RasterMapLayer(this, map));
     }
     
     /**
@@ -286,7 +273,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * Adds a marker to this map
      * 
-     * @param marker
+     * @param marker a marker to add to this map
      */
     private void addMarker(Marker marker) {
         this.markers.add(marker);
@@ -297,17 +284,16 @@ public class MapWidget extends FlexibleWidgetContainer {
      * Removes the given marker from this map.
      * Marker should be added via a {@link MarkerController}
      * 
-     * @param marker
-     * @return this map, for chaining
+     * @param marker a marker to remove from this map
      */
-    public MapWidget removeMarker(Marker marker) {
+    public void removeMarker(Marker marker) {
         this.markers.remove(marker);
         this.removeWidget(marker);
-        return this;
     }
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        this.profiler.endSection(); // End rest of the screen section
         this.profiler.startSection("draw");
         super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
         this.profiler.endSection();
@@ -317,353 +303,39 @@ public class MapWidget extends FlexibleWidgetContainer {
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 
         this.profiler.startSection("update-movement");
-        long ctime = System.currentTimeMillis();
-        long dt = ctime - this.lastUpdateTime;
-
-        /* 
-         * These things do time dependent integration operations, so if the integration step is irrelevant, skip
-         * We also want to do that before calling the super method, so any position change is taken into account when updating markers
-         */
-        if(dt > 0 && dt < 1000) {
-            this.controller.processInertia(dt);
-            this.controller.processZoom(dt);
-            this.controller.processRotation(dt);
-        }
+        long currentTime = System.currentTimeMillis();
+        long dt = currentTime - this.lastUpdateTime;
         
-        if(this.trackingMarker != null) {
-            if(this.widgets.contains(this.trackingMarker) && this.trackingMarker.getLocation() != null) { //TODO Do we really need to check the location here ?
-                this.trackingMarker.onUpdate(mouseX - this.trackingMarker.getX(), mouseY - this.trackingMarker.getY(), this); // Force update so we don't lag behind, this one needs to be updated twice
-                GeoPoint trackingLocation = this.trackingMarker.getLocation();
-                if(trackingLocation == null) {
-                    this.trackingMarker = null;
-                } else {
-                    this.setCenterLocation(trackingLocation);
-                    if(this.trackRotation && this.trackingMarker instanceof AbstractMovingMarker) {
-                        float azimuth = ((AbstractMovingMarker)this.trackingMarker).getAzimuth();
-                        if(Float.isFinite(azimuth)) this.setRotation(-azimuth);
-                    }
-                }
+        if(this.controller.isTracking()) {
+            Marker tracked = this.controller.getTrackedMarker();
+            if(this.widgets.contains(tracked)) {
+                // Force update, so we don't lag behind, this one needs to be updated twice
+                tracked.onUpdate(mouseX - tracked.getX(), mouseY - tracked.getY(), this);
             } else {
-                this.trackingMarker = null;
+                this.controller.stopTracking();
             }
         }
+
+        this.controller.update(dt);
 
         this.profiler.endStartSection("update-all");
         super.onUpdate(mouseX, mouseY, parent);
 
-        this.profiler.endStartSection("update-misc");
         this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
         this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
         this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
         if(!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
-
-        this.syncOverlaysWithController();
-
-        this.profiler.endStartSection("update-markers");
-        this.updateMarkers(mouseX, mouseY);
-
-        this.profiler.endStartSection("update-errors");
         if(this.reportedErrors.size() > 0) {
             String errorText = I18n.format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
             this.errorText.setText(new TextComponentString(errorText));
         }
-        this.profiler.endSection();
 
-        this.lastUpdateTime = ctime;
-    }
+        this.profiler.endStartSection("update-markers");
+        this.updateMarkers(mouseX, mouseY);
 
-    /**
-     * Handles all inputs for this map
-     * 
-     * @author SmylerMC
-     */
-    private class ControllerMapLayer extends MapLayer {
+        this.profiler.endStartSection("rest-of-screen");
 
-        GeoPoint zoomLocation;
-        double zoomTarget = 0;
-        float rotationTarget = 0;
-        float speedX, speedY;
-        float rotateAroundX = Float.NaN;
-        float rotateAroundY = Float.NaN;
-        GeoPoint rotateLocation;
-        private float rotationAngleOrigin = 0f;
-
-        public ControllerMapLayer(double tileScaling) {
-            super(tileScaling);
-            this.z = CONTROLLER_Z;
-        }
-        
-        @Override
-        public String getId() {
-            return "controller";
-        }
-
-        @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            // If we are processing rotation input, draw pentagons at the corresponding spot
-            if(!Float.isNaN(this.rotateAroundX) && !Float.isNaN(this.rotateAroundY)) {
-                int vertexCount = 5;
-                float radiusLarge = 5;
-                float radiusSmall = 2;
-                double[] verticesLarge = new double[vertexCount*2];
-                double[] verticesSmall = new double[vertexCount*2];
-                Vec2d pos = new Vec2d(0, -1);
-                Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
-                for(int i = 0; i < vertexCount; i++) {
-                    Vec2d absPosLarge = pos.scale(radiusLarge).add(x + this.rotateAroundX, y + this.rotateAroundY);
-                    Vec2d absPosSmall = pos.scale(radiusSmall).add(x + this.rotateAroundX, y + this.rotateAroundY);
-                    verticesLarge[2*i] = absPosLarge.x;
-                    verticesLarge[2*i + 1] = absPosLarge.y;
-                    verticesSmall[2*i] = absPosSmall.x;
-                    verticesSmall[2*i + 1] = absPosSmall.y;
-                    pos = rot.prod(pos);
-                }
-                RenderUtil.drawPolygon(Color.DARK_OVERLAY, verticesLarge);
-                RenderUtil.drawPolygon(Color.DARK_OVERLAY, verticesSmall);
-            }
-        }
-
-        @Override
-        public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-            this.cancelMovement();
-            this.cancelRotationInput();
-            if(MapWidget.this.isShortcutEnabled()) {
-                MapWidget.this.teleportPlayerTo(MapWidget.this.mouseLocation);
-                if(MapWidget.this.getContext().equals(MapContext.FULLSCREEN)) {
-                    Minecraft.getMinecraft().displayGuiScreen(null);
-                }
-            }
-            if(MapWidget.this.enableRightClickMenu && mouseButton == 1 && WebMercatorUtil.PROJECTION_BOUNDS.contains(MapWidget.this.mouseLocation)) {
-                parent.showMenu(mouseX, mouseY, MapWidget.this.rightClickMenu);
-            }
-            if(MapWidget.this.isInteractive() && mouseButton == 2 && Float.isNaN(this.rotateAroundX) && Float.isNaN(this.rotateAroundY)) {
-                this.rotateAroundX = mouseX;
-                this.rotateAroundY = mouseY;
-                this.rotateLocation = this.getScreenlocation(mouseX, mouseY);
-                this.rotationAngleOrigin = this.getRotation();
-                MapWidget.this.trackingMarker = null;
-            }
-            return false;
-        }
-
-        @Override
-        public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-            this.cancelMovement();
-            this.cancelRotationInput();
-            // We don't care about double right clicks
-            if(mouseButton != 0) this.onClick(mouseX, mouseY, mouseButton, parent);
-
-            if(MapWidget.this.isInteractive() && mouseButton == 0) {
-                GeoPoint zoomLocation = this.getScreenlocation(mouseX, mouseY);
-                if(MapWidget.this.focusedZoom) this.zoom(zoomLocation, 1);
-                else this.zoom(1);
-            }
-            return false;
-        }
-
-        @Override
-        public boolean onParentClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-            this.cancelRotationInput();
-            return super.onParentClick(mouseX, mouseY, mouseButton, parent);
-        }
-
-        @Override
-        public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-            this.cancelRotationInput();
-            return super.onParentDoubleClick(mouseX, mouseY, mouseButton, parent);
-        }
-
-        @Override
-        public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
-            this.cancelRotationInput();
-            if(MapWidget.this.isInteractive() && mouseButton == 0) {
-                this.moveMap(dX, dY);
-                this.speedX = dX / dt;
-                this.speedY = dY / dt;
-            }
-        }
-
-        @Override
-        public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
-            // If we are currently taking rotation inputs, rotate the map
-            if(MapWidget.this.isInteractive() && !Float.isNaN(this.rotateAroundX) && !Float.isNaN(this.rotateAroundY)) {
-                if(mouseX != this.rotateAroundX || mouseY != this.rotateAroundY) {
-                    float angle = (float) Math.toDegrees(Math.atan2(mouseY - this.rotateAroundY, mouseX - this.rotateAroundX)) + 90f + this.rotationAngleOrigin;
-                    if(Float.isFinite(angle)) {
-                        float closetsCardinal = Math.round(angle / 90f) * 90f;
-                        if(Math.abs(closetsCardinal - angle) < 5f) angle = closetsCardinal;
-                        this.setRotation(angle);
-                        Vec2d newPos = this.getScreenPosition(this.rotateLocation);
-                        double ndX = newPos.x - this.rotateAroundX;
-                        double ndY = newPos.y - this.rotateAroundY;
-                        this.setCenter(this.getScreenlocation(this.getWidth() / 2 + ndX, this.getHeight() / 2 + ndY));
-                    }
-                }
-            }
-        }
-
-        @Override
-        public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
-            if(MapWidget.this.isInteractive()) {
-                double z = amount > 0? 1: -1;
-                z *= MapWidget.this.zoomSnapping;
-                if(MapWidget.this.focusedZoom) {
-                    this.zoom(this.getScreenlocation(mouseX, mouseY), z);
-                } else {
-                    this.zoom(z);
-                }
-            }
-            return false;
-        }
-
-        public void zoom(double val) {
-            this.zoom(this.getCenterLocation(), val);
-        }
-
-        public void zoom(GeoPoint location, double zoom) {
-            this.cancelRotationInput();
-            this.zoomLocation = location;
-            this.zoomTarget += zoom;
-        }
-
-        private void processInertia(long dt) {
-            if((this.speedX != 0 || this.speedY != 0) && dt < 1000 && !Mouse.isButtonDown(0)) {
-                float dX = this.speedX * dt;
-                float dY = this.speedY * dt;
-                this.speedX -= MapWidget.this.drag*this.speedX;
-                this.speedY -= MapWidget.this.drag*this.speedY;
-                if(Math.abs(this.speedX) < 0.01f && Math.abs(this.speedY) < 0.01f) {
-                    this.speedX = 0f;
-                    this.speedY = 0f;
-                }
-                if(Math.abs(dX) < 100 && Math.abs(dY) < 100) {
-                    this.moveMap(dX, dY);
-                }
-
-            }
-        }
-
-        private void processZoom(long dt) {
-
-            // Round up the targeted zoom level to the nearest multiple of the snapping value and ensure it is within bounds
-            double zoomTarget = Math.round(this.zoomTarget / MapWidget.this.zoomSnapping) * MapWidget.this.zoomSnapping;
-            double maxZoom = TerramapConfig.CLIENT.unlockZoom? 25: getMaxZoom();
-            zoomTarget = Math.min(zoomTarget, maxZoom);
-            zoomTarget = Math.max(MapWidget.this.getMinZoom(), zoomTarget);
-
-            // If we are close enough of the desired zoom level, just finish reaching it
-            if(Math.abs(this.getZoom() - zoomTarget) < 0.01d) {
-                this.zoomTarget = zoomTarget;
-                this.setZoom(zoomTarget);
-                return;
-            }
-
-            MapWidget.this.rightClickMenu.hide(null);
-
-            // Compute a delta to the new zoom value, exponential decay, and ensure it is within bounds
-            double maxDzoom = zoomTarget - this.getZoom();
-            double dzoom = MapWidget.this.zoomResponsiveness * maxDzoom * dt;
-            dzoom = maxDzoom > 0 ? Math.min(dzoom, maxDzoom) : Math.max(dzoom, maxDzoom);
-
-            // The position that needs to stay static and how far it is from the center of the screen
-            Vec2d pos = this.getScreenPosition(this.zoomLocation);
-            double dX = pos.x - this.getWidth()/2;
-            double dY = pos.y - this.getHeight()/2;
-
-            /*
-             *  Get the scale factor from the previous zoom to the new one
-             *  Then do some basic arithmetic to know much the center of the screen should move
-             */
-            double factor = Math.pow(2, dzoom);
-            double ndX = dX * (1 - factor);
-            double ndY = dY * (1 - factor);
-            this.speedX *= factor;
-            this.speedY *= factor;
-
-            super.setZoom(this.getZoom() + dzoom); // That's what we are here for
-
-            // And move so the static point is static
-            this.setCenter(this.getScreenlocation((double)this.getWidth()/2 - ndX, (double)this.getHeight()/2 - ndY));
-        }
-
-        private void processRotation(long dt) {
-            float currentRotation = this.getRotation();
-
-            float actualRotationTarget = this.rotationTarget;
-            float d0 = Math.abs(this.rotationTarget - currentRotation);
-            float d1 = Math.abs(this.rotationTarget - currentRotation - 360f);
-            float d2 = Math.abs(this.rotationTarget - currentRotation + 360f);
-            if(d1 < d0) {
-                actualRotationTarget -= 360f;
-            } else if(d2 < d0) {
-                actualRotationTarget += 360f;
-            }
-
-            if(Math.abs(currentRotation - actualRotationTarget) < 0.1f) {
-                this.setRotation(actualRotationTarget);
-                return;
-            }
-
-            this.cancelRotationInput();
-
-            float maxDRot = actualRotationTarget - currentRotation;
-            float drot = MapWidget.this.rotationResponsiveness * maxDRot * dt;
-            drot = maxDRot > 0 ? Math.min(drot, maxDRot) : Math.max(drot, maxDRot);
-
-            super.setRotation(currentRotation + drot);
-        }
-
-        public void moveMap(float dX, float dY) {
-            MapWidget.this.trackingMarker = null;
-            this.setCenter(this.getScreenlocation(this.getWidth()/2 - dX, this.getHeight()/2 - dY));
-        }
-
-        @Override
-        public String getTooltipText() {
-            return isShortcutEnabled() ? I18n.format("terramap.mapwidget.shortcuts.tp"): "";
-        }
-
-        @Override
-        public long getTooltipDelay() {
-            return 0;
-        }
-
-        public void cancelMovement() {
-            this.speedX = this.speedY = 0f;
-        }
-
-        public void cancelRotationInput() {
-            this.rotateLocation = null;
-            this.rotateAroundX = this.rotateAroundY = Float.NaN;
-        }
-
-        @Override
-        public void setZoom(double zoom) {
-            super.setZoom(zoom);
-            this.zoomTarget = zoom;
-        }
-
-        @Override
-        public void setRotation(float rotation) {
-            super.setRotation(rotation);
-            this.rotationTarget = rotation;
-        }
-
-        @Override
-        public MapLayer copy() {
-            return new ControllerMapLayer(this.getTileScaling());
-        }
-
-        @Override
-        public String name() {
-            return "Controller";
-        }
-
-        @Override
-        public String description() {
-            return "Controller";
-        }
-
+        this.lastUpdateTime = currentTime;
     }
 
     /**
@@ -702,22 +374,6 @@ public class MapWidget extends FlexibleWidgetContainer {
         return super.removeWidget(widget);
     }
 
-    private void syncOverlaysWithController() {
-        this.controller.setDimensions(this.getWidth(), this.getHeight());
-        for(MapLayer layer: this.overlayLayers) {
-            layer.setDimensions(this.getWidth(), this.getHeight());
-            layer.setTileScaling(this.tileScaling);
-            layer.setCenter(this.controller.getCenterLocation());
-            layer.setZoom(this.controller.getZoom());
-            layer.setRotation(this.controller.getRotation());
-        }
-        this.background.setDimensions(this.getWidth(), this.getHeight());
-        this.background.setTileScaling(this.tileScaling);
-        this.background.setCenter(this.controller.getCenterLocation());
-        this.background.setZoom(this.controller.getZoom());
-        this.background.setRotation(this.controller.getRotation());
-    }
-
     private void updateMarkers(float mouseX, float mouseY) {
         // Gather the existing classes
         Map<Class<?>, List<Marker>> markers = new HashMap<>();
@@ -748,7 +404,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                 for(Marker markerToAdd: newMarkers) {
                     String id = markerToAdd.getIdentifier();
                     if(id != null && id.equals(this.restoreTrackingId)) {
-                        this.track(markerToAdd);
+                        this.controller.track(markerToAdd);
                         this.restoreTrackingId = null;
                         TerramapMod.logger.debug("Restored tracking with " + id);
                     }
@@ -775,9 +431,10 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     private void updateMouseGeoPos(float mouseX, float mouseY) {
-        this.mouseLocation = this.controller.getScreenlocation(mouseX, mouseY);
+        this.inputLayer.getLocationAtPositionOnWidget(this.mouseLocation, mouseX, mouseY);
     }
 
+    //TODO Refactoring: move this monstrosity somewhere else
     private void createRightClickMenu() {
         Font font = SmyLibGui.DEFAULT_FONT;
         this.rightClickMenu = new MenuWidget(1500, font);
@@ -785,18 +442,18 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.teleportPlayerTo(this.mouseLocation)
         );
         MenuEntry centerHere = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.center"), () ->
-            this.setCenterLocation(this.mouseLocation)
+            this.controller.moveLocationToCenter(this.mouseLocation, true)
         );
         centerHere.enabled = this.interactive;
         MenuWidget copySubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
         copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.geo"), () ->
-            GuiScreen.setClipboardString("" + this.mouseLocation.latitude + " " + this.mouseLocation.longitude)
+            GuiScreen.setClipboardString("" + this.mouseLocation.latitude() + " " + this.mouseLocation.longitude())
         );
         this.copyBlockMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
             try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
-                String dispX = "" + Math.round(coords[0]);
-                String dispY = "" + Math.round(coords[1]);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
+                String dispX = "" + round(coords[0]);
+                String dispY = "" + round(coords[1]);
                 GuiScreen.setClipboardString(dispX + " " + dispY);
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
@@ -806,9 +463,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copyChunkMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
             try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
-                String dispX = "" + Math.floorDiv(Math.round(coords[0]), 16);
-                String dispY = "" + Math.floorDiv(Math.round(coords[1]), 16);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
+                String dispX = "" + floorDiv(round(coords[0]), 16);
+                String dispY = "" + floorDiv(round(coords[1]), 16);
                 GuiScreen.setClipboardString(dispX + " " + dispY);
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
@@ -818,9 +475,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copyRegionMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
             try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
-                String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
-                String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
+                String dispX = "" + floorDiv(round(coords[0]), 512);
+                String dispY = "" + floorDiv(round(coords[1]), 512);
                 GuiScreen.setClipboardString("r." + dispX + "." + dispY + ".mca");
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
@@ -830,9 +487,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copy3drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
             try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
-                String dispX = "" + Math.floorDiv(Math.round(coords[0]), 256);
-                String dispY = "" + Math.floorDiv(Math.round(coords[1]), 256);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
+                String dispX = "" + floorDiv(round(coords[0]), 256);
+                String dispY = "" + floorDiv(round(coords[1]), 256);
                 GuiScreen.setClipboardString(dispX + ".0." + dispY + ".3dr");
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; //Just a random string
@@ -842,9 +499,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         });
         this.copy2drMenuEntry = copySubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
             try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude, this.mouseLocation.latitude);
-                String dispX = "" + Math.floorDiv(Math.round(coords[0]), 512);
-                String dispY = "" + Math.floorDiv(Math.round(coords[1]), 512);
+                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
+                String dispX = "" + floorDiv(round(coords[0]), 512);
+                String dispY = "" + floorDiv(round(coords[1]), 512);
                 GuiScreen.setClipboardString(dispX + "." + dispY + ".2dr");
             } catch(OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; //Just a random string
@@ -856,38 +513,39 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.rightClickMenu.addSeparator();
         MenuWidget openSubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_osm"), () ->
-            GeoServices.openInOSMWeb(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+            GeoServices.openInOSMWeb(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
         );
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bte"), () ->
-            GeoServices.openInBTEMap(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+            GeoServices.openInBTEMap(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
         );
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gmaps"), () -> {
-            if(this.getMainPlayerMarker() != null) {
-                GeoPoint markerLocation = this.getMainPlayerMarker().getLocation();
-                if(markerLocation != null) {
-                    GeoServices.openPlaceInGoogleMaps(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude, markerLocation.longitude, markerLocation.latitude);
+            MainPlayerMarker playerMarker = this.getMainPlayerMarker();
+            if(playerMarker != null) {
+                if(playerMarker.isVisible(MapWidget.this)) {
+                    GeoPoint<?> playerLocation = playerMarker.getLocation();
+                    GeoServices.openPlaceInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), playerLocation.longitude(), playerLocation.latitude());
                 } else {
-                    GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude);
+                    GeoServices.openInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
                 }
             } else {
-                GeoServices.openInGoogleMaps(Math.round((float)this.getZoom()), this.mouseLocation.longitude, this.mouseLocation.latitude);
+                GeoServices.openInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
             }
 
         });
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_web"), () ->
-            GeoServices.opentInGoogleEarthWeb(this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+            GeoServices.opentInGoogleEarthWeb(this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
         );
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_gearth_pro"), () ->
-            GeoServices.openInGoogleEarthPro(this.mouseLocation.longitude, this.mouseLocation.latitude)
+            GeoServices.openInGoogleEarthPro(this.mouseLocation.longitude(), this.mouseLocation.latitude())
         );
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_bing"), () ->
-            GeoServices.openInBingMaps((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+            GeoServices.openInBingMaps((int) this.controller.getZoom(), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
         );
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_wikimapia"), () ->
-            GeoServices.openInWikimapia((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+            GeoServices.openInWikimapia((int) this.controller.getZoom(), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
         );
         openSubMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open_yandex"), () ->
-            GeoServices.openInYandex((int) this.getZoom(), this.mouseLocation.longitude, this.mouseLocation.latitude, this.mouseLocation.longitude, this.mouseLocation.latitude)
+            GeoServices.openInYandex((int) this.controller.getZoom(), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
         );
         this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
         this.rightClickMenu.addSeparator();
@@ -913,9 +571,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.setProjectionMenuEntry.enabled = (!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().isOnEarthWorld());
     }
 
-    private void teleportPlayerTo(GeoPoint position) {
+    protected void teleportPlayerTo(GeoPoint<?> position) {
         String cmdFormat = TerramapClientContext.getContext().getTpCommand();
-        String cmd = cmdFormat.replace("{longitude}", "" + position.longitude).replace("{latitude}", "" + position.latitude);
+        String cmd = cmdFormat.replace("{longitude}", "" + position.longitude()).replace("{latitude}", "" + position.latitude());
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
             String s = System.currentTimeMillis() + ""; // Just a random string
@@ -925,7 +583,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
         if(projection != null) {
             try {
-                double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(position.longitude, position.latitude);
+                double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(position.longitude(), position.latitude());
                 cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
             } catch (OutOfProjectionBoundsException e) {
                 String s = System.currentTimeMillis() + ""; // Just a random string
@@ -934,10 +592,6 @@ public class MapWidget extends FlexibleWidgetContainer {
             }
         }
         CHAT_SENDER_GUI.sendChatMessage(cmd, false);
-    }
-
-    private boolean isShortcutEnabled() {
-        return this.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode()) && this.allowsQuickTp;
     }
 
     /**
@@ -952,161 +606,26 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
         return m;
     }
-
-    /**
-     * @return the current zoom of this map
-     */
-    public double getZoom() {
-        return this.controller.getZoom();
-    }
-
-    /**
-     * @return The maximum zoom this map can operate at, based on the current settings
-     */
-    public double getMaxZoom() {
-        return TerramapConfig.CLIENT.unlockZoom? 25: this.background.getMap().getMaxZoom();
-    }
-
-    /**
-     * @return The minimum zoom this map can operate at, based on the current settings
-     */
-    public double getMinZoom() {
-        return this.background.getMap().getMinZoom();
-    }
-
-    /**
-     * Sets this map's zoom level.
-     * Unless the given zoom level is not a multiple of the current zoom snapping value, this will be done without animation.
-     * 
-     * @param zoom
-     * @return this map, for chaining
-     */
-    public MapWidget setZoom(double zoom) {
-        this.controller.setZoom(Math.max(this.getMinZoom(), Math.min(this.getMaxZoom(), zoom)));
-        this.controller.zoomLocation = this.controller.getCenterLocation();
-        return this;
-    }
-
-    /**
-     * Sets this map zoom, animated.
-     * 
-     * @param zoom
-     */
-    public void setZoomWithAnimation(double zoom) {
-        this.controller.zoomTarget = zoom;
-    }
-
-    /**
-     * Zooms of the given amount, with an animation.
-
-     * @param zoom
-     * @return this map, for chaining
-     */
-    public MapWidget zoom(double zoom) {
-        this.controller.zoom(zoom);
-        return this;
-    }
-
-    /**
-     * Set the zoom snapping value for this map.
-     * When the map zoom is not a multiple of this value, it will adjust itself to change to the closets multiple, with an animation.
-     * This also affects the mouse wheel zoom sensibility.
-     * This is usually 1d.
-     * 
-     * @return this map, for chaining
-     */
-    public float getZoomSnapping() {
-        return this.zoomSnapping;
-    }
-
-    /**
-     * Set the zoom snapping value for this map.
-     * When the map zoom is not a multiple of this value, it will adjust itself to change to the closets multiple, with an animation.
-     * This also affects the mouse wheel zoom sensibility.
-     * This is usually 1d.
-     * 
-     * @param value - the value to set
-     */
-    public void setZoomSnapping(float value) {
-        this.zoomSnapping = value;
-    }
-
-    /**
-     * Set the speed at which zooming is animated.
-     * 
-     * @return this map's zoom responsiveness
-     */
-    public float getZoomResponsiveness() {
-        return this.zoomResponsiveness;
-    }
-
-    /** 
-     * @param value the speed at which zooming is animated
-     */
-    public void setZoomResponsiveness(float value) {
-        this.zoomResponsiveness = value;
-    }
-    
-    /**
-     * @return the zoom level this map is trying to reach once the zooming animation is over
-     */
-    public double getZoomTarget() {
-        return this.controller.zoomTarget;
-    }
-    
-    /**
-     * @return the location at the center of this map
-     */
-    public GeoPoint getCenterLocation() {
-        return this.controller.getCenterLocation();
-    }
-    
-    /**
-     * Moves this map so the given location is at the center (no animation).
-     * 
-     * @param location
-     */
-    public void setCenterLocation(GeoPoint location) {
-        this.controller.setCenter(location);
-    }
-
-    /**
-     * @return this map's current rotation
-     */
-    public float getRotation() {
-        return this.controller.getRotation();
-    }
-
-    /**
-     * Sets this map current rotation
-     * 
-     * @param rotation
-     */
-    public void setRotation(float rotation) {
-        this.controller.setRotation(rotation);
-    }
-
-    /**
-     * Change this map rotation, animated
-     * 
-     * @param rotation
-     */
-    public void setRotationWithAnimation(float rotation) {
-        this.controller.rotationTarget = GeoUtil.getAzimuthInRange(rotation);
-    }
     
     /**
      * @return the location hovered by the mouse
      */
-    public GeoPoint getMouseLocation() {
-        return this.mouseLocation;
+    public GeoPointReadOnly getMouseLocation() {
+        return this.mouseLocation.getReadOnly();
+    }
+
+    /**
+     * @return this map's controller
+     */
+    public MapController getController() {
+        return this.controller;
     }
 
     /**
      * Sets this map's size
      * 
-     * @param width
-     * @param height
+     * @param width a new width for this map
+     * @param height a new height for this map
      */
     @Override
     public void setSize(float width, float height) {
@@ -1115,105 +634,74 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * @return whether or not this map accepts input at all
+     * @return whether this map accepts input at all
      */
     public boolean isInteractive() {
         return this.interactive;
     }
 
     /**
-     * Set whether or not this map takes input
+     * Sets whether this map takes input.
      * 
-     * @param yesNo
-     * @return whether or not this map is interactive
+     * @param yesNo whether this map should accept user inputs
      */
-    public MapWidget setInteractive(boolean yesNo) {
+    public void setInteractive(boolean yesNo) {
         this.interactive = yesNo;
-        return this;
     }
 
     /**
-     * @return Whether or not this map's right click menu is enabled
+     * @return Whether this map's right click menu is enabled
      */
     public boolean isRightClickMenuEnabled() {
         return this.enableRightClickMenu;
     }
 
     /**
-     * Sets whether or not this map's right click menu is enabled.
+     * Sets whether this map's right click menu is enabled.
      * This is independent from {@link #setInteractive(boolean)}.
      * 
-     * @param yesNo
-     * @return this map, for chaining
+     * @param yesNo whether to enable this map's right click menu
      */
-    public MapWidget setRightClickMenuEnabled(boolean yesNo) {
+    public void setRightClickMenuEnabled(boolean yesNo) {
         this.enableRightClickMenu = yesNo;
-        return this;
     }
 
     /**
-     * Enabled this map's right click menu
-     * 
-     * @return this map, for chaining
-     */
-    public MapWidget enableRightClickMenu() {
-        return this.setRightClickMenuEnabled(true);
-    }
-
-    /**
-     * Disables this map's right click menu
-     * 
-     * @return this map, for chaining
-     */
-    public MapWidget disableRightClickMenu() {
-        return this.setRightClickMenuEnabled(false);
-    }
-
-    /**
-     * @return whether or not this map copyright is visible
+     * @return whether this map copyright is visible
      */
     public boolean getCopyrightVisibility() {
         return this.showCopyright;
     }
 
     /**
-     * Sets whether or not this map's copyright is visible
+     * Sets whether this map's copyright is visible.
      * 
-     * @param yesNo
-     * @return this map, for chaining
+     * @param yesNo whether to show this map's copyright notice
      */
-    public MapWidget setCopyrightVisibility(boolean yesNo) {
+    public void setCopyrightVisibility(boolean yesNo) {
         this.showCopyright = yesNo;
-        return this;
     }
 
     /**
-     * Moves this map without any animation
-     * TODO animated variant
-     * 
-     * @param dX
-     * @param dY
+     * Computes the position on this widget of a given {@link GeoPoint}.
+     *
+     * @param destination   a vector to store the result in
+     * @param location      the location to compute the position of
      */
-    public void moveMap(float dX, float dY) {
-        this.controller.moveMap(dX, dY);
+    public void getScreenPosition(Vec2dMutable destination, GeoPoint<?> location) {
+        this.inputLayer.getPositionOnWidget(destination, location);
     }
 
-    /**
-     * @param location
-     * @return the position of the given location on this widget's coordinate system
-     */
-    public Vec2d getScreenPosition(GeoPoint location) {
-        return this.controller.getScreenPosition(location);
-    }
 
     /**
-     * @param x - a coordinate on this map's coordinate system
-     * @param y - a coordinate on this map's coordinate system
-     * 
-     * @return the geographic location at the given coordinates
+     * Computes the location displayed at a given position on the widget.
+     *
+     * @param destination   a point to store the result in
+     * @param x             a coordinate on this map's coordinate system
+     * @param y             a coordinate on this map's coordinate system
      */
-    public GeoPoint getScreenLocation(double x, double y) {
-        return this.controller.getScreenlocation(x, y);
+    public void getScreenLocation(GeoPointMutable destination, double x, double y) {
+        this.inputLayer.getLocationAtPositionOnWidget(destination, x, y);
     }
 
     /**
@@ -1226,12 +714,10 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * Sets the X coordinate of this map's scale widget
      * 
-     * @param x
-     * @return this map, for chaining
+     * @param x a new X coordinate in the widget for the scale
      */
-    public MapWidget setScaleX(float x) {
+    public void setScaleX(float x) {
         this.scale.setX(x);
-        return this;
     }
 
     /**
@@ -1249,14 +735,12 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * Sets the width of this map scale widget
+     * Sets the width of this map scale widget.
      * 
-     * @param width
-     * @return this map, for chaining
+     * @param width a new width for this map's scale
      */
-    public MapWidget setScaleWidth(float width) {
+    public void setScaleWidth(float width) {
         this.scale.setWidth(width);
-        return this;
     }
 
     /**
@@ -1267,59 +751,21 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * Sets the visibility of this map's scale widget
+     * Sets the visibility of this map's scale widget.
      * 
-     * @param yesNo
-     * @return this map, for chaining
+     * @param yesNo whether to display this map's scale
      */
-    public MapWidget setScaleVisibility(boolean yesNo) {
+    public void setScaleVisibility(boolean yesNo) {
         this.scale.setVisibility(yesNo);
-        return this;
     }
 
     /**
      * @return this map's {@link MapContext}
+     * @deprecated MapContext will soon be deprecated
      */
+    @Deprecated
     public MapContext getContext() {
         return this.context;
-    }
-
-    /**
-     * @return whether or not this map is tracking a marker
-     */
-    public boolean isTracking() {
-        return this.trackingMarker != null;
-    }
-
-    /**
-     * @return whether or not this map will rotate with the markers it tracks if they implement {@link AbstractMovingMarker}
-     */
-    public boolean doesMapTrackRotation() {
-        return this.trackRotation;
-    }
-
-    /**
-     * Sets whether or not this map should rotate with the marker it tracks if they implement {@link AbstractMovingMarker}
-     * @param yesNo
-     */
-    public void setTrackRotation(boolean yesNo) {
-        this.trackRotation = yesNo;
-    }
-
-    /**
-     * @return the marker this map is tracking, or null if this map is not tracking anything
-     */
-    public Marker getTracking() {
-        return this.trackingMarker;
-    }
-
-    /**
-     * Start tracking the given marker
-     * 
-     * @param marker
-     */
-    public void track(Marker marker) {
-        this.trackingMarker = marker;
     }
 
     /**
@@ -1333,43 +779,41 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @return the {@link IRasterTiledMap} used by this map's background layer
      */
     public IRasterTiledMap getBackgroundStyle() {
-        return this.background.getMap();
+        return this.background.getTiledMap();
     }
 
     /**
-     * Tries to set a features visibility, or does nothing if the feature does not exist for this map.
+     * Tries to set a feature's visibility, or does nothing if the feature does not exist for this map.
      * 
      * @param controllerId - the id of the {@link FeatureVisibilityController} to set the visibility for
      * @param value - visibility
      * 
-     * @return this map, for chaining
      */
-    public MapWidget trySetFeatureVisibility(String controllerId, boolean value) {
+    public void trySetFeatureVisibility(String controllerId, boolean value) {
         FeatureVisibilityController c = this.getVisibilityControllers().get(controllerId);
         if(c != null) c.setVisibility(value);
-        return this;
     }
 
     /**
-     * Tries to resume tracking a marker using its string id, does nothing if the marker is not found
+     * Tries to resume tracking a marker using its string id, does nothing if the marker is not found.
      * 
-     * @param markerId
+     * @param markerId the id of a marker to find and track
      */
     public void restoreTracking(String markerId) {
         this.restoreTrackingId = markerId;
     }
 
     /**
-     * @return whether or not this map shows debug information
+     * @return whether this map shows debug information
      */
     public boolean isDebugMode() {
         return debugMode;
     }
 
     /**
-     * Activates and resets this map's profiler and start showing debug information on this map
+     * Activates and resets this map's profiler and start showing debug information on this map.
      * 
-     * @param debugMode
+     * @param debugMode whether this map should be in debug mod
      */
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
@@ -1385,13 +829,12 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * Sets this map rendering scale factor
-     * 
-     * @param tileScaling
+     * Sets this map rendering scale factor.
+     *
+     * @param tileScaling a new value for this map's scale factor
      */
     public void setTileScaling(double tileScaling) {
         this.tileScaling = tileScaling;
-        this.controller.setTileScaling(tileScaling);
     }
 
     @Override
@@ -1400,40 +843,20 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * Sets this map visibility
+     * Sets this map's visibility.
      * 
-     * @param yesNo
-     * @return this map, for chaining
+     * @param yesNo whether this map should be visible
      */
-    public MapWidget setVisibility(boolean yesNo) {
+    public void setVisibility(boolean yesNo) {
         this.visible = yesNo;
-        return this;
     }
 
     /**
-     * @return this map inertia drag coefficient
-     */
-    public float getInertia() {
-        return this.drag;
-    }
-
-    /**
-     * Sets this map inertia drag coefficient. Higher means more drag, the map stops faster.
+     * Reports an error that will be shown in this map's error area,
+     * until discarded with {@link #discardPreviousErrors(Object)}.
      * 
-     * @param inertia
-     * 
-     * @throws IllegalArgumentException if the inertia is not strictly positive
-     */
-    public void setInertia(float inertia) {
-        PValidation.checkArg(inertia > 0f, "Map inertia needs to be strictly positive");
-        this.drag = inertia;
-    }
-
-    /**
-     * Reports an error that will be shown in this map's error area until discarded with {@link #discardPreviousErrors(Object)}
-     * 
-     * @param source - the source of the error, which can used as a key to discard errors afterwards
-     * @param errorMessage - the error message
+     * @param source        the source of the error, which can used as a key to discard errors afterwards
+     * @param errorMessage  the error message
      */
     public void reportError(Object source, String errorMessage) {
         ReportedError error = new ReportedError(source, errorMessage);
@@ -1445,9 +868,9 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * Discard the errors from the given source
+     * Discard the errors from the given source.
      * 
-     * @param source
+     * @param source the object that was used as the key when the error was reported
      */
     public void discardPreviousErrors(Object source) {
         List<ReportedError> errsToRm = new ArrayList<>();
@@ -1457,7 +880,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.reportedErrors.removeAll(errsToRm);
     }
 
-    private class ReportedError {
+    private static class ReportedError {
 
         private final Object source;
         private final String message;
@@ -1476,45 +899,53 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * Stops all passive inputs (inputs that does not require the user to actively press a button, e.g. rotation)
+     * Stops all passive inputs (inputs that does not require the user to actively press a button, e.g. rotation).
      */
     public void stopPassiveInputs() {
-        this.controller.cancelRotationInput();
+        this.inputLayer.isRotating = false;
     }
 
     /**
-     * @return whether or not this map zooms to the mouse position (true) or to its center (false).
+     * @return whether this map zooms to the mouse position (true) or to its center (false).
      */
     public boolean isFocusedZoom() {
         return focusedZoom;
     }
 
     /**
-     * Sets whether or not this map zooms to the mouse position (true) or to its center (false).
+     * Sets whether this map zooms to the mouse position (true) or to its center (false).
      */
     public void setFocusedZoom(boolean focusedZoom) {
         this.focusedZoom = focusedZoom;
     }
 
     /**
-     * @return whether or not user can teleport with the ctrl+click shortcut.
+     * @return whether the user can teleport with the ctrl+click shortcut.
      */
     public boolean allowsQuickTp() {
         return allowsQuickTp;
     }
 
     /**
-     * Sets whether or not user can teleport with the ctrl+click shortcut.
+     * Sets whether the user can teleport with the ctrl+click shortcut.
      */
     public void setAllowsQuickTp(boolean allowsQuickTp) {
         this.allowsQuickTp = allowsQuickTp;
     }
 
     /**
-     * @return whether or not this map's background has a rendering offset set.
+     * @return whether this map's background has a rendering offset set.
      */
     public boolean doesBackgroundHaveRenderingOffset() {
-        return this.background.getRenderingOffset().normSquared() != 0d;
+        return this.background.hasRenderingOffset();
+    }
+
+    InputLayer getInputLayer() {
+        return this.inputLayer;
+    }
+
+    protected MenuWidget getRightClickMenu() {
+        return this.rightClickMenu;
     }
 
 }

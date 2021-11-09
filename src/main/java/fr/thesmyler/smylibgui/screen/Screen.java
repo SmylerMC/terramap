@@ -1,7 +1,5 @@
 package fr.thesmyler.smylibgui.screen;
 
-import java.io.IOException;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -68,7 +66,7 @@ public class Screen extends GuiScreen {
     }
 
     @Override
-    public void handleMouseInput() throws IOException {
+    public void handleMouseInput() {
         this.processor.processMouseEvent();
     }
 
@@ -79,7 +77,7 @@ public class Screen extends GuiScreen {
 
 
     @Deprecated @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
         this.warnNotToCall();
         this.container.onClick(mouseX, mouseY, mouseButton, null);
     }

@@ -6,9 +6,10 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
-import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,8 +25,13 @@ import net.minecraft.client.resources.I18n;
  */
 public class DistortionLayer extends MapLayer {
 
-    public DistortionLayer(double tileScaling) {
-        super(tileScaling);
+    private final Vec2dMutable screenPositions = new Vec2dMutable();
+    private final GeoPointMutable renderedLocations = new GeoPointMutable();
+    private final Vec2dReadOnly renderSpaceDimensions;
+
+    public DistortionLayer(MapWidget map) {
+        super(map);
+        this.renderSpaceDimensions = this.getRenderSpaceDimensions();
     }
 
     @Override
@@ -36,15 +42,17 @@ public class DistortionLayer extends MapLayer {
         map.getProfiler().startSection("layer-" + this.getId());
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
-        
+
+        double maxX = this.renderSpaceDimensions.x();
+        double maxY = this.renderSpaceDimensions.y();
         double res = 20d;
-        for(double dx = -1; dx < this.getExtendedWidth(); dx += res) {
-            for(double dy = -1; dy < this.getExtendedHeight(); dy += res) {
-                GeoPoint location = this.getRenderLocation(new Vec2d(dx + res / 2, dy + res / 2));
-                if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) continue;
+        for(double dx = -1; dx < maxX; dx += res) {
+            for(double dy = -1; dy < maxY; dy += res) {
+                this.getLocationAtPositionInRenderSpace(this.renderedLocations, this.screenPositions.set(dx + res / 2, dy + res / 2));
+                if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(this.renderedLocations)) continue;
                 Color color = Color.TRANSPARENT;
                 try {
-                    double[] distortion = projection.tissot(location.longitude, location.latitude);
+                    double[] distortion = projection.tissot(this.renderedLocations.longitude(), this.renderedLocations.latitude());
                     float red = (float) Math.min(distortion[0] / 4f, 1f);
                     float green = (float) Math.min(distortion[1] / 2/Math.PI, 1f);
                     float alpha = Math.min(red + green, 1f);
@@ -66,8 +74,8 @@ public class DistortionLayer extends MapLayer {
     }
 
     @Override
-    public MapLayer copy() {
-        DistortionLayer other = new DistortionLayer(this.getTileScaling());
+    public MapLayer copy(MapWidget forMap) {
+        DistortionLayer other = new DistortionLayer(forMap);
         this.copyPropertiesToOther(other);
         return other;
     }

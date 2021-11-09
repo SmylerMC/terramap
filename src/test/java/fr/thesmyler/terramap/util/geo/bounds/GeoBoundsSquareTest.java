@@ -9,7 +9,7 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.util.collections.HashMapBuilder;
 import fr.thesmyler.terramap.util.geo.GeoBounds;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
 public class GeoBoundsSquareTest {
@@ -22,7 +22,7 @@ public class GeoBoundsSquareTest {
                 .put(GeoBounds.NORTHERN_HEMISPHERE, false)
                 .put(GeoBounds.WESTERN_HEMISPHERE, false)
                 .put(GeoBounds.EASTERN_HEMISPHERE, false)
-                .put(new GeoBounds(GeoPoint.ORIGIN, GeoPoint.NORTH_POLE.withLongitude(-1d)), true)
+                .put(new GeoBounds(GeoPointImmutable.ORIGIN, GeoPointImmutable.NORTH_POLE.withLongitude(-1d)), true)
             .build();
         for(GeoBounds square: squares.keySet()) {
             boolean crossesAntimeridian = squares.get(square);
@@ -43,39 +43,39 @@ public class GeoBoundsSquareTest {
     @Test
     public void splitAtAntimeridianTest() {
         GeoBounds sq = new GeoBounds(
-                new GeoPoint(150d, -60d),
-                new GeoPoint(-15d, 56d)
+                new GeoPointImmutable(150d, -60d),
+                new GeoPointImmutable(-15d, 56d)
         );
         GeoBounds[] split = sq.splitAtAntimeridian();
         assertEquals(2, split.length);
-        assertEquals(-180d, split[0].lowerCorner.longitude, 0d);
-        assertEquals(-15d, split[0].upperCorner.longitude, 0d);
-        assertEquals(-60d, split[0].lowerCorner.latitude, 0d);
-        assertEquals(56d, split[0].upperCorner.latitude, 0d);
-        assertEquals(150d, split[1].lowerCorner.longitude, 0d);
-        assertEquals(180d, split[1].upperCorner.longitude, 0d);
-        assertEquals(-60d, split[1].lowerCorner.latitude, 0d);
-        assertEquals(56d, split[1].upperCorner.latitude, 0d);
+        assertEquals(-180d, split[0].lowerCorner.longitude(), 0d);
+        assertEquals(-15d, split[0].upperCorner.longitude(), 0d);
+        assertEquals(-60d, split[0].lowerCorner.latitude(), 0d);
+        assertEquals(56d, split[0].upperCorner.latitude(), 0d);
+        assertEquals(150d, split[1].lowerCorner.longitude(), 0d);
+        assertEquals(180d, split[1].upperCorner.longitude(), 0d);
+        assertEquals(-60d, split[1].lowerCorner.latitude(), 0d);
+        assertEquals(56d, split[1].upperCorner.latitude(), 0d);
     }
     
     @Test
     public void encompassingOtherSquareTest() {
-        GeoPoint rightPosMid = new GeoPoint(35d, 45d);
-        GeoPoint rightUp = new GeoPoint(35d, 85d);
-        GeoPoint rightNegMid = new GeoPoint(35d, -50d);
-        GeoPoint rightDown = new GeoPoint(35d, -88d);
-        GeoPoint farRightPosMid = new GeoPoint(158d, 45d);
-        GeoPoint farRightUp = new GeoPoint(158d, 85d);
-        GeoPoint farRightNegMid = new GeoPoint(158d, -50d);
-        GeoPoint farRightDown = new GeoPoint(158d, -88d);
-        GeoPoint leftPosMid = new GeoPoint(-40d, 45d);
-        GeoPoint leftUp = new GeoPoint(-40d, 85d);
-        GeoPoint leftNegMid = new GeoPoint(-40d, -50d);
-        GeoPoint leftDown = new GeoPoint(-40d, -88d);
-        GeoPoint farLeftPosMid = new GeoPoint(-140d, 45d);
-        GeoPoint farLeftUp = new GeoPoint(-140d, 85d);
-        GeoPoint farLeftNegMid = new GeoPoint(-140d, -50d);
-        GeoPoint farLeftDown = new GeoPoint(-140d, -88d);
+        GeoPointImmutable rightPosMid = new GeoPointImmutable(35d, 45d);
+        GeoPointImmutable rightUp = new GeoPointImmutable(35d, 85d);
+        GeoPointImmutable rightNegMid = new GeoPointImmutable(35d, -50d);
+        GeoPointImmutable rightDown = new GeoPointImmutable(35d, -88d);
+        GeoPointImmutable farRightPosMid = new GeoPointImmutable(158d, 45d);
+        GeoPointImmutable farRightUp = new GeoPointImmutable(158d, 85d);
+        GeoPointImmutable farRightNegMid = new GeoPointImmutable(158d, -50d);
+        GeoPointImmutable farRightDown = new GeoPointImmutable(158d, -88d);
+        GeoPointImmutable leftPosMid = new GeoPointImmutable(-40d, 45d);
+        GeoPointImmutable leftUp = new GeoPointImmutable(-40d, 85d);
+        GeoPointImmutable leftNegMid = new GeoPointImmutable(-40d, -50d);
+        GeoPointImmutable leftDown = new GeoPointImmutable(-40d, -88d);
+        GeoPointImmutable farLeftPosMid = new GeoPointImmutable(-140d, 45d);
+        GeoPointImmutable farLeftUp = new GeoPointImmutable(-140d, 85d);
+        GeoPointImmutable farLeftNegMid = new GeoPointImmutable(-140d, -50d);
+        GeoPointImmutable farLeftDown = new GeoPointImmutable(-140d, -88d);
         GeoBounds[][] tests = {
                 {
                     // Square 1 contains square 2, none cross
@@ -87,11 +87,11 @@ public class GeoBoundsSquareTest {
                     // Squares intersect, none cross
                     new GeoBounds(farLeftDown, rightUp),
                     new GeoBounds(leftDown, farRightPosMid),
-                    new GeoBounds(farLeftDown, rightUp.withLongitude(farRightPosMid.longitude))
+                    new GeoBounds(farLeftDown, rightUp.withLongitude(farRightPosMid.longitude()))
                 },
                 {
                     // Squares do not intersect, none cross, smallest encompassing does not cross
-                    new GeoBounds(leftDown, GeoPoint.ORIGIN),
+                    new GeoBounds(leftDown, GeoPointImmutable.ORIGIN),
                     new GeoBounds(rightDown, farRightUp),
                     new GeoBounds(leftDown, farRightUp)
                 },
@@ -117,7 +117,7 @@ public class GeoBoundsSquareTest {
                     // First square crosses the antimeridian, second does not but has both points inside of the other
                     new GeoBounds(rightDown, leftUp),
                     new GeoBounds(farLeftDown, farRightPosMid),
-                    new GeoBounds(new GeoPoint(-180d, farLeftDown.latitude), new GeoPoint(180d, leftUp.latitude))
+                    new GeoBounds(new GeoPointImmutable(-180d, farLeftDown.latitude()), new GeoPointImmutable(180d, leftUp.latitude()))
                 },
                 {
                     // First square crosses the antimeridian, second one does not intersets, smallest gap is on the left
@@ -141,13 +141,13 @@ public class GeoBoundsSquareTest {
                     // First square crosses the antimeridian, second one is in lower part
                     new GeoBounds(farRightDown, rightUp),
                     new GeoBounds(farLeftDown.withLongitude(0d), rightPosMid),
-                    new GeoBounds(farRightDown, rightPosMid.withLatitude(leftUp.latitude))
+                    new GeoBounds(farRightDown, rightPosMid.withLatitude(leftUp.latitude()))
                 },
                 {
                     // First square crosses the antimeridian, second one intersects with upper part
                     new GeoBounds(rightDown, farLeftUp),
                     new GeoBounds(leftNegMid, rightPosMid),
-                    new GeoBounds(leftNegMid.withLatitude(rightDown.latitude), farLeftUp)
+                    new GeoBounds(leftNegMid.withLatitude(rightDown.latitude()), farLeftUp)
                 },
                 {
                     // First square crosses the antimeridian, second one is in the upper part
@@ -165,53 +165,53 @@ public class GeoBoundsSquareTest {
     @Test
     public void containsPointTest() {
         GeoBounds notCrossing = new GeoBounds(
-                new GeoPoint(-67d, -78d), new GeoPoint(169d, 35d)
+                new GeoPointImmutable(-67d, -78d), new GeoPointImmutable(169d, 35d)
             );
         assertTrue(notCrossing.contains(notCrossing.lowerCorner));
         assertTrue(notCrossing.contains(notCrossing.upperCorner));
-        assertTrue(notCrossing.contains(new GeoPoint(-67d, -6d)));
-        assertTrue(notCrossing.contains(new GeoPoint(169d, 15d)));
-        assertTrue(notCrossing.contains(new GeoPoint(0d, -78d)));
-        assertTrue(notCrossing.contains(new GeoPoint(-5d, 35d)));
-        assertTrue(notCrossing.contains(GeoPoint.ORIGIN));
-        assertTrue(notCrossing.contains(new GeoPoint(-24d, 18d)));
-        assertFalse(notCrossing.contains(new GeoPoint(-69d, 0d)));
-        assertFalse(notCrossing.contains(new GeoPoint(179d, 0d)));
-        assertFalse(notCrossing.contains(new GeoPoint(0d, -85d)));
-        assertFalse(notCrossing.contains(new GeoPoint(0d, 40d)));
+        assertTrue(notCrossing.contains(new GeoPointImmutable(-67d, -6d)));
+        assertTrue(notCrossing.contains(new GeoPointImmutable(169d, 15d)));
+        assertTrue(notCrossing.contains(new GeoPointImmutable(0d, -78d)));
+        assertTrue(notCrossing.contains(new GeoPointImmutable(-5d, 35d)));
+        assertTrue(notCrossing.contains(GeoPointImmutable.ORIGIN));
+        assertTrue(notCrossing.contains(new GeoPointImmutable(-24d, 18d)));
+        assertFalse(notCrossing.contains(new GeoPointImmutable(-69d, 0d)));
+        assertFalse(notCrossing.contains(new GeoPointImmutable(179d, 0d)));
+        assertFalse(notCrossing.contains(new GeoPointImmutable(0d, -85d)));
+        assertFalse(notCrossing.contains(new GeoPointImmutable(0d, 40d)));
         GeoBounds crossing = new GeoBounds(
-                new GeoPoint(169d, -35d), new GeoPoint(-67d, 78d)
+                new GeoPointImmutable(169d, -35d), new GeoPointImmutable(-67d, 78d)
             );
         assertTrue(crossing.contains(crossing.lowerCorner));
         assertTrue(crossing.contains(crossing.upperCorner));
-        assertTrue(crossing.contains(new GeoPoint(-67d, -6d)));
-        assertTrue(crossing.contains(new GeoPoint(169d, 15d)));
-        assertTrue(crossing.contains(new GeoPoint(180d, 78d)));
-        assertTrue(crossing.contains(new GeoPoint(-180d, -35d)));
-        assertTrue(crossing.contains(new GeoPoint(170d, 25d)));
-        assertTrue(crossing.contains(new GeoPoint(-80d, -5d)));
-        assertFalse(crossing.contains(new GeoPoint(-5d, 35d)));
-        assertFalse(crossing.contains(GeoPoint.ORIGIN));
+        assertTrue(crossing.contains(new GeoPointImmutable(-67d, -6d)));
+        assertTrue(crossing.contains(new GeoPointImmutable(169d, 15d)));
+        assertTrue(crossing.contains(new GeoPointImmutable(180d, 78d)));
+        assertTrue(crossing.contains(new GeoPointImmutable(-180d, -35d)));
+        assertTrue(crossing.contains(new GeoPointImmutable(170d, 25d)));
+        assertTrue(crossing.contains(new GeoPointImmutable(-80d, -5d)));
+        assertFalse(crossing.contains(new GeoPointImmutable(-5d, 35d)));
+        assertFalse(crossing.contains(GeoPointImmutable.ORIGIN));
     }
     
     @Test
     public void containsSquareTest() {
-        GeoPoint rightPosMid = new GeoPoint(35d, 45d);
-        GeoPoint rightUp = new GeoPoint(35d, 85d);
-        GeoPoint rightNegMid = new GeoPoint(35d, -50d);
-        GeoPoint rightDown = new GeoPoint(35d, -88d);
-        GeoPoint farRightPosMid = new GeoPoint(158d, 45d);
-        GeoPoint farRightUp = new GeoPoint(158d, 85d);
-        GeoPoint farRightNegMid = new GeoPoint(158d, -50d);
-        GeoPoint farRightDown = new GeoPoint(158d, -88d);
-        GeoPoint leftPosMid = new GeoPoint(-40d, 45d);
-        GeoPoint leftUp = new GeoPoint(-40d, 85d);
-        GeoPoint leftNegMid = new GeoPoint(-40d, -50d);
-        GeoPoint leftDown = new GeoPoint(-40d, -88d);
-        GeoPoint farLeftPosMid = new GeoPoint(-140d, 45d);
-        GeoPoint farLeftUp = new GeoPoint(-140d, 85d);
-        GeoPoint farLeftNegMid = new GeoPoint(-140d, -50d);
-        GeoPoint farLeftDown = new GeoPoint(-140d, -88d);
+        GeoPointImmutable rightPosMid = new GeoPointImmutable(35d, 45d);
+        GeoPointImmutable rightUp = new GeoPointImmutable(35d, 85d);
+        GeoPointImmutable rightNegMid = new GeoPointImmutable(35d, -50d);
+        GeoPointImmutable rightDown = new GeoPointImmutable(35d, -88d);
+        GeoPointImmutable farRightPosMid = new GeoPointImmutable(158d, 45d);
+        GeoPointImmutable farRightUp = new GeoPointImmutable(158d, 85d);
+        GeoPointImmutable farRightNegMid = new GeoPointImmutable(158d, -50d);
+        GeoPointImmutable farRightDown = new GeoPointImmutable(158d, -88d);
+        GeoPointImmutable leftPosMid = new GeoPointImmutable(-40d, 45d);
+        GeoPointImmutable leftUp = new GeoPointImmutable(-40d, 85d);
+        GeoPointImmutable leftNegMid = new GeoPointImmutable(-40d, -50d);
+        GeoPointImmutable leftDown = new GeoPointImmutable(-40d, -88d);
+        GeoPointImmutable farLeftPosMid = new GeoPointImmutable(-140d, 45d);
+        GeoPointImmutable farLeftUp = new GeoPointImmutable(-140d, 85d);
+        GeoPointImmutable farLeftNegMid = new GeoPointImmutable(-140d, -50d);
+        GeoPointImmutable farLeftDown = new GeoPointImmutable(-140d, -88d);
         GeoBounds[][] contains = {
                 {
                     // Square 1 contains square 2, none cross
@@ -242,7 +242,7 @@ public class GeoBoundsSquareTest {
                 },
                 {
                     // Squares do not intersect, none cross, smallest encompassing does not cross
-                    new GeoBounds(leftDown, GeoPoint.ORIGIN),
+                    new GeoBounds(leftDown, GeoPointImmutable.ORIGIN),
                     new GeoBounds(rightDown, farRightUp),
                 },
                 {
@@ -296,22 +296,22 @@ public class GeoBoundsSquareTest {
     
     @Test
     public void intesectionTest() {
-        GeoPoint rightPosMid = new GeoPoint(35d, 45d);
-        GeoPoint rightUp = new GeoPoint(35d, 85d);
-        GeoPoint rightNegMid = new GeoPoint(35d, -50d);
-        GeoPoint rightDown = new GeoPoint(35d, -88d);
-        GeoPoint farRightPosMid = new GeoPoint(158d, 45d);
-        GeoPoint farRightUp = new GeoPoint(158d, 85d);
-        GeoPoint farRightNegMid = new GeoPoint(158d, -50d);
-        GeoPoint farRightDown = new GeoPoint(158d, -88d);
-        GeoPoint leftPosMid = new GeoPoint(-40d, 45d);
-        GeoPoint leftUp = new GeoPoint(-40d, 85d);
-        GeoPoint leftNegMid = new GeoPoint(-40d, -50d);
-        GeoPoint leftDown = new GeoPoint(-40d, -88d);
-        GeoPoint farLeftPosMid = new GeoPoint(-140d, 45d);
-        GeoPoint farLeftUp = new GeoPoint(-140d, 85d);
-        GeoPoint farLeftNegMid = new GeoPoint(-140d, -50d);
-        GeoPoint farLeftDown = new GeoPoint(-140d, -88d);
+        GeoPointImmutable rightPosMid = new GeoPointImmutable(35d, 45d);
+        GeoPointImmutable rightUp = new GeoPointImmutable(35d, 85d);
+        GeoPointImmutable rightNegMid = new GeoPointImmutable(35d, -50d);
+        GeoPointImmutable rightDown = new GeoPointImmutable(35d, -88d);
+        GeoPointImmutable farRightPosMid = new GeoPointImmutable(158d, 45d);
+        GeoPointImmutable farRightUp = new GeoPointImmutable(158d, 85d);
+        GeoPointImmutable farRightNegMid = new GeoPointImmutable(158d, -50d);
+        GeoPointImmutable farRightDown = new GeoPointImmutable(158d, -88d);
+        GeoPointImmutable leftPosMid = new GeoPointImmutable(-40d, 45d);
+        GeoPointImmutable leftUp = new GeoPointImmutable(-40d, 85d);
+        GeoPointImmutable leftNegMid = new GeoPointImmutable(-40d, -50d);
+        GeoPointImmutable leftDown = new GeoPointImmutable(-40d, -88d);
+        GeoPointImmutable farLeftPosMid = new GeoPointImmutable(-140d, 45d);
+        GeoPointImmutable farLeftUp = new GeoPointImmutable(-140d, 85d);
+        GeoPointImmutable farLeftNegMid = new GeoPointImmutable(-140d, -50d);
+        GeoPointImmutable farLeftDown = new GeoPointImmutable(-140d, -88d);
         GeoBounds[][] tests = {
                 {
                     // Square 1 contains square 2, none cross
@@ -323,11 +323,11 @@ public class GeoBoundsSquareTest {
                     // Squares intersect, none cross
                     new GeoBounds(farLeftDown, rightUp),
                     new GeoBounds(leftDown, farRightPosMid),
-                    new GeoBounds(leftDown, rightUp.withLatitude(farRightPosMid.latitude))
+                    new GeoBounds(leftDown, rightUp.withLatitude(farRightPosMid.latitude()))
                 },
                 {
                     // Squares do not intersect, none cross, smallest encompassing does not cross
-                    new GeoBounds(leftDown, GeoPoint.ORIGIN),
+                    new GeoBounds(leftDown, GeoPointImmutable.ORIGIN),
                     new GeoBounds(rightDown, farRightUp),
                     GeoBounds.EMPTY
                 },
@@ -341,7 +341,7 @@ public class GeoBoundsSquareTest {
                     // Both squares cross
                     new GeoBounds(rightDown, farLeftUp),
                     new GeoBounds(farRightNegMid, leftPosMid),
-                    new GeoBounds(farRightNegMid, leftPosMid.withLongitude(farLeftUp.longitude))
+                    new GeoBounds(farRightNegMid, leftPosMid.withLongitude(farLeftUp.longitude()))
                 },
                 {
                     // Both squares cross, first one contains second
@@ -377,7 +377,7 @@ public class GeoBoundsSquareTest {
                     // First square crosses the antimeridian, second one intersects with upper part
                     new GeoBounds(rightDown, farLeftUp),
                     new GeoBounds(leftNegMid, farRightPosMid),
-                    new GeoBounds(rightDown.withLatitude(leftNegMid.latitude), farRightPosMid)
+                    new GeoBounds(rightDown.withLatitude(leftNegMid.latitude()), farRightPosMid)
                 },
                 {
                     // First square crosses the antimeridian, second one is in the upper part
@@ -432,15 +432,15 @@ public class GeoBoundsSquareTest {
     
     @Test
     public void equalsAndHashCodeTest() {
-        GeoBounds square1 = new GeoBounds(new GeoPoint(45d, 23d), new GeoPoint(60d, 67d));
-        GeoBounds square2 = new GeoBounds(new GeoPoint(45d, 23d), new GeoPoint(60d, 67d));
-        GeoBounds square3 = new GeoBounds(new GeoPoint(46d, 23d), new GeoPoint(60d, 67d));
+        GeoBounds square1 = new GeoBounds(new GeoPointImmutable(45d, 23d), new GeoPointImmutable(60d, 67d));
+        GeoBounds square2 = new GeoBounds(new GeoPointImmutable(45d, 23d), new GeoPointImmutable(60d, 67d));
+        GeoBounds square3 = new GeoBounds(new GeoPointImmutable(46d, 23d), new GeoPointImmutable(60d, 67d));
         assertEquals(square1, square2);
         assertEquals(square1.hashCode(), square2.hashCode());
         assertNotEquals(square1, square3);
         assertNotEquals(square1.hashCode(), square3.hashCode());
-        GeoBounds empty1 = new GeoBounds(new GeoPoint(45d, 23d), new GeoPoint(60d, -67d));
-        GeoBounds empty2 = new GeoBounds(new GeoPoint(-28d, 38d), new GeoPoint(125d, 1d));
+        GeoBounds empty1 = new GeoBounds(new GeoPointImmutable(45d, 23d), new GeoPointImmutable(60d, -67d));
+        GeoBounds empty2 = new GeoBounds(new GeoPointImmutable(-28d, 38d), new GeoPointImmutable(125d, 1d));
         assertEquals(empty1.hashCode(), empty2.hashCode());
         assertEquals(empty1, empty2);
         assertNotEquals(empty1, square1);
@@ -448,7 +448,7 @@ public class GeoBoundsSquareTest {
     
     @Test
     public void toStringTest() {
-        GeoBounds square = new GeoBounds(new GeoPoint(45d, -16d), new GeoPoint(-64d, 18d));
+        GeoBounds square = new GeoBounds(new GeoPointImmutable(45d, -16d), new GeoPointImmutable(-64d, 18d));
         assertEquals("GeoBoundsSquare{lower=GeoPoint{lon=45.0°, lat=-16.0°}, upper=GeoPoint{lon=-64.0°, lat=18.0°}}", square.toString());
     }
 

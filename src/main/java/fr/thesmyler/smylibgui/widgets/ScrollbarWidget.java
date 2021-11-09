@@ -5,6 +5,7 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
@@ -26,7 +27,7 @@ public class ScrollbarWidget extends WidgetContainer {
     private final Draggable drag = new Draggable();
     private float progress = 0f;
     private float targetProgress;
-    private final float scrollResponsiveness = 0.02f;
+    private float scrollResponsiveness = 0.02f;
     private float viewPort = 0.1f;
     private final ScrollbarOrientation orientation;
 
@@ -230,6 +231,16 @@ public class ScrollbarWidget extends WidgetContainer {
 
         }
 
+    }
+
+    public float getScrollResponsiveness() {
+        return this.scrollResponsiveness;
+    }
+
+    public ScrollbarWidget setScrollResponsiveness(float responsiveness) {
+        PValidation.checkArg(responsiveness >= 0, "Invalid scroll responsiveness, it needs to be positive.");
+        this.scrollResponsiveness = responsiveness;
+        return this;
     }
     
     public enum ScrollbarOrientation {

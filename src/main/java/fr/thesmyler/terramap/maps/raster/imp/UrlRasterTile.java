@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.util.ImageUtil;
-import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import net.buildtheearth.terraplusplus.util.http.Disk;
@@ -27,14 +27,14 @@ import net.minecraft.util.ResourceLocation;
  */
 public class UrlRasterTile implements IRasterTile {
 
-    private final TilePosUnmutable pos;
+    private final TilePosImmutable pos;
     private final String url;
     private ResourceLocation texture = null;
     private CompletableFuture<ByteBuf> textureTask;
 
     public static ResourceLocation errorTileTexture = null;
 
-    public UrlRasterTile(String urlPattern, TilePosUnmutable pos) {
+    public UrlRasterTile(String urlPattern, TilePosImmutable pos) {
         this.pos = pos;
         this.url = urlPattern
                 .replace("{x}", "" + this.getPosition().getX())
@@ -43,7 +43,7 @@ public class UrlRasterTile implements IRasterTile {
     }
 
     public UrlRasterTile(String urlPattern, int zoom, int x, int y) {
-        this(urlPattern, new TilePosUnmutable(zoom, x , y));
+        this(urlPattern, new TilePosImmutable(zoom, x , y));
     }
 
     public String getURL() {
@@ -72,6 +72,7 @@ public class UrlRasterTile implements IRasterTile {
     }
 
     private void tryLoadingTexture() throws Throwable {
+        //TODO Do that fully async, DynamicTexture::new is expensive
         if(this.textureTask != null && this.textureTask.isDone()){
             if(this.textureTask.isCompletedExceptionally()) {
                 if(this.textureTask.isCancelled()) {
@@ -126,7 +127,7 @@ public class UrlRasterTile implements IRasterTile {
     }
 
     @Override
-    public TilePosUnmutable getPosition() {
+    public TilePosImmutable getPosition() {
         return this.pos;
     }
 
@@ -138,7 +139,8 @@ public class UrlRasterTile implements IRasterTile {
     public static void registerErrorTexture() {
         TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
         int[] color = {170, 211, 223};
-        UrlRasterTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", new DynamicTexture(ImageUtil.imageFromColor(256,  256, color)));
+        DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256,  256, color));
+        UrlRasterTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", texture);
     }
 
 }

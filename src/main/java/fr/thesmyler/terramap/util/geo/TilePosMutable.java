@@ -223,8 +223,8 @@ public class TilePosMutable extends TilePos {
     }
 
     @Override
-    public TilePosUnmutable getUnmutable() {
-        return new TilePosUnmutable(this);
+    public TilePosImmutable getImmutable() {
+        return new TilePosImmutable(this);
     }
 
 }

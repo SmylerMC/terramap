@@ -12,24 +12,16 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.lwjgl.input.Mouse;
 
 public final class SmyLibGui {
 
     public static Logger logger;
     public static boolean debug;
 
-    public static final ResourceLocation BUTTON_TEXTURES, OPTIONS_BACKGROUND, STAT_ICONS, ICONS, WIDGET_TEXTURES;
     public static final Font DEFAULT_FONT = new Font();
 
     private SmyLibGui() {}
-
-    static {
-        BUTTON_TEXTURES = ObfuscationReflectionHelper.getPrivateValue(GuiButton.class, null, "field_146122_a");
-        OPTIONS_BACKGROUND = Gui.OPTIONS_BACKGROUND;
-        STAT_ICONS = Gui.STAT_ICONS;
-        ICONS = Gui.ICONS;
-        WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/widgets.png");
-    }
 
     public static void init(Logger logger, boolean debug) {
         SmyLibGui.logger = logger;
@@ -45,4 +37,9 @@ public final class SmyLibGui {
     public static String getLanguage() {
         return Minecraft.getMinecraft().gameSettings.language;
     }
+
+    public static int getMouseButtonCount() {
+        return debug ? 3: Mouse.getButtonCount();
+    }
+
 }
