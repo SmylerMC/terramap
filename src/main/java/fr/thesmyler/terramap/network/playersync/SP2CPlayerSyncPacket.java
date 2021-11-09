@@ -5,6 +5,7 @@ import java.util.UUID;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.NetworkUtil;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -34,15 +35,15 @@ public class SP2CPlayerSyncPacket implements IMessage {
             ITextComponent name = ITextComponent.Serializer.jsonToComponent(NetworkUtil.decodeStringFromByteBuf(buf));
             double longitude = buf.readDouble();
             double latitude = buf.readDouble();
-            float azimut = buf.readFloat();
+            float azimuth = buf.readFloat();
             GameType gamemode = GameType.getByName(NetworkUtil.decodeStringFromByteBuf(buf));
-            GeoPoint location;
+            GeoPointImmutable location;
             if(Double.isFinite(longitude) && Double.isFinite(latitude)) {
-                location = new GeoPoint(longitude, latitude);
+                location = new GeoPointImmutable(longitude, latitude);
             } else {
                 location = null;
             }
-            this.remotePlayers[i] = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name, location, azimut, gamemode);
+            this.remotePlayers[i] = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name, location, azimuth, gamemode);
         }
     }
 
@@ -52,7 +53,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
         for(TerramapPlayer player: this.localPlayers) {
             double[] coordinates;
             try {
-                GeoPoint location = player.getLocation();
+                GeoPoint<?> location = player.getLocation();
                 if(location == null) throw OutOfProjectionBoundsException.get();
                 coordinates = location.asArray();
             } catch(OutOfProjectionBoundsException e) {
@@ -64,7 +65,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
             NetworkUtil.encodeStringToByteBuf(playerDisplayName, buf);
             buf.writeDouble(coordinates[0]);
             buf.writeDouble(coordinates[1]);
-            buf.writeFloat(player.getAzimut());
+            buf.writeFloat(player.getAzimuth());
             NetworkUtil.encodeStringToByteBuf(player.getGamemode().getName(), buf);
         }
     }
@@ -76,7 +77,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
 
         @Override
         public IMessage onMessage(SP2CPlayerSyncPacket message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(()->{TerramapClientContext.getContext().syncPlayers(message.remotePlayers);});
+            Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().syncPlayers(message.remotePlayers));
             return null;
         }
 

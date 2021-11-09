@@ -14,7 +14,7 @@ import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
-import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 import net.buildtheearth.terraplusplus.util.http.Http;
 import net.minecraft.util.text.ITextComponent;
@@ -116,7 +116,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     }
 
     @Override
-    protected UrlRasterTile createNewTile(TilePosUnmutable pos) {
+    protected UrlRasterTile createNewTile(TilePosImmutable pos) {
         String pat = this.urlPatterns[(pos.getZoom() + pos.getX() + pos.getY()) % this.urlPatterns.length];
         return new UrlRasterTile(pat, pos);
     }

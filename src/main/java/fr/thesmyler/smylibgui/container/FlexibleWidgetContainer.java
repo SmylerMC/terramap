@@ -1,5 +1,10 @@
 package fr.thesmyler.smylibgui.container;
 
+/**
+ * A widget container that can change shape and position.
+ *
+ * @author SmylerMC
+ */
 public class FlexibleWidgetContainer extends WidgetContainer {
 
     private float x, y, width, height;

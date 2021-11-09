@@ -1,18 +1,18 @@
 package fr.thesmyler.terramap.util.geo;
 
-public class TilePosUnmutable extends TilePos {
+public class TilePosImmutable extends TilePos {
 
-    public TilePosUnmutable(int zoom, int x, int y) {
+    public TilePosImmutable(int zoom, int x, int y) {
         super(zoom, x, y);
     }
 
-    public TilePosUnmutable(TilePos pos) {
+    public TilePosImmutable(TilePos pos) {
         super(pos);
     }
 
     @Override
     public TilePos getCopy() {
-        return new TilePosUnmutable(this);
+        return new TilePosImmutable(this);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class TilePosUnmutable extends TilePos {
     }
 
     @Override
-    public TilePosUnmutable getUnmutable() {
+    public TilePosImmutable getImmutable() {
         return this;
     }
 

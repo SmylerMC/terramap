@@ -1,152 +1,90 @@
 package fr.thesmyler.terramap.util.geo;
 
-import java.util.Locale;
-
-import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.Immutable;
+import fr.thesmyler.terramap.util.Mutable;
+import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 
 /**
  * A point in the WGS:84 coordinate system.
  * Two points are considered equal when they represent the same place,
- * which means that points corresponding to the north pole will be equal even if they have different longitudes.
+ * which means that points corresponding to the North Pole will be equal even if they have different longitudes.
  * Similarly, points at the same latitude on the antimeridian will be equal,
- * independently of whether or not their longitude is -180 or 180.
- * 
+ * independently of whether their longitude is -180 or 180.
+ *
+ * @param <T> the type of the implementing subclass that any method returning a {@link GeoPoint} will return
  * @author SmylerMC
- * 
  *
  */
-public class GeoPoint {
-    
-    public static final GeoPoint ORIGIN = new GeoPoint(0d, 0d);
-    public static final GeoPoint NORTH_POLE = new GeoPoint(0d, 90d);
-    public static final GeoPoint SOUTH_POLE = new GeoPoint(0d, -90d);
-    
-    public final double longitude, latitude;
-    
-    private transient int hashCode = 0;
-    
+public interface GeoPoint<T extends GeoPoint<?>> extends Mutable<GeoPointImmutable>, Immutable<GeoPointMutable> {
+
     /**
-     * Constructs a new point from the given coordinates in degrees.
-     * The longitude get adjusted to be in the [-180°, 180°] range.
-     * Latitude needs to be within the [-90°, 90°] range.
-     * The coordinates do not change if they already are in the appropriate ranges.
-     * 
-     * @param longitude in degrees
-     * @param latitude in degrees
-     * 
-     * @throws IllegalArgumentException if either latitude or longitude is not a finite number,
-     *  or if latitude is not within the appropriate range.
+     * @return this point's latitude, in the appropriate [-90°, 90°] range
      */
-    public GeoPoint(double longitude, double latitude) {
-        this.latitude = GeoUtil.getLatitudeInRange(latitude);
-        this.longitude = GeoUtil.getLongitudeInRange(longitude);
-    }
-    
+    double latitude();
+
     /**
-     * Delegate constructor to {@link #GeoPoint(double, double)}
-     * 
-     * @param lola a double array of the form {longitude, latitude}
+     * @return this point's longitude, in the appropriate [-180°, 180°] range
      */
-    public GeoPoint(double[] lola) {
-        this(lola[0], lola[1]);
-    }
-    
-    /**     
-     * Delegate constructor to {@link #GeoPoint(double, double)}
-     * 
-     * @param lola
-     */
-    public GeoPoint(LatLng lola) {
-        this(lola.getLng(), lola.getLat());
-    }
-    
+    double longitude();
+
     /**
-     * @param longitude
-     * 
-     * @return a new GeoPoint with the same latitude as this one but a different longitude
-     */
-    public GeoPoint withLongitude(double longitude) {
-        return new GeoPoint(longitude, this.latitude);
-    }
-    
-    /**
-     * @param latitude
-     * 
-     * @return a new GeoPoint with the same longitude as this one but a different latitude
-     */
-    public GeoPoint withLatitude(double latitude) {
-        return new GeoPoint(this.longitude, latitude);
-    }
-    
-    /**
-     * Estimates the distance between this point and an other one as best as possible, ignoring altitude
-     * 
-     * @param other an other point
-     * 
+     * Estimates the distance between this point and another one as best as possible, ignoring altitude
+     *
+     * @param other another point
+     *
      * @return the distance between this point and the other, in meters
      */
-    public double distanceTo(GeoPoint other) {
-        return GeoUtil.distanceHaversine(this.longitude, this.latitude, other.longitude, other.latitude);
+    default double distanceTo(GeoPoint<?> other) {
+        return GeoUtil.distanceHaversine(this.longitude(), this.latitude(), other.longitude(), other.latitude());
     }
-    
+
     /**
      * @return this point as a {longitude, latitude} double array
      */
-    public double[] asArray() {
-        return new double[] { this.longitude, this.latitude };
+    default double[] asArray() {
+        return new double[] { this.longitude(), this.latitude() };
     }
-    
+
     /**
      * @return a {@link LatLng} that represents the same point
      */
-    public LatLng asLatLng() {
-        return new LatLng(this.latitude, this.longitude);
+    default LatLng asLatLng() {
+        return new LatLng(this.latitude(), this.longitude());
     }
-    
+
     /**
-     * @return a {@link Vec2d} of which the X component is the longitude of this point
+     * @return a {@link Vec2dImmutable} of which the X component is the longitude of this point
      * and the Y component its latitude
      */
-    public Vec2d asVec2d() {
-        return new Vec2d(this.longitude, this.latitude);
+    default Vec2dImmutable asVec2d() {
+        return new Vec2dImmutable(this.longitude(), this.latitude());
+    }
+
+    /**
+     * @param longitude a new longitude, that will be converted to the [-180°, 180°] range id needed
+     * @return a new GeoPoint with the same latitude as this one but a different longitude
+     *
+     * @throws IllegalArgumentException if the longitude is not a finite number
+     */
+    T withLongitude(double longitude);
+
+    /**
+     * @param latitude a new latitude
+     * @return a new GeoPoint with the same longitude as this one but a different latitude
+     *
+     * @throws IllegalArgumentException if the latitude is not a finite number in the [-90°, 90°] range
+     */
+    T withLatitude(double latitude);
+
+    @Override
+    default GeoPointMutable getMutable() {
+        return new GeoPointMutable(this.longitude(), this.latitude());
     }
 
     @Override
-    public int hashCode() {
-        if(this.hashCode == 0) {
-            // Cache hashCode result
-            final int prime = 31;
-            int result = 1;
-            long temp;
-            double lon = Math.abs(this.latitude) == 90d ? 0d: this.longitude;
-            if(lon == -180d) lon = 180d;
-            temp = Double.doubleToLongBits(lon);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
-            temp = Double.doubleToLongBits(this.latitude);
-            result = prime * result + (int) (temp ^ (temp >>> 32));
-            this.hashCode =  result;
-        }
-        return this.hashCode;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj == null) return false;
-        if(getClass() != obj.getClass()) return false;
-        GeoPoint other = (GeoPoint) obj;
-        if(this.latitude != other.latitude) return false;
-        if(Math.abs(this.latitude) == 90d) return true; // We don't care about longitude at the poles
-        if((this.longitude == -180d || this.longitude == 180d)
-                && this.longitude + other.longitude == 0d)
-            return true; // Antimeridian can be both 180 or -180
-        return this.longitude == other.longitude;
-    }
-    
-    @Override
-    public String toString() {
-        return String.format(Locale.US, "GeoPoint{lon=%s°, lat=%s°}", this.longitude, this.latitude);
+    default GeoPointImmutable getImmutable() {
+        return new GeoPointImmutable(this.longitude(), this.latitude());
     }
 
 }

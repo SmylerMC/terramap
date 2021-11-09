@@ -6,7 +6,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
-import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dMutable;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class Marker implements IWidget {
@@ -14,7 +14,7 @@ public abstract class Marker implements IWidget {
     protected float width, height;
     protected int minZoom;
     protected int maxZoom;
-    private float x, y;
+    private final Vec2dMutable position = new Vec2dMutable();
     private final MarkerController<?> controller;
 
     public Marker(MarkerController<?> controller, float width, float height, int minZoom, int maxZoom) {
@@ -31,12 +31,12 @@ public abstract class Marker implements IWidget {
 
     @Override
     public float getX() {
-        return this.x;
+        return (float) this.position.x();
     }
 
     @Override
     public float getY() {
-        return this.y;
+        return (float) this.position.y();
     }
 
     @Override
@@ -54,7 +54,7 @@ public abstract class Marker implements IWidget {
         return this.height;
     }
 
-    public abstract GeoPoint getLocation();
+    public abstract GeoPoint<?> getLocation();
 
     public abstract float getDeltaX();
 
@@ -65,11 +65,10 @@ public abstract class Marker implements IWidget {
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
             this.update(map);
-            GeoPoint location = this.getLocation();
+            GeoPoint<?> location = this.getLocation();
             if(location != null) {
-                Vec2d xy = map.getScreenPosition(this.getLocation());
-                this.x = (float) (xy.x + this.getDeltaX());
-                this.y = (float) (xy.y + this.getDeltaY());
+                map.getScreenPosition(this.position, location);
+                this.position.add(this.getDeltaX(), this.getDeltaY());
             }
         }
     }
@@ -79,11 +78,11 @@ public abstract class Marker implements IWidget {
     @Override
     public boolean isVisible(WidgetContainer parent) {
         if(!this.controller.getVisibility()) return false;
-        GeoPoint location = this.getLocation();
+        GeoPoint<?> location = this.getLocation();
         if(location == null || !WebMercatorUtil.PROJECTION_BOUNDS.contains(this.getLocation())) return false;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget)parent;
-            double zoom = map.getZoom();
+            double zoom = map.getController().getZoom();
             return this.minZoom <= zoom && zoom <= this.maxZoom;
         }
         return true;
@@ -104,7 +103,7 @@ public abstract class Marker implements IWidget {
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         if(this.canBeTracked() && parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
-            map.track(this);
+            map.getController().track(this);
         }
         return false;
     }
@@ -117,7 +116,7 @@ public abstract class Marker implements IWidget {
 
     /**
      * This identifier shall be used to resume tracking this marker is the map is saved and closed then opened again
-     * So it cannot depend on runtime and should be unique. The convention is markertype:uuid
+     * So it cannot depend on runtime and should be unique. The convention is markerType:uuid
      * 
      * @return a String uniquely identifying this marker
      */

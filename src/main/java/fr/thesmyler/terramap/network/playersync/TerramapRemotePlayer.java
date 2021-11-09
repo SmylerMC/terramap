@@ -7,6 +7,8 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointMutable;
+import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
@@ -19,17 +21,17 @@ public class TerramapRemotePlayer extends TerramapPlayer {
 
     protected final UUID uuid;
     protected ITextComponent displayName;
-    protected GeoPoint location;
-    protected float azimut;
+    protected final GeoPointMutable location = new GeoPointMutable();
+    protected float azimuth;
     protected GameType gamemode;
     protected ResourceLocation texture;
     protected boolean texureRequested = false;
 
-    public TerramapRemotePlayer(UUID uuid, ITextComponent name, GeoPoint location, float azimut, GameType gameMode) {
+    public TerramapRemotePlayer(UUID uuid, ITextComponent name, GeoPoint<?> location, float azimuth, GameType gameMode) {
         this.uuid = uuid;
         this.displayName = name;
-        this.location = location;
-        this.azimut = azimut;
+        this.location.set(location);
+        this.azimuth = azimuth;
         this.gamemode = gameMode;
     }
 
@@ -48,21 +50,21 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     }
     
     @Override
-    public GeoPoint getLocation() {
-        return this.location;
+    public GeoPointReadOnly getLocation() {
+        return this.location.getReadOnly();
     }
     
-    public void setLocation(GeoPoint location) {
-        this.location = location;
+    public void setLocation(GeoPoint<?> location) {
+        this.location.set(location);
     }
 
     @Override
-    public float getAzimut() {
-        return this.azimut;
+    public float getAzimuth() {
+        return this.azimuth;
     }
 
-    public void setAzimut(float azimut) {
-        this.azimut = azimut;
+    public void setAzimuth(float azimuth) {
+        this.azimuth = azimuth;
     }
 
     @Override

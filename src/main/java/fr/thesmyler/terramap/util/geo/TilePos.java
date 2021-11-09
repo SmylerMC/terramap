@@ -1,5 +1,8 @@
 package fr.thesmyler.terramap.util.geo;
 
+import fr.thesmyler.terramap.util.Immutable;
+import fr.thesmyler.terramap.util.Mutable;
+
 /**
  * A Web-Mercator tile position.
  * Zoom levels go from 0 to 30, and x and  positions go from 0 to 2^z where z is the zoom level.
@@ -7,7 +10,7 @@ package fr.thesmyler.terramap.util.geo;
  * @author SmylerMC
  *
  */
-public abstract class TilePos {
+public abstract class TilePos implements Mutable<TilePosImmutable>, Immutable<TilePosMutable> {
 
     protected int zoom;
     protected int xPosition;
@@ -37,7 +40,7 @@ public abstract class TilePos {
      * TilePos constructor.
      * Implementing classes should implement a similar constructor.
      * 
-     * @param other - an other tile to copy
+     * @param other - another tile to copy
      */
     public TilePos(TilePos other) {
         this(other.getZoom(), other.getX(), other.getY());
@@ -72,26 +75,26 @@ public abstract class TilePos {
 
     /**
      * @return a mutable deep copy of this tile position
-     * @see #getUnmutableCopy()
+     * @see #getImmutableCopy()
      * @see #getCopy()
      */
     public TilePosMutable getMutableCopy() {
-        return new TilePosMutable(this.xPosition, this.yPosition, this.zoom);
+        return new TilePosMutable(this.zoom, this.xPosition, this.yPosition);
     }
 
     /**
-     * @return an unmutable deep copy of this tile position
+     * @return an immutable deep copy of this tile position
      * @see #getMutableCopy()
      * @see #getCopy()
      */
-    public TilePosUnmutable getUnmutableCopy() {
-        return new TilePosUnmutable(this.xPosition, this.yPosition, this.zoom);
+    public TilePosImmutable getImmutableCopy() {
+        return new TilePosImmutable(this.zoom, this.xPosition, this.yPosition);
     }
 
     /**
      * @return a deep copy of this tile position
      * @see #getMutableCopy()
-     * @see #getUnmutableCopy()
+     * @see #getImmutableCopy()
      */
     public abstract TilePos getCopy();
 
@@ -101,14 +104,14 @@ public abstract class TilePos {
     public abstract TilePosMutable getMutable();
 
     /**
-     * @return this if this is unmutable, or an unmutable copy if it isn't
+     * @return this if this is immutable, or an immutable copy if it isn't
      */
-    public abstract TilePosUnmutable getUnmutable();
+    public abstract TilePosImmutable getImmutable();
 
     @Override
     public boolean equals(Object obj) {
         if(this == obj) return true;
-        if(obj != null && obj instanceof TilePos) {
+        if(obj instanceof TilePos) {
             TilePos o = (TilePos) obj;
             return this.zoom == o.zoom && this.xPosition == o.xPosition && this.yPosition == o.yPosition;
         }

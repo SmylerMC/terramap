@@ -108,6 +108,11 @@ public class ClientTerramapEventHandler {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         if(event.getGui() instanceof GuiChat && Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup) {
+            /*
+             * Take care of propagating offset changes once the popup is closed
+             * when the minimap background offset was changed from a popup opened from the chat,
+             * by right-clicking the minimap.
+             */
             LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) Minecraft.getMinecraft().currentScreen;
             MapLayer layer = popup.getLayer();
             TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), layer.getRenderingOffset());

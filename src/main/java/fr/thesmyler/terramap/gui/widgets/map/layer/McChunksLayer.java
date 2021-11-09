@@ -13,13 +13,20 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
+import fr.thesmyler.terramap.util.geo.GeoPointMutable;
+import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+
+import static java.lang.Math.floor;
+import static java.lang.Math.floorDiv;
 
 /**
  * Renders Minecraft region (both 2dr and 3dr), chunks, and blocks outlines onto a map widget.
@@ -32,6 +39,9 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     public static final String ID = "mcchunks";
     
     private final ProjectionCache cache = new ProjectionCache(4);
+    private final Vec2dMutable mcCenter = new Vec2dMutable();
+    private final Vec2dReadOnly extendedDimensions;
+    private final GeoPointReadOnly geoCenter;
     
     private final ToggleButtonWidget button;
     
@@ -39,8 +49,25 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     
     private Color color = Color.DARK_GRAY;
 
-    public McChunksLayer(double tileScaling) {
-        super(tileScaling);
+    // Used for calculations. Those aren't local fields, so we don't create hundreds of objects every time we render
+    private final Vec2dMutable[] corners = {
+            new Vec2dMutable(),
+            new Vec2dMutable(),
+            new Vec2dMutable(),
+            new Vec2dMutable()
+    };
+    private final Vec2dMutable[] projectedCorners = {
+            new Vec2dMutable(),
+            new Vec2dMutable(),
+            new Vec2dMutable(),
+            new Vec2dMutable()
+    };
+    private final Vec2dMutable centerTile = new Vec2dMutable();
+    private final Vec2dMutable deltaCalculator = new Vec2dMutable();
+    private final GeoPointMutable nearCenterLocation = new GeoPointMutable();
+
+    public McChunksLayer(MapWidget map) {
+        super(map);
         this.setAlpha(0.25f);
         this.button = new ToggleButtonWidget(10, 14, 14,
                 186, 108, 186, 122,
@@ -50,6 +77,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 b -> this.visible = b
                 );
         this.button.setTooltip(I18n.format("terramap.mapwidget.mcchunks.tooltip"));
+        this.extendedDimensions = this.getRenderSpaceDimensions();
+        this.geoCenter = this.getMap().getController().getCenterLocation();
     }
 
     @Override
@@ -61,9 +90,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         
         this.cache.projection = projection;
 
-        double extendedWidth = this.getExtendedWidth();
-        double extendedHeight = this.getExtendedHeight();        
-
         boolean render2dr = false;
         boolean render3dr = false;
         boolean renderChunks = false;
@@ -71,13 +97,12 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         double renderThreshold = 128d;
 
         // First decide on what we are going to render depending on the scale at the center of the map
-        Vec2d centerMc;
         try {
-            GeoPoint centerLocation = this.getCenterLocation();
-            centerMc = new Vec2d(projection.fromGeo(centerLocation.longitude, centerLocation.latitude));
-            GeoPoint nearCenterLocation = this.getRenderLocation(new Vec2d(extendedWidth / 2 + 10, extendedHeight / 2 + 10));
-            Vec2d pos2 = new Vec2d(projection.fromGeo(nearCenterLocation.longitude, nearCenterLocation.latitude));
-            double d = centerMc.distanceTo(pos2);
+            this.deltaCalculator.set(this.extendedDimensions).downscale(2d).add(10d, 10d);
+            this.getLocationAtPositionInRenderSpace(this.nearCenterLocation, this.deltaCalculator);
+            this.mcCenter.set(projection.fromGeo(this.geoCenter.longitude(), this.geoCenter.latitude()));
+            this.deltaCalculator.set(projection.fromGeo(this.nearCenterLocation.longitude(), this.nearCenterLocation.latitude()));
+            double d = this.mcCenter.distanceTo(this.deltaCalculator);
             if(d < renderThreshold) render2dr = true;
             if(d < renderThreshold / 2) render3dr = true;
             if(d < renderThreshold / 16) renderChunks = true;
@@ -93,19 +118,19 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         Color c = this.color.withAlpha(this.getAlpha());
 
         if(renderBlocks) {
-            this.renderGrid(x, y, 0, centerMc, 1, extendedWidth, extendedHeight, c, 1f);
-            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, c, 2f);
-            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, c, 3f);
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 4f);
+            this.renderGrid(x, y, 0, 1, c, 1f);
+            this.renderGrid(x, y, 1, 16, c, 2f);
+            this.renderGrid(x, y, 2, 256, c, 3f);
+            this.renderGrid(x, y, 3, 512, c, 4f);
         } else if(renderChunks) {
-            this.renderGrid(x, y, 1, centerMc, 16, extendedWidth, extendedHeight, c, 1f);
-            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, c, 2f);
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 3f);
+            this.renderGrid(x, y, 1, 16, c, 1f);
+            this.renderGrid(x, y, 2, 256, c, 2f);
+            this.renderGrid(x, y, 3, 512, c, 3f);
         } else if(render3dr) {
-            this.renderGrid(x, y, 2, centerMc, 256, extendedWidth, extendedHeight, c, 1f);
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 2f);
+            this.renderGrid(x, y, 2, 256, c, 1f);
+            this.renderGrid(x, y, 3, 512, c, 2f);
         } else if(render2dr) {
-            this.renderGrid(x, y, 3, centerMc, 512, extendedWidth, extendedHeight, c, 1f);
+            this.renderGrid(x, y, 3, 512, c, 1f);
         }
 
         this.cache.cycle();
@@ -113,35 +138,33 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         map.getProfiler().endSection();
     }
     
-    private void renderGrid(float x, float y, int discriminator, Vec2d mcCenter, long tileSize, double extendedWidth, double extendedHeight, Color color, float lineWidth) {
+    private void renderGrid(float x, float y, int discriminator, long tileSize, Color color, float lineWidth) {
         
-        int maxTiles = 100; // Maximum drawing iterations, for safety
-        
-        Vec2d centerTile = new Vec2d(Math.floorDiv((long)Math.floor(mcCenter.x), tileSize), Math.floorDiv((long)Math.floor(mcCenter.y), tileSize));
+        final int maxTiles = 100; // Maximum drawing iterations, for safety
+
+        this.centerTile.set(floorDiv((long) floor(this.mcCenter.x), tileSize), floorDiv((long)floor(this.mcCenter.y), tileSize));
         int dX = 0;
         int dY = 0;
-        Vec2d[] corners = {
-                new Vec2d(centerTile.x * tileSize, centerTile.y * tileSize),
-                new Vec2d(centerTile.x * tileSize, (centerTile.y + 1) * tileSize),
-                new Vec2d((centerTile.x + 1) * tileSize, (centerTile.y + 1) * tileSize),
-                new Vec2d((centerTile.x + 1) * tileSize, centerTile.y * tileSize)
-        };
+        this.corners[0].set(this.centerTile).scale(tileSize);
+        this.corners[1].set(this.centerTile).add(0, 1).scale(tileSize);
+        this.corners[2].set(this.centerTile).add(1, 1).scale(tileSize);
+        this.corners[3].set(this.centerTile).add(1, 0).scale(tileSize);
         int direction = 1;
         int size = 1;
         int safety = 0;
         boolean inTop, inBottom, inLeft, inRight;
         inTop = inBottom = inLeft = inRight = true;
         
-        // Spirale out from the center tile until we aren't rendering anything onto the screen
+        // Spiral out from the center tile until we aren't rendering anything onto the screen
         while((inTop || inBottom || inRight || inLeft) && safety++ < maxTiles) {
             
             boolean[] linesInlineIn = new boolean[4];
             while(2*dX*direction < size) {
                 if((direction < 0 && inBottom) || (direction > 0 && inTop))
-                    this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                    this.renderTile(x, y, discriminator, color, lineWidth, linesInlineIn);
                 dX += direction;
                 long step = tileSize*direction;
-                for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(step, 0);
+                for (Vec2dMutable corner : this.corners) corner.add(step, 0);
             }
             
             if(!linesInlineIn[0]) inLeft = false;
@@ -152,10 +175,10 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
             while(2*dY*direction < size) {
                 if((direction < 0 && inLeft) || (direction > 0 && inRight))
-                    this.renderTile(x, y, discriminator, corners, color, lineWidth, linesInlineIn, extendedWidth, extendedHeight);
+                    this.renderTile(x, y, discriminator, color, lineWidth, linesInlineIn);
                 dY += direction;
                 long step = tileSize*direction;
-                for(int i=0; i<corners.length; i++) corners[i] = corners[i].add(0, step);
+                for (Vec2dMutable corner : this.corners) corner.add(0, step);
             }
             
             if(!linesInlineIn[0]) inLeft = false;
@@ -168,26 +191,25 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         }
     }
 
-    private void renderTile(float x, float y, int discriminator, Vec2d[] corners, Color color, float lineWidth, boolean[] loopingConditions, double extendedWidth, double extendedHeight) {
-        Vec2d[] renderCorners = new Vec2d[4];
+    private void renderTile(float x, float y, int discriminator, Color color, float lineWidth, boolean[] loopingConditions) {
         try {
-            for(int i=0; i<renderCorners.length; i++) {
-                renderCorners[i] = this.cache.getRenderPos(corners[i], discriminator);
+            for(int i=0; i<this.projectedCorners.length; i++) {
+                this.cache.getRenderPos(this.projectedCorners[i], this.corners[i], discriminator);
             }
         } catch(OutOfProjectionBoundsException silenced) {
             return; // Skip the tile
         }
-        for(Vec2d corner: renderCorners) {
+        for(Vec2dMutable corner: this.projectedCorners) {
             loopingConditions[0] = loopingConditions[0] || corner.x >= 0;
-            loopingConditions[1] = loopingConditions[1] || corner.x <= extendedWidth;
+            loopingConditions[1] = loopingConditions[1] || corner.x <= this.extendedDimensions.x();
             loopingConditions[2] = loopingConditions[2] || corner.y >= 0;
-            loopingConditions[3] = loopingConditions[3] || corner.y <= extendedHeight;
+            loopingConditions[3] = loopingConditions[3] || corner.y <= this.extendedDimensions.y();
         }
         RenderUtil.drawClosedStrokeLine(color, lineWidth,
-                x + renderCorners[0].x, y + renderCorners[0].y,
-                x + renderCorners[1].x, y + renderCorners[1].y,
-                x + renderCorners[2].x, y + renderCorners[2].y,
-                x + renderCorners[3].x, y + renderCorners[3].y
+                x + this.projectedCorners[0].x, y + this.projectedCorners[0].y,
+                x + this.projectedCorners[1].x, y + this.projectedCorners[1].y,
+                x + this.projectedCorners[2].x, y + this.projectedCorners[2].y,
+                x + this.projectedCorners[3].x, y + this.projectedCorners[3].y
         );
     }
     
@@ -200,8 +222,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         
         GeographicProjection projection;
         
-        final Map<Vec2d, GeoPoint> mcToGeo = new HashMap<>();
-        final Set<Vec2d> accessedInCycle = new HashSet<>();
+        final Map<Vec2d<?>, GeoPointImmutable> mcToGeo = new HashMap<>();
+        final Set<Vec2d<?>> accessedInCycle = new HashSet<>();
         
         final int maxProjectionsPerCycle = 50;
         int[] projectionsThisCycle;
@@ -210,13 +232,13 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
             this.projectionsThisCycle = new int[diffCount];
         }
         
-        Vec2d getRenderPos(Vec2d mcPos, int discriminator) throws OutOfProjectionBoundsException {
-            this.accessedInCycle.add(mcPos);
+        void getRenderPos(Vec2dMutable destination, Vec2d<?> mcPos, int discriminator) throws OutOfProjectionBoundsException {
+            if (!this.accessedInCycle.contains(mcPos)) this.accessedInCycle.add(mcPos.getImmutable());
             
-            // Not really out of bounds but we don't need to differentiate the two
+            // Not really out of bounds, but we don't need to differentiate the two
             if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) throw OutOfProjectionBoundsException.get();
             
-            GeoPoint location;
+            GeoPointImmutable location;
             
             // Try getting a cached value
             if(this.mcToGeo.containsKey(mcPos)) {
@@ -226,16 +248,16 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 // Fallback to computing it
                 try {
                     this.projectionsThisCycle[discriminator]++;
-                    location = new GeoPoint(this.projection.toGeo(mcPos.x, mcPos.y));
-                    this.mcToGeo.put(mcPos, location);
+                    location = new GeoPointImmutable(this.projection.toGeo(mcPos.x(), mcPos.y()));
+                    this.mcToGeo.put(mcPos.getImmutable(), location);
                 } catch(OutOfProjectionBoundsException e) {
-                    this.mcToGeo.put(mcPos, null);
+                    this.mcToGeo.put(mcPos.getImmutable(), null);
                     throw e;
                 }
             }
             
             if(! WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) throw OutOfProjectionBoundsException.get();
-            return McChunksLayer.this.getRenderPos(location);
+            McChunksLayer.this.getLocationPositionInRenderSpace(destination, location);
         }
         
         void cycle() {
@@ -287,8 +309,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     }
 
     @Override
-    public MapLayer copy() {
-        McChunksLayer layer = new McChunksLayer(this.getTileScaling());
+    public MapLayer copy(MapWidget mapFor) {
+        McChunksLayer layer = new McChunksLayer(mapFor);
         this.copyPropertiesToOther(layer);
         return layer;
     }

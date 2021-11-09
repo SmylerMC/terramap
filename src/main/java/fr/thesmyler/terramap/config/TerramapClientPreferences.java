@@ -14,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -64,16 +65,16 @@ public class TerramapClientPreferences {
         }
     }
     
-    public static Vec2d getMinimapRenderingOffset(String serverId, String layerName) {
+    public static Vec2dImmutable getMinimapRenderingOffset(String serverId, String layerName) {
         try {
             initPreferences();
             ServerPreferences server = preferences.servers.get(serverId);
-            if(server == null) return Vec2d.NULL;
-            return server.minimapRenderOffsets.getOrDefault(layerName, Vec2d.NULL);
+            if(server == null) return Vec2dImmutable.NULL;
+            return server.minimapRenderOffsets.getOrDefault(layerName, Vec2dImmutable.NULL);
         } catch(Exception e) {
             TerramapMod.logger.warn("Failed to query whether or not welcome was shown for " + serverId);
             TerramapMod.logger.catching(e);
-            return Vec2d.NULL;
+            return Vec2dImmutable.NULL;
         }
     }
 
@@ -113,11 +114,11 @@ public class TerramapClientPreferences {
         }
     }
     
-    public static void setMinimapRenderingOffset(String serverId, String layerId, Vec2d offset) {
+    public static void setMinimapRenderingOffset(String serverId, String layerId, Vec2d<?> offset) {
         try {
             initPreferences();
             ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
-            serv.minimapRenderOffsets.put(layerId, offset);
+            serv.minimapRenderOffsets.put(layerId, offset.getImmutable());
             if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
         } catch(Exception e) {
             TerramapMod.logger.warn("Failed to set minimap rendering delta!");
@@ -177,7 +178,7 @@ public class TerramapClientPreferences {
         public String genSettings = "";
         public TerramapScreenSavedState mapState = new TerramapScreenSavedState();
         public boolean hasShownWelcome =  false;
-        public final Map<String, Vec2d> minimapRenderOffsets = new HashMap<>();
+        public final Map<String, Vec2dImmutable> minimapRenderOffsets = new HashMap<>();
     }
 
 }

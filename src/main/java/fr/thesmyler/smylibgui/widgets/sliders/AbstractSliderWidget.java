@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.widgets.sliders;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -111,7 +112,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
         Color.WHITE.applyGL();
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -129,7 +130,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
         RenderUtil.drawTexturedModalRect(x + leftWidth, y + this.height - splitHeight, 200 - rightWidth, 46 + 20 - splitHeight, rightWidth, splitHeight);
 
         float sliderPosition = this.getPosition();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
         Color.WHITE.applyGL();
         
         float sliderX = x + sliderPosition * (this.width - 8);
@@ -179,6 +180,11 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 
     public AbstractSliderWidget setWidth(float width) {
         this.width = width;
+        return this;
+    }
+
+    public AbstractSliderWidget setHeight(float height) {
+        this.height = height;
         return this;
     }
 

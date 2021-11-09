@@ -97,7 +97,7 @@ public class S2CTerramapHelloPacket implements IMessage {
 
         @Override
         public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {
-            Minecraft.getMinecraft().addScheduledTask(()->{RemoteSynchronizer.onServerHello(message);});
+            Minecraft.getMinecraft().addScheduledTask(() -> RemoteSynchronizer.onServerHello(message));
             return null;
         }
 

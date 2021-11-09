@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.maps.raster.IRasterTile;
-import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -15,11 +15,11 @@ import net.minecraft.util.ResourceLocation;
 
 public class TerrainPreviewTile implements IRasterTile {
 
-    private final TilePosUnmutable position;
+    private final TilePosImmutable position;
     private ResourceLocation texture;
     private CompletableFuture<BufferedImage> textureTask;
 
-    public TerrainPreviewTile(TilePosUnmutable position) {
+    public TerrainPreviewTile(TilePosImmutable position) {
         this.position = position;
     }
 
@@ -68,7 +68,7 @@ public class TerrainPreviewTile implements IRasterTile {
     }
 
     @Override
-    public TilePosUnmutable getPosition() {
+    public TilePosImmutable getPosition() {
         return this.position;
     }
 

@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.maps.raster.imp;
 
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
-import fr.thesmyler.terramap.util.geo.TilePosUnmutable;
+import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import net.minecraft.client.resources.I18n;
 
 public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile> {
@@ -14,7 +14,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
         this.setUseLowZoom(false); // Loading tiles at low zoom levels takes forever here
     }
     @Override
-    protected TerrainPreviewTile createNewTile(TilePosUnmutable position) {
+    protected TerrainPreviewTile createNewTile(TilePosImmutable position) {
         return new TerrainPreviewTile(position);
     }
 

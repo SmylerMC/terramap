@@ -12,6 +12,7 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
+import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
@@ -21,8 +22,9 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
-import fr.thesmyler.terramap.util.math.Vec2d;
+import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -48,7 +50,8 @@ public abstract class HudScreenHandler {
                     if(TerramapClientContext.getContext().getProjection() != null
                             && !(Minecraft.getMinecraft().currentScreen instanceof GuiChat)
                             && !(Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup)) {
-                        map.track(map.getMainPlayerMarker());
+                        Marker player = map.getMainPlayerMarker();
+                        if (player != null) map.getController().track(player);
                     }
                 });
             }
@@ -86,6 +89,7 @@ public abstract class HudScreenHandler {
             init(screen);
             return;
         }
+        MapController controller = map.getController();
         map.setX(Math.round(TerramapConfig.CLIENT.minimap.posX / 100 * screen.getWidth()));
         map.setY(Math.round(TerramapConfig.CLIENT.minimap.posY / 100 * screen.getHeight()));
         map.setWidth(Math.round(TerramapConfig.CLIENT.minimap.width / 100 * screen.getWidth()));
@@ -95,8 +99,8 @@ public abstract class HudScreenHandler {
         map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
         map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
         map.trySetFeatureVisibility(McChunksLayer.ID, TerramapConfig.CLIENT.minimap.chunksRender);
-        map.setTrackRotation(TerramapConfig.CLIENT.minimap.playerRotation);
-        if(!TerramapConfig.CLIENT.minimap.playerRotation) map.setRotation(0f);
+        controller.setTracksRotation(TerramapConfig.CLIENT.minimap.playerRotation);
+        if(!TerramapConfig.CLIENT.minimap.playerRotation) controller.setRotation(0f, false);
         Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
         IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
         if(bg == null || ! bg.isAllowedOnMinimap()) {
@@ -107,18 +111,17 @@ public abstract class HudScreenHandler {
         map.setBackground(bg);
         
         for(MapLayer layer: map.getOverlayLayers()) {
-            Vec2d offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());
+            Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());
             layer.setRenderingOffset(offset);
         }
         
         RasterMapLayer backLayer = map.getBackgroundLayer();
-        Vec2d offset = TerramapClientContext.getContext().getMinimapRenderOffset(backLayer.getId());
+        Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(backLayer.getId());
         backLayer.setRenderingOffset(offset);
         
         float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
         zoomLevel = Math.min(bg.getMaxZoom(), zoomLevel);
-        map.setZoom(zoomLevel);
-        map.setZoom(TerramapConfig.CLIENT.minimap.zoomLevel);
+        controller.setZoom(zoomLevel, false);
 
         map.setTileScaling(TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
         map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP));
@@ -126,21 +129,23 @@ public abstract class HudScreenHandler {
 
     public static void zoomInMinimap() {
         if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
-        map.zoom(1);
-        TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoomTarget();
+        map.getController().setZoomStaticLocation(map.getController().getCenterLocation());
+        map.getController().zoom(1, true);
+        TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getController().getTargetZoom();
         TerramapConfig.sync();
     }
 
     public static void zoomOutMinimap() {
         if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
-        map.zoom(-1);
-        TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getZoomTarget();
+        map.getController().setZoomStaticLocation(map.getController().getCenterLocation());
+        map.getController().zoom(-1, true);
+        TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getController().getTargetZoom();
         TerramapConfig.sync();
     }
 
     /**
      * Toggles the minimap visibility and updates the config accordingly.
-     * If the compass is enabled in the config, sync it's visibility to the minimap, else ignores it.
+     * If the compass is enabled in the config, sync it visibility to the minimap, else ignores it.
      */
     public static void toggleWidgets() {
         if(map != null && compass != null && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {

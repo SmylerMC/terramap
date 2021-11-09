@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -44,7 +44,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
-        mc.getTextureManager().bindTexture(SmyLibGui.BUTTON_TEXTURES);
+        mc.getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
         Color.WHITE.applyGL();
         int textureDelta = 1;
         Color textColor = this.enabledTextColor;
