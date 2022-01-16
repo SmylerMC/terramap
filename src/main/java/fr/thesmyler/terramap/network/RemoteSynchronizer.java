@@ -1,10 +1,6 @@
 package fr.thesmyler.terramap.network;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -31,7 +27,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public abstract class RemoteSynchronizer {
 
-	public static Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<UUID, RegisteredForUpdatePlayer>();
+	public static final Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<UUID, RegisteredForUpdatePlayer>();
 
 	public static void syncPlayers(WorldServer world) {
 		if(playersToUpdate.size() <= 0) return;
@@ -43,7 +39,7 @@ public abstract class RemoteSynchronizer {
 			if(terraPlayer.isSpectator() && !TerramapConfig.SERVER.synchronizeSpectators) continue;
 			players.add(terraPlayer);
 		}
-		IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[players.size()]));
+		IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[0]));
 		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
 			TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(pkt, player.player);
 		}
@@ -54,10 +50,12 @@ public abstract class RemoteSynchronizer {
 				player.noticeSent = true;
 			}
 		}
-		for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
+		Iterator<RegisteredForUpdatePlayer> iterator = RemoteSynchronizer.playersToUpdate.values().iterator();
+		while (iterator.hasNext()) {
+			RegisteredForUpdatePlayer player = iterator.next();
 			if(ctime - player.lastRegisterTime > TerramapConfig.SERVER.syncHeartbeatTimeout) {
 				TerramapMod.logger.debug("Unregistering " + player.player.getName() + "from map update as it did not renew its registration");
-				RemoteSynchronizer.playersToUpdate.remove(player.player.getPersistentID());
+				iterator.remove();
 				TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
 			}
 		}
