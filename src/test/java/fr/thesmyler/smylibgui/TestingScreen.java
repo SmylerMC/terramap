@@ -1,6 +1,5 @@
 package fr.thesmyler.smylibgui;
 
-import com.sun.istack.internal.NotNull;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.terramap.config.TerramapConfig;
 
@@ -207,7 +206,7 @@ public class TestingScreen extends WidgetContainer {
             this.time = time;
         }
         @Override
-        public int compareTo(@NotNull MouseEvent other) {
+        public int compareTo(MouseEvent other) {
             return Long.compare(this.time, other.time);
         }
     }
@@ -220,7 +219,7 @@ public class TestingScreen extends WidgetContainer {
             this.time = time;
         }
         @Override
-        public int compareTo(@NotNull MouseWheelEvent other) {
+        public int compareTo(MouseWheelEvent other) {
             return Long.compare(this.time, other.time);
         }
     }
@@ -235,7 +234,7 @@ public class TestingScreen extends WidgetContainer {
             this.time = time;
         }
         @Override
-        public int compareTo(@NotNull KeyboardEvent other) {
+        public int compareTo(KeyboardEvent other) {
             return Long.compare(this.time, other.time);
         }
     }
