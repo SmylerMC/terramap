@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.widgets.text;
 import fr.thesmyler.smylibgui.SmyLibGuiTest;
 import fr.thesmyler.smylibgui.container.TestingScreen;
 import org.junit.jupiter.api.Test;
+import org.lwjgl.input.Keyboard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,6 +26,16 @@ public class TextFieldWidgetTest extends SmyLibGuiTest {
 
         assertEquals(widget, screen.getFocusedWidget());
 
+        // Send input to the input field
+        screen.pressKey('a', Keyboard.KEY_A);
+        screen.doTick();
+        screen.pressKey('b', Keyboard.KEY_A);
+        screen.doTick();
+        screen.pressKey('c', Keyboard.KEY_A);
+        screen.doTick();
+
+        assertEquals("abc", widget.getText());
+
         // Click on nothing
         screen.moveMouse(1, 1, 250);
         screen.click(0);
@@ -38,7 +49,8 @@ public class TextFieldWidgetTest extends SmyLibGuiTest {
         screen.click(0);
         screen.doTick();
 
-        //TODO this fails: assertNull(screen.getFocusedWidget());
+        assertNull(screen.getFocusedWidget());
+
     }
 
 }

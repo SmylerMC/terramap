@@ -1,5 +1,8 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -27,6 +30,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 
 /**
+ * A text field, similar to the vanilla implementation, but with a few
  * 
  * Heavily inspired by the 1.15 vanilla class
  * We can't support all input methods as it would require GLFW and it is not present in LWJGL 2
@@ -705,6 +709,16 @@ public class TextFieldWidget implements IWidget {
             if (isValidChar(c)) builder.append(c);
         }
         return builder.toString();
+    }
+
+    @Override
+    public boolean onClickedNotInput(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+        return false;
+    }
+
+    @Override
+    public boolean takesInputs() {
+        return this.enabled;
     }
 
 }
