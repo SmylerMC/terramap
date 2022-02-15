@@ -116,7 +116,12 @@ public abstract class WidgetContainer implements IWidget{
                             break;
                     }
                 } else {
-                    if(!(widget.takesInputs() && widget.isVisible(this))) continue;
+                    if(!(widget.takesInputs() && widget.isVisible(this))) {
+                        if (!widget.onClickedNotInput(event.mouseX, event.mouseY, event.button, this)) {
+                            processed = true;
+                            break;
+                        }
+                    }
                     switch(event.type) {
                         case CLICK:
                             propagate = widget.onClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
