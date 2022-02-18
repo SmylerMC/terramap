@@ -3,6 +3,10 @@ package fr.thesmyler.smylibgui.util;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.devices.GameWindow;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.opengl.GL11;
 
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
@@ -88,9 +92,10 @@ public final class RenderUtil {
     }
 
     private static void doScissor() {
-        float screenWidth = getGameWindow().getWindowWidth();
-        float screenHeight = getGameWindow().getWindowHeight();
-        double scale = 1 / (float)getGameWindow().getScaleFactor();
+        GameWindow window = SmyLibGui.getGameWindow();
+        float screenWidth = window.getWindowWidth();
+        float screenHeight = window.getWindowHeight();
+        double scale = window.getScaleFactor();
         float y = Math.max(0, Math.min(screenHeight, screenHeight - scissorY - scissorHeight));
         float x = Math.max(0, Math.min(screenWidth, scissorX));
         float width = Math.max(0, Math.min(Math.min(scissorWidth + scissorX, scissorWidth), screenWidth - scissorX));
