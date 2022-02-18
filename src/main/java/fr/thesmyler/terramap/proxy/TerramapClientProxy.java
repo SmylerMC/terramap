@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.proxy;
 import java.io.File;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.SmyLibGuiContext;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
@@ -47,7 +48,12 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         TerramapMod.logger.debug("Terramap client init");
-        SmyLibGui.init(TerramapMod.logger, false);
+        if ("true".equals(System.getProperty("terramap.showTestScreen"))) {
+            SmyLibGui.init(TerramapMod.logger, SmyLibGuiContext.LWJGL2_TEST_SCREEN);
+        } else {
+            SmyLibGui.init(TerramapMod.logger, SmyLibGuiContext.LWJGL2);
+        }
+
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
         KeyBindings.registerBindings();
         UrlRasterTile.registerErrorTexture();

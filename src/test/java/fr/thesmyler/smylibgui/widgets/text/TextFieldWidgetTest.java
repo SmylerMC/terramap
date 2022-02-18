@@ -5,6 +5,7 @@ import fr.thesmyler.smylibgui.TestingScreen;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static fr.thesmyler.smylibgui.SmyLibGuiContext.JUNIT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -12,7 +13,7 @@ public class TextFieldWidgetTest {
 
     @BeforeAll
     static void beforeAll() {
-        SmyLibGui.debug = true;
+        SmyLibGui.init(null, JUNIT);
     }
 
     @Test
