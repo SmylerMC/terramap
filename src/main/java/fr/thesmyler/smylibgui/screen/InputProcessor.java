@@ -1,21 +1,21 @@
 package fr.thesmyler.smylibgui.screen;
 
-import org.lwjgl.input.Mouse;
-
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
+import org.lwjgl.input.Mouse;
+
+import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
 class InputProcessor {
 
     private final WidgetContainer container;
 
     private int touchContactsCount = 0;
-    private final boolean[] mouseButtonsPressed = new boolean[Mouse.getButtonCount()];
-    private final float[] lastClickX = new float[Mouse.getButtonCount()];
-    private final float[] lastClickY = new float[Mouse.getButtonCount()];
-    private final long[] lastClickTime = new long[Mouse.getButtonCount()];
+    private final boolean[] mouseButtonsPressed = new boolean[getMouse().getButtonCount()];
+    private final float[] lastClickX = new float[getMouse().getButtonCount()];
+    private final float[] lastClickY = new float[getMouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getMouse().getButtonCount()];
     private int lastClickedButton = -1;
     private final Minecraft mc = Minecraft.getMinecraft();
 
@@ -24,9 +24,8 @@ class InputProcessor {
     }
 
     public void processMouseEvent() {
-        ScaledResolution resolution = new ScaledResolution(this.mc);
-        float mouseX = (float)Mouse.getX() / resolution.getScaleFactor();
-        float mouseY = resolution.getScaledHeight() - (float)Mouse.getY() / resolution.getScaleFactor() - 1;
+        float mouseX = getMouse().getX();
+        float mouseY = getMouse().getY();
         int mouseButton = Mouse.getEventButton();
         long ctime = System.currentTimeMillis();
 
