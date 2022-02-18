@@ -1,5 +1,6 @@
 package fr.thesmyler.smylibgui.widgets;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -58,7 +59,7 @@ public class ScrollbarWidget extends WidgetContainer {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        SmyLibGui.getSoundSystem().playClickSound();
         float i = 4;
         float y = this.drag.getY();
         if(mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.forwardButton.getHeight()) {
