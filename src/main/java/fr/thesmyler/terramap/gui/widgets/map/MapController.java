@@ -4,8 +4,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.math.*;
-import org.lwjgl.input.Mouse;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
 import static fr.thesmyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
 import static fr.thesmyler.terramap.util.math.Math.clamp;
@@ -87,7 +87,7 @@ public final class MapController {
             }
         }
         //TODO move the Mouse.isButtonDown(0) out of here
-        if(this.movingSpeed.normSquared() > 0d && dt < 1000 && !Mouse.isButtonDown(0)) {
+        if(this.movingSpeed.normSquared() > 0d && dt < 1000 && !getMouse().isButtonPressed(0)) {
             double dX = this.movingSpeed.x * dt;
             double dY = this.movingSpeed.y * dt;
             this.movingSpeed.scale(max(0d, 1d - this.movementDrag*dt));

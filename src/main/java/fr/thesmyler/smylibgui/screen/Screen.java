@@ -1,13 +1,14 @@
 package fr.thesmyler.smylibgui.screen;
 
-import org.lwjgl.input.Mouse;
+import fr.thesmyler.smylibgui.SmyLibGui;
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+
+import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
 public class Screen extends GuiScreen {
 
@@ -34,8 +35,8 @@ public class Screen extends GuiScreen {
     public void drawScreen(int nopX, int nopY, float partialTicks) {
         this.drawBackground();
         super.drawScreen(nopX, nopY, partialTicks);
-        float mouseX = (float)Mouse.getX() * this.width / this.mc.displayWidth;
-        float mouseY = this.height - (float)Mouse.getY() * this.height / this.mc.displayHeight - 1;
+        float mouseX = getMouse().getX();
+        float mouseY = getMouse().getY();
         this.onUpdate();
         this.container.onUpdate(mouseX, mouseY, null);
         this.container.draw(0, 0, mouseX, mouseY, true, true, null);
