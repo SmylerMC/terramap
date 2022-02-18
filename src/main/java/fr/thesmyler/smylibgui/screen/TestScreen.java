@@ -55,10 +55,10 @@ public class TestScreen extends Screen {
         this.next = new TexturedButtonWidget(10, IncludedTexturedButtons.RIGHT, this::nextPage);
         this.previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
 
-        this.fpsCounter = new TextWidget(10, new TextComponentString("FPS: 0"), SmyLibGui.DEFAULT_FONT);
-        this.focus = new TextWidget(10, new TextComponentString("Focused: null"), SmyLibGui.DEFAULT_FONT);
-        this.hovered = new TextWidget(10, new TextComponentString("Hovered: null"), SmyLibGui.DEFAULT_FONT);
-        this.textField = new TextFieldWidget(1, "Text field",SmyLibGui.DEFAULT_FONT);
+        this.fpsCounter = new TextWidget(10, new TextComponentString("FPS: 0"), SmyLibGui.getDefaultFont());
+        this.focus = new TextWidget(10, new TextComponentString("Focused: null"), SmyLibGui.getDefaultFont());
+        this.hovered = new TextWidget(10, new TextComponentString("Hovered: null"), SmyLibGui.getDefaultFont());
+        this.textField = new TextFieldWidget(1, "Text field",SmyLibGui.getDefaultFont());
         this.textField.setText("Write and right click");
         this.textField.setCursor(0);
     }
@@ -77,7 +77,7 @@ public class TestScreen extends Screen {
         this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen};
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
-        TextWidget title = new TextWidget(this.width / 2f, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        TextWidget title = new TextWidget(this.width / 2f, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, SmyLibGui.getDefaultFont());
         content.addWidget(title);
         content.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
         content.addWidget(next.setX(this.width - 20).setY(this.height - 20));
@@ -88,10 +88,10 @@ public class TestScreen extends Screen {
                 );
 
         // === Text related stuff and general features examples === //
-        this.hovered = new TextWidget(0, 50, 10, new TextComponentString("Hovered: null"), SmyLibGui.DEFAULT_FONT);
+        this.hovered = new TextWidget(0, 50, 10, new TextComponentString("Hovered: null"), SmyLibGui.getDefaultFont());
 
-        TextWidget counterStr = new TextWidget(0, 100, 10, SmyLibGui.DEFAULT_FONT);
-        this.colored = new TextWidget(0, 120, 10, new TextComponentString("Color animated text"), SmyLibGui.DEFAULT_FONT);
+        TextWidget counterStr = new TextWidget(0, 100, 10, SmyLibGui.getDefaultFont());
+        this.colored = new TextWidget(0, 120, 10, new TextComponentString("Color animated text"), SmyLibGui.getDefaultFont());
         this.colored.setBaseColor(animation.rainbowColor());
         textScreen.addWidget(fpsCounter.setAnchorX(0).setAnchorY(10));
         textScreen.addWidget(focus.setAnchorX(0).setAnchorY(30));
@@ -137,13 +137,13 @@ public class TestScreen extends Screen {
 
         // === Menu screen: example on how to use menu widgets === //
 
-        MenuWidget rcm = new MenuWidget(50, SmyLibGui.DEFAULT_FONT); //This will be used as our right click menu, the following are it's sub menus
-        MenuWidget animationMenu = new MenuWidget(1, SmyLibGui.DEFAULT_FONT);
-        MenuWidget here = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
-        MenuWidget is = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
-        MenuWidget a = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
-        MenuWidget very = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
-        MenuWidget nested = new MenuWidget(50, SmyLibGui.DEFAULT_FONT);
+        MenuWidget rcm = new MenuWidget(50, SmyLibGui.getDefaultFont()); //This will be used as our right click menu, the following are it's sub menus
+        MenuWidget animationMenu = new MenuWidget(1, SmyLibGui.getDefaultFont());
+        MenuWidget here = new MenuWidget(50, SmyLibGui.getDefaultFont());
+        MenuWidget is = new MenuWidget(50, SmyLibGui.getDefaultFont());
+        MenuWidget a = new MenuWidget(50, SmyLibGui.getDefaultFont());
+        MenuWidget very = new MenuWidget(50, SmyLibGui.getDefaultFont());
+        MenuWidget nested = new MenuWidget(50, SmyLibGui.getDefaultFont());
         animationMenu.addEntry("Show", () -> animation.start(AnimationState.ENTER));
         animationMenu.addEntry("Hide", () -> animation.start(AnimationState.LEAVE));
         animationMenu.addEntry("Flash", () -> animation.start(AnimationState.FLASH));
@@ -162,7 +162,7 @@ public class TestScreen extends Screen {
         rcm.addSeparator();
         rcm.addEntry("Animation", animationMenu);
         rcm.useAsRightClick(); // Calling this tells the menu to open whenever it's parent screen is right clicked
-        menuScreen.addWidget(new TextWidget(menuScreen.getWidth() / 2, menuScreen.getHeight() / 2, 1, new TextComponentString("Please right click anywhere"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT));
+        menuScreen.addWidget(new TextWidget(menuScreen.getWidth() / 2, menuScreen.getHeight() / 2, 1, new TextComponentString("Please right click anywhere"), TextAlignment.CENTER, SmyLibGui.getDefaultFont()));
         menuScreen.addWidget(rcm);
 
 

@@ -60,7 +60,7 @@ public abstract class WidgetContainer implements IWidget{
     private float menuToShowX;
     private float menuToShowY;
 
-    private Font font = SmyLibGui.DEFAULT_FONT;
+    private Font font = SmyLibGui.getDefaultFont();
 
     public WidgetContainer(int z) {
         Arrays.fill(this.lastClickTime, Long.MIN_VALUE);

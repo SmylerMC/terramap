@@ -155,13 +155,13 @@ public class HudConfigScreen extends Screen {
 
         // Boolean lines
         LinkedList<TextWidget> buttonsTexts = new LinkedList<>();
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.minimap"), SmyLibGui.DEFAULT_FONT));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.compass"), SmyLibGui.DEFAULT_FONT));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.players"), SmyLibGui.DEFAULT_FONT));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.entities"), SmyLibGui.DEFAULT_FONT));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.directions"), SmyLibGui.DEFAULT_FONT));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.rotation"), SmyLibGui.DEFAULT_FONT));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.chunks"), SmyLibGui.DEFAULT_FONT));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.minimap"), SmyLibGui.getDefaultFont()));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.compass"), SmyLibGui.getDefaultFont()));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.players"), SmyLibGui.getDefaultFont()));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.entities"), SmyLibGui.getDefaultFont()));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.directions"), SmyLibGui.getDefaultFont()));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.rotation"), SmyLibGui.getDefaultFont()));
+        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.chunks"), SmyLibGui.getDefaultFont()));
         this.minimapButton.setTooltip(I18n.format("terramap.hudconfig.minimap.tooltip"));
         this.compassButton.setTooltip(I18n.format("terramap.hudconfig.compass.tooltip"));
         this.otherPlayersButton.setTooltip(I18n.format("terramap.hudconfig.players.tooltip"));
@@ -221,7 +221,7 @@ public class HudConfigScreen extends Screen {
         this.buttonPanel.setOpenX(this.buttonPanel.getClosedX()).setOpenY(this.height - this.settingsPanel.getHeight() - this.buttonPanel.getHeight());
         this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 
-        TextWidget explain = new TextWidget(this.width / 2f, this.height / 2f - 100f, 10, new TextComponentTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        TextWidget explain = new TextWidget(this.width / 2f, this.height / 2f - 100f, 10, new TextComponentTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, SmyLibGui.getDefaultFont());
         content.addWidget(explain.setMaxWidth(this.width * .8f).setAnchorY(this.height / 2f - explain.getHeight() - 10f));
 
         content.addWidget(this.buttonPanel);

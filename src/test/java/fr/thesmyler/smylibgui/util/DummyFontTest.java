@@ -1,14 +1,14 @@
-package fr.thesmyler.smylibgui.widgets.text;
+package fr.thesmyler.smylibgui.util;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MockFontTest {
+public class DummyFontTest {
 
     @Test
     public void test() {
-        MockFont font = new MockFont(1);
+        DummyFont font = new DummyFont(1);
         String input = "Lorem ipsum dolor sit amet, consectetur adipiscing elit," +
                         " sed do\neiusmod tempor incididunt ut labore et dolore magna aliqua." +
                         "\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

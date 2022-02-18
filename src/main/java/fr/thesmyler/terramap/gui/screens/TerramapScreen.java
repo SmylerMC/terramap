@@ -154,7 +154,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.zoomInButton.setTooltip(I18n.format("terramap.terramapscreen.buttons.zoomin.tooltip"));
         this.zoomInButton.enable();
         content.addWidget(this.zoomInButton);
-        this.zoomText = new TextWidget(49, SmyLibGui.DEFAULT_FONT);
+        this.zoomText = new TextWidget(49, SmyLibGui.getDefaultFont());
         this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
         this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
         this.zoomText.setVisibility(!this.f1Mode);
@@ -295,7 +295,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             Style style = new Style();
             style.setColor(TextFormatting.YELLOW);
             c.setStyle(style);
-            TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, SmyLibGui.DEFAULT_FONT);
+            TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, SmyLibGui.getDefaultFont());
             warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
             content.addWidget(warningWidget);
         }
