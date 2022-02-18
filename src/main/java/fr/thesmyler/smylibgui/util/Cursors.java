@@ -25,8 +25,8 @@ public final class Cursors {
     public static final Cursor CURSOR_RESIZE_DIAGONAL_2 = loadCursorFromTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/cursors/resize_diag2.png"), 32, 32);
 
     static {
-        if(Minecraft.IS_RUNNING_ON_MAC && SmyLibGui.logger != null) {
-            SmyLibGui.logger.error("Running on MacOS, will not use custom cursors.");
+        if(Minecraft.IS_RUNNING_ON_MAC) {
+            SmyLibGui.getLogger().error("Running on MacOS, will not use custom cursors.");
         }
     }
 
@@ -40,7 +40,7 @@ public final class Cursors {
         try {
             Mouse.setNativeCursor(cursor);
         } catch (LWJGLException e) {
-            if(SmyLibGui.logger != null) SmyLibGui.logger.catching(e);
+            SmyLibGui.getLogger().catching(e);
         }
     }
 

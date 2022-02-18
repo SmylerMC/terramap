@@ -3,6 +3,7 @@ package fr.thesmyler.terramap;
 import java.io.File;
 import java.util.Map;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import net.minecraft.client.resources.data.IMetadataSection;
 import org.apache.logging.log4j.Logger;
 

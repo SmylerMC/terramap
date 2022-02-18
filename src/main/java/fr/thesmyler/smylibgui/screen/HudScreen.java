@@ -3,7 +3,6 @@ package fr.thesmyler.smylibgui.screen;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import fr.thesmyler.smylibgui.util.Color;
@@ -128,10 +127,7 @@ public final class HudScreen {
             chatBottom = renderHeight - 40;
             chatTop = chatBottom - Math.min(visibleChatLines * 9 / scale, chat.getChatHeight());
         } catch (ClassCastException | IllegalArgumentException | IllegalAccessException e) {
-            if(SmyLibGui.debug) {
-                SmyLibGui.logger.warn("Reflection fail when checking chat position!");
-                SmyLibGui.logger.catching(e);
-            }
+            throw new IllegalStateException("Reflection fail when checking chat position!");
         }
         return new float[] { chatLeft, chatTop, chatRight, chatBottom };
     }

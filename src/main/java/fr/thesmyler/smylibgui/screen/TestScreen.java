@@ -19,12 +19,18 @@ import fr.thesmyler.smylibgui.widgets.sliders.OptionSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import fr.thesmyler.terramap.TerramapClientContext;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class TestScreen extends Screen {
+
+    private static boolean wasShown = false;
 
     private final GuiScreen parent;
     private final Animation animation;
@@ -195,6 +201,14 @@ public class TestScreen extends Screen {
         else this.previous.enable();
         if(this.currentSubScreen >= this.subScreens.length - 1) this.next.disable();
         else this.next.enable();
+    }
+
+    @SubscribeEvent
+    public static void onGuiScreenInit(GuiScreenEvent.InitGuiEvent event) {
+        if(!wasShown && !(event.getGui() instanceof Screen)) {
+            Minecraft.getMinecraft().displayGuiScreen(new TestScreen(event.getGui()));
+            wasShown = true;
+        }
     }
 
 }

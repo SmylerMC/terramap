@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import fr.thesmyler.smylibgui.devices.Key;
-import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -96,14 +95,11 @@ public class ChatWidget implements IWidget, ITabCompleter {
             mc.currentScreen = this.guiChat;
             this.guiChat.drawScreen(Math.round(mouseX), Math.round(mouseY), 0);
         }
-        int updateCounter = Integer.MIN_VALUE;
+        int updateCounter;
         try {
             updateCounter = HudScreen.getChatUpdateCounter();
         } catch (IllegalArgumentException | IllegalAccessException e) {
-            if(SmyLibGui.debug) {
-                SmyLibGui.logger.warn("Failed to do reflection stuff for ChatWidget");
-                SmyLibGui.logger.catching(e);
-            }
+            throw new IllegalStateException("Failed to do reflection stuff for ChatWidget");
         }
         GlStateManager.pushMatrix();
         GlStateManager.translate(0f, HudScreen.getContent().getHeight() - 48f, 0f);
@@ -129,10 +125,8 @@ public class ChatWidget implements IWidget, ITabCompleter {
         try {
             GUI_CHAT_MOUSE_CLICKED_METHOD.invoke(this.guiChat, Math.round(mouseX), Math.round(mouseY), mouseButton);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            if(SmyLibGui.debug) {
-                SmyLibGui.logger.debug("Failed some reflection in ChatWidget#onCLick");
-                SmyLibGui.logger.catching(e);
-            }
+            SmyLibGui.getLogger().warn("Failed some reflection in ChatWidget#onCLick");
+            SmyLibGui.getLogger().catching(e);
         }
         return false;
     }
@@ -167,10 +161,8 @@ public class ChatWidget implements IWidget, ITabCompleter {
                 Minecraft.getMinecraft().currentScreen = screen;
             }
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            if(SmyLibGui.debug) {
-                SmyLibGui.logger.error("Failed to call reflected method in ChatWidget!");
-                SmyLibGui.logger.catching(e);
-            }
+            SmyLibGui.getLogger().warn("Failed some reflection in ChatWidget#onConKeyTyped");
+            SmyLibGui.getLogger().catching(e);
         }
     }
 
