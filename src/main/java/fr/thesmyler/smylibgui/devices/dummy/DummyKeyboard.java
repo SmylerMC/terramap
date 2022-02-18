@@ -16,6 +16,10 @@ public class DummyKeyboard implements Keyboard {
         return this.states.get()[key.ordinal()];
     }
 
+    public void setKeyPressed(Key key, boolean yesNo) {
+        this.states.get()[key.ordinal()] = yesNo;
+    }
+
     @Override
     public void setRepeatEvents(boolean repeat) {
         this.repeats.get().set(repeat);

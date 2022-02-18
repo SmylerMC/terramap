@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.devices.dummy;
 import fr.thesmyler.smylibgui.devices.Mouse;
 import fr.thesmyler.smylibgui.util.ThreadLocal;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,9 +21,17 @@ public class DummyMouse implements Mouse {
         return Float.intBitsToFloat(this.xBits.get().get());
     }
 
+    public void setX(float x) {
+        this.xBits.get().set(Float.floatToIntBits(x));
+    }
+
     @Override
     public float getY() {
         return Float.intBitsToFloat(this.yBits.get().get());
+    }
+
+    public void setY(float y) {
+        this.yBits.get().set(Float.floatToIntBits(y));
     }
 
     @Override
@@ -30,9 +39,19 @@ public class DummyMouse implements Mouse {
         return this.buttonCount.get().get();
     }
 
+    public void setButtonCount(int count) {
+        this.buttonCount.get().set(count);
+        this.buttons.set(Arrays.copyOf(this.buttons.get(), count));
+        this.buttonNames.set(Arrays.copyOf(this.buttonNames.get(), count));
+    }
+
     @Override
     public boolean hasWheel() {
         return this.hasWheel.get().get();
+    }
+
+    public void setHasWheel(boolean hasWheel) {
+        this.hasWheel.get().set(hasWheel);
     }
 
     @Override
@@ -41,10 +60,20 @@ public class DummyMouse implements Mouse {
         return this.buttons.get()[button];
     }
 
+    public void setButtonPressed(int button, boolean yesNo) {
+        if (button < 0 || button > this.getButtonCount()) throw new IllegalArgumentException("Invalid button id: " + button);
+        this.buttons.get()[button] = yesNo;
+    }
+
     @Override
     public String getButtonName(int button) throws IllegalArgumentException {
         if (button < 0 || button > this.getButtonCount()) throw new IllegalArgumentException("Invalid button id: " + button);
         return this.buttonNames.get()[button];
+    }
+
+    public void setButtonName(int button, String name) {
+        if (button < 0 || button > this.getButtonCount()) throw new IllegalArgumentException("Invalid button id: " + button);
+        this.buttonNames.get()[button] = name;
     }
 
     @Override

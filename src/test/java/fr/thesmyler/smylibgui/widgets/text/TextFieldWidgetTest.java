@@ -1,20 +1,13 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.TestingScreen;
-import org.junit.jupiter.api.BeforeAll;
+import fr.thesmyler.smylibgui.SmyLibGuiTest;
+import fr.thesmyler.smylibgui.container.TestingScreen;
 import org.junit.jupiter.api.Test;
 
-import static fr.thesmyler.smylibgui.SmyLibGuiContext.JUNIT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class TextFieldWidgetTest {
-
-    @BeforeAll
-    static void beforeAll() {
-        SmyLibGui.init(null, JUNIT);
-    }
+public class TextFieldWidgetTest extends SmyLibGuiTest {
 
     @Test
     public void testActivation() throws InterruptedException {
