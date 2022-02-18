@@ -8,6 +8,8 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+
 /**
  * @author SmylerMC
  * 
@@ -97,7 +99,7 @@ public class TerramapConfig {
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {
-                return SmyLibGui.getMinecraftGuiScale();
+                return getGameWindow().getScaleFactor();
             } else {
                 return CLIENT.minimap.tileScaling;
             }
@@ -203,7 +205,7 @@ public class TerramapConfig {
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {
-                return SmyLibGui.getMinecraftGuiScale();
+                return getGameWindow().getScaleFactor();
             } else {
                 return CLIENT.tileScaling;
             }

@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.widgets;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.devices.Key;
 
 //TODO make it possible to stop user inputs without processing them
 public interface IWidget {
@@ -170,10 +171,10 @@ public interface IWidget {
      * Called when a key is typed
      * 
      * @param typedChar
-     * @param keyCode
+     * @param key
      * @param parent screen
      */
-    default void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {}
+    default void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {}
 
     /**
      * Called when the mouse is over this widget and the wheel is turned

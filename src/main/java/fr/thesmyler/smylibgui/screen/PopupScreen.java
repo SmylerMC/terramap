@@ -1,5 +1,6 @@
 package fr.thesmyler.smylibgui.screen;
 
+import fr.thesmyler.smylibgui.devices.Key;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -154,9 +155,9 @@ public class PopupScreen extends Screen {
         }
 
         @Override
-        public void onKeyTyped(char typedChar, int keyCode, WidgetContainer parent) {
-            if(keyCode == Keyboard.KEY_ESCAPE) PopupScreen.this.close();
-            else super.onKeyTyped(typedChar, keyCode, parent);
+        public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
+            if(key == Key.KEY_ESCAPE) PopupScreen.this.close();
+            else super.onKeyTyped(typedChar, key, parent);
         }
 
     }

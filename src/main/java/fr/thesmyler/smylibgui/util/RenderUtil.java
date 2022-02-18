@@ -5,14 +5,13 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
 
 public final class RenderUtil {
 
@@ -89,17 +88,14 @@ public final class RenderUtil {
     }
 
     private static void doScissor() {
-        Minecraft mc = Minecraft.getMinecraft();
-        ScaledResolution res = new ScaledResolution(mc);
-        int screenWidth = res.getScaledWidth();
-        int screenHeight = res.getScaledHeight();
-        double scaleW = mc.displayWidth / res.getScaledWidth_double();
-        double scaleH = mc.displayHeight / res.getScaledHeight_double();
+        float screenWidth = getGameWindow().getWindowWidth();
+        float screenHeight = getGameWindow().getWindowHeight();
+        double scale = 1 / (float)getGameWindow().getScaleFactor();
         float y = Math.max(0, Math.min(screenHeight, screenHeight - scissorY - scissorHeight));
         float x = Math.max(0, Math.min(screenWidth, scissorX));
         float width = Math.max(0, Math.min(Math.min(scissorWidth + scissorX, scissorWidth), screenWidth - scissorX));
         float height = Math.max(0, Math.min(scissorHeight, screenHeight - scissorY));
-        GL11.glScissor((int)Math.round(x * scaleW), (int)Math.round(y * scaleH), (int)Math.round(width * scaleW), (int)Math.round(height * scaleH));
+        GL11.glScissor((int)Math.round(x * scale), (int)Math.round(y * scale), (int)Math.round(width * scale), (int)Math.round(height * scale));
     }
 
     public static void drawRect(int z, double xLeft, double yTop, double xRight, double yBottom, Color color) {
@@ -209,7 +205,7 @@ public final class RenderUtil {
     }
 
     public static void drawStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth((float)(size * SmyLibGui.getMinecraftGuiScale()));
+        GL11.glLineWidth((float)(size * getGameWindow().getScaleFactor()));
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
@@ -232,7 +228,7 @@ public final class RenderUtil {
     }
 
     public static void drawClosedStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth((float)(size * SmyLibGui.getMinecraftGuiScale()));
+        GL11.glLineWidth((float)(size * getGameWindow().getScaleFactor()));
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();

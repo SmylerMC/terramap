@@ -13,7 +13,6 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -24,12 +23,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
 public final class HudScreen {
 
-    private static int renderWidth = 0;
-    private static int renderHeight = 0;
+    private static float renderWidth = 0;
+    private static float renderHeight = 0;
     private static GuiScreen lastTickScreen = null;
 
     private static final HudScreenContainer CONTAINER = new HudScreenContainer(0);
@@ -44,9 +44,8 @@ public final class HudScreen {
     public static void onRenderHUD(RenderGameOverlayEvent.Pre e) {
         if(!e.getType().equals(ElementType.HOTBAR)) return;
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
-        ScaledResolution res = e.getResolution();
-        int width = res.getScaledWidth();
-        int height = res.getScaledHeight();
+        float width = getGameWindow().getWindowWidth();
+        float height = getGameWindow().getWindowHeight();
         if(width != renderWidth || height != renderHeight) {
             renderWidth = width;
             renderHeight = height;
