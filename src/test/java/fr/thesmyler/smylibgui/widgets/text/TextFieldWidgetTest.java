@@ -3,8 +3,8 @@ package fr.thesmyler.smylibgui.widgets.text;
 import fr.thesmyler.smylibgui.SmyLibGuiTest;
 import fr.thesmyler.smylibgui.container.TestingScreen;
 import fr.thesmyler.smylibgui.devices.Key;
+import fr.thesmyler.smylibgui.util.DummyFont;
 import org.junit.jupiter.api.Test;
-import org.lwjgl.input.Keyboard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -15,7 +15,7 @@ public class TextFieldWidgetTest extends SmyLibGuiTest {
     public void testActivation() throws InterruptedException {
 
         TestingScreen screen = new TestingScreen(30, 400, 300);
-        TextFieldWidget widget = new TextFieldWidget(10, 10, 0, 200, new MockFont(1f));
+        TextFieldWidget widget = new TextFieldWidget(10, 10, 0, 200, new DummyFont(1f));
         screen.addWidget(widget);
 
         assertNull(screen.getFocusedWidget());

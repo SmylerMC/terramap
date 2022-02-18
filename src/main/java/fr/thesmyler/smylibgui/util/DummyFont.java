@@ -1,7 +1,4 @@
-package fr.thesmyler.smylibgui.widgets.text;
-
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
+package fr.thesmyler.smylibgui.util;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,12 +6,17 @@ import java.util.List;
 import static fr.thesmyler.terramap.util.math.Math.clamp;
 import static java.lang.Math.*;
 
-public class MockFont extends Font {
+/**
+ * A font that does nothing, which can be used in unit tests when no rendering context is available.
+ *
+ * @author SmylerMC
+ */
+public class DummyFont extends Font {
 
     private static final float CHAR_WIDTH = 9f;
     private final float size;
 
-    public MockFont(float size) {
+    public DummyFont(float size) {
         this.size = size;
     }
 

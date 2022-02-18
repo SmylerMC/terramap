@@ -8,6 +8,7 @@ import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Keyboard;
 import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Mouse;
 import fr.thesmyler.smylibgui.devices.lwjgl2.MinecraftGameContext;
 import fr.thesmyler.smylibgui.screen.TestScreen;
+import fr.thesmyler.smylibgui.util.DummyFont;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,14 +20,13 @@ import static fr.thesmyler.smylibgui.SmyLibGuiContext.JUNIT;
 
 public final class SmyLibGui {
 
-    public static final Font DEFAULT_FONT = new Font();
-
     private static boolean init = false;
     private static SmyLibGuiContext context;
     private static Logger logger;
     private static Mouse mouse;
     private static Keyboard keyboard;
     private static GameContext gameContext;
+    private static Font defaultFont;
 
     public static void init(Logger logger, SmyLibGuiContext context) {
         if (init && context != getContext()) throw new IllegalStateException("SmyLibGui has already been initialized with a different state");
@@ -51,6 +51,7 @@ public final class SmyLibGui {
         mouse = new Lwjgl2Mouse();
         keyboard = new Lwjgl2Keyboard();
         gameContext = new MinecraftGameContext();
+        defaultFont = new Font();
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(gameContext);
     }
@@ -66,6 +67,7 @@ public final class SmyLibGui {
         getTestMouse().setHasWheel(true);
         keyboard = new DummyKeyboard();
         gameContext = new DummyGameContext();
+        defaultFont = new DummyFont(1f);
     }
 
     public static Mouse getMouse() {
@@ -81,6 +83,10 @@ public final class SmyLibGui {
     public static GameContext getGameContext() {
         checkInit();
         return gameContext;
+    }
+
+    public static Font getDefaultFont() {
+        return defaultFont;
     }
 
     public static Logger getLogger() {

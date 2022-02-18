@@ -133,7 +133,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.setDoScissor(true);
         this.context = context;
         this.tileScaling = tileScaling;
-        Font font = SmyLibGui.DEFAULT_FONT;
+        Font font = SmyLibGui.getDefaultFont();
         Font smallFont = Util.getSmallestFont();
         this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
             @Override
@@ -436,7 +436,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     //TODO Refactoring: move this monstrosity somewhere else
     private void createRightClickMenu() {
-        Font font = SmyLibGui.DEFAULT_FONT;
+        Font font = SmyLibGui.getDefaultFont();
         this.rightClickMenu = new MenuWidget(1500, font);
         this.teleportMenuEntry = this.rightClickMenu.addEntry(I18n.format("terramap.mapwidget.rclickmenu.teleport"), () ->
             this.teleportPlayerTo(this.mouseLocation)
