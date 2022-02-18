@@ -96,10 +96,9 @@ public class Screen extends GuiScreen {
     }
 
     private void warnNotToCall() {
-        if(SmyLibGui.logger == null) return;
-        SmyLibGui.logger.warn("Something called SmyLibGui's ScreenGui native vanilla input handling methods. This could cause weird behavior, call the IWidget floating point variants instead!");
+        SmyLibGui.getLogger().warn("Something called SmyLibGui's ScreenGui native vanilla input handling methods. This could cause weird behavior, call the IWidget floating point variants instead!");
         StackTraceElement[] lines = Thread.currentThread().getStackTrace();
-        for(int i=1; i<lines.length; i++) SmyLibGui.logger.warn(lines[i]);
+        for(int i=1; i<lines.length; i++) SmyLibGui.getLogger().warn(lines[i]);
     }
 
     public void drawHoveringText(String text, double x, double y) {

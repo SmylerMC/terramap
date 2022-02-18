@@ -41,6 +41,7 @@ minecraft {
             property 'fml.coreMods.load', 'io.github.opencubicchunks.cubicchunks.core.asm.coremod.CubicChunksCoreMod,io.github.opencubicchunks.cubicchunks.cubicgen.asm.coremod.CubicGenCoreMod'
             property 'mixin.env.disableRefMap', 'true'
             property 'terramap.debug', ''
+            property 'terramap.showTestScreen', 'false'
 
             mods {
                 terramap {

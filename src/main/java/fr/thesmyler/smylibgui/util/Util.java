@@ -1,7 +1,5 @@
 package fr.thesmyler.smylibgui.util;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
 
 public final class Util {

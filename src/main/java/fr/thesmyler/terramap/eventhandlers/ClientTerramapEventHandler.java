@@ -97,10 +97,7 @@ public class ClientTerramapEventHandler {
 
     @SubscribeEvent
     public void onGuiScreenInit(InitGuiEvent event) {
-        if(SmyLibGui.debug && !testScreenWasShown && !(event.getGui() instanceof Screen)) {
-            Minecraft.getMinecraft().displayGuiScreen(new TestScreen(event.getGui()));
-            this.testScreenWasShown = true;
-        } else if(event.getGui() instanceof GuiDownloadTerrain) {
+        if(event.getGui() instanceof GuiDownloadTerrain) {
             TerramapClientContext.getContext().resetWorld();
         }
     }

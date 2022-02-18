@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiUtilRenderComponents;
@@ -44,11 +43,7 @@ public class Font {
                 return this.renderString(text, x, y, color, false);
             }
         } catch (Exception e) {
-            if(SmyLibGui.debug) {
-                SmyLibGui.logger.error("Failed to use custom drawString in custom font!");
-                SmyLibGui.logger.catching(e);
-            }
-            return this.getFont().drawString(text, x, y, color.encoded(), shadow);
+            throw new IllegalStateException("Failed to draw String!");
         }
     }
 
@@ -63,11 +58,7 @@ public class Font {
             String trimed = this.trimStringNewline(text);
             this.renderSplitString(x, y, trimed, wrapWidth, color, shadow);
         } catch (Exception e) {
-            if(SmyLibGui.debug) {
-                SmyLibGui.logger.error("Failed to use custom drawSplitString in custom font renderer!");
-                SmyLibGui.logger.catching(e);
-            }
-            this.getFont().drawSplitString(text, Math.round(x), Math.round(y), Math.round(wrapWidth), color.encoded());
+            throw new IllegalStateException("Failed to use custom drawSplitString in custom font renderer!");
         }
     }
 
