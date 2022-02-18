@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
+import fr.thesmyler.smylibgui.devices.Key;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -242,51 +243,51 @@ public class TextFieldWidget implements IWidget {
     }
 
     @Override
-    public void onKeyTyped(char typedChar, int keyCode, WidgetContainer parent) {
+    public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
         if(!this.isEnabled()) return;
         this.selecting = GuiScreen.isShiftKeyDown();
-        if (GuiScreen.isKeyComboCtrlA(keyCode)) {
+        if (GuiScreen.isKeyComboCtrlA(key.code)) {
             this.selectAll();
-        } else if (GuiScreen.isKeyComboCtrlC(keyCode)) {
+        } else if (GuiScreen.isKeyComboCtrlC(key.code)) {
             this.copySelectionToClipboard();
-        } else if (GuiScreen.isKeyComboCtrlV(keyCode)) {
+        } else if (GuiScreen.isKeyComboCtrlV(key.code)) {
             this.pasteIn();
-        } else if (GuiScreen.isKeyComboCtrlX(keyCode)) {
+        } else if (GuiScreen.isKeyComboCtrlX(key.code)) {
             this.cutSelectionToClipboard();
         } else {
-            switch(keyCode) {
-                case Keyboard.KEY_BACK:
+            switch(key) {
+                case KEY_BACK:
                     this.selecting = false;
                     this.erase(-1);
                     this.selecting = GuiScreen.isShiftKeyDown();
                     break;
-                case Keyboard.KEY_DELETE:
+                case KEY_DELETE:
                     this.selecting = false;
                     this.erase(1);
                     this.selecting = GuiScreen.isShiftKeyDown();
                     break;
-                case Keyboard.KEY_RIGHT:
+                case KEY_RIGHT:
                     if (GuiScreen.isCtrlKeyDown()) {
                         this.setCursor(this.getWordSkipPosition(1));
                     } else {
                         this.moveCursor(1);
                     }
                     break;
-                case Keyboard.KEY_LEFT:
+                case KEY_LEFT:
                     if (GuiScreen.isCtrlKeyDown()) {
                         this.setCursor(this.getWordSkipPosition(-1));
                     } else {
                         this.moveCursor(-1);
                     }
                     break;
-                case Keyboard.KEY_HOME: // This is the start key
+                case KEY_HOME: // This is the start key
                     this.setCursorToStart();
                     break;
-                case Keyboard.KEY_END:
+                case KEY_END:
                     this.setCursorToEnd();
                     break;
-                case Keyboard.KEY_RETURN: // This is the enter key
-                case Keyboard.KEY_NUMPADENTER:
+                case KEY_RETURN: // This is the enter key
+                case KEY_NUMPADENTER:
                     if(this.onPressEnterCallback.test(this.text)) {
                         parent.setFocus(null);
                     }

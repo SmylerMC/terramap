@@ -1,6 +1,7 @@
 package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.devices.Key;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -73,7 +74,7 @@ public class Screen extends GuiScreen {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) {
-        this.container.onKeyTyped(typedChar, keyCode, null);
+        this.container.onKeyTyped(typedChar, Key.fromCode(keyCode), null);
     }
 
 

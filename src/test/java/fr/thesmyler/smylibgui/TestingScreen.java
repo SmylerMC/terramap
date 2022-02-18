@@ -1,12 +1,14 @@
 package fr.thesmyler.smylibgui;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.devices.Key;
 import fr.thesmyler.terramap.config.TerramapConfig;
 
 import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
@@ -23,10 +25,10 @@ public class TestingScreen extends WidgetContainer {
     private final Queue<MouseWheelEvent> mouseWheelEvents = new PriorityQueue<>();
     private final Queue<KeyboardEvent> keyboardEvents = new PriorityQueue<>();
 
-    private final boolean[] mouseButtonsPressed = new boolean[SmyLibGui.getMouseButtonCount()];
-    private final float[] lastClickX = new float[SmyLibGui.getMouseButtonCount()];
-    private final float[] lastClickY = new float[SmyLibGui.getMouseButtonCount()];
-    private final long[] lastClickTime = new long[SmyLibGui.getMouseButtonCount()];
+    private final boolean[] mouseButtonsPressed = new boolean[getMouse().getButtonCount()];
+    private final float[] lastClickX = new float[getMouse().getButtonCount()];
+    private final float[] lastClickY = new float[getMouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getMouse().getButtonCount()];
     private int lastClickedButton = -1;
 
     /**
@@ -114,8 +116,8 @@ public class TestingScreen extends WidgetContainer {
         }
     }
 
-    public void pressKey(char key, int keyCode) {
-        this.keyboardEvents.add(new KeyboardEvent(key, keyCode, this.screenTime));
+    public void pressKey(char typedChar, Key key) {
+        this.keyboardEvents.add(new KeyboardEvent(typedChar, key, this.screenTime));
     }
 
     private void processMouseEvents() {
@@ -226,9 +228,9 @@ public class TestingScreen extends WidgetContainer {
 
     private final static class KeyboardEvent implements Comparable<KeyboardEvent> {
         final char character;
-        final int eventKey;
+        final Key eventKey;
         final long time;
-        public KeyboardEvent(char character, int eventKey, long time) {
+        public KeyboardEvent(char character, Key eventKey, long time) {
             this.character = character;
             this.eventKey = eventKey;
             this.time = time;

@@ -2,6 +2,8 @@ package fr.thesmyler.smylibgui.util;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+
 public final class Util {
 
     public static float saturate(float f) {
@@ -21,7 +23,7 @@ public final class Util {
     }
 
     public static Font getSmallestFont() {
-        return new Font((float) (1/SmyLibGui.getMinecraftGuiScale()));
+        return new Font((float) (1/getGameWindow().getScaleFactor()));
     }
 
 }

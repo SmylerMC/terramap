@@ -8,6 +8,7 @@ import java.util.TreeSet;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.devices.Key;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
@@ -186,9 +187,9 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     @Override
-    public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
+    public void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {
         if(this.focusedWidget != null) {
-            this.focusedWidget.onKeyTyped(typedChar, keyCode, this);
+            this.focusedWidget.onKeyTyped(typedChar, key, this);
         }
     }
 
