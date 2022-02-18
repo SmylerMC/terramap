@@ -3,8 +3,6 @@ package fr.thesmyler.smylibgui.screen;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
-
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
@@ -25,6 +23,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+
+import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
 public final class HudScreen {
 
@@ -52,8 +52,8 @@ public final class HudScreen {
             renderHeight = height;
             init();
         }
-        float mouseX = (float)Mouse.getX() / res.getScaleFactor();
-        float mouseY = height - (float)Mouse.getY() / res.getScaleFactor() - 1;
+        float mouseX = getMouse().getX();
+        float mouseY = getMouse().getY();
         CONTAINER.onUpdate(mouseX, mouseY, null);
         Color color = Color.currentGL();
         CONTAINER.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
@@ -75,9 +75,8 @@ public final class HudScreen {
     @SubscribeEvent
     public static void onMouseInput(MouseInputEvent.Pre event) {
         if(!(event.getGui() instanceof GuiChat)) return;
-        ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-        float mouseX = (float)Mouse.getX() / res.getScaleFactor();
-        float mouseY = renderHeight - (float)Mouse.getY() / res.getScaleFactor() - 1;
+        float mouseX = getMouse().getX();
+        float mouseY = getMouse().getY();
         if(isOverChat(mouseX, mouseY)) return;
         event.setCanceled(true);
         PROCESSOR.processMouseEvent();

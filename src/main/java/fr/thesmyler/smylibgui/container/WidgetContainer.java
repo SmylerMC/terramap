@@ -7,14 +7,14 @@ import java.util.TreeSet;
 
 import javax.annotation.Nullable;
 
-import org.lwjgl.input.Mouse;
-
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
+
+import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
 public abstract class WidgetContainer implements IWidget{
 
@@ -41,14 +41,14 @@ public abstract class WidgetContainer implements IWidget{
     private final int z;
     private boolean doScissor = true;
 
-    private final float[] lastClickX = new float[SmyLibGui.getMouseButtonCount()];
-    private final float[] lastClickY = new float[SmyLibGui.getMouseButtonCount()];
-    private final long[] lastClickTime = new long[SmyLibGui.getMouseButtonCount()];
+    private final float[] lastClickX = new float[getMouse().getButtonCount()];
+    private final float[] lastClickY = new float[getMouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getMouse().getButtonCount()];
 
-    private final IWidget[] draggedWidget = new IWidget[SmyLibGui.getMouseButtonCount()];
-    private final float[] dClickX = new float[SmyLibGui.getMouseButtonCount()];
-    private final float[] dClickY = new float[SmyLibGui.getMouseButtonCount()];
-    private final long[] dClickT = new long[SmyLibGui.getMouseButtonCount()];
+    private final IWidget[] draggedWidget = new IWidget[getMouse().getButtonCount()];
+    private final float[] dClickX = new float[getMouse().getButtonCount()];
+    private final float[] dClickY = new float[getMouse().getButtonCount()];
+    private final long[] dClickT = new long[getMouse().getButtonCount()];
 
     private final List<MouseAction> delayedActions = new ArrayList<>();
 
