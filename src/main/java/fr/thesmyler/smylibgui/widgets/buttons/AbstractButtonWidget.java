@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.AbstractWidget;
 import net.minecraft.client.Minecraft;
@@ -36,7 +37,7 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         if(!this.isEnabled()) return false;
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        SmyLibGui.getSoundSystem().playClickSound();
         parent.setFocus(null); // We don't want to keep the focus
         if(this.onClick != null && mouseButton == 0) {
             this.onClick.run();
@@ -47,7 +48,7 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         if(!this.isEnabled()) return false;
-        Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        SmyLibGui.getSoundSystem().playClickSound();
         parent.setFocus(null);
         if(mouseButton == 0) {
             if(this.onDoubleClick != null) {

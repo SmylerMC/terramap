@@ -4,9 +4,11 @@ import fr.thesmyler.smylibgui.devices.*;
 import fr.thesmyler.smylibgui.devices.dummy.DummyGameContext;
 import fr.thesmyler.smylibgui.devices.dummy.DummyKeyboard;
 import fr.thesmyler.smylibgui.devices.dummy.DummyMouse;
+import fr.thesmyler.smylibgui.devices.dummy.DummySoundSystem;
 import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Keyboard;
 import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Mouse;
 import fr.thesmyler.smylibgui.devices.lwjgl2.MinecraftGameContext;
+import fr.thesmyler.smylibgui.devices.lwjgl2.MinecraftSoundSystem;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.smylibgui.util.DummyFont;
 import org.apache.logging.log4j.LogManager;
@@ -27,6 +29,7 @@ public final class SmyLibGui {
     private static Keyboard keyboard;
     private static GameContext gameContext;
     private static Font defaultFont;
+    private static SoundSystem soundSystem;
 
     public static void init(Logger logger, SmyLibGuiContext context) {
         if (init && context != getContext()) throw new IllegalStateException("SmyLibGui has already been initialized with a different state");
@@ -52,6 +55,7 @@ public final class SmyLibGui {
         keyboard = new Lwjgl2Keyboard();
         gameContext = new MinecraftGameContext();
         defaultFont = new Font();
+        soundSystem = new MinecraftSoundSystem();
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(gameContext);
     }
@@ -68,6 +72,7 @@ public final class SmyLibGui {
         keyboard = new DummyKeyboard();
         gameContext = new DummyGameContext();
         defaultFont = new DummyFont(1f);
+        soundSystem = new DummySoundSystem();
     }
 
     public static Mouse getMouse() {
@@ -87,6 +92,11 @@ public final class SmyLibGui {
 
     public static Font getDefaultFont() {
         return defaultFont;
+    }
+
+    public static SoundSystem getSoundSystem() {
+        checkInit();
+        return soundSystem;
     }
 
     public static Logger getLogger() {
