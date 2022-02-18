@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 
 //TODO Reload cursors with resources
+//TODO Have a wrapper class for lwjgl cursors
 public final class Cursors {
 
     public static final Cursor CURSOR_MOVE = loadCursorFromTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/cursors/move.png"), 32, 32);
