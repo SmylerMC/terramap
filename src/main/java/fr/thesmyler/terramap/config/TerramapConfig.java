@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.config;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -8,7 +7,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 /**
  * @author SmylerMC
@@ -99,7 +98,7 @@ public class TerramapConfig {
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {
-                return getGameWindow().getScaleFactor();
+                return getGameContext().getScaleFactor();
             } else {
                 return CLIENT.minimap.tileScaling;
             }
@@ -205,7 +204,7 @@ public class TerramapConfig {
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {
-                return getGameWindow().getScaleFactor();
+                return getGameContext().getScaleFactor();
             } else {
                 return CLIENT.tileScaling;
             }

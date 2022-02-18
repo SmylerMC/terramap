@@ -310,7 +310,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     @Override
     public String name() {
-        return this.tiledMap.getLocalizedName(SmyLibGui.getLanguage());
+        return this.tiledMap.getLocalizedName(SmyLibGui.getGameContext().getLanguage());
     }
 
     @Override

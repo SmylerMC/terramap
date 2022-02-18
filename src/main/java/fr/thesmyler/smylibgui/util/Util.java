@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.util;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 public final class Util {
 
@@ -21,7 +21,7 @@ public final class Util {
     }
 
     public static Font getSmallestFont() {
-        return new Font((float) (1/getGameWindow().getScaleFactor()));
+        return new Font((float) (1/ getGameContext().getScaleFactor()));
     }
 
 }
