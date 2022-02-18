@@ -4,9 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.devices.GameWindow;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
+import fr.thesmyler.smylibgui.devices.GameContext;
 import org.lwjgl.opengl.GL11;
 
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
@@ -15,7 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 public final class RenderUtil {
 
@@ -92,7 +90,7 @@ public final class RenderUtil {
     }
 
     private static void doScissor() {
-        GameWindow window = SmyLibGui.getGameWindow();
+        GameContext window = SmyLibGui.getGameContext();
         float screenWidth = window.getWindowWidth();
         float screenHeight = window.getWindowHeight();
         double scale = window.getScaleFactor();
@@ -210,7 +208,7 @@ public final class RenderUtil {
     }
 
     public static void drawStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth((float)(size * getGameWindow().getScaleFactor()));
+        GL11.glLineWidth((float)(size * getGameContext().getScaleFactor()));
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
@@ -233,7 +231,7 @@ public final class RenderUtil {
     }
 
     public static void drawClosedStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth((float)(size * getGameWindow().getScaleFactor()));
+        GL11.glLineWidth((float)(size * getGameContext().getScaleFactor()));
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();

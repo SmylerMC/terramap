@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
 public final class HudScreen {
@@ -43,8 +43,8 @@ public final class HudScreen {
     public static void onRenderHUD(RenderGameOverlayEvent.Pre e) {
         if(!e.getType().equals(ElementType.HOTBAR)) return;
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
-        float width = getGameWindow().getWindowWidth();
-        float height = getGameWindow().getWindowHeight();
+        float width = getGameContext().getWindowWidth();
+        float height = getGameContext().getWindowHeight();
         if(width != renderWidth || height != renderHeight) {
             renderWidth = width;
             renderHeight = height;
