@@ -59,6 +59,7 @@ public interface Mouse {
      * @return the id of the given button
      *
      * @throws IllegalArgumentException if the given name does not exist
+     * @throws NullPointerException if the given name is null
      */
     int getButtonByName(String name) throws IllegalArgumentException;
 

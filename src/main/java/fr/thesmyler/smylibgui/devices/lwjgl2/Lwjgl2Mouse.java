@@ -41,6 +41,7 @@ public class Lwjgl2Mouse implements Mouse {
 
     @Override
     public int getButtonByName(String name) throws IllegalArgumentException {
+        if (name == null) throw new NullPointerException("Button name cannot be null");
         int index = org.lwjgl.input.Mouse.getButtonIndex(name);
         if (index < 0) throw new IllegalArgumentException("Button is not recognised");
         return index;
