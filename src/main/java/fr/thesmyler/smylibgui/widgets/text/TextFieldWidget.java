@@ -109,15 +109,15 @@ public class TextFieldWidget implements IWidget {
     }
 
     public TextFieldWidget(float x, float y, int z, float width) {
-        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, SmyLibGui.DEFAULT_FONT);
+        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, SmyLibGui.getDefaultFont());
     }
 
     public TextFieldWidget(int z, String defaultText) {
-        this(0, 0, z, 50, SmyLibGui.DEFAULT_FONT);
+        this(0, 0, z, 50, SmyLibGui.getDefaultFont());
     }
 
     public TextFieldWidget(int z) {
-        this(z, "", SmyLibGui.DEFAULT_FONT);
+        this(z, "", SmyLibGui.getDefaultFont());
     }
 
     @Override

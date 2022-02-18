@@ -59,23 +59,42 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         float margin = 8;
         float spacing = 7;
         WidgetContainer content = this.getContent();
-        TextWidget title = new TextWidget(content.getWidth() / 2, margin, 0, new TextComponentTranslation("terramap.popup.renderoffset.title"), TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        TextWidget title = new TextWidget(
+                content.getWidth() / 2, margin, 0,
+                new TextComponentTranslation("terramap.popup.renderoffset.title"),
+                TextAlignment.CENTER,
+                SmyLibGui.getDefaultFont());
         content.addWidget(title);
-        TextWidget xText = new TextWidget(margin, title.getY() + title.getHeight() + interline, 0, new TextComponentTranslation("terramap.popup.renderoffset.x"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
+        TextWidget xText = new TextWidget(
+                margin, title.getY() + title.getHeight() + interline, 0,
+                new TextComponentTranslation("terramap.popup.renderoffset.x"),
+                TextAlignment.RIGHT,
+                SmyLibGui.getDefaultFont());
         content.addWidget(xText);
-        TextWidget yText = new TextWidget(margin, xText.getY() + xText.getHeight() + interline, 0, new TextComponentTranslation("terramap.popup.renderoffset.y"), TextAlignment.RIGHT, SmyLibGui.DEFAULT_FONT);
+        TextWidget yText = new TextWidget(
+                margin, xText.getY() + xText.getHeight() + interline, 0,
+                new TextComponentTranslation("terramap.popup.renderoffset.y"),
+                TextAlignment.RIGHT,
+                SmyLibGui.getDefaultFont());
         content.addWidget(yText);
         float inputsX = Math.max(xText.getX() + xText.getWidth(), yText.getX() + yText.getWidth()) + spacing;
         this.xInput = new TextFieldWidget(inputsX, xText.getY() - 6, 0, 70);
         content.addWidget(this.xInput);
         this.yInput = new TextFieldWidget(inputsX, yText.getY() - 6, 0, this.xInput.getWidth());
         content.addWidget(this.yInput);
-        this.zoomText = new TextWidget(xText.getX(), this.yInput.getY() + this.yInput.getHeight() + 6, 0, TextAlignment.RIGHT, content.getFont());
+        this.zoomText = new TextWidget(
+                xText.getX(), this.yInput.getY() + this.yInput.getHeight() + 6, 0,
+                TextAlignment.RIGHT,
+                content.getFont());
         content.addWidget(this.zoomText);
         float mapSize = Math.min(
                 content.getWidth() - (inputsX + this.yInput.getWidth() + spacing * 2) - margin,
                 content.getHeight() - this.xInput.getY() - margin);
-        this.map = new MapWidget(content.getWidth() - mapSize - margin, this.xInput.getY(), 0, mapSize, mapSize, background.getTiledMap(), MapContext.PREVIEW, layer.getMap().getTileScaling());
+        this.map = new MapWidget(content.getWidth() - mapSize - margin, this.xInput.getY(), 0,
+                mapSize, mapSize,
+                background.getTiledMap(),
+                MapContext.PREVIEW,
+                layer.getMap().getTileScaling());
         this.mapController = this.map.getController();
         this.mapController.moveLocationToCenter(layer.getMap().getController().getCenterLocation(), false);
         this.map.getBackgroundLayer().setRenderingOffset(layer.getRenderingOffset());

@@ -149,7 +149,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
         if (!this.isEnabled()) textColor = this.disabledTextColor;
         else if (hovered || hasFocus) textColor = this.activeTextColor;
 
-        float fontSize = SmyLibGui.DEFAULT_FONT.height();
+        float fontSize = SmyLibGui.getDefaultFont().height();
         double gameScale = getGameContext().getScaleFactor();
         float fontScale = 1f;
         while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) fontScale++;

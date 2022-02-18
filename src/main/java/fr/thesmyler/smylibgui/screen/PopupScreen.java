@@ -1,7 +1,6 @@
 package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.devices.Key;
-import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -91,7 +90,7 @@ public class PopupScreen extends Screen {
     }
 
     public static void showMessage(ITextComponent message) {
-        TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, SmyLibGui.DEFAULT_FONT);
+        TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, SmyLibGui.getDefaultFont());
         float padding = 10;
         text.setMaxWidth(300);
         text.setAnchorX(text.getWidth() / 2 + padding).setAnchorY(padding);
