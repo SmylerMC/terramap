@@ -1,12 +1,12 @@
 package fr.thesmyler.smylibgui;
 
 import fr.thesmyler.smylibgui.devices.*;
-import fr.thesmyler.smylibgui.devices.dummy.DummyGameWindow;
+import fr.thesmyler.smylibgui.devices.dummy.DummyGameContext;
 import fr.thesmyler.smylibgui.devices.dummy.DummyKeyboard;
 import fr.thesmyler.smylibgui.devices.dummy.DummyMouse;
 import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Keyboard;
 import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Mouse;
-import fr.thesmyler.smylibgui.devices.lwjgl2.ScaledResolutionGameWindow;
+import fr.thesmyler.smylibgui.devices.lwjgl2.MinecraftGameContext;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +25,7 @@ public final class SmyLibGui {
     private static Logger logger;
     private static Mouse mouse;
     private static Keyboard keyboard;
-    private static GameWindow window;
+    private static GameContext gameContext;
 
     public static void init(Logger logger, SmyLibGuiContext context) {
         if (init && context != getContext()) throw new IllegalStateException("SmyLibGui has already been initialized with a different state");
@@ -49,9 +49,9 @@ public final class SmyLibGui {
     private static void initLwjgl2() {
         mouse = new Lwjgl2Mouse();
         keyboard = new Lwjgl2Keyboard();
-        window = new ScaledResolutionGameWindow();
+        gameContext = new MinecraftGameContext();
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
-        MinecraftForge.EVENT_BUS.register(window);
+        MinecraftForge.EVENT_BUS.register(gameContext);
     }
 
     private static void initLwjgl2TestScreen() {
@@ -62,7 +62,7 @@ public final class SmyLibGui {
     private static void initJunit() {
         mouse = new DummyMouse();
         keyboard = new DummyKeyboard();
-        window = new DummyGameWindow();
+        gameContext = new DummyGameContext();
     }
 
     public static Mouse getMouse() {
@@ -75,9 +75,9 @@ public final class SmyLibGui {
         return keyboard;
     }
 
-    public static GameWindow getGameWindow() {
+    public static GameContext getGameContext() {
         checkInit();
-        return window;
+        return gameContext;
     }
 
     public static Logger getLogger() {
@@ -88,10 +88,6 @@ public final class SmyLibGui {
     public static SmyLibGuiContext getContext() {
         checkInit();
         return context;
-    }
-
-    public static String getLanguage() {
-        return Minecraft.getMinecraft().gameSettings.language;
     }
 
     private SmyLibGui() {

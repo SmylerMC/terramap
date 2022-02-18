@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.smylibgui.devices.Key;
-import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -15,7 +14,7 @@ import fr.thesmyler.smylibgui.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 /**
  * AbstractSliderWidget
@@ -151,7 +150,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
         else if (hovered || hasFocus) textColor = this.activeTextColor;
 
         float fontSize = SmyLibGui.DEFAULT_FONT.height();
-        double gameScale = getGameWindow().getScaleFactor();
+        double gameScale = getGameContext().getScaleFactor();
         float fontScale = 1f;
         while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) fontScale++;
         Font font = new Font(1 / fontScale + 0.0001f);

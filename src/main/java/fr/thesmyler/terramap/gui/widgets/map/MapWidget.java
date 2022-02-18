@@ -424,7 +424,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         for(IWidget widget: this.widgets) 
             if(widget instanceof ICopyrightHolder){
                 if(component.getFormattedText().length() > 0) component.appendText(" | ");
-                component.appendSibling(((ICopyrightHolder)widget).getCopyright(SmyLibGui.getLanguage()));
+                component.appendSibling(((ICopyrightHolder)widget).getCopyright(SmyLibGui.getGameContext().getLanguage()));
             }
         this.copyright.setText(component);
         this.copyright.setVisibility(component.getFormattedText().length() > 0);

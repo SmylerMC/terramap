@@ -42,7 +42,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 
 public class HudConfigScreen extends Screen {
@@ -93,7 +93,7 @@ public class HudConfigScreen extends Screen {
             this.zoomSlider.setMax(TerramapConfig.CLIENT.unlockZoom ? 25: map.map.getMaxZoom());
         });
         this.tileScalingSlider.setOnChange(v -> {
-            if(v == TileScalingOption.AUTO) this.minimap.setTileScaling(getGameWindow().getScaleFactor());
+            if(v == TileScalingOption.AUTO) this.minimap.setTileScaling(getGameContext().getScaleFactor());
             else this.minimap.setTileScaling(v.value);
         });
         this.minimapButton.setOnChange(this.minimapWindow::setVisibility);
@@ -138,7 +138,7 @@ public class HudConfigScreen extends Screen {
             this.minimapWindow.setWidth(this.minimapWindow.getWidth() / this.lastWidth * this.width);
             this.minimapWindow.setHeight(this.minimapWindow.getHeight() / this.lastHeight * this.height);
             double t = this.tileScalingSlider.getCurrentOption().value;
-            if(t == 0) this.minimap.setTileScaling(getGameWindow().getScaleFactor());
+            if(t == 0) this.minimap.setTileScaling(getGameContext().getScaleFactor());
             else this.minimap.setTileScaling(t);
             this.compassWindow.setX(this.compassWindow.getX() * this.width / this.lastWidth);
             this.compassWindow.setY(this.compassWindow.getY() * this.height / this.lastHeight);

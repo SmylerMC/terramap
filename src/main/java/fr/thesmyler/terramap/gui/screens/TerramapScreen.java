@@ -64,7 +64,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 public class TerramapScreen extends Screen implements ITabCompleter {
 
@@ -384,7 +384,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     debugBuilder.append(String.format(locale, "\nMap urls (%d) %s", urls.length, urls[showingIndex]));
                 }
             }
-            debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameWindow().getScaleFactor()));
+            debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameContext().getScaleFactor()));
             debugBuilder.append("\n\n");
             debugBuilder.append("Locations: ")
                     .append(TextFormatting.RED).append("center ")
@@ -761,7 +761,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
             Color textColor = hovered? Color.SELECTION: Color.WHITE;
-            String text = this.getBackgroundStyle().getLocalizedName(SmyLibGui.getLanguage());
+            String text = this.getBackgroundStyle().getLocalizedName(SmyLibGui.getGameContext().getLanguage());
             float width = this.getWidth();
             float height = this.getHeight();
             RenderUtil.drawRect(x, y, x + width, y + 4, Color.DARK_GRAY);

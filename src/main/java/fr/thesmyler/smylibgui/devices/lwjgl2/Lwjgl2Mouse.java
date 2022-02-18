@@ -8,14 +8,14 @@ public class Lwjgl2Mouse implements Mouse {
     @Override
     public float getX() {
         int x = org.lwjgl.input.Mouse.getX();
-        return (float) x / SmyLibGui.getGameWindow().getScaleFactor();
+        return (float) x / SmyLibGui.getGameContext().getScaleFactor();
     }
 
     @Override
     public float getY() {
         int y = org.lwjgl.input.Mouse.getY();
-        int scale = SmyLibGui.getGameWindow().getScaleFactor();
-        float height = SmyLibGui.getGameWindow().getWindowHeight();
+        int scale = SmyLibGui.getGameContext().getScaleFactor();
+        float height = SmyLibGui.getGameContext().getWindowHeight();
         return height - (float) y / scale - 1;
     }
 

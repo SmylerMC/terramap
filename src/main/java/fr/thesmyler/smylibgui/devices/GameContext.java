@@ -5,7 +5,7 @@ package fr.thesmyler.smylibgui.devices;
  *
  * @author SmylerMC
  */
-public interface GameWindow {
+public interface GameContext {
 
     /**
      * @return the effective width of the window when scaling is taken into account
@@ -31,5 +31,12 @@ public interface GameWindow {
      * @return the scale factor applied
      */
     int getScaleFactor();
+
+    /**
+     * Gets the current language the game uses.
+     *
+     * @return the language identifier (e.g. "en-us")
+     */
+    String getLanguage();
 
 }

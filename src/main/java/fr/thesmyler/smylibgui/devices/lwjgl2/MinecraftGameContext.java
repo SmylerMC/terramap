@@ -1,12 +1,12 @@
 package fr.thesmyler.smylibgui.devices.lwjgl2;
 
-import fr.thesmyler.smylibgui.devices.GameWindow;
+import fr.thesmyler.smylibgui.devices.GameContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-public class ScaledResolutionGameWindow implements GameWindow {
+public class MinecraftGameContext implements GameContext {
 
     private float width = 1f;
     private float height = 1f;
@@ -37,6 +37,11 @@ public class ScaledResolutionGameWindow implements GameWindow {
     @Override
     public int getScaleFactor() {
         return this.scale;
+    }
+
+    @Override
+    public String getLanguage() {
+        return Minecraft.getMinecraft().gameSettings.language;
     }
 
     @SubscribeEvent
