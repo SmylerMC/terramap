@@ -39,4 +39,11 @@ public interface GameContext {
      */
     String getLanguage();
 
+    /**
+     * MacOS does weird things, we may want to account for them.
+     *
+     * @return whether Minecraft has detected that the underlying system is macOS.
+     */
+    boolean isMac();
+
 }

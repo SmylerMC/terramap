@@ -34,6 +34,8 @@
 
 package fr.thesmyler.smylibgui.devices;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
+
 /**
  * Keys that can be typed on a keyboard.
  *
@@ -202,5 +204,5 @@ public enum Key {
         if (key == null) throw new IllegalArgumentException("Invalid key code: " + code);
         return key;
     }
-    
+
 }

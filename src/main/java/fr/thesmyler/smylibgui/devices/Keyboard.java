@@ -1,5 +1,9 @@
 package fr.thesmyler.smylibgui.devices;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
+
+import static fr.thesmyler.smylibgui.devices.Key.*;
+
 /**
  * A wrapper around whatever keyboard is being used internally.
  *
@@ -32,5 +36,20 @@ public interface Keyboard {
      * @return whether key pressed events are repeated when a key is hold down
      */
     boolean isRepeatingEvents();
+
+    default boolean isShiftPressed() {
+        return this.isKeyPressed(KEY_RSHIFT) || this.isKeyPressed(KEY_LSHIFT);
+    }
+
+    default boolean isControlPressed() {
+        if (SmyLibGui.getGameContext().isMac()) {
+            return this.isKeyPressed(KEY_LMETA);
+        }
+        return this.isKeyPressed(KEY_RCONTROL) || this.isKeyPressed(KEY_LCONTROL);
+    }
+
+    default boolean isAltPressed() {
+        return this.isKeyPressed(KEY_RMENU) || this.isKeyPressed(KEY_LMENU);
+    }
 
 }
