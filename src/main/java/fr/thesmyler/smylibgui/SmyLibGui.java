@@ -1,18 +1,16 @@
 package fr.thesmyler.smylibgui;
 
+import fr.thesmyler.smylibgui.devices.*;
+import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Keyboard;
+import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Mouse;
+import fr.thesmyler.smylibgui.devices.lwjgl2.ScaledResolutionGameWindow;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.util.Font;
-import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import org.lwjgl.input.Mouse;
 
 public final class SmyLibGui {
 
@@ -21,14 +19,37 @@ public final class SmyLibGui {
 
     public static final Font DEFAULT_FONT = new Font();
 
-    private SmyLibGui() {}
+    private static Mouse mouse;
+    private static Keyboard keyboard;
+    private static GameWindow window;
 
     public static void init(Logger logger, boolean debug) {
         SmyLibGui.logger = logger;
         SmyLibGui.debug = debug;
+        mouse = new Lwjgl2Mouse();
+        keyboard = new Lwjgl2Keyboard();
+        window = new ScaledResolutionGameWindow();
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
+        MinecraftForge.EVENT_BUS.register(window);
     }
 
+    public static Mouse getMouse() {
+        return mouse;
+    }
+
+    public static Keyboard getKeyboard() {
+        return keyboard;
+    }
+
+    public static GameWindow getGameWindow() {
+        return window;
+    }
+
+    /**
+     *
+     * @deprecated use {@link GameWindow#getScaleFactor()}
+     */
+    @Deprecated
     public static double getMinecraftGuiScale() {
         ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
         return scaledRes.getScaleFactor();
@@ -38,8 +59,14 @@ public final class SmyLibGui {
         return Minecraft.getMinecraft().gameSettings.language;
     }
 
+    /**
+     * @deprecated use {@link fr.thesmyler.smylibgui.devices.Mouse#getButtonCount()}
+     */
+    @Deprecated
     public static int getMouseButtonCount() {
-        return debug ? 3: Mouse.getButtonCount();
+        return debug ? 3: getMouse().getButtonCount();
     }
+
+    private SmyLibGui() {}
 
 }
