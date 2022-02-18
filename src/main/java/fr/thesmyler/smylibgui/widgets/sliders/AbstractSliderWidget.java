@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.widgets.sliders;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
+import fr.thesmyler.smylibgui.devices.Key;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -13,6 +14,8 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
 
 /**
  * AbstractSliderWidget
@@ -95,15 +98,15 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
     }
 
     @Override
-    public void onKeyTyped(char typedChar, int keyCode, @Nullable WidgetContainer parent) {
+    public void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {
         if(!this.isEnabled()) return;
-        switch(keyCode) {
-            case Keyboard.KEY_DOWN:
-            case Keyboard.KEY_LEFT:
+        switch(key) {
+            case KEY_DOWN:
+            case KEY_LEFT:
                 this.goToPrevious();
                 break;
-            case Keyboard.KEY_UP:
-            case Keyboard.KEY_RIGHT:
+            case KEY_UP:
+            case KEY_RIGHT:
                 this.goToNext();
                 break;
         }
@@ -148,7 +151,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
         else if (hovered || hasFocus) textColor = this.activeTextColor;
 
         float fontSize = SmyLibGui.DEFAULT_FONT.height();
-        double gameScale = SmyLibGui.getMinecraftGuiScale();
+        double gameScale = getGameWindow().getScaleFactor();
         float fontScale = 1f;
         while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) fontScale++;
         Font font = new Font(1 / fontScale + 0.0001f);

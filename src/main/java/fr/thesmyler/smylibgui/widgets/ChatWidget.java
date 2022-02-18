@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import fr.thesmyler.smylibgui.devices.Key;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
@@ -16,6 +17,9 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ITabCompleter;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
+import static fr.thesmyler.smylibgui.devices.Key.KEY_ESCAPE;
+import static fr.thesmyler.smylibgui.devices.Key.KEY_RETURN;
 
 /**
  * Kinda hacky widget to add the chat to a custom screen.
@@ -144,22 +148,22 @@ public class ChatWidget implements IWidget, ITabCompleter {
     }
 
     @Override
-    public void onKeyTyped(char typedChar, int keyCode, WidgetContainer parent) {
-        if(keyCode == Keyboard.KEY_ESCAPE) {
+    public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
+        if(key == KEY_ESCAPE) {
             this.setOpen(false);
             return;
         }
         try {
-            if(keyCode == Keyboard.KEY_RETURN) {
+            if(key == KEY_RETURN) {
                 // We have to do it this way or this.guiChat would close the parent screen
-                GuiTextField textField = (GuiTextField)GUI_CHAT_INPUTFIELD_FIELD.get(this.guiChat);
+                GuiTextField textField = (GuiTextField) GUI_CHAT_INPUTFIELD_FIELD.get(this.guiChat);
                 this.guiChat.sendChatMessage(textField.getText().trim());
                 this.setOpen(false);
             } else {
                 // We need to swap the current screen temporarily so Forge client commands are tab completable
                 GuiScreen screen = Minecraft.getMinecraft().currentScreen;
                 Minecraft.getMinecraft().currentScreen = this.guiChat;
-                GUI_CHAT_KEYPRESSED_METHOD.invoke(this.guiChat, typedChar, keyCode);
+                GUI_CHAT_KEYPRESSED_METHOD.invoke(this.guiChat, typedChar, key);
                 Minecraft.getMinecraft().currentScreen = screen;
             }
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {

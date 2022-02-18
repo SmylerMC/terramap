@@ -64,6 +64,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getGameWindow;
+
 public class TerramapScreen extends Screen implements ITabCompleter {
 
     private final GuiScreen parent;
@@ -382,7 +384,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     debugBuilder.append(String.format(locale, "\nMap urls (%d) %s", urls.length, urls[showingIndex]));
                 }
             }
-            debugBuilder.append(String.format(locale, "\nScaling: %.2f/%.2f", this.map.getTileScaling(), SmyLibGui.getMinecraftGuiScale()));
+            debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameWindow().getScaleFactor()));
             debugBuilder.append("\n\n");
             debugBuilder.append("Locations: ")
                     .append(TextFormatting.RED).append("center ")

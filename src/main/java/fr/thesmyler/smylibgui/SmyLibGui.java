@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.util.Font;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.common.MinecraftForge;
 
 public final class SmyLibGui {
@@ -45,26 +44,8 @@ public final class SmyLibGui {
         return window;
     }
 
-    /**
-     *
-     * @deprecated use {@link GameWindow#getScaleFactor()}
-     */
-    @Deprecated
-    public static double getMinecraftGuiScale() {
-        ScaledResolution scaledRes = new ScaledResolution(Minecraft.getMinecraft());
-        return scaledRes.getScaleFactor();
-    }
-
     public static String getLanguage() {
         return Minecraft.getMinecraft().gameSettings.language;
-    }
-
-    /**
-     * @deprecated use {@link fr.thesmyler.smylibgui.devices.Mouse#getButtonCount()}
-     */
-    @Deprecated
-    public static int getMouseButtonCount() {
-        return debug ? 3: getMouse().getButtonCount();
     }
 
     private SmyLibGui() {}
