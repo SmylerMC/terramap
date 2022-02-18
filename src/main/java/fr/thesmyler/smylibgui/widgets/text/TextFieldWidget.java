@@ -1,8 +1,5 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -10,10 +7,10 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.smylibgui.devices.Key;
-import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.devices.Keyboard;
 import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import fr.thesmyler.smylibgui.util.Color;
@@ -28,6 +25,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
+
+import static fr.thesmyler.smylibgui.devices.Key.*;
 
 /**
  * A text field, similar to the vanilla implementation, but with a few
@@ -249,14 +248,15 @@ public class TextFieldWidget implements IWidget {
     @Override
     public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
         if(!this.isEnabled()) return;
-        this.selecting = GuiScreen.isShiftKeyDown();
-        if (GuiScreen.isKeyComboCtrlA(key.code)) {
+        Keyboard keyboard = SmyLibGui.getKeyboard();
+        this.selecting = keyboard.isShiftPressed();
+        if (keyboard.isControlPressed() && key == KEY_A) {
             this.selectAll();
-        } else if (GuiScreen.isKeyComboCtrlC(key.code)) {
+        } else if (keyboard.isControlPressed() && key == KEY_C) {
             this.copySelectionToClipboard();
-        } else if (GuiScreen.isKeyComboCtrlV(key.code)) {
+        } else if (keyboard.isControlPressed() && key == KEY_V) {
             this.pasteIn();
-        } else if (GuiScreen.isKeyComboCtrlX(key.code)) {
+        } else if (keyboard.isControlPressed() && key == KEY_X) {
             this.cutSelectionToClipboard();
         } else {
             switch(key) {

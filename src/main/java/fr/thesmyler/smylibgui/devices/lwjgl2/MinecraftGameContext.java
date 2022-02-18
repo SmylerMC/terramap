@@ -44,6 +44,11 @@ public class MinecraftGameContext implements GameContext {
         return Minecraft.getMinecraft().gameSettings.language;
     }
 
+    @Override
+    public boolean isMac() {
+        return Minecraft.IS_RUNNING_ON_MAC;
+    }
+
     @SubscribeEvent
     public void onRender(TickEvent.RenderTickEvent event) {
         ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());

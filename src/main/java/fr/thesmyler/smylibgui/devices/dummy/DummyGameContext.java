@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.devices.dummy;
 import fr.thesmyler.smylibgui.devices.GameContext;
 import fr.thesmyler.smylibgui.util.ThreadLocal;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Math.round;
@@ -13,6 +14,7 @@ public class DummyGameContext implements GameContext {
     private final ThreadLocal<AtomicInteger> height = new ThreadLocal<>(() -> new AtomicInteger(Float.floatToIntBits(480f)));
     private final ThreadLocal<AtomicInteger> scale = new ThreadLocal<>(() -> new AtomicInteger(1));
     private final ThreadLocal<String> language = new ThreadLocal<>(() -> "en-us");
+    private final ThreadLocal<AtomicBoolean> isMac = new ThreadLocal<>(() -> new AtomicBoolean(false));
 
     @Override
     public float getWindowWidth() {
@@ -54,6 +56,15 @@ public class DummyGameContext implements GameContext {
     @Override
     public String getLanguage() {
         return this.language.get();
+    }
+
+    @Override
+    public boolean isMac() {
+        return this.isMac.get().get();
+    }
+
+    public void setIsMac(boolean yesNo) {
+        this.isMac.get().set(yesNo);
     }
 
     public void setLanguage(String lang) {

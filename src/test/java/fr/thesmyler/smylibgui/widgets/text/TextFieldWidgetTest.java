@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.widgets.text;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTest;
 import fr.thesmyler.smylibgui.container.TestingScreen;
+import fr.thesmyler.smylibgui.devices.Key;
 import org.junit.jupiter.api.Test;
 import org.lwjgl.input.Keyboard;
 
@@ -27,11 +28,11 @@ public class TextFieldWidgetTest extends SmyLibGuiTest {
         assertEquals(widget, screen.getFocusedWidget());
 
         // Send input to the input field
-        screen.pressKey('a', Keyboard.KEY_A);
+        screen.pressKey('a', Key.KEY_A);
         screen.doTick();
-        screen.pressKey('b', Keyboard.KEY_A);
+        screen.pressKey('b', Key.KEY_B);
         screen.doTick();
-        screen.pressKey('c', Keyboard.KEY_A);
+        screen.pressKey('c', Key.KEY_C);
         screen.doTick();
 
         assertEquals("abc", widget.getText());
