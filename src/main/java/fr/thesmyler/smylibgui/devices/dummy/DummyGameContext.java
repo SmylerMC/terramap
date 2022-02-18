@@ -19,9 +19,17 @@ public class DummyGameContext implements GameContext {
         return Float.intBitsToFloat(this.width.get().get());
     }
 
+    public void setWindowWidth(float width) {
+        this.width.get().set(Float.floatToIntBits(width));
+    }
+
     @Override
     public float getWindowHeight() {
         return Float.intBitsToFloat(this.height.get().get());
+    }
+
+    public void setWindowHeight(float height) {
+        this.width.get().set(Float.floatToIntBits(height));
     }
 
     @Override
@@ -39,9 +47,17 @@ public class DummyGameContext implements GameContext {
         return this.scale.get().get();
     }
 
+    public void setScaleFactor(int scale) {
+        this.scale.get().set(scale);
+    }
+
     @Override
     public String getLanguage() {
         return this.language.get();
+    }
+
+    public void setLanguage(String lang) {
+        this.language.set(lang);
     }
 
 }

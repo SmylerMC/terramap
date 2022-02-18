@@ -13,8 +13,9 @@ import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.util.Font;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+
+import static fr.thesmyler.smylibgui.SmyLibGuiContext.JUNIT;
 
 public final class SmyLibGui {
 
@@ -32,6 +33,7 @@ public final class SmyLibGui {
         if (logger == null) logger = LogManager.getLogger("SmyLibGui");
         SmyLibGui.logger = logger;
         SmyLibGui.context = context;
+        init = true;
         switch (context) {
             case LWJGL2:
                 initLwjgl2();
@@ -43,7 +45,6 @@ public final class SmyLibGui {
                 initLwjgl2TestScreen();
                 break;
         }
-        init = true;
     }
 
     private static void initLwjgl2() {
@@ -61,6 +62,8 @@ public final class SmyLibGui {
 
     private static void initJunit() {
         mouse = new DummyMouse();
+        getTestMouse().setButtonCount(3);
+        getTestMouse().setHasWheel(true);
         keyboard = new DummyKeyboard();
         gameContext = new DummyGameContext();
     }
@@ -90,12 +93,32 @@ public final class SmyLibGui {
         return context;
     }
 
+    public static DummyMouse getTestMouse() {
+        checkInitAndTest();
+        return (DummyMouse) mouse;
+    }
+
+    public static DummyKeyboard getTestKeyboard() {
+        checkInitAndTest();
+        return (DummyKeyboard) keyboard;
+    }
+
+    public static DummyGameContext getTestGameContext() {
+        checkInitAndTest();
+        return (DummyGameContext) gameContext;
+    }
+
     private SmyLibGui() {
         throw new IllegalStateException();
     }
 
     private static void checkInit() {
-        if (!init) throw new IllegalStateException("SmyLibGui has not been initialized");
+        if (!init) throw new IllegalStateException("SmyLibGui has not been initialized.");
+    }
+
+    private static void checkInitAndTest() {
+        checkInit();
+        if (context != JUNIT) throw new IllegalStateException("SmyLibGui is not running in a test context.");
     }
 
 }

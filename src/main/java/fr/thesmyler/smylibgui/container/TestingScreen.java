@@ -1,7 +1,8 @@
-package fr.thesmyler.smylibgui;
+package fr.thesmyler.smylibgui.container;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.devices.Key;
+import fr.thesmyler.smylibgui.devices.dummy.DummyMouse;
 import fr.thesmyler.terramap.config.TerramapConfig;
 
 import java.util.Iterator;
@@ -19,13 +20,10 @@ public class TestingScreen extends WidgetContainer {
 
     private long screenTime = 0L;
     private final int frameTime;
-    private float width, height;
-    private float mouseX, mouseY;
     private final Queue<MouseEvent> mouseEvents = new PriorityQueue<>();
     private final Queue<MouseWheelEvent> mouseWheelEvents = new PriorityQueue<>();
     private final Queue<KeyboardEvent> keyboardEvents = new PriorityQueue<>();
 
-    private final boolean[] mouseButtonsPressed = new boolean[getMouse().getButtonCount()];
     private final float[] lastClickX = new float[getMouse().getButtonCount()];
     private final float[] lastClickY = new float[getMouse().getButtonCount()];
     private final long[] lastClickTime = new long[getMouse().getButtonCount()];
@@ -40,8 +38,8 @@ public class TestingScreen extends WidgetContainer {
      */
     public TestingScreen(int fps, float width, float height) {
         super(Integer.MAX_VALUE);
-        this.width = width;
-        this.height = height;
+        SmyLibGui.getTestGameContext().setWindowWidth(width);
+        SmyLibGui.getTestGameContext().setWindowHeight(height);
         this.frameTime = 1000 / fps;
     }
 
@@ -54,7 +52,9 @@ public class TestingScreen extends WidgetContainer {
         long stime = System.currentTimeMillis();
         this.processMouseEvents();
         this.processKeyboardEvents();
-        this.onUpdate(this.mouseX, this.mouseY, this);
+        float mouseX = SmyLibGui.getTestMouse().getX();
+        float mouseY = SmyLibGui.getTestMouse().getY();
+        this.onUpdate(mouseX, mouseY, this);
         // At this point we would draw the screen, but we aren't doing that here
         // this.draw(0, 0, this.mouseX, this.mouseY, true, true, null);
         long dt = System.currentTimeMillis() - stime;
@@ -69,24 +69,25 @@ public class TestingScreen extends WidgetContainer {
 
     public void moveMouse(float x, float y, long time) throws InterruptedException {
         long updates = time / this.frameTime;
-        float dX = (x - this.mouseX) / updates;
-        float dY = (y - this.mouseY) / updates;
+        DummyMouse mouse = SmyLibGui.getTestMouse();
+        float dX = (x - mouse.getX()) / updates;
+        float dY = (y - mouse.getY()) / updates;
         for (long i = 0; i < updates; i++) {
-            this.mouseX += dX;
-            this.mouseY += dY;
-            if (this.lastClickedButton >= 0 && this.mouseButtonsPressed[this.lastClickedButton]) {
+            mouse.setX(mouse.getX() + dX);
+            mouse.setY(mouse.getY() + dY);
+            if (this.lastClickedButton >= 0 && SmyLibGui.getTestMouse().isButtonPressed(this.lastClickedButton)) {
                 this.mouseEvents.add(new MouseEvent(-1, false, this.screenTime));
             }
             this.doTick();
         }
-        this.mouseX = x;
-        this.mouseY = y;
+        mouse.setX(x);
+        mouse.setY(y);
         this.doTick();
     }
 
     public void resize(float width, float height) {
-        this.width = width;
-        this.height = height;
+        SmyLibGui.getTestGameContext().setWindowWidth(width);
+        SmyLibGui.getTestGameContext().setWindowHeight(height);
         this.init();
     }
 
@@ -133,37 +134,37 @@ public class TestingScreen extends WidgetContainer {
     private void processMouseEvent(MouseEvent event) {
         long ctime = this.screenTime;
         int mouseButton = event.button;
-
+        DummyMouse mouse = SmyLibGui.getTestMouse();
         if(event.buttonState) {
-            this.mouseButtonsPressed[mouseButton] = true;
-            if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.CLIENT.doubleClickDelay && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
-                this.onDoubleClick(this.mouseX, this.mouseY, mouseButton, null);
+            SmyLibGui.getTestMouse().setButtonPressed(mouseButton, true);
+            if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.CLIENT.doubleClickDelay && this.lastClickX[mouseButton] == mouse.getX() && this.lastClickY[mouseButton] == mouse.getY()) {
+                this.onDoubleClick(mouse.getX(), mouse.getY(), mouseButton, null);
             } else {
-                this.onClick(this.mouseX, this.mouseY, mouseButton, null);
+                this.onClick(mouse.getX(), mouse.getY(), mouseButton, null);
             }
             this.lastClickedButton = mouseButton;
             this.lastClickTime[mouseButton] = ctime;
-            this.lastClickX[mouseButton] = this.mouseX;
-            this.lastClickY[mouseButton] = this.mouseY;
+            this.lastClickX[mouseButton] = mouse.getX();
+            this.lastClickY[mouseButton] = mouse.getY();
         } else if(mouseButton >= 0) {
-            this.mouseButtonsPressed[mouseButton] = false;
+            SmyLibGui.getTestMouse().setButtonPressed(mouseButton, false);
             this.lastClickedButton = -1;
-            this.onMouseReleased(this.mouseX, this.mouseY, mouseButton, null);
-        } else if(this.lastClickedButton >= 0 && this.mouseButtonsPressed[this.lastClickedButton]) {
-            float dX = this.mouseX - this.lastClickX[this.lastClickedButton];
-            float dY = this.mouseY - this.lastClickY[this.lastClickedButton];
+            this.onMouseReleased(mouse.getX(), mouse.getY(), mouseButton, null);
+        } else if(this.lastClickedButton >= 0 && SmyLibGui.getTestMouse().isButtonPressed(this.lastClickedButton)) {
+            float dX = mouse.getX() - this.lastClickX[this.lastClickedButton];
+            float dY = mouse.getY() - this.lastClickY[this.lastClickedButton];
             long dt = ctime - this.lastClickTime[this.lastClickedButton];
-            this.lastClickX[this.lastClickedButton] = this.mouseX;
-            this.lastClickY[this.lastClickedButton] = this.mouseY;
+            this.lastClickX[this.lastClickedButton] = mouse.getX();
+            this.lastClickY[this.lastClickedButton] = mouse.getY();
             this.lastClickTime[this.lastClickedButton] = ctime;
-            this.onMouseDragged(this.mouseX, this.mouseY, dX, dY, this.lastClickedButton, null, dt);
+            this.onMouseDragged(mouse.getX(), mouse.getY(), dX, dY, this.lastClickedButton, null, dt);
         }
 
         Iterator<MouseWheelEvent> iterator = this.mouseWheelEvents.iterator();
         while (iterator.hasNext()) {
             MouseWheelEvent wheelEvent = iterator.next();
             if (wheelEvent.time > this.screenTime) break;
-            if(wheelEvent.scroll != 0) this.onMouseWheeled(this.mouseX, this.mouseY, wheelEvent.scroll, null);
+            if(wheelEvent.scroll != 0) this.onMouseWheeled(mouse.getX(), mouse.getY(), wheelEvent.scroll, null);
             iterator.remove();
         }
     }
@@ -190,12 +191,12 @@ public class TestingScreen extends WidgetContainer {
 
     @Override
     public float getWidth() {
-        return this.width;
+        return SmyLibGui.getTestGameContext().getWindowWidth();
     }
 
     @Override
     public float getHeight() {
-        return this.height;
+        return SmyLibGui.getTestGameContext().getWindowHeight();
     }
 
     private final static class MouseEvent implements Comparable<MouseEvent> {
