@@ -6,8 +6,7 @@ import fr.thesmyler.smylibgui.devices.Key;
 import fr.thesmyler.smylibgui.util.DummyFont;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TextFieldWidgetTest extends SmyLibGuiTest {
 
@@ -25,7 +24,7 @@ public class TextFieldWidgetTest extends SmyLibGuiTest {
         screen.click(0);
         screen.doTick();
 
-        assertEquals(widget, screen.getFocusedWidget());
+        assertSame(widget, screen.getFocusedWidget());
 
         // Send input to the input field
         screen.pressKey('a', Key.KEY_A);

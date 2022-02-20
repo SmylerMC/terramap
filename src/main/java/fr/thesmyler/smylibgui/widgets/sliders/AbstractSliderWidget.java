@@ -11,6 +11,7 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
+import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -70,7 +71,6 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-        if(!this.isEnabled()) return false;
         float pos = Util.saturate((mouseX) / this.getWidth());
         this.setValueFromPos(pos);
         return false;
@@ -78,19 +78,16 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-        if(!this.isEnabled()) return false;
         return this.onClick(mouseX, mouseY, mouseButton, parent);
     }
 
     @Override
     public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
-        if(!this.isEnabled()) return;
         this.onClick(mouseX, mouseY, mouseButton, parent);
     }
 
     @Override
     public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
-        if(!this.isEnabled()) return false;
         if(amount > 0) this.goToNext();
         else this.goToPrevious();
         return false;
@@ -98,7 +95,6 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
 
     @Override
     public void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {
-        if(!this.isEnabled()) return;
         switch(key) {
             case KEY_DOWN:
             case KEY_LEFT:
@@ -281,4 +277,18 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
         return this.tooltip;
     }
 
+    @Override
+    public IWidget getFocusedWidget() {
+        return this;
+    }
+
+    @Override
+    public boolean takesInputs() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean onClickedNotInput(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+        return false;
+    }
 }
