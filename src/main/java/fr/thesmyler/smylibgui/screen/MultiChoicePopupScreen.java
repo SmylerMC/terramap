@@ -11,6 +11,11 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 
+/**
+ * A {@link PopupScreen} that provides the user with multiple choices, in the form of buttons to click.
+ *
+ * @author SmylerMC
+ */
 public class MultiChoicePopupScreen extends PopupScreen {
 
     public MultiChoicePopupScreen(String titleLangKey, Map<String, Runnable> options) {

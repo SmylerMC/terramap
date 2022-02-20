@@ -17,6 +17,20 @@ import fr.thesmyler.smylibgui.widgets.MenuWidget;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
+/**
+ * A {@link WidgetContainer} is a containers that stores widgets and redistributes events to them.
+ * A {@link WidgetContainer} can also process scheduled tasks.
+ * Each {@link fr.thesmyler.smylibgui.screen.Screen} has its own {@link WidgetContainer} into which widgets can be added.
+ *
+ * @see FlexibleWidgetContainer
+ * @see ScrollableWidgetContainer
+ * @see WindowedContainer
+ * @see SlidingPanelWidget
+ * @see TestingWidgetContainer
+ *
+ * @author SmylerMC
+ *
+ */
 public abstract class WidgetContainer implements IWidget{
 
     protected final TreeSet<IWidget> widgets = new TreeSet<>(
@@ -117,7 +131,7 @@ public abstract class WidgetContainer implements IWidget{
                     }
                 } else {
                     if(!(widget.takesInputs() && widget.isVisible(this))) {
-                        if (!widget.onClickedNotInput(event.mouseX, event.mouseY, event.button, this)) {
+                        if (!widget.onInteractWhenNotTakingInputs(event.mouseX, event.mouseY, event.button, this)) {
                             processed = true;
                             break;
                         }
@@ -238,10 +252,10 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * 
      * @param x position relative to this screen's origin
      * @param y position relative to this screen's origin
-     * @return
+     *
+     * @return the {@link IWidget} with the highest z value at the given point
      */
     @Nullable 
     protected IWidget getWidgetUnder(float x, float y) {
@@ -251,11 +265,11 @@ public abstract class WidgetContainer implements IWidget{
 
     /**
      * 
-     * @param x position relative to this screen's origin
-     * @param y position relative to this screen's origin
-     * @param widget
+     * @param x         position relative to this screen's origin
+     * @param y         position relative to this screen's origin
+     * @param widget    the widget to check
      * 
-     * @return a boolean indicating whether or not the specified point is over a widget
+     * @return a boolean indicating whether the specified point is over a widget
      */
     protected boolean isOverWidget(float x, float y, IWidget widget) {
         return
@@ -275,7 +289,7 @@ public abstract class WidgetContainer implements IWidget{
     /**
      * Register the given widget to gain focus at the next screen update
      * 
-     * @param widget
+     * @param widget    the widget to focus
      */
     public void setFocus(IWidget widget) {
         this.scheduleBeforeNextUpdate(() -> this.focusedWidget = widget);
@@ -284,9 +298,9 @@ public abstract class WidgetContainer implements IWidget{
     /**
      * Show that menu at next update, pass recursively to parent screen
      * 
-     * @param x
-     * @param y
-     * @param menu
+     * @param x     the X position where to show the menu
+     * @param y     the y menu where to show the menu
+     * @param menu  the {@link MenuWidget} to show
      */
     public void showMenu(float x, float y, MenuWidget menu) {
         this.menuToShow = menu;
@@ -305,7 +319,7 @@ public abstract class WidgetContainer implements IWidget{
         return this.focusedWidget;
     }
 
-    private class MouseAction {
+    private static class MouseAction {
 
         final MouseActionType type;
         final int button;
@@ -371,9 +385,9 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * Indicates whether or not the widget is worth rendering
+     * Indicates whether the widget is worth rendering
      * 
-     * @param widget
+     * @param widget    the widget to check
      * 
      * @return false if the widget overlaps with the screen, true otherwise
      */
@@ -386,19 +400,19 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * Schedule a task to be ran the next time the container updates, before the rest of is updated.
+     * Schedule a task to be run the next time the container updates, before the rest of is updated.
      * 
-     * @param run
+     * @param run   the task to run
      */
     public void scheduleBeforeNextUpdate(Runnable run) {
         this.scheduledForUpdatePre.add(new ScheduledTask(System.currentTimeMillis(), run));
     }
 
     /**
-     * Schedule a task to be ran after a given delay when the container updates, before the rest is updated.
+     * Schedule a task to be run after a given delay when the container updates, before the rest is updated.
      * 
-     * @param run
-     * @param delay - delay to wait before executing the task in milliseconds
+     * @param run   the task to run
+     * @param delay delay to wait before executing the task in milliseconds
      */
     public void scheduleBeforeUpdate(Runnable run, long delay) {
         long t = System.currentTimeMillis() + delay;
@@ -406,10 +420,10 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * Schedule a task to run at a given interval (as best as possible), when the container updates, before the rest is updated
+     * Schedule a task to run at a given interval (as good as possible), when the container updates, before the rest is updated
      * 
-     * @param run
-     * @param delay -  delay to wait between each execution of the task
+     * @param run   the task to run
+     * @param delay delay to wait between each execution of the task
      */
     public void scheduleAtIntervalBeforeUpdate(Runnable run, long delay) {
         Runnable task = new Runnable() {
@@ -425,28 +439,28 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * Schedule a task to be ran before each container update
+     * Schedule a task to be run before each container update
      * 
-     * @param run
+     * @param run   the task to run
      */
     public void scheduleBeforeEachUpdate(Runnable run) {
         this.scheduleAtIntervalBeforeUpdate(run, 0);
     }
 
     /**
-     * Schedule a task to be ran after the next container update (could be just after the current one).
+     * Schedule a task to be run after the next container update (could be just after the current one).
      * 
-     * @param run
+     * @param run   the task to run
      */
     public void scheduleAfterNextUpdate(Runnable run) {
         this.scheduledForUpdatePost.add(new ScheduledTask(System.currentTimeMillis(), run));
     }
 
     /**
-     * Schedule a task to be ran after a given delay when the container updates, after the rest is updated.
+     * Schedule a task to be run after a given delay when the container updates, after the rest is updated.
      * 
-     * @param run
-     * @param delay - delay to wait before executing the task in milliseconds
+     * @param run   the task to run
+     * @param delay delay to wait before executing the task in milliseconds
      */
     public void scheduleAfterUpdate(Runnable run, long delay) {
         long t = System.currentTimeMillis() + delay;
@@ -454,10 +468,10 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * Schedule a task to run at a given interval (as best as possible), when the container updates, after the rest is updated
+     * Schedule a task to run at a given interval (as good as possible), when the container updates, after the rest is updated
      * 
-     * @param run
-     * @param delay -  delay to wait between each execution of the task
+     * @param run   the task to run
+     * @param delay delay to wait between each execution of the task
      */
     public void scheduleAtIntervalAfterUpdate(Runnable run, long delay) {
         Runnable task = new Runnable() {
@@ -473,16 +487,16 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     /**
-     * Schedule a task to be ran after each container update
+     * Schedule a task to be run after each container update
      * 
-     * @param run
+     * @param run   the task to run
      */
     public void scheduleAfterEachUpdate(Runnable run) {
         this.scheduleAtIntervalAfterUpdate(run, 0);
     }
     
-    public void cancellAllScheduled() {
-        // We create new instances instead of clearing because we could be iterating the lists
+    public void cancelAllScheduled() {
+        // We create new instances instead of clearing because we could be iterating over the lists
         this.scheduledForUpdatePre = new ArrayList<>();
         this.scheduledForUpdatePost = new ArrayList<>();
     }

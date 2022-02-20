@@ -1,7 +1,7 @@
 package fr.thesmyler.smylibgui.widgets.sliders;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTest;
-import fr.thesmyler.smylibgui.container.TestingScreen;
+import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +10,7 @@ public class OptionSliderWidgetTest extends SmyLibGuiTest {
 
     @Test
     public void testActivation() throws InterruptedException {
-        TestingScreen screen = new TestingScreen(30, 1080, 720);
+        TestingWidgetContainer screen = new TestingWidgetContainer(30, 1080, 720);
         OptionSliderWidget<String> slider = new OptionSliderWidget<>(
                 100, 100, 0, 200, 20f,
                 new String[] {"Option1", "Option2", "Option3"}, 2,

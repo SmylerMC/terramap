@@ -11,6 +11,14 @@ import net.minecraft.client.renderer.GlStateManager;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
+/**
+ * A {@link Screen} is where everything happens in SmyLibGui.
+ * This class extends from Minecraft's {@link GuiScreen} and can be used as such.
+ *
+ * To use this class, add widgets to your screen by retrieving its {@link WidgetContainer} using {@link #getContent()}.
+ *
+ * @author SmylerMC
+ */
 public class Screen extends GuiScreen {
 
     private final WidgetContainer container = new Container();

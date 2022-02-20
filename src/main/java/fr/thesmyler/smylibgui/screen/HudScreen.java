@@ -25,6 +25,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
+/**
+ * A screen that shows up on top of the regular HUD when playing.
+ * This screen can be interacted with when the chat is open.
+ *
+ * @author SmylerMC
+ */
 public final class HudScreen {
 
     private static float renderWidth = 0;

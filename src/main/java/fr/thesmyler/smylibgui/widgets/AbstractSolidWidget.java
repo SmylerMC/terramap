@@ -2,14 +2,17 @@ package fr.thesmyler.smylibgui.widgets;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 
-public abstract class AbstractWidget implements IWidget {
+import javax.annotation.Nullable;
+
+public abstract class AbstractSolidWidget implements IWidget {
 
     protected boolean visible = true;
+    protected boolean enabled= true;
     protected final int z;
     protected float x, y, width, height;
     protected String tooltip = null;
 
-    public AbstractWidget(float x, float y, int z, float width, float height) {
+    public AbstractSolidWidget(float x, float y, int z, float width, float height) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -47,21 +50,39 @@ public abstract class AbstractWidget implements IWidget {
         return this.visible;
     }
 
-    public AbstractWidget setVisibility(boolean yesNo) {
+    public AbstractSolidWidget setVisibility(boolean yesNo) {
         this.visible = yesNo;
         return this;
     }
 
-    public AbstractWidget show() {
+    public AbstractSolidWidget show() {
         return this.setVisibility(true);
     }
 
-    public AbstractWidget hide() {
+    public AbstractSolidWidget hide() {
         return this.setVisibility(false);
     }
 
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 
-    public AbstractWidget setTooltip(String tooltip) {
+    public AbstractSolidWidget setEnabled(boolean yesNo) {
+        this.enabled = yesNo;
+        return this;
+    }
+
+    public AbstractSolidWidget enable() {
+        this.setEnabled(true);
+        return this;
+    }
+
+    public AbstractSolidWidget disable() {
+        this.setEnabled(false);
+        return this;
+    }
+
+    public AbstractSolidWidget setTooltip(String tooltip) {
         this.tooltip = tooltip;
         return this;
     }
@@ -69,6 +90,16 @@ public abstract class AbstractWidget implements IWidget {
     @Override
     public String getTooltipText() {
         return this.tooltip;
+    }
+
+    @Override
+    public boolean takesInputs() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean onInteractWhenNotTakingInputs(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+        return false;
     }
 
 }
