@@ -1,10 +1,13 @@
 package fr.thesmyler.smylibgui.widgets.sliders;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.util.Font;
 import net.minecraft.client.Minecraft;
 
 public class OptionSliderWidget<T> extends AbstractSliderWidget {
@@ -30,11 +33,10 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 
     public OptionSliderWidget(int z, T[] options, int startOption, Consumer<T> onCycle) {
         this(0, 0, z, 0, 0, options, startOption, onCycle);
-        int maxWidth = 0;
-        for(T o: options) {
-            int w = Minecraft.getMinecraft().fontRenderer.getStringWidth(o.toString());
-            maxWidth = Math.max(maxWidth,  w);
-        }
+        Font font = SmyLibGui.getDefaultFont();
+        float maxWidth = Arrays.stream(options)
+                .map(Object::toString).map(font::getStringWidth)
+                .max(Float::compareTo).orElse(0f);
         this.setWidth(maxWidth + 20);
     }
 
