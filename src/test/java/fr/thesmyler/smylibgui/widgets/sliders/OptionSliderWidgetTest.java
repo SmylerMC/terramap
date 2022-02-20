@@ -24,14 +24,12 @@ public class OptionSliderWidgetTest extends SmyLibGuiTest {
         // Select option 1 and focus
         screen.moveMouse(110f, 110f, 100);
         screen.click(0);
-        screen.doTick();
         assertSame(slider, screen.getFocusedWidget());
         assertEquals("Option1", slider.getCurrentOption());
 
         // Lose focus
         screen.moveMouse(10f, 10f, 100);
         screen.click(0);
-        screen.doTick();
         assertNull(screen.getFocusedWidget());
         assertEquals("Option1", slider.getCurrentOption());
 
@@ -39,7 +37,6 @@ public class OptionSliderWidgetTest extends SmyLibGuiTest {
         slider.setEnabled(false);
         screen.moveMouse(210f, 110f, 100);
         screen.click(0);
-        screen.doTick();
         assertFalse(slider.isEnabled());
         assertNull(screen.getFocusedWidget());
         assertEquals("Option1", slider.getCurrentOption());

@@ -22,24 +22,19 @@ public class TextFieldWidgetTest extends SmyLibGuiTest {
         // Click the input field
         screen.moveMouse(50, 20, 250);
         screen.click(0);
-        screen.doTick();
 
         assertSame(widget, screen.getFocusedWidget());
 
         // Send input to the input field
         screen.pressKey('a', Key.KEY_A);
-        screen.doTick();
         screen.pressKey('b', Key.KEY_B);
-        screen.doTick();
         screen.pressKey('c', Key.KEY_C);
-        screen.doTick();
 
         assertEquals("abc", widget.getText());
 
         // Click on nothing
         screen.moveMouse(1, 1, 250);
         screen.click(0);
-        screen.doTick();
 
         assertNull(screen.getFocusedWidget());
 
@@ -47,7 +42,6 @@ public class TextFieldWidgetTest extends SmyLibGuiTest {
         widget.setEnabled(false);
         screen.moveMouse(50, 20, 250);
         screen.click(0);
-        screen.doTick();
 
         assertNull(screen.getFocusedWidget());
 
