@@ -12,10 +12,16 @@ import org.lwjgl.input.Mouse;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
+/**
+ * A {@link FlexibleWidgetContainer} that takes the form of a window and can optionally moved or resized by the user,
+ * the same way any desktop window would.
+ *
+ * @author SmylerMC
+ */
 public class WindowedContainer extends FlexibleWidgetContainer {
 
     private float borderWidth = 5;
-    private float effectiveBorderWidth = borderWidth;
+    private float effectiveBorderSize = borderWidth;
     private float topBarHeight = 12;
     private float effectiveTopBarHeight = topBarHeight;
     private float minInnerWidth = 20;
@@ -82,10 +88,10 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     private void updateSubScreen() {
-        this.subScreen.setPosition(this.effectiveBorderWidth, this.effectiveBorderWidth + this.effectiveTopBarHeight);
+        this.subScreen.setPosition(this.effectiveBorderSize, this.effectiveBorderSize + this.effectiveTopBarHeight);
         this.subScreen.setSize(
-                this.getWidth() - this.effectiveBorderWidth * 2,
-                this.getHeight() - this.effectiveBorderWidth * 2 -  this.effectiveTopBarHeight
+                this.getWidth() - this.effectiveBorderSize * 2,
+                this.getHeight() - this.effectiveBorderSize * 2 -  this.effectiveTopBarHeight
                 );
     }
 
@@ -131,7 +137,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public boolean isVisible(WidgetContainer parent) {
-            return WindowedContainer.this.effectiveBorderWidth > 0;
+            return WindowedContainer.this.effectiveBorderSize > 0;
         }
 
         @Override
@@ -150,22 +156,22 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getY() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderWidth * 2;
+            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderSize * 2;
         }
 
         @Override
@@ -200,17 +206,17 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getY() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderWidth * 2;
+            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderSize * 2;
         }
 
         @Override
@@ -237,22 +243,22 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getY() {
-            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderWidth * 2;
+            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderSize * 2;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -277,7 +283,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -287,12 +293,12 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderWidth * 2;
+            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderSize * 2;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -329,12 +335,12 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -369,17 +375,17 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getY() {
-            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -407,22 +413,22 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getY() {
-            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.getHeight() - WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -448,7 +454,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -458,12 +464,12 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getHeight() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
@@ -491,17 +497,17 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getY() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getWidth() {
-            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderWidth * 2;
+            return WindowedContainer.this.getWidth() - WindowedContainer.this.effectiveBorderSize * 2;
         }
 
         @Override
@@ -514,7 +520,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
             float width = this.getWidth();
             String toDraw = parent.getFont().trimStringToWidth(WindowedContainer.this.windowTitle, this.getWidth());
-            float titleY = y + (this.getHeight() - WindowedContainer.this.effectiveBorderWidth - parent.getFont().height()) / 2 + 1;
+            float titleY = y + (this.getHeight() - WindowedContainer.this.effectiveBorderSize - parent.getFont().height()) / 2 + 1;
             parent.getFont().drawCenteredString(x + width / 2, titleY, toDraw, WindowedContainer.this.titleColor, true);
         }
 
@@ -550,12 +556,12 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return WindowedContainer.this.effectiveBorderWidth;
+            return WindowedContainer.this.effectiveBorderSize;
         }
 
         @Override
         public float getY() {
-            return WindowedContainer.this.effectiveBorderWidth + WindowedContainer.this.effectiveTopBarHeight;
+            return WindowedContainer.this.effectiveBorderSize + WindowedContainer.this.effectiveTopBarHeight;
         }
 
         @Override
@@ -617,16 +623,16 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public float getInnerWidth() {
-        return this.getWidth() - 2*this.effectiveBorderWidth;
+        return this.getWidth() - 2*this.effectiveBorderSize;
     }
 
     public float getInnerHeight() {
-        return this.getHeight() - 2*this.effectiveBorderWidth - this.effectiveTopBarHeight;
+        return this.getHeight() - 2*this.effectiveBorderSize - this.effectiveTopBarHeight;
     }
 
     private boolean trySetInnerWidth(float width) {
         if(width >= this.minInnerWidth && width <= this.maxInnerWidth) {
-            this.setWidth(width + this.effectiveBorderWidth * 2);
+            this.setWidth(width + this.effectiveBorderSize * 2);
             return true;
         }
         return false;
@@ -634,7 +640,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
     private boolean trySetInnerHeight(float height) {
         if(height >= this.minInnerHeight && height <= this.maxInnerHeight) {
-            this.setHeight(height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight);
+            this.setHeight(height + this.effectiveBorderSize * 2 + this.effectiveTopBarHeight);
             return true;
         }
         return false;
@@ -643,8 +649,8 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     public WindowedContainer trySetInnerDimensions(float width, float height) {
         boolean validWidth = width >= this.minInnerWidth && width <= this.maxInnerWidth;
         boolean validHeight = height >= this.minInnerHeight && height <= this.maxInnerHeight;
-        float newWidth = width + this.effectiveBorderWidth * 2;
-        float newHeight = height + this.effectiveBorderWidth * 2 + this.effectiveTopBarHeight;
+        float newWidth = width + this.effectiveBorderSize * 2;
+        float newHeight = height + this.effectiveBorderSize * 2 + this.effectiveTopBarHeight;
 
         if(validWidth && validHeight) {
             this.setSize(newWidth, newHeight);
@@ -696,25 +702,25 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public float getBorderWidth() {
-        return this.effectiveBorderWidth;
+        return this.effectiveBorderSize;
     }
 
     public WindowedContainer setBorderWidth(float width) {
         Preconditions.checkArgument(width > 0, "border width needs to be strictly positive");
-        if(this.borderWidth == this.effectiveBorderWidth)
-            this.effectiveBorderWidth = width;
+        if(this.borderWidth == this.effectiveBorderSize)
+            this.effectiveBorderSize = width;
         this.borderWidth = width;
         this.updateSubScreen();
         return this;
     }
 
     public boolean isBorderless() {
-        return this.effectiveBorderWidth == 0;
+        return this.effectiveBorderSize == 0;
     }
 
     public WindowedContainer setBorderless(boolean yesNo) {
-        if(yesNo) this.effectiveBorderWidth = 0;
-        else this.effectiveBorderWidth = this.borderWidth;
+        if(yesNo) this.effectiveBorderSize = 0;
+        else this.effectiveBorderSize = this.borderWidth;
         this.updateSubScreen();
         return this;
     }

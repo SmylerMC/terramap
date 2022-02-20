@@ -6,7 +6,7 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 
-public class WarningWidget extends AbstractWidget {
+public class WarningWidget extends AbstractSolidWidget {
 
     public WarningWidget(float x, float y, int z) {
         super(x, y, z, 15, 15);

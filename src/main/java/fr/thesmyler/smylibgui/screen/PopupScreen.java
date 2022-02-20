@@ -17,6 +17,11 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * A screen that shows up on to of other screens.
+ *
+ * @author SmylerMC
+ */
 public class PopupScreen extends Screen {
 
     private GuiScreen other;
@@ -89,6 +94,11 @@ public class PopupScreen extends Screen {
         this.closeOnClickOutContent = closeOnClickOutContent;
     }
 
+    /**
+     * Shows a pup-up screen with a text component and an OK button.
+     *
+     * @param message   the text to display
+     */
     public static void showMessage(ITextComponent message) {
         TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, SmyLibGui.getDefaultFont());
         float padding = 10;

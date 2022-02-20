@@ -37,7 +37,7 @@ class OverlayList extends FlexibleWidgetContainer {
             return;
         }
         this.removeAllWidgets();
-        this.cancellAllScheduled();
+        this.cancelAllScheduled();
         List<MapLayer> layers = Arrays.asList(this.map.getOverlayLayers());
         layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
         float ly = 5f;

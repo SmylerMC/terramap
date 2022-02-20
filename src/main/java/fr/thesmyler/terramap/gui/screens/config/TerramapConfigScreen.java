@@ -64,7 +64,7 @@ public class TerramapConfigScreen extends Screen {
         int inter = 9;
         WidgetContainer content = this.getContent();
         content.removeAllWidgets(); //Remove the widgets that were already there
-        content.cancellAllScheduled(); //Cancel all callbacks that were already there
+        content.cancelAllScheduled(); //Cancel all callbacks that were already there
         this.title = new TextWidget(this.width / 2f, 10, 5, new TextComponentTranslation("terramap.configmenu.title"), TextAlignment.CENTER, SmyLibGui.getDefaultFont());
         content.addWidget(this.title);
         TextButtonWidget save = new TextButtonWidget(this.width / 2f + 30, this.height - 30, 10, 100, I18n.format("terramap.configmenu.save"), this::saveAndClose);
@@ -232,7 +232,7 @@ public class TerramapConfigScreen extends Screen {
         public void initGui() {
             WidgetContainer content = this.getContent();
             content.removeAllWidgets();
-            content.cancellAllScheduled();
+            content.cancelAllScheduled();
             TextWidget text = new TextWidget(content.getWidth() / 2, content.getHeight() / 2 - 20, 10, new TextComponentTranslation("terramap.configmenu.asksave.prompt"), TextAlignment.CENTER, SmyLibGui.getDefaultFont());
             content.addWidget(text);
             content.addWidget(new TextButtonWidget(content.getWidth() / 2 - 125, text.getY() + text.getHeight() + 15, 10, 80, I18n.format("terramap.configmenu.asksave.deny"), TerramapConfigScreen.this::close));

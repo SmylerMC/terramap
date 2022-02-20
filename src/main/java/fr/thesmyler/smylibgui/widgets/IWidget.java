@@ -5,7 +5,16 @@ import javax.annotation.Nullable;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.devices.Key;
 
-//TODO make it possible to stop user inputs without processing them
+/**
+ * A generic widget that can be added to a {@link WidgetContainer}.
+ * SmyLibGui provides various widgets, including re-implementations of vanilla widgets, as well as original new ones.
+ *
+ * This interface can also be implemented into your own classes to create your own widgets.
+ *
+ * @see fr.thesmyler.smylibgui.widgets The SmyLibGui widgets package, that contains the SmyLibGui implementations
+ *
+ * @author SmylerMC
+ */
 public interface IWidget {
 
     /**
@@ -59,6 +68,8 @@ public interface IWidget {
 
     /**
      * If this returns false, this widget will not be notified of user actions.
+     * If the user tries to interact with the widget,
+     * {@link #onInteractWhenNotTakingInputs(float, float, int, WidgetContainer)} will be called instead.
      * 
      * @return true if this widget needs to process user inputs
      */
@@ -78,7 +89,8 @@ public interface IWidget {
      * @see #isVisible(WidgetContainer)
      * @see #takesInputs()
      * 
-     * @return a boolean indicating whether this event should propagate to widgets with lower priorities
+     * @return a boolean indicating whether the event should propagate to widgets with lower priorities.
+     *         Returning false also focuses this widget.
      */
     default boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return true;
@@ -96,14 +108,15 @@ public interface IWidget {
      * @see #isVisible(WidgetContainer)
      * @see #takesInputs()
      *
-     * @return a boolean indicating whether this event should propagate to widgets with lower priorities
+     * @return a boolean indicating whether the event should propagate to widgets with lower priorities.
+     *         Returning false also focuses this widget.
      */
     default boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return true;
     }
 
     /**
-     * Called when this widget is clicked but doesn't accept inputs.
+     * Called when this widget is interacted with, but doesn't accept inputs.
      * In contrary to other methods, returning false to this one will not focus this widget.
      *
      * @param mouseX        mouse x position relative to the parent's origin
@@ -112,8 +125,10 @@ public interface IWidget {
      * @param parent        the parent widget container
      *
      * @return whether to propagate the event
+     *
+     * @see #takesInputs()
      */
-    default boolean onClickedNotInput(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+    default boolean onInteractWhenNotTakingInputs(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return true;
     }
 
@@ -128,8 +143,9 @@ public interface IWidget {
      * 
      * @see #isVisible(WidgetContainer)
      * @see #takesInputs()
-     * 
-     * @return a boolean indicating whether this event should propagate to widgets with lower priorities
+     *
+     * @return a boolean indicating whether the event should propagate to widgets with lower priorities.
+     *         Returning false also focuses this widget.
      */
     default boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return this.onClick(mouseX, mouseY, mouseButton, parent);
@@ -146,8 +162,9 @@ public interface IWidget {
      *
      * @see #isVisible(WidgetContainer)
      * @see #takesInputs()
-     * 
-     * @return a boolean indicating whether or not this event should propagate to widgets with lower priorities
+     *
+     * @return a boolean indicating whether the event should propagate to widgets with lower priorities.
+     *         Returning false also focuses this widget.
      */
     default boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return this.onParentClick(mouseX, mouseY, mouseButton, parent);
