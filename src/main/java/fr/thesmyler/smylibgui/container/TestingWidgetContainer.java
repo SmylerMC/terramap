@@ -96,13 +96,16 @@ public class TestingWidgetContainer extends WidgetContainer {
         this.init();
     }
 
-    public void click(int mouseButton) {
+    public void click(int mouseButton) throws InterruptedException {
         this.mouseEvents.add(new MouseEvent(mouseButton, true, this.screenTime));
-        this.mouseEvents.add(new MouseEvent(mouseButton, false, this.screenTime + this.frameTime - 1));
+        this.doTick();
+        this.mouseEvents.add(new MouseEvent(mouseButton, false, this.screenTime));
+        this.doTick();
     }
 
-    public void doubleClick(int mouseButton) {
+    public void doubleClick(int mouseButton) throws InterruptedException {
         this.click(mouseButton);
+        this.doTick();
         this.click(mouseButton);
     }
 
@@ -114,16 +117,18 @@ public class TestingWidgetContainer extends WidgetContainer {
         this.mouseEvents.add(new MouseEvent(button, false, this.screenTime));
     }
 
-    public void scrollMouse(int amount) {
+    public void scrollMouse(int amount) throws InterruptedException {
         if (amount == 0) return;
         int inc = amount / abs(amount);
         for (int i = 0; i != amount; i += inc) {
             this.mouseWheelEvents.add(new MouseWheelEvent(inc, this.screenTime));
         }
+        this.doTick();
     }
 
-    public void pressKey(char typedChar, Key key) {
+    public void pressKey(char typedChar, Key key) throws InterruptedException {
         this.keyboardEvents.add(new KeyboardEvent(typedChar, key, this.screenTime));
+        this.doTick();
     }
 
     private void processMouseEvents() {
@@ -139,10 +144,11 @@ public class TestingWidgetContainer extends WidgetContainer {
     private void processMouseEvent(MouseEvent event) {
         long ctime = this.screenTime;
         int mouseButton = event.button;
+        long doubleClickDelay = SmyLibGui.getMouse().getDoubleClickDelay();
         DummyMouse mouse = SmyLibGui.getTestMouse();
         if(event.buttonState) {
             SmyLibGui.getTestMouse().setButtonPressed(mouseButton, true);
-            if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.CLIENT.doubleClickDelay && this.lastClickX[mouseButton] == mouse.getX() && this.lastClickY[mouseButton] == mouse.getY()) {
+            if(ctime - this.lastClickTime[mouseButton] <= doubleClickDelay && this.lastClickX[mouseButton] == mouse.getX() && this.lastClickY[mouseButton] == mouse.getY()) {
                 this.onDoubleClick(mouse.getX(), mouse.getY(), mouseButton, null);
             } else {
                 this.onClick(mouse.getX(), mouse.getY(), mouseButton, null);

@@ -6,6 +6,7 @@ import fr.thesmyler.smylibgui.util.ThreadLocal;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class DummyMouse implements Mouse {
 
@@ -15,6 +16,7 @@ public class DummyMouse implements Mouse {
     private final ThreadLocal<AtomicBoolean> hasWheel = new ThreadLocal<>(AtomicBoolean::new);
     private final ThreadLocal<boolean[]> buttons = new ThreadLocal<>(() -> new boolean[this.getButtonCount()]);
     private final ThreadLocal<String[]> buttonNames = new ThreadLocal<>(() -> new String[this.getButtonCount()]);
+    private final ThreadLocal<AtomicLong> doubleClickDelay = new ThreadLocal<>(() -> new AtomicLong(200));
 
     @Override
     public float getX() {
@@ -58,6 +60,16 @@ public class DummyMouse implements Mouse {
     public boolean isButtonPressed(int button) throws IllegalArgumentException {
         if (button < 0 || button > this.getButtonCount()) throw new IllegalArgumentException("Invalid button id: " + button);
         return this.buttons.get()[button];
+    }
+
+    @Override
+    public long getDoubleClickDelay() {
+        return this.doubleClickDelay.get().get();
+    }
+
+    @Override
+    public void setDoubleClickDelay(long delay) {
+        this.doubleClickDelay.get().set(delay);
     }
 
     public void setButtonPressed(int button, boolean yesNo) {

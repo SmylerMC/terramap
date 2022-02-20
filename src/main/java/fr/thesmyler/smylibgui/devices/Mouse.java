@@ -41,6 +41,20 @@ public interface Mouse {
     boolean isButtonPressed(int button) throws IllegalArgumentException;
 
     /**
+     * Returns the delay between two clicks for them to be considered a double click.
+     *
+     * @return the delay, in milliseconds
+     */
+    long getDoubleClickDelay();
+
+    /**
+     * Sets the delay between two clicks for them to be considered a double click.
+     *
+     * @param delay the delay
+     */
+    void setDoubleClickDelay(long delay);
+
+    /**
      * Gets the human friendly name of a mouse button.
      *
      * @param button    the id button to get the name of

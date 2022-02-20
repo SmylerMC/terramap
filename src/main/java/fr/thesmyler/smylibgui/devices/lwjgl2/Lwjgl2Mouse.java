@@ -5,6 +5,8 @@ import fr.thesmyler.smylibgui.devices.Mouse;
 
 public class Lwjgl2Mouse implements Mouse {
 
+    private long doubleClickDelay = 200;
+
     @Override
     public float getX() {
         int x = org.lwjgl.input.Mouse.getX();
@@ -32,6 +34,16 @@ public class Lwjgl2Mouse implements Mouse {
     @Override
     public boolean isButtonPressed(int button) {
         return org.lwjgl.input.Mouse.isButtonDown(button);
+    }
+
+    @Override
+    public long getDoubleClickDelay() {
+        return this.doubleClickDelay;
+    }
+
+    @Override
+    public void setDoubleClickDelay(long delay) {
+        this.doubleClickDelay = delay;
     }
 
     @Override

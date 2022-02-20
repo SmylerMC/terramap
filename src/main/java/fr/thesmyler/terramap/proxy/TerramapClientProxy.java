@@ -8,6 +8,7 @@ import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
+import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
@@ -84,6 +85,7 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public void onConfigChanged(OnConfigChangedEvent event) {
         if (event.getModID().equals(TerramapMod.MODID)) {
+            SmyLibGui.getMouse().setDoubleClickDelay(TerramapConfig.CLIENT.doubleClickDelay);
             if(TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
                 HudScreenHandler.updateMinimap();
             }
