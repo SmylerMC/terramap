@@ -25,7 +25,7 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
-import fr.thesmyler.smylibgui.widgets.AbstractWidget;
+import fr.thesmyler.smylibgui.widgets.AbstractSolidWidget;
 import fr.thesmyler.smylibgui.widgets.ChatWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
@@ -244,7 +244,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         
         // Overlay panel
         this.overlayPanel.removeAllWidgets();
-        this.overlayPanel.cancellAllScheduled();
+        this.overlayPanel.cancelAllScheduled();
         this.overlayPanel.setSize(
                 this.infoPanel.getWidth(),
                 this.height - this.infoPanel.getHeight());
@@ -682,7 +682,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     }
 
-    private static class FailedMapLoadingNotice extends AbstractWidget {
+    private static class FailedMapLoadingNotice extends AbstractSolidWidget {
 
         private final TiledMapProvider provider;
         private final Throwable exception;

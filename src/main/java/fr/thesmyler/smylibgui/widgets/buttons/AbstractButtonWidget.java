@@ -4,17 +4,13 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.widgets.AbstractWidget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
+import fr.thesmyler.smylibgui.widgets.AbstractSolidWidget;
 
 //TODO Add the possibility to bind a keybinding to a button
-public abstract class AbstractButtonWidget extends AbstractWidget {
+public abstract class AbstractButtonWidget extends AbstractSolidWidget {
 
     protected Runnable onClick;
     protected Runnable onDoubleClick;
-    protected boolean enabled = true;
 
     public AbstractButtonWidget(float x, float y, int z, float width, float height, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
         super(x, y, z, width, height);
@@ -91,32 +87,4 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
         return this;
     }
 
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    public AbstractButtonWidget setEnabled(boolean yesNo) {
-        this.enabled = yesNo;
-        return this;
-    }
-
-    public AbstractButtonWidget enable() {
-        this.setEnabled(true);
-        return this;
-    }
-
-    public AbstractButtonWidget disable() {
-        this.setEnabled(false);
-        return this;
-    }
-
-    @Override
-    public boolean takesInputs() {
-        return this.enabled;
-    }
-
-    @Override
-    public boolean onClickedNotInput(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-        return false;
-    }
 }

@@ -10,6 +10,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * A toast that renders a texture.
+ *
+ * @author SmylerMC
+ */
 public class TextureToast extends AbstractToast {
 
     protected final ResourceLocation icon;

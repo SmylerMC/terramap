@@ -14,9 +14,14 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 /**
- * A mock screen to use in unit tests.
+ * A mock widget container to use in unit tests.
+ * This class behaves like a normal container,
+ * except that it can be passed user inputs programmatically,
+ * and doesn't call its children draw methods.
+ *
+ * @author SmylerMC
  */
-public class TestingScreen extends WidgetContainer {
+public class TestingWidgetContainer extends WidgetContainer {
 
     private long screenTime = 0L;
     private final int frameTime;
@@ -30,13 +35,13 @@ public class TestingScreen extends WidgetContainer {
     private int lastClickedButton = -1;
 
     /**
-     * {@link TestingScreen} constructor.
+     * {@link TestingWidgetContainer} constructor.
      *
      * @param fps       the frame-rate to simulate
      * @param width     the initial width of the window
      * @param height    the initial height of the window
      */
-    public TestingScreen(int fps, float width, float height) {
+    public TestingWidgetContainer(int fps, float width, float height) {
         super(Integer.MAX_VALUE);
         SmyLibGui.getTestGameContext().setWindowWidth(width);
         SmyLibGui.getTestGameContext().setWindowHeight(height);

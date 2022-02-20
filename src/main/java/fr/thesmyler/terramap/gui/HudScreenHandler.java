@@ -38,7 +38,7 @@ public abstract class HudScreenHandler {
     public static void init(WidgetContainer screen) {
 
         screen.removeAllWidgets();
-        screen.cancellAllScheduled();
+        screen.cancelAllScheduled();
 
         if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
             if(map == null) {

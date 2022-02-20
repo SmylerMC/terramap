@@ -2,12 +2,19 @@ package fr.thesmyler.smylibgui.container;
 
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 
+/**
+ * A {@link FlexibleWidgetContainer} which contains another {@link FlexibleWidgetContainer} and handles the difference in size
+ * between the two using scrollbars.
+ *
+ * @author SmylerMC
+ */
 public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
     
     private final FlexibleWidgetContainer content;
@@ -121,4 +128,37 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
         return content;
     }
 
+    /**
+     * @deprecated Content should be added to a {@link ScrollableWidgetContainer} using its content container,
+     * retrievable via {@link ScrollableWidgetContainer#getContent()}
+     */
+    @Override
+    @Deprecated
+    public WidgetContainer addWidget(IWidget widget) {
+        return super.addWidget(widget);
+    }
+
+    /**
+     * @deprecated Content should be added to a {@link ScrollableWidgetContainer} using its content container,
+     * retrievable via {@link ScrollableWidgetContainer#getContent()}. Removing content from it should therefore be avoided.
+     *
+     * @throws IllegalStateException if trying to remove the content widget container
+     */
+    @Override
+    @Deprecated
+    public WidgetContainer removeWidget(IWidget widget) {
+        if (this.content.equals(widget))
+            throw new IllegalStateException("Cannot remove the content container from a scrollable content container!");
+        return super.removeWidget(widget);
+    }
+    /**
+     * @deprecated Content should be added to a {@link ScrollableWidgetContainer} using its content container,
+     * retrievable via {@link ScrollableWidgetContainer#getContent()}. Removing content from it should therefore be avoided.
+     *
+     * @throws IllegalStateException because calling this method would remove the content widget container
+     */
+    @Override
+    public WidgetContainer removeAllWidgets() {
+        throw new IllegalStateException("Cannot remove the content container from a scrollable content container!");
+    }
 }

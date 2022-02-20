@@ -1,7 +1,7 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTest;
-import fr.thesmyler.smylibgui.container.TestingScreen;
+import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -14,7 +14,7 @@ public class TextButtonWidgetTest extends SmyLibGuiTest {
     @Test
     public void testActivation() throws InterruptedException {
         AtomicInteger clickCounter = new AtomicInteger();
-        TestingScreen screen = new TestingScreen(30, 400, 300);
+        TestingWidgetContainer screen = new TestingWidgetContainer(30, 400, 300);
         TextButtonWidget button = new TextButtonWidget(10, 10, 0, 200, "Test button", clickCounter::incrementAndGet);
         screen.addWidget(button);
 

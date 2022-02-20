@@ -19,9 +19,7 @@ import fr.thesmyler.smylibgui.widgets.sliders.OptionSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.TerramapClientContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -67,7 +65,7 @@ public class TestScreen extends Screen {
     public void initGui() {
         WidgetContainer content = this.getContent();
         content.removeAllWidgets(); // Remove the widgets that were already there
-        content.cancellAllScheduled(); // Cancel all callbacks that were already there
+        content.cancelAllScheduled(); // Cancel all callbacks that were already there
 
         //Main screen
         WidgetContainer textScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);

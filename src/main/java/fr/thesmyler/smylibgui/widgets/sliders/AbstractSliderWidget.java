@@ -288,7 +288,7 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
     }
 
     @Override
-    public boolean onClickedNotInput(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+    public boolean onInteractWhenNotTakingInputs(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return false;
     }
 }
