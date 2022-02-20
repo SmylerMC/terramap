@@ -36,7 +36,6 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if(!this.isEnabled()) return false;
         SmyLibGui.getSoundSystem().playClickSound();
         parent.setFocus(null); // We don't want to keep the focus
         if(this.onClick != null && mouseButton == 0) {
@@ -47,7 +46,6 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
 
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if(!this.isEnabled()) return false;
         SmyLibGui.getSoundSystem().playClickSound();
         parent.setFocus(null);
         if(mouseButton == 0) {
@@ -112,4 +110,13 @@ public abstract class AbstractButtonWidget extends AbstractWidget {
         return this;
     }
 
+    @Override
+    public boolean takesInputs() {
+        return this.enabled;
+    }
+
+    @Override
+    public boolean onClickedNotInput(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
+        return false;
+    }
 }
