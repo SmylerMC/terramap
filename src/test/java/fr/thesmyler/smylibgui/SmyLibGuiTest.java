@@ -8,6 +8,7 @@ public abstract class SmyLibGuiTest {
 
     @BeforeEach
     public void initSmyLibGui() {
+        // We are doing it before each test, so we clear devices' states
         SmyLibGui.init(null, JUNIT);
     }
 
