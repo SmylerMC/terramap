@@ -1,5 +1,8 @@
 package fr.thesmyler.smylibgui.util;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.SmyLibGuiContext;
+
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 public final class Util {
@@ -21,6 +24,9 @@ public final class Util {
     }
 
     public static Font getSmallestFont() {
+        if (SmyLibGui.getContext() == SmyLibGuiContext.JUNIT) {
+            return new DummyFont((float) (1/ getGameContext().getScaleFactor()));
+        }
         return new Font((float) (1/ getGameContext().getScaleFactor()));
     }
 
