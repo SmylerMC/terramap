@@ -121,7 +121,6 @@ public class Font {
 
     public List<ITextComponent> splitText(ITextComponent textComponent, float maxTextLenght, boolean keepTrailingBlank, boolean forceTextColor) {
         return GuiUtilRenderComponents.splitText(textComponent, (int) Math.floor(maxTextLenght / this.scale), this.getFont(), keepTrailingBlank, forceTextColor);
-
     }
 
     protected void setColor(float r, float g, float b, float a) {
