@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -11,7 +12,6 @@ import fr.thesmyler.terramap.util.math.Mat2d;
 import fr.thesmyler.terramap.util.math.Vec2dMutable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
@@ -200,7 +200,7 @@ class InputLayer extends MapLayer {
 
     @Override
     public String getTooltipText() {
-        return isShortcutEnabled() ? I18n.format("terramap.mapwidget.shortcuts.tp"): "";
+        return isShortcutEnabled() ? SmyLibGui.getTranslator().format("terramap.mapwidget.shortcuts.tp"): "";
     }
 
     @Override

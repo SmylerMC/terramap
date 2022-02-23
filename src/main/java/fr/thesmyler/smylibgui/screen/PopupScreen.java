@@ -11,7 +11,6 @@ import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -107,7 +106,7 @@ public class PopupScreen extends Screen {
         TextButtonWidget button = new TextButtonWidget(
                 text.getWidth() / 2 + padding - 20,
                 text.getY() + text.getHeight() + padding,
-                1, 40, I18n.format("smylibgui.popup.info.ok"));
+                1, 40, SmyLibGui.getTranslator().format("smylibgui.popup.info.ok"));
         PopupScreen screen = new PopupScreen(text.getWidth() + padding*2, button.getY() + padding + button.getHeight());
         button.setOnClick(screen::close);
         button.enable();

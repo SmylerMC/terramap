@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.toast.TextureToast;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
@@ -38,7 +39,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -497,7 +497,11 @@ public class TerramapClientContext {
     public void tryShowWelcomeToast() {
         if(this.shouldShowWelcomeToast()) {
             String key = KeyBindings.OPEN_MAP.getDisplayName();
-            Minecraft.getMinecraft().getToastGui().add(new TextureToast(I18n.format("terramap.toasts.welcome.title"), I18n.format("terramap.toasts.welcome.text", key), new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
+            Minecraft.getMinecraft().getToastGui().add(
+                    new TextureToast(
+                            SmyLibGui.getTranslator().format("terramap.toasts.welcome.title"),
+                            SmyLibGui.getTranslator().format("terramap.toasts.welcome.text", key),
+                            new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
             this.setHasShownWelcomeMessage(true);
         }
     }

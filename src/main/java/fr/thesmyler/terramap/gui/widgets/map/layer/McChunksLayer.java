@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -23,7 +24,6 @@ import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
 
 import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;
@@ -76,7 +76,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 this.visible,
                 b -> this.visible = b
                 );
-        this.button.setTooltip(I18n.format("terramap.mapwidget.mcchunks.tooltip"));
+        this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.mapwidget.mcchunks.tooltip"));
         this.extendedDimensions = this.getRenderSpaceDimensions();
         this.geoCenter = this.getMap().getController().getCenterLocation();
     }
@@ -317,12 +317,12 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
     @Override
     public String name() {
-        return I18n.format("terramap.mapwidget.layers.mcchunks.name");
+        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.mcchunks.name");
     }
 
     @Override
     public String description() {
-        return I18n.format("terramap.mapwidget.layers.mcchunks.desc");
+        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.mcchunks.desc");
     }
 
 }

@@ -25,7 +25,6 @@ import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -316,7 +315,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     @Override
     public String description() {
-        return I18n.format("terramap.mapwidget.layers.raster.desc");
+        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.raster.desc");
     }
 
 }

@@ -1,9 +1,9 @@
 package fr.thesmyler.terramap.maps.raster.imp;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
-import net.minecraft.client.resources.I18n;
 
 public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile> {
 
@@ -25,7 +25,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
 
     @Override
     public String getLocalizedName(String localeKey) {
-        return I18n.format("terramap.maps.debug.terrain"); // This is always local
+        return SmyLibGui.getTranslator().format("terramap.maps.debug.terrain"); // This is always local
     }
 
     @Override
