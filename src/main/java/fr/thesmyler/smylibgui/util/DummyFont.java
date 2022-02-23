@@ -1,7 +1,12 @@
 package fr.thesmyler.smylibgui.util;
 
+import net.minecraft.client.gui.GuiUtilRenderComponents;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static fr.thesmyler.terramap.util.math.Math.clamp;
 import static java.lang.Math.*;
@@ -95,6 +100,11 @@ public class DummyFont extends Font {
             }
         }
         return builder.toString();
+    }
+
+    @Override
+    public List<ITextComponent> splitText(ITextComponent textComponent, float maxTextLenght, boolean keepTrailingBlank, boolean forceTextColor) {
+        return this.listFormattedStringToWidth(textComponent.getFormattedText(), maxTextLenght).stream().map(TextComponentString::new).collect(Collectors.toList());
     }
 
 }
