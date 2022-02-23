@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 import java.util.Map;
 import java.util.UUID;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -12,7 +13,6 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.OtherPlayerMar
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.resources.I18n;
 
 public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<OtherPlayerMarker> {
 
@@ -24,7 +24,7 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
                 88, 108, 88, 122,
                 88, 136, 88, 150,
                 false, null));
-        this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
+        this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
     }
 
     @Override

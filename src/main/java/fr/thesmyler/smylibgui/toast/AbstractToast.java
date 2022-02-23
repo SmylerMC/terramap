@@ -1,7 +1,7 @@
 package fr.thesmyler.smylibgui.toast;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.resources.I18n;
 
 public abstract class AbstractToast implements IToast {
 
@@ -16,10 +16,10 @@ public abstract class AbstractToast implements IToast {
     }
 
     public String getLocalizedDescription() {
-        return I18n.format(this.descriptionKey);
+        return SmyLibGui.getTranslator().format(this.descriptionKey);
     }
 
     public String getLocalizedTitle() {
-        return I18n.format(this.titleKey);
+        return SmyLibGui.getTranslator().format(this.titleKey);
     }
 }

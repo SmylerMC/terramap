@@ -1,14 +1,8 @@
 package fr.thesmyler.smylibgui;
 
 import fr.thesmyler.smylibgui.devices.*;
-import fr.thesmyler.smylibgui.devices.dummy.DummyGameContext;
-import fr.thesmyler.smylibgui.devices.dummy.DummyKeyboard;
-import fr.thesmyler.smylibgui.devices.dummy.DummyMouse;
-import fr.thesmyler.smylibgui.devices.dummy.DummySoundSystem;
-import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Keyboard;
-import fr.thesmyler.smylibgui.devices.lwjgl2.Lwjgl2Mouse;
-import fr.thesmyler.smylibgui.devices.lwjgl2.MinecraftGameContext;
-import fr.thesmyler.smylibgui.devices.lwjgl2.MinecraftSoundSystem;
+import fr.thesmyler.smylibgui.devices.dummy.*;
+import fr.thesmyler.smylibgui.devices.lwjgl2.*;
 import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.smylibgui.util.DummyFont;
 import org.apache.logging.log4j.LogManager;
@@ -30,6 +24,7 @@ public final class SmyLibGui {
     private static GameContext gameContext;
     private static Font defaultFont;
     private static SoundSystem soundSystem;
+    private static Translator translator;
 
     public static void init(Logger logger, SmyLibGuiContext context) {
         if (init && context != getContext()) throw new IllegalStateException("SmyLibGui has already been initialized with a different state");
@@ -56,6 +51,7 @@ public final class SmyLibGui {
         gameContext = new MinecraftGameContext();
         defaultFont = new Font();
         soundSystem = new MinecraftSoundSystem();
+        translator = new I18nTranslator();
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(gameContext);
     }
@@ -73,6 +69,7 @@ public final class SmyLibGui {
         gameContext = new DummyGameContext();
         defaultFont = new DummyFont(1f);
         soundSystem = new DummySoundSystem();
+        translator = new DummyTranslator();
     }
 
     public static Mouse getMouse() {
@@ -102,6 +99,11 @@ public final class SmyLibGui {
     public static Logger getLogger() {
         checkInit();
         return logger;
+    }
+
+    public static Translator getTranslator() {
+        checkInit();
+        return translator;
     }
 
     public static SmyLibGuiContext getContext() {

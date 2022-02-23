@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.AnimalMarker;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
@@ -27,7 +27,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
     public AnimalMarkerController() {
         super(ID, 700, AnimalMarker.class);
         this.button.setOnChange(this::setVisibility);
-        this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.animals"));
+        this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.animals"));
     }
 
     @Override

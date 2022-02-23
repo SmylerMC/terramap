@@ -26,7 +26,6 @@ import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
@@ -67,12 +66,24 @@ public class TerramapConfigScreen extends Screen {
         content.cancelAllScheduled(); //Cancel all callbacks that were already there
         this.title = new TextWidget(this.width / 2f, 10, 5, new TextComponentTranslation("terramap.configmenu.title"), TextAlignment.CENTER, SmyLibGui.getDefaultFont());
         content.addWidget(this.title);
-        TextButtonWidget save = new TextButtonWidget(this.width / 2f + 30, this.height - 30, 10, 100, I18n.format("terramap.configmenu.save"), this::saveAndClose);
-        TextButtonWidget cancel = new TextButtonWidget(this.width / 2f - 130, save.getY(), save.getZ(), save.getWidth(), I18n.format("terramap.configmenu.cancel"), this::close);
-        TextButtonWidget reset = new TextButtonWidget(this.width / 2f - 25, save.getY(), save.getZ(), 50, I18n.format("terramap.configmenu.reset"), this::reset);
-        content.addWidget(save.setTooltip(I18n.format("terramap.configmenu.save.tooltip")));
-        content.addWidget(cancel.setTooltip(I18n.format("terramap.configmenu.cancel")));
-        content.addWidget(reset.setTooltip(I18n.format("terramap.configmenu.reset")));
+        TextButtonWidget save = new TextButtonWidget(
+                this.width / 2f + 30, this.height - 30, 10,
+                100,
+                SmyLibGui.getTranslator().format("terramap.configmenu.save"),
+                this::saveAndClose);
+        TextButtonWidget cancel = new TextButtonWidget(
+                this.width / 2f - 130, save.getY(), save.getZ(),
+                save.getWidth(),
+                SmyLibGui.getTranslator().format("terramap.configmenu.cancel"),
+                this::close);
+        TextButtonWidget reset = new TextButtonWidget(
+                this.width / 2f - 25, save.getY(), save.getZ(),
+                50,
+                SmyLibGui.getTranslator().format("terramap.configmenu.reset"),
+                this::reset);
+        content.addWidget(save.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.save.tooltip")));
+        content.addWidget(cancel.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.cancel")));
+        content.addWidget(reset.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.reset")));
         content.addWidget(this.next.setX(save.getX() + save.getWidth() + 5).setY(save.getY() + 2));
         content.addWidget(this.previous.setX(cancel.getX() - 20).setY(this.next.getY()));
         FlexibleWidgetContainer mapConfigScreen = new FlexibleWidgetContainer(20, 20, 1, this.width - 40, this.height - 75);
@@ -84,41 +95,61 @@ public class TerramapConfigScreen extends Screen {
                 otherConfigScreen
         };
         this.titles = new String[] {
-                I18n.format("terramap.configmenu.title.mapsettings"),
-                I18n.format("terramap.configmenu.title.mapstyles"),
-                I18n.format("terramap.configmenu.title.other")
+                SmyLibGui.getTranslator().format("terramap.configmenu.title.mapsettings"),
+                SmyLibGui.getTranslator().format("terramap.configmenu.title.mapstyles"),
+                SmyLibGui.getTranslator().format("terramap.configmenu.title.other")
         };
 
         // Map settings
         TextWidget unlockZoomText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.unlockzoom"), TextAlignment.RIGHT, SmyLibGui.getDefaultFont());
         unlockZoomText.setAnchorX((mapConfigScreen.getWidth() - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth()) / 2f - 71f).setAnchorY(this.height / 4f - 30);
         mapConfigScreen.addWidget(unlockZoomText);
-        this.unlockZoomToggle.setTooltip(I18n.format("terramap.configmenu.unlockzoom.tooltip"));
+        this.unlockZoomToggle.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.unlockzoom.tooltip"));
         mapConfigScreen.addWidget(this.unlockZoomToggle.setX(unlockZoomText.getX() + unlockZoomText.getWidth() + 5).setY(unlockZoomText.getAnchorY() - 4));
         TextWidget saveUIStateText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.saveui"), TextAlignment.RIGHT, SmyLibGui.getDefaultFont());
-        this.saveUIStateToggle.setTooltip(I18n.format("terramap.configmenu.saveui.tooltip"));
+        this.saveUIStateToggle.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.saveui.tooltip"));
         saveUIStateText.setAnchorX((mapConfigScreen.getWidth() - saveUIStateText.getWidth() - this.saveUIStateToggle.getWidth()) / 2f + 64f).setAnchorY(unlockZoomText.getAnchorY());
         mapConfigScreen.addWidget(saveUIStateText);
         mapConfigScreen.addWidget(this.saveUIStateToggle.setX(saveUIStateText.getX() + saveUIStateText.getWidth() + 5).setY(saveUIStateText.getAnchorY() - 4));
         TextWidget chatOnMapText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.chatonmap"), TextAlignment.RIGHT, SmyLibGui.getDefaultFont());
         chatOnMapText.setAnchorX(unlockZoomText.getAnchorX()).setAnchorY(unlockZoomText.getAnchorY() + unlockZoomText.getFont().height() + 10);
         mapConfigScreen.addWidget(chatOnMapText);
-        this.showChatOnMapToggle.setTooltip(I18n.format("terramap.configmenu.chatonmap.tooltip"));
-        mapConfigScreen.addWidget(this.showChatOnMapToggle.setX(chatOnMapText.getX() + chatOnMapText.getWidth() + 9).setY(chatOnMapText.getAnchorY() - 4));
-        mapConfigScreen.addWidget(this.tileScalingSlider.setX(mapConfigScreen.getWidth()/2 - 130).setY(this.showChatOnMapToggle.getY() + this.unlockZoomToggle.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilescaling")));
-        mapConfigScreen.addWidget(this.doubleClickDelaySlider.setX(mapConfigScreen.getWidth()/2 + 5).setY(this.tileScalingSlider.getY()).setWidth(this.tileScalingSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.doubleclick")));
-        this.maxLoadedTilesSlider.setTooltip(I18n.format("terramap.configmenu.tilecache.tooltip"));
-        mapConfigScreen.addWidget(this.maxLoadedTilesSlider.setX(mapConfigScreen.getWidth()/2 - 130).setY(this.doubleClickDelaySlider.getY() + this.doubleClickDelaySlider.getHeight() + inter).setWidth(125).setDisplayPrefix(I18n.format("terramap.configmenu.tilecache")));
-        this.lowZoomLevelSlider.setTooltip(I18n.format("terramap.configmenu.lowzoom.tooltip"));
-        mapConfigScreen.addWidget(this.lowZoomLevelSlider.setX(mapConfigScreen.getWidth()/2 + 5).setY(this.maxLoadedTilesSlider.getY()).setWidth(this.maxLoadedTilesSlider.getWidth()).setDisplayPrefix(I18n.format("terramap.configmenu.lowzoom")));
-        TextButtonWidget hudButton = new TextButtonWidget(mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10, 200, I18n.format("terramap.configmenu.configureminimap"), () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
-        hudButton.setTooltip(I18n.format("terramap.configmenu.configureminimap.tooltip"));
+        this.showChatOnMapToggle.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.chatonmap.tooltip"));
+        mapConfigScreen.addWidget(
+                this.showChatOnMapToggle
+                        .setX(chatOnMapText.getX() + chatOnMapText.getWidth() + 9).setY(chatOnMapText.getAnchorY() - 4));
+        mapConfigScreen.addWidget(
+                this.tileScalingSlider
+                        .setX(mapConfigScreen.getWidth()/2 - 130).setY(this.showChatOnMapToggle.getY() + this.unlockZoomToggle.getHeight() + inter)
+                        .setWidth(125)
+                        .setDisplayPrefix(SmyLibGui.getTranslator().format("terramap.configmenu.tilescaling")));
+        mapConfigScreen.addWidget(
+                this.doubleClickDelaySlider
+                    .setX(mapConfigScreen.getWidth()/2 + 5).setY(this.tileScalingSlider.getY())
+                        .setWidth(this.tileScalingSlider.getWidth())
+                        .setDisplayPrefix(SmyLibGui.getTranslator().format("terramap.configmenu.doubleclick")));
+        this.maxLoadedTilesSlider.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.tilecache.tooltip"));
+        mapConfigScreen.addWidget(
+                this.maxLoadedTilesSlider
+                        .setX(mapConfigScreen.getWidth()/2 - 130).setY(this.doubleClickDelaySlider.getY() + this.doubleClickDelaySlider.getHeight() + inter)
+                        .setWidth(125)
+                        .setDisplayPrefix(SmyLibGui.getTranslator().format("terramap.configmenu.tilecache")));
+        this.lowZoomLevelSlider.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.lowzoom.tooltip"));
+        mapConfigScreen.addWidget(this.lowZoomLevelSlider
+                .setX(mapConfigScreen.getWidth()/2 + 5).setY(this.maxLoadedTilesSlider.getY())
+                .setWidth(this.maxLoadedTilesSlider.getWidth())
+                .setDisplayPrefix(SmyLibGui.getTranslator().format("terramap.configmenu.lowzoom")));
+        TextButtonWidget hudButton = new TextButtonWidget(
+                mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10,
+                200,
+                SmyLibGui.getTranslator().format("terramap.configmenu.configureminimap"), () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
+        hudButton.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.configureminimap.tooltip"));
         mapConfigScreen.addWidget(hudButton);
 
         // Map styles
         TextWidget debugMapStylesText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.debugmapstyles"), SmyLibGui.getDefaultFont());
         mapStylesConfigScreen.addWidget(debugMapStylesText.setAnchorX((mapStylesConfigScreen.getWidth() - debugMapStylesToggle.getWidth() - debugMapStylesText.getWidth() - 3) / 2).setAnchorY(mapStylesConfigScreen.getHeight() / 4 - 30));
-        debugMapStylesToggle.setTooltip(I18n.format("terramap.configmenu.debugmapstyles.tooltip"));
+        debugMapStylesToggle.setTooltip(SmyLibGui.getTranslator().format("terramap.configmenu.debugmapstyles.tooltip"));
         mapStylesConfigScreen.addWidget(debugMapStylesToggle.setX(debugMapStylesText.getX() + debugMapStylesText.getWidth() + 3).setY(debugMapStylesText.getY() - 4));
         Set<String> baseIDs = MapStylesLibrary.getBaseMaps().keySet();
         Set<String> userIDs = MapStylesLibrary.getUserMaps().keySet();
@@ -135,9 +166,9 @@ public class TerramapConfigScreen extends Screen {
         mapStylesConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
         mapStylesConfigScreen.addWidget(userText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(serverText.getY() + serverText.getHeight() + inter));
         mapStylesConfigScreen.addWidget(effectiveText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(userText.getY() + userText.getHeight() + inter));
-        this.reloadMapStylesButton = new TextButtonWidget(mapStylesConfigScreen.getWidth() / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + mapStylesConfigScreen.getHeight()) / 2 - 10, 10, 150, I18n.format("terramap.configmenu.mapstyles.reload"), () -> {MapStylesLibrary.reload(); TerramapConfigScreen.this.initGui();});
+        this.reloadMapStylesButton = new TextButtonWidget(mapStylesConfigScreen.getWidth() / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + mapStylesConfigScreen.getHeight()) / 2 - 10, 10, 150, SmyLibGui.getTranslator().format("terramap.configmenu.mapstyles.reload"), () -> {MapStylesLibrary.reload(); TerramapConfigScreen.this.initGui();});
         mapStylesConfigScreen.addWidget(this.reloadMapStylesButton);
-        mapStylesConfigScreen.addWidget(new TextButtonWidget(this.reloadMapStylesButton.getX() + this.reloadMapStylesButton.getWidth() + 3, this.reloadMapStylesButton.getY(), 10, 150, I18n.format("terramap.configmenu.mapstyles.open"), () ->  {
+        mapStylesConfigScreen.addWidget(new TextButtonWidget(this.reloadMapStylesButton.getX() + this.reloadMapStylesButton.getWidth() + 3, this.reloadMapStylesButton.getY(), 10, 150, SmyLibGui.getTranslator().format("terramap.configmenu.mapstyles.open"), () ->  {
             try {
                 Desktop.getDesktop().open(MapStylesLibrary.getFile());
             } catch (IOException e) {
@@ -235,9 +266,21 @@ public class TerramapConfigScreen extends Screen {
             content.cancelAllScheduled();
             TextWidget text = new TextWidget(content.getWidth() / 2, content.getHeight() / 2 - 20, 10, new TextComponentTranslation("terramap.configmenu.asksave.prompt"), TextAlignment.CENTER, SmyLibGui.getDefaultFont());
             content.addWidget(text);
-            content.addWidget(new TextButtonWidget(content.getWidth() / 2 - 125, text.getY() + text.getHeight() + 15, 10, 80, I18n.format("terramap.configmenu.asksave.deny"), TerramapConfigScreen.this::close));
-            content.addWidget(new TextButtonWidget(content.getWidth() / 2 - 40, text.getY() + text.getHeight() + 15, 10, 80, I18n.format("terramap.configmenu.asksave.cancel"), () -> Minecraft.getMinecraft().displayGuiScreen(TerramapConfigScreen.this)));
-            content.addWidget(new TextButtonWidget(content.getWidth() / 2 + 45, text.getY() + text.getHeight() + 15, 10, 80, I18n.format("terramap.configmenu.asksave.confirm"),TerramapConfigScreen.this::saveAndClose));
+            content.addWidget(new TextButtonWidget(
+                    content.getWidth() / 2 - 125, text.getY() + text.getHeight() + 15, 10,
+                    80,
+                    SmyLibGui.getTranslator().format("terramap.configmenu.asksave.deny"),
+                    TerramapConfigScreen.this::close));
+            content.addWidget(new TextButtonWidget(
+                    content.getWidth() / 2 - 40, text.getY() + text.getHeight() + 15, 10,
+                    80,
+                    SmyLibGui.getTranslator().format("terramap.configmenu.asksave.cancel"),
+                    () -> Minecraft.getMinecraft().displayGuiScreen(TerramapConfigScreen.this)));
+            content.addWidget(new TextButtonWidget(
+                    content.getWidth() / 2 + 45, text.getY() + text.getHeight() + 15, 10,
+                    80,
+                    SmyLibGui.getTranslator().format("terramap.configmenu.asksave.confirm"),
+                    TerramapConfigScreen.this::saveAndClose));
         }
     }
 
@@ -261,7 +304,7 @@ public class TerramapConfigScreen extends Screen {
         @Override
         public String toString() {
             if(this == AUTO) {
-                return I18n.format("terramap.configmenu.tilescaling.auto");
+                return SmyLibGui.getTranslator().format("terramap.configmenu.tilescaling.auto");
             }
             return "" + this.value;
         }
