@@ -4,16 +4,20 @@ buildscript {
             url = "https://maven.minecraftforge.net"
         }
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
+plugins {
+    id 'checkstyle'
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'checkstyle'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
 
 
 version = project.mod_version
@@ -82,7 +86,7 @@ repositories {
 
 dependencies {
 
-    minecraft group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version
+    minecraft(group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version)
 
     implementation group: "com.twelvemonkeys.imageio", name: "imageio-webp", version: project.twelvemonkeys_version
 
@@ -124,6 +128,15 @@ processResources {
     }
 }
 
+shadowJar {
+    dependencies {
+        include(dependency(group: "com.twelvemonkeys.imageio", name: "imageio-core", version: project.twelvemonkeys_version))
+        include(dependency(group: "com.twelvemonkeys.imageio", name: "imageio-metadata", version: project.twelvemonkeys_version))
+        include(dependency(group: "com.twelvemonkeys.imageio", name: "imageio-webp", version: project.twelvemonkeys_version))
+    }
+    finalizedBy('reobfJar')
+}
+
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {
@@ -142,6 +155,10 @@ jar {
 jar.finalizedBy('reobfJar')
 // If you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
 // publish.dependsOn('reobfJar')
+
+build {
+    dependsOn shadowJar
+}
 
 publishing {
     publications {
