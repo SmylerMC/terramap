@@ -8,7 +8,7 @@
   "url": "https://www.curseforge.com/minecraft/mc-mods/terramap",
   "updateUrl": "",
   "authorList": ["TheSmyler"],
-  "credits": "The Terra121 and Terra++ teams, without whom Terramap would be irrelevant. Copyrights notices and links are displayed on the fullscreen map. The now many people helping with the translation: Agrro, EnderBenjy, hugofnm, qsefthuopq and Serdaise. Drope for the logo. Xesau, for adapting the BTE website so Terramap can interact with it. Map credits: OpenStreetMap contributors, Stamen, Mapbox.",
+  "credits": "The Terra121 and Terra++ teams, without whom Terramap would be irrelevant. Copyrights notices and links are displayed on the fullscreen map. The now many people helping with the translation. Drope for the logo. The TwelveMonkeys library is licensed under the BSD 3-Clause \"New\" or \"Revised\" License.",
   "logoFile": "assets/terramap/logo/1000.png",
   "screenshots": [],
   "dependencies": ["terraplusplus"]
