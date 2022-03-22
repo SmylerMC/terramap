@@ -84,6 +84,8 @@ dependencies {
 
     minecraft group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version
 
+    implementation group: "com.twelvemonkeys.imageio", name: "imageio-webp", version: project.twelvemonkeys_version
+
     implementation fg.deobf(group: "com.github.OpenCubicChunks.CubicChunks", name: "cubicchunks", version: project.cc_version) {
         transitive = false
     }
