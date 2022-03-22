@@ -137,7 +137,7 @@ public class TerramapClientContext {
 
     public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
         if(genSettings != null && this.hasSledgehammer() && !TerramapUtil.isBteCompatible(genSettings)) {
-            TerramapMod.logger.error("Terrramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
+            TerramapMod.logger.error("Terramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
             TerramapMod.logger.error("The proxy will be assuming a BTE projection, things will not work!");
             //TODO Warning on the GUI
         }
@@ -432,24 +432,28 @@ public class TerramapClientContext {
     }
 
     /**
-     * Tells whether or not the map should be accessible in the given context
+     * Tells whether the map should be accessible in the given context
      * 
      * The fullscreen map is accessible if one of the following is true:
      *  - The proxy forces the map
+     *  - The force terra world client side configuration is set
      *  - The generation settings are set
-     *  - We are on a Earth world and Terramap is not installed on the server
+     *  - We are on an Earth world and Terramap is not installed on the server
      *  
      *  The minimap is accessible if one of the following is true:
      *   - We are on an earth world
      *   - The generation settings are set
      * 
-     * @param context
+     * @param context   the context in which the map would be opened
      * @return true if the map should be accessible
      */
     public boolean allowsMap(MapContext context) {
         switch(context) {
             case FULLSCREEN:
-                return this.proxyForcesGlobalMap || this.getGeneratorSettings() != null || (!this.isInstalledOnServer() && this.isOnEarthWorld());
+                return this.proxyForcesGlobalMap
+                        || TerramapConfig.CLIENT.forceTerraWorld
+                        || this.getGeneratorSettings() != null
+                        || (!this.isInstalledOnServer() && this.isOnEarthWorld());
             case MINIMAP:
                 return this.getGeneratorSettings() != null;
             default:
@@ -458,11 +462,13 @@ public class TerramapClientContext {
     }
 
     /**
-     * Checks if the player is on the overworld of an EarthWorld (client side check)
-     * 
-     * @return
+     * Checks if the player is on the overworld of an EarthWorld (client side check).
+     * This check may be bypassed with {@link TerramapConfig.Client#forceTerraWorld}.
+     *
+     * @return true if the current world is a Terra world
      */
     public boolean isOnEarthWorld() {
+        if (TerramapConfig.CLIENT.forceTerraWorld) return true;
         WorldClient world = Minecraft.getMinecraft().world;
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         return world != null && player != null && world.getWorldType() instanceof EarthWorldType && player.dimension == 0;

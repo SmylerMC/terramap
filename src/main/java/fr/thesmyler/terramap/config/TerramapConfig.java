@@ -32,35 +32,35 @@ public class TerramapConfig {
         @Config.Name("minimap_position_x")
         @Config.LangKey("terramap.config.minimap.pos_x")
         @Config.Comment("X position of the minimap on screen, in percents")
-        @Config.RangeInt(min=0, max=100)
+        @Config.RangeDouble(min=0, max=100)
         @Config.SlidingOption
         public float posX = 1;
 
         @Config.Name("minimap_position_y")
         @Config.LangKey("terramap.config.minimap.pos_y")
         @Config.Comment("Y position of the minimap on screen, in percents")
-        @Config.RangeInt(min=0, max=100)
+        @Config.RangeDouble(min=0, max=100)
         @Config.SlidingOption
         public float posY = 1;
 
         @Config.Name("minimap_width")
         @Config.LangKey("terramap.config.minimap.width")
         @Config.Comment("Minimap width, in percents")
-        @Config.RangeInt(min=0, max=100)
+        @Config.RangeDouble(min=0, max=100)
         @Config.SlidingOption
         public float width = 20;
 
         @Config.Name("minimap_height")
         @Config.LangKey("terramap.config.minimap.height")
         @Config.Comment("Minimap height, in percents")
-        @Config.RangeInt(min=0, max=100)
+        @Config.RangeDouble(min=0, max=100)
         @Config.SlidingOption
         public float height = 15;
 
         @Config.Name("minimap_zoom")
         @Config.LangKey("terramap.config.minimap.zoom")
         @Config.Comment("Minimap zoom level")
-        @Config.RangeInt(min=0, max=19)
+        @Config.RangeDouble(min=0, max=19)
         @Config.SlidingOption
         public float zoomLevel = 18;
 
@@ -200,6 +200,11 @@ public class TerramapConfig {
         @Config.LangKey("terramap.config.chat_on_map")
         @Config.Comment("Whether or not to show the chat over the full screen map")
         public boolean chatOnMap = true;
+
+        @Config.Name("force_terra_world")
+        @Config.LangKey("terramap.config.force_terra_world")
+        @Config.Comment("Set this to true to force terramap to treat all worlds as Terra worlds")
+        public boolean forceTerraWorld = false;
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {
