@@ -28,6 +28,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.imageio.ImageIO;
+
 public class TerramapClientProxy extends TerramapProxy {
 
     @Override
@@ -42,6 +44,15 @@ public class TerramapClientProxy extends TerramapProxy {
         File clientPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapClientPreferences.FILENAME);
         TerramapClientPreferences.setFile(clientPrefs);
         TerramapClientPreferences.load();
+        if (!ImageIO.getImageReadersBySuffix("webp").hasNext()) {
+            TerramapMod.logger.warn("ImageIO does not have WebP support, triggering a plugin scan!");
+            ImageIO.scanForPlugins();
+            if (ImageIO.getImageReadersBySuffix("webp").hasNext()) {
+                TerramapMod.logger.info("Found a WebP ImageIO reader.");
+            } else {
+                TerramapMod.logger.error("Could not find a WebP ImageIO reader! WebP will not be supported.");
+            }
+        }
     }
 
     @Override
