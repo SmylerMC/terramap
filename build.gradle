@@ -131,6 +131,10 @@ processResources {
 
 shadowJar {
     dependencies {
+        include(dependency(group: "com.twelvemonkeys.common", name: "common-lang", version: project.twelvemonkeys_version))
+        include(dependency(group: "com.twelvemonkeys.common", name: "common-io", version: project.twelvemonkeys_version))
+        include(dependency(group: "com.twelvemonkeys.common", name: "common-image", version: project.twelvemonkeys_version))
+        include(dependency(group: "jmagick", name: "jmagick", version: project.jmagick_version))
         include(dependency(group: "com.twelvemonkeys.imageio", name: "imageio-core", version: project.twelvemonkeys_version))
         include(dependency(group: "com.twelvemonkeys.imageio", name: "imageio-metadata", version: project.twelvemonkeys_version))
         include(dependency(group: "com.twelvemonkeys.imageio", name: "imageio-webp", version: project.twelvemonkeys_version))
