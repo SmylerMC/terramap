@@ -112,6 +112,34 @@ public class Color {
         GlStateManager.color(this.redf(), this.bluef(), this.greenf(), this.alphaf());
     }
 
+    public int asInt() {
+        return this.alpha() << 24 +
+                this.red() << 16 +
+                this.green() << 8 +
+                this.blue();
+    }
+
+    public int[] asIntArray() {
+        return new int[] {
+                this.alpha(),
+                this.red(),
+                this.green(),
+                this.blue()
+        };
+    }
+
+    public int[] asRGBInt() {
+        return new int[] {
+                this.red(),
+                this.green(),
+                this.blue()
+        };
+    }
+
+    public String asHexString() {
+        return Integer.toHexString(this.asInt());
+    }
+
     public static final Color RED = new Color(0xFFFF0000);
     public static final Color GREEN = new Color(0xFF00FF00);
     public static final Color BLUE = new Color(0xFF0000FF);
