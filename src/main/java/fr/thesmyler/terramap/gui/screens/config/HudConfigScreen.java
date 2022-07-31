@@ -47,7 +47,7 @@ import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 public class HudConfigScreen extends Screen {
 
-    private final MapWidget minimap = new MapWidget(0, TerramapClientContext.getContext().getMapStyles().values().iterator().next(), MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
+    private final MapWidget minimap = new MapWidget(0, MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
     private final WindowedContainer minimapWindow = new WindowedContainer(15, this.minimap, "");
     private final CompassScreen compassScreen = new CompassScreen();
     private final WindowedContainer compassWindow = new WindowedContainer(16, this.compassScreen, "");
@@ -90,9 +90,12 @@ public class HudConfigScreen extends Screen {
         });
         this.zoomSlider.setOnChange(z -> controller.setZoom(z, true));
         this.styleSlider.setOnChange(map -> {
+            //FIXME set minimap backgound in hud config screen
+            /*
             this.minimap.setBackground(map.map);
             this.zoomSlider.setMin(map.map.getMinZoom());
             this.zoomSlider.setMax(TerramapConfig.CLIENT.unlockZoom ? 25: map.map.getMaxZoom());
+             */
         });
         this.tileScalingSlider.setOnChange(v -> {
             if(v == TileScalingOption.AUTO) this.minimap.setTileScaling(getGameContext().getScaleFactor());

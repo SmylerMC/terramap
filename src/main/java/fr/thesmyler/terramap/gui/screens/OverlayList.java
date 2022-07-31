@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.screens;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
@@ -38,7 +38,7 @@ class OverlayList extends FlexibleWidgetContainer {
         }
         this.removeAllWidgets();
         this.cancelAllScheduled();
-        List<MapLayer> layers = Arrays.asList(this.map.getOverlayLayers());
+        List<MapLayer> layers = new ArrayList<>(this.map.getLayers());
         layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
         float ly = 5f;
 
@@ -47,23 +47,25 @@ class OverlayList extends FlexibleWidgetContainer {
             this.addWidget(entry);
             ly += entry.getHeight() + 5f;
         }
-        BackgroundOverlayEntry bgEntry = new BackgroundOverlayEntry(ly, map.getBackgroundLayer());
-        this.addWidget(bgEntry);
+        //FIXME background entry in overlay list
+        //BackgroundOverlayEntry bgEntry = new BackgroundOverlayEntry(ly, map.getBackgroundLayer());
+        //this.addWidget(bgEntry);
         this.cancelNextInit = true;
-        this.setHeight(ly + bgEntry.getHeight() + 5);
+        //this.setHeight(ly + bgEntry.getHeight() + 5);
+        this.setHeight(ly + 5);
     }
     
     private void swapLayers(MapLayer layer1, MapLayer layer2) {
+        //FIXME OverlayList#swapLayers()
+        /*
         this.map.removeOverlayLayer(layer1);
         this.map.removeOverlayLayer(layer2);
         int swap = layer1.getZ();
-        //FIXME layer swapping in overlay list
-        /*
         layer1.setZ(layer2.getZ());
         layer2.setZ(swap);
-         */
         this.map.addOverlayLayer(layer1);
         this.map.addOverlayLayer(layer2);
+        */
         OverlayList.this.scheduleBeforeNextUpdate(OverlayList.this::init);
     }
     
@@ -120,7 +122,9 @@ class OverlayList extends FlexibleWidgetContainer {
             this.addWidget(remove.setEnabled(layer.isUserOverlay()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () ->
-                OverlayList.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show())
+                    //FIXME set offset button in overlay list
+                //OverlayList.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show())
+                {}
             ));
             if(layer.hasRenderingOffset()) {
                 WarningWidget warn = new WarningWidget(this.getWidth() - 86, 3, 0);
@@ -136,14 +140,17 @@ class OverlayList extends FlexibleWidgetContainer {
         
         public void remove() {
             OverlayList.this.scheduleBeforeNextUpdate(() -> {
+                //FIXME Overlay list entry remove layer
+                /*
                 OverlayList.this.map.removeOverlayLayer(this.layer);
                 OverlayList.this.init();
+                */
             });
         }
         
         
         void moveUp() {
-            List<MapLayer> layers = Arrays.asList(OverlayList.this.map.getOverlayLayers());
+            List<MapLayer> layers = new ArrayList<>(OverlayList.this.map.getLayers());
             layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
             int i = layers.indexOf(this.layer);
             if(i > 0) {
@@ -153,7 +160,7 @@ class OverlayList extends FlexibleWidgetContainer {
         }
         
         void moveDown() {
-            List<MapLayer> layers = Arrays.asList(OverlayList.this.map.getOverlayLayers());
+            List<MapLayer> layers = new ArrayList<>(OverlayList.this.map.getLayers());
             layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
             int i = layers.indexOf(this.layer);
             if(i < layers.size() - 1) {

@@ -64,6 +64,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
+        MapWidget map = (MapWidget) parent;
         double x = this.entity.posX;
         double z = this.entity.posZ;
         GeographicProjection proj = TerramapClientContext.getContext().getProjection();
@@ -75,7 +76,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             this.actualAzimuth = Float.NaN;
         }
         super.onUpdate(mouseX, mouseY, parent);
-        if(this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
+        if(this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
     }
 
     @Override

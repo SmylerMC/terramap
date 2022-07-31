@@ -511,16 +511,18 @@ public class TerramapClientContext {
     }
 
     public void openMap() {
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapClientContext.getContext().getMapStyles(), TerramapClientContext.getContext().getSavedScreenState()));
+        //TODO restore from state when available
+        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, null));
     }
 
     public void openMapAt(double zoom, double lon, double lat) {
+        //TODO restore from state when available
         TerramapScreenSavedState state = this.getSavedScreenState();
         state.centerLongitude = lon;
         state.centerLatitude = lat;
         state.zoomLevel = zoom;
         state.trackedMarker = null;
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, TerramapClientContext.getContext().getMapStyles(), state));
+        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, null));
     }
 
     @Nonnull

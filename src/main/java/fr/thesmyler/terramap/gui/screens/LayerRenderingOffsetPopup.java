@@ -18,9 +18,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
-import fr.thesmyler.terramap.util.geo.GeoServices;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 import fr.thesmyler.terramap.util.math.Vec2d;
 import fr.thesmyler.terramap.util.math.Vec2dImmutable;
@@ -91,22 +89,22 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
                 content.getHeight() - this.xInput.getY() - margin);
         this.map = new MapWidget(content.getWidth() - mapSize - margin, this.xInput.getY(), 0,
                 mapSize, mapSize,
-                background.getTiledMap(),
                 MapContext.PREVIEW,
                 layer.getMap().getTileScaling());
         this.mapController = this.map.getController();
         this.mapController.moveLocationToCenter(layer.getMap().getController().getCenterLocation(), false);
+
+        //FIXME use new layer API in LayerRenderingOffsetPopup
+        /*
         this.map.getBackgroundLayer().setRenderingOffset(layer.getRenderingOffset());
         RenderingDeltaPreviewLayer previewLayer = new RenderingDeltaPreviewLayer(this.map, layer.getMap().getController().getCenterLocation());
         this.map.addOverlayLayer(previewLayer);
         MapLayer layerCopy = layer.copy(this.map);
         layerCopy.setAlpha(0.5f);
-
-        // FIXME use a proper map move layer method in LayerRenderingOffsetPopup
-        //layerCopy.setZ(-3);
-
+        layerCopy.setZ(-3);
         layerCopy.setRenderingOffset(Vec2dImmutable.NULL);
         this.map.addOverlayLayer(layerCopy);
+         */
         this.map.setScaleVisibility(false);
         this.map.setCopyrightVisibility(false);
         this.map.setRightClickMenuEnabled(false);
@@ -199,9 +197,12 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
             this.xInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.x()));
             this.yInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.y()));
         }
+        //FIXME do not reference map background when updating LayerRenderingOffsetPopup
+        /*
         this.map.getBackgroundLayer().setPixelRenderingOffset(this.updateMapDelta.scale(-1d));
         if (!this.map.getBackgroundLayer().hasRenderingOffset()) this.map.getBackgroundLayer().setPixelRenderingOffset(Vec2dImmutable.UNIT_X);
         this.zoomText.setText(new TextComponentTranslation("terramap.popup.renderoffset.zoom", GeoServices.formatZoomLevelForDisplay(zoom)));
+         */
     }
     
     private void setOffsetToZero() {
