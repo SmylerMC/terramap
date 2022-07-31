@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.util.geo.*;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.util.text.*;
 import org.lwjgl.input.Keyboard;
 
@@ -51,11 +50,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityCo
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
-import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
-import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -63,7 +59,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 public class TerramapScreen extends Screen implements ITabCompleter {
 
@@ -104,17 +99,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private boolean f1Mode = false;
     private boolean debugMode = false;
 
-    private final Map<String, IRasterTiledMap> backgrounds;
-
-    public TerramapScreen(GuiScreen parent, Map<String, IRasterTiledMap> maps, TerramapScreenSavedState state) {
+    public TerramapScreen(GuiScreen parent, TerramapScreenSavedState state) {
         super(BackgroundOption.OVERLAY);
         this.parent = parent;
-        this.backgrounds = maps;
-        Collection<IRasterTiledMap> tiledMaps = this.backgrounds.values();
-        IRasterTiledMap bg = tiledMaps.toArray(new IRasterTiledMap[0])[0];
-        this.map = new MapWidget(10, this.backgrounds.getOrDefault("osm", bg), MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
+        this.map = new MapWidget(10, MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
         this.backgroundStylePanelListContainer = new BackgroundStylePanelListContainer();
-        if(state != null) this.resumeFromSavedState(TerramapClientContext.getContext().getSavedScreenState());
         this.infoPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
         this.overlayPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
         this.overlayList = new OverlayList(0, 0, 0, 100, this.map);
@@ -372,6 +361,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.noplayer"));
         }
 
+        //FIXME debug text in TerramapScreen
+        /*
         this.offsetWarning.setVisibility(this.map.doesBackgroundHaveRenderingOffset());
 
         if(this.debugMode) {
@@ -409,6 +400,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.debugText.setText(new TextComponentString(debugBuilder.toString()));
             this.debugText.setAnchorY(this.height - this.debugText.getHeight());
         }
+        */
     }
 
     private void buildProfilingResult(StringBuilder builder, String sectionName, String padding) {
@@ -464,81 +456,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
     }
 
-    public TerramapScreenSavedState saveToState() {
-
-        MapController controller = this.map.getController();
-        String tracking = null;
-        Marker trackingMarker = controller.getTrackedMarker();
-        if(trackingMarker != null) {
-            tracking = trackingMarker.getIdentifier();
-        }
-        Map<String, Boolean> visibility = new HashMap<>();
-        Map<String, FeatureVisibilityController> visibilityControllers = this.map.getVisibilityControllers();
-        for(String key: visibilityControllers.keySet()) {
-            visibility.put(key, visibilityControllers.get(key).getVisibility());
-        }
-        
-        List<MapWidget> maps = new ArrayList<>(this.backgroundStylePanelListContainer.maps);
-        maps.add(this.map); // Add it last to make sure it prevails in the final Map<String, Vec2d>
-        Map<String, Vec2dImmutable> offsets = new HashMap<>();
-        for(MapWidget map: maps) {
-            for(MapLayer layer: map.getOverlayLayers()) {
-                offsets.put(layer.getId(), layer.getRenderingOffset().getImmutable());
-            }
-            RasterMapLayer background = map.getBackgroundLayer();
-            offsets.put(background.getId(), background.getRenderingOffset().getImmutable());
-        }        
-
-        return new TerramapScreenSavedState(
-                controller.getZoom(),
-                controller.getCenterLocation().getImmutable(),
-                controller.getRotation(),
-                this.map.getBackgroundStyle().getId(),
-                this.infoPanel.getTarget().equals(PanelTarget.OPENED),
-                TerramapConfig.CLIENT.saveUiState && this.debugMode,
-                TerramapConfig.CLIENT.saveUiState && this.f1Mode,
-                visibility,
-                tracking,
-                offsets
-        );
-    }
-
-    public void resumeFromSavedState(TerramapScreenSavedState state) {
-        MapController controller = this.map.getController();
-        this.map.setBackground(this.backgrounds.getOrDefault(state.mapStyle, this.map.getBackgroundStyle()));
-        controller.setZoom(state.zoomLevel, false);
-        GeoPointImmutable centerLocation = new GeoPointImmutable(state.centerLongitude, state.centerLatitude);
-        controller.moveLocationToCenter(centerLocation, false);
-        controller.setRotation(state.rotation, false);
-        this.map.restoreTracking(state.trackedMarker);
-        this.infoPanel.setStateNoAnimation(state.infoPannel);
-        TexturedButtonWidget newButton;
-        if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
-            float x = this.panelButton.getX();
-            float y = this.panelButton.getY();
-            int z = this.panelButton.getZ();
-            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPanel);
-            newButton.setTooltip(this.panelButton.getTooltipText());
-            this.infoPanel.removeWidget(this.panelButton);
-            this.panelButton = newButton;
-        }
-        this.infoPanel.addWidget(this.panelButton);
-        this.setF1Mode(state.f1);
-        this.setDebugMode(state.debug);
-        for(FeatureVisibilityController c: this.map.getVisibilityControllers().values()) {
-            if(state.visibilitySettings.containsKey(c.getSaveName())) c.setVisibility(state.visibilitySettings.get(c.getSaveName()));
-        }
-        if(state.layerOffsets != null) {
-            List<MapLayer> layers = new ArrayList<>();
-            for(MapWidget map: this.backgroundStylePanelListContainer.maps) layers.add(map.getBackgroundLayer());
-            Collections.addAll(layers, this.map.getOverlayLayers());
-            layers.add(this.map.getBackgroundLayer());
-            for(MapLayer layer: layers) for(String id: state.layerOffsets.keySet()) if(id.equals(layer.getId())){
-                layer.setRenderingOffset(state.layerOffsets.get(id));
-            }
-        }
-    }
-
     @Override
     public boolean doesGuiPauseGame() {
         /*
@@ -560,17 +477,19 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
     
     private void addMapLayer(MapLayer mapLayer) {
+        //FIXME MapWidget#adMapLayer()
+        /*
         //TODO Have multiple categories
         int z = Integer.MIN_VALUE + 1;
         MapLayer[] layers = this.map.getOverlayLayers();
         for(MapLayer layer: layers) {
             z = Math.max(z, layer.getZ());
         }
-        //FIXME MapWidget#adMapLayer() set layer z
-        //mapLayer.setZ(Math.min(-1, z + 1));
+        mapLayer.setZ(Math.min(-1, z + 1));
         mapLayer.setUserOverlay(true);
         this.map.addOverlayLayer(mapLayer);
         this.overlayList.init();
+         */
     }
     
     private void openInitialNewLayerSelector() {
@@ -579,7 +498,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         options.put("Tiled raster map ", () -> {
             FlexibleWidgetContainer container = new FlexibleWidgetContainer(0f, 0f, 0, 285f, 10f);
             container.setDoScissor(false);
-            ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapScreen.this.backgrounds.values());
+            ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapClientContext.getContext().getMapStyles().values());
             maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
             float y = 5f;
             float x = 20f;
@@ -635,14 +554,17 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 this.addWidget(w);
                 lw = w;
             }
-            ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapScreen.this.backgrounds.values());
+            ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapClientContext.getContext().getMapStyles().values());
             maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
             for(IRasterTiledMap map: maps) {
                 MapWidget w = new MapPreview(50, map, m -> {
+                    //FIXME fix map preview set background
+                    /*
                     TerramapScreen.this.map.setBackground(m.getBackgroundStyle());
                     TerramapScreen.this.map.getBackgroundLayer().setRenderingOffset(m.getBackgroundLayer().getRenderingOffset());
                     TerramapScreen.this.stylePanel.close();
                     TerramapScreen.this.overlayList.init();
+                    */
                 });
                 w.setWidth(mapWidth);
                 w.setHeight(mapHeight);
@@ -660,6 +582,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
+            //FIXME map style list update
+            /*
             MapLayer bg = TerramapScreen.this.map.getBackgroundLayer();
             final MapController thisController = TerramapScreen.this.map.getController();
             for(MapWidget map: this.maps) {
@@ -672,6 +596,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 }
             }
             super.onUpdate(mouseX, mouseY, parent);
+            */
         }
 
         @Override
@@ -725,7 +650,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     @Override
     public void onGuiClosed() {
-        TerramapClientContext.getContext().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
+        //FIXME re-implement saving
+        //TerramapClientContext.getContext().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
         TerramapClientContext.getContext().saveSettings();
         TerramapClientContext.getContext().registerForUpdates(false);
     }
@@ -758,11 +684,12 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private class MapPreview extends MapWidget {
-        
+
+        //FIXME map preview
         final Consumer<MapPreview> onClick;
 
         public MapPreview(int z, IRasterTiledMap map, Consumer<MapPreview> onClick) {
-            super(z, map, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
+            super(z, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
             this.setInteractive(false);
             this.setRightClickMenuEnabled(false);
             this.setCopyrightVisibility(false);
@@ -774,7 +701,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
             Color textColor = hovered? Color.SELECTION: Color.WHITE;
-            String text = this.getBackgroundStyle().getLocalizedName(SmyLibGui.getGameContext().getLanguage());
+            //FIXME fix map preview name
+            //String text = this.getBackgroundStyle().getLocalizedName(SmyLibGui.getGameContext().getLanguage());
+            String text = "WIP";
             float width = this.getWidth();
             float height = this.getHeight();
             RenderUtil.drawRect(x, y, x + width, y + 4, Color.DARK_GRAY);
@@ -795,7 +724,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public String getTooltipText() {
-            return this.getBackgroundLayer().getTiledMap().getId();
+            //FIXME fix map preview tooltip
+            return "WIP";
+            //return this.getBackgroundLayer().getTiledMap().getId();
         }
 
         @Override

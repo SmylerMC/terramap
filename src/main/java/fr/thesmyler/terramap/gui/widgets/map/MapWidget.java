@@ -1,13 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
-import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.math.DoubleRange;
 import fr.thesmyler.terramap.util.math.Vec2dMutable;
@@ -26,8 +21,6 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
@@ -38,7 +31,6 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilit
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
@@ -68,6 +60,9 @@ import static java.lang.Math.*;
  * @author SmylerMC
  *
  */
+//TODO set min and max zoom according to layers
+//TODO update copyright according to layers
+//TODO keep track of errors according to layers
 public class MapWidget extends FlexibleWidgetContainer {
 
     private boolean interactive = true;
@@ -80,9 +75,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     private final InputLayer inputLayer;
     private final MapController controller;
-    @Deprecated private RasterMapLayer background;
-    @Deprecated private final List<MapLayer> overlayLayers = new ArrayList<>();
     private final List<MapLayer> layers = new ArrayList<>();
+    private final List<MapLayer> layersReadOnly = Collections.unmodifiableList(this.layers);
     private final List<Marker> markers = new ArrayList<>();
     private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<>();
     private RightClickMarkerController rcmMarkerController;
@@ -125,7 +119,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     public static final int CONTROLLER_Z = 0;
     static final DoubleRange ZOOM_RANGE = new DoubleRange(0d, 25d);
 
-    public MapWidget(float x, float y, int z, float width, float height, IRasterTiledMap map, MapContext context, double tileScaling) {
+    public MapWidget(float x, float y, int z, float width, float height, MapContext context, double tileScaling) {
         super(x, y, z, width, height);
         this.controller = new MapController(this);
         this.inputLayer = (InputLayer) this.createLayer("input");
@@ -161,8 +155,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.createRightClickMenu();
 
-        this.background = (RasterMapLayer) this.createLayer("raster");
-
         this.scale.setX(15).setY(this.getHeight() - 30);
         super.addWidget(this.scale);
         this.updateRightClickMenuEntries();
@@ -193,8 +185,8 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     }
 
-    public MapWidget(int z, IRasterTiledMap map, MapContext context, double tileScaling) {
-        this(0, 0, z, 50, 50, map, context, tileScaling);
+    public MapWidget(int z, MapContext context, double tileScaling) {
+        this(0, 0, z, 50, 50, context, tileScaling);
     }
 
     @Override
@@ -221,90 +213,8 @@ public class MapWidget extends FlexibleWidgetContainer {
         return layer;
     }
 
-    /**
-     * Adds an overlay layer to this map.
-     * <p>
-     * The layer's Z level is important as anything higher than {@link #CONTROLLER_Z} that captures inputs will could stop inputs from reaching the map's controller layer.
-     *
-     * @param layer - the overlay to add
-     * @return this map, for chaining
-     * @throws IllegalArgumentException if the layer's Z level is set to a reserved value, like {@link #BACKGROUND_Z} or {@link #CONTROLLER_Z}
-     *
-     * TODO remove method
-     */
-    @Deprecated
-    public MapWidget addOverlayLayer(MapLayer layer) {
-        switch(layer.getZ()) {
-            case BACKGROUND_Z:
-                throw new IllegalArgumentException("Z level " + layer.getZ() + " is reserved for background layer");
-            case CONTROLLER_Z:
-                throw new IllegalArgumentException("Z level " + layer.getZ() + " is reserved for controller layer");
-        }
-        if (layer.getMap() != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
-        this.overlayLayers.add(layer);
-        super.addWidget(layer);
-        this.updateCopyright();
-        return this;
-    }
-
-    /**
-     * Removes the given overlay layer from this map.
-     * 
-     * @param layer a layer to remove from this map
-     */
-    public void removeOverlayLayer(MapLayer layer) {
-        this.overlayLayers.remove(layer);
-        this.discardPreviousErrors(layer); // We don't care about errors for this overlay anymore
-        super.removeWidget(layer);
-        this.updateCopyright();
-    }
-
-    /**
-     * Sets this map's background style
-     * 
-     * @param background a layer to set as this map's background
-     *
-     * TODO remove method
-     */
-    @Deprecated
-    private void setBackground(RasterMapLayer background) {
-        if (background.getMap() != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
-        background.z = BACKGROUND_Z;
-        this.discardPreviousErrors(this.background); // We don't care about errors for this background anymore
-        super.removeWidget(this.background);
-        super.addWidget(background);
-        this.background = background;
-        this.updateCopyright();
-        this.controller.setMinZoom(this.background.getTiledMap().getMinZoom());
-        this.controller.setMaxZoom(TerramapConfig.CLIENT.unlockZoom ? 25: this.background.getTiledMap().getMaxZoom());
-    }
-
-    /**
-     * Sets this map background layer to a {@link RasterMapLayer} constructed from the given {@link IRasterTiledMap}.
-     * 
-     * @param map - a raster tiled map
-     *
-     * TODO remove method
-     */
-    @Deprecated
-    public void setBackground(IRasterTiledMap map) {
-        this.setBackground(new RasterMapLayer(this, map));
-    }
-    
-    /**
-     * @return this map's background layer
-     */
-    @Deprecated
-    public RasterMapLayer getBackgroundLayer() {
-        return this.background;
-    }
-    
-    /**
-     * @return all overlay layers active on this map
-     */
-    @Deprecated
-    public MapLayer[] getOverlayLayers() {
-        return this.overlayLayers.toArray(new MapLayer[0]);
+    public List<MapLayer> getLayers() {
+        return this.layersReadOnly;
     }
 
     /**
@@ -314,7 +224,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     private void addMarker(Marker marker) {
         this.markers.add(marker);
-        this.addWidget(marker);
+        super.addWidget(marker);
     }
 
     /**
@@ -325,7 +235,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void removeMarker(Marker marker) {
         this.markers.remove(marker);
-        this.removeWidget(marker);
+        super.removeWidget(marker);
     }
 
     @Override
@@ -376,39 +286,25 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * Adds a widget to the screen. Since this is a map before being a screen,
-     * {@link #addOverlayLayer(MapLayer) addMapLayer} should be used instead
-     * and other types of widget should not be added to the map directly
-     * but rather on the parent screen.
+     * Maps do not support directly adding or removing widgets.
+     * This method will always throw an exception.
      * 
-     * @param widget to add
-     * @throws IllegalArgumentException if the widget has an incompatible z value
+     * @throws UnsupportedOperationException in any case
      */
     @Override @Deprecated
-    public WidgetContainer addWidget(IWidget widget) {
-        if(widget instanceof MapLayer) {
-            this.addOverlayLayer((MapLayer)widget);
-        } else {
-            switch(widget.getZ()) {
-                case BACKGROUND_Z:
-                    throw new IllegalArgumentException("Z level " + widget.getZ() + " is reserved for background layer");
-                case CONTROLLER_Z:
-                    throw new IllegalArgumentException("Z level " + widget.getZ() + " is reserved for controller layer");
-            }
-            super.addWidget(widget);
-        }
-        return this;
+    public WidgetContainer addWidget(IWidget widget) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * Removes the given object from this widget container.
-     * @deprecated widgets should be added to the parent widget container, not to this map.
-     * @param widget the widget to remove
+     * Maps do not support directly adding or removing widgets.
+     * This method will always throw an exception.
+     *
+     * @throws UnsupportedOperationException in any case
      */
     @Override @Deprecated
-    public WidgetContainer removeWidget(IWidget widget) {
-        this.overlayLayers.remove(widget);
-        return super.removeWidget(widget);
+    public WidgetContainer removeWidget(IWidget widget) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
     private void updateMarkers(float mouseX, float mouseY) {
@@ -594,7 +490,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             }));
         });
 
-        this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.offset"), () -> new LayerRenderingOffsetPopup(this.background).show());
+        //TODO FIXME opening rendering offset popup
+        //this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.offset"), () -> new LayerRenderingOffsetPopup(this.background).show());
     }
 
     private void updateRightClickMenuEntries() {
@@ -638,7 +535,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers);
         if(this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
         if(this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
-        for(MapLayer layer: this.overlayLayers) {
+        for(MapLayer layer: this.layers) {
             if(layer instanceof FeatureVisibilityController) m.put(layer.getId(), (FeatureVisibilityController)layer);
         }
         return m;
@@ -813,13 +710,6 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * @return the {@link IRasterTiledMap} used by this map's background layer
-     */
-    public IRasterTiledMap getBackgroundStyle() {
-        return this.background.getTiledMap();
-    }
-
-    /**
      * Tries to set a feature's visibility, or does nothing if the feature does not exist for this map.
      * 
      * @param controllerId - the id of the {@link FeatureVisibilityController} to set the visibility for
@@ -968,13 +858,6 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void setAllowsQuickTp(boolean allowsQuickTp) {
         this.allowsQuickTp = allowsQuickTp;
-    }
-
-    /**
-     * @return whether this map's background has a rendering offset set.
-     */
-    public boolean doesBackgroundHaveRenderingOffset() {
-        return this.background.hasRenderingOffset();
     }
 
     InputLayer getInputLayer() {

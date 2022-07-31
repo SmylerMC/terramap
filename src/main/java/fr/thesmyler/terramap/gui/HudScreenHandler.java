@@ -16,7 +16,6 @@ import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
@@ -42,7 +41,7 @@ public abstract class HudScreenHandler {
 
         if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
             if(map == null) {
-                map = new MapWidget(10, TerramapClientContext.getContext().getMapStyles().values().toArray(new IRasterTiledMap[0])[0], MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
+                map = new MapWidget(10, MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
                 map.setCopyrightVisibility(false);
                 map.setScaleVisibility(false);
                 map.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
@@ -112,14 +111,10 @@ public abstract class HudScreenHandler {
         //FIXME set minimap background on update
         //map.setBackground(bg);
         
-        for(MapLayer layer: map.getOverlayLayers()) {
+        for(MapLayer layer: map.getLayers()) {
             Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());
             layer.setRenderingOffset(offset);
         }
-        
-        RasterMapLayer backLayer = map.getBackgroundLayer();
-        Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(backLayer.getId());
-        backLayer.setRenderingOffset(offset);
         
         float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
         zoomLevel = Math.min(bg.getMaxZoom(), zoomLevel);
