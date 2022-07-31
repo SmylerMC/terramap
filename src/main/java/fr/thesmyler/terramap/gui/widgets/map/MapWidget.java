@@ -206,6 +206,16 @@ public class MapWidget extends FlexibleWidgetContainer {
         return layer;
     }
 
+    /**
+     * Removes a layer from the map.
+     *
+     * @param layer the layer to remove
+     */
+    public void removeLayer(MapLayer layer) {
+        super.removeWidget(layer);
+        this.layers.remove(layer);
+    }
+
     public void setLayerZ(MapLayer layer, int z) {
         if (layer.getMap() != this) throw new IllegalArgumentException("Cannot move a layer that does not belong to this map");
         super.removeWidget(layer);

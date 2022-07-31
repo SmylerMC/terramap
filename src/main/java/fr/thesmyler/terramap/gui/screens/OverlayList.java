@@ -13,9 +13,9 @@ import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTextu
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.minecraft.util.text.TextComponentString;
 
 class OverlayList extends FlexibleWidgetContainer {
@@ -43,29 +43,24 @@ class OverlayList extends FlexibleWidgetContainer {
         float ly = 5f;
 
         for(MapLayer layer: layers) {
-            OverlayEntry entry = new GenericOverlayEntry(ly, layer);
+            if (layer instanceof InputLayer) continue; // We don't want the user to have to deal with the input layer
+            OverlayEntry entry;
+            if (layer.getZ() == Integer.MIN_VALUE) {
+                entry = new BackgroundOverlayEntry(ly, layer);
+            } else {
+                entry = new GenericOverlayEntry(ly, layer);
+            }
             this.addWidget(entry);
             ly += entry.getHeight() + 5f;
         }
-        //FIXME background entry in overlay list
-        //BackgroundOverlayEntry bgEntry = new BackgroundOverlayEntry(ly, map.getBackgroundLayer());
-        //this.addWidget(bgEntry);
         this.cancelNextInit = true;
-        //this.setHeight(ly + bgEntry.getHeight() + 5);
-        this.setHeight(ly + 5);
+        this.setHeight(ly);
     }
     
     private void swapLayers(MapLayer layer1, MapLayer layer2) {
-        //FIXME OverlayList#swapLayers()
-        /*
-        this.map.removeOverlayLayer(layer1);
-        this.map.removeOverlayLayer(layer2);
-        int swap = layer1.getZ();
-        layer1.setZ(layer2.getZ());
-        layer2.setZ(swap);
-        this.map.addOverlayLayer(layer1);
-        this.map.addOverlayLayer(layer2);
-        */
+        int layer2z = layer1.getZ();
+        this.map.setLayerZ(layer1, layer2.getZ());
+        this.map.setLayerZ(layer2, layer2z);
         OverlayList.this.scheduleBeforeNextUpdate(OverlayList.this::init);
     }
     
@@ -86,7 +81,7 @@ class OverlayList extends FlexibleWidgetContainer {
     
     private class BackgroundOverlayEntry extends OverlayEntry {
 
-        public BackgroundOverlayEntry(float y, RasterMapLayer layer) {
+        public BackgroundOverlayEntry(float y, MapLayer layer) {
             super(y, 20);
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentString("Raster background"), TextAlignment.RIGHT, this.getFont());
@@ -101,7 +96,7 @@ class OverlayList extends FlexibleWidgetContainer {
             }
             this.setHeight(37);
         }
-        
+
     }
     
     private class GenericOverlayEntry extends OverlayEntry {
@@ -140,11 +135,8 @@ class OverlayList extends FlexibleWidgetContainer {
         
         public void remove() {
             OverlayList.this.scheduleBeforeNextUpdate(() -> {
-                //FIXME Overlay list entry remove layer
-                /*
-                OverlayList.this.map.removeOverlayLayer(this.layer);
+                OverlayList.this.map.removeLayer(this.layer);
                 OverlayList.this.init();
-                */
             });
         }
         
@@ -155,20 +147,22 @@ class OverlayList extends FlexibleWidgetContainer {
             int i = layers.indexOf(this.layer);
             if(i > 0) {
                 MapLayer other = layers.get(i - 1);
+                if (other.getZ() == Integer.MIN_VALUE) return; // Do not move the background
                 OverlayList.this.swapLayers(this.layer, other);
             }
         }
-        
+
         void moveDown() {
             List<MapLayer> layers = new ArrayList<>(OverlayList.this.map.getLayers());
             layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
             int i = layers.indexOf(this.layer);
             if(i < layers.size() - 1) {
                 MapLayer other = layers.get(i + 1);
+                if (other.getZ() == Integer.MIN_VALUE) return; // Do not move the background
                 OverlayList.this.swapLayers(this.layer, other);
             }
         }
-        
+
     }
 
 }
