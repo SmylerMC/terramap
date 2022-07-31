@@ -16,7 +16,6 @@ import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
 
-import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.CONTROLLER_Z;
 import static java.lang.Math.*;
 
 /**
@@ -24,12 +23,15 @@ import static java.lang.Math.*;
  *
  * @author SmylerMC
  */
-class InputLayer extends MapLayer {
+public class InputLayer extends MapLayer {
+
+    private MapWidget map;
+    private MapController controller;
 
     final Vec2dMutable rotatePosition = new Vec2dMutable();
     boolean isRotating = false;
     private float rotationAngleOrigin = 0f;
-    private final GeoPointReadOnly mouseLocation;
+    private GeoPointReadOnly mouseLocation;
 
     // Stuff that can be pre-computed and that's used later when drawing a polygon at the place the map rotates around.
     private static final int ROTATION_POLYGON_VERTEX_COUNT = 5;
@@ -51,10 +53,11 @@ class InputLayer extends MapLayer {
         }
     }
 
-    public InputLayer(MapWidget map) {
-        super(map);
-        this.z = CONTROLLER_Z;
-        this.mouseLocation = map.getMouseLocation();
+    @Override
+    protected void initialize() {
+        this.map = this.getMap();
+        this.controller = this.map.getController();
+        this.mouseLocation = this.getMap().getMouseLocation();
     }
 
     @Override
@@ -74,7 +77,7 @@ class InputLayer extends MapLayer {
             GlStateManager.popMatrix();
         }
 
-        if (this.map.isDebugMode()) {
+        if (this.getMap().isDebugMode()) {
             double pointHalfSize = 5.0d;
             Vec2dMutable position = new Vec2dMutable();
             this.getPositionOnWidget(position, this.controller.getTargetLocation());

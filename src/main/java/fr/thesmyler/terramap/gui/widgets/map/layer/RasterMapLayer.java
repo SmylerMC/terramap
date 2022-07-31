@@ -9,10 +9,12 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
 import fr.thesmyler.terramap.util.geo.*;
@@ -41,23 +43,31 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
     private final Vec2dMutable right = new Vec2dMutable();
     private final Vec2dMutable minusCenterPos = new Vec2dMutable();
     private final Vec2dMutable distanceToCenterCalculator = new Vec2dMutable();
-    private final GeoPointReadOnly focusedPoint;
-    private final Vec2dReadOnly renderingSpaceDimensions;
-    private final Vec2dReadOnly halfRenderingSpaceDimensions;
+    private GeoPointReadOnly focusedPoint;
+    private Vec2dReadOnly renderingSpaceDimensions;
+    private Vec2dReadOnly halfRenderingSpaceDimensions;
 
+    public RasterMapLayer() {
+        //TODO remove work-around constructor
+        this.tiledMap = TerramapClientContext.getContext().getMapStyles().get("osm");
+    }
 
     public RasterMapLayer(MapWidget map, IRasterTiledMap tiledMap) {
-        super(map);
+        //TODO Remove RasterMapLayer constructor
         this.tiledMap = tiledMap;
-        this.focusedPoint = map.getController().getCenterLocation();
-        this.renderingSpaceDimensions = this.getRenderSpaceDimensions();
-        this.halfRenderingSpaceDimensions = this.getRenderSpaceHalfDimensions();
     }
 
     public IRasterTiledMap getTiledMap() {
         return this.tiledMap;
     }
-    
+
+    @Override
+    protected void initialize() {
+        this.focusedPoint = this.getMap().getController().getCenterLocation();
+        this.renderingSpaceDimensions = this.getRenderSpaceDimensions();
+        this.halfRenderingSpaceDimensions = this.getRenderSpaceHalfDimensions();
+    }
+
     @Override
     public String getId() {
         return "tiled-raster-" + this.tiledMap.getId();
@@ -83,7 +93,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         GlStateManager.pushMatrix();
         float widthViewPort = this.getWidth();
         float heightViewPort = this.getHeight();
-        double zoom = this.controller.getZoom();
+        double zoom = this.getMap().getController().getZoom();
 
         // These are the x and y original elementary vectors expressed in the rotated coordinate system
         Mat2d rotationMatrix = this.getRotationMatrix();
@@ -97,7 +107,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         int zoomLevel = (int) Math.round(zoom);
         double zoomSizeFactor = zoom - zoomLevel;
 
-        double renderSize = WebMercatorUtil.TILE_DIMENSIONS / this.map.getTileScaling() * Math.pow(2, zoomSizeFactor);
+        double renderSize = WebMercatorUtil.TILE_DIMENSIONS / this.getMap().getTileScaling() * Math.pow(2, zoomSizeFactor);
 
         int maxTileXY = WebMercatorUtil.getDimensionsInTile(zoomLevel);
         double maxX = upperLeft.x() + this.renderingSpaceDimensions.x();

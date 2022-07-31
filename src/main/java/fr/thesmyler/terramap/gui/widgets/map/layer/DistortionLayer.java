@@ -27,10 +27,9 @@ public class DistortionLayer extends MapLayer {
 
     private final Vec2dMutable screenPositions = new Vec2dMutable();
     private final GeoPointMutable renderedLocations = new GeoPointMutable();
-    private final Vec2dReadOnly renderSpaceDimensions;
+    private Vec2dReadOnly renderSpaceDimensions;
 
-    public DistortionLayer(MapWidget map) {
-        super(map);
+    protected void initialize() {
         this.renderSpaceDimensions = this.getRenderSpaceDimensions();
     }
 
@@ -75,7 +74,7 @@ public class DistortionLayer extends MapLayer {
 
     @Override
     public MapLayer copy(MapWidget forMap) {
-        DistortionLayer other = new DistortionLayer(forMap);
+        DistortionLayer other = new DistortionLayer();
         this.copyPropertiesToOther(other);
         return other;
     }

@@ -57,8 +57,11 @@ class OverlayList extends FlexibleWidgetContainer {
         this.map.removeOverlayLayer(layer1);
         this.map.removeOverlayLayer(layer2);
         int swap = layer1.getZ();
+        //FIXME layer swapping in overlay list
+        /*
         layer1.setZ(layer2.getZ());
         layer2.setZ(swap);
+         */
         this.map.addOverlayLayer(layer1);
         this.map.addOverlayLayer(layer2);
         OverlayList.this.scheduleBeforeNextUpdate(OverlayList.this::init);
