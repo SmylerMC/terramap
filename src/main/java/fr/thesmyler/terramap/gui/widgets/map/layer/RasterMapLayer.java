@@ -9,12 +9,11 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
+import fr.thesmyler.terramap.maps.raster.imp.ColorTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
 import fr.thesmyler.terramap.util.geo.*;
@@ -33,7 +32,7 @@ import net.minecraft.util.text.TextComponentString;
 
 public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
-    protected final IRasterTiledMap tiledMap;
+    protected IRasterTiledMap tiledMap = new ColorTiledMap(Color.WHITE, "Empty map");
     protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
 
     // Used for calculations
@@ -47,18 +46,12 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
     private Vec2dReadOnly renderingSpaceDimensions;
     private Vec2dReadOnly halfRenderingSpaceDimensions;
 
-    public RasterMapLayer() {
-        //TODO remove work-around constructor
-        this.tiledMap = TerramapClientContext.getContext().getMapStyles().get("osm");
-    }
-
-    public RasterMapLayer(MapWidget map, IRasterTiledMap tiledMap) {
-        //TODO Remove RasterMapLayer constructor
-        this.tiledMap = tiledMap;
-    }
-
     public IRasterTiledMap getTiledMap() {
         return this.tiledMap;
+    }
+
+    public void setTiledMap(IRasterTiledMap map) {
+        this.tiledMap = map;
     }
 
     @Override
@@ -75,7 +68,6 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-
         Font smallFont = Util.getSmallestFont();
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager textureManager = mc.getTextureManager();
@@ -101,7 +93,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
         Vec2dImmutable yvec = rotationMatrix.line2();
 
         this.applyRotationGl(x, y);
-        
+
         Vec2dReadOnly upperLeft = this.getUpperLeftRenderCornerPositionInMercatorSpace();
 
         int zoomLevel = (int) Math.round(zoom);
@@ -115,7 +107,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
         int lowerTileX = (int) Math.floor(upperLeft.x() / renderSize);
         int lowerTileY = (int) Math.floor(upperLeft.y() / renderSize);
-        
+
         Color whiteWithAlpha = Color.WHITE.withAlpha(this.getAlpha());
 
         for(int tileX = lowerTileX; tileX * renderSize < maxX; tileX++) {
@@ -135,7 +127,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                 double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
                 double displayHeight = Math.min(renderSize, maxY - tileY * renderSize);
 
-                /* 
+                /*
                  * Let's do some checks to ensure the tile is indeed visible when rotation is taken into account.
                  * To do that, we project each corner of the tile onto the corresponding unit vector of the non-rotated coordinate system,
                  * and if the result of the projection is further than the limit, we skip the tile.
@@ -251,7 +243,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                         );
                 if(debug) {
                     Color lineColor = lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : Color.WHITE;
-                    RenderUtil.drawClosedStrokeLine(lineColor, 1f, 
+                    RenderUtil.drawClosedStrokeLine(lineColor, 1f,
                             dispX, dispY,
                             dispX, dispY + displayHeight - 1,
                             dispX + displayWidth - 1, dispY + displayHeight - 1,
@@ -312,7 +304,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     @Override
     public MapLayer copy(MapWidget forMap) {
-        RasterMapLayer other = new RasterMapLayer(forMap, this.tiledMap);
+        RasterMapLayer other = new RasterMapLayer();
         this.copyPropertiesToOther(other);
         return other;
     }

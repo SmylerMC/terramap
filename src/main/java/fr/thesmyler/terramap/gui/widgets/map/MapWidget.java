@@ -114,9 +114,6 @@ public class MapWidget extends FlexibleWidgetContainer {
     private static final int MAX_ERRORS_KEPT = 10;
 
     private final MapContext context;
-
-    public static final int BACKGROUND_Z = Integer.MIN_VALUE;
-    public static final int CONTROLLER_Z = 0;
     static final DoubleRange ZOOM_RANGE = new DoubleRange(0d, 25d);
 
     public MapWidget(float x, float y, int z, float width, float height, MapContext context, double tileScaling) {
@@ -124,11 +121,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.controller = new MapController(this);
         this.inputLayer = (InputLayer) this.createLayer("input");
         this.controller.inputLayer = this.inputLayer;
-
-        //TODO use a proper move layer method
-        super.removeWidget(this.inputLayer);
-        this.inputLayer.setZ(CONTROLLER_Z);
-        super.addWidget(this.inputLayer);
+        this.setLayerZ(this.inputLayer, 0);
 
         this.setDoScissor(true);
         this.context = context;
@@ -211,6 +204,13 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.layers.add(layer);
         layer.initialize();
         return layer;
+    }
+
+    public void setLayerZ(MapLayer layer, int z) {
+        if (layer.getMap() != this) throw new IllegalArgumentException("Cannot move a layer that does not belong to this map");
+        super.removeWidget(layer);
+        layer.setZ(z);
+        super.addWidget(layer);
     }
 
     public List<MapLayer> getLayers() {
