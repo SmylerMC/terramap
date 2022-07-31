@@ -108,7 +108,9 @@ public abstract class HudScreenHandler {
             maps.sort(Collections.reverseOrder());
             bg = maps.get(0);
         }
-        map.setBackground(bg);
+
+        //FIXME set minimap background on update
+        //map.setBackground(bg);
         
         for(MapLayer layer: map.getOverlayLayers()) {
             Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());

@@ -101,7 +101,10 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         this.map.addOverlayLayer(previewLayer);
         MapLayer layerCopy = layer.copy(this.map);
         layerCopy.setAlpha(0.5f);
-        layerCopy.setZ(-3);
+
+        // FIXME use a proper map move layer method in LayerRenderingOffsetPopup
+        //layerCopy.setZ(-3);
+
         layerCopy.setRenderingOffset(Vec2dImmutable.NULL);
         this.map.addOverlayLayer(layerCopy);
         this.map.setScaleVisibility(false);

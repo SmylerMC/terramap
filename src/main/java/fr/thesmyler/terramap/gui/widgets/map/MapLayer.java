@@ -25,8 +25,8 @@ import static java.lang.Math.toRadians;
  */
 public abstract class MapLayer implements IWidget {
 
-    protected final MapWidget map;
-    protected final MapController controller;
+    private MapWidget map;
+    private MapController controller;
 
     protected int z;
     private final Vec2dMutable renderSpaceDimensions = new Vec2dMutable();
@@ -46,10 +46,15 @@ public abstract class MapLayer implements IWidget {
     private float alpha = 1.0f;
     private static final DoubleRange ALPHA_RANGE = new DoubleRange(0d, 1d);
 
-    public MapLayer(MapWidget map) {
+    void setMap(MapWidget map) {
         this.map = map;
         this.controller = map.getController();
     }
+
+    /**
+     * Called by the owning map once the layer has been fully created.
+     */
+    protected abstract void initialize();
 
     @Override
     public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
@@ -222,7 +227,7 @@ public abstract class MapLayer implements IWidget {
     }
 
     //TODO Make this only callable from the map
-    public void setZ(int z) {
+    void setZ(int z) {
         this.z = z;
     }
 

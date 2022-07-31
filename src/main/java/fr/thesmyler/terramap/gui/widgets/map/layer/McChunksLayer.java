@@ -67,7 +67,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     private final GeoPointMutable nearCenterLocation = new GeoPointMutable();
 
     public McChunksLayer(MapWidget map) {
-        super(map);
         this.setAlpha(0.25f);
         this.button = new ToggleButtonWidget(10, 14, 14,
                 186, 108, 186, 122,
@@ -79,6 +78,11 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.mapwidget.mcchunks.tooltip"));
         this.extendedDimensions = this.getRenderSpaceDimensions();
         this.geoCenter = this.getMap().getController().getCenterLocation();
+    }
+
+    @Override
+    protected void initialize() {
+
     }
 
     @Override
@@ -212,7 +216,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 x + this.projectedCorners[3].x, y + this.projectedCorners[3].y
         );
     }
-    
+
     @Override
     public String getId() {
         return ID;

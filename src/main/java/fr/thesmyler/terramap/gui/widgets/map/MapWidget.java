@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.util.geo.*;
@@ -26,7 +27,6 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
-import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
@@ -80,8 +80,9 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     private final InputLayer inputLayer;
     private final MapController controller;
-    private RasterMapLayer background;
-    private final List<MapLayer> overlayLayers = new ArrayList<>();
+    @Deprecated private RasterMapLayer background;
+    @Deprecated private final List<MapLayer> overlayLayers = new ArrayList<>();
+    private final List<MapLayer> layers = new ArrayList<>();
     private final List<Marker> markers = new ArrayList<>();
     private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<>();
     private RightClickMarkerController rcmMarkerController;
@@ -127,8 +128,14 @@ public class MapWidget extends FlexibleWidgetContainer {
     public MapWidget(float x, float y, int z, float width, float height, IRasterTiledMap map, MapContext context, double tileScaling) {
         super(x, y, z, width, height);
         this.controller = new MapController(this);
-        this.inputLayer = new InputLayer(this);
+        this.inputLayer = (InputLayer) this.createLayer("input");
         this.controller.inputLayer = this.inputLayer;
+
+        //TODO use a proper move layer method
+        super.removeWidget(this.inputLayer);
+        this.inputLayer.setZ(CONTROLLER_Z);
+        super.addWidget(this.inputLayer);
+
         this.setDoScissor(true);
         this.context = context;
         this.tileScaling = tileScaling;
@@ -154,9 +161,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.createRightClickMenu();
 
-        super.addWidget(this.inputLayer);
-
-        this.setBackground(new RasterMapLayer(this, map));
+        this.background = (RasterMapLayer) this.createLayer("raster");
 
         this.scale.setX(15).setY(this.getHeight() - 30);
         super.addWidget(this.scale);
@@ -178,10 +183,13 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
             this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
         }
-        
-        McChunksLayer chunks = new McChunksLayer(this);
+
+        //FIXME add McChunkLayer
+        /*
+        MapLayer chunks = new McChunksLayer(this);
         chunks.setZ(-1000);
         this.addOverlayLayer(chunks);
+        */
 
     }
 
@@ -195,14 +203,36 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
+     * Creates a layer on this map.
+     *
+     * @param layerTypeId a layer type identifier, among those to those registered in global {@link MapLayerLibrary}.
+     *
+     * @return the newly created layer
+     * @throws IllegalArgumentException if there is no such layer type id
+     */
+    public MapLayer createLayer(String layerTypeId) throws IllegalArgumentException {
+        Supplier<MapLayer> constructor = MapLayerLibrary.INSTANCE.getLayerConstructor(layerTypeId);
+        if (constructor == null) throw new IllegalArgumentException("No such layer type registered: " + layerTypeId);
+        MapLayer layer = constructor.get();
+        layer.setMap(this);
+        super.addWidget(layer);
+        this.layers.add(layer);
+        layer.initialize();
+        return layer;
+    }
+
+    /**
      * Adds an overlay layer to this map.
      * <p>
      * The layer's Z level is important as anything higher than {@link #CONTROLLER_Z} that captures inputs will could stop inputs from reaching the map's controller layer.
-     * 
+     *
      * @param layer - the overlay to add
      * @return this map, for chaining
      * @throws IllegalArgumentException if the layer's Z level is set to a reserved value, like {@link #BACKGROUND_Z} or {@link #CONTROLLER_Z}
+     *
+     * TODO remove method
      */
+    @Deprecated
     public MapWidget addOverlayLayer(MapLayer layer) {
         switch(layer.getZ()) {
             case BACKGROUND_Z:
@@ -210,7 +240,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             case CONTROLLER_Z:
                 throw new IllegalArgumentException("Z level " + layer.getZ() + " is reserved for controller layer");
         }
-        if (layer.map != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
+        if (layer.getMap() != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
         this.overlayLayers.add(layer);
         super.addWidget(layer);
         this.updateCopyright();
@@ -233,9 +263,12 @@ public class MapWidget extends FlexibleWidgetContainer {
      * Sets this map's background style
      * 
      * @param background a layer to set as this map's background
+     *
+     * TODO remove method
      */
+    @Deprecated
     private void setBackground(RasterMapLayer background) {
-        if (background.map != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
+        if (background.getMap() != this) throw new IllegalArgumentException("Trying to add a layer that does not belong to this map");
         background.z = BACKGROUND_Z;
         this.discardPreviousErrors(this.background); // We don't care about errors for this background anymore
         super.removeWidget(this.background);
@@ -250,7 +283,10 @@ public class MapWidget extends FlexibleWidgetContainer {
      * Sets this map background layer to a {@link RasterMapLayer} constructed from the given {@link IRasterTiledMap}.
      * 
      * @param map - a raster tiled map
+     *
+     * TODO remove method
      */
+    @Deprecated
     public void setBackground(IRasterTiledMap map) {
         this.setBackground(new RasterMapLayer(this, map));
     }
@@ -258,6 +294,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * @return this map's background layer
      */
+    @Deprecated
     public RasterMapLayer getBackgroundLayer() {
         return this.background;
     }
@@ -265,6 +302,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * @return all overlay layers active on this map
      */
+    @Deprecated
     public MapLayer[] getOverlayLayers() {
         return this.overlayLayers.toArray(new MapLayer[0]);
     }

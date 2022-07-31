@@ -566,7 +566,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         for(MapLayer layer: layers) {
             z = Math.max(z, layer.getZ());
         }
-        mapLayer.setZ(Math.min(-1, z + 1));
+        //FIXME MapWidget#adMapLayer() set layer z
+        //mapLayer.setZ(Math.min(-1, z + 1));
         mapLayer.setUserOverlay(true);
         this.map.addOverlayLayer(mapLayer);
         this.overlayList.init();

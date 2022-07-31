@@ -16,15 +16,23 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
 
     private final GeoPointMutable realCenter = new GeoPointMutable();
     private final Vec2dMutable realCenterPosition = new Vec2dMutable();
-    private final Vec2dReadOnly renderSpaceHalfDimensions;
+    private Vec2dReadOnly renderSpaceHalfDimensions;
 
     public RenderingDeltaPreviewLayer(MapWidget map, GeoPoint<?> realCenter) {
+        //FIXME RenderingDeltaPreviewLayer initialization
+        /*
         super(map);
         this.z = -1;
         this.realCenter.set(realCenter);
         this.renderSpaceHalfDimensions = this.getRenderSpaceHalfDimensions();
+        */
     }
-    
+
+    @Override
+    protected void initialize() {
+        this.renderSpaceHalfDimensions = this.getRenderSpaceHalfDimensions();
+    }
+
     @Override
     public String getId() {
         return "delta-preview";
