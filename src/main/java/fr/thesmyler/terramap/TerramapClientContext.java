@@ -34,6 +34,7 @@ import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
+import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.buildtheearth.terraplusplus.projection.mercator.WebMercatorProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -168,8 +169,11 @@ public class TerramapClientContext {
             if(toRemove.remove(player.getUUID())) {
                 TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
                 savedPlayer.setDisplayName(player.getDisplayName());
-                savedPlayer.setLocation(player.getLocation());
-                savedPlayer.setAzimuth(player.getAzimuth());
+                try {
+                    savedPlayer.setLocationAndAzimuth(player.getLocation(), player.getAzimuth());
+                } catch (OutOfProjectionBoundsException e) {
+                    savedPlayer.setOutOfProjection();
+                }
                 savedPlayer.setGamemode(player.getGamemode());
             } else toAdd.add(player);
         }

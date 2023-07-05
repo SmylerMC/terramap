@@ -79,7 +79,8 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     }
 
     @Override
-    protected GeoPointImmutable getActualLocation() {
+    protected GeoPointImmutable getActualLocation() throws OutOfProjectionBoundsException {
+        if (this.actualLocation == null) throw OutOfProjectionBoundsException.get();
         return this.actualLocation;
     }
 

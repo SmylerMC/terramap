@@ -5,7 +5,7 @@ import java.util.UUID;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.NetworkUtil;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
+import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -20,7 +20,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
     protected TerramapLocalPlayer[] localPlayers;
     protected TerramapRemotePlayer[] remotePlayers;
 
-    public SP2CPlayerSyncPacket() {} //Required by forge
+    public SP2CPlayerSyncPacket() {} // Required by forge
 
     public SP2CPlayerSyncPacket(TerramapLocalPlayer[] players) {
         this.localPlayers = players;
@@ -29,6 +29,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.remotePlayers = new TerramapRemotePlayer[buf.readInt()];
+        GeoPointMutable playerLocation = new GeoPointMutable();
         for(int i=0; i<this.remotePlayers.length; i++) {
             long leastUUID = buf.readLong();
             long mostUUID = buf.readLong();
@@ -37,13 +38,13 @@ public class SP2CPlayerSyncPacket implements IMessage {
             double latitude = buf.readDouble();
             float azimuth = buf.readFloat();
             GameType gamemode = GameType.getByName(NetworkUtil.decodeStringFromByteBuf(buf));
-            GeoPointImmutable location;
+            TerramapRemotePlayer player = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name);
+            player.setGamemode(gamemode);
             if(Double.isFinite(longitude) && Double.isFinite(latitude)) {
-                location = new GeoPointImmutable(longitude, latitude);
-            } else {
-                location = null;
+                playerLocation.set(longitude, latitude);
+                player.setLocationAndAzimuth(playerLocation, azimuth);
             }
-            this.remotePlayers[i] = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name, location, azimuth, gamemode);
+            this.remotePlayers[i] = player;
         }
     }
 
