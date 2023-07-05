@@ -9,6 +9,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
+import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
@@ -23,16 +24,14 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     protected ITextComponent displayName;
     protected final GeoPointMutable location = new GeoPointMutable();
     protected float azimuth;
-    protected GameType gamemode;
+    protected boolean outOfProjection = true;
+    protected GameType gamemode = GameType.NOT_SET;
     protected ResourceLocation texture;
     protected boolean texureRequested = false;
 
-    public TerramapRemotePlayer(UUID uuid, ITextComponent name, GeoPoint<?> location, float azimuth, GameType gameMode) {
+    public TerramapRemotePlayer(UUID uuid, ITextComponent name) {
         this.uuid = uuid;
         this.displayName = name;
-        this.location.set(location);
-        this.azimuth = azimuth;
-        this.gamemode = gameMode;
     }
 
     @Override
@@ -50,12 +49,15 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     }
     
     @Override
-    public GeoPointReadOnly getLocation() {
+    public GeoPointReadOnly getLocation() throws OutOfProjectionBoundsException {
+        if (this.outOfProjection) throw OutOfProjectionBoundsException.get();
         return this.location.getReadOnly();
     }
     
-    public void setLocation(GeoPoint<?> location) {
+    public void setLocationAndAzimuth(GeoPoint<?> location, float azimuth) {
         this.location.set(location);
+        this.azimuth = azimuth;
+        this.outOfProjection = false;
     }
 
     @Override
@@ -63,8 +65,12 @@ public class TerramapRemotePlayer extends TerramapPlayer {
         return this.azimuth;
     }
 
-    public void setAzimuth(float azimuth) {
-        this.azimuth = azimuth;
+    public void setOutOfProjection() {
+        this.outOfProjection = true;
+    }
+
+    public boolean isOutOfProjection() {
+        return this.outOfProjection;
     }
 
     @Override

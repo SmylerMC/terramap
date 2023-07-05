@@ -55,7 +55,8 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected GeoPointImmutable getActualLocation() {
+    protected GeoPointImmutable getActualLocation() throws OutOfProjectionBoundsException {
+        if (this.playerLocation == null) throw OutOfProjectionBoundsException.get();
         return this.playerLocation;
     }
 
