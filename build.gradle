@@ -100,10 +100,13 @@ dependencies {
     implementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version) {
         transitive = true
     }
-    runtimeOnly group: "org.apache.commons", name: "commons-imaging", version: "1.0-alpha2"
-    runtimeOnly(group: "net.daporkchop", name: "leveldb-mcpe-jni", version: "0.0.10-SNAPSHOT")  {
-        exclude group: "io.netty"
+
+    // https://stackoverflow.com/questions/68377027/minecraft-forge-mod-loader-fml-loading-and-crashing-mc
+    implementation ("net.minecraftforge:mergetool:0.2.3.3") {
+        force = true
     }
+
+    runtimeOnly group: "org.apache.commons", name: "commons-imaging", version: "1.0-alpha2"
     testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.8.1"
     testImplementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version)
     
