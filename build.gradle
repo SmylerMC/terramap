@@ -13,7 +13,6 @@ buildscript {
 plugins {
     id 'checkstyle'
     id 'eclipse'
-    id 'idea'
     id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
@@ -182,8 +181,6 @@ test {
     useJUnitPlatform()
 }
 
-idea {
-    module {
-        inheritOutputDirs = true
-    }
+legacy {
+    fixClasspath = true
 }
