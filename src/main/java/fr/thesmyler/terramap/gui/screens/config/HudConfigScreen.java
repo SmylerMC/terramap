@@ -35,6 +35,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -81,8 +82,10 @@ public class HudConfigScreen extends Screen {
         this.minimap.setScaleVisibility(false);
         this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
         this.minimap.scheduleBeforeEachUpdate(() -> {
-            if(TerramapClientContext.getContext().getProjection() != null) {
-                controller.track(this.minimap.getMainPlayerMarker());
+            GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+            Marker marker = this.minimap.getMainPlayerMarker();
+            if (projection != null && marker != null) {
+                controller.track(marker);
             }
         });
         this.zoomSlider.setOnChange(z -> controller.setZoom(z, true));
