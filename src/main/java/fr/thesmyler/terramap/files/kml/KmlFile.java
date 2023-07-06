@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,7 +38,7 @@ public class KmlFile {
             JAXBContext context = JAXBContext.newInstance(KmlFile.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            try(OutputStream stream = new FileOutputStream(file)) {
+            try(OutputStream stream = Files.newOutputStream(file.toPath())) {
                 if(compressed) {
                     try(ZipArchiveOutputStream compressedStream = new ZipArchiveOutputStream(stream)) {
                         ZipArchiveEntry entry = new ZipArchiveEntry("terramap.kml");

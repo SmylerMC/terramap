@@ -127,14 +127,14 @@ public class TerramapClientPreferences {
     }
 
     private static void initPreferences() {
-        if(preferences == null || preferences.servers == null) {
+        if(preferences == null) {
             preferences = new ClientPreferences();
         }
     }
 
     public static void save() {
         try {
-            if(preferences == null || preferences.servers == null) {
+            if(preferences == null) {
                 preferences = new ClientPreferences();
             }
             String str = GSON.toJson(preferences);

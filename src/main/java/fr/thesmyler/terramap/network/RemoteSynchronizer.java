@@ -30,7 +30,7 @@ public abstract class RemoteSynchronizer {
     public static final Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<>();
 
     public static void syncPlayers(WorldServer world) {
-        if(playersToUpdate.size() <= 0) return;
+        if(playersToUpdate.size() == 0) return;
         long ctime = System.currentTimeMillis();
         List<TerramapLocalPlayer> players = new ArrayList<>();
         for(EntityPlayer player: world.playerEntities) {

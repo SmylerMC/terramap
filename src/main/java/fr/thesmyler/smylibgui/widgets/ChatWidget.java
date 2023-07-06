@@ -116,11 +116,6 @@ public class ChatWidget implements IWidget, ITabCompleter {
     }
 
     @Override
-    public boolean takesInputs() {
-        return true;
-    }
-
-    @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         try {
             GUI_CHAT_MOUSE_CLICKED_METHOD.invoke(this.guiChat, Math.round(mouseX), Math.round(mouseY), mouseButton);

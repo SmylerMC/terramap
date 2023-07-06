@@ -337,8 +337,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             if(projection != null) {
                 try {
                     double[] dist = projection.tissot(mouseLocation.longitude(), mouseLocation.latitude());
-                    formatScale = "" + GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
-                    formatOrientation = "" + GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
+                    formatScale = GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
+                    formatOrientation = GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
                 } catch (OutOfProjectionBoundsException ignored) {
                 }
                 this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));

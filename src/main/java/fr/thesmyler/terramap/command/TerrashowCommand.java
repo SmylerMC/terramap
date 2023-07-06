@@ -10,7 +10,6 @@ import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
 import fr.thesmyler.terramap.config.TerramapServerPreferences;
 import fr.thesmyler.terramap.permissions.Permission;
-import fr.thesmyler.terramap.permissions.PermissionManager;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -22,6 +21,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
+
+import static fr.thesmyler.terramap.permissions.PermissionManager.hasPermission;
 
 public class TerrashowCommand extends CommandBase {
 
@@ -43,22 +44,29 @@ public class TerrashowCommand extends CommandBase {
 
         EntityPlayerMP player = null;
         EntityPlayer senderPlayer = sender instanceof EntityPlayer? (EntityPlayer) sender: null;
-        if(args.length <= 0) transCtx.syntaxException("terramap.commands.terrashow.too_few_parameters");
-        else if(args.length > 2) transCtx.syntaxException("terramap.commands.terrashow.too_many_parameters");
-        else if(args.length == 2) {
+        if(args.length == 0) {
+            throw transCtx.syntaxException("terramap.commands.terrashow.too_few_parameters");
+        } else if(args.length > 2) {
+            throw transCtx.syntaxException("terramap.commands.terrashow.too_many_parameters");
+        } else if(args.length == 2) {
             player = server.getPlayerList().getPlayerByUsername(args[1]);
-        } else if(sender instanceof EntityPlayerMP) player = (EntityPlayerMP)sender;
-        else transCtx.playerNotFoundException("terramap.commands.terrashow.console_player_name");
-
-        if(player != null && player.equals(senderPlayer)) {
-            if(senderPlayer != null && !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
-                transCtx.commandException("terramap.commands.terrashow.cannot_change_own_visibility");
+        } else if(sender instanceof EntityPlayerMP) {
+            player = (EntityPlayerMP)sender;
         } else {
-            if(senderPlayer != null && !PermissionManager.hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
-                transCtx.commandException("terramap.commands.terrashow.cannot_change_others_visibility");
+            throw transCtx.playerNotFoundException("terramap.commands.terrashow.console_player_name");
         }
 
-        if(player == null) transCtx.playerNotFoundException("terramap.commands.terrashow.noplayer");
+        if (player != null && player.equals(senderPlayer)) {
+            if(senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
+                throw transCtx.commandException("terramap.commands.terrashow.cannot_change_own_visibility");
+        } else {
+            if(senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
+                throw transCtx.commandException("terramap.commands.terrashow.cannot_change_others_visibility");
+        }
+
+        if(player == null) {
+            throw transCtx.playerNotFoundException("terramap.commands.terrashow.noplayer");
+        }
         UUID uuid = player.getPersistentID();
         WorldServer world = player.getServerWorld();
         ITextComponent message = transCtx.getComponent("terramap.commands.terrashow.invalid_action");

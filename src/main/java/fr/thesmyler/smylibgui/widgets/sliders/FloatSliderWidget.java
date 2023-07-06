@@ -38,7 +38,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
 
     @Override
     protected String getDisplayString() {
-        return "" + (float)Math.round(this.value*resolution) / resolution;
+        return String.valueOf((float) Math.round(this.value * resolution) / resolution);
     }
 
     public double getMin() {

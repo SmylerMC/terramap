@@ -446,16 +446,16 @@ public class MapWidget extends FlexibleWidgetContainer {
         centerHere.enabled = this.interactive;
         MenuWidget copySubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
         copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.geo"), () ->
-            GuiScreen.setClipboardString("" + this.mouseLocation.latitude() + " " + this.mouseLocation.longitude())
+            GuiScreen.setClipboardString(this.mouseLocation.latitude() + " " + this.mouseLocation.longitude())
         );
         this.copyBlockMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
             try {
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = "" + round(coords[0]);
-                String dispY = "" + round(coords[1]);
+                String dispX = String.valueOf(round(coords[0]));
+                String dispY = String.valueOf(round(coords[1]));
                 GuiScreen.setClipboardString(dispX + " " + dispY);
             } catch(OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; // Just a random string
+                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
                 this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copyblock"));
                 this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
@@ -463,11 +463,11 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copyChunkMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
             try {
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = "" + floorDiv(round(coords[0]), 16);
-                String dispY = "" + floorDiv(round(coords[1]), 16);
+                String dispX = String.valueOf(floorDiv(round(coords[0]), 16));
+                String dispY = String.valueOf(floorDiv(round(coords[1]), 16));
                 GuiScreen.setClipboardString(dispX + " " + dispY);
             } catch(OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; // Just a random string
+                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
                 this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copychunk"));
                 this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
@@ -475,11 +475,11 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copyRegionMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
             try {
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = "" + floorDiv(round(coords[0]), 512);
-                String dispY = "" + floorDiv(round(coords[1]), 512);
+                String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
+                String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
                 GuiScreen.setClipboardString("r." + dispX + "." + dispY + ".mca");
             } catch(OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; // Just a random string
+                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
                 this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copyregion"));
                 this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
@@ -487,11 +487,11 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copy3drMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
             try {
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = "" + floorDiv(round(coords[0]), 256);
-                String dispY = "" + floorDiv(round(coords[1]), 256);
+                String dispX = String.valueOf(floorDiv(round(coords[0]), 256));
+                String dispY = String.valueOf(floorDiv(round(coords[1]), 256));
                 GuiScreen.setClipboardString(dispX + ".0." + dispY + ".3dr");
             } catch(OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; //Just a random string
+                String s = String.valueOf(System.currentTimeMillis()); //Just a random string
                 this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copy2dregion"));
                 this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
@@ -499,11 +499,11 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copy2drMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
             try {
                 double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = "" + floorDiv(round(coords[0]), 512);
-                String dispY = "" + floorDiv(round(coords[1]), 512);
+                String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
+                String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
                 GuiScreen.setClipboardString(dispX + "." + dispY + ".2dr");
             } catch(OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; //Just a random string
+                String s = String.valueOf(System.currentTimeMillis()); //Just a random string
                 this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copy2dregion"));
                 this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }
@@ -572,10 +572,10 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     protected void teleportPlayerTo(GeoPoint<?> position) {
         String cmdFormat = TerramapClientContext.getContext().getTpCommand();
-        String cmd = cmdFormat.replace("{longitude}", "" + position.longitude()).replace("{latitude}", "" + position.latitude());
+        String cmd = cmdFormat.replace("{longitude}", String.valueOf(position.longitude())).replace("{latitude}", String.valueOf(position.latitude()));
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
-            String s = System.currentTimeMillis() + ""; // Just a random string
+            String s = String.valueOf(System.currentTimeMillis()); // Just a random string
             this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.tp"));
             this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             return;
@@ -583,9 +583,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         if(projection != null) {
             try {
                 double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(position.longitude(), position.latitude());
-                cmd = cmd.replace("{x}", "" + xz[0]).replace("{z}", "" + xz[1]);
+                cmd = cmd.replace("{x}", String.valueOf(xz[0])).replace("{z}", String.valueOf(xz[1]));
             } catch (OutOfProjectionBoundsException e) {
-                String s = System.currentTimeMillis() + ""; // Just a random string
+                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
                 this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.tp"));
                 this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
             }

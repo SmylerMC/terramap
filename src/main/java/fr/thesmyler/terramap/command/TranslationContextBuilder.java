@@ -64,16 +64,16 @@ public class TranslationContextBuilder {
             }
         }
 
-        public void syntaxException(String key) throws SyntaxErrorException {
-            throw new SyntaxErrorException(this.getText(key));
+        public SyntaxErrorException syntaxException(String key) {
+            return new SyntaxErrorException(this.getText(key));
         }
 
-        public void playerNotFoundException(String key) throws PlayerNotFoundException {
-            throw new PlayerNotFoundException(this.getText(key));
+        public PlayerNotFoundException playerNotFoundException(String key) {
+            return new PlayerNotFoundException(this.getText(key));
         }
 
-        public void commandException(String key) throws CommandException {
-            throw new CommandException(this.getText(key));
+        public CommandException commandException(String key) {
+            return new CommandException(this.getText(key));
         }
 
     }

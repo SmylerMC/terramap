@@ -33,8 +33,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ClientTerramapEventHandler {
 
-    private boolean testScreenWasShown = false;
-
     @SubscribeEvent
     public void onRenderHUD(RenderGameOverlayEvent.Text event) {
         if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {

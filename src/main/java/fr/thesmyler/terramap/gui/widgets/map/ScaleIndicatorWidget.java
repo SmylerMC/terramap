@@ -100,7 +100,7 @@ public class ScaleIndicatorWidget implements IWidget {
                     scale *= 100;
                     j = 0;
                 }
-                lengthstr = "" + Math.round(scale) + " " + units[j];
+                lengthstr = Math.round(scale) + " " + units[j];
             }
         }
         float strwidth = parent.getFont().getStringWidth(lengthstr);

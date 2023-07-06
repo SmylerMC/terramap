@@ -208,7 +208,7 @@ public final class RenderUtil {
     }
 
     public static void drawStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth((float)(size * getGameContext().getScaleFactor()));
+        GL11.glLineWidth(size * getGameContext().getScaleFactor());
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
@@ -231,7 +231,7 @@ public final class RenderUtil {
     }
 
     public static void drawClosedStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth((float)(size * getGameContext().getScaleFactor()));
+        GL11.glLineWidth(size * getGameContext().getScaleFactor());
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();

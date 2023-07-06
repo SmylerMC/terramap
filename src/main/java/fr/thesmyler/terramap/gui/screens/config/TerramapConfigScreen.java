@@ -306,7 +306,7 @@ public class TerramapConfigScreen extends Screen {
             if(this == AUTO) {
                 return SmyLibGui.getTranslator().format("terramap.configmenu.tilescaling.auto");
             }
-            return "" + this.value;
+            return String.valueOf(this.value);
         }
     }
 

@@ -75,11 +75,11 @@ public class TerramapVersionTest {
             TerramapVersion v1 = new TerramapVersion(versions[i]);
             for(int j=0; j<versions.length; j++) {
                 TerramapVersion v2 = j==0 ? null: new TerramapVersion(versions[j]);
-                assertTrue(v1.isOlder(v2) == i < j, v1 + " isOlder " + v2 + " failed");
-                assertTrue(v1.isOlderOrSame(v2) == i <= j, v1 + " isOlderOrSame " + v2 + " failed");
-                assertTrue(v1.equals(v2) == (i == j), v1 + " equals " + v2 + " failed");
-                assertTrue(v1.isNewer(v2) == i > j, v1 + " isNewer " + v2 + " failed");
-                assertTrue(v1.isNewerOrSame(v2) == i >= j, v1 + " isNewerOrSame " + v2 + " failed");
+                assertEquals(v1.isOlder(v2), i < j, v1 + " isOlder " + v2 + " failed");
+                assertEquals(v1.isOlderOrSame(v2), i <= j, v1 + " isOlderOrSame " + v2 + " failed");
+                assertEquals(v1.equals(v2), (i == j), v1 + " equals " + v2 + " failed");
+                assertEquals(v1.isNewer(v2), i > j, v1 + " isNewer " + v2 + " failed");
+                assertEquals(v1.isNewerOrSame(v2), i >= j, v1 + " isNewerOrSame " + v2 + " failed");
             }
         }
     }
