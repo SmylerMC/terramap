@@ -37,7 +37,7 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
 
     @Override
     protected String getDisplayString() {
-        return "" + this.value;
+        return String.valueOf(this.value);
     }
 
     public long getMin() {

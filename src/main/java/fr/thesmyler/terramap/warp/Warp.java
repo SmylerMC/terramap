@@ -35,7 +35,7 @@ public class Warp {
     }
 
     public void setProperty(String key, String value) {
-        if(value == null || value.length() <= 0) {
+        if(value == null || value.length() == 0) {
             this.properties.remove(key);
         } else {
             this.properties.put(key, value);

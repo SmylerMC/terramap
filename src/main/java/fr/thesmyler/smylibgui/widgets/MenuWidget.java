@@ -344,7 +344,7 @@ public class MenuWidget implements IWidget {
         this.disabledTextColor = disabledTextColor;
     }
 
-    public class MenuEntry {
+    public static class MenuEntry {
 
         public final String text;
         private final Runnable action;

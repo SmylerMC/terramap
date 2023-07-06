@@ -54,11 +54,6 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
         return false;
     }
 
-    @Override
-    public long getTooltipDelay() {
-        return 750;
-    }
-
     public Runnable getOnClick() {
         return onClick;
     }

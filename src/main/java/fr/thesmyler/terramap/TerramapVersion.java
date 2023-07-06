@@ -223,9 +223,9 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
         if(this.devRun && other.devRun) {
             return 0;
         } else if(this.devRun) {
-            return Integer.MAX_VALUE;
+            return 1;
         } else if(other.devRun) {
-            return Integer.MIN_VALUE;
+            return -1;
         }
 
         int majorComp = this.majorTarget - other.majorTarget;
@@ -331,7 +331,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 
     }
 
-    public class InvalidVersionString extends Exception {
+    public static class InvalidVersionString extends Exception {
 
         public InvalidVersionString(String message) {
             super(message);

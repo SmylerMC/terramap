@@ -17,6 +17,7 @@ import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -80,16 +81,20 @@ public class TerramapClientProxy extends TerramapProxy {
 
     @Override
     public GameType getGameMode(EntityPlayer e) {
-        if(e instanceof AbstractClientPlayer) {
-            NetworkPlayerInfo i = Minecraft.getMinecraft().getConnection().getPlayerInfo(e.getUniqueID());
-            if(i != null) return i.getGameType();
-        }
         if(e instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP)e;
             return player.interactionManager.getGameType();
         }
+        NetHandlerPlayClient connection = Minecraft.getMinecraft().getConnection();
+        if (connection == null) {
+            return GameType.NOT_SET;
+        }
+        if(e instanceof AbstractClientPlayer) {
+            NetworkPlayerInfo i = connection.getPlayerInfo(e.getUniqueID());
+            if(i != null) return i.getGameType();
+        }
         TerramapMod.logger.error("Failed to determine player gamemode.");
-        return GameType.SURVIVAL;
+        return GameType.NOT_SET;
     }
 
     @Override

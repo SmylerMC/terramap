@@ -37,15 +37,9 @@ public abstract class WidgetContainer implements IWidget{
             (w2, w1) -> {
                 if (w2 != null && w2.equals(w1)) return 0;
                 if (w1 == null && w2 == null) return 0;
-                if (w1 == null) return Integer.MIN_VALUE;
-                if (w2 == null) return Integer.MAX_VALUE;
-                int z1 = w1.getZ();
-                int z2 = w2.getZ();
-                if (z1 == Integer.MAX_VALUE) return Integer.MAX_VALUE;
-                if (z1 == Integer.MIN_VALUE) return Integer.MIN_VALUE;
-                if (z2 == Integer.MAX_VALUE) return Integer.MIN_VALUE;
-                if (z2 == Integer.MIN_VALUE) return Integer.MAX_VALUE;
-                int r = z1 - z2;
+                if (w1 == null) return -1;
+                if (w2 == null) return 1;
+                int r = Integer.compare(w1.getZ(), w2.getZ());
                 return r == 0 ? w1.hashCode() - w2.hashCode() : r;
             }
     );

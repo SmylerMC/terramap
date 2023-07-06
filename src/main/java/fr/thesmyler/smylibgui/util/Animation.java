@@ -56,8 +56,6 @@ public class Animation {
                     break;
                 case STOPPED:
                     break;
-                default:
-                    break;
             }
         }
     }

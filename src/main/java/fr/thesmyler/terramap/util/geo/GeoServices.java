@@ -59,7 +59,7 @@ public final class GeoServices {
             String dispLat = GeoServices.formatGeoCoordForDisplay(latitude);
             String dispPlace;
             dispPlace = URLEncoder.encode(GeoServices.numeric2NSEW(placeLongitude, placeLatitude), StandardCharsets.UTF_8.toString());
-            return str.replace("{zoom}", "" + zoomLevel)
+            return str.replace("{zoom}", String.valueOf(zoomLevel))
                     .replace("{latitude}", dispLat)
                     .replace("{longitude}", dispLong)
                     .replace("{place}", dispPlace);
@@ -171,8 +171,8 @@ public final class GeoServices {
         int latitudeMinutes = (int) minLat;
         double secLon = minLon * 60 - longitudeMinutes * 60;
         double secLat = minLat * 60 - latitudeMinutes * 60;
-        String formatedLongitude = "" + longitudeDegrees + "°" + longitudeMinutes + "'" + decFormat1.format(secLon) + "\"" + eo;
-        String formatedLatitude = "" + latitudeDegrees + "°" + latitudeMinutes + "'" + decFormat1.format(secLat) + "\"" + ns;
+        String formatedLongitude = longitudeDegrees + "°" + longitudeMinutes + "'" + decFormat1.format(secLon) + "\"" + eo;
+        String formatedLatitude = latitudeDegrees + "°" + latitudeMinutes + "'" + decFormat1.format(secLat) + "\"" + ns;
         return formatedLatitude + " " + formatedLongitude;
     }
 

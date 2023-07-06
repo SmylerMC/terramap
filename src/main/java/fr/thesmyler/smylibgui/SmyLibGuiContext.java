@@ -12,6 +12,6 @@ public enum SmyLibGuiContext {
     JUNIT,
 
     /** Running inside the game, but displaying the test screen on startup */
-    LWJGL2_TEST_SCREEN;
+    LWJGL2_TEST_SCREEN
 
 }

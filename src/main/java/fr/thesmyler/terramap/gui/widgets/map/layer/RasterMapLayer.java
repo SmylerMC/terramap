@@ -247,7 +247,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
                             dispX + displayWidth - 1, dispY + displayHeight - 1,
                             dispX + displayWidth - 1, dispY
                             );
-                    smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)(dispY + displayHeight/2), "" + tile.getPosition().getZoom(), lineColor, false);
+                    smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)(dispY + displayHeight/2), String.valueOf(tile.getPosition().getZoom()), lineColor, false);
                     smallFont.drawString((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
                     smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }

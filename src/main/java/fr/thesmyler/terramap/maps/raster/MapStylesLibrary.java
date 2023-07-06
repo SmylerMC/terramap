@@ -67,13 +67,13 @@ public class MapStylesLibrary {
             // https://github.com/MinecraftForge/MinecraftForge/issues/5713
             InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
             try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(in))) {
-                String json = "";
+                StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
                 while(line != null) {
-                    json += line;
+                    json.append(line);
                     line = txtReader.readLine();
                 }
-                baseMaps.putAll(loadFromJson(json, TiledMapProvider.BUILT_IN));
+                baseMaps.putAll(loadFromJson(json.toString(), TiledMapProvider.BUILT_IN));
             }
         } catch(Exception e) {
             TerramapMod.logger.fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
@@ -127,13 +127,13 @@ public class MapStylesLibrary {
                 TiledMapProvider.ONLINE.setLastError(e);
             }
             try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteBufInputStream(b)))) {
-                String json = "";
+                StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
                 while(line != null) {
-                    json += line;
+                    json.append(line);
                     line = txtReader.readLine();
                 }
-                baseMaps.putAll(loadFromJson(json, TiledMapProvider.ONLINE));
+                baseMaps.putAll(loadFromJson(json.toString(), TiledMapProvider.ONLINE));
             } catch(Exception f) {
                 TerramapMod.logger.error("Failed to parse updated map style file!");
                 TerramapMod.logger.catching(e);
@@ -201,7 +201,7 @@ public class MapStylesLibrary {
 
     private static UrlTiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
         String[] patterns = saved.urls;
-        if(patterns == null || patterns.length <= 0) {
+        if(patterns == null || patterns.length == 0) {
             if(saved.url != null) {
                 // This is a legacy source, it only has one url
                 patterns = new String[] {saved.url};
