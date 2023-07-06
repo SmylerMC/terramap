@@ -2,7 +2,6 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 
 import java.util.function.Consumer;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;

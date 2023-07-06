@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.util.Font;
-import net.minecraft.client.Minecraft;
 
 public class OptionSliderWidget<T> extends AbstractSliderWidget {
 

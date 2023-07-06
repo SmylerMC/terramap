@@ -2,7 +2,6 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
@@ -128,7 +127,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
         SEARCH(21, 21, 81, 45, 81, 66, 81, 87, SmyLibGuiTextures.WIDGET_TEXTURES);
 
         final int width, height, u, v, hoverU, hoverV, disabledU, disabledV;
-        ResourceLocation texture;
+        final ResourceLocation texture;
 
         IncludedTexturedButtons(
                 int width,

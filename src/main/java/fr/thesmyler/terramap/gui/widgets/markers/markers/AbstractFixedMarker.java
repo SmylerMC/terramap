@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
 

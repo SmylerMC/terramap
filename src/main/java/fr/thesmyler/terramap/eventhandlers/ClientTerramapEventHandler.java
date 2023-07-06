@@ -1,9 +1,6 @@
 package fr.thesmyler.terramap.eventhandlers;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
-import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
