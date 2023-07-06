@@ -145,6 +145,8 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
     }
     
     private void onTextFieldsChange(String unused) {
+        IWidget focused = this.getContent().getFocusedWidget();
+        if (focused != this.xInput && focused != this.yInput) return; // We don't want an infinite loop !
         boolean okX = false, okY = false;
         double dX = 0, dY = 0;
         double mapZoom = this.map.getController().getZoom();
@@ -178,7 +180,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
     }
     
     private void setRenderedOffset(Vec2d<?> offset) {
-        WebMercatorUtil.fromGeo(this.offsetCalculator, this.mapController.getCenterLocation(), 0d);
+        WebMercatorUtil.fromGeo(this.offsetCalculator, this.layer.getMap().getController().getCenterLocation(), 0d);
         this.offsetCalculator.downscale(256d).add(offset).scale(256d);
         WebMercatorUtil.toGeo(this.layerCenterLocation, this.offsetCalculator, 0d);
         this.map.getController().moveLocationToCenter(this.layerCenterLocation, false);
@@ -186,20 +188,21 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
     
     private void updateMap() {
         IWidget focused = this.getContent().getFocusedWidget();
-        if(focused == this.yInput || focused == this.xInput) return;
         double zoom = this.mapController.getZoom();
         WebMercatorUtil.fromGeo(this.updateMapLayerCenter, this.layer.getMap().getController().getCenterLocation(), zoom);
         WebMercatorUtil.fromGeo(this.updateMapDelta, this.mapController.getCenterLocation(), zoom);
         this.updateMapDelta.subtract(this.updateMapLayerCenter);
-        this.xInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.x()));
-        this.yInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.y()));
+        if(focused != this.yInput && focused != this.xInput) {
+            this.xInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.x()));
+            this.yInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.y()));
+        }
         this.map.getBackgroundLayer().setPixelRenderingOffset(this.updateMapDelta.scale(-1d));
         if (!this.map.getBackgroundLayer().hasRenderingOffset()) this.map.getBackgroundLayer().setPixelRenderingOffset(Vec2dImmutable.UNIT_X);
         this.zoomText.setText(new TextComponentTranslation("terramap.popup.renderoffset.zoom", GeoServices.formatZoomLevelForDisplay(zoom)));
     }
     
     private void setOffsetToZero() {
-        this.mapController.moveLocationToCenter(this.mapController.getCenterLocation(), true);
+        this.mapController.moveLocationToCenter(this.layer.getMap().getController().getCenterLocation(), true);
     }
     
     private void applyAndClose() {
