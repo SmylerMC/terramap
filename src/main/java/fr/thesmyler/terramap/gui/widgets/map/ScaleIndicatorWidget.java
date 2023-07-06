@@ -4,7 +4,6 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
 

@@ -34,8 +34,6 @@
 
 package fr.thesmyler.smylibgui.devices;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-
 /**
  * Keys that can be typed on a keyboard.
  *

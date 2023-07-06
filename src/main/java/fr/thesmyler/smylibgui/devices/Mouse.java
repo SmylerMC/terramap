@@ -1,7 +1,5 @@
 package fr.thesmyler.smylibgui.devices;
 
-import fr.thesmyler.smylibgui.util.Cursors;
-
 /**
  * A wrapper around whatever mouse is being used internally.
  *

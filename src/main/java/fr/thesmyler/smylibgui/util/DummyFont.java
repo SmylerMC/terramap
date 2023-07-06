@@ -1,6 +1,5 @@
 package fr.thesmyler.smylibgui.util;
 
-import net.minecraft.client.gui.GuiUtilRenderComponents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 

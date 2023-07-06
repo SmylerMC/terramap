@@ -18,7 +18,6 @@ import javax.annotation.Nullable;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.CONTROLLER_Z;
 import static java.lang.Math.*;
-import static java.lang.Math.copySign;
 
 /**
  * Processes inputs for a map and propagates them to the map controller.
