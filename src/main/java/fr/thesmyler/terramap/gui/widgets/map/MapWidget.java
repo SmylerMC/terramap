@@ -14,12 +14,9 @@ import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.smylibgui.widgets.MenuWidget;
-import fr.thesmyler.smylibgui.widgets.MenuWidget.MenuEntry;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
@@ -32,17 +29,9 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerCon
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.util.ICopyrightHolder;
-import net.buildtheearth.terraplusplus.control.PresetEarthGui;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-
-import static java.lang.Math.*;
 
 /**
  * The core component of Terramap: the map widget itself.
@@ -92,21 +81,12 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     protected double tileScaling;
 
-    private MenuWidget rightClickMenu;
-    private MenuEntry teleportMenuEntry;
-    private MenuEntry copyBlockMenuEntry;
-    private MenuEntry copyChunkMenuEntry;
-    private MenuEntry copyRegionMenuEntry;
-    private MenuEntry copy3drMenuEntry;
-    private MenuEntry copy2drMenuEntry;
-    private MenuEntry setProjectionMenuEntry;
+    private final MapMenuWidget rightClickMenu;
 
     private final TextWidget copyright;
     private final ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
 
     private final Profiler profiler = new Profiler();
-    private static final GuiScreen CHAT_SENDER_GUI = new GuiScreen() {}; // The only reason this exists is so we can use it to send chat messages
-    static { CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
 
     private final TextWidget errorText;
 
@@ -146,11 +126,10 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.errorText.setBackgroundColor(Color.ERROR_OVERLAY).setPadding(5).setAlignment(TextAlignment.CENTER).setShadow(false).setBaseColor(Color.WHITE);
         super.addWidget(errorText);
 
-        this.createRightClickMenu();
+        this.rightClickMenu = new MapMenuWidget(this);
 
         this.scale.setX(15).setY(this.getHeight() - 30);
         super.addWidget(this.scale);
-        this.updateRightClickMenuEntries();
         this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
 
         for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
@@ -375,167 +354,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     private void updateMouseGeoPos(float mouseX, float mouseY) {
         this.inputLayer.getLocationAtPositionOnWidget(this.mouseLocation, mouseX, mouseY);
-    }
-
-    //TODO Refactoring: move this monstrosity somewhere else
-    private void createRightClickMenu() {
-        Font font = SmyLibGui.getDefaultFont();
-        this.rightClickMenu = new MenuWidget(1500, font);
-        this.teleportMenuEntry = this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.teleport"), () ->
-            this.teleportPlayerTo(this.mouseLocation)
-        );
-        MenuEntry centerHere = this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.center"), () ->
-            this.controller.moveLocationToCenter(this.mouseLocation, true)
-        );
-        centerHere.enabled = this.interactive;
-        MenuWidget copySubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
-        copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.geo"), () ->
-            GuiScreen.setClipboardString(this.mouseLocation.latitude() + " " + this.mouseLocation.longitude())
-        );
-        this.copyBlockMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.block"), ()->{
-            try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = String.valueOf(round(coords[0]));
-                String dispY = String.valueOf(round(coords[1]));
-                GuiScreen.setClipboardString(dispX + " " + dispY);
-            } catch(OutOfProjectionBoundsException e) {
-                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
-                this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copyblock"));
-                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
-            }
-        });
-        this.copyChunkMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.chunk"), ()->{
-            try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = String.valueOf(floorDiv(round(coords[0]), 16));
-                String dispY = String.valueOf(floorDiv(round(coords[1]), 16));
-                GuiScreen.setClipboardString(dispX + " " + dispY);
-            } catch(OutOfProjectionBoundsException e) {
-                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
-                this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copychunk"));
-                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
-            }
-        });
-        this.copyRegionMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.region"), ()->{
-            try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
-                String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
-                GuiScreen.setClipboardString("r." + dispX + "." + dispY + ".mca");
-            } catch(OutOfProjectionBoundsException e) {
-                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
-                this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copyregion"));
-                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
-            }
-        });
-        this.copy3drMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.3dr"), ()->{
-            try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = String.valueOf(floorDiv(round(coords[0]), 256));
-                String dispY = String.valueOf(floorDiv(round(coords[1]), 256));
-                GuiScreen.setClipboardString(dispX + ".0." + dispY + ".3dr");
-            } catch(OutOfProjectionBoundsException e) {
-                String s = String.valueOf(System.currentTimeMillis()); //Just a random string
-                this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copy2dregion"));
-                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
-            }
-        });
-        this.copy2drMenuEntry = copySubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy.2dr"), ()->{
-            try {
-                double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
-                String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
-                GuiScreen.setClipboardString(dispX + "." + dispY + ".2dr");
-            } catch(OutOfProjectionBoundsException e) {
-                String s = String.valueOf(System.currentTimeMillis()); //Just a random string
-                this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.copy2dregion"));
-                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
-            }
-        });
-        this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.copy"), copySubMenu);
-        this.rightClickMenu.addSeparator();
-        MenuWidget openSubMenu = new MenuWidget(this.rightClickMenu.getZ(), font);
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_osm"), () ->
-            GeoServices.openInOSMWeb(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
-        );
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_bte"), () ->
-            GeoServices.openInBTEMap(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
-        );
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_gmaps"), () -> {
-            MainPlayerMarker playerMarker = this.getMainPlayerMarker();
-            if(playerMarker != null) {
-                if(playerMarker.isVisible(MapWidget.this)) {
-                    GeoPoint<?> playerLocation = playerMarker.getLocation();
-                    GeoServices.openPlaceInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), playerLocation.longitude(), playerLocation.latitude());
-                } else {
-                    GeoServices.openInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
-                }
-            } else {
-                GeoServices.openInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
-            }
-
-        });
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_gearth_web"), () ->
-            GeoServices.opentInGoogleEarthWeb(this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
-        );
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_gearth_pro"), () ->
-            GeoServices.openInGoogleEarthPro(this.mouseLocation.longitude(), this.mouseLocation.latitude())
-        );
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_bing"), () ->
-            GeoServices.openInBingMaps((int) this.controller.getZoom(), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
-        );
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_wikimapia"), () ->
-            GeoServices.openInWikimapia((int) this.controller.getZoom(), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
-        );
-        openSubMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open_yandex"), () ->
-            GeoServices.openInYandex((int) this.controller.getZoom(), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude())
-        );
-        this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.open"), openSubMenu);
-        this.rightClickMenu.addSeparator();
-        this.setProjectionMenuEntry = this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.set_proj"), ()-> {
-            EarthGeneratorSettings stg = TerramapClientContext.getContext().getGeneratorSettings();
-            Minecraft.getMinecraft().displayGuiScreen(new PresetEarthGui(null, stg != null ? stg.toString(): PresetEarthGui.DEFAULT_PRESETS.get("default"), s ->  {
-                TerramapClientContext.getContext().setGeneratorSettings(EarthGeneratorSettings.parse(s));
-                TerramapClientContext.getContext().saveSettings();
-            }));
-        });
-
-        //TODO FIXME opening rendering offset popup
-        //this.rightClickMenu.addEntry(SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.offset"), () -> new LayerRenderingOffsetPopup(this.background).show());
-    }
-
-    private void updateRightClickMenuEntries() {
-        boolean hasProjection = TerramapClientContext.getContext().getProjection() != null;
-        this.teleportMenuEntry.enabled = true;
-        this.copyBlockMenuEntry.enabled = hasProjection;
-        this.copyChunkMenuEntry.enabled = hasProjection;
-        this.copyRegionMenuEntry.enabled = hasProjection;
-        this.copy3drMenuEntry.enabled = hasProjection;
-        this.copy2drMenuEntry.enabled = hasProjection;
-        this.setProjectionMenuEntry.enabled = (!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().isOnEarthWorld());
-    }
-
-    protected void teleportPlayerTo(GeoPoint<?> position) {
-        String cmdFormat = TerramapClientContext.getContext().getTpCommand();
-        String cmd = cmdFormat.replace("{longitude}", String.valueOf(position.longitude())).replace("{latitude}", String.valueOf(position.latitude()));
-        GeographicProjection projection = TerramapClientContext.getContext().getProjection();
-        if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
-            String s = String.valueOf(System.currentTimeMillis()); // Just a random string
-            this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.tp"));
-            this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
-            return;
-        }
-        if(projection != null) {
-            try {
-                double[] xz = TerramapClientContext.getContext().getProjection().fromGeo(position.longitude(), position.latitude());
-                cmd = cmd.replace("{x}", String.valueOf(xz[0])).replace("{z}", String.valueOf(xz[1]));
-            } catch (OutOfProjectionBoundsException e) {
-                String s = String.valueOf(System.currentTimeMillis()); // Just a random string
-                this.reportError(s, SmyLibGui.getTranslator().format("terramap.mapwidget.error.tp"));
-                this.scheduleBeforeUpdate(() -> this.discardPreviousErrors(s), 5000);
-            }
-        }
-        CHAT_SENDER_GUI.sendChatMessage(cmd, false);
     }
 
     /**
@@ -874,7 +692,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         return this.inputLayer;
     }
 
-    protected MenuWidget getRightClickMenu() {
+    protected MapMenuWidget getRightClickMenu() {
         return this.rightClickMenu;
     }
 

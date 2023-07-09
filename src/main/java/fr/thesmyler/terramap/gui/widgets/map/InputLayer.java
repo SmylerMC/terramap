@@ -113,7 +113,7 @@ public class InputLayer extends MapLayer {
         this.controller.stopTracking();
         this.isRotating = false;
         if(this.isShortcutEnabled()) {
-            this.map.teleportPlayerTo(this.map.getMouseLocation());
+            this.map.getRightClickMenu().teleport();
             if(this.map.getContext().equals(MapContext.FULLSCREEN)) {
                 Minecraft.getMinecraft().displayGuiScreen(null); //TODO change this so it can work from any menu
             }
