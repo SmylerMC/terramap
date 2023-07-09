@@ -40,8 +40,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     
     private final ProjectionCache cache = new ProjectionCache(4);
     private final Vec2dMutable mcCenter = new Vec2dMutable();
-    private final Vec2dReadOnly extendedDimensions;
-    private final GeoPointReadOnly geoCenter;
+    private Vec2dReadOnly extendedDimensions;
+    private GeoPointReadOnly geoCenter;
     
     private final ToggleButtonWidget button;
     
@@ -49,7 +49,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     
     private Color color = Color.DARK_GRAY;
 
-    // Used for calculations. Those aren't local fields, so we don't create hundreds of objects every time we render
+    // Used for calculations. Those aren't local fields so we don't create hundreds of objects every time we render
     private final Vec2dMutable[] corners = {
             new Vec2dMutable(),
             new Vec2dMutable(),
@@ -66,8 +66,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     private final Vec2dMutable deltaCalculator = new Vec2dMutable();
     private final GeoPointMutable nearCenterLocation = new GeoPointMutable();
 
-    public McChunksLayer(MapWidget map) {
-        this.setAlpha(0.25f);
+    public McChunksLayer() {
         this.button = new ToggleButtonWidget(10, 14, 14,
                 186, 108, 186, 122,
                 186, 108, 186, 122,
@@ -76,13 +75,13 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 b -> this.visible = b
                 );
         this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.mapwidget.mcchunks.tooltip"));
-        this.extendedDimensions = this.getRenderSpaceDimensions();
-        this.geoCenter = this.getMap().getController().getCenterLocation();
     }
 
     @Override
     protected void initialize() {
-
+        this.extendedDimensions = this.getRenderSpaceDimensions();
+        this.geoCenter = this.getMap().getController().getCenterLocation();
+        this.setAlpha(0.25f);
     }
 
     @Override
@@ -314,7 +313,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
     @Override
     public MapLayer copy(MapWidget mapFor) {
-        McChunksLayer layer = new McChunksLayer(mapFor);
+        McChunksLayer layer = new McChunksLayer();
         this.copyPropertiesToOther(layer);
         return layer;
     }
