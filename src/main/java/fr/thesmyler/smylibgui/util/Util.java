@@ -27,7 +27,7 @@ public final class Util {
         if (SmyLibGui.getContext() == SmyLibGuiContext.JUNIT) {
             return new DummyFont((float) (1/ getGameContext().getScaleFactor()));
         }
-        return new Font((float) (1/ getGameContext().getScaleFactor()));
+        return new Font( 1f/ getGameContext().getScaleFactor());
     }
 
 }

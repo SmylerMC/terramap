@@ -15,7 +15,7 @@ import fr.thesmyler.terramap.maps.raster.IRasterTile;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.ColorTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
-import fr.thesmyler.terramap.util.ICopyrightHolder;
+import fr.thesmyler.terramap.util.CopyrightHolder;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.util.math.Mat2d;
@@ -30,7 +30,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
+public class RasterMapLayer extends MapLayer implements CopyrightHolder {
 
     protected IRasterTiledMap tiledMap = new ColorTiledMap(Color.WHITE, "Empty map");
     protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
@@ -52,6 +52,7 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     public void setTiledMap(IRasterTiledMap map) {
         this.tiledMap = map;
+        this.getMap().updateCopyright();
     }
 
     @Override
@@ -296,8 +297,8 @@ public class RasterMapLayer extends MapLayer implements ICopyrightHolder {
 
     @Override
     public ITextComponent getCopyright(String localeKey) {
-        if(this.tiledMap instanceof ICopyrightHolder) {
-            return ((ICopyrightHolder)this.tiledMap).getCopyright(localeKey);
+        if(this.tiledMap instanceof CopyrightHolder) {
+            return ((CopyrightHolder)this.tiledMap).getCopyright(localeKey);
         }
         return new TextComponentString("");
     }

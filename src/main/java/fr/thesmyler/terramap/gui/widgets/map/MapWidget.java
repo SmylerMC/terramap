@@ -28,7 +28,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilit
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.util.ICopyrightHolder;
+import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -50,7 +50,6 @@ import net.minecraft.util.text.TextComponentString;
  *
  */
 //TODO set min and max zoom according to layers
-//TODO update copyright according to layers
 //TODO keep track of errors according to layers
 public class MapWidget extends FlexibleWidgetContainer {
 
@@ -98,16 +97,13 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     public MapWidget(float x, float y, int z, float width, float height, MapContext context, double tileScaling) {
         super(x, y, z, width, height);
-        this.controller = new MapController(this);
-        this.inputLayer = (InputLayer) this.createLayer("input");
-        this.controller.inputLayer = this.inputLayer;
-        this.setLayerZ(this.inputLayer, 0);
 
-        this.setDoScissor(true);
         this.context = context;
         this.tileScaling = tileScaling;
+
         Font font = SmyLibGui.getDefaultFont();
         Font smallFont = Util.getSmallestFont();
+
         this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
             @Override
             public boolean isVisible(WidgetContainer parent) {
@@ -130,6 +126,15 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.scale.setX(15).setY(this.getHeight() - 30);
         super.addWidget(this.scale);
+
+        this.controller = new MapController(this);
+        this.inputLayer = (InputLayer) this.createLayer("input");
+        this.controller.inputLayer = this.inputLayer;
+        this.setLayerZ(this.inputLayer, 0);
+
+        this.setDoScissor(true);
+
+
         this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
 
         for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
@@ -182,6 +187,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         super.addWidget(layer);
         this.layers.add(layer);
         layer.initialize();
+        this.updateCopyright();
         return layer;
     }
 
@@ -193,6 +199,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     public void removeLayer(MapLayer layer) {
         super.removeWidget(layer);
         this.layers.remove(layer);
+        this.updateCopyright();
     }
 
     public void setLayerZ(MapLayer layer, int z) {
@@ -200,6 +207,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         super.removeWidget(layer);
         layer.setZ(z);
         super.addWidget(layer);
+        this.updateCopyright();
     }
 
     public List<MapLayer> getLayers() {
@@ -341,12 +349,13 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     }
 
-    private void updateCopyright() {
+    public void updateCopyright() {
         ITextComponent component = new TextComponentString("");
         for(IWidget widget: this.widgets) 
-            if(widget instanceof ICopyrightHolder){
+            if(widget instanceof CopyrightHolder){
                 if(component.getFormattedText().length() > 0) component.appendText(" | ");
-                component.appendSibling(((ICopyrightHolder)widget).getCopyright(SmyLibGui.getGameContext().getLanguage()));
+                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(SmyLibGui.getGameContext().getLanguage());
+                component.appendSibling(copyright);
             }
         this.copyright.setText(component);
         this.copyright.setVisibility(component.getFormattedText().length() > 0);
