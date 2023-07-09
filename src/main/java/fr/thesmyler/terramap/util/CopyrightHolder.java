@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.util;
 
 import net.minecraft.util.text.ITextComponent;
 
-public interface ICopyrightHolder {
+public interface CopyrightHolder {
 
     /**
      * Gets a copyright notice for this map, translated in the appropriate language,

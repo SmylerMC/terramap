@@ -13,7 +13,7 @@ import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
-import fr.thesmyler.terramap.util.ICopyrightHolder;
+import fr.thesmyler.terramap.util.CopyrightHolder;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 import net.buildtheearth.terraplusplus.util.http.Http;
@@ -25,7 +25,7 @@ import net.minecraft.util.text.ITextComponent;
  * @author SmylerMC
  *
  */
-public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements ICopyrightHolder {
+public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements CopyrightHolder {
 
     private final String[] urlPatterns;
     private final int maxZoom;
