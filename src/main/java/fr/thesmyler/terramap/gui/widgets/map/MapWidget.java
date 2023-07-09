@@ -128,7 +128,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         super.addWidget(this.scale);
 
         this.controller = new MapController(this);
-        this.inputLayer = (InputLayer) this.createLayer("input");
+        this.inputLayer = (InputLayer) this.createLayer(MapLayerLibrary.INPUT_LAYER_ID);
         this.controller.inputLayer = this.inputLayer;
         this.setLayerZ(this.inputLayer, 0);
 
@@ -137,7 +137,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
 
-        for(MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
+        for (MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
             if(controller instanceof RightClickMarkerController) {
                 this.rcmMarkerController = (RightClickMarkerController) controller;
             } else if(controller instanceof MainPlayerMarkerController) {
@@ -152,13 +152,6 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
             this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
         }
-
-        //FIXME add McChunkLayer
-        /*
-        MapLayer chunks = new McChunksLayer(this);
-        chunks.setZ(-1000);
-        this.addOverlayLayer(chunks);
-        */
 
     }
 

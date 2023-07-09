@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayerLibrary;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
@@ -125,11 +126,13 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     private void initializeMapForTheFirstTime() {
         TerramapMod.logger.info("Could not load a saved state, loading default full-screen map");
-        this.backgroundLayer = (RasterMapLayer) this.map.createLayer("raster");
+        this.backgroundLayer = (RasterMapLayer) this.map.createLayer(MapLayerLibrary.RASTER_LAYER_ID);
         IRasterTiledMap osmStyle = TerramapClientContext.getContext().getMapStyles().get("osm");
         if (osmStyle == null) TerramapMod.logger.warn("Could not load OSM raster style");
         this.backgroundLayer.setTiledMap(osmStyle);
         this.map.setLayerZ(this.backgroundLayer, Integer.MIN_VALUE);
+        MapLayer chunks = this.map.createLayer(MapLayerLibrary.CHUNKS_LAYER_ID);
+        this.map.setLayerZ(chunks, this.backgroundLayer.getZ() + 1);
     }
 
     private void restoreMap(TerramapScreenSavedState state) {
@@ -521,7 +524,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             PopupScreen pop = new PopupScreen(300f, 200f);
             for(IRasterTiledMap m: maps) {
                 MapPreview map = new MapPreview(0, m, e -> {
-                    ((RasterMapLayer) this.addMapLayer("raster")).setTiledMap(m);
+                    ((RasterMapLayer) this.addMapLayer(MapLayerLibrary.RASTER_LAYER_ID)).setTiledMap(m);
                     pop.close();
                 });
                 MapController controller = map.getController();
@@ -706,7 +709,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.setCopyrightVisibility(false);
             this.setScaleVisibility(false);
             this.onClick = onClick;
-            this.previewLayer = (RasterMapLayer) this.createLayer("raster");
+            this.previewLayer = (RasterMapLayer) this.createLayer(MapLayerLibrary.RASTER_LAYER_ID);
             this.previewLayer.setTiledMap(map);
         }
 
