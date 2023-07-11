@@ -56,15 +56,12 @@ public final class MapController {
     void update(long dt) {
         /*
          * These things do time dependent integration operations, so if the integration step is irrelevant, skip
-         * We also want to do that before calling the super method, so any position change is taken into account when updating markers
          */
         boolean processTimeDependant = dt > 0 && dt < 1000;
         if (processTimeDependant) {
             this.processZoom(dt);
             this.processRotation(dt);
-        }
-        if (this.trackedMarker == null || this.processTracking()) {
-            if (processTimeDependant) {
+            if (this.trackedMarker == null || this.processTracking()) {
                 this.processInertia(dt);
             }
         }
@@ -195,7 +192,7 @@ public final class MapController {
      * Increases or decreases this map's zoom of the given amount.
      * The new zoom value will be clamped to this map's maximum and minimum zoom,
      * and snapped to the closest snapping multiple.
-     *
+     * <br>
      * This method does not interrupt tracking.
      *
      * @param amount    a delta to add to this map zoom's
@@ -248,7 +245,7 @@ public final class MapController {
 
     /**
      * Moves a given location to the center of the map widget.
-     *
+     * <br>
      * This method interrupts tracking.
      *
      * @param location  a location to move to the center of the map widget
@@ -262,7 +259,7 @@ public final class MapController {
 
     /**
      * Moves a given location to a given position on the map widget.
-     *
+     * <br>
      * This method interrupts tracking.
      *
      * @param location  a location to move to the center of the map widget
@@ -278,7 +275,7 @@ public final class MapController {
 
     /**
      * Moves a given location to a given position on the map widget.
-     *
+     * <br>
      * This method interrupts tracking.
      *
      * @param location  a location to move to the center of the map widget
@@ -310,7 +307,7 @@ public final class MapController {
      * Changes this map's zoom to the given value.
      * The new zoom value will be clamped to this map's maximum and minimum zoom,
      * and snapped to the closest snapping multiple.
-     *
+     * <br>
      * This method does not interrupt tracking.
      *
      * @param zoom      a new zoom value

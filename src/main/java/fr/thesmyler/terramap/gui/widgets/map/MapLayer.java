@@ -25,13 +25,14 @@ import static java.lang.Math.toRadians;
  */
 public abstract class MapLayer implements IWidget {
 
+    private String type;
     private MapWidget map;
     private MapController controller;
 
     protected int z;
     private final Vec2dMutable renderSpaceDimensions = new Vec2dMutable();
     private final Vec2dMutable renderSpaceDimensionsHalf = new Vec2dMutable(); // We need so much we might as well keep a copy
-    protected final Vec2dMutable renderingOffset = new Vec2dMutable();
+    private final Vec2dMutable renderingOffset = new Vec2dMutable();
     private float rotation;
     private float rotationOffset; //TODO GUI
 
@@ -49,6 +50,10 @@ public abstract class MapLayer implements IWidget {
     void setMap(MapWidget map) {
         this.map = map;
         this.controller = map.getController();
+    }
+
+    void setType(String type) {
+        this.type = type;
     }
 
     /**
@@ -182,7 +187,7 @@ public abstract class MapLayer implements IWidget {
      * Updates the current OpenGL context to rotate the screen according to this layer's rotation matrix.
      * This method needs to be called before rendering anything in implementing subclasses,
      * or the rendered content will not be rotated according to this layer's settings.
-     *
+     * <br>
      * The caller is responsible for calling {@link GlStateManager#pushMatrix()} and {@link GlStateManager#popMatrix()}.
      *
      * @param drawX the X coordinate the widget is supposed to be drawn at
@@ -329,6 +334,13 @@ public abstract class MapLayer implements IWidget {
         if (!Double.isFinite(rotationOffset)) throw new IllegalArgumentException("Layer rotation offset has to be finite");
         this.rotationOffset = rotationOffset;
         this.updateViewPorts();
+    }
+
+    /**
+     * @return the type of this layer, as registered in {@link MapLayerLibrary}
+     */
+    public String getType() {
+        return this.type;
     }
 
     /**

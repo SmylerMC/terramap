@@ -67,9 +67,9 @@ public class TestingWidgetContainer extends WidgetContainer {
         this.screenTime += System.currentTimeMillis() - stime;
     }
 
-    public void runFor(long time) throws InterruptedException {
+    public void runFor(long milliseconds) throws InterruptedException {
         long stime = this.screenTime;
-        while (this.screenTime < stime + time) this.doTick();
+        while (this.screenTime < stime + milliseconds) this.doTick();
     }
 
     public void moveMouse(float x, float y, long time) throws InterruptedException {
