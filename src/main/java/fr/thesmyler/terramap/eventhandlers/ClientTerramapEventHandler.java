@@ -107,7 +107,8 @@ public class ClientTerramapEventHandler {
              */
             LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) Minecraft.getMinecraft().currentScreen;
             MapLayer layer = popup.getLayer();
-            TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), layer.getRenderingOffset());
+            //TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), layer.getRenderingOffset());
+            //FIXME restore Minimap
             TerramapClientPreferences.save();
         }
     }

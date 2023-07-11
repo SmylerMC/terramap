@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.terramap.config.SavedTerramapState;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayerLibrary;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
@@ -107,7 +108,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     private RasterMapLayer backgroundLayer;
 
-    public TerramapScreen(GuiScreen parent, TerramapScreenSavedState state) {
+    public TerramapScreen(GuiScreen parent, SavedMainScreenState state) {
         super(BackgroundOption.OVERLAY);
         this.parent = parent;
         this.map = new MapWidget(10, MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
@@ -135,7 +136,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.map.setLayerZ(chunks, this.backgroundLayer.getZ() + 1);
     }
 
-    private void restoreMap(TerramapScreenSavedState state) {
+    private void restoreMap(SavedMainScreenState state) {
         //TODO
     }
 
@@ -664,8 +665,21 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     @Override
     public void onGuiClosed() {
-        //FIXME re-implement saving
-        //TerramapClientContext.getContext().setSavedScreenState(this.saveToState()); //TODO Also save if minecraft is closed from the OS
+        //TODO Also save if minecraft is closed from the OS
+        Map<String, Boolean> visibility = new HashMap<>();
+        Map<String, FeatureVisibilityController> visibilityControllers = this.map.getVisibilityControllers();
+        for(String key: visibilityControllers.keySet()) {
+            visibility.put(key, visibilityControllers.get(key).getVisibility());
+        }
+
+        SavedTerramapState state = TerramapClientContext.getContext().getSavedState();
+        state.mainScreen.map = this.map.save();
+        Marker tracked = this.map.getController().getTrackedMarker();
+        state.mainScreen.trackedMarker = tracked != null ? tracked.getControllerId(): null;
+        state.mainScreen.f1 = TerramapConfig.CLIENT.saveUiState && this.f1Mode;
+        state.mainScreen.debug = TerramapConfig.CLIENT.saveUiState && this.debugMode;
+        state.mainScreen.infoPanel = this.infoPanel.getTarget().equals(PanelTarget.OPENED);
+        state.mainScreen.visibilitySettings = visibility;
         TerramapClientContext.getContext().saveSettings();
         TerramapClientContext.getContext().registerForUpdates(false);
     }

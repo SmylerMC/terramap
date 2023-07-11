@@ -12,15 +12,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
-import fr.thesmyler.terramap.util.math.Vec2d;
-import fr.thesmyler.terramap.util.math.Vec2dImmutable;
+import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 
- * Preferences setting the client needs to store about servers
+ * Preferences settings the client needs to store about servers
  *
  */
 @SideOnly(Side.CLIENT)
@@ -30,101 +29,10 @@ public class TerramapClientPreferences {
     private static File file = null;
     private static ClientPreferences preferences = new ClientPreferences();
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
-    public static String getServerGenSettings(String serverId) {
-        try {
-            initPreferences();
-            return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).genSettings: "";
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to get server gen settings");
-            TerramapMod.logger.catching(e);
-            return "";
-        }
-    }
-
-    public static TerramapScreenSavedState getServerSavedScreen(String serverId) {
-        try {
-            initPreferences();
-            return preferences.servers.containsKey(serverId) ? preferences.servers.get(serverId).mapState: null;
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to get saved screen state");
-            TerramapMod.logger.catching(e);
-            return null;
-        }
-    }
-
-    public static boolean getServerHasShownWelcome(String serverId) {
-        try {
-            initPreferences();
-            return preferences.servers.containsKey(serverId) && preferences.servers.get(serverId).hasShownWelcome;
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to query whether or not welcome was shown for " + serverId);
-            TerramapMod.logger.catching(e);
-            return false;
-        }
-    }
-    
-    public static Vec2dImmutable getMinimapRenderingOffset(String serverId, String layerName) {
-        try {
-            initPreferences();
-            ServerPreferences server = preferences.servers.get(serverId);
-            if(server == null) return Vec2dImmutable.NULL;
-            return server.minimapRenderOffsets.getOrDefault(layerName, Vec2dImmutable.NULL);
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to query whether or not welcome was shown for " + serverId);
-            TerramapMod.logger.catching(e);
-            return Vec2dImmutable.NULL;
-        }
-    }
-
-    public static void setServerSavedScreen(String serverId, TerramapScreenSavedState mapState) {
-        try {
-            initPreferences();
-            ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
-            serv.mapState = mapState;
-            preferences.servers.put(serverId, serv);
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to set saved screen state");
-            TerramapMod.logger.catching(e);
-        }
-    }
-
-    public static void setServerGenSettings(String serverId, String genSettings) {
-        try {
-            initPreferences();
-            ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
-            serv.genSettings = genSettings;
-            if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to set gen settings");
-            TerramapMod.logger.catching(e);
-        }
-    }
-
-    public static void setServerHasShownWelcome(String serverId, boolean yesNo) {
-        try {
-            initPreferences();
-            ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
-            serv.hasShownWelcome = yesNo;
-            if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to set gen settings");
-            TerramapMod.logger.catching(e);
-        }
-    }
-    
-    public static void setMinimapRenderingOffset(String serverId, String layerId, Vec2d<?> offset) {
-        try {
-            initPreferences();
-            ServerPreferences serv = preferences.servers.getOrDefault(serverId, new ServerPreferences());
-            serv.minimapRenderOffsets.put(layerId, offset.getImmutable());
-            if(!preferences.servers.containsKey(serverId)) preferences.servers.put(serverId, serv);
-        } catch(Exception e) {
-            TerramapMod.logger.warn("Failed to set minimap rendering delta!");
-            TerramapMod.logger.catching(e);
-        }
-    }
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
+            .setPrettyPrinting()
+            .create();
 
     private static void initPreferences() {
         if(preferences == null) {
@@ -132,11 +40,19 @@ public class TerramapClientPreferences {
         }
     }
 
+    public static SavedTerramapState getSavedState(String serverIdentifier) {
+        initPreferences();
+        SavedTerramapState state = preferences.servers.get(serverIdentifier);
+        if (state == null) {
+            state = new SavedTerramapState();
+            preferences.servers.put(serverIdentifier, state);
+        }
+        return state;
+    }
+
     public static void save() {
         try {
-            if(preferences == null) {
-                preferences = new ClientPreferences();
-            }
+            initPreferences();
             String str = GSON.toJson(preferences);
             Files.write(file.toPath(), str.getBytes(Charset.defaultCharset()));
         } catch (IOException e) {
@@ -152,8 +68,7 @@ public class TerramapClientPreferences {
         } else {
             try {
                 String text = String.join("\n", Files.readAllLines(file.toPath(), Charset.defaultCharset()));
-                Gson gson = new Gson();
-                preferences = gson.fromJson(text, ClientPreferences.class);
+                preferences = GSON.fromJson(text, ClientPreferences.class);
             } catch (IOException | JsonSyntaxException e) {
                 TerramapMod.logger.error("Failed to load client preference file, setting to default");
                 TerramapMod.logger.catching(e);
@@ -171,14 +86,7 @@ public class TerramapClientPreferences {
     }
 
     private static class ClientPreferences {
-        final Map<String, ServerPreferences> servers = new HashMap<>();
-    }
-
-    private static class ServerPreferences {
-        public String genSettings = "";
-        public TerramapScreenSavedState mapState = new TerramapScreenSavedState();
-        public boolean hasShownWelcome =  false;
-        public final Map<String, Vec2dImmutable> minimapRenderOffsets = new HashMap<>();
+        final Map<String, SavedTerramapState> servers = new HashMap<>();
     }
 
 }

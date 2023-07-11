@@ -10,11 +10,11 @@ import java.util.UUID;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.toast.TextureToast;
+import fr.thesmyler.terramap.config.SavedTerramapState;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
-import fr.thesmyler.terramap.gui.screens.TerramapScreenSavedState;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
@@ -28,8 +28,6 @@ import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import fr.thesmyler.terramap.util.TerramapUtil;
-import fr.thesmyler.terramap.util.math.Vec2d;
-import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
@@ -65,7 +63,6 @@ public class TerramapClientContext {
     private final PlayerSyncStatus proxySyncSpectators = PlayerSyncStatus.DISABLED;
     private TerramapVersion serverVersion = null;
     private String sledgehammerVersion = null;
-    private EarthGeneratorSettings genSettings = null;
     private GeographicProjection projection = null;
     private TerrainPreview terrainPreview = null;
     private boolean isRegisteredForUpdates = false;
@@ -117,10 +114,11 @@ public class TerramapClientContext {
     }
 
     public EarthGeneratorSettings getGeneratorSettings() {
-        if(this.genSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
+        SavedTerramapState savedTerramapState = this.getSavedState();
+        if(savedTerramapState.generatorSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
             return TerramapUtil.BTE_GENERATOR_SETTINGS; // Sledgehammer is installed and this is an Earth world, it should be safe to assume a BTE world
         }
-        return this.genSettings;
+        return savedTerramapState.generatorSettings;
     }
 
     public GeographicProjection getProjection() {
@@ -145,16 +143,14 @@ public class TerramapClientContext {
             TerramapMod.logger.error("The proxy will be assuming a BTE projection, things will not work!");
             //TODO Warning on the GUI
         }
-        this.genSettings = genSettings;
+        this.getSavedState().generatorSettings = genSettings;
         this.projection = null;
         this.terrainPreview = null;
+        this.saveSettings();
     }
 
     public void saveSettings() {
         try {
-            if(!this.isInstalledOnServer() && this.genSettings != null) {
-                TerramapClientPreferences.setServerGenSettings(this.getContextIdentifier(), this.genSettings.toString());
-            }
             TerramapClientPreferences.save();
         } catch(Exception e) {
             TerramapMod.logger.info("Failed to save client preference file");
@@ -244,25 +240,6 @@ public class TerramapClientContext {
         return maps;
     }
 
-    public TerramapScreenSavedState getSavedScreenState() {
-        return TerramapClientPreferences.getServerSavedScreen(this.getContextIdentifier());
-    }
-
-    public boolean hasSavedScreenState() {
-        return TerramapClientPreferences.getServerSavedScreen(this.getContextIdentifier()) != null;
-    }
-
-    public void setSavedScreenState(TerramapScreenSavedState svd) {
-        TerramapClientPreferences.setServerSavedScreen(this.getContextIdentifier(), svd);
-    }
-    
-    public Vec2dImmutable getMinimapRenderOffset(String layer) {
-        return TerramapClientPreferences.getMinimapRenderingOffset(this.getContextIdentifier(), layer);
-    }
-
-    public void setMinimapRenderOffset(String layer, Vec2d<?> offset) {
-        TerramapClientPreferences.setMinimapRenderingOffset(this.getContextIdentifier(), layer, offset);
-    }
     public void registerForUpdates(boolean yesNo) {
         this.isRegisteredForUpdates = yesNo;
         if(this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
@@ -292,9 +269,8 @@ public class TerramapClientContext {
 
     private void setRemoteIdentifier(String identifier) {
         this.serverIdentifier = identifier;
-        String sttgStr = TerramapClientPreferences.getServerGenSettings(this.getContextIdentifier());
-        if(sttgStr.length() > 0) {
-            this.genSettings = EarthGeneratorSettings.parse(sttgStr);
+        EarthGeneratorSettings settings = this.getSavedState().generatorSettings;
+        if(settings != null) {
             TerramapMod.logger.info("Got generator settings from client preferences file");
         }
     }
@@ -440,13 +416,13 @@ public class TerramapClientContext {
 
     /**
      * Tells whether the map should be accessible in the given context
-     * 
+     * <br>
      * The fullscreen map is accessible if one of the following is true:
      *  - The proxy forces the map
      *  - The force terra world client side configuration is set
      *  - The generation settings are set
      *  - We are on an Earth world and Terramap is not installed on the server
-     *  
+     * <br>
      *  The minimap is accessible if one of the following is true:
      *   - We are on an earth world
      *   - The generation settings are set
@@ -487,15 +463,27 @@ public class TerramapClientContext {
         }
     }
 
+    /**
+     * @deprecated call {@link #getSavedState()} and {@link #saveSettings()} directly.
+     */
+    @Deprecated
     public boolean shouldShowWelcomeToast() {
         if(!this.allowsMap(MapContext.FULLSCREEN)) return false;
         if(!(Minecraft.getMinecraft().currentScreen == null)) return false;
-        return !TerramapClientPreferences.getServerHasShownWelcome(this.getContextIdentifier());
+        return !this.getSavedState().hasShownWelcome;
     }
 
+    /**
+     * @deprecated call {@link #getSavedState()} and {@link #saveSettings()} directly.
+     */
+    @Deprecated
     public void setHasShownWelcomeMessage(boolean yesNo) {
-        TerramapClientPreferences.setServerHasShownWelcome(this.getContextIdentifier(), yesNo);
-        TerramapClientPreferences.save();
+        this.getSavedState().hasShownWelcome = yesNo;
+        this.saveSettings();
+    }
+
+    public SavedTerramapState getSavedState() {
+        return TerramapClientPreferences.getSavedState(this.getContextIdentifier());
     }
 
     public void tryShowWelcomeToast() {
@@ -517,11 +505,10 @@ public class TerramapClientContext {
 
     public void openMapAt(double zoom, double lon, double lat) {
         //TODO restore from state when available
-        TerramapScreenSavedState state = this.getSavedScreenState();
-        state.centerLongitude = lon;
-        state.centerLatitude = lat;
-        state.zoomLevel = zoom;
-        state.trackedMarker = null;
+        SavedTerramapState state = this.getSavedState();
+        state.mainScreen.map.center.set(lon, lat);
+        state.mainScreen.map.zoom = zoom;
+        state.mainScreen.trackedMarker = null;
         Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, null));
     }
 
