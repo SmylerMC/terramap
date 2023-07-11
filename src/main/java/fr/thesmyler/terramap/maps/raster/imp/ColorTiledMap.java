@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.maps.raster.imp;
 
+import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.SmyLibGuiContext;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
@@ -20,10 +22,14 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
     public ColorTiledMap(Color color, String name) {
         this.color = color;
         this.name = name;
-        TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-        DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256,  256, this.color.asRGBInt()));
-        this.textureLocation = textureManager.getDynamicTextureLocation(
-                TerramapMod.MODID + ":color_tile_" + this.color.asHexString(), texture);
+        if (SmyLibGui.getContext() != SmyLibGuiContext.JUNIT) {
+            TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+            DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256, 256, this.color.asRGBInt()));
+            this.textureLocation = textureManager.getDynamicTextureLocation(
+                    TerramapMod.MODID + ":color_tile_" + this.color.asHexString(), texture);
+        } else {
+            this.textureLocation = null;
+        }
     }
 
     @Override

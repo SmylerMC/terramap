@@ -9,6 +9,17 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GeoPointTest {
+
+    public static GeoPointImmutable PARIS = new GeoPointImmutable(2.350987d, 48.856667d);
+    public static GeoPointImmutable NEW_YORK = new GeoPointImmutable(-74.005974d, 40.714268d);
+    public static GeoPointImmutable LONDON = new GeoPointImmutable(-0.166670d, 51.500000d);
+    public static GeoPointImmutable BEIJING = new GeoPointImmutable(116.397230d, 39.907500d);
+    public static GeoPointImmutable SEATTLE = new GeoPointImmutable(-122.332070, 47.606210d);
+    public static GeoPointImmutable SIDNEY = new GeoPointImmutable(151.208666d, -33.875113d);
+    public static GeoPointImmutable ARC_DE_TRIOMPHE = new GeoPointImmutable(2.295026d, 48.87378100000001d);
+    public static GeoPointImmutable ARCHE_DE_LA_DEFENSE = new GeoPointImmutable(2.236214, 48.8926507);
+    public static GeoPointImmutable NOTRE_DAME_NORTH_TOWER = new GeoPointImmutable(2.349270d, 48.853474d);
+    public static GeoPointImmutable NOTRE_DAME_SOUTH_TOWER = new GeoPointImmutable(2.348969d, 48.853065d);
     
     @Test
     public void validConstructionTest() {
@@ -85,26 +96,16 @@ public class GeoPointTest {
     
     @Test
     public void distanceTest() {
-        GeoPointImmutable paris = new GeoPointImmutable(2.350987d, 48.856667d);
-        GeoPointImmutable newYork = new GeoPointImmutable(-74.005974d, 40.714268d);
-        GeoPointImmutable london = new GeoPointImmutable(-0.166670d, 51.500000d);
-        GeoPointImmutable beijing = new GeoPointImmutable(116.397230d, 39.907500d);
-        GeoPointImmutable seattle = new GeoPointImmutable(-122.332070, 47.606210d);
-        GeoPointImmutable sidney = new GeoPointImmutable(151.208666d, -33.875113d);
-        GeoPointImmutable arcDeTriomphe = new GeoPointImmutable(2.295026d, 48.87378100000001d);
-        GeoPointImmutable archeLaDefense = new GeoPointImmutable(2.236214, 48.8926507);
-        GeoPointImmutable notreDameNorthTower = new GeoPointImmutable(2.349270d, 48.853474d);
-        GeoPointImmutable notreDameSouthTower = new GeoPointImmutable(2.348969d, 48.853065d);
-        assertEquals(12470810d, sidney.distanceTo(seattle), 1000d);
-        assertEquals(8689000d, beijing.distanceTo(seattle), 1000d);
-        assertEquals(5837000d, paris.distanceTo(newYork), 1000d);
-        assertEquals(344240d, paris.distanceTo(london), 100d);
-        assertEquals(4785d, arcDeTriomphe.distanceTo(archeLaDefense), 10d);
-        assertEquals(51d, notreDameNorthTower.distanceTo(notreDameSouthTower), 1d);
-        assertEquals(0d, paris.distanceTo(paris), 0d);
-        assertEquals(0d, newYork.distanceTo(newYork), 0d);
-        assertEquals(0d, sidney.distanceTo(sidney), 0d);
-        assertEquals(0d, beijing.distanceTo(beijing), 0d);
+        assertEquals(12470810d, SIDNEY.distanceTo(SEATTLE), 1000d);
+        assertEquals(8689000d, BEIJING.distanceTo(SEATTLE), 1000d);
+        assertEquals(5837000d, PARIS.distanceTo(NEW_YORK), 1000d);
+        assertEquals(344240d, PARIS.distanceTo(LONDON), 100d);
+        assertEquals(4785d, ARC_DE_TRIOMPHE.distanceTo(ARCHE_DE_LA_DEFENSE), 10d);
+        assertEquals(51d, NOTRE_DAME_NORTH_TOWER.distanceTo(NOTRE_DAME_SOUTH_TOWER), 1d);
+        assertEquals(0d, PARIS.distanceTo(PARIS), 0d);
+        assertEquals(0d, NEW_YORK.distanceTo(NEW_YORK), 0d);
+        assertEquals(0d, SIDNEY.distanceTo(SIDNEY), 0d);
+        assertEquals(0d, BEIJING.distanceTo(BEIJING), 0d);
     }
    
     @Test

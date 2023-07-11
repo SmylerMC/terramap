@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.*;
 import java.util.function.Supplier;
 
+import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.math.DoubleRange;
 import fr.thesmyler.terramap.util.math.Vec2dMutable;
@@ -177,6 +178,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         if (constructor == null) throw new IllegalArgumentException("No such layer type registered: " + layerTypeId);
         MapLayer layer = constructor.get();
         layer.setMap(this);
+        layer.setType(layerTypeId);
         super.addWidget(layer);
         this.layers.add(layer);
         layer.initialize();
@@ -646,6 +648,25 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.source = source;
             this.message = message;
         }
+    }
+
+    public SavedMapState save() {
+        SavedMapState state = new SavedMapState();
+        state.center.set(this.controller.getTargetLocation());
+        state.zoom = this.controller.getTargetZoom();
+        state.rotation = this.controller.getTargetRotation();
+        for (MapLayer layer: this.layers) {
+            if (layer instanceof InputLayer) continue;
+            SavedMapState.SavedLayerState layerState = new SavedMapState.SavedLayerState();
+            layerState.type = layer.getType();
+            layerState.z = layer.getZ();
+            layerState.overlay = layer.isUserOverlay();
+            layerState.cartesianOffset.set(layer.getRenderingOffset());
+            layerState.rotationOffset = layer.getRotationOffset();
+            layerState.alpha = layer.getAlpha();
+            state.layers.add(layerState);
+        }
+        return state;
     }
 
     /**
