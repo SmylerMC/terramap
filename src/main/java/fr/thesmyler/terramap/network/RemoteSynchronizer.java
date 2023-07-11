@@ -144,10 +144,10 @@ public abstract class RemoteSynchronizer {
 
         try {
             ctx.setServerVersion(new TerramapVersion(pkt.serverVersion));
-            ctx.setGeneratorSettings(pkt.worldSettings);
             if(pkt.worldUUID.getLeastSignificantBits() != 0 || pkt.worldUUID.getMostSignificantBits() != 0) {
                 ctx.setWorldUUID(pkt.worldUUID);
             }
+            ctx.setGeneratorSettings(pkt.worldSettings);
             ctx.setPlayersSynchronizedByServer(pkt.syncPlayers);
             ctx.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
             ctx.setAllowsPlayerRadar(pkt.enablePlayerRadar);

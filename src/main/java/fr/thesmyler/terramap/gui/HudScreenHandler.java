@@ -111,10 +111,11 @@ public abstract class HudScreenHandler {
         //FIXME set minimap background on update
         //map.setBackground(bg);
         
-        for(MapLayer layer: map.getLayers()) {
-            Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());
-            layer.setRenderingOffset(offset);
-        }
+        //for(MapLayer layer: map.getLayers()) {
+            //FIXME restore minimap
+            //Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());
+            //layer.setRenderingOffset(offset);
+        //}
         
         float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
         zoomLevel = Math.min(bg.getMaxZoom(), zoomLevel);
