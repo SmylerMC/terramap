@@ -61,11 +61,6 @@ public class InputLayer extends MapLayer {
     }
 
     @Override
-    public String getId() {
-        return "controller";
-    }
-
-    @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         if(this.isRotating) {
@@ -208,11 +203,6 @@ public class InputLayer extends MapLayer {
     @Override
     public long getTooltipDelay() {
         return 0;
-    }
-
-    @Override
-    public MapLayer copy(MapWidget mapFor) {
-        throw new UnsupportedOperationException("Cannot copy a map input layer");
     }
 
     @Override

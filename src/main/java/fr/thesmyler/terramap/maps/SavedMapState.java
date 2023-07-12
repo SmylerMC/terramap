@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.maps;
 
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +18,5 @@ public class SavedMapState {
     public float rotation;
 
     public final List<SavedLayerState> layers = new ArrayList<>();
-
-    public static class SavedLayerState {
-        public String type;
-        public int z;
-        public final Vec2dMutable cartesianOffset = new Vec2dMutable();
-        public float rotationOffset = 0f;
-        public float alpha = 1f;
-        public boolean overlay = true;
-    }
 
 }

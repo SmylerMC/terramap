@@ -4,6 +4,7 @@ import fr.thesmyler.smylibgui.SmyLibGuiTest;
 import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.util.math.Vec2dImmutable;
@@ -44,14 +45,14 @@ class MapWidgetTest extends SmyLibGuiTest {
         assertEquals(45f, saved.rotation);
         assertEquals(2, saved.layers.size());
 
-        SavedMapState.SavedLayerState savedOsm = saved.layers.get(0);
+        SavedLayerState savedOsm = saved.layers.get(0);
         assertEquals(RASTER_LAYER_ID, savedOsm.type);
         assertEquals(-2, savedOsm.z);
         assertEquals(1f, savedOsm.alpha);
         assertEquals(0d, savedOsm.cartesianOffset.subtract(0d, 0d).norm(), 1e-5d);
         assertEquals(0f, savedOsm.rotationOffset, 1e-5f);
 
-        SavedMapState.SavedLayerState savedStamen = saved.layers.get(1);
+        SavedLayerState savedStamen = saved.layers.get(1);
         assertEquals(RASTER_LAYER_ID, savedStamen.type);
         assertEquals(-1, savedStamen.z);
         assertEquals(0.5f, savedStamen.alpha);

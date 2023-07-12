@@ -3,12 +3,15 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
+import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.IRasterTile;
@@ -63,8 +66,24 @@ public class RasterMapLayer extends MapLayer implements CopyrightHolder {
     }
 
     @Override
-    public String getId() {
-        return "tiled-raster-" + this.tiledMap.getId();
+    public JsonObject saveSettings() {
+        JsonObject object = new JsonObject();
+        object.add("style", new JsonPrimitive(this.tiledMap.getId()));
+        return object;
+    }
+
+    @Override
+    public void loadSettings(JsonObject json) {
+        try {
+            JsonPrimitive primitiveValue = json.getAsJsonPrimitive("style");
+            String styleId = primitiveValue.getAsString();
+            IRasterTiledMap tiledMap = TerramapClientContext.getContext().getMapStyles().get(styleId);
+            if (tiledMap != null) {
+                this.setTiledMap(tiledMap);
+            }
+        } catch (IllegalStateException | NullPointerException ignored) {
+            // Too bad, we can't load it
+        }
     }
 
     @Override
@@ -301,13 +320,6 @@ public class RasterMapLayer extends MapLayer implements CopyrightHolder {
             return ((CopyrightHolder)this.tiledMap).getCopyright(localeKey);
         }
         return new TextComponentString("");
-    }
-
-    @Override
-    public MapLayer copy(MapWidget forMap) {
-        RasterMapLayer other = new RasterMapLayer();
-        this.copyPropertiesToOther(other);
-        return other;
     }
 
     @Override
