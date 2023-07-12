@@ -365,7 +365,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @return the {@link FeatureVisibilityController} active for this map (the {@link Map} returned is a copy)
      */
     public Map<String, FeatureVisibilityController> getVisibilityControllers() {
-        Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers);
+        Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers); // Order matters !
         if (this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
         if (this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
         for (MapLayer layer: this.layers) {
@@ -671,6 +671,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             layerState.settings = layer.saveSettings();
             state.layers.add(layerState);
         }
+        state.visibilitySettings.clear();
+        this.getVisibilityControllers().values().forEach(c -> state.visibilitySettings.put(c.getSaveName(), c.getVisibility()));
         return state;
     }
 
@@ -690,6 +692,11 @@ public class MapWidget extends FlexibleWidgetContainer {
             layer.setRotationOffset(layerState.rotationOffset);
             layer.setUserOverlay(layerState.overlay);
             layer.loadSettings(layerState.settings);
+        }
+        Map<String, FeatureVisibilityController> controllers = this.getVisibilityControllers();
+        for (String key: state.visibilitySettings.keySet()) {
+            FeatureVisibilityController controller = controllers.get(key);
+            if (controller != null) controller.setVisibility(state.visibilitySettings.get(key));
         }
     }
 
