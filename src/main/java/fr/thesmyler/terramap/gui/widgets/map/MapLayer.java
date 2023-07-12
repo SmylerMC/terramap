@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import com.google.gson.JsonObject;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.util.DefaultThreadLocal;
@@ -34,7 +35,7 @@ public abstract class MapLayer implements IWidget {
     private final Vec2dMutable renderSpaceDimensionsHalf = new Vec2dMutable(); // We need so much we might as well keep a copy
     private final Vec2dMutable renderingOffset = new Vec2dMutable();
     private float rotation;
-    private float rotationOffset; //TODO GUI
+    private float rotationOffset; //TODO GUI for rotation offset
 
     private Mat2d directRotation = Mat2d.IDENTITY;
     private Mat2d inverseRotation = Mat2d.IDENTITY;
@@ -200,11 +201,26 @@ public abstract class MapLayer implements IWidget {
     }
 
     /**
-     * @return an id used to save this layer's properties
-     * @deprecated this should be removed when proper map serialisation is implemented
+     * Saves this layer's additional settings as a JSON object.
+     * This method is meant to be overridden by subclasses to save additional properties.
+     * Core properties like offsets or Z level are saved independently.
+     *
+     * @return a {@link JsonObject} containing this layer's settings
      */
-    @Deprecated
-    public abstract String getId();
+    public JsonObject saveSettings() {
+        return new JsonObject();
+    }
+
+    /**
+     * Restores this layer's additional settings from a JSON object.
+     * This method is meant to be overridden by subclasses to restore additional parameters.
+     * Core properties like offsets or Z level are saved independently.
+     *
+     * @param json  a {@link JsonObject} that contains previously saved settings (potentially empty or malformed)
+     */
+    public void loadSettings(JsonObject json) {
+        // No-op
+    }
     
     @Override
     public float getX() {
@@ -231,7 +247,6 @@ public abstract class MapLayer implements IWidget {
         return this.map.getHeight();
     }
 
-    //TODO Make this only callable from the map
     void setZ(int z) {
         this.z = z;
     }
@@ -388,13 +403,22 @@ public abstract class MapLayer implements IWidget {
     }
 
     /**
-     * Copies this layer, except the new layer can be assigned to another map.
+     * Creates an exact copy of this layer, which may belong to another map.
      *
      * @param mapFor the map the copy should be assigned to
      *
      * @return a deep copy of this layer
      */
-    public abstract MapLayer copy(MapWidget mapFor);
+    public final MapLayer copy(MapWidget mapFor) {
+        MapLayer other = mapFor.createLayer(this.getType());
+        other.setAlpha(this.getAlpha());
+        other.setRenderingOffset(this.getRenderingOffset());
+        other.setUserOverlay(this.isUserOverlay());
+        other.setRotationOffset(this.getRotationOffset());
+        mapFor.setLayerZ(other, this.getZ());
+        other.loadSettings(this.saveSettings());
+        return other;
+    }
 
     /**
      * @return a localized name for this layer
@@ -413,7 +437,10 @@ public abstract class MapLayer implements IWidget {
      * @param other a layer to copy this one's properties to
      *
      * @throws NullPointerException if other is null
+     *
+     * @deprecated use the new settings system
      */
+    @Deprecated
     protected final void copyPropertiesToOther(MapLayer other) {
         other.alpha = this.alpha;
         other.rotationOffset = this.rotationOffset;

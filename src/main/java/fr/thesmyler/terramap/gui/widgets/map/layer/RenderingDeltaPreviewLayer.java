@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
+import com.google.gson.JsonObject;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -31,11 +32,6 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
     @Override
     protected void initialize() {
         this.renderSpaceHalfDimensions = this.getRenderSpaceHalfDimensions();
-    }
-
-    @Override
-    public String getId() {
-        return "delta-preview";
     }
 
     @Override
@@ -76,10 +72,25 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
     }
 
     @Override
-    public MapLayer copy(MapWidget forMap) {
-        RenderingDeltaPreviewLayer layer = new RenderingDeltaPreviewLayer(forMap, this.realCenter);
-        this.copyPropertiesToOther(layer);
-        return layer;
+    public JsonObject saveSettings() {
+        JsonObject json = new JsonObject();
+        JsonObject geoPoint = new JsonObject();
+        geoPoint.addProperty("latitude", this.realCenter.latitude());
+        geoPoint.addProperty("longitude", this.realCenter.longitude());
+        json.add("realCenter", geoPoint);
+        return json;
+    }
+
+    @Override
+    public void loadSettings(JsonObject json) {
+        try {
+            JsonObject geoPoint = json.getAsJsonObject("realCenter");
+            double latitude = geoPoint.get("latitude").getAsDouble();
+            double longitude = geoPoint.get("longitude").getAsDouble();
+            this.realCenter.set(longitude, latitude);
+        } catch (IllegalStateException | NullPointerException ignored) {
+            // Things were not in the expected format, let's abort there.
+        }
     }
 
     @Override

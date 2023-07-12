@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.*;
 import java.util.function.Supplier;
 
+import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.math.DoubleRange;
@@ -365,10 +366,13 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public Map<String, FeatureVisibilityController> getVisibilityControllers() {
         Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers);
-        if(this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
-        if(this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
-        for(MapLayer layer: this.layers) {
-            if(layer instanceof FeatureVisibilityController) m.put(layer.getId(), (FeatureVisibilityController)layer);
+        if (this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
+        if (this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
+        for (MapLayer layer: this.layers) {
+            if (layer instanceof FeatureVisibilityController) {
+                FeatureVisibilityController featureVisibilityController = (FeatureVisibilityController) layer;
+                m.put(featureVisibilityController.getSaveName(), featureVisibilityController);
+            }
         }
         return m;
     }
@@ -657,13 +661,14 @@ public class MapWidget extends FlexibleWidgetContainer {
         state.rotation = this.controller.getTargetRotation();
         for (MapLayer layer: this.layers) {
             if (layer instanceof InputLayer) continue;
-            SavedMapState.SavedLayerState layerState = new SavedMapState.SavedLayerState();
+            SavedLayerState layerState = new SavedLayerState();
             layerState.type = layer.getType();
             layerState.z = layer.getZ();
             layerState.overlay = layer.isUserOverlay();
             layerState.cartesianOffset.set(layer.getRenderingOffset());
             layerState.rotationOffset = layer.getRotationOffset();
             layerState.alpha = layer.getAlpha();
+            layerState.settings = layer.saveSettings();
             state.layers.add(layerState);
         }
         return state;
@@ -677,13 +682,14 @@ public class MapWidget extends FlexibleWidgetContainer {
             if (layer instanceof InputLayer) continue;
             this.removeLayer(layer);
         }
-        for (SavedMapState.SavedLayerState layerState: state.layers) {
+        for (SavedLayerState layerState: state.layers) {
             MapLayer layer = this.createLayer(layerState.type);
             this.setLayerZ(layer, layerState.z);
             layer.setAlpha(layerState.alpha);
             layer.setRenderingOffset(layerState.cartesianOffset);
             layer.setRotationOffset(layerState.rotationOffset);
             layer.setUserOverlay(layerState.overlay);
+            layer.loadSettings(layerState.settings);
         }
     }
 

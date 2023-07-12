@@ -89,7 +89,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         MapWidget map = (MapWidget)parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
-        map.getProfiler().startSection("layer-" + this.getId());
+        map.getProfiler().startSection("layer-" + ID);
         
         this.cache.projection = projection;
 
@@ -215,11 +215,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 x + this.projectedCorners[3].x, y + this.projectedCorners[3].y
         );
     }
-
-    @Override
-    public String getId() {
-        return ID;
-    }
     
     private class ProjectionCache {
         
@@ -284,7 +279,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
     @Override
     public String getSaveName() {
-        return this.getId();
+        return ID;
     }
 
     @Override
@@ -309,13 +304,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
     public void setColor(Color color) {
         this.color = color;
-    }
-
-    @Override
-    public MapLayer copy(MapWidget mapFor) {
-        McChunksLayer layer = new McChunksLayer();
-        this.copyPropertiesToOther(layer);
-        return layer;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class DistortionLayer extends MapLayer {
         MapWidget map = (MapWidget) parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
-        map.getProfiler().startSection("layer-" + this.getId());
+        map.getProfiler().startSection("layer-distortion");
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
 
@@ -65,18 +65,6 @@ public class DistortionLayer extends MapLayer {
         
         GlStateManager.popMatrix();
         map.getProfiler().endSection();
-    }
-
-    @Override
-    public String getId() {
-        return "distortion";
-    }
-
-    @Override
-    public MapLayer copy(MapWidget forMap) {
-        DistortionLayer other = new DistortionLayer();
-        this.copyPropertiesToOther(other);
-        return other;
     }
 
     @Override
