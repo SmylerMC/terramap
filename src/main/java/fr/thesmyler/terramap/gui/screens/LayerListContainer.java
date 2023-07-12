@@ -18,13 +18,13 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.minecraft.util.text.TextComponentString;
 
-class OverlayList extends FlexibleWidgetContainer {
+class LayerListContainer extends FlexibleWidgetContainer {
     
     private final MapWidget map;
     
     private boolean cancelNextInit = false;
 
-    public OverlayList(float x, float y, int z, float width, MapWidget map) {
+    public LayerListContainer(float x, float y, int z, float width, MapWidget map) {
         super(x, y, z, width, 10);
         this.map = map;
         this.setDoScissor(false);
@@ -61,13 +61,13 @@ class OverlayList extends FlexibleWidgetContainer {
         int layer2z = layer1.getZ();
         this.map.setLayerZ(layer1, layer2.getZ());
         this.map.setLayerZ(layer2, layer2z);
-        OverlayList.this.scheduleBeforeNextUpdate(OverlayList.this::init);
+        LayerListContainer.this.scheduleBeforeNextUpdate(LayerListContainer.this::init);
     }
     
     private abstract class OverlayEntry extends FlexibleWidgetContainer {
 
         public OverlayEntry(float y, float height) {
-            super(5, y, 0, OverlayList.this.getWidth() - 10, height);
+            super(5, y, 0, LayerListContainer.this.getWidth() - 10, height);
             this.setDoScissor(false);
         }
 
@@ -134,32 +134,32 @@ class OverlayList extends FlexibleWidgetContainer {
         }
         
         public void remove() {
-            OverlayList.this.scheduleBeforeNextUpdate(() -> {
-                OverlayList.this.map.removeLayer(this.layer);
-                OverlayList.this.init();
+            LayerListContainer.this.scheduleBeforeNextUpdate(() -> {
+                LayerListContainer.this.map.removeLayer(this.layer);
+                LayerListContainer.this.init();
             });
         }
         
         
         void moveUp() {
-            List<MapLayer> layers = new ArrayList<>(OverlayList.this.map.getLayers());
+            List<MapLayer> layers = new ArrayList<>(LayerListContainer.this.map.getLayers());
             layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
             int i = layers.indexOf(this.layer);
             if(i > 0) {
                 MapLayer other = layers.get(i - 1);
                 if (other.getZ() == Integer.MIN_VALUE) return; // Do not move the background
-                OverlayList.this.swapLayers(this.layer, other);
+                LayerListContainer.this.swapLayers(this.layer, other);
             }
         }
 
         void moveDown() {
-            List<MapLayer> layers = new ArrayList<>(OverlayList.this.map.getLayers());
+            List<MapLayer> layers = new ArrayList<>(LayerListContainer.this.map.getLayers());
             layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
             int i = layers.indexOf(this.layer);
             if(i < layers.size() - 1) {
                 MapLayer other = layers.get(i + 1);
                 if (other.getZ() == Integer.MIN_VALUE) return; // Do not move the background
-                OverlayList.this.swapLayers(this.layer, other);
+                LayerListContainer.this.swapLayers(this.layer, other);
             }
         }
 
