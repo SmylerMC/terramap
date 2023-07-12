@@ -669,6 +669,24 @@ public class MapWidget extends FlexibleWidgetContainer {
         return state;
     }
 
+    public void restore(SavedMapState state) {
+        this.controller.setRotation(state.rotation, false);
+        this.controller.setZoom(state.zoom, false);
+        this.controller.moveLocationToCenter(state.center, false);
+        for (MapLayer layer: this.layers) {
+            if (layer instanceof InputLayer) continue;
+            this.removeLayer(layer);
+        }
+        for (SavedMapState.SavedLayerState layerState: state.layers) {
+            MapLayer layer = this.createLayer(layerState.type);
+            this.setLayerZ(layer, layerState.z);
+            layer.setAlpha(layerState.alpha);
+            layer.setRenderingOffset(layerState.cartesianOffset);
+            layer.setRotationOffset(layerState.rotationOffset);
+            layer.setUserOverlay(layerState.overlay);
+        }
+    }
+
     /**
      * @return this map's profiler
      */

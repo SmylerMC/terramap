@@ -5,9 +5,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.terramap.config.SavedTerramapState;
-import fr.thesmyler.terramap.gui.widgets.map.MapController;
-import fr.thesmyler.terramap.gui.widgets.map.MapLayerLibrary;
+import fr.thesmyler.terramap.gui.widgets.map.*;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
@@ -48,8 +46,6 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
-import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
@@ -98,9 +94,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private final ScrollbarWidget styleScrollbar = new ScrollbarWidget(100, ScrollbarOrientation.VERTICAL);
     
     // Overlay panel
-    private final SlidingPanelWidget overlayPanel = new SlidingPanelWidget(70, 200);
-    private final OverlayList overlayList;
-    private final ScrollableWidgetContainer overlayListContainer;
+    private final SlidingPanelWidget layerPanel = new SlidingPanelWidget(70, 200);
+    private final LayerListContainer layerListContainer;
+    private final ScrollableWidgetContainer layerList;
     
     // UI states
     private boolean f1Mode = false;
@@ -114,30 +110,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.map = new MapWidget(10, MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
         this.backgroundStylePanelListContainer = new BackgroundStylePanelListContainer();
         this.infoPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
-        this.overlayPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
-        this.overlayList = new OverlayList(0, 0, 0, 100, this.map);
-        this.overlayListContainer = new ScrollableWidgetContainer(0, 0, 10, 10, 10, this.overlayList);
+        this.layerPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
+        this.layerListContainer = new LayerListContainer(0, 0, 0, 100, this.map);
+        this.layerList = new ScrollableWidgetContainer(0, 0, 10, 10, 10, this.layerListContainer);
         TerramapClientContext.getContext().registerForUpdates(true);
-        if (state != null) {
-            this.restoreMap(state);
-        } else {
-            this.initializeMapForTheFirstTime();
-        }
-    }
-
-    private void initializeMapForTheFirstTime() {
-        TerramapMod.logger.info("Could not load a saved state, loading default full-screen map");
-        this.backgroundLayer = (RasterMapLayer) this.map.createLayer(MapLayerLibrary.RASTER_LAYER_ID);
-        IRasterTiledMap osmStyle = TerramapClientContext.getContext().getMapStyles().get("osm");
-        if (osmStyle == null) TerramapMod.logger.warn("Could not load OSM raster style");
-        this.backgroundLayer.setTiledMap(osmStyle);
-        this.map.setLayerZ(this.backgroundLayer, Integer.MIN_VALUE);
-        MapLayer chunks = this.map.createLayer(MapLayerLibrary.CHUNKS_LAYER_ID);
-        this.map.setLayerZ(chunks, this.backgroundLayer.getZ() + 1);
-    }
-
-    private void restoreMap(SavedMainScreenState state) {
-        //TODO
+        this.restore(state);
     }
 
     @Override
@@ -212,15 +189,15 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         TexturedButtonWidget openConfigButton = new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig);
         openConfigButton.setTooltip(SmyLibGui.getTranslator().format("terramap.terramapscreen.buttons.config.tooltip"));
         this.infoPanel.addWidget(openConfigButton);
-        TexturedButtonWidget openOverlayButton = new TexturedButtonWidget(
+        TexturedButtonWidget openLayerListButton = new TexturedButtonWidget(
                 openConfigButton.getX(), openConfigButton.getY() + openConfigButton.getHeight() + 3, 100,
                 IncludedTexturedButtons.PAPER, () -> {
-                    if(this.overlayPanel.getTarget() == PanelTarget.CLOSED) {
-                        this.overlayPanel.open();
+                    if(this.layerPanel.getTarget() == PanelTarget.CLOSED) {
+                        this.layerPanel.open();
                         if(this.infoPanel.getTarget() == PanelTarget.CLOSED) this.toggleInfoPanel();
                     }
                 });
-        this.infoPanel.addWidget(openOverlayButton);
+        this.infoPanel.addWidget(openLayerListButton);
         this.playerGeoLocationText = new TextWidget(49, infoFont);
         this.playerGeoLocationText = new TextWidget(49, infoFont);
         this.playerGeoLocationText.setAnchorX(5).setAnchorY(5).setAlignment(TextAlignment.RIGHT);
@@ -258,47 +235,47 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.infoPanel.addWidget(searchButton);
         this.infoPanel.setHeight(this.searchBox.getY() + this.searchBox.getHeight() + 5);
         content.addWidget(this.infoPanel);
-        
-        // Overlay panel
-        this.overlayPanel.removeAllWidgets();
-        this.overlayPanel.cancelAllScheduled();
-        this.overlayPanel.setSize(
+
+        // Layers panel
+        this.layerPanel.removeAllWidgets();
+        this.layerPanel.cancelAllScheduled();
+        this.layerPanel.setSize(
                 this.infoPanel.getWidth(),
                 this.height - this.infoPanel.getHeight());
-        this.overlayPanel.setClosedX(-this.overlayPanel.getWidth()).setClosedY(this.infoPanel.getHeight());
-        this.overlayPanel.setOpenX(0).setOpenY(this.overlayPanel.getClosedY());
-        this.overlayPanel.addWidget(new TextWidget(
-                this.overlayPanel.getWidth() / 2, 7, 1,
+        this.layerPanel.setClosedX(-this.layerPanel.getWidth()).setClosedY(this.infoPanel.getHeight());
+        this.layerPanel.setOpenX(0).setOpenY(this.layerPanel.getClosedY());
+        this.layerPanel.addWidget(new TextWidget(
+                this.layerPanel.getWidth() / 2, 7, 1,
                 new TextComponentTranslation("terramap.terramapscreen.layerscreen.title"), TextAlignment.CENTER,
                 content.getFont()));
-        this.overlayPanel.addWidget(new TexturedButtonWidget(
-                this.overlayPanel.getWidth() - 20, 5, 1,
-                IncludedTexturedButtons.CROSS, this.overlayPanel::close));
-        this.overlayListContainer.setPosition(5f, 25f);
-        this.overlayListContainer.setSize(this.overlayPanel.getWidth() - 10, this.overlayPanel.getHeight() - 55f);
-        this.overlayListContainer.setContourColor(Color.DARK_OVERLAY).setContourSize(1f);
-        this.overlayList.setWidth(this.overlayListContainer.getWidth() - 15);
-        this.overlayListContainer.setDoScissor(true);
-        this.overlayList.setPosition(0, 0);
-        this.overlayPanel.addWidget(this.overlayListContainer);
-        int buttonWidth = (int) ((this.overlayListContainer.getWidth() - 10) / 3);
-        this.overlayPanel.addWidget(
+        this.layerPanel.addWidget(new TexturedButtonWidget(
+                this.layerPanel.getWidth() - 20, 5, 1,
+                IncludedTexturedButtons.CROSS, this.layerPanel::close));
+        this.layerList.setPosition(5f, 25f);
+        this.layerList.setSize(this.layerPanel.getWidth() - 10, this.layerPanel.getHeight() - 55f);
+        this.layerList.setContourColor(Color.DARK_OVERLAY).setContourSize(1f);
+        this.layerListContainer.setWidth(this.layerList.getWidth() - 15);
+        this.layerList.setDoScissor(true);
+        this.layerListContainer.setPosition(0, 0);
+        this.layerPanel.addWidget(this.layerList);
+        int buttonWidth = (int) ((this.layerList.getWidth() - 10) / 3);
+        this.layerPanel.addWidget(
                 new TextButtonWidget(
-                        5f, this.overlayPanel.getHeight() - 25, 1,
+                        5f, this.layerPanel.getHeight() - 25, 1,
                         buttonWidth,
                         SmyLibGui.getTranslator().format("terramap.terramapscreen.layerscreen.new"),
                         this::openInitialNewLayerSelector));
-        this.overlayPanel.addWidget(
+        this.layerPanel.addWidget(
                 new TextButtonWidget(
-                        10f + buttonWidth, this.overlayPanel.getHeight() - 25f, 1,
+                        10f + buttonWidth, this.layerPanel.getHeight() - 25f, 1,
                         buttonWidth,
                         SmyLibGui.getTranslator().format("terramap.terramapscreen.layerscreen.export")));
-        this.overlayPanel.addWidget(
+        this.layerPanel.addWidget(
                 new TextButtonWidget(
-                        15f + buttonWidth*2, this.overlayPanel.getHeight() - 25f, 1,
+                        15f + buttonWidth*2, this.layerPanel.getHeight() - 25f, 1,
                         buttonWidth,
                         SmyLibGui.getTranslator().format("terramap.terramapscreen.layerscreen.import")));
-        content.addWidget(this.overlayPanel);
+        content.addWidget(this.layerPanel);
 
         // Style panel
         this.stylePanel.setSize(200, this.height);
@@ -331,6 +308,37 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
 
         TerramapClientContext.getContext().setupMaps();
+    }
+
+    public void saveToState(SavedMainScreenState state) {
+        state.map = this.map.save();
+        Marker tracked = this.map.getController().getTrackedMarker();
+        state.trackedMarker = tracked != null ? tracked.getControllerId(): null;
+        state.f1 = TerramapConfig.CLIENT.saveUiState && this.f1Mode;
+        state.debug = TerramapConfig.CLIENT.saveUiState && this.debugMode;
+        state.infoPanel = this.infoPanel.getTarget().equals(PanelTarget.OPENED);
+        state.layerPanel = this.layerPanel.getTarget().equals(PanelTarget.OPENED);
+        Map<String, Boolean> visibility = new HashMap<>();
+        Map<String, FeatureVisibilityController> visibilityControllers = this.map.getVisibilityControllers();
+        for(String key: visibilityControllers.keySet()) {
+            visibility.put(key, visibilityControllers.get(key).getVisibility());
+        }
+        state.visibilitySettings = visibility;
+    }
+
+    private void restore(SavedMainScreenState state) {
+        this.map.restore(state.map);
+        if (TerramapConfig.CLIENT.saveUiState) {
+            this.f1Mode = state.f1;
+            this.debugMode = state.debug;
+        }
+        this.infoPanel.setStateNoAnimation(state.infoPanel);
+        this.layerPanel.setStateNoAnimation(state.layerPanel);
+
+        this.backgroundLayer = (RasterMapLayer) this.map.getLayers().stream()
+                .filter(l -> l instanceof RasterMapLayer)
+                .min(Comparator.comparingInt(MapLayer::getZ))
+                .orElse(null);
     }
 
     @Override
@@ -390,7 +398,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.noplayer"));
         }
 
-        this.offsetWarning.setVisibility(this.backgroundLayer.hasRenderingOffset());
+        this.offsetWarning.setVisibility(this.getBackgroundLayer().map(MapLayer::hasRenderingOffset).orElse(false));
 
         if(this.debugMode) {
             StringBuilder debugBuilder = new StringBuilder();
@@ -402,18 +410,22 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
             debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
-            IRasterTiledMap backgroundStyle = this.backgroundLayer.getTiledMap();
-            debugBuilder.append(String.format(locale, "\nMap id: %s", backgroundStyle.getId()));
-            debugBuilder.append(String.format(locale, "\nMap provider: %sv%s", backgroundStyle.getProvider(), backgroundStyle.getProviderVersion()));
-            if(backgroundStyle instanceof CachingRasterTiledMap) {
-                CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) backgroundStyle;
-                debugBuilder.append(String.format(locale, "\nLoaded tiles: %d/%d/%d", cachingMap.getBaseLoad(), cachingMap.getLoadedCount(), cachingMap.getMaxLoad()));
-                if(cachingMap instanceof UrlTiledMap) {
-                    UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
-                    String[] urls = urlMap.getUrlPatterns();
-                    int showingIndex = (int) ((System.currentTimeMillis() / 3000) % urls.length);
-                    debugBuilder.append(String.format(locale, "\nMap urls (%d) %s", urls.length, urls[showingIndex]));
+            if (this.getBackgroundLayer().isPresent()) {
+                IRasterTiledMap backgroundStyle = this.getBackgroundLayer().get().getTiledMap();
+                debugBuilder.append(String.format(locale, "\nMap id: %s", backgroundStyle.getId()));
+                debugBuilder.append(String.format(locale, "\nMap provider: %sv%s", backgroundStyle.getProvider(), backgroundStyle.getProviderVersion()));
+                if (backgroundStyle instanceof CachingRasterTiledMap) {
+                    CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) backgroundStyle;
+                    debugBuilder.append(String.format(locale, "\nLoaded tiles: %d/%d/%d", cachingMap.getBaseLoad(), cachingMap.getLoadedCount(), cachingMap.getMaxLoad()));
+                    if (cachingMap instanceof UrlTiledMap) {
+                        UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
+                        String[] urls = urlMap.getUrlPatterns();
+                        int showingIndex = (int) ((System.currentTimeMillis() / 3000) % urls.length);
+                        debugBuilder.append(String.format(locale, "\nMap urls (%d) %s", urls.length, urls[showingIndex]));
+                    }
                 }
+            } else {
+                debugBuilder.append("\nMap has no background");
             }
             debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameContext().getScaleFactor()));
             debugBuilder.append("\n\n");
@@ -449,7 +461,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         TexturedButtonWidget newButton;
         if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
             this.infoPanel.close();
-            if(this.overlayPanel.getTarget() == PanelTarget.OPENED) this.overlayPanel.close();
+            if(this.layerPanel.getTarget() == PanelTarget.OPENED) this.layerPanel.close();
             newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPanel);
         } else {
             this.infoPanel.open();
@@ -504,11 +516,15 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
     
     private MapLayer addMapLayer(String type) {
-        int z = this.map.getLayers().stream().map(MapLayer::getZ).max(Integer::compareTo).orElse(Integer.MIN_VALUE) + 1;
+        int z = this.map.getLayers().stream()
+                .filter(l -> !(l instanceof InputLayer))
+                .map(MapLayer::getZ)
+                .max(Integer::compareTo)
+                .orElse(Integer.MIN_VALUE) + 1;
         MapLayer layer = this.map.createLayer(type);
         this.map.setLayerZ(layer, z);
         layer.setUserOverlay(true);
-        this.overlayList.init();
+        this.layerListContainer.init();
         return layer;
     }
     
@@ -578,10 +594,12 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
             for(IRasterTiledMap map: maps) {
                 MapPreview w = new MapPreview(50, map, m -> {
-                    TerramapScreen.this.backgroundLayer.setTiledMap(m.previewLayer.getTiledMap());
-                    TerramapScreen.this.backgroundLayer.setRenderingOffset(m.previewLayer.getRenderingOffset());
+                    if (TerramapScreen.this.backgroundLayer != null) {
+                        TerramapScreen.this.backgroundLayer.setTiledMap(m.previewLayer.getTiledMap());
+                        TerramapScreen.this.backgroundLayer.setRenderingOffset(m.previewLayer.getRenderingOffset());
+                    }
                     TerramapScreen.this.stylePanel.close();
-                    TerramapScreen.this.overlayList.init();
+                    TerramapScreen.this.layerListContainer.init();
                 });
                 w.setWidth(mapWidth);
                 w.setHeight(mapHeight);
@@ -600,15 +618,17 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-            RasterMapLayer bg = TerramapScreen.this.backgroundLayer;
-            final MapController thisController = TerramapScreen.this.map.getController();
-            for(MapPreview map: this.maps) {
-                MapController controller = map.getController();
-                controller.setZoom(thisController.getZoom(), false);
-                controller.moveLocationToCenter(thisController.getCenterLocation(), false);
-                map.setTileScaling(TerramapScreen.this.map.getTileScaling());
-                if(map.previewLayer.getTiledMap().getId().equals(bg.getTiledMap().getId())) {
-                    map.previewLayer.setRenderingOffset(bg.getRenderingOffset());
+            if (TerramapScreen.this.backgroundLayer != null) {
+                RasterMapLayer bg = TerramapScreen.this.backgroundLayer;
+                final MapController thisController = TerramapScreen.this.map.getController();
+                for (MapPreview map : this.maps) {
+                    MapController controller = map.getController();
+                    controller.setZoom(thisController.getZoom(), false);
+                    controller.moveLocationToCenter(thisController.getCenterLocation(), false);
+                    map.setTileScaling(TerramapScreen.this.map.getTileScaling());
+                    if (map.previewLayer.getTiledMap().getId().equals(bg.getTiledMap().getId())) {
+                        map.previewLayer.setRenderingOffset(bg.getRenderingOffset());
+                    }
                 }
             }
             super.onUpdate(mouseX, mouseY, parent);
@@ -666,20 +686,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     @Override
     public void onGuiClosed() {
         //TODO Also save if minecraft is closed from the OS
-        Map<String, Boolean> visibility = new HashMap<>();
-        Map<String, FeatureVisibilityController> visibilityControllers = this.map.getVisibilityControllers();
-        for(String key: visibilityControllers.keySet()) {
-            visibility.put(key, visibilityControllers.get(key).getVisibility());
-        }
-
-        SavedTerramapState state = TerramapClientContext.getContext().getSavedState();
-        state.mainScreen.map = this.map.save();
-        Marker tracked = this.map.getController().getTrackedMarker();
-        state.mainScreen.trackedMarker = tracked != null ? tracked.getControllerId(): null;
-        state.mainScreen.f1 = TerramapConfig.CLIENT.saveUiState && this.f1Mode;
-        state.mainScreen.debug = TerramapConfig.CLIENT.saveUiState && this.debugMode;
-        state.mainScreen.infoPanel = this.infoPanel.getTarget().equals(PanelTarget.OPENED);
-        state.mainScreen.visibilitySettings = visibility;
+        this.saveToState(TerramapClientContext.getContext().getSavedState().mainScreen);
         TerramapClientContext.getContext().saveSettings();
         TerramapClientContext.getContext().registerForUpdates(false);
     }
@@ -709,6 +716,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     private Collection<FeatureVisibilityController> getButtonProviders() {
         return Collections.unmodifiableCollection(this.map.getVisibilityControllers().values());
+    }
+
+    public Optional<RasterMapLayer> getBackgroundLayer() {
+        return Optional.ofNullable(this.backgroundLayer);
     }
 
     private class MapPreview extends MapWidget {

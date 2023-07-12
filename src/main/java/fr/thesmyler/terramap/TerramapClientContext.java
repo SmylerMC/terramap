@@ -14,6 +14,7 @@ import fr.thesmyler.terramap.config.SavedTerramapState;
 import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.config.TerramapConfig;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
+import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
@@ -499,17 +500,15 @@ public class TerramapClientContext {
     }
 
     public void openMap() {
-        //TODO restore from state when available
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, null));
+        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, this.getSavedState().mainScreen));
     }
 
     public void openMapAt(double zoom, double lon, double lat) {
-        //TODO restore from state when available
-        SavedTerramapState state = this.getSavedState();
-        state.mainScreen.map.center.set(lon, lat);
-        state.mainScreen.map.zoom = zoom;
-        state.mainScreen.trackedMarker = null;
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, null));
+        SavedMainScreenState state = this.getSavedState().mainScreen;
+        state.map.center.set(lon, lat);
+        state.map.zoom = zoom;
+        state.trackedMarker = null;
+        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, state));
     }
 
     @Nonnull
