@@ -3,7 +3,9 @@ package fr.thesmyler.terramap.maps;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A map saved state.
@@ -18,5 +20,6 @@ public class SavedMapState {
     public float rotation;
 
     public final List<SavedLayerState> layers = new ArrayList<>();
+    public final Map<String, Boolean> visibilitySettings = new HashMap<>();
 
 }

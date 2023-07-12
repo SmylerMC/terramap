@@ -318,12 +318,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         state.debug = TerramapConfig.CLIENT.saveUiState && this.debugMode;
         state.infoPanel = this.infoPanel.getTarget().equals(PanelTarget.OPENED);
         state.layerPanel = this.layerPanel.getTarget().equals(PanelTarget.OPENED);
-        Map<String, Boolean> visibility = new HashMap<>();
-        Map<String, FeatureVisibilityController> visibilityControllers = this.map.getVisibilityControllers();
-        for(String key: visibilityControllers.keySet()) {
-            visibility.put(key, visibilityControllers.get(key).getVisibility());
-        }
-        state.visibilitySettings = visibility;
     }
 
     private void restore(SavedMainScreenState state) {
