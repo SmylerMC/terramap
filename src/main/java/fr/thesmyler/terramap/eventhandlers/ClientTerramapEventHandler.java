@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.eventhandlers;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
@@ -71,7 +70,7 @@ public class ClientTerramapEventHandler {
 
     @SubscribeEvent
     public void onClientConnected(ClientConnectedToServerEvent event) {
-        Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().setRemoteIdentifier()); // This event is called from the network thread
+        Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().reloadState()); // This event is called from the network thread
     }
 
     @SubscribeEvent
@@ -109,7 +108,7 @@ public class ClientTerramapEventHandler {
             MapLayer layer = popup.getLayer();
             //TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), layer.getRenderingOffset());
             //FIXME restore Minimap
-            TerramapClientPreferences.save();
+            TerramapClientContext.getContext().saveState();
         }
     }
 

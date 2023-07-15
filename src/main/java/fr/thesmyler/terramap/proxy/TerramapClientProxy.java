@@ -1,13 +1,10 @@
 package fr.thesmyler.terramap.proxy;
 
-import java.io.File;
-
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.SmyLibGuiContext;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
-import fr.thesmyler.terramap.config.TerramapClientPreferences;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
@@ -43,9 +40,6 @@ public class TerramapClientProxy extends TerramapProxy {
     public void preInit(FMLPreInitializationEvent event) {
         TerramapMod.logger.debug("Terramap client pre-init");
         TerramapNetworkManager.registerHandlers(Side.CLIENT);
-        File clientPrefs = new File(event.getModConfigurationDirectory().getAbsoluteFile() + "/" + TerramapClientPreferences.FILENAME);
-        TerramapClientPreferences.setFile(clientPrefs);
-        TerramapClientPreferences.load();
         if (!ImageIO.getImageReadersBySuffix("webp").hasNext()) {
             TerramapMod.logger.warn("ImageIO does not have WebP support, triggering a plugin scan!");
             ImageIO.scanForPlugins();

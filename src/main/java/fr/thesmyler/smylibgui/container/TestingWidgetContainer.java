@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.container;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.devices.Key;
 import fr.thesmyler.smylibgui.devices.dummy.DummyMouse;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.TerramapConfig;
 
 import java.util.Iterator;
 import java.util.PriorityQueue;

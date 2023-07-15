@@ -21,7 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;

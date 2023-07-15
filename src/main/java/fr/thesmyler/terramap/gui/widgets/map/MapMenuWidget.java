@@ -128,7 +128,7 @@ public class MapMenuWidget extends MenuWidget {
         EarthGeneratorSettings stg = TerramapClientContext.getContext().getGeneratorSettings();
         Minecraft.getMinecraft().displayGuiScreen(new PresetEarthGui(null, stg != null ? stg.toString(): PresetEarthGui.DEFAULT_PRESETS.get("default"), s ->  {
             TerramapClientContext.getContext().setGeneratorSettings(EarthGeneratorSettings.parse(s));
-            TerramapClientContext.getContext().saveSettings();
+            TerramapClientContext.getContext().saveState();
         }));
     }
 

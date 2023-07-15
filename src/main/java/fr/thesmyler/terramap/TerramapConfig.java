@@ -1,6 +1,5 @@
-package fr.thesmyler.terramap.config;
+package fr.thesmyler.terramap;
 
-import fr.thesmyler.terramap.TerramapMod;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;

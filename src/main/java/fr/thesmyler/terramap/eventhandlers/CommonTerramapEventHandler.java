@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.eventhandlers;
 
-import fr.thesmyler.terramap.config.TerramapConfig;
-import fr.thesmyler.terramap.config.TerramapServerPreferences;
+import fr.thesmyler.terramap.TerramapConfig;
+import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
 import fr.thesmyler.terramap.network.RemoteSynchronizer;
 import fr.thesmyler.terramap.util.TerramapUtil;
 import net.minecraft.entity.player.EntityPlayerMP;
