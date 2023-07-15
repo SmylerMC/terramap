@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;

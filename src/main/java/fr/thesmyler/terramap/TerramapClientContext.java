@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,9 +11,8 @@ import java.util.UUID;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.toast.TextureToast;
-import fr.thesmyler.terramap.config.SavedTerramapState;
-import fr.thesmyler.terramap.config.TerramapClientPreferences;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.saving.client.ClientSaveManager;
+import fr.thesmyler.terramap.saving.client.SavedClientState;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
@@ -81,7 +81,20 @@ public class TerramapClientContext {
     private UUID worldUUID = null;
     private UUID proxyUUID = null;
 
-    private String serverIdentifier = "genericserver";
+    private SavedClientState state;
+
+    private final ClientSaveManager saveManager;
+
+    public TerramapClientContext() {
+        this.saveManager = new ClientSaveManager(Minecraft.getMinecraft().gameDir.toPath().resolve("terramap"));
+        try {
+            this.saveManager.createDirectoryIfNecessary();
+        } catch (IOException exception) {
+            TerramapMod.logger.error("An error occurred when preparing Terramap's save directory");
+            TerramapMod.logger.catching(exception);
+        }
+        this.reloadState();
+    }
 
     public boolean isInstalledOnServer() {
         return this.serverVersion != null; 
@@ -115,11 +128,11 @@ public class TerramapClientContext {
     }
 
     public EarthGeneratorSettings getGeneratorSettings() {
-        SavedTerramapState savedTerramapState = this.getSavedState();
-        if(savedTerramapState.generatorSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
+        SavedClientState savedClientState = this.getSavedState();
+        if(savedClientState.generatorSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
             return TerramapUtil.BTE_GENERATOR_SETTINGS; // Sledgehammer is installed and this is an Earth world, it should be safe to assume a BTE world
         }
-        return savedTerramapState.generatorSettings;
+        return savedClientState.generatorSettings;
     }
 
     public GeographicProjection getProjection() {
@@ -147,16 +160,7 @@ public class TerramapClientContext {
         this.getSavedState().generatorSettings = genSettings;
         this.projection = null;
         this.terrainPreview = null;
-        this.saveSettings();
-    }
-
-    public void saveSettings() {
-        try {
-            TerramapClientPreferences.save();
-        } catch(Exception e) {
-            TerramapMod.logger.info("Failed to save client preference file");
-            TerramapMod.logger.catching(e);
-        }
+        this.saveState();
     }
 
     public void syncPlayers(TerramapRemotePlayer[] players) {
@@ -181,27 +185,6 @@ public class TerramapClientContext {
 
     public List<Entity> getEntities() {
         return Minecraft.getMinecraft().world.loadedEntityList;
-    }
-
-    private String buildCurrentServerIdentifer() {
-        String worldType = this.isOnEarthWorld() ? "earth": "other";
-        if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
-            return worldType + "@proxy:" + this.proxyUUID;
-        } else if(this.worldUUID != null) {
-            return worldType + "@server:" + this.worldUUID;
-        } else {
-            if(this.proxyUUID != null) {
-                return worldType + "@proxy:" + this.proxyUUID;
-            }
-            ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
-            if(Minecraft.getMinecraft().isIntegratedServerRunning()) {
-                return Minecraft.getMinecraft().getIntegratedServer().getFolderName() + "@integrated_server@localhost";
-            } else if(servData != null){
-                return worldType + "@" + servData.serverName + "@" + servData.serverIP;
-            } else {
-                return "noserver";
-            }
-        }
     }
 
     public void addServerMapStyle(UrlTiledMap map) {
@@ -260,19 +243,42 @@ public class TerramapClientContext {
         return this.isRegisteredForUpdates;
     }
 
-    public String getContextIdentifier() {
-        return this.serverIdentifier;
+    public void reloadState() {
+        ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+        if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
+            this.state = this.saveManager.loadProxyState(this.proxyUUID);
+            TerramapMod.logger.debug("Loaded proxy saved state for UUID {} (forced by proxy)", this.proxyUUID);
+        } else if(this.worldUUID != null) {
+            this.state = this.saveManager.loadWorldState(this.worldUUID);
+            TerramapMod.logger.debug("Loaded world saved state for UUID {}", this.worldUUID);
+        } else if(this.proxyUUID != null) {
+            this.state = this.saveManager.loadProxyState(this.proxyUUID);
+            TerramapMod.logger.debug("Loaded proxy saved state for UUID {} (world unknown)", this.proxyUUID);
+        } else if (servData != null) {
+            this.state = this.saveManager.loadServerState(servData);
+            TerramapMod.logger.debug("Loaded server saved state for server {} ({})",servData.serverName, servData.serverIP);
+        } else {
+            this.state = this.saveManager.getDefaultState();
+            TerramapMod.logger.debug("Went back to default state");
+        }
     }
 
-    public void setRemoteIdentifier() {
-        this.setRemoteIdentifier(this.buildCurrentServerIdentifer());
-    }
-
-    private void setRemoteIdentifier(String identifier) {
-        this.serverIdentifier = identifier;
-        EarthGeneratorSettings settings = this.getSavedState().generatorSettings;
-        if(settings != null) {
-            TerramapMod.logger.info("Got generator settings from client preferences file");
+    public void saveState() {
+        ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+        if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
+            this.saveManager.saveProxyState(this.proxyUUID, this.state);
+            TerramapMod.logger.debug("Saved proxy state for UUID {} (forced by proxy)", this.proxyUUID);
+        } else if(this.worldUUID != null) {
+            this.saveManager.saveWorldState(this.worldUUID, this.state);
+            TerramapMod.logger.debug("Saved world state for UUID {}", this.worldUUID);
+        } else if(this.proxyUUID != null) {
+            this.saveManager.saveProxyState(this.proxyUUID, this.state);
+            TerramapMod.logger.debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
+        } else if (servData != null) {
+            this.saveManager.saveServerState(servData, this.state);
+            TerramapMod.logger.debug("Saved server state for server {} ({})",servData.serverName, servData.serverIP);
+        } else {
+            TerramapMod.logger.debug("Did not save state for unreliable context");
         }
     }
 
@@ -394,7 +400,7 @@ public class TerramapClientContext {
 
     public void setProxyForceGlobalSettings(boolean yesNo) {
         this.proxyForceGlobalSettings = yesNo;
-        this.setRemoteIdentifier();
+        this.reloadState();
     }
 
     public UUID getWorldUUID() {
@@ -403,7 +409,7 @@ public class TerramapClientContext {
 
     public void setWorldUUID(UUID worldUUID) {
         this.worldUUID = worldUUID;
-        this.setRemoteIdentifier();
+        this.reloadState();
     }
 
     public UUID getProxyUUID() {
@@ -412,7 +418,7 @@ public class TerramapClientContext {
 
     public void setProxyUUID(UUID worldUUID) {
         this.proxyUUID = worldUUID;
-        this.setRemoteIdentifier();
+        this.reloadState();
     }
 
     /**
@@ -464,27 +470,19 @@ public class TerramapClientContext {
         }
     }
 
-    /**
-     * @deprecated call {@link #getSavedState()} and {@link #saveSettings()} directly.
-     */
-    @Deprecated
     public boolean shouldShowWelcomeToast() {
         if(!this.allowsMap(MapContext.FULLSCREEN)) return false;
         if(!(Minecraft.getMinecraft().currentScreen == null)) return false;
         return !this.getSavedState().hasShownWelcome;
     }
 
-    /**
-     * @deprecated call {@link #getSavedState()} and {@link #saveSettings()} directly.
-     */
-    @Deprecated
     public void setHasShownWelcomeMessage(boolean yesNo) {
         this.getSavedState().hasShownWelcome = yesNo;
-        this.saveSettings();
+        this.saveState();
     }
 
-    public SavedTerramapState getSavedState() {
-        return TerramapClientPreferences.getSavedState(this.getContextIdentifier());
+    public SavedClientState getSavedState() {
+        return this.state;
     }
 
     public void tryShowWelcomeToast() {

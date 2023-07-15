@@ -1,7 +1,7 @@
 package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.TerramapConfig;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 

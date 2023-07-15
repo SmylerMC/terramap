@@ -43,7 +43,7 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
@@ -681,7 +681,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     public void onGuiClosed() {
         //TODO Also save if minecraft is closed from the OS
         this.saveToState(TerramapClientContext.getContext().getSavedState().mainScreen);
-        TerramapClientContext.getContext().saveSettings();
+        TerramapClientContext.getContext().saveState();
         TerramapClientContext.getContext().registerForUpdates(false);
     }
 

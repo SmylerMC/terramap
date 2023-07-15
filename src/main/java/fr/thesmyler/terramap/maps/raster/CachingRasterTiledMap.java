@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.config.TerramapConfig;
+import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.util.geo.TilePos;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;

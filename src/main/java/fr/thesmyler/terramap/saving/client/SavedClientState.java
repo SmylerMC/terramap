@@ -1,10 +1,10 @@
-package fr.thesmyler.terramap.config;
+package fr.thesmyler.terramap.saving.client;
 
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 
-public class SavedTerramapState {
+public class SavedClientState {
 
     public boolean hasShownWelcome = false;
     public EarthGeneratorSettings generatorSettings = null;

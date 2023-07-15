@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.config;
+package fr.thesmyler.terramap.saving.server;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapMod;
+import fr.thesmyler.terramap.TerramapConfig;
 import net.minecraft.world.WorldServer;
 
 /**

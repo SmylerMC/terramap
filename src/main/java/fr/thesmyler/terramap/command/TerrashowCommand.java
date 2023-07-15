@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
-import fr.thesmyler.terramap.config.TerramapServerPreferences;
+import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
 import fr.thesmyler.terramap.permissions.Permission;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
