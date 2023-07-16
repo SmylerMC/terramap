@@ -83,9 +83,6 @@ public class MapMenuWidget extends MenuWidget {
         this.addSeparator();
 
         this.setProjectionMenuEntry = this.addEntry(translator.format("terramap.mapwidget.rclickmenu.set_proj"), this::setProjection);
-
-        //FIXME opening rendering offset popup
-        //this.addEntry(translator.format("terramap.mapwidget.rclickmenu.offset"), () -> new LayerRenderingOffsetPopup(this.background).show());
     }
 
     void teleport() {

@@ -18,6 +18,8 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.minecraft.util.text.TextComponentString;
 
+import static java.util.Comparator.comparing;
+
 class LayerListContainer extends FlexibleWidgetContainer {
     
     private final MapWidget map;
@@ -116,10 +118,10 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, IncludedTexturedButtons.DOWN, this::moveDown));
             this.addWidget(remove.setEnabled(layer.isUserOverlay()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () ->
-                    //FIXME set offset button in overlay list
-                //OverlayList.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(OverlayList.this.map.getBackgroundLayer(), layer).show())
-                {}
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () -> {
+                    MapLayer lowestLayer = LayerListContainer.this.map.getLayers().stream().min(comparing(MapLayer::getZ)).orElse(layer);
+                    LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(lowestLayer, layer).show());
+                }
             ));
             if(layer.hasRenderingOffset()) {
                 WarningWidget warn = new WarningWidget(this.getWidth() - 86, 3, 0);

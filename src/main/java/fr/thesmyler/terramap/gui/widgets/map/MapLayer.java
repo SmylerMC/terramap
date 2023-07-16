@@ -403,24 +403,6 @@ public abstract class MapLayer implements IWidget {
     }
 
     /**
-     * Creates an exact copy of this layer, which may belong to another map.
-     *
-     * @param mapFor the map the copy should be assigned to
-     *
-     * @return a deep copy of this layer
-     */
-    public final MapLayer copy(MapWidget mapFor) {
-        MapLayer other = mapFor.createLayer(this.getType());
-        other.setAlpha(this.getAlpha());
-        other.setRenderingOffset(this.getRenderingOffset());
-        other.setUserOverlay(this.isUserOverlay());
-        other.setRotationOffset(this.getRotationOffset());
-        mapFor.setLayerZ(other, this.getZ());
-        other.loadSettings(this.saveSettings());
-        return other;
-    }
-
-    /**
      * @return a localized name for this layer
      */
     public abstract String name();
@@ -429,24 +411,5 @@ public abstract class MapLayer implements IWidget {
      * @return a localized description of this layer
      */
     public abstract String description();
-
-    /**
-     * A utility method to copy this layer's alpha, offsets, and user overlay status to another layer.
-     * Useful to call in {@link #copy(MapWidget)}.
-     *
-     * @param other a layer to copy this one's properties to
-     *
-     * @throws NullPointerException if other is null
-     *
-     * @deprecated use the new settings system
-     */
-    @Deprecated
-    protected final void copyPropertiesToOther(MapLayer other) {
-        other.alpha = this.alpha;
-        other.rotationOffset = this.rotationOffset;
-        other.renderingOffset.set(this.renderingOffset);
-        other.isUserOverlay = this.isUserOverlay;
-        other.updateViewPorts();
-    }
 
 }
