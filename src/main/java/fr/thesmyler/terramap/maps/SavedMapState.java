@@ -21,5 +21,6 @@ public class SavedMapState {
 
     public final List<SavedLayerState> layers = new ArrayList<>();
     public final Map<String, Boolean> visibilitySettings = new HashMap<>();
+    public String trackedMarker = null;
 
 }
