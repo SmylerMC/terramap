@@ -505,7 +505,7 @@ public class TerramapClientContext {
         SavedMainScreenState state = this.getSavedState().mainScreen;
         state.map.center.set(lon, lat);
         state.map.zoom = zoom;
-        state.trackedMarker = null;
+        state.map.trackedMarker = null;
         Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, state));
     }
 

@@ -312,8 +312,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     public void saveToState(SavedMainScreenState state) {
         state.map = this.map.save();
-        Marker tracked = this.map.getController().getTrackedMarker();
-        state.trackedMarker = tracked != null ? tracked.getControllerId(): null;
         state.f1 = TerramapConfig.CLIENT.saveUiState && this.f1Mode;
         state.debug = TerramapConfig.CLIENT.saveUiState && this.debugMode;
         state.infoPanel = this.infoPanel.getTarget().equals(PanelTarget.OPENED);

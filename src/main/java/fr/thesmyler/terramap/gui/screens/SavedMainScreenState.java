@@ -11,6 +11,4 @@ public class SavedMainScreenState {
     public boolean debug = false;
     public boolean f1 = false;
 
-    public String trackedMarker = null;
-
 }

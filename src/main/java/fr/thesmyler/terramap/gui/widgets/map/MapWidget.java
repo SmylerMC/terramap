@@ -659,6 +659,8 @@ public class MapWidget extends FlexibleWidgetContainer {
         state.center.set(this.controller.getTargetLocation());
         state.zoom = this.controller.getTargetZoom();
         state.rotation = this.controller.getTargetRotation();
+        Marker tracked = this.controller.getTrackedMarker();
+        state.trackedMarker = tracked != null ? tracked.getIdentifier(): null;
         for (MapLayer layer: this.layers) {
             if (layer instanceof InputLayer) continue;
             SavedLayerState layerState = new SavedLayerState();
@@ -680,6 +682,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.controller.setRotation(state.rotation, false);
         this.controller.setZoom(state.zoom, false);
         this.controller.moveLocationToCenter(state.center, false);
+        this.restoreTracking(state.trackedMarker);
         for (MapLayer layer: this.layers) {
             if (layer instanceof InputLayer) continue;
             this.removeLayer(layer);
