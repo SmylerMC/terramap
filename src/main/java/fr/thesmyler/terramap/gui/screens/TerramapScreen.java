@@ -325,12 +325,23 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.debugMode = state.debug;
         }
         this.infoPanel.setStateNoAnimation(state.infoPanel);
+        if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
+            float x = this.panelButton.getX();
+            float y = this.panelButton.getY();
+            int z = this.panelButton.getZ();
+            TexturedButtonWidget newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPanel);
+            newButton.setTooltip(this.panelButton.getTooltipText());
+            this.infoPanel.removeWidget(this.panelButton);
+            this.panelButton = newButton;
+            this.infoPanel.addWidget(this.panelButton);
+        }
         this.layerPanel.setStateNoAnimation(state.layerPanel);
 
         this.backgroundLayer = (RasterMapLayer) this.map.getLayers().stream()
                 .filter(l -> l instanceof RasterMapLayer)
                 .min(Comparator.comparingInt(MapLayer::getZ))
                 .orElse(null);
+
     }
 
     @Override
