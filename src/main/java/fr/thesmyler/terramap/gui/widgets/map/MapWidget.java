@@ -188,6 +188,24 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
+     * Creates a copy for this map of a given layer.
+     *
+     * @param layer the layer to copy
+     *
+     * @return a copy of the layer, which belongs to this map
+     */
+    public final MapLayer copyLayer(MapLayer layer) {
+        MapLayer other = this.createLayer(layer.getType());
+        other.setAlpha(layer.getAlpha());
+        other.setRenderingOffset(layer.getRenderingOffset());
+        other.setUserOverlay(layer.isUserOverlay());
+        other.setRotationOffset(layer.getRotationOffset());
+        this.setLayerZ(other, layer.getZ());
+        other.loadSettings(layer.saveSettings());
+        return other;
+    }
+
+    /**
      * Removes a layer from the map.
      *
      * @param layer the layer to remove
@@ -749,7 +767,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         return this.inputLayer;
     }
 
-    protected MapMenuWidget getRightClickMenu() {
+    public MapMenuWidget getRightClickMenu() {
         return this.rightClickMenu;
     }
 

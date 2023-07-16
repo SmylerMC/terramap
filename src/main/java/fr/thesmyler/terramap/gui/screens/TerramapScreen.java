@@ -115,6 +115,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.layerList = new ScrollableWidgetContainer(0, 0, 10, 10, 10, this.layerListContainer);
         TerramapClientContext.getContext().registerForUpdates(true);
         this.restore(state);
+        this.map.getRightClickMenu().addEntry(
+                SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.offset"),
+                () -> new LayerRenderingOffsetPopup(this.backgroundLayer).show()
+        );
     }
 
     @Override
