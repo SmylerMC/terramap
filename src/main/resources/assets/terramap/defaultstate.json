@@ -7,7 +7,22 @@
     },
     "zoom": 0.0,
     "rotation": 0.0,
-    "layers": [],
+    "layers": [
+      {
+        "type": "terramap:raster",
+        "z": -2147483648,
+        "cartesianOffset": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "rotationOffset": 0.0,
+        "alpha": 1.0,
+        "overlay": false,
+        "settings": {
+          "style": "osm"
+        }
+      }
+    ],
     "visibilitySettings": {}
   },
   "mainScreen": {
