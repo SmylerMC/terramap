@@ -1,8 +1,6 @@
 package fr.thesmyler.terramap.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
@@ -13,8 +11,10 @@ import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
@@ -26,6 +26,11 @@ import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
 
 public abstract class HudScreenHandler {
 
@@ -86,40 +91,40 @@ public abstract class HudScreenHandler {
             init(screen);
             return;
         }
-        MapController controller = map.getController();
+        map.setTileScaling(TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
         map.setX(Math.round(TerramapConfig.CLIENT.minimap.posX / 100 * screen.getWidth()));
         map.setY(Math.round(TerramapConfig.CLIENT.minimap.posY / 100 * screen.getHeight()));
         map.setWidth(Math.round(TerramapConfig.CLIENT.minimap.width / 100 * screen.getWidth()));
         map.setHeight(Math.round(TerramapConfig.CLIENT.minimap.height / 100 * screen.getHeight()));
+
+        map.restore(TerramapClientContext.getContext().getSavedState().minimap);
+
+        MapController controller = map.getController();
         map.trySetFeatureVisibility(AnimalMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
         map.trySetFeatureVisibility(MobMarkerController.ID, TerramapConfig.CLIENT.minimap.showEntities);
         map.trySetFeatureVisibility(OtherPlayerMarkerController.ID, TerramapConfig.CLIENT.minimap.showOtherPlayers);
         map.trySetFeatureVisibility(PlayerDirectionsVisibilityController.ID, TerramapConfig.CLIENT.minimap.playerDirections);
         map.trySetFeatureVisibility(McChunksLayer.ID, TerramapConfig.CLIENT.minimap.chunksRender);
+        
         controller.setTracksRotation(TerramapConfig.CLIENT.minimap.playerRotation);
-        if(!TerramapConfig.CLIENT.minimap.playerRotation) controller.setRotation(0f, false);
-        Map<String, IRasterTiledMap> styles = TerramapClientContext.getContext().getMapStyles();
-        IRasterTiledMap bg = styles.get(TerramapConfig.CLIENT.minimap.style);
-        if(bg == null || ! bg.isAllowedOnMinimap()) {
-            ArrayList<IRasterTiledMap> maps = new ArrayList<>(styles.values());
-            maps.sort(Collections.reverseOrder());
-            bg = maps.get(0);
+        if(!TerramapConfig.CLIENT.minimap.playerRotation) {
+            controller.setRotation(0f, false);
         }
 
-        //FIXME set minimap background on update
-        //map.setBackground(bg);
-        
-        //for(MapLayer layer: map.getLayers()) {
-            //FIXME restore minimap
-            //Vec2dImmutable offset = TerramapClientContext.getContext().getMinimapRenderOffset(layer.getId());
-            //layer.setRenderingOffset(offset);
-        //}
-        
-        float zoomLevel = Math.max(bg.getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
-        zoomLevel = Math.min(bg.getMaxZoom(), zoomLevel);
-        controller.setZoom(zoomLevel, false);
+        Optional<IRasterTiledMap> background = map.getLayers().stream()
+                .filter(l -> l instanceof RasterMapLayer)
+                .min(comparing(MapLayer::getZ))
+                .map(l -> (RasterMapLayer)l)
+                .map(RasterMapLayer::getTiledMap);
+        float zoom;
+        if (background.isPresent()) {
+            zoom = max(background.get().getMinZoom(), TerramapConfig.CLIENT.minimap.zoomLevel);
+            zoom = min(background.get().getMaxZoom(), zoom);
+        } else {
+            zoom = TerramapConfig.CLIENT.minimap.zoomLevel;
+        }
+        controller.setZoom(zoom, false);
 
-        map.setTileScaling(TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
         map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP));
     }
 
@@ -152,4 +157,5 @@ public abstract class HudScreenHandler {
             TerramapConfig.sync();
         }
     }
+
 }

@@ -25,6 +25,8 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Objects;
+
 /**
  * Event handler for the physical client
  *
@@ -106,8 +108,12 @@ public class ClientTerramapEventHandler {
              */
             LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) Minecraft.getMinecraft().currentScreen;
             MapLayer layer = popup.getLayer();
-            //TerramapClientContext.getContext().setMinimapRenderOffset(layer.getId(), layer.getRenderingOffset());
-            //FIXME restore Minimap
+            TerramapClientContext.getContext().getSavedState().minimap.layers.stream()
+                    .filter(l -> l.z == layer.getZ() && Objects.equals(l.type, layer.getType()) && l.settings.equals(layer.saveSettings()))
+                    .forEach(l -> {
+                        l.cartesianOffset.set(layer.getRenderingOffset());
+                        l.rotationOffset = layer.getRotationOffset();
+                    });
             TerramapClientContext.getContext().saveState();
         }
     }
