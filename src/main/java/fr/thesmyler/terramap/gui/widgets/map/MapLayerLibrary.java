@@ -12,7 +12,7 @@ public class MapLayerLibrary {
 
     public static final MapLayerLibrary INSTANCE = new MapLayerLibrary();
 
-    public static final String INPUT_LAYER_ID = "terramap:layer";
+    public static final String INPUT_LAYER_ID = "terramap:input";
     public static final String RASTER_LAYER_ID = "terramap:raster";
     public static final String CHUNKS_LAYER_ID = "terramap:chunks";
     public static final String OFFSET_PREVIEW = "terramap:offset_preview";
