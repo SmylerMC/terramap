@@ -72,7 +72,11 @@ public class TerramapMod {
     }
 
     public static TerramapVersion getVersion() {
-        return TerramapMod.version;
+        try {
+            return TerramapMod.version != null ? TerramapMod.version: new TerramapVersion("0.0.0");
+        } catch (InvalidVersionString e) {
+            throw new IllegalStateException("Version 0.0.0 should not be invalid");
+        }
     }
 
     @NetworkCheckHandler
