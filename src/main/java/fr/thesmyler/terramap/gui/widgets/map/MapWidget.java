@@ -35,6 +35,8 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * The core component of Terramap: the map widget itself.
  * This is in fact a {@link FlexibleWidgetContainer} that groups together the various components of the map, which are:
@@ -725,10 +727,10 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.controller.setZoom(state.zoom, false);
         this.controller.moveLocationToCenter(state.center, false);
         this.restoreTracking(state.trackedMarker);
-        for (MapLayer layer: this.layers) {
-            if (layer instanceof InputLayer) continue;
-            this.removeLayer(layer);
-        }
+        this.layers.stream()
+                .filter(l -> !(l instanceof InputLayer)) // This one we need to keep
+                .collect(toList()) // Avoid co-modification problems
+                .forEach(this::removeLayer);
         for (SavedLayerState layerState: state.layers) {
             MapLayer layer = this.createLayer(layerState.type);
             this.setLayerZ(layer, layerState.z);
