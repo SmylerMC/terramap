@@ -97,10 +97,29 @@ public class MapWidget extends FlexibleWidgetContainer {
     private final MapContext context;
     static final DoubleRange ZOOM_RANGE = new DoubleRange(0d, 25d);
 
+    public static final double MIN_TILE_SCALING = 1e-3;
+
+    /**
+     * Constructs a new map widget.
+     *
+     * @param x             the X coordinate of the map in the parent container's coordinate space (in pixels)
+     * @param y             the Y coordinate of the map in the parent container's coordinate space (in pixels)
+     * @param z             the Z index of the map in the parent container's widget stack
+     * @param width         the width of the map (in pixels)
+     * @param height        the height of the map (in pixels)
+     * @param context       the context for which this map is being created
+     * @param tileScaling   a rendering scale factor
+     *
+     * @throws IllegalArgumentException if tileScaling is smaller than {@link MapWidget#MIN_TILE_SCALING}
+     */
     public MapWidget(float x, float y, int z, float width, float height, MapContext context, double tileScaling) {
         super(x, y, z, width, height);
 
         this.context = context;
+
+        if (tileScaling < MIN_TILE_SCALING) {
+            throw new IllegalArgumentException("Constructing a map widget with a tile scaling value that's too small " + tileScaling);
+        }
         this.tileScaling = tileScaling;
 
         Font font = SmyLibGui.getDefaultFont();
@@ -230,7 +249,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     /**
      * Adds a marker to this map
-     * 
+     *
      * @param marker a marker to add to this map
      */
     private void addMarker(Marker marker) {
@@ -241,7 +260,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * Removes the given marker from this map.
      * Marker should be added via a {@link MarkerController}
-     * 
+     *
      * @param marker a marker to remove from this map
      */
     public void removeMarker(Marker marker) {
@@ -263,7 +282,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.profiler.startSection("update-movement");
         long currentTime = System.currentTimeMillis();
         long dt = currentTime - this.lastUpdateTime;
-        
+
         if(this.controller.isTracking()) {
             Marker tracked = this.controller.getTrackedMarker();
             if(this.widgets.contains(tracked)) {
@@ -299,7 +318,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * Maps do not support directly adding or removing widgets.
      * This method will always throw an exception.
-     * 
+     *
      * @throws UnsupportedOperationException in any case
      */
     @Override @Deprecated
@@ -358,7 +377,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         // Update right click marker visibility
         if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
-        
+
         for(Marker marker: this.markers) marker.onUpdate(mouseX, mouseY, this);
 
     }
@@ -613,8 +632,13 @@ public class MapWidget extends FlexibleWidgetContainer {
      * Sets this map rendering scale factor.
      *
      * @param tileScaling a new value for this map's scale factor
+     *
+     * @throws IllegalArgumentException if tileScaling is below {@link MapWidget#MIN_TILE_SCALING}
      */
     public void setTileScaling(double tileScaling) {
+        if (tileScaling < MIN_TILE_SCALING) {
+            throw new IllegalArgumentException("Map tile scaling value is too small: " + tileScaling);
+        }
         this.tileScaling = tileScaling;
     }
 
