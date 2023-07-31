@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.toast.TextureToast;
+import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
 import fr.thesmyler.terramap.saving.client.ClientSaveManager;
 import fr.thesmyler.terramap.saving.client.SavedClientState;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
@@ -86,7 +87,7 @@ public class TerramapClientContext {
     private final ClientSaveManager saveManager;
 
     public TerramapClientContext() {
-        this.saveManager = new ClientSaveManager(Minecraft.getMinecraft().gameDir.toPath().resolve("terramap"));
+        this.saveManager = new ClientSaveManager(SmyLibGui.getGameContext().getGameDirectory().resolve("terramap"));
         try {
             this.saveManager.createDirectoryIfNecessary();
         } catch (IOException exception) {
@@ -244,7 +245,7 @@ public class TerramapClientContext {
     }
 
     public void reloadState() {
-        ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+        MinecraftServerInfo serverInfo = SmyLibGui.getGameContext().getCurrentServerInfo();
         if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
             TerramapMod.logger.debug("Loaded proxy saved state for UUID {} (forced by proxy)", this.proxyUUID);
@@ -254,9 +255,9 @@ public class TerramapClientContext {
         } else if(this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
             TerramapMod.logger.debug("Loaded proxy saved state for UUID {} (world unknown)", this.proxyUUID);
-        } else if (servData != null) {
-            this.state = this.saveManager.loadServerState(servData);
-            TerramapMod.logger.debug("Loaded server saved state for server {} ({})",servData.serverName, servData.serverIP);
+        } else if (serverInfo != null) {
+            this.state = this.saveManager.loadServerState(serverInfo);
+            TerramapMod.logger.debug("Loaded server saved state for server {} ({})",serverInfo.name, serverInfo.host);
         } else {
             this.state = this.saveManager.getDefaultState();
             TerramapMod.logger.debug("Went back to default state");

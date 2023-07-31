@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.saving.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
@@ -60,12 +61,12 @@ public class ClientSaveManager {
      * Loads a {@link SavedClientState} associated with a specific server, given the server's {@link ServerData}.
      * This method will usually be used when a remote world cannot be uniquely identified and we can only identify the server.
      *
-     * @param serverData the information of the server to retrieve the save for
+     * @param serverInfo the information of the server to retrieve the save for
      *
      * @return {@link SavedClientState} associated with the server
      */
-    public SavedClientState loadServerState(ServerData serverData) {
-        return this.loadFromPath(this.worldDirectory.resolve(serverData.serverIP + EXTENSION));
+    public SavedClientState loadServerState(MinecraftServerInfo serverInfo) {
+        return this.loadFromPath(this.worldDirectory.resolve(serverInfo.host + EXTENSION));
     }
 
     /**

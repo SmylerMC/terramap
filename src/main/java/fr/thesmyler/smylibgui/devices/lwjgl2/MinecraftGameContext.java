@@ -1,8 +1,10 @@
 package fr.thesmyler.smylibgui.devices.lwjgl2;
 
 import fr.thesmyler.smylibgui.devices.GameContext;
+import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -54,6 +56,12 @@ public class MinecraftGameContext implements GameContext {
     @Override
     public Path getGameDirectory() {
         return Minecraft.getMinecraft().gameDir.toPath();
+    }
+
+    @Override
+    public MinecraftServerInfo getCurrentServerInfo() {
+        ServerData data = Minecraft.getMinecraft().getCurrentServerData();
+        return data == null ? null: new MinecraftServerInfo(data);
     }
 
     @SubscribeEvent
