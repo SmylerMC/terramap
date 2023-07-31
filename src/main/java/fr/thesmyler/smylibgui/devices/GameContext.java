@@ -1,5 +1,7 @@
 package fr.thesmyler.smylibgui.devices;
 
+import java.nio.file.Path;
+
 /**
  * A wrapper around the game window.
  *
@@ -42,8 +44,15 @@ public interface GameContext {
     /**
      * MacOS does weird things, we may want to account for them.
      *
-     * @return whether Minecraft has detected that the underlying system is macOS.
+     * @return whether Minecraft has detected that the underlying system is macOS
      */
     boolean isMac();
+
+    /**
+     * The game directory is where all game files are saved (e.g. ~/.minecraft on unix based OS).
+     *
+     * @return the game directory
+     */
+    Path getGameDirectory();
 
 }

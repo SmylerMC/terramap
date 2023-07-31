@@ -3,6 +3,9 @@ package fr.thesmyler.smylibgui.devices.dummy;
 import fr.thesmyler.smylibgui.devices.GameContext;
 import fr.thesmyler.smylibgui.util.ThreadLocal;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -15,6 +18,17 @@ public class DummyGameContext implements GameContext {
     private final ThreadLocal<AtomicInteger> scale = new ThreadLocal<>(() -> new AtomicInteger(1));
     private final ThreadLocal<String> language = new ThreadLocal<>(() -> "en-us");
     private final ThreadLocal<AtomicBoolean> isMac = new ThreadLocal<>(() -> new AtomicBoolean(false));
+
+    private final Path gameDirectory;
+
+    public DummyGameContext() {
+        try {
+            this.gameDirectory = Files.createTempDirectory("smylibgui");
+            Files.createDirectories(this.gameDirectory);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public float getWindowWidth() {
@@ -61,6 +75,11 @@ public class DummyGameContext implements GameContext {
     @Override
     public boolean isMac() {
         return this.isMac.get().get();
+    }
+
+    @Override
+    public Path getGameDirectory() {
+        return this.gameDirectory;
     }
 
     public void setIsMac(boolean yesNo) {

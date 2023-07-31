@@ -6,6 +6,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.nio.file.Path;
+
 public class MinecraftGameContext implements GameContext {
 
     private float width = 1f;
@@ -47,6 +49,11 @@ public class MinecraftGameContext implements GameContext {
     @Override
     public boolean isMac() {
         return Minecraft.IS_RUNNING_ON_MAC;
+    }
+
+    @Override
+    public Path getGameDirectory() {
+        return Minecraft.getMinecraft().gameDir.toPath();
     }
 
     @SubscribeEvent
