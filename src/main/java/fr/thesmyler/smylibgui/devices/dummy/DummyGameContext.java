@@ -1,6 +1,7 @@
 package fr.thesmyler.smylibgui.devices.dummy;
 
 import fr.thesmyler.smylibgui.devices.GameContext;
+import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
 import fr.thesmyler.smylibgui.util.ThreadLocal;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class DummyGameContext implements GameContext {
     private final ThreadLocal<AtomicInteger> scale = new ThreadLocal<>(() -> new AtomicInteger(1));
     private final ThreadLocal<String> language = new ThreadLocal<>(() -> "en-us");
     private final ThreadLocal<AtomicBoolean> isMac = new ThreadLocal<>(() -> new AtomicBoolean(false));
+    private MinecraftServerInfo serverInfo = new MinecraftServerInfo("Dummy Server", "example.com", "Message of the day.", false);
 
     private final Path gameDirectory;
 
@@ -82,12 +84,21 @@ public class DummyGameContext implements GameContext {
         return this.gameDirectory;
     }
 
+    @Override
+    public MinecraftServerInfo getCurrentServerInfo() {
+        return this.serverInfo;
+    }
+
     public void setIsMac(boolean yesNo) {
         this.isMac.get().set(yesNo);
     }
 
     public void setLanguage(String lang) {
         this.language.set(lang);
+    }
+
+    public MinecraftServerInfo setServerInfo(MinecraftServerInfo info) {
+        return this.serverInfo;
     }
 
 }

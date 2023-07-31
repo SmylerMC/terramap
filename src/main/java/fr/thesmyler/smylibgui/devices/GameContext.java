@@ -1,5 +1,7 @@
 package fr.thesmyler.smylibgui.devices;
 
+import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
+
 import java.nio.file.Path;
 
 /**
@@ -54,5 +56,12 @@ public interface GameContext {
      * @return the game directory
      */
     Path getGameDirectory();
+
+    /**
+     * Get information on the server which is currently being played on.
+     *
+     * @return the server info, or null if not currently playing on a server
+     */
+    MinecraftServerInfo getCurrentServerInfo();
 
 }
