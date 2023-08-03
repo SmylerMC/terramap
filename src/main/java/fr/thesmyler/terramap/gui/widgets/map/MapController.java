@@ -26,6 +26,12 @@ public final class MapController {
     private final GeoPointMutable centerLocationTarget = new GeoPointMutable();
     private final Vec2dMutable movingSpeed = new Vec2dMutable();
     private float movementDrag = 0.003f;
+
+    // Poles are projected to infinity, not good
+    private static final GeoBounds SAFE_BOUNDS = new GeoBounds(
+            new GeoPointImmutable(-180d, -89.9999),
+            new GeoPointImmutable(180d, 89.9999)
+    );
     private GeoBounds bounds; //TODO implement bounds in MapController
 
     private final GeoPointMutable zoomLocation = new GeoPointMutable();
@@ -240,6 +246,10 @@ public final class MapController {
                 this.centerLocation,
                 this.map.getWidth()/2 - dX,
                 this.map.getHeight()/2 - dY);
+        // We might end-up reaching the poles if supplied very large numbers because of floating point inaccuracies,
+        // which would screw things up because pole get projected to infinities.
+        SAFE_BOUNDS.clamp(this.centerLocationTarget);
+        SAFE_BOUNDS.clamp(this.centerLocation);
         this.inputLayer.updateViewPorts();
     }
 
@@ -335,6 +345,7 @@ public final class MapController {
      */
     public void setZoomStaticLocation(GeoPoint<?> location) {
         this.zoomLocation.set(location);
+        this.inputLayer.updateViewPorts();
     }
 
     /**
@@ -399,6 +410,7 @@ public final class MapController {
      */
     public void setRotationStaticLocation(GeoPoint<?> location) {
         this.rotateLocation.set(location);
+        this.inputLayer.updateViewPorts();
     }
 
     /**
