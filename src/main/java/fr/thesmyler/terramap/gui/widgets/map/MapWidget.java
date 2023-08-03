@@ -41,8 +41,7 @@ import static java.util.stream.Collectors.toList;
  * The core component of Terramap: the map widget itself.
  * This is in fact a {@link FlexibleWidgetContainer} that groups together the various components of the map, which are:
  * <ul>
- *  <li>The map's background layer</li>
- *  <li>The map's overlay layers</li>
+ *  <li>The map's layers</li>
  *  <li>The map's input processing layer (internal to the map)</li>
  *  <li>The map's markers</li>
  *  <li>The map's copyright notice</li>
@@ -151,9 +150,13 @@ public class MapWidget extends FlexibleWidgetContainer {
         super.addWidget(this.scale);
 
         this.controller = new MapController(this);
-        this.inputLayer = (InputLayer) this.createLayer(MapLayerLibrary.INPUT_LAYER_ID);
+
+        InputLayer layer = new InputLayer(this);
+        layer.setZ(0);
+        super.addWidget(layer);
+        this.inputLayer = layer;
         this.controller.inputLayer = this.inputLayer;
-        this.setLayerZ(this.inputLayer, 0);
+
 
         this.setDoScissor(true);
 
@@ -706,7 +709,6 @@ public class MapWidget extends FlexibleWidgetContainer {
         Marker tracked = this.controller.getTrackedMarker();
         state.trackedMarker = tracked != null ? tracked.getIdentifier(): null;
         for (MapLayer layer: this.layers) {
-            if (layer instanceof InputLayer) continue;
             SavedLayerState layerState = new SavedLayerState();
             layerState.type = layer.getType();
             layerState.z = layer.getZ();
@@ -729,9 +731,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.controller.setZoomStaticLocation(state.center);
         this.controller.setZoom(state.zoom, false);
         this.restoreTracking(state.trackedMarker);
-        this.layers.stream()
-                .filter(l -> !(l instanceof InputLayer)) // This one we need to keep
-                .collect(toList()) // Avoid co-modification problems
+        new ArrayList<>(this.layers) // Avoid co-modification problems
                 .forEach(this::removeLayer);
         for (SavedLayerState layerState: state.layers) {
             MapLayer layer = this.createLayer(layerState.type);

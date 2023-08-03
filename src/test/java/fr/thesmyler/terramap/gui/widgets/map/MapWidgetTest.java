@@ -100,8 +100,8 @@ class MapWidgetTest extends TerramapTest {
         assertEquals(GeoPointImmutable.ORIGIN, map.getController().getCenterLocation().getImmutable());
         assertEquals(0, map.getController().getZoom());
         assertEquals(0, map.getController().getRotation());
-        assertEquals(2, map.getLayers().size()); // Input layer and raster layer
-        MapLayer layer = map.getLayers().get(1);
+        assertEquals(1, map.getLayers().size()); // Input layer and raster layer
+        MapLayer layer = map.getLayers().get(0);
         assertTrue(layer instanceof RasterMapLayer);
         assertEquals("stamen_terrain", ((RasterMapLayer) layer).getTiledMap().getId());
 
