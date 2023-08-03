@@ -25,13 +25,13 @@ import static java.lang.Math.*;
  */
 public class InputLayer extends MapLayer {
 
-    private MapWidget map;
-    private MapController controller;
+    private final MapWidget map;
+    private final MapController controller;
 
     final Vec2dMutable rotatePosition = new Vec2dMutable();
     boolean isRotating = false;
     private float rotationAngleOrigin = 0f;
-    private GeoPointReadOnly mouseLocation;
+    private final GeoPointReadOnly mouseLocation;
 
     // Stuff that can be pre-computed and that's used later when drawing a polygon at the place the map rotates around.
     private static final int ROTATION_POLYGON_VERTEX_COUNT = 5;
@@ -53,12 +53,16 @@ public class InputLayer extends MapLayer {
         }
     }
 
-    @Override
-    protected void initialize() {
+    public InputLayer(MapWidget map) {
+        this.setMap(map);
         this.map = this.getMap();
         this.controller = this.map.getController();
         this.mouseLocation = this.getMap().getMouseLocation();
+        this.setType("input");
     }
+
+    @Override
+    protected void initialize() {}
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
