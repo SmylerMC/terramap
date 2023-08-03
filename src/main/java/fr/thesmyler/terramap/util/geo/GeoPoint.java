@@ -29,7 +29,7 @@ public interface GeoPoint<T extends GeoPoint<?>> extends Mutable<GeoPointImmutab
     double longitude();
 
     /**
-     * Estimates the distance between this point and another one as best as possible, ignoring altitude
+     * Estimates the distance between this point and another one as best as possible, ignoring altitude.
      *
      * @param other another point
      *

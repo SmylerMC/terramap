@@ -723,9 +723,11 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     public void restore(SavedMapState state) {
-        this.controller.setRotation(state.rotation, false);
-        this.controller.setZoom(state.zoom, false);
         this.controller.moveLocationToCenter(state.center, false);
+        this.controller.setRotationStaticLocation(state.center);
+        this.controller.setRotation(state.rotation, false);
+        this.controller.setZoomStaticLocation(state.center);
+        this.controller.setZoom(state.zoom, false);
         this.restoreTracking(state.trackedMarker);
         this.layers.stream()
                 .filter(l -> !(l instanceof InputLayer)) // This one we need to keep

@@ -9,7 +9,7 @@ import static java.lang.Math.min;
 /**
  * A square bounding box, aligned with meridians and parallels.
  * Works across the antimeridian.
- * By convention, a {@link GeoBounds} which has a greater lower latitude than it's upper latitude is empty.
+ * By convention, a {@link GeoBounds} which has a greater lower latitude than its upper latitude is empty.
  * All empty bounding boxes are considered equals.
  * 
  * @author SmylerMC
@@ -272,6 +272,57 @@ public class GeoBounds {
      */
     public boolean isEmpty() {
         return this.lowerCorner.latitude() > this.upperCorner.latitude();
+    }
+
+    /**
+     * Clamps the latitude and longitude to make sure they are in the given bounds.
+     * Both are clamped independently.
+     * The longitude is clamped to the nearest side of the bounding box,
+     * even though it might be on the other side of the antimeridian.
+     *
+     * @param   point a point to clamp
+     * @return  the result of the clamping operation, applied on the input {@link GeoPoint}
+     *
+     * @param <T>   the type of {@link GeoPoint}
+     */
+    public <T extends GeoPoint<T>> GeoPoint<T> clamp(GeoPoint<T> point) {
+
+        if (this.isEmpty()) {
+            throw new UnsupportedOperationException("Cannot clamp within empty bounds");
+        }
+
+        double longitude = point.longitude();
+        double latitude = point.latitude();
+
+        if (latitude < this.lowerCorner.latitude()) {
+            point = point.withLatitude(this.lowerCorner.latitude());
+        } else if (latitude > this.upperCorner.latitude()) {
+            point = point.withLatitude(this.upperCorner.latitude());
+        }
+
+        if (this.crossesAntimeridian) {
+            if (longitude > this.upperCorner.longitude() && longitude < this.lowerCorner.longitude()) {
+                if (longitude - this.upperCorner.longitude() < this.lowerCorner.longitude() - longitude) {
+                    point = point.withLongitude(this.upperCorner.longitude());
+                } else {
+                    point = point.withLongitude(this.lowerCorner.longitude());
+                }
+            }
+        } else if (longitude < this.lowerCorner.longitude() ) {
+            if (this.lowerCorner.longitude() - longitude < longitude + 360d - this.upperCorner.longitude()) {
+                point = point.withLongitude(this.lowerCorner.longitude());
+            } else {
+                point = point.withLongitude(this.upperCorner.longitude());
+            }
+        } else if (longitude > this.upperCorner.longitude()) {
+            if (longitude - this.upperCorner.longitude() < this.lowerCorner.longitude() - longitude + 360d) {
+                point = point.withLongitude(this.upperCorner.longitude());
+            } else {
+                point = point.withLongitude(this.lowerCorner.longitude());
+            }
+        }
+
+        return point;
     }
 
     @Override

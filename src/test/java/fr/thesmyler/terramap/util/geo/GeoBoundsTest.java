@@ -1,18 +1,15 @@
-package fr.thesmyler.terramap.util.geo.bounds;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+package fr.thesmyler.terramap.util.geo;
 
 import java.util.Map;
 
 import fr.thesmyler.terramap.util.collections.HashMapBuilder;
-import fr.thesmyler.terramap.util.geo.GeoBounds;
-import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
-public class GeoBoundsSquareTest {
+import static fr.thesmyler.terramap.util.geo.GeoBounds.*;
+import static fr.thesmyler.terramap.util.geo.GeoPointImmutable.NORTH_POLE;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class GeoBoundsTest {
     
     @Test
     public void constructionAndCrossesAntimeridianTest() {
@@ -22,7 +19,7 @@ public class GeoBoundsSquareTest {
                 .put(GeoBounds.NORTHERN_HEMISPHERE, false)
                 .put(GeoBounds.WESTERN_HEMISPHERE, false)
                 .put(GeoBounds.EASTERN_HEMISPHERE, false)
-                .put(new GeoBounds(GeoPointImmutable.ORIGIN, GeoPointImmutable.NORTH_POLE.withLongitude(-1d)), true)
+                .put(new GeoBounds(GeoPointImmutable.ORIGIN, NORTH_POLE.withLongitude(-1d)), true)
             .build();
         for(GeoBounds square: squares.keySet()) {
             boolean crossesAntimeridian = squares.get(square);
@@ -329,13 +326,13 @@ public class GeoBoundsSquareTest {
                     // Squares do not intersect, none cross, smallest encompassing does not cross
                     new GeoBounds(leftDown, GeoPointImmutable.ORIGIN),
                     new GeoBounds(rightDown, farRightUp),
-                    GeoBounds.EMPTY
+                    EMPTY
                 },
                 {
                     // Squares do not intersect, none cross, smallest encompassing crosses
                     new GeoBounds(farLeftDown.withLongitude(-180d), farLeftUp),
                     new GeoBounds(rightDown, farRightUp),
-                    GeoBounds.EMPTY
+                    EMPTY
                 },
                 {
                     // Both squares cross
@@ -353,13 +350,13 @@ public class GeoBoundsSquareTest {
                     // First square crosses the antimeridian, second one does not intersets, smallest gap is on the left
                     new GeoBounds(farRightDown, farLeftUp),
                     new GeoBounds(leftDown, rightPosMid),
-                    GeoBounds.EMPTY
+                    EMPTY
                 },
                 {
                     // First square crosses the antimeridian, second one does not intersets, smallest gap is on the right
                     new GeoBounds(farRightDown, farLeftUp),
                     new GeoBounds(leftDown.withLongitude(0d), rightPosMid),
-                    GeoBounds.EMPTY
+                    EMPTY
                 },
                 {
                     // First square crosses the antimeridian, second one intersects with lower part
@@ -390,12 +387,12 @@ public class GeoBoundsSquareTest {
             GeoBounds square1 = bounds[0];
             GeoBounds square2 = bounds[1];
             GeoBounds inter = bounds[2];
-            if(GeoBounds.EMPTY.equals(inter)) {
+            if(EMPTY.equals(inter)) {
                 assertFalse(square1.intersects(square2));
                 assertFalse(square2.intersects(square1));
                 assertEquals(0, square1.intersections(square2).length);
                 assertEquals(0, square2.intersections(square1).length);
-                assertEquals(GeoBounds.EMPTY, square1.encompassingIntersection(square2));
+                assertEquals(EMPTY, square1.encompassingIntersection(square2));
             } else {
                 assertTrue(square1.intersects(square2));
                 assertTrue(square2.intersects(square1));
@@ -429,7 +426,39 @@ public class GeoBoundsSquareTest {
                 (inte[1].equals(res1) && inte[0].equals(res2)));
         assertEquals(inte[0].smallestEncompassingSquare(inte[1]), square1.encompassingIntersection(square2));
     }
-    
+
+    @Test
+    public void clampGeoPointTest() {
+        GeoBounds transatlanticBounds = new GeoBounds(
+                new GeoPointImmutable(-90, -45),
+                new GeoPointImmutable(15, 45)
+        );
+
+        GeoBounds transpacificBounds = new GeoBounds(
+                new GeoPointImmutable(120, -45),
+                new GeoPointImmutable(-120, 45)
+        );
+
+        // Cannot clamp with empty bounds
+        assertThrows(UnsupportedOperationException.class, () -> EMPTY.clamp(NORTH_POLE));
+
+        // Simplest case, clamping with bounds that do not cross the antimeridian
+        assertEquals(new GeoPointImmutable(-90, 10), transatlanticBounds.clamp(new GeoPointImmutable(-92, 10)));
+        assertEquals(new GeoPointImmutable(15, 10), transatlanticBounds.clamp(new GeoPointImmutable(20, 10)));
+        assertEquals(new GeoPointImmutable(10, -45), transatlanticBounds.clamp(new GeoPointImmutable(10, -60)));
+        assertEquals(new GeoPointImmutable(10, 45), transatlanticBounds.clamp(new GeoPointImmutable(10, 70)));
+
+        // More complicated case, clamping with bounds that cross the antimeridian
+        assertEquals(new GeoPointImmutable(120, 20), transpacificBounds.clamp(new GeoPointImmutable(118, 20)));
+        assertEquals(new GeoPointImmutable(-120, 20), transpacificBounds.clamp(new GeoPointImmutable(-118, 20)));
+        assertEquals(new GeoPointImmutable(130, -45), transpacificBounds.clamp(new GeoPointImmutable(130, -60)));
+        assertEquals(new GeoPointImmutable(130, 45), transpacificBounds.clamp(new GeoPointImmutable(130, 70)));
+
+        // Most complicated: closest boundary is on the other side of the antimeridian
+        assertEquals(new GeoPointImmutable(-180, 0), WESTERN_HEMISPHERE.clamp(new GeoPointImmutable(170, 0)));
+        assertEquals(new GeoPointImmutable(180, 0), EASTERN_HEMISPHERE.clamp(new GeoPointImmutable(-170, 0)));
+    }
+
     @Test
     public void equalsAndHashCodeTest() {
         GeoBounds square1 = new GeoBounds(new GeoPointImmutable(45d, 23d), new GeoPointImmutable(60d, 67d));
