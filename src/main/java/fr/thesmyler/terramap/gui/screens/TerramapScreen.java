@@ -61,6 +61,8 @@ import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
+import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
+import static fr.thesmyler.terramap.util.math.Math.clamp;
 
 
 public class TerramapScreen extends Screen implements ITabCompleter {
@@ -339,6 +341,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
         this.layerPanel.setStateNoAnimation(state.layerPanel);
 
+        this.setZoomRestrictions();
     }
 
     @Override
@@ -347,15 +350,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
 
         MapController controller = this.map.getController();
-        this.zoomInButton.setEnabled(controller.getZoom() < controller.getMaxZoom());
-        this.zoomOutButton.setEnabled(controller.getZoom() > controller.getMinZoom());
-        this.zoomText.setText(new TextComponentString(GeoServices.formatZoomLevelForDisplay(controller.getZoom())));
+        this.setZoomRestrictions();
+        this.zoomText.setText(new TextComponentString(formatZoomLevelForDisplay(controller.getZoom())));
         this.centerButton.setEnabled(!(controller.getTrackedMarker() instanceof MainPlayerMarker));
 
         this.compass.setAzimuth(controller.getRotation());
 
         GeoPointReadOnly mouseLocation = this.map.getMouseLocation();
-        String formatScale = "-"; 
+        String formatScale = "-";
         String formatOrientation = "-";
         if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
             this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
@@ -438,6 +440,28 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.debugText.setText(new TextComponentString(debugBuilder.toString()));
             this.debugText.setAnchorY(this.height - this.debugText.getHeight());
         }
+    }
+
+    private void setZoomRestrictions() {
+        MapController controller = this.map.getController();
+        Optional<RasterMapLayer> backgroundLayer = this.map.getRasterBackgroundLayer();
+        double minZoom = 0;
+        double maxZoom = 25;
+        double zoom = controller.getZoom();
+        if (backgroundLayer.isPresent()) {
+            IRasterTiledMap style = backgroundLayer.get().getTiledMap();
+            minZoom = style.getMinZoom();
+            if (!TerramapConfig.CLIENT.unlockZoom) {
+                maxZoom = style.getMaxZoom();
+            }
+        }
+        controller.setMinZoom(minZoom);
+        controller.setMaxZoom(maxZoom);
+        if (zoom < minZoom || zoom > maxZoom) {
+            controller.setZoom(clamp(zoom, minZoom, maxZoom), true);
+        }
+        this.zoomInButton.setEnabled(controller.getZoom() < controller.getMaxZoom());
+        this.zoomOutButton.setEnabled(controller.getZoom() > controller.getMinZoom());
     }
 
     private void buildProfilingResult(StringBuilder builder, String sectionName, String padding) {
