@@ -102,8 +102,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private boolean f1Mode = false;
     private boolean debugMode = false;
 
-    private RasterMapLayer backgroundLayer;
-
     public TerramapScreen(GuiScreen parent, SavedMainScreenState state) {
         super(BackgroundOption.OVERLAY);
         this.parent = parent;
@@ -117,7 +115,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.restore(state);
         this.map.getRightClickMenu().addEntry(
                 SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.offset"),
-                () -> new LayerRenderingOffsetPopup(this.backgroundLayer).show()
+                () -> this.map.getRasterBackgroundLayer().ifPresent(l -> new LayerRenderingOffsetPopup(l).show())
         );
     }
 
@@ -341,11 +339,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
         this.layerPanel.setStateNoAnimation(state.layerPanel);
 
-        this.backgroundLayer = (RasterMapLayer) this.map.getLayers().stream()
-                .filter(l -> l instanceof RasterMapLayer)
-                .min(Comparator.comparingInt(MapLayer::getZ))
-                .orElse(null);
-
     }
 
     @Override
@@ -405,7 +398,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.noplayer"));
         }
 
-        this.offsetWarning.setVisibility(this.getBackgroundLayer().map(MapLayer::hasRenderingOffset).orElse(false));
+        this.offsetWarning.setVisibility(this.map.getRasterBackgroundLayer().map(MapLayer::hasRenderingOffset).orElse(false));
 
         if(this.debugMode) {
             StringBuilder debugBuilder = new StringBuilder();
@@ -417,8 +410,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
             debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
-            if (this.getBackgroundLayer().isPresent()) {
-                IRasterTiledMap backgroundStyle = this.getBackgroundLayer().get().getTiledMap();
+            this.map.getRasterBackgroundLayer().ifPresent(layer -> {
+                IRasterTiledMap backgroundStyle = layer.getTiledMap();
                 debugBuilder.append(String.format(locale, "\nMap id: %s", backgroundStyle.getId()));
                 debugBuilder.append(String.format(locale, "\nMap provider: %sv%s", backgroundStyle.getProvider(), backgroundStyle.getProviderVersion()));
                 if (backgroundStyle instanceof CachingRasterTiledMap) {
@@ -431,9 +424,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                         debugBuilder.append(String.format(locale, "\nMap urls (%d) %s", urls.length, urls[showingIndex]));
                     }
                 }
-            } else {
-                debugBuilder.append("\nMap has no background");
-            }
+            });
             debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameContext().getScaleFactor()));
             debugBuilder.append("\n\n");
             debugBuilder.append("Locations: ")
@@ -601,10 +592,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
             for(IRasterTiledMap map: maps) {
                 MapPreview w = new MapPreview(50, map, m -> {
-                    if (TerramapScreen.this.backgroundLayer != null) {
-                        TerramapScreen.this.backgroundLayer.setTiledMap(m.previewLayer.getTiledMap());
-                        TerramapScreen.this.backgroundLayer.setRenderingOffset(m.previewLayer.getRenderingOffset());
-                    }
+                    TerramapScreen.this.map.getRasterBackgroundLayer().ifPresent(l -> {
+                        l.setTiledMap(m.previewLayer.getTiledMap());
+                        l.setRenderingOffset(m.previewLayer.getRenderingOffset());
+                    });
                     TerramapScreen.this.stylePanel.close();
                     TerramapScreen.this.layerListContainer.init();
                 });
@@ -625,8 +616,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-            if (TerramapScreen.this.backgroundLayer != null) {
-                RasterMapLayer bg = TerramapScreen.this.backgroundLayer;
+            TerramapScreen.this.map.getRasterBackgroundLayer().ifPresent(bg -> {
                 final MapController thisController = TerramapScreen.this.map.getController();
                 for (MapPreview map : this.maps) {
                     MapController controller = map.getController();
@@ -637,7 +627,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                         map.previewLayer.setRenderingOffset(bg.getRenderingOffset());
                     }
                 }
-            }
+            });
             super.onUpdate(mouseX, mouseY, parent);
         }
 
@@ -723,10 +713,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     private Collection<FeatureVisibilityController> getButtonProviders() {
         return Collections.unmodifiableCollection(this.map.getVisibilityControllers().values());
-    }
-
-    public Optional<RasterMapLayer> getBackgroundLayer() {
-        return Optional.ofNullable(this.backgroundLayer);
     }
 
     private class MapPreview extends MapWidget {

@@ -1,9 +1,6 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
@@ -44,7 +41,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
-
 public class HudConfigScreen extends Screen {
 
     private final MapWidget minimap = new MapWidget(0, MapContext.MINIMAP, TerramapConfig.CLIENT.minimap.getEffectiveTileScaling());
@@ -81,6 +77,7 @@ public class HudConfigScreen extends Screen {
         this.minimap.setRightClickMenuEnabled(false);
         this.minimap.setScaleVisibility(false);
         this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
+        this.minimap.restore(TerramapClientContext.getContext().getSavedState().minimap);
         this.minimap.scheduleBeforeEachUpdate(() -> {
             GeographicProjection projection = TerramapClientContext.getContext().getProjection();
             Marker marker = this.minimap.getMainPlayerMarker();
@@ -89,14 +86,11 @@ public class HudConfigScreen extends Screen {
             }
         });
         this.zoomSlider.setOnChange(z -> controller.setZoom(z, true));
-        this.styleSlider.setOnChange(map -> {
-            //FIXME set minimap backgound in hud config screen
-            /*
-            this.minimap.setBackground(map.map);
+        this.styleSlider.setOnChange(map -> this.minimap.getRasterBackgroundLayer().ifPresent(b -> {
+            b.setTiledMap(map.map);
             this.zoomSlider.setMin(map.map.getMinZoom());
-            this.zoomSlider.setMax(TerramapConfig.CLIENT.unlockZoom ? 25: map.map.getMaxZoom());
-             */
-        });
+            this.zoomSlider.setMax(map.map.getMaxZoom());
+        }));
         this.tileScalingSlider.setOnChange(v -> {
             if(v == TileScalingOption.AUTO) this.minimap.setTileScaling(getGameContext().getScaleFactor());
             else this.minimap.setTileScaling(v.value);
@@ -232,11 +226,11 @@ public class HudConfigScreen extends Screen {
                 this.settingsPanel.addWidget(text);
                 this.settingsPanel.addWidget(button);
             }
-            lineY = lastButton.getY() + lastButton.getHeight() + lineSpace;
+            lineY = lastButton != null ? lastButton.getY() + lastButton.getHeight() + lineSpace: lineSpace;
         }
         // Second line
         this.settingsPanel.addWidget(this.tileScalingSlider
-                .setX(this.width / 2f - 153).setY(lastButton.getY() + lastButton.getHeight() + lineSpace)
+                .setX(this.width / 2f - 153).setY(lastButton != null ? lastButton.getY() + lastButton.getHeight() + lineSpace: lineSpace)
                 .setWidth(100)
                 .setDisplayPrefix(SmyLibGui.getTranslator().format("terramap.hudconfig.scaling"))
                 .setTooltip(SmyLibGui.getTranslator().format("terramap.hudconfig.scaling.tooltip")));
@@ -249,6 +243,7 @@ public class HudConfigScreen extends Screen {
                 .setWidth(100)
                 .setX(this.width / 2f + 53f).setY(this.tileScalingSlider.getY())
                 .setTooltip(SmyLibGui.getTranslator().format("terramap.hudconfig.mapstyle.tooltip")));
+        this.styleSlider.setEnabled(this.minimap.getRasterBackgroundLayer().isPresent());
 
         // Setup panels
         this.buttonPanel.setBackgroundColor(Color.DARKER_OVERLAY);

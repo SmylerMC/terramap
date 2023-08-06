@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.*;
 import java.util.function.Supplier;
 
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.util.geo.*;
@@ -35,7 +36,7 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.Comparator.comparingInt;
 
 /**
  * The core component of Terramap: the map widget itself.
@@ -747,6 +748,31 @@ public class MapWidget extends FlexibleWidgetContainer {
             FeatureVisibilityController controller = controllers.get(key);
             if (controller != null) controller.setVisibility(state.visibilitySettings.get(key));
         }
+    }
+
+    /**
+     * Utility method to access a map's background when it has one.
+     * The map's background is considered to be the {@link MapLayer layer} with the lowest negative Z level.
+     *
+     * @return the map's background as an {@link Optional},
+     *         or an empty {@link Optional} if no {@link MapLayer layers} fulfilled the definition of a background.
+     */
+    public Optional<MapLayer> getBackgroundLayer() {
+        return this.getLayers().stream()
+                .filter(l -> l.getZ() < 0)
+                .min(comparingInt(MapLayer::getZ));
+    }
+
+    /**
+     * Utility method to access a map's raster background when it has one.
+     * The map's raster background is considered to be the {@link MapLayer layer} with the lowest negative Z level,
+     * if it is a {@link RasterMapLayer raster layer}.
+     *
+     * @return the map's raster background as an {@link Optional},
+     *         or an empty {@link Optional} if no {@link MapLayer layers} fulfilled the definition of a raster background.
+     */
+    public Optional<RasterMapLayer> getRasterBackgroundLayer() {
+        return this.getBackgroundLayer().map(l -> l instanceof RasterMapLayer ? (RasterMapLayer) l: null);
     }
 
     /**
