@@ -53,7 +53,6 @@ import static java.util.Comparator.comparingInt;
  * @author SmylerMC
  *
  */
-//TODO set min and max zoom according to layers
 //TODO keep track of errors according to layers
 public class MapWidget extends FlexibleWidgetContainer {
 

@@ -87,7 +87,9 @@ public class MinimapWidget extends MapWidget {
         this.restore(state);
 
         Optional<RasterMapLayer> background = this.getRasterBackgroundLayer();
-        float zoom = TerramapConfig.CLIENT.minimap.zoomLevel;
+        double zoom = TerramapConfig.CLIENT.minimap.zoomLevel;
+        double minZoom = 0d;
+        double maxZoom = 25d;
         if (background.isPresent()) {
             IRasterTiledMap style = TerramapClientContext.getContext().getMapStyles().get(TerramapConfig.CLIENT.minimap.style);
             RasterMapLayer layer = background.get();
@@ -95,9 +97,15 @@ public class MinimapWidget extends MapWidget {
                 layer.setTiledMap(style);
             }
             style = layer.getTiledMap();
-            zoom = clamp(zoom, style.getMinZoom(), style.getMaxZoom());
+            minZoom = style.getMinZoom();
+            if (!TerramapConfig.CLIENT.unlockZoom) {
+                maxZoom = style.getMaxZoom();
+            }
         }
+        zoom = clamp(zoom, minZoom, maxZoom);
         controller.setZoom(zoom, false);
+        controller.setMinZoom(minZoom);
+        controller.setMaxZoom(maxZoom);
 
     }
 
