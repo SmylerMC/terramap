@@ -16,6 +16,7 @@ public class SavedLayerState {
     public int z;
     public final Vec2dMutable cartesianOffset = new Vec2dMutable();
     public float rotationOffset = 0f;
+    public boolean visible = true;
     public float alpha = 1f;
     public boolean overlay = true;
 

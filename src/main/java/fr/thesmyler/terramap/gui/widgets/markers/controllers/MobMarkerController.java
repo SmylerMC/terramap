@@ -21,7 +21,7 @@ public class MobMarkerController extends MarkerController<MobMarker> {
             102, 108, 102, 122,
             102, 108, 102, 122,
             102, 136, 102, 150,
-            this.getVisibility(), null);
+            this.isVisible(), null);
 
     public MobMarkerController() {
         super(ID, 700, MobMarker.class);
@@ -61,8 +61,8 @@ public class MobMarkerController extends MarkerController<MobMarker> {
     }
 
     @Override
-    public boolean getVisibility() {
-        return super.getVisibility() && TerramapClientContext.getContext().allowsMobRadar();
+    public boolean isVisible() {
+        return super.isVisible() && TerramapClientContext.getContext().allowsMobRadar();
     }
 
     @Override

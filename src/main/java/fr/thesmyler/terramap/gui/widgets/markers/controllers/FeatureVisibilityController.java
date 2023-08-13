@@ -12,6 +12,6 @@ public interface FeatureVisibilityController {
 
     void setVisibility(boolean visibility);
 
-    boolean getVisibility();
+    boolean isVisible();
 
 }

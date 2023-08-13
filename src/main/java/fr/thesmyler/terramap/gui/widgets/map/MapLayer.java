@@ -45,6 +45,7 @@ public abstract class MapLayer implements IWidget {
     private final ThreadLocal<Vec2dMutable> calculationHelper = new DefaultThreadLocal<>(Vec2dMutable::new);
     
     private boolean isUserOverlay = false;
+    private boolean visible = true;
     private float alpha = 1.0f;
     private static final DoubleRange ALPHA_RANGE = new DoubleRange(0d, 1d);
 
@@ -379,6 +380,19 @@ public abstract class MapLayer implements IWidget {
      */
     public void setUserOverlay(boolean isUserOverlay) {
         this.isUserOverlay = isUserOverlay;
+    }
+
+    @Override
+    public boolean isVisible(WidgetContainer parent) {
+        return this.visible;
+    }
+
+    public boolean isVisible() {
+        return this.visible;
+    }
+
+    public void setVisibility(boolean visible) {
+        this.visible = visible;
     }
 
     /**

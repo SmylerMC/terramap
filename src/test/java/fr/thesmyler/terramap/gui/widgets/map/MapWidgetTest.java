@@ -31,6 +31,7 @@ class MapWidgetTest extends TerramapTest {
         raster_stamen.setTiledMap(MapStylesLibrary.getBaseMaps().get("stamen_terrain"));
         map.setLayerZ(raster_stamen, -1);
         raster_stamen.setAlpha(0.5f);
+        raster_stamen.setVisibility(false);
         raster_stamen.setRenderingOffset(new Vec2dImmutable(0.042d, -0.24d));
         raster_stamen.setRotationOffset(15f);
 
@@ -59,6 +60,7 @@ class MapWidgetTest extends TerramapTest {
         assertEquals(RASTER_LAYER_ID, savedStamen.type);
         assertEquals(-1, savedStamen.z);
         assertEquals(0.5f, savedStamen.alpha);
+        assertFalse(savedStamen.visible);
         assertEquals(0, savedStamen.cartesianOffset.subtract(0.042d, -0.24d).norm(), 1e-5d);
         assertEquals(15f, savedStamen.rotationOffset, 1e-5f);
 
@@ -75,6 +77,7 @@ class MapWidgetTest extends TerramapTest {
         // Let's start in some random state
         RasterMapLayer rasterLayer = (RasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         rasterLayer.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm"));
+        rasterLayer.setVisibility(false);
         map.setLayerZ(rasterLayer, -1);
         map.getController().setZoomStaticLocation(PARIS);
         map.getController().setZoom(18, true);
@@ -105,6 +108,7 @@ class MapWidgetTest extends TerramapTest {
         MapLayer layer = map.getLayers().get(0);
         assertTrue(layer instanceof RasterMapLayer);
         assertEquals("stamen_terrain", ((RasterMapLayer) layer).getTiledMap().getId());
+        assertTrue(layer.isVisible());
 
     }
 

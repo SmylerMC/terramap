@@ -8,6 +8,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
@@ -108,6 +109,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
     private class GenericOverlayEntry extends OverlayEntry {
         
         final MapLayer layer;
+        final FloatSliderWidget alphaSlider;
 
         public GenericOverlayEntry(float y, MapLayer layer) {
             super(y, 20);
@@ -131,11 +133,22 @@ class LayerListContainer extends FlexibleWidgetContainer {
             );
             offsetButton.setTooltip(layer.hasRenderingOffset() ? "A rendering offset is set for this layer": "Set layer render offset");
             this.addWidget(offsetButton);
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH));
+            this.addWidget(new ToggleButtonWidget(
+                    this.getWidth() - 86f, 3f, 0, 15f, 15f,
+                    100, 164, // On enabled
+                    100, 179, // Off enabled
+                    100, 224, // On disabled
+                    100, 239, // Off disabled
+                    100, 194, // On focused
+                    100, 209, // Off focused
+                    layer.isVisible(),
+                    this::toggleVisibility
+            ));
 
-            FloatSliderWidget alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, layer.getAlpha());
-            alphaSlider.setDisplayPrefix("Alpha: ");
-            alphaSlider.setOnChange(d -> this.layer.setAlpha(d.floatValue()));
+            this.alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, layer.getAlpha());
+            this.alphaSlider.setDisplayPrefix("Alpha: ");
+            this.alphaSlider.setOnChange(d -> this.layer.setAlpha(d.floatValue()));
+            this.alphaSlider.setEnabled(this.layer.isVisible());
             this.addWidget(alphaSlider);
             this.setHeight(37);
         }
@@ -168,6 +181,11 @@ class LayerListContainer extends FlexibleWidgetContainer {
                 if (other.getZ() == Integer.MIN_VALUE) return; // Do not move the background
                 LayerListContainer.this.swapLayers(this.layer, other);
             }
+        }
+
+        void toggleVisibility(boolean visibility) {
+            this.alphaSlider.setEnabled(visibility);
+            this.layer.setVisibility(visibility);
         }
 
     }

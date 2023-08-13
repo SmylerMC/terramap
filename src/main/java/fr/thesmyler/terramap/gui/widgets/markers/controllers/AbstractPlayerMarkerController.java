@@ -13,7 +13,7 @@ public abstract class AbstractPlayerMarkerController<T extends AbstractPlayerMar
         super(id, zLayer, clazz);
         this.button = button;
         this.button.setOnChange(this::setVisibility);
-        this.button.setState(this.getVisibility());
+        this.button.setState(this.isVisible());
     }
 
     public boolean doesShowNames() {

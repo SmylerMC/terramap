@@ -60,8 +60,8 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
 
     @Override
-    public boolean getVisibility() {
-        return super.getVisibility() && TerramapClientContext.getContext().allowsPlayerRadar();
+    public boolean isVisible() {
+        return super.isVisible() && TerramapClientContext.getContext().allowsPlayerRadar();
     }
 
     @Override

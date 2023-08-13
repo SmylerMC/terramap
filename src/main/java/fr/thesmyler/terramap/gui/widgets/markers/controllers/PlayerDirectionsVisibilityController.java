@@ -51,7 +51,7 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
     }
 
     @Override
-    public boolean getVisibility() {
+    public boolean isVisible() {
         return this.main.doesShowDirection();
     }
 
