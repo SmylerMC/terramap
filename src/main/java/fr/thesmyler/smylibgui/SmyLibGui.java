@@ -21,6 +21,7 @@ public final class SmyLibGui {
     private static Logger logger;
     private static Mouse mouse;
     private static Keyboard keyboard;
+    private static Clipboard clipboard;
     private static GameContext gameContext;
     private static Font defaultFont;
     private static SoundSystem soundSystem;
@@ -48,6 +49,7 @@ public final class SmyLibGui {
     private static void initLwjgl2() {
         mouse = new Lwjgl2Mouse();
         keyboard = new Lwjgl2Keyboard();
+        clipboard = new AwtClipboard();
         gameContext = new MinecraftGameContext();
         defaultFont = new Font();
         soundSystem = new MinecraftSoundSystem();
@@ -66,6 +68,7 @@ public final class SmyLibGui {
         getTestMouse().setButtonCount(3);
         getTestMouse().setHasWheel(true);
         keyboard = new DummyKeyboard();
+        clipboard = new DummyClipboard();
         gameContext = new DummyGameContext();
         defaultFont = new DummyFont(1f);
         soundSystem = new DummySoundSystem();
@@ -80,6 +83,10 @@ public final class SmyLibGui {
     public static Keyboard getKeyboard() {
         checkInit();
         return keyboard;
+    }
+
+    public static Clipboard getClipboard() {
+        return clipboard;
     }
 
     public static GameContext getGameContext() {

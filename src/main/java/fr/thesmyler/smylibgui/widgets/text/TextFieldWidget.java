@@ -19,22 +19,23 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getClipboard;
+import static fr.thesmyler.smylibgui.SmyLibGui.getKeyboard;
 import static fr.thesmyler.smylibgui.devices.Key.*;
 
 /**
- * A text field, similar to the vanilla implementation, but with a few
+ * A text field, similar to the vanilla implementation, but with a few improvements.
+ * <br>
+ * Heavily inspired by the 1.15 vanilla class.
+ * We can't support all input methods as it would require GLFW, and it is not present in LWJGL 2.
  * 
- * Heavily inspired by the 1.15 vanilla class
- * We can't support all input methods as it would require GLFW and it is not present in LWJGL 2
- * 
- * @author SmylerMC
+ * @author Smyler
  *
  */
 public class TextFieldWidget implements IWidget {
@@ -88,6 +89,7 @@ public class TextFieldWidget implements IWidget {
         this.visible = true;
         this.menuEnabled = true;
         this.rightClickMenu = new MenuWidget(5000, this.font);
+        //TODO localize
         this.rightClickMenu.addEntry("Copy", this::copySelectionToClipboard);
         this.rightClickMenu.addEntry("Cut", this::cutSelectionToClipboard);
         this.rightClickMenu.addEntry("Paste", this::pasteIn);
@@ -263,22 +265,22 @@ public class TextFieldWidget implements IWidget {
                 case KEY_BACK:
                     this.selecting = false;
                     this.erase(-1);
-                    this.selecting = GuiScreen.isShiftKeyDown();
+                    this.selecting = getKeyboard().isShiftPressed();
                     break;
                 case KEY_DELETE:
                     this.selecting = false;
                     this.erase(1);
-                    this.selecting = GuiScreen.isShiftKeyDown();
+                    this.selecting = getKeyboard().isShiftPressed();
                     break;
                 case KEY_RIGHT:
-                    if (GuiScreen.isCtrlKeyDown()) {
+                    if (getKeyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(1));
                     } else {
                         this.moveCursor(1);
                     }
                     break;
                 case KEY_LEFT:
-                    if (GuiScreen.isCtrlKeyDown()) {
+                    if (getKeyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(-1));
                     } else {
                         this.moveCursor(-1);
@@ -356,7 +358,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     private void erase(int count) {
-        if (GuiScreen.isCtrlKeyDown()) this.eraseWords(count);
+        if (getKeyboard().isControlPressed()) this.eraseWords(count);
         else this.eraseCharacters(count);
     }
 
@@ -485,7 +487,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     public void copySelectionToClipboard() {
-        GuiScreen.setClipboardString(this.getSelectedText());
+        getClipboard().setContent(this.getSelectedText());
     }
 
     public void cutSelectionToClipboard() {
@@ -494,7 +496,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     public void pasteIn() {
-        this.write(GuiScreen.getClipboardString());
+        this.write(getClipboard().getContent());
     }
 
     public int getMaxTextLength() {
