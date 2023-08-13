@@ -2,18 +2,19 @@ package fr.thesmyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
-import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapTest;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
-import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import org.junit.jupiter.api.Test;
 
+import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerLibrary.RASTER_LAYER_ID;
+import static fr.thesmyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
 import static fr.thesmyler.terramap.util.geo.GeoPointTest.PARIS;
+import static fr.thesmyler.terramap.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapWidgetTest extends TerramapTest {
@@ -21,7 +22,7 @@ class MapWidgetTest extends TerramapTest {
     @Test
     void canSaveMapWidgetToSavedMapState() throws InterruptedException {
         TestingWidgetContainer screen = new TestingWidgetContainer(60, 500f, 500f);
-        MapWidget map = new MapWidget(0f, 0f, 0,  500f, 500f, MapContext.FULLSCREEN, 1f);
+        MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
         screen.addWidget(map);
         RasterMapLayer raster_osm = (RasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         RasterMapLayer raster_stamen = (RasterMapLayer) map.createLayer(RASTER_LAYER_ID);
@@ -67,7 +68,7 @@ class MapWidgetTest extends TerramapTest {
     public void canRestoreMapState() throws InterruptedException {
 
         TestingWidgetContainer screen = new TestingWidgetContainer(60, 500f, 500f);
-        MapWidget map = new MapWidget(0f, 0f, 0,  500f, 500f, MapContext.FULLSCREEN, 1f);
+        MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
         screen.moveMouse(750, 750, 1000);
         screen.addWidget(map);
 
@@ -85,7 +86,7 @@ class MapWidgetTest extends TerramapTest {
 
         // A completely different saved state
         SavedMapState state = new SavedMapState();
-        state.center.set(GeoPointImmutable.ORIGIN);
+        state.center.set(ORIGIN);
         state.zoom = 0;
         state.rotation = 0;
         SavedLayerState layerState = new SavedLayerState();
@@ -97,7 +98,7 @@ class MapWidgetTest extends TerramapTest {
         map.restore(state);
         screen.doTick();
 
-        assertEquals(GeoPointImmutable.ORIGIN, map.getController().getCenterLocation().getImmutable());
+        assertEquals(ORIGIN, map.getController().getCenterLocation().getImmutable());
         assertEquals(0, map.getController().getZoom());
         assertEquals(0, map.getController().getRotation());
         assertEquals(1, map.getLayers().size()); // Input layer and raster layer
@@ -105,6 +106,18 @@ class MapWidgetTest extends TerramapTest {
         assertTrue(layer instanceof RasterMapLayer);
         assertEquals("stamen_terrain", ((RasterMapLayer) layer).getTiledMap().getId());
 
+    }
+
+    @Test
+    public void layersViewportsAreProperlyUpdatedWhenMapResizes() {
+        MapWidget map = new MapWidget(0f, 0f, 0, 100f, 100F, FULLSCREEN, 1d);
+        assertEquals(new Vec2dImmutable(100d, 100d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
+        map.setSize(500f, 500f);
+        assertEquals(new Vec2dImmutable(500d, 500d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
+        map.setWidth(100f);
+        assertEquals(new Vec2dImmutable(100d, 500d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
+        map.setHeight(100f);
+        assertEquals(new Vec2dImmutable(100d, 100d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
     }
 
 }
