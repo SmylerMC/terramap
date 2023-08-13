@@ -117,6 +117,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
         OPTIONS2_15(15, 15, 240, 0, 240, 15, 240, 30, SmyLibGuiTextures.WIDGET_TEXTURES),
         TRASH(15, 15, 241, 45, 241, 60, 241, 75, SmyLibGuiTextures.WIDGET_TEXTURES),
         OFFSET(15, 15, 226, 45, 226, 60, 226, 75, SmyLibGuiTextures.WIDGET_TEXTURES),
+        OFFSET_WARNING(15, 15, 211, 45, 211, 60, 211, 75, SmyLibGuiTextures.WIDGET_TEXTURES),
 
         // 20x20
         BLANK_20(20, 20, 60, 164, 60, 184, 60, 204, SmyLibGuiTextures.WIDGET_TEXTURES),
