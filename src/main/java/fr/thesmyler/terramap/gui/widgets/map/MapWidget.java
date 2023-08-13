@@ -65,7 +65,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     private boolean visible = true;
 
     private final InputLayer inputLayer;
-    private final MapController controller;
+    private final MapController controller = new MapController(this);
     private final List<MapLayer> layers = new ArrayList<>();
     private final List<MapLayer> layersReadOnly = Collections.unmodifiableList(this.layers);
     private final List<Marker> markers = new ArrayList<>();
@@ -149,7 +149,6 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.scale.setX(15).setY(this.getHeight() - 30);
         super.addWidget(this.scale);
 
-        this.controller = new MapController(this);
 
         InputLayer layer = new InputLayer(this);
         layer.setZ(0);
