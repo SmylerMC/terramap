@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import javax.annotation.Nullable;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getClipboard;
 import static java.lang.Math.floorDiv;
 import static java.lang.Math.round;
 
@@ -176,7 +177,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
-            GuiScreen.setClipboardString(dispX + "." + dispY + ".2dr");
+            getClipboard().setContent(dispX + "." + dispY + ".2dr");
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copy2dregion");
         }
@@ -187,7 +188,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 256));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 256));
-            GuiScreen.setClipboardString(dispX + ".0." + dispY + ".3dr");
+            getClipboard().setContent(dispX + ".0." + dispY + ".3dr");
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copy2dregion");
         }
@@ -198,7 +199,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
-            GuiScreen.setClipboardString("r." + dispX + "." + dispY + ".mca");
+            getClipboard().setContent("r." + dispX + "." + dispY + ".mca");
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copyregion");
         }
@@ -209,7 +210,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 16));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 16));
-            GuiScreen.setClipboardString(dispX + " " + dispY);
+            getClipboard().setContent(dispX + " " + dispY);
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copychunk");
         }
@@ -220,7 +221,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(round(coords[0]));
             String dispY = String.valueOf(round(coords[1]));
-            GuiScreen.setClipboardString(dispX + " " + dispY);
+            getClipboard().setContent(dispX + " " + dispY);
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copyblock");
         }
@@ -232,7 +233,7 @@ public class MapMenuWidget extends MenuWidget {
     }
 
     private void copyGeoLocation() {
-        GuiScreen.setClipboardString(this.mouseLocation.latitude() + " " + this.mouseLocation.longitude());
+        getClipboard().setContent(this.mouseLocation.latitude() + " " + this.mouseLocation.longitude());
     }
     
     private void reportError(String errorTranslationKey) {

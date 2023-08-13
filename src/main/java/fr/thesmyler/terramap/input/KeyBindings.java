@@ -11,11 +11,12 @@ import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+
+import static fr.thesmyler.smylibgui.SmyLibGui.getClipboard;
 
 public abstract class KeyBindings {
 
@@ -70,7 +71,7 @@ public abstract class KeyBindings {
             } else {
                 try {
                     double[] projectedCoords = projection.toGeo(player.posX, player.posZ);
-                    GuiScreen.setClipboardString(projectedCoords[1] + " " + projectedCoords[0]);
+                    getClipboard().setContent(projectedCoords[1] + " " + projectedCoords[0]);
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.geo"));
                 } catch(OutOfProjectionBoundsException e) {
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.outproj"));
@@ -83,7 +84,7 @@ public abstract class KeyBindings {
             if(player == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
             } else {
-                GuiScreen.setClipboardString(player.posX + " " + player.posY + " " + player.posZ);
+                getClipboard().setContent(player.posX + " " + player.posY + " " + player.posZ);
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.mc"));
             }
         }
