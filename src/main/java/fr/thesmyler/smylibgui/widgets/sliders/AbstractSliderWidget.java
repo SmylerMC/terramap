@@ -25,9 +25,10 @@ import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
  * @author SmylerMC
  *
  */
-public abstract class AbstractSliderWidget extends WidgetContainer {
+public abstract class AbstractSliderWidget implements IWidget {
 
     protected float x, y, width, height;
+    private final int z;
 
     protected String displayPrefix = "";
     protected String tooltip;
@@ -39,9 +40,9 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
     protected Color disabledTextColor = Color.MEDIUM_GRAY;
 
     public AbstractSliderWidget(float x, float y, int z, float width, float height) {
-        super(z);
         this.x = x;
         this.y = y;
+        this.z = z;
         this.width = width;
         this.height = height;
     }
@@ -239,6 +240,11 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
     }
 
     @Override
+    public int getZ() {
+        return this.z;
+    }
+
+    @Override
     public float getWidth() {
         return this.width;
     }
@@ -275,11 +281,6 @@ public abstract class AbstractSliderWidget extends WidgetContainer {
     @Override
     public String getTooltipText() {
         return this.tooltip;
-    }
-
-    @Override
-    public IWidget getFocusedWidget() {
-        return this;
     }
 
     @Override
