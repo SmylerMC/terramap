@@ -179,6 +179,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
         }
 
+        this.updateLayersViewports();
+
     }
 
     public MapWidget(int z, MapContext context, double tileScaling) {
@@ -188,6 +190,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     @Override
     public void init() {
         this.copyright.setFont(Util.getSmallestFont());
+        this.updateLayersViewports();
     }
 
     /**
@@ -822,6 +825,11 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     public MapMenuWidget getRightClickMenu() {
         return this.rightClickMenu;
+    }
+
+    private void updateLayersViewports() {
+        this.inputLayer.updateViewPorts();
+        this.layers.forEach(MapLayer::updateViewPorts);
     }
 
 }
