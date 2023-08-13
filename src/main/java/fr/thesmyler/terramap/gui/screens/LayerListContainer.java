@@ -7,19 +7,20 @@ import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.widgets.WarningWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.minecraft.util.text.TextComponentString;
 
+import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.*;
 import static java.util.Comparator.comparing;
 
+//TODO localize
 class LayerListContainer extends FlexibleWidgetContainer {
     
     private final MapWidget map;
@@ -47,8 +48,8 @@ class LayerListContainer extends FlexibleWidgetContainer {
         for(MapLayer layer: layers) {
             if (layer instanceof InputLayer) continue; // We don't want the user to have to deal with the input layer
             OverlayEntry entry;
-            if (layer.getZ() == Integer.MIN_VALUE) {
-                entry = new BackgroundOverlayEntry(ly, layer);
+            if (layer.getZ() == Integer.MIN_VALUE && layer instanceof RasterMapLayer) {
+                entry = new BackgroundOverlayEntry(ly, (RasterMapLayer) layer);
             } else {
                 entry = new GenericOverlayEntry(ly, layer);
             }
@@ -83,19 +84,22 @@ class LayerListContainer extends FlexibleWidgetContainer {
     
     private class BackgroundOverlayEntry extends OverlayEntry {
 
-        public BackgroundOverlayEntry(float y, MapLayer layer) {
+        public BackgroundOverlayEntry(float y, RasterMapLayer layer) {
             super(y, 20);
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentString("Raster background"), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, IncludedTexturedButtons.WRENCH));
-            if(layer.hasRenderingOffset()) {
-                WarningWidget warn = new WarningWidget(this.getWidth() - 37, 3, 0);
-                warn.setTooltip("A rendering offset is set for this layer");
-                this.addWidget(warn);
-            }
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, WRENCH));
+            TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 37, 3, 0,
+                    layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
+                    () -> {
+                        LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(layer).show());
+                    }
+            );
+            offsetButton.setTooltip(layer.hasRenderingOffset() ? "Background has a rendering offset": "Set background rendering offset");
+            this.addWidget(offsetButton);
             this.setHeight(37);
         }
 
@@ -113,21 +117,22 @@ class LayerListContainer extends FlexibleWidgetContainer {
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
-            TexturedButtonWidget remove = new TexturedButtonWidget(this.getWidth() - 38, 3, 0, IncludedTexturedButtons.TRASH, this::remove);
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, IncludedTexturedButtons.UP, this::moveUp));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, IncludedTexturedButtons.DOWN, this::moveDown));
+            TexturedButtonWidget remove = new TexturedButtonWidget(this.getWidth() - 38, 3, 0, TRASH, this::remove);
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, UP, this::moveUp));
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, DOWN, this::moveDown));
             this.addWidget(remove.setEnabled(layer.isUserOverlay()));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, IncludedTexturedButtons.WRENCH));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 70, 3, 0, IncludedTexturedButtons.OFFSET, () -> {
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH));
+            TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 70, 3, 0,
+                layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
+                () -> {
                     MapLayer lowestLayer = LayerListContainer.this.map.getLayers().stream().min(comparing(MapLayer::getZ)).orElse(layer);
                     LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(lowestLayer, layer).show());
                 }
-            ));
-            if(layer.hasRenderingOffset()) {
-                WarningWidget warn = new WarningWidget(this.getWidth() - 86, 3, 0);
-                warn.setTooltip("A rendering offset is set for this layer");
-                this.addWidget(warn);
-            }
+            );
+            offsetButton.setTooltip(layer.hasRenderingOffset() ? "A rendering offset is set for this layer": "Set layer render offset");
+            this.addWidget(offsetButton);
+            this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH));
+
             FloatSliderWidget alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, layer.getAlpha());
             alphaSlider.setDisplayPrefix("Alpha: ");
             alphaSlider.setOnChange(d -> this.layer.setAlpha(d.floatValue()));
