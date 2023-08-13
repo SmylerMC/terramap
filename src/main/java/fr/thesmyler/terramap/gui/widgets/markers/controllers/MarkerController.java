@@ -24,7 +24,7 @@ public abstract class MarkerController<T extends Marker> implements FeatureVisib
     }
 
     @Override
-    public boolean getVisibility() {
+    public boolean isVisible() {
         return this.visibility;
     }
 

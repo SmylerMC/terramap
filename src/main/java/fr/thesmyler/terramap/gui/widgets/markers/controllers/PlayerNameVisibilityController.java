@@ -50,7 +50,7 @@ public class PlayerNameVisibilityController implements FeatureVisibilityControll
     }
 
     @Override
-    public boolean getVisibility() {
+    public boolean isVisible() {
         return this.main.doesShowNames();
     }
 

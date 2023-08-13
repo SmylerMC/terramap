@@ -22,7 +22,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
             116, 108, 116, 122,
             116, 108, 116, 122,
             116, 136, 116, 150,
-            this.getVisibility(), null);
+            this.isVisible(), null);
 
     public AnimalMarkerController() {
         super(ID, 700, AnimalMarker.class);
@@ -62,8 +62,8 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
     }
 
     @Override
-    public boolean getVisibility() {
-        return super.getVisibility() && TerramapClientContext.getContext().allowsAnimalRadar();
+    public boolean isVisible() {
+        return super.isVisible() && TerramapClientContext.getContext().allowsAnimalRadar();
     }
 
     @Override

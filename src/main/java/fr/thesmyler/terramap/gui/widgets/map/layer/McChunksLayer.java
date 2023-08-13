@@ -44,9 +44,7 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     private GeoPointReadOnly geoCenter;
     
     private final ToggleButtonWidget button;
-    
-    private boolean visible = false;
-    
+
     private Color color = Color.DARK_GRAY;
 
     // Used for calculations. Those aren't local fields so we don't create hundreds of objects every time we render
@@ -71,8 +69,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
                 186, 108, 186, 122,
                 186, 108, 186, 122,
                 186, 136, 186, 150,
-                this.visible,
-                b -> this.visible = b
+                this.isVisible(),
+                this::setVisibility
                 );
         this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.mapwidget.mcchunks.tooltip"));
     }
@@ -284,18 +282,8 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
 
     @Override
     public void setVisibility(boolean visibility) {
-        this.visible = visibility;
+        super.setVisibility(visibility);
         this.button.setState(visibility);
-    }
-
-    @Override
-    public boolean getVisibility() {
-        return this.visible;
-    }
-
-    @Override
-    public boolean isVisible(WidgetContainer parent) {
-        return this.visible;
     }
 
     public Color getColor() {
