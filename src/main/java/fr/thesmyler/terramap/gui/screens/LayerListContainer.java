@@ -48,11 +48,11 @@ class LayerListContainer extends FlexibleWidgetContainer {
 
         for(MapLayer layer: layers) {
             if (layer instanceof InputLayer) continue; // We don't want the user to have to deal with the input layer
-            OverlayEntry entry;
+            LayerEntry entry;
             if (layer.getZ() == Integer.MIN_VALUE && layer instanceof RasterMapLayer) {
-                entry = new BackgroundOverlayEntry(ly, (RasterMapLayer) layer);
+                entry = new BackgroundLayerEntry(ly, (RasterMapLayer) layer);
             } else {
-                entry = new GenericOverlayEntry(ly, layer);
+                entry = new GenericLayerEntry(ly, layer);
             }
             this.addWidget(entry);
             ly += entry.getHeight() + 5f;
@@ -68,9 +68,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
         LayerListContainer.this.scheduleBeforeNextUpdate(LayerListContainer.this::init);
     }
     
-    private abstract class OverlayEntry extends FlexibleWidgetContainer {
+    private abstract class LayerEntry extends FlexibleWidgetContainer {
 
-        public OverlayEntry(float y, float height) {
+        public LayerEntry(float y, float height) {
             super(5, y, 0, LayerListContainer.this.getWidth() - 10, height);
             this.setDoScissor(false);
         }
@@ -83,9 +83,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
         
     }
     
-    private class BackgroundOverlayEntry extends OverlayEntry {
+    private class BackgroundLayerEntry extends LayerEntry {
 
-        public BackgroundOverlayEntry(float y, RasterMapLayer layer) {
+        public BackgroundLayerEntry(float y, RasterMapLayer layer) {
             super(y, 20);
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentString("Raster background"), TextAlignment.RIGHT, this.getFont());
@@ -106,12 +106,12 @@ class LayerListContainer extends FlexibleWidgetContainer {
 
     }
     
-    private class GenericOverlayEntry extends OverlayEntry {
+    private class GenericLayerEntry extends LayerEntry {
         
         final MapLayer layer;
         final FloatSliderWidget alphaSlider;
 
-        public GenericOverlayEntry(float y, MapLayer layer) {
+        public GenericLayerEntry(float y, MapLayer layer) {
             super(y, 20);
             this.layer = layer;
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
@@ -122,7 +122,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
             TexturedButtonWidget remove = new TexturedButtonWidget(this.getWidth() - 38, 3, 0, TRASH, this::remove);
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, UP, this::moveUp));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, DOWN, this::moveDown));
-            this.addWidget(remove.setEnabled(layer.isUserOverlay()));
+            this.addWidget(remove.setEnabled(layer.isUserLayer()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH));
             TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 70, 3, 0,
                 layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,

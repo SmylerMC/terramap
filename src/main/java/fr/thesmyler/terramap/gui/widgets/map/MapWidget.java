@@ -224,7 +224,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         MapLayer other = this.createLayer(layer.getType());
         other.setAlpha(layer.getAlpha());
         other.setRenderingOffset(layer.getRenderingOffset());
-        other.setUserOverlay(layer.isUserOverlay());
+        other.setIsUserLayer(layer.isUserLayer());
         other.setRotationOffset(layer.getRotationOffset());
         this.setLayerZ(other, layer.getZ());
         other.loadSettings(layer.saveSettings());
@@ -714,7 +714,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             SavedLayerState layerState = new SavedLayerState();
             layerState.type = layer.getType();
             layerState.z = layer.getZ();
-            layerState.overlay = layer.isUserOverlay();
+            layerState.setByUser = layer.isUserLayer();
             layerState.cartesianOffset.set(layer.getRenderingOffset());
             layerState.rotationOffset = layer.getRotationOffset();
             layerState.visible = layer.isVisible();
@@ -743,7 +743,7 @@ public class MapWidget extends FlexibleWidgetContainer {
             layer.setAlpha(layerState.alpha);
             layer.setRenderingOffset(layerState.cartesianOffset);
             layer.setRotationOffset(layerState.rotationOffset);
-            layer.setUserOverlay(layerState.overlay);
+            layer.setIsUserLayer(layerState.setByUser);
             layer.loadSettings(layerState.settings);
         }
         Map<String, FeatureVisibilityController> controllers = this.getVisibilityControllers();

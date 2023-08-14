@@ -18,7 +18,7 @@ public class SavedLayerState {
     public float rotationOffset = 0f;
     public boolean visible = true;
     public float alpha = 1f;
-    public boolean overlay = true;
+    public boolean setByUser = true;
 
     public JsonObject settings = new JsonObject();
 
