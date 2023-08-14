@@ -15,6 +15,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
         this.min = min;
         this.max = max;
         this.value = startValue;
+        this.updateResolution();
     }
     
     public FloatSliderWidget(float x, float y, int z, float width, double min, double max, double startValue) {
@@ -38,7 +39,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
 
     @Override
     protected String getDisplayString() {
-        return String.valueOf((float) Math.round(this.value * resolution) / resolution);
+        return String.valueOf((float) Math.round(this.value * this.resolution) / this.resolution);
     }
 
     public double getMin() {
@@ -85,8 +86,12 @@ public class FloatSliderWidget extends AbstractSliderWidget {
     }
 
     protected void onChange() {
-        this.resolution = (int) Math.pow(10, Math.max(1, Math.ceil(Math.log10(width / (max - min)))));
+        this.updateResolution();
         if(this.onChange != null) this.onChange.accept(this.getValue());
+    }
+
+    private void updateResolution() {
+        this.resolution = (int) Math.pow(10, Math.max(1, Math.ceil(Math.log10(width / (max - min)))));
     }
 
     public void setOnChange(Consumer<Double> onChange) {

@@ -22,7 +22,7 @@ import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
  * An abstract slider, providing the basis for rendering and positioning
  * Calculating the progress and the string to displayed is left to the implementing subclass
  * 
- * @author SmylerMC
+ * @author Smyler
  *
  */
 public abstract class AbstractSliderWidget implements IWidget {
@@ -292,4 +292,5 @@ public abstract class AbstractSliderWidget implements IWidget {
     public boolean onInteractWhenNotTakingInputs(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         return false;
     }
+
 }
