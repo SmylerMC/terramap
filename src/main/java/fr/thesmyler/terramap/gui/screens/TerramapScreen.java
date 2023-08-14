@@ -95,7 +95,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private final BackgroundStylePanelListContainer backgroundStylePanelListContainer;
     private final ScrollbarWidget styleScrollbar = new ScrollbarWidget(100, ScrollbarOrientation.VERTICAL);
     
-    // Overlay panel
+    // Advanced layer settings panel
     private final SlidingPanelWidget layerPanel = new SlidingPanelWidget(70, 200);
     private final LayerListContainer layerListContainer;
     private final ScrollableWidgetContainer layerList;
@@ -545,7 +545,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 .orElse(Integer.MIN_VALUE) + 1;
         MapLayer layer = this.map.createLayer(type);
         this.map.setLayerZ(layer, z);
-        layer.setUserOverlay(true);
+        layer.setIsUserLayer(true);
         this.layerListContainer.init();
         return layer;
     }

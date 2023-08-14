@@ -44,7 +44,7 @@ public abstract class MapLayer implements IWidget {
 
     private final ThreadLocal<Vec2dMutable> calculationHelper = new DefaultThreadLocal<>(Vec2dMutable::new);
     
-    private boolean isUserOverlay = false;
+    private boolean isUserLayer = false;
     private boolean visible = true;
     private float alpha = 1.0f;
     private static final DoubleRange ALPHA_RANGE = new DoubleRange(0d, 1d);
@@ -369,17 +369,17 @@ public abstract class MapLayer implements IWidget {
     /**
      * @return whether this layer should be treated as an additional layer  configured by the user
      */
-    public boolean isUserOverlay() {
-        return isUserOverlay;
+    public boolean isUserLayer() {
+        return isUserLayer;
     }
 
     /**
      * Sets whether this layer should be treated as an additional layer configured by the user.
      *
-     * @param isUserOverlay whether this layer is user configured
+     * @param isUserLayer whether this layer is user configured
      */
-    public void setUserOverlay(boolean isUserOverlay) {
-        this.isUserOverlay = isUserOverlay;
+    public void setIsUserLayer(boolean isUserLayer) {
+        this.isUserLayer = isUserLayer;
     }
 
     @Override
