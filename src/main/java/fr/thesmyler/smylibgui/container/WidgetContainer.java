@@ -129,23 +129,24 @@ public abstract class WidgetContainer implements IWidget{
                             processed = true;
                             break;
                         }
-                    }
-                    switch(event.type) {
-                        case CLICK:
-                            propagate = widget.onClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
-                            if(!propagate) this.focusedWidget = widget;
-                            break;
-                        case DOUBLE_CLICK:
-                            propagate = widget.onDoubleClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
-                            if(!propagate) this.focusedWidget = widget;
-                            break;
-                        case RELEASE:
-                            this.draggedWidget[event.button] = null;
-                            widget.onMouseReleased(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this.draggedWidget[event.button]);
-                            break;
-                        case SCROLL:
-                            propagate = widget.onMouseWheeled(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
-                            break;
+                    } else {
+                        switch (event.type) {
+                            case CLICK:
+                                propagate = widget.onClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
+                                if (!propagate) this.focusedWidget = widget;
+                                break;
+                            case DOUBLE_CLICK:
+                                propagate = widget.onDoubleClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
+                                if (!propagate) this.focusedWidget = widget;
+                                break;
+                            case RELEASE:
+                                this.draggedWidget[event.button] = null;
+                                widget.onMouseReleased(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this.draggedWidget[event.button]);
+                                break;
+                            case SCROLL:
+                                propagate = widget.onMouseWheeled(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
+                                break;
+                        }
                     }
                 }
                 if(!propagate) {
@@ -236,7 +237,10 @@ public abstract class WidgetContainer implements IWidget{
         if(this.draggedWidget[button] == null) {
             this.dClickX[button] = 0;
             this.dClickY[button] = 0;
-            this.draggedWidget[button] = this.getWidgetUnder(mouseX, mouseY);
+            IWidget widget = this.getWidgetUnder(mouseX, mouseY);
+            if (widget != null && widget.takesInputs()) {
+                this.draggedWidget[button] = widget;
+            }
         }
         this.lastClickX[button] = mouseX;
         this.lastClickY[button] = mouseY;
