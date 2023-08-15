@@ -9,11 +9,9 @@ import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
@@ -31,10 +29,10 @@ import static java.lang.Math.floorDiv;
 /**
  * Renders Minecraft region (both 2dr and 3dr), chunks, and blocks outlines onto a map widget.
  * 
- * @author SmylerMC
+ * @author Smyler
  *
  */
-public class McChunksLayer extends MapLayer implements FeatureVisibilityController {
+public class McChunksLayer extends MapLayer {
     
     public static final String ID = "mcchunks";
     
@@ -42,8 +40,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     private final Vec2dMutable mcCenter = new Vec2dMutable();
     private Vec2dReadOnly extendedDimensions;
     private GeoPointReadOnly geoCenter;
-    
-    private final ToggleButtonWidget button;
 
     private Color color = Color.DARK_GRAY;
 
@@ -63,17 +59,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
     private final Vec2dMutable centerTile = new Vec2dMutable();
     private final Vec2dMutable deltaCalculator = new Vec2dMutable();
     private final GeoPointMutable nearCenterLocation = new GeoPointMutable();
-
-    public McChunksLayer() {
-        this.button = new ToggleButtonWidget(10, 14, 14,
-                186, 108, 186, 122,
-                186, 108, 186, 122,
-                186, 136, 186, 150,
-                this.isVisible(),
-                this::setVisibility
-                );
-        this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.mapwidget.mcchunks.tooltip"));
-    }
 
     @Override
     protected void initialize() {
@@ -263,27 +248,6 @@ public class McChunksLayer extends MapLayer implements FeatureVisibilityControll
         }
         
         
-    }
-
-    @Override
-    public boolean showButton() {
-        return true;
-    }
-
-    @Override
-    public ToggleButtonWidget getButton() {
-        return this.button;
-    }
-
-    @Override
-    public String getSaveName() {
-        return ID;
-    }
-
-    @Override
-    public void setVisibility(boolean visibility) {
-        super.setVisibility(visibility);
-        this.button.setState(visibility);
     }
 
     public Color getColor() {
