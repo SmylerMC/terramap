@@ -26,7 +26,7 @@ import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import fr.thesmyler.terramap.util.math.Vec2dMutable;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import static fr.thesmyler.terramap.gui.widgets.map.MapLayerLibrary.OFFSET_PREVIEW;
+import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.OFFSET_PREVIEW;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 
 public class LayerRenderingOffsetPopup extends PopupScreen {

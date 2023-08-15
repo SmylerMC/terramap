@@ -11,7 +11,7 @@ import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import org.junit.jupiter.api.Test;
 
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
-import static fr.thesmyler.terramap.gui.widgets.map.MapLayerLibrary.RASTER_LAYER_ID;
+import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
 import static fr.thesmyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
 import static fr.thesmyler.terramap.util.geo.GeoPointTest.PARIS;
 import static fr.thesmyler.terramap.Assertions.*;

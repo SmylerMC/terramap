@@ -353,7 +353,7 @@ public abstract class MapLayer implements IWidget {
     }
 
     /**
-     * @return the type of this layer, as registered in {@link MapLayerLibrary}
+     * @return the type of this layer, as registered in {@link MapLayerRegistry}
      */
     public String getType() {
         return this.type;

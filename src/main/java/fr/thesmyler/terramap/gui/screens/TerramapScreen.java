@@ -563,7 +563,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             PopupScreen pop = new PopupScreen(300f, 200f);
             for(IRasterTiledMap m: maps) {
                 MapPreview map = new MapPreview(0, m, e -> {
-                    ((RasterMapLayer) this.addMapLayer(MapLayerLibrary.RASTER_LAYER_ID)).setTiledMap(m);
+                    ((RasterMapLayer) this.addMapLayer(MapLayerRegistry.RASTER_LAYER_ID)).setTiledMap(m);
                     pop.close();
                 });
                 MapController controller = map.getController();
@@ -751,7 +751,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.setCopyrightVisibility(false);
             this.setScaleVisibility(false);
             this.onClick = onClick;
-            this.previewLayer = (RasterMapLayer) this.createLayer(MapLayerLibrary.RASTER_LAYER_ID);
+            this.previewLayer = (RasterMapLayer) this.createLayer(MapLayerRegistry.RASTER_LAYER_ID);
             this.previewLayer.setTiledMap(map);
         }
 
