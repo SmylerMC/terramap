@@ -60,20 +60,20 @@ public class Animation {
         }
     }
 
-    public long blend(long x1, long x2) {
-        return Math.round((x1 - x2) * (double)this.progress + x2);
+    public long blend(long end, long start) {
+        return Math.round((end - start) * (double)this.progress + start);
     }
 
-    public int blend(int x1, int x2) {
-        return (int) this.blend(x1, (long)x2);
+    public int blend(int end, int start) {
+        return (int) this.blend(end, (long)start);
     }
 
-    public double blend(double x1, double x2) {
-        return (x1 - x2) * this.progress + x2;
+    public double blend(double end, double start) {
+        return (end - start) * this.progress + start;
     }
 
-    public float blend(float x1, float x2) {
-        return (float) this.blend(x1, (double)x2);
+    public float blend(float end, float start) {
+        return (float) this.blend(end, (double)start);
     }
 
     public Color fadeColor(Color color) {
