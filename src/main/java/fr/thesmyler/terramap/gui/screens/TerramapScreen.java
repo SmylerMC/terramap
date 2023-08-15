@@ -21,7 +21,6 @@ import fr.thesmyler.smylibgui.container.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.MultiChoicePopupScreen;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
@@ -61,8 +60,10 @@ import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
+import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static fr.thesmyler.terramap.util.math.Math.clamp;
+import static java.util.stream.Collectors.toMap;
 
 
 public class TerramapScreen extends Screen implements ITabCompleter {
@@ -551,39 +552,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
     
     private void openInitialNewLayerSelector() {
-        final MapController thisController = this.map.getController();
-        Map<String, Runnable> options = new HashMap<>();
-        options.put("Tiled raster map ", () -> {
-            FlexibleWidgetContainer container = new FlexibleWidgetContainer(0f, 0f, 0, 285f, 10f);
-            container.setDoScissor(false);
-            ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapClientContext.getContext().getMapStyles().values());
-            maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
-            float y = 5f;
-            float x = 20f;
-            PopupScreen pop = new PopupScreen(300f, 200f);
-            for(IRasterTiledMap m: maps) {
-                MapPreview map = new MapPreview(0, m, e -> {
-                    ((RasterMapLayer) this.addMapLayer(MapLayerRegistry.RASTER_LAYER_ID)).setTiledMap(m);
-                    pop.close();
-                });
-                MapController controller = map.getController();
-                map.setPosition(x, y);
-                map.setSize(125f, 75f);
-                controller.moveLocationToCenter(thisController.getCenterLocation(), false);
-                controller.setZoom(thisController.getZoom(), false);
-                if(x == 20f) {
-                    x = 155f;
-                } else {
-                    x = 20f;
-                    y += map.getHeight() + 5f;
-                }
-                container.addWidget(map);
-            }
-            container.setHeight(y);
-            ScrollableWidgetContainer scrollContainer = new ScrollableWidgetContainer(0f, 0f, 0, 300f, 200f, container);
-            pop.getContent().addWidget(scrollContainer);
-            pop.show();
-        });
+        Map<String, Runnable> options = MapLayerRegistry.INSTANCE.getRegistrations().values().stream()
+                        .filter(MapLayerRegistry.LayerRegistration::showsOnNewLayerMenu)
+                        .collect(toMap(LayerRegistration::getNewLayerMenuTranslationKey, l -> () -> this.addMapLayer(l.getId())));
         this.getContent().scheduleBeforeNextUpdate(() -> 
             new MultiChoicePopupScreen("Choose a type for the new  layer", options).show()
         );
