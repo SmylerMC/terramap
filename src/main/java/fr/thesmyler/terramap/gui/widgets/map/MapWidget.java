@@ -195,13 +195,13 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * Creates a layer on this map.
      *
-     * @param layerTypeId a layer type identifier, among those to those registered in global {@link MapLayerLibrary}.
+     * @param layerTypeId a layer type identifier, among those to those registered in global {@link MapLayerRegistry}.
      *
      * @return the newly created layer
      * @throws IllegalArgumentException if there is no such layer type id
      */
     public MapLayer createLayer(String layerTypeId) throws IllegalArgumentException {
-        Supplier<MapLayer> constructor = MapLayerLibrary.INSTANCE.getLayerConstructor(layerTypeId);
+        Supplier<? extends MapLayer> constructor = MapLayerRegistry.INSTANCE.getRegistration(layerTypeId).constructor;
         if (constructor == null) throw new IllegalArgumentException("No such layer type registered: " + layerTypeId);
         MapLayer layer = constructor.get();
         layer.setMap(this);
