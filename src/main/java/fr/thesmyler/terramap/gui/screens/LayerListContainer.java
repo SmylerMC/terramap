@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
@@ -18,14 +19,17 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.minecraft.util.text.TextComponentString;
 
+import javax.annotation.Nullable;
+
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.*;
 import static java.util.Comparator.comparing;
 
 //TODO localize
 class LayerListContainer extends FlexibleWidgetContainer {
-    
+
     private final MapWidget map;
-    
+    private static final long SWAP_ANIMATION_DURATION = 100;
+
     private boolean cancelNextInit = false;
 
     public LayerListContainer(float x, float y, int z, float width, MapWidget map) {
@@ -33,7 +37,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
         this.map = map;
         this.setDoScissor(false);
     }
-    
+
     @Override
     public void init() {
         if(this.cancelNextInit) {
@@ -43,9 +47,10 @@ class LayerListContainer extends FlexibleWidgetContainer {
         this.removeAllWidgets();
         this.cancelAllScheduled();
         List<MapLayer> layers = new ArrayList<>(this.map.getLayers());
-        layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
+        layers.sort(comparing(MapLayer::getZ).reversed());
         float ly = 5f;
 
+        LayerEntry previous = null;
         for(MapLayer layer: layers) {
             if (layer instanceof InputLayer) continue; // We don't want the user to have to deal with the input layer
             LayerEntry entry;
@@ -54,25 +59,45 @@ class LayerListContainer extends FlexibleWidgetContainer {
             } else {
                 entry = new GenericLayerEntry(ly, layer);
             }
+            if (previous != null) {
+                entry.setPrevious(previous);
+                previous.setNext(entry);
+            }
             this.addWidget(entry);
             ly += entry.getHeight() + 5f;
+            previous = entry;
         }
         this.cancelNextInit = true;
-        this.setHeight(ly);
+        this.setHeight(ly); // That would init again
+        super.init();
     }
-    
-    private void swapLayers(MapLayer layer1, MapLayer layer2) {
-        int layer2z = layer1.getZ();
-        this.map.setLayerZ(layer1, layer2.getZ());
-        this.map.setLayerZ(layer2, layer2z);
-        LayerListContainer.this.scheduleBeforeNextUpdate(LayerListContainer.this::init);
+
+    private void swapLayers(LayerEntry entry1, LayerEntry entry2) {
+        entry1.animateSwap(entry2.getY());
+        entry2.animateSwap(entry1.getY());
+        LayerListContainer.this.scheduleBeforeUpdate(() -> {
+            int layer2z = entry1.layer.getZ();
+            this.map.setLayerZ(entry1.layer, entry2.layer.getZ());
+            this.map.setLayerZ(entry2.layer, layer2z);
+        }, SWAP_ANIMATION_DURATION / 2);
+        LayerListContainer.this.scheduleBeforeUpdate(LayerListContainer.this::init, SWAP_ANIMATION_DURATION);
     }
-    
+
     private abstract class LayerEntry extends FlexibleWidgetContainer {
 
-        public LayerEntry(float y, float height) {
+        final MapLayer layer;
+        private float startY;
+        private float destinationY;
+        private Animation animation;
+
+        protected LayerEntry previous;
+        protected LayerEntry next;
+
+        public LayerEntry(MapLayer layer, float y, float height) {
             super(5, y, 0, LayerListContainer.this.getWidth() - 10, height);
+            this.layer = layer;
             this.setDoScissor(false);
+            this.startY = this.destinationY = y;
         }
 
         @Override
@@ -80,13 +105,37 @@ class LayerListContainer extends FlexibleWidgetContainer {
             RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), Color.LIGHT_OVERLAY , 1f, Color.DARK_GRAY);
             super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }
-        
+
+        void animateSwap(float destinationY) {
+            this.startY = this.getY();
+            this.destinationY = destinationY;
+            this.animation = new Animation(SWAP_ANIMATION_DURATION);
+            this.animation.start(Animation.AnimationState.ENTER);
+        }
+
+        @Override
+        public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
+            if (this.animation != null) {
+                this.animation.update();
+                this.setY(this.animation.blend(this.destinationY, this.startY));
+            }
+            super.onUpdate(mouseX, mouseY, parent);
+        }
+
+        protected void setPrevious(LayerEntry entry) {
+            this.previous = entry;
+        }
+
+        protected void setNext(LayerEntry entry) {
+            this.next = entry;
+        }
+
     }
     
     private class BackgroundLayerEntry extends LayerEntry {
 
         public BackgroundLayerEntry(float y, RasterMapLayer layer) {
-            super(y, 20);
+            super(layer, y, 20);
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentString("Raster background"), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
@@ -111,8 +160,11 @@ class LayerListContainer extends FlexibleWidgetContainer {
         final MapLayer layer;
         final FloatSliderWidget alphaSlider;
 
+        private final TexturedButtonWidget nextButton = new TexturedButtonWidget(this.getWidth() - 18, 19, 0, DOWN, this::moveDown);
+        private final TexturedButtonWidget previousButton = new TexturedButtonWidget(this.getWidth() - 18, 3, 0, UP, this::moveUp);
+
         public GenericLayerEntry(float y, MapLayer layer) {
-            super(y, 20);
+            super(layer, y, 20);
             this.layer = layer;
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentString(layer.description()), TextAlignment.RIGHT, this.getFont());
@@ -120,8 +172,8 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(name);
             this.addWidget(type);
             TexturedButtonWidget remove = new TexturedButtonWidget(this.getWidth() - 38, 3, 0, TRASH, this::remove);
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, UP, this::moveUp));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 19, 0, DOWN, this::moveDown));
+            this.addWidget(this.previousButton);
+            this.addWidget(this.nextButton);
             this.addWidget(remove.setEnabled(layer.isUserLayer()));
             this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH));
             TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 70, 3, 0,
@@ -162,30 +214,36 @@ class LayerListContainer extends FlexibleWidgetContainer {
         
         
         void moveUp() {
-            List<MapLayer> layers = new ArrayList<>(LayerListContainer.this.map.getLayers());
-            layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
-            int i = layers.indexOf(this.layer);
-            if(i > 0) {
-                MapLayer other = layers.get(i - 1);
-                if (other.getZ() == Integer.MIN_VALUE) return; // Do not move the background
-                LayerListContainer.this.swapLayers(this.layer, other);
+            if (this.previous != null) {
+                this.animateSwap(this.previous.getY());
+                this.previous.animateSwap(this.getY());
+                LayerListContainer.this.swapLayers(this, this.previous);
             }
         }
 
         void moveDown() {
-            List<MapLayer> layers = new ArrayList<>(LayerListContainer.this.map.getLayers());
-            layers.sort((l1, l2) -> Integer.compare(l2.getZ(), l1.getZ()));
-            int i = layers.indexOf(this.layer);
-            if(i < layers.size() - 1) {
-                MapLayer other = layers.get(i + 1);
-                if (other.getZ() == Integer.MIN_VALUE) return; // Do not move the background
-                LayerListContainer.this.swapLayers(this.layer, other);
+            if (this.next != null) {
+                this.animateSwap(this.next.getY());
+                this.next.animateSwap(this.getY());
+                LayerListContainer.this.swapLayers(this, this.next);
             }
         }
 
         void toggleVisibility(boolean visibility) {
             this.alphaSlider.setEnabled(visibility);
             this.layer.setVisibility(visibility);
+        }
+
+        @Override
+        protected void setPrevious(LayerEntry entry) {
+            super.setPrevious(entry);
+            this.previousButton.setEnabled(entry instanceof GenericLayerEntry);
+        }
+
+        @Override
+        protected void setNext(LayerEntry entry) {
+            super.setNext(entry);
+            this.nextButton.setEnabled(entry instanceof GenericLayerEntry);
         }
 
     }
