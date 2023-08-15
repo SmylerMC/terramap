@@ -412,12 +412,6 @@ public class MapWidget extends FlexibleWidgetContainer {
         Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers); // Order matters !
         if (this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
         if (this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
-        for (MapLayer layer: this.layers) {
-            if (layer instanceof FeatureVisibilityController) {
-                FeatureVisibilityController featureVisibilityController = (FeatureVisibilityController) layer;
-                m.put(featureVisibilityController.getSaveName(), featureVisibilityController);
-            }
-        }
         return m;
     }
     

@@ -147,7 +147,6 @@ terramap.mapwidget.rclickmenu.set_proj=Set projection
 terramap.mapwidget.rclickmenu.offset=Set background offset
 terramap.mapwidget.error.header=Error:
 terramap.mapwidget.shortcuts.tp=Click to teleport
-terramap.mapwidget.mcchunks.tooltip=Show region and chunk borders
 terramap.mapwidget.error.copyblock=Failed to copy block coordinates outside the projection
 terramap.mapwidget.error.copychunk=Failed to copy chunk coordinates outside the projection
 terramap.mapwidget.error.copyregion=Failed to copy vanilla region coordinates outside the projection
