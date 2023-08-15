@@ -201,7 +201,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @throws IllegalArgumentException if there is no such layer type id
      */
     public MapLayer createLayer(String layerTypeId) throws IllegalArgumentException {
-        Supplier<? extends MapLayer> constructor = MapLayerRegistry.INSTANCE.getRegistration(layerTypeId).constructor;
+        Supplier<? extends MapLayer> constructor = MapLayerRegistry.INSTANCE.getRegistrations(layerTypeId).getConstructor();
         if (constructor == null) throw new IllegalArgumentException("No such layer type registered: " + layerTypeId);
         MapLayer layer = constructor.get();
         layer.setMap(this);

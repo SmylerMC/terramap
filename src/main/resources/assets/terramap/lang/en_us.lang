@@ -209,6 +209,10 @@ terramap.terramapscreen.layerscreen.new=New layer
 terramap.terramapscreen.layerscreen.export=Export
 terramap.terramapscreen.layerscreen.import=Import
 
+## New layer popup
+terramap.terramapscreen.newlayer.raster=Raster tiled map
+terramap.terramapscreen.newlayer.mcchunks=Minecraft regions and chunks
+
 #### In game ####
 terramap.ingameactions.copy.noplayer=Could not copy coordinates: no player
 terramap.ingameactions.copy.noproj=Could not copy coordinates: no projection
