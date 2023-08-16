@@ -7,6 +7,7 @@ import java.util.Set;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -266,6 +267,16 @@ public class McChunksLayer extends MapLayer {
     @Override
     public String description() {
         return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.mcchunks.desc");
+    }
+
+    @Override
+    public boolean isConfigurable() {
+        return false;
+    }
+
+    @Override
+    public PopupScreen createConfigurationScreen() {
+        return null;
     }
 
 }

@@ -17,6 +17,7 @@ import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
@@ -141,7 +142,12 @@ class LayerListContainer extends FlexibleWidgetContainer {
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 18, 3, 0, WRENCH));
+            TexturedButtonWidget settingsButton = new TexturedButtonWidget(this.getWidth() - 18, 3, 0, WRENCH);
+            if (layer.isConfigurable()) {
+                settingsButton.setOnClick(() -> layer.createConfigurationScreen().show());
+                settingsButton.enable();
+            }
+            this.addWidget(settingsButton);
             TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 37, 3, 0,
                     layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
                     () -> {
@@ -175,7 +181,12 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(this.previousButton);
             this.addWidget(this.nextButton);
             this.addWidget(remove.setEnabled(layer.isUserLayer()));
-            this.addWidget(new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH));
+            TexturedButtonWidget settingsButton = new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH);
+            if (layer.isConfigurable()) {
+                settingsButton.setOnClick(() -> layer.createConfigurationScreen().show());
+                settingsButton.enable();
+            }
+            this.addWidget(settingsButton);
             TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 70, 3, 0,
                 layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
                 () -> {
