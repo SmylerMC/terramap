@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -330,6 +331,16 @@ public class RasterMapLayer extends MapLayer implements CopyrightHolder {
     @Override
     public String description() {
         return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.raster.desc");
+    }
+
+    @Override
+    public boolean isConfigurable() {
+        return false;
+    }
+
+    @Override
+    public PopupScreen createConfigurationScreen() {
+        return null;
     }
 
 }

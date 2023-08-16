@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -75,6 +76,16 @@ public class DistortionLayer extends MapLayer {
     @Override
     public String description() {
         return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.distortion.desc");
+    }
+
+    @Override
+    public boolean isConfigurable() {
+        return false;
+    }
+
+    @Override
+    public PopupScreen createConfigurationScreen() {
+        return null;
     }
 
 }

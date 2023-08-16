@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import com.google.gson.JsonObject;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
+import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
@@ -95,6 +96,16 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
     @Override
     public String description() {
         return ""; // Never shown
+    }
+
+    @Override
+    public boolean isConfigurable() {
+        return false;
+    }
+
+    @Override
+    public PopupScreen createConfigurationScreen() {
+        return null;
     }
 
 }
