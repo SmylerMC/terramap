@@ -472,7 +472,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     private void onChange() {
-        this.onChangeCallback.accept(this.text);
+        if (this.onChangeCallback != null) this.onChangeCallback.accept(this.text);
     }
 
     public String getSelectedText() {
@@ -690,6 +690,10 @@ public class TextFieldWidget implements IWidget {
 
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    public Color getBorderColorNormal() {
+        return this.borderColorNormal;
     }
 
     public Color getBorderColorHovered() {

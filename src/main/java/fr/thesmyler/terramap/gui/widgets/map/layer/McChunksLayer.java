@@ -4,13 +4,23 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.widgets.ColorPickerWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
+import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
@@ -23,7 +33,10 @@ import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.TextComponentTranslation;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getDefaultFont;
+import static fr.thesmyler.terramap.util.math.Math.clamp;
 import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;
 
@@ -42,7 +55,16 @@ public class McChunksLayer extends MapLayer {
     private Vec2dReadOnly extendedDimensions;
     private GeoPointReadOnly geoCenter;
 
+    private boolean render2dr = true;
+    private boolean render3dr = true;
+    private boolean renderChunks = true;
+    private boolean renderBlocks = true;
+
     private Color color = Color.DARK_GRAY;
+    private Color color2dr = Color.DARK_GRAY;
+    private Color color3dr = Color.DARK_GRAY;
+    private Color colorChunks = Color.DARK_GRAY;
+    private Color colorBlocks = Color.DARK_GRAY;
 
     // Used for calculations. Those aren't local fields so we don't create hundreds of objects every time we render
     private final Vec2dMutable[] corners = {
@@ -69,6 +91,51 @@ public class McChunksLayer extends MapLayer {
     }
 
     @Override
+    public JsonObject saveSettings() {
+        JsonObject json = new JsonObject();
+        json.add("render2dr", new JsonPrimitive(this.isRender2dr()));
+        json.add("color2dr", this.saveColor(this.getColor2dr()));
+        json.add("render3dr", new JsonPrimitive(this.isRender3dr()));
+        json.add("color3dr", this.saveColor(this.getColor3dr()));
+        json.add("renderChunks", new JsonPrimitive(this.isRenderChunks()));
+        json.add("colorChunks", this.saveColor(this.getColorChunks()));
+        json.add("renderBlocks", new JsonPrimitive(this.isRenderBlocks()));
+        json.add("colorBlocks", this.saveColor(this.getColorBlocks()));
+        return json;
+    }
+
+    private JsonObject saveColor(Color color) {
+        JsonObject json = new JsonObject();
+        json.add("red", new JsonPrimitive(color.red()));
+        json.add("green", new JsonPrimitive(color.green()));
+        json.add("blue", new JsonPrimitive(color.blue()));
+        return json;
+    }
+
+    @Override
+    public void loadSettings(JsonObject json) {
+        try {
+            this.setRender2dr(json.get("render2dr").getAsBoolean());
+            this.loadColor(json.getAsJsonObject("color2dr"), this::setColor2dr);
+            this.setRender3dr(json.get("render3dr").getAsBoolean());
+            this.loadColor(json.getAsJsonObject("color3dr"), this::setColor3dr);
+            this.setRenderChunks(json.get("renderChunks").getAsBoolean());
+            this.loadColor(json.getAsJsonObject("colorChunks"), this::setColorChunks);
+            this.setRenderBlocks(json.get("renderBlocks").getAsBoolean());
+            this.loadColor(json.getAsJsonObject("colorBlocks"), this::setColorBlocks);
+        } catch (NullPointerException | ClassCastException | IllegalStateException e) {
+            TerramapMod.logger.warn("Failed to load mc boundaries layer settings: {}", json);
+        }
+    }
+
+    private void loadColor(JsonObject object, Consumer<Color> setter) {
+            int red = clamp(object.get("red").getAsInt(), 0, 255);
+            int green = clamp(object.get("green").getAsInt(), 0, 255);
+            int blue = clamp(object.get("blue").getAsInt(), 0, 255);
+            setter.accept(new Color(red, green, blue));
+    }
+
+    @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget)parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
@@ -90,10 +157,10 @@ public class McChunksLayer extends MapLayer {
             this.mcCenter.set(projection.fromGeo(this.geoCenter.longitude(), this.geoCenter.latitude()));
             this.deltaCalculator.set(projection.fromGeo(this.nearCenterLocation.longitude(), this.nearCenterLocation.latitude()));
             double d = this.mcCenter.distanceTo(this.deltaCalculator);
-            if(d < renderThreshold) render2dr = true;
-            if(d < renderThreshold / 2) render3dr = true;
-            if(d < renderThreshold / 16) renderChunks = true;
-            if(d < renderThreshold / 128) renderBlocks = true;
+            if(d < renderThreshold) render2dr = this.render2dr;
+            if(d < renderThreshold / 2) render3dr = this.render3dr;
+            if(d < renderThreshold / 16) renderChunks = this.renderChunks;
+            if(d < renderThreshold / 128) renderBlocks = this.renderBlocks;
         } catch(OutOfProjectionBoundsException silenced) {
             // The center is out of bounds, let's not render anything
             return;
@@ -102,22 +169,22 @@ public class McChunksLayer extends MapLayer {
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
         
-        Color c = this.color.withAlpha(this.getAlpha());
 
+        float size = 1f;
         if(renderBlocks) {
-            this.renderGrid(x, y, 0, 1, c, 1f);
-            this.renderGrid(x, y, 1, 16, c, 2f);
-            this.renderGrid(x, y, 2, 256, c, 3f);
-            this.renderGrid(x, y, 3, 512, c, 4f);
-        } else if(renderChunks) {
-            this.renderGrid(x, y, 1, 16, c, 1f);
-            this.renderGrid(x, y, 2, 256, c, 2f);
-            this.renderGrid(x, y, 3, 512, c, 3f);
-        } else if(render3dr) {
-            this.renderGrid(x, y, 2, 256, c, 1f);
-            this.renderGrid(x, y, 3, 512, c, 2f);
-        } else if(render2dr) {
-            this.renderGrid(x, y, 3, 512, c, 1f);
+            this.renderGrid(x, y, 0, 1, this.colorBlocks.withAlpha(this.getAlpha()), size);
+            size += 1f;
+        }
+        if(renderChunks) {
+            this.renderGrid(x, y, 1, 16, this.colorChunks.withAlpha(this.getAlpha()), size);
+            size += 1f;
+        }
+        if(render3dr) {
+            this.renderGrid(x, y, 2, 256, this.color3dr.withAlpha(this.getAlpha()), size);
+            size += 1f;
+        }
+        if(render2dr) {
+            this.renderGrid(x, y, 3, 512, this.color2dr.withAlpha(this.getAlpha()), size);
         }
 
         this.cache.cycle();
@@ -251,12 +318,78 @@ public class McChunksLayer extends MapLayer {
         
     }
 
+    @Deprecated
     public Color getColor() {
         return color;
     }
 
+    @Deprecated
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public boolean isRender2dr() {
+        return this.render2dr;
+    }
+
+    public void setRender2dr(boolean render2dr) {
+        this.render2dr = render2dr;
+    }
+
+    public boolean isRender3dr() {
+        return this.render3dr;
+    }
+
+    public void setRender3dr(boolean render3dr) {
+        this.render3dr = render3dr;
+    }
+
+    public boolean isRenderChunks() {
+        return this.renderChunks;
+    }
+
+    public void setRenderChunks(boolean renderChunks) {
+        this.renderChunks = renderChunks;
+    }
+
+    public boolean isRenderBlocks() {
+        return this.renderBlocks;
+    }
+
+    public void setRenderBlocks(boolean renderBlocks) {
+        this.renderBlocks = renderBlocks;
+    }
+
+    public Color getColor2dr() {
+        return this.color2dr;
+    }
+
+    public void setColor2dr(Color color2dr) {
+        this.color2dr = color2dr;
+    }
+
+    public Color getColor3dr() {
+        return this.color3dr;
+    }
+
+    public void setColor3dr(Color color3dr) {
+        this.color3dr = color3dr;
+    }
+
+    public Color getColorChunks() {
+        return this.colorChunks;
+    }
+
+    public void setColorChunks(Color colorChunks) {
+        this.colorChunks = colorChunks;
+    }
+
+    public Color getColorBlocks() {
+        return this.colorBlocks;
+    }
+
+    public void setColorBlocks(Color colorBlocks) {
+        this.colorBlocks = colorBlocks;
     }
 
     @Override
@@ -271,12 +404,92 @@ public class McChunksLayer extends MapLayer {
 
     @Override
     public boolean isConfigurable() {
-        return false;
+        return true;
     }
 
     @Override
     public PopupScreen createConfigurationScreen() {
-        return null;
+        return new SettingsPopup();
+    }
+
+    //TODO localize
+    private class SettingsPopup extends PopupScreen {
+
+        public SettingsPopup() {
+            super(200f, 240f);
+            Font font = getDefaultFont();
+            WidgetContainer content = this.getContent();
+            float width = content.getWidth();
+            float height = content.getHeight();
+            float left = 10f;
+            float right = 40f;
+            float interline = 9f;
+            float textYOffset = 3f;
+
+            content.addWidget(new TextWidget(width / 2f, 10f, 0,
+                    new TextComponentTranslation("Minecraft outlines settings"),
+                    TextAlignment.CENTER, font));
+
+            float y = 24;
+
+            content.addWidget(new TextWidget(
+                    left, y + textYOffset, 10,
+                    new TextComponentTranslation("Vanilla mca regions"), font));
+            content.addWidget(new ToggleButtonWidget(
+                    width - right, y, 0,
+                    McChunksLayer.this.isRender2dr(),
+                    McChunksLayer.this::setRender2dr)
+            );
+            y += font.height() + interline;
+            ColorPickerWidget colorPicker2dr = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColor2dr(), font);
+            colorPicker2dr.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColor2dr));
+            content.addWidget(colorPicker2dr);
+            y += 20 + interline;
+
+            content.addWidget(new TextWidget(
+                    left, y + textYOffset, 10,
+                    new TextComponentTranslation("CubicChunks 3dr regions"), font));
+            content.addWidget(new ToggleButtonWidget(
+                    width - right, y, 0,
+                    McChunksLayer.this.isRender3dr(),
+                    McChunksLayer.this::setRender3dr)
+            );
+            y += font.height() + interline;
+            ColorPickerWidget colorPicker3dr = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColor3dr(), font);
+            colorPicker3dr.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColor3dr));
+            content.addWidget(colorPicker3dr);
+            y += 20 + interline;
+
+            content.addWidget(new TextWidget(
+                    left, y + textYOffset, 10,
+                    new TextComponentTranslation("Chunks"), font));
+            content.addWidget(new ToggleButtonWidget(
+                    width - right, y, 0,
+                    McChunksLayer.this.isRenderChunks(),
+                    McChunksLayer.this::setRenderChunks)
+            );
+            y += font.height() + interline;
+            ColorPickerWidget colorPickerChunks = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColorChunks(), font);
+            colorPickerChunks.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColorChunks));
+            content.addWidget(colorPickerChunks);
+            y += 20 + interline;
+
+            content.addWidget(new TextWidget(
+                    left, y + textYOffset, 10,
+                    new TextComponentTranslation("Blocks"), font));
+            content.addWidget(new ToggleButtonWidget(
+                    width - right, y, 0,
+                    McChunksLayer.this.isRenderBlocks(),
+                    McChunksLayer.this::setRenderBlocks)
+            );
+            y += font.height() + interline;
+            ColorPickerWidget colorPickerBlocks = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColorBlocks(), font);
+            colorPickerBlocks.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColorBlocks));
+            content.addWidget(colorPickerBlocks);
+
+            content.addWidget(new TextButtonWidget(width / 2f - 20f, height - 30f, 0, 40, "Done", this::close));
+        }
+
     }
 
 }

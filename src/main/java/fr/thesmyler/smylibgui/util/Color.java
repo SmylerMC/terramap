@@ -5,6 +5,11 @@ import org.lwjgl.opengl.GL11;
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.minecraft.client.renderer.GlStateManager;
 
+import java.util.Locale;
+
+import static java.lang.Integer.toHexString;
+import static java.lang.Long.parseLong;
+
 public class Color {
 
     private static final int MASK = 0xFF;
@@ -109,14 +114,11 @@ public class Color {
     }
     
     public void applyGL() {
-        GlStateManager.color(this.redf(), this.bluef(), this.greenf(), this.alphaf());
+        GlStateManager.color(this.redf(), this.greenf(), this.bluef(), this.alphaf());
     }
 
     public int asInt() {
-        return this.alpha() << 24 +
-                this.red() << 16 +
-                this.green() << 8 +
-                this.blue();
+        return this.color;
     }
 
     public int[] asIntArray() {
@@ -136,8 +138,76 @@ public class Color {
         };
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        Color color1 = (Color) o;
+        return color == color1.color;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.color;
+    }
+
     public String asHexString() {
-        return Integer.toHexString(this.asInt());
+        return toHexString(this.asInt()).toUpperCase(Locale.ROOT);
+    }
+
+    public String asHtmlHexString() {
+        StringBuilder builder = new StringBuilder(toHexString(this.color & 0xFFFFFF));
+        for (int i = builder.length(); i < 6; i++) {
+            builder.insert(0, '0');
+        }
+        builder.insert(0, '#');
+        if (this.alpha() < 0xF) {
+            builder.append("0");
+        }
+        if (this.alpha() < 0xFF) {
+            builder.append(toHexString(this.alpha()));
+        }
+        return builder.toString().toUpperCase(Locale.ROOT);
+    }
+
+    /**
+     * Parses an HTML color code.
+     *
+     * @param text  the text to parse
+     * @return      the corresponding color
+     * @throws      NumberFormatException if the hex code is invalid according to {@link #isValidHexColorCode(String)}
+     */
+    public static Color fromHtmlHexString(String text) {
+        if (!isValidHexColorCode(text)) {
+            throw new NumberFormatException("Invalid HTML color code: " + text);
+        }
+        long value = parseLong(text.substring(1), 16);
+        if (text.length() == 9) {
+            value = (value >>> 8) | (value << 24);
+        } else {
+            value |= 0xFF000000L;
+        }
+        return new Color((int)value);
+    }
+
+    public static boolean isValidHexColorCode(String text) {
+        if (!text.startsWith("#")) {
+            return false;
+        }
+        if (text.length() != 7 && text.length() != 9) {
+            return false;
+        }
+        for (int i = 1; i < text.length(); i++) {
+            char c = text.charAt(i);
+            boolean validHexChar =
+                    ('0' <= c && c <= '9')
+                            || ('A' <= c && c <= 'F')
+                            || ('a' <= c && c <= 'f');
+            if (!validHexChar) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static final Color RED = new Color(0xFFFF0000);

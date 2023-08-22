@@ -443,7 +443,7 @@ public abstract class MapLayer implements IWidget {
      * <br>
      * The configuration screen should only be concerned by settings that are specific to this layer and saved using {@link #saveSettings()}.
      *
-     * @see #isConfigurable() 
+     * @see #isConfigurable()
      * @return a configuration {@link Screen screen} for this layer
      */
     public abstract PopupScreen createConfigurationScreen();
