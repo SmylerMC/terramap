@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.devices.Key;
 import fr.thesmyler.smylibgui.util.Font;
-import fr.thesmyler.smylibgui.util.RenderUtil;
+import fr.thesmyler.smylibgui.util.Scissor;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
@@ -343,11 +343,10 @@ public abstract class WidgetContainer implements IWidget{
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
-        boolean wasScissor = RenderUtil.isScissorEnabled();
         if(this.doScissor) {
-            RenderUtil.setScissorState(true);
-            RenderUtil.pushScissorPos();
-            RenderUtil.scissor(x, y, this.getWidth(), this.getHeight());
+            Scissor.push();
+            Scissor.setScissorState(true);
+            Scissor.scissorIntersecting(x, y, this.getWidth(), this.getHeight());
         }
         IWidget wf = null;
         if(screenHovered) {
@@ -377,8 +376,7 @@ public abstract class WidgetContainer implements IWidget{
             widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
         });
         if(this.doScissor) {
-            RenderUtil.popScissorPos();
-            RenderUtil.setScissorState(wasScissor);
+            Scissor.pop();
         }
     }
 

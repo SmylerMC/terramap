@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.devices.Key;
+import fr.thesmyler.smylibgui.util.Scissor;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -42,6 +43,9 @@ public class Screen extends GuiScreen {
 
     @Override
     public void drawScreen(int nopX, int nopY, float partialTicks) {
+        Scissor.push();
+        // We need to make sure everything is visible
+        Scissor.scissor(-1f, -1f, this.width + 1f, this.height + 1f);
         this.drawBackground();
         super.drawScreen(nopX, nopY, partialTicks);
         float mouseX = getMouse().getX();
@@ -65,6 +69,7 @@ public class Screen extends GuiScreen {
         this.lastHoveredWidget = hoveredWidget;
         this.lastRenderMouseX = mouseX;
         this.lastRenderMouseY = mouseY;
+        Scissor.pop();
     }
 
     public void onUpdate() {}
