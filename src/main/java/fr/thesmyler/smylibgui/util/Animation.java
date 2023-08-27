@@ -76,6 +76,22 @@ public class Animation {
         return (float) this.blend(end, (double)start);
     }
 
+    /**
+     * Linearly interpolates two colors using their RGBA channels.
+     *
+     * @param   end   end color
+     * @param   start start color
+     * @return  the blended color
+     */
+    public Color blend(Color end, Color start) {
+        return new Color(
+                this.blend(end.red(), start.red()),
+                this.blend(end.green(), start.green()),
+                this.blend(end.blue(), start.blue()),
+                this.blend(end.alpha(), start.alpha())
+        );
+    }
+
     public Color fadeColor(Color color) {
         return color.withAlpha(Util.saturate(color.alphaf()*this.progress));
     }
