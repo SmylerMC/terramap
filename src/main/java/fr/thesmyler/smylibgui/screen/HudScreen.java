@@ -6,6 +6,7 @@ import java.util.List;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import fr.thesmyler.smylibgui.util.Color;
+import fr.thesmyler.smylibgui.util.Scissor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
@@ -60,6 +61,8 @@ public final class HudScreen {
         float mouseY = getMouse().getY();
         CONTAINER.onUpdate(mouseX, mouseY, null);
         Color color = Color.currentGL();
+        Scissor.push();
+        Scissor.scissor(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
         CONTAINER.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
         GlStateManager.enableAlpha();
         color.applyGL(); // Reset color to what it was

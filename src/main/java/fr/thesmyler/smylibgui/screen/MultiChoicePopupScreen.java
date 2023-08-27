@@ -24,7 +24,6 @@ public class MultiChoicePopupScreen extends PopupScreen {
         TextWidget titleWidget = new TextWidget(150f, 7f, 1, new TextComponentTranslation(titleLangKey), TextAlignment.CENTER, content.getFont());
         content.addWidget(titleWidget);
         FlexibleWidgetContainer container = new FlexibleWidgetContainer(0f, 0f, 1, 275f, 10f);
-        container.setDoScissor(false);
         float y = 5f;
         for(String optionLangKey: options.keySet()) {
             Runnable run = options.get(optionLangKey);

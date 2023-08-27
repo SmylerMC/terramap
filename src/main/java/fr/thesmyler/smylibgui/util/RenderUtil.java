@@ -1,10 +1,5 @@
 package fr.thesmyler.smylibgui.util;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.devices.GameContext;
 import org.lwjgl.opengl.GL11;
 
 import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
@@ -16,90 +11,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 
 public final class RenderUtil {
-
-    private static final List<Float> SCISSOR_POS_STACK = new LinkedList<>();
-    private static float scissorX, scissorY, scissorWidth, scissorHeight;
-
-    /**
-     * Enable or disable scissoring
-     * 
-     * @param yesNo
-     */
-    public static void setScissorState(boolean yesNo) {
-        if(yesNo) {
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        } else {
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-        }
-    }
-
-    /**
-     * @return whether or not scissor is enabled in OpenGL
-     */
-    public static boolean isScissorEnabled() {
-        return GL11.glIsEnabled(GL11.GL_SCISSOR_TEST);
-    }
-
-    /**
-     * Set scissoring zone
-     * This does not enable scissoring, it only sets the scissored zone
-     * 
-     * @see #setScissorState(boolean)
-     * 
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     */
-    public static void scissor(float x, float y, float width, float height) {
-        scissorX = x;
-        scissorY = y;
-        scissorWidth = width;
-        scissorHeight = height;
-        doScissor();
-    }
-
-    /**
-     * Saves current scissoring zone
-     * 
-     * @see #popScissorPos()
-     */
-    public static void pushScissorPos() {
-        SCISSOR_POS_STACK.add(scissorX);
-        SCISSOR_POS_STACK.add(scissorY);
-        SCISSOR_POS_STACK.add(scissorWidth);
-        SCISSOR_POS_STACK.add(scissorHeight);
-    }
-
-    /**
-     * Reset scissoring zone to what it was last time pushScissor was called and remove the corresponding zone from the stack
-     */
-    public static void popScissorPos() {
-        scissorHeight = SCISSOR_POS_STACK.remove(SCISSOR_POS_STACK.size() - 1);
-        scissorWidth = SCISSOR_POS_STACK.remove(SCISSOR_POS_STACK.size() - 1);
-        scissorY = SCISSOR_POS_STACK.remove(SCISSOR_POS_STACK.size() - 1);
-        scissorX = SCISSOR_POS_STACK.remove(SCISSOR_POS_STACK.size() - 1);
-        doScissor();
-    }
-
-    /**
-     * @return the current scissor position {scissorX, scissorY, scissorWidth, scissorHeight}
-     */
-    public static float[] getScissor() {
-        return new float[] {scissorX, scissorY, scissorWidth, scissorHeight};
-    }
-
-    private static void doScissor() {
-        GameContext window = SmyLibGui.getGameContext();
-        float screenWidth = window.getWindowWidth();
-        float screenHeight = window.getWindowHeight();
-        double scale = window.getScaleFactor();
-        float y = Math.max(0, Math.min(screenHeight, screenHeight - scissorY - scissorHeight));
-        float x = Math.max(0, Math.min(screenWidth, scissorX));
-        float width = Math.max(0, Math.min(Math.min(scissorWidth + scissorX, scissorWidth), screenWidth - scissorX));
-        float height = Math.max(0, Math.min(scissorHeight, screenHeight - scissorY));
-        GL11.glScissor((int)Math.round(x * scale), (int)Math.round(y * scale), (int)Math.round(width * scale), (int)Math.round(height * scale));
-    }
 
     public static void drawRect(int z, double xLeft, double yTop, double xRight, double yBottom, Color color) {
         drawGradientRect(z, xLeft, yTop, xRight, yBottom, color, color, color, color);

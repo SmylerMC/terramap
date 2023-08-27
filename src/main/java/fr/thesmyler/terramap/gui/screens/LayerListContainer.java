@@ -36,7 +36,6 @@ class LayerListContainer extends FlexibleWidgetContainer {
     public LayerListContainer(float x, float y, int z, float width, MapWidget map) {
         super(x, y, z, width, 10);
         this.map = map;
-        this.setDoScissor(false);
     }
 
     @Override
@@ -97,7 +96,6 @@ class LayerListContainer extends FlexibleWidgetContainer {
         public LayerEntry(MapLayer layer, float y, float height) {
             super(5, y, 0, LayerListContainer.this.getWidth() - 10, height);
             this.layer = layer;
-            this.setDoScissor(false);
             this.startY = this.destinationY = y;
         }
 

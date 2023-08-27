@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.*;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
@@ -22,10 +23,6 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.MultiChoicePopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
-import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.AbstractSolidWidget;
 import fr.thesmyler.smylibgui.widgets.ChatWidget;
 import fr.thesmyler.smylibgui.widgets.IWidget;
@@ -260,7 +257,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.layerList.setSize(this.layerPanel.getWidth() - 10, this.layerPanel.getHeight() - 55f);
         this.layerList.setContourColor(Color.DARK_OVERLAY).setContourSize(1f);
         this.layerListContainer.setWidth(this.layerList.getWidth() - 15);
-        this.layerList.setDoScissor(true);
         this.layerListContainer.setPosition(0, 0);
         this.layerPanel.addWidget(this.layerList);
         int buttonWidth = (int) ((this.layerList.getWidth() - 10) / 3);
@@ -569,7 +565,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         BackgroundStylePanelListContainer() {
             super(0, 0, 0, 0, 0);
-            this.setDoScissor(false);
             IWidget lw = null;
             for(TiledMapProvider provider: TiledMapProvider.values()) {
                 Throwable e = provider.getLastError();
@@ -660,17 +655,15 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            boolean wasScissor = RenderUtil.isScissorEnabled();
-            RenderUtil.setScissorState(true);
-            RenderUtil.pushScissorPos();
-            RenderUtil.scissor(x, y, this.width, this.height);
+            Scissor.push();
+            Scissor.setScissorState(true);
+            Scissor.scissorIntersecting(x, y, this.width, this.height);
             RenderUtil.drawRect(x, y, x + this.width, y + this.height, Color.YELLOW);
             RenderUtil.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
             parent.getFont().drawCenteredString(x + this.width / 2, y + 8, SmyLibGui.getTranslator().format("terramap.terramapscreen.mapstylefailed.title"), Color.YELLOW, false);
             parent.getFont().drawString(x + 8, y + 16 + parent.getFont().height(), SmyLibGui.getTranslator().format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
             parent.getFont().drawSplitString(x + 8, y + 24 + parent.getFont().height()*2, SmyLibGui.getTranslator().format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16, Color.WHITE, false);
-            RenderUtil.popScissorPos();
-            RenderUtil.setScissorState(wasScissor);
+            Scissor.pop();
         }
 
     }

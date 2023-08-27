@@ -41,9 +41,6 @@ public class LayerConfigurationPopup extends PopupScreen {
         content.addWidget(this.titleText);
         content.addWidget(this.closeButton);
         content.addWidget(this.scroll);
-        this.container.setDoScissor(false);
-        this.scroll.setDoScissor(true);
-        content.setDoScissor(false);
     }
 
     @Override

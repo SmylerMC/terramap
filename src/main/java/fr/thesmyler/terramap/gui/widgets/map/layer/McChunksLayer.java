@@ -409,7 +409,7 @@ public class McChunksLayer extends MapLayer {
     public FlexibleWidgetContainer createConfigurationContainer() {
         //TODO localize
         float width = 200f;
-        float height = 165f;
+        float height = 180f;
         FlexibleWidgetContainer container = new FlexibleWidgetContainer(0, 0, 0, width, height);
         Font font = getDefaultFont();
         float left = 1f;
