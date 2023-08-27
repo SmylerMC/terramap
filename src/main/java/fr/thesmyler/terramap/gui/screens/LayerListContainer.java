@@ -13,11 +13,11 @@ import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import fr.thesmyler.terramap.gui.screens.config.LayerConfigurationPopup;
 import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
@@ -144,15 +144,13 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(type);
             TexturedButtonWidget settingsButton = new TexturedButtonWidget(this.getWidth() - 18, 3, 0, WRENCH);
             if (layer.isConfigurable()) {
-                settingsButton.setOnClick(() -> layer.createConfigurationScreen().show());
+                settingsButton.setOnClick(() -> new LayerConfigurationPopup(layer).show());
                 settingsButton.enable();
             }
             this.addWidget(settingsButton);
             TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 37, 3, 0,
                     layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
-                    () -> {
-                        LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(layer).show());
-                    }
+                    () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(layer).show())
             );
             offsetButton.setTooltip(layer.hasRenderingOffset() ? "Background has a rendering offset": "Set background rendering offset");
             this.addWidget(offsetButton);
@@ -183,7 +181,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(remove.setEnabled(layer.isUserLayer()));
             TexturedButtonWidget settingsButton = new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH);
             if (layer.isConfigurable()) {
-                settingsButton.setOnClick(() -> layer.createConfigurationScreen().show());
+                settingsButton.setOnClick(() -> new LayerConfigurationPopup(layer).show());
                 settingsButton.enable();
             }
             this.addWidget(settingsButton);

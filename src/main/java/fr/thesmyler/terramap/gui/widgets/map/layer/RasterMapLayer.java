@@ -6,8 +6,8 @@ import java.util.Set;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -339,7 +339,7 @@ public class RasterMapLayer extends MapLayer implements CopyrightHolder {
     }
 
     @Override
-    public PopupScreen createConfigurationScreen() {
+    public FlexibleWidgetContainer createConfigurationContainer() {
         return null;
     }
 

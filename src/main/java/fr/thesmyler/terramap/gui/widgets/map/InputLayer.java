@@ -1,8 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
@@ -226,7 +226,7 @@ public class InputLayer extends MapLayer {
     }
 
     @Override
-    public PopupScreen createConfigurationScreen() {
+    public FlexibleWidgetContainer createConfigurationContainer() {
         return null;
     }
 
