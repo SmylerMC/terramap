@@ -25,8 +25,8 @@ public class PopupScreen extends Screen {
 
     private GuiScreen other;
     private final WidgetContainer content;
-    private final float contentWidth;
-    private final float contentHeight;
+    private float contentWidth;
+    private float contentHeight;
     private boolean closeOnClickOutContent = true;
     private Color contentBackgroundColor = Color.DARKER_OVERLAY;
     private Color shadeColor = Color.TRANSPARENT;
@@ -93,6 +93,12 @@ public class PopupScreen extends Screen {
         this.closeOnClickOutContent = closeOnClickOutContent;
     }
 
+    public void setContentSize(float width, float height) {
+        this.contentWidth = width;
+        this.contentHeight = height;
+        this.content.init();
+    }
+
     /**
      * Shows a pup-up screen with a text component and an OK button.
      *
@@ -123,8 +129,15 @@ public class PopupScreen extends Screen {
 
         @Override
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), PopupScreen.this.contentBackgroundColor, PopupScreen.this.contourSize, PopupScreen.this.contourColor);
+            float right = x + this.getWidth();
+            float bottom = y + this.getHeight();
+            RenderUtil.drawRect(x, y, right, bottom, PopupScreen.this.contentBackgroundColor);
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+            RenderUtil.drawClosedStrokeLine(PopupScreen.this.contourColor, PopupScreen.this.contourSize,
+                    x, y,
+                    x, bottom,
+                    right, bottom,
+                    right, y);
         }
 
         @Override

@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonObject;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
@@ -432,20 +433,21 @@ public abstract class MapLayer implements IWidget {
      * Indicates whether this layer may be configured by the user using a configuration {@link PopupScreen popup}.
      *
      * @see #isConfigurable()
-     * @return <code>true</code> if {@link #createConfigurationScreen()} returns a configuration {@link PopupScreen popup},
+     * @return <code>true</code> if {@link #createConfigurationContainer()} returns a configuration GUI,
      * <code>false</code> otherwise
      */
     public abstract boolean isConfigurable();
 
     /**
-     * Creates a configuration {@link PopupScreen popup} for this layer.
+     * Creates a configuration container for this layer.
+     * This GUI will be shown in a popup when the user wants to configure the layer.
      * This should only return <code>null</code> if {@link #isConfigurable()} returns <code>false</code>.
      * <br>
-     * The configuration screen should only be concerned by settings that are specific to this layer and saved using {@link #saveSettings()}.
+     * The configuration GUI should only be concerned by settings that are specific to this layer and saved using {@link #saveSettings()}.
      *
      * @see #isConfigurable()
      * @return a configuration {@link Screen screen} for this layer
      */
-    public abstract PopupScreen createConfigurationScreen();
+    public abstract FlexibleWidgetContainer createConfigurationContainer();
 
 }

@@ -9,15 +9,13 @@ import java.util.function.Consumer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Font;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.ColorPickerWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
-import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
@@ -408,88 +406,75 @@ public class McChunksLayer extends MapLayer {
     }
 
     @Override
-    public PopupScreen createConfigurationScreen() {
-        return new SettingsPopup();
-    }
+    public FlexibleWidgetContainer createConfigurationContainer() {
+        //TODO localize
+        float width = 200f;
+        float height = 165f;
+        FlexibleWidgetContainer container = new FlexibleWidgetContainer(0, 0, 0, width, height);
+        Font font = getDefaultFont();
+        float left = 1f;
+        float right = 30f;
+        float interline = 9f;
+        float textYOffset = 3f;
 
-    //TODO localize
-    private class SettingsPopup extends PopupScreen {
+        float y = 0;
 
-        public SettingsPopup() {
-            super(200f, 240f);
-            Font font = getDefaultFont();
-            WidgetContainer content = this.getContent();
-            float width = content.getWidth();
-            float height = content.getHeight();
-            float left = 10f;
-            float right = 40f;
-            float interline = 9f;
-            float textYOffset = 3f;
+        container.addWidget(new TextWidget(
+                left, y + textYOffset, 10,
+                new TextComponentTranslation("Vanilla mca regions"), font));
+        container.addWidget(new ToggleButtonWidget(
+                width - right, y, 0,
+                McChunksLayer.this.isRender2dr(),
+                McChunksLayer.this::setRender2dr)
+        );
+        y += font.height() + interline;
+        ColorPickerWidget colorPicker2dr = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColor2dr(), font);
+        colorPicker2dr.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColor2dr));
+        container.addWidget(colorPicker2dr);
+        y += 20 + interline;
 
-            content.addWidget(new TextWidget(width / 2f, 10f, 0,
-                    new TextComponentTranslation("Minecraft outlines settings"),
-                    TextAlignment.CENTER, font));
+        container.addWidget(new TextWidget(
+                left, y + textYOffset, 10,
+                new TextComponentTranslation("CubicChunks 3dr regions"), font));
+        container.addWidget(new ToggleButtonWidget(
+                width - right, y, 0,
+                McChunksLayer.this.isRender3dr(),
+                McChunksLayer.this::setRender3dr)
+        );
+        y += font.height() + interline;
+        ColorPickerWidget colorPicker3dr = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColor3dr(), font);
+        colorPicker3dr.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColor3dr));
+        container.addWidget(colorPicker3dr);
+        y += 20 + interline;
 
-            float y = 24;
+        container.addWidget(new TextWidget(
+                left, y + textYOffset, 10,
+                new TextComponentTranslation("Chunks"), font));
+        container.addWidget(new ToggleButtonWidget(
+                width - right, y, 0,
+                McChunksLayer.this.isRenderChunks(),
+                McChunksLayer.this::setRenderChunks)
+        );
+        y += font.height() + interline;
+        ColorPickerWidget colorPickerChunks = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColorChunks(), font);
+        colorPickerChunks.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColorChunks));
+        container.addWidget(colorPickerChunks);
+        y += 20 + interline;
 
-            content.addWidget(new TextWidget(
-                    left, y + textYOffset, 10,
-                    new TextComponentTranslation("Vanilla mca regions"), font));
-            content.addWidget(new ToggleButtonWidget(
-                    width - right, y, 0,
-                    McChunksLayer.this.isRender2dr(),
-                    McChunksLayer.this::setRender2dr)
-            );
-            y += font.height() + interline;
-            ColorPickerWidget colorPicker2dr = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColor2dr(), font);
-            colorPicker2dr.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColor2dr));
-            content.addWidget(colorPicker2dr);
-            y += 20 + interline;
+        container.addWidget(new TextWidget(
+                left, y + textYOffset, 10,
+                new TextComponentTranslation("Blocks"), font));
+        container.addWidget(new ToggleButtonWidget(
+                width - right, y, 0,
+                McChunksLayer.this.isRenderBlocks(),
+                McChunksLayer.this::setRenderBlocks)
+        );
+        y += font.height() + interline;
+        ColorPickerWidget colorPickerBlocks = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColorBlocks(), font);
+        colorPickerBlocks.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColorBlocks));
+        container.addWidget(colorPickerBlocks);
 
-            content.addWidget(new TextWidget(
-                    left, y + textYOffset, 10,
-                    new TextComponentTranslation("CubicChunks 3dr regions"), font));
-            content.addWidget(new ToggleButtonWidget(
-                    width - right, y, 0,
-                    McChunksLayer.this.isRender3dr(),
-                    McChunksLayer.this::setRender3dr)
-            );
-            y += font.height() + interline;
-            ColorPickerWidget colorPicker3dr = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColor3dr(), font);
-            colorPicker3dr.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColor3dr));
-            content.addWidget(colorPicker3dr);
-            y += 20 + interline;
-
-            content.addWidget(new TextWidget(
-                    left, y + textYOffset, 10,
-                    new TextComponentTranslation("Chunks"), font));
-            content.addWidget(new ToggleButtonWidget(
-                    width - right, y, 0,
-                    McChunksLayer.this.isRenderChunks(),
-                    McChunksLayer.this::setRenderChunks)
-            );
-            y += font.height() + interline;
-            ColorPickerWidget colorPickerChunks = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColorChunks(), font);
-            colorPickerChunks.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColorChunks));
-            content.addWidget(colorPickerChunks);
-            y += 20 + interline;
-
-            content.addWidget(new TextWidget(
-                    left, y + textYOffset, 10,
-                    new TextComponentTranslation("Blocks"), font));
-            content.addWidget(new ToggleButtonWidget(
-                    width - right, y, 0,
-                    McChunksLayer.this.isRenderBlocks(),
-                    McChunksLayer.this::setRenderBlocks)
-            );
-            y += font.height() + interline;
-            ColorPickerWidget colorPickerBlocks = new ColorPickerWidget(left, y, 0, McChunksLayer.this.getColorBlocks(), font);
-            colorPickerBlocks.setOnColorChange(c -> c.ifPresent(McChunksLayer.this::setColorBlocks));
-            content.addWidget(colorPickerBlocks);
-
-            content.addWidget(new TextButtonWidget(width / 2f - 20f, height - 30f, 0, 40, "Done", this::close));
-        }
-
+        return container;
     }
 
 }
