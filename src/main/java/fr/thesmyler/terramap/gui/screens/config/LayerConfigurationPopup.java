@@ -32,7 +32,7 @@ public class LayerConfigurationPopup extends PopupScreen {
         WidgetContainer content = this.getContent();
         this.container = requireNonNull(layer.createConfigurationContainer());
         this.titleText = new TextWidget(0,
-                new TextComponentString(layer.name()),
+                new TextComponentString(layer.description()),
                 TextAlignment.CENTER, getDefaultFont());
         this.closeButton = new TexturedButtonWidget(0, CROSS, this::close);
         this.scroll = new ScrollableWidgetContainer(1f, 1f, 0,
