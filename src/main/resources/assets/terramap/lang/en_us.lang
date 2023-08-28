@@ -206,8 +206,6 @@ terramap.terramapscreen.markercontrollers.buttons.name=Toggle players' name visi
 ## Layer panel
 terramap.terramapscreen.layerscreen.title=Advanced layer settings
 terramap.terramapscreen.layerscreen.new=New layer
-terramap.terramapscreen.layerscreen.export=Export
-terramap.terramapscreen.layerscreen.import=Import
 
 ## New layer popup
 terramap.terramapscreen.newlayer.raster=Raster tiled map
