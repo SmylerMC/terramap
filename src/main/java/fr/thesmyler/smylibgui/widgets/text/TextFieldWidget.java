@@ -248,61 +248,72 @@ public class TextFieldWidget implements IWidget {
     }
 
     @Override
-    public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
-        if(!this.isEnabled()) return;
+    public void onKeyTyped(char typedChar, @Nullable Key key, WidgetContainer parent) {
+        if(!this.isEnabled()) {
+            return;
+        }
+
         Keyboard keyboard = SmyLibGui.getKeyboard();
         this.selecting = keyboard.isShiftPressed();
+
         if (keyboard.isControlPressed() && key == KEY_A) {
             this.selectAll();
-        } else if (keyboard.isControlPressed() && key == KEY_C) {
+            return;
+        }
+        if (keyboard.isControlPressed() && key == KEY_C) {
             this.copySelectionToClipboard();
-        } else if (keyboard.isControlPressed() && key == KEY_V) {
+            return;
+        }
+        if (keyboard.isControlPressed() && key == KEY_V) {
             this.pasteIn();
-        } else if (keyboard.isControlPressed() && key == KEY_X) {
+            return;
+        }
+        if (keyboard.isControlPressed() && key == KEY_X) {
             this.cutSelectionToClipboard();
-        } else {
+            return;
+        }
+        if (key != null) {
             switch(key) {
                 case KEY_BACK:
                     this.selecting = false;
                     this.erase(-1);
                     this.selecting = getKeyboard().isShiftPressed();
-                    break;
+                    return;
                 case KEY_DELETE:
                     this.selecting = false;
                     this.erase(1);
                     this.selecting = getKeyboard().isShiftPressed();
-                    break;
+                    return;
                 case KEY_RIGHT:
                     if (getKeyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(1));
                     } else {
                         this.moveCursor(1);
                     }
-                    break;
+                    return;
                 case KEY_LEFT:
                     if (getKeyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(-1));
                     } else {
                         this.moveCursor(-1);
                     }
-                    break;
+                    return;
                 case KEY_HOME: // This is the start key
                     this.setCursorToStart();
-                    break;
+                    return;
                 case KEY_END:
                     this.setCursorToEnd();
-                    break;
+                    return;
                 case KEY_RETURN: // This is the enter key
                 case KEY_NUMPADENTER:
                     if(this.onPressEnterCallback.test(this.text)) {
                         parent.setFocus(null);
                     }
-                    break;
-                default:
-                    if (TextFieldWidget.isValidChar(typedChar))
-                        this.write(Character.toString(typedChar));
-                    break;
+                    return;
             }
+        }
+        if (TextFieldWidget.isValidChar(typedChar)) {
+            this.write(Character.toString(typedChar));
         }
     }
 

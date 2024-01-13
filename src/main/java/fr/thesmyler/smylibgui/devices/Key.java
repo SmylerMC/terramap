@@ -34,6 +34,8 @@
 
 package fr.thesmyler.smylibgui.devices;
 
+import javax.annotation.Nullable;
+
 /**
  * Keys that can be typed on a keyboard.
  *
@@ -197,10 +199,9 @@ public enum Key {
         this.code = code;
     }
 
+    @Nullable
     public static Key fromCode(int code) {
-        Key key = code >= 0 && code < 256 ? keys[code]: null;
-        if (key == null) throw new IllegalArgumentException("Invalid key code: " + code);
-        return key;
+        return code >= 0 && code < 256 ? keys[code]: null;
     }
 
 }

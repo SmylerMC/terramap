@@ -17,6 +17,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ITabCompleter;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import javax.annotation.Nullable;
+
 import static fr.thesmyler.smylibgui.devices.Key.KEY_ESCAPE;
 import static fr.thesmyler.smylibgui.devices.Key.KEY_RETURN;
 
@@ -137,7 +139,7 @@ public class ChatWidget implements IWidget, ITabCompleter {
     }
 
     @Override
-    public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
+    public void onKeyTyped(char typedChar, @Nullable Key key, WidgetContainer parent) {
         if(key == KEY_ESCAPE) {
             this.setOpen(false);
             return;
