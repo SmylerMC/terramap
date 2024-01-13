@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import fr.thesmyler.terramap.gui.widgets.map.layer.GenerationPreviewLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
@@ -17,6 +18,7 @@ public final class MapLayerRegistry {
 
     public static final String RASTER_LAYER_ID = "terramap:raster";
     public static final String CHUNKS_LAYER_ID = "terramap:chunks";
+    public static final String GENERATION_PREVIEW_LAYER_ID = "terramap:generation_preview";
     public static final String OFFSET_PREVIEW = "terramap:offset_preview";
 
 
@@ -26,6 +28,9 @@ public final class MapLayerRegistry {
                 .register();
         INSTANCE.newRegistration(CHUNKS_LAYER_ID, McChunksLayer::new)
                 .showInNewLayerMenu("terramap.terramapscreen.newlayer.mcchunks")
+                .register();
+        INSTANCE.newRegistration(GENERATION_PREVIEW_LAYER_ID, GenerationPreviewLayer::new)
+                .showInNewLayerMenu("terramap.terramapscreen.newlayer.generation_preview")
                 .register();
         INSTANCE.newRegistration(OFFSET_PREVIEW, RenderingDeltaPreviewLayer::new)
                 .register();
