@@ -7,8 +7,8 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.maps.raster.IRasterTile;
-import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.RasterTile;
+import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
@@ -24,7 +24,7 @@ import net.minecraft.util.ResourceLocation;
 
 abstract public class RasterMapLayer extends MapLayer {
 
-    protected Set<IRasterTile> lastNeededTiles = new HashSet<>();
+    protected Set<RasterTile> lastNeededTiles = new HashSet<>();
 
     // Used for calculations
     private final Vec2dMutable top = new Vec2dMutable();
@@ -37,7 +37,7 @@ abstract public class RasterMapLayer extends MapLayer {
     private Vec2dReadOnly renderingSpaceDimensions;
     private Vec2dReadOnly halfRenderingSpaceDimensions;
 
-    public abstract IRasterTiledMap getTiledMap();
+    public abstract RasterTiledMap getTiledMap();
 
     @Override
     protected void initialize() {
@@ -50,7 +50,7 @@ abstract public class RasterMapLayer extends MapLayer {
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
-        final IRasterTiledMap tiledMap = this.getTiledMap();
+        final RasterTiledMap tiledMap = this.getTiledMap();
 
         Font smallFont = Util.getSmallestFont();
         Minecraft mc = Minecraft.getMinecraft();
@@ -58,7 +58,7 @@ abstract public class RasterMapLayer extends MapLayer {
         float rotation = this.getRotation();
 
         boolean perfectDraw = true;
-        Set<IRasterTile> neededTiles = new HashSet<>();
+        Set<RasterTile> neededTiles = new HashSet<>();
 
         MapWidget parentMap = (MapWidget) parent;
         boolean debug = parentMap.isDebugMode();
@@ -98,14 +98,14 @@ abstract public class RasterMapLayer extends MapLayer {
 
             for(int tileY = lowerTileY; tileY * renderSize < maxY; tileY++) {
 
-                IRasterTile tile;
+                RasterTile tile;
 
                 try {
                     tile = tiledMap.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
                 } catch(InvalidTilePositionException silenced) { continue ;}
 
                 // This is the tile we would like to render, but it is not possible if it hasn't been cached yet
-                IRasterTile bestTile = tile;
+                RasterTile bestTile = tile;
                 double dispX = tileX * renderSize - upperLeft.x();
                 double dispY = tileY * renderSize - upperLeft.y();
                 double displayWidth = Math.min(renderSize, maxX - tileX * renderSize);
@@ -270,7 +270,7 @@ abstract public class RasterMapLayer extends MapLayer {
         }
         if(perfectDraw) parentMap.discardPreviousErrors(this);
         this.lastNeededTiles.removeAll(neededTiles);
-        this.lastNeededTiles.forEach(IRasterTile::cancelTextureLoading);
+        this.lastNeededTiles.forEach(RasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;
 
         GlStateManager.popMatrix();

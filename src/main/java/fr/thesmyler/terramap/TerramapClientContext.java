@@ -18,7 +18,7 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
@@ -69,8 +69,8 @@ public class TerramapClientContext {
     private TerrainPreview terrainPreview = null;
     private boolean isRegisteredForUpdates = false;
     private String tpCommand = null;
-    private final Map<String, IRasterTiledMap> serverMaps = new HashMap<>();
-    private final Map<String, IRasterTiledMap> proxyMaps = new HashMap<>();
+    private final Map<String, RasterTiledMap> serverMaps = new HashMap<>();
+    private final Map<String, RasterTiledMap> proxyMaps = new HashMap<>();
     private boolean proxyHasWarpSupport = false;
     private boolean serverHasWarpSupport = false;
     private boolean allowPlayerRadar = true;
@@ -205,19 +205,19 @@ public class TerramapClientContext {
         HudScreenHandler.updateMinimap();
     }
 
-    public Map<String, IRasterTiledMap> getServerMapStyles() {
+    public Map<String, RasterTiledMap> getServerMapStyles() {
         return this.serverMaps;
     }
 
-    public Map<String, IRasterTiledMap> getProxyMapStyles() {
+    public Map<String, RasterTiledMap> getProxyMapStyles() {
         return this.proxyMaps;
     }
 
     /**
      * @return a new Map containing all available mapstyles
      */
-    public Map<String, IRasterTiledMap> getMapStyles() {
-        Map<String, IRasterTiledMap> maps = new HashMap<>();
+    public Map<String, RasterTiledMap> getMapStyles() {
+        Map<String, RasterTiledMap> maps = new HashMap<>();
         maps.putAll(MapStylesLibrary.getBaseMaps());
         maps.putAll(this.proxyMaps);
         maps.putAll(this.serverMaps);
@@ -466,7 +466,7 @@ public class TerramapClientContext {
     }
 
     public void setupMaps() {
-        for(IRasterTiledMap map: this.getMapStyles().values()) {
+        for(RasterTiledMap map: this.getMapStyles().values()) {
             map.setup();
         }
     }

@@ -33,7 +33,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerCo
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -67,8 +67,8 @@ public class HudConfigScreen extends Screen {
         final MapController controller = this.minimap.getController();
         List<MapStyleSliderEntry> maps = new ArrayList<>();
         TerramapClientContext.getContext().getMapStyles().values().stream()
-            .sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
-            .filter(IRasterTiledMap::isAllowedOnMinimap)
+            .sorted(((Comparator<RasterTiledMap>) RasterTiledMap::compareTo).reversed())
+            .filter(RasterTiledMap::isAllowedOnMinimap)
             .forEachOrdered(m -> maps.add(new MapStyleSliderEntry(m)));
         this.mapStyles = maps.toArray(this.mapStyles);
         this.styleSlider = new OptionSliderWidget<>(0, 0, 15, 10, this.mapStyles);
@@ -370,8 +370,8 @@ public class HudConfigScreen extends Screen {
     }
 
     private static class MapStyleSliderEntry {
-        private final IRasterTiledMap map;
-        private MapStyleSliderEntry(IRasterTiledMap map) {
+        private final RasterTiledMap map;
+        private MapStyleSliderEntry(RasterTiledMap map) {
             this.map = map;
         }
         @Override

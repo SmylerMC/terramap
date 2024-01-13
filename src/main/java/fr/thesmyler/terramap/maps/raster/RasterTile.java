@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.maps.raster;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import net.minecraft.util.ResourceLocation;
 
-public interface IRasterTile {
+public interface RasterTile {
 
     boolean isTextureAvailable();
 

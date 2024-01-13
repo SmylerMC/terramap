@@ -43,12 +43,11 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -401,7 +400,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
             debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
             this.map.getRasterBackgroundLayer().ifPresent(layer -> {
-                IRasterTiledMap backgroundStyle = layer.getTiledMap();
+                RasterTiledMap backgroundStyle = layer.getTiledMap();
                 debugBuilder.append(String.format(locale, "\nMap id: %s", backgroundStyle.getId()));
                 debugBuilder.append(String.format(locale, "\nMap provider: %sv%s", backgroundStyle.getProvider(), backgroundStyle.getProviderVersion()));
                 if (backgroundStyle instanceof CachingRasterTiledMap) {
@@ -437,7 +436,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         double maxZoom = 25;
         double zoom = controller.getZoom();
         if (backgroundLayer.isPresent()) {
-            IRasterTiledMap style = backgroundLayer.get().getTiledMap();
+            RasterTiledMap style = backgroundLayer.get().getTiledMap();
             minZoom = style.getMinZoom();
             if (!TerramapConfig.CLIENT.unlockZoom) {
                 maxZoom = style.getMaxZoom();
@@ -569,9 +568,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 this.addWidget(w);
                 lw = w;
             }
-            ArrayList<IRasterTiledMap> maps = new ArrayList<>(TerramapClientContext.getContext().getMapStyles().values());
+            ArrayList<RasterTiledMap> maps = new ArrayList<>(TerramapClientContext.getContext().getMapStyles().values());
             maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
-            for(IRasterTiledMap map: maps) {
+            for(RasterTiledMap map: maps) {
                 MapPreview w = new MapPreview(50, map, m -> {
                     TerramapScreen.this.map.getRasterBackgroundLayer().ifPresent(l -> {
                         l.setTiledMap(m.previewLayer.getTiledMap());
@@ -699,7 +698,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         final Consumer<MapPreview> onClick;
         final OnlineRasterMapLayer previewLayer;
 
-        public MapPreview(int z, IRasterTiledMap map, Consumer<MapPreview> onClick) {
+        public MapPreview(int z, RasterTiledMap map, Consumer<MapPreview> onClick) {
             super(z, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
             this.setInteractive(false);
             this.setRightClickMenuEnabled(false);

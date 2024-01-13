@@ -14,7 +14,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.ColorTiledMap;
 import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.minecraft.util.text.ITextComponent;
@@ -35,13 +35,13 @@ import static java.util.stream.Collectors.toList;
 
 public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHolder {
 
-    protected IRasterTiledMap tiledMap = new ColorTiledMap(Color.WHITE, "Empty map");
+    protected RasterTiledMap tiledMap = new ColorTiledMap(Color.WHITE, "Empty map");
 
-    public IRasterTiledMap getTiledMap() {
+    public RasterTiledMap getTiledMap() {
         return this.tiledMap;
     }
 
-    public void setTiledMap(IRasterTiledMap map) {
+    public void setTiledMap(RasterTiledMap map) {
         this.tiledMap = map;
         this.getMap().updateCopyright();
     }
@@ -66,7 +66,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
         try {
             JsonPrimitive primitiveValue = json.getAsJsonPrimitive("style");
             String styleId = primitiveValue.getAsString();
-            IRasterTiledMap tiledMap = TerramapClientContext.getContext().getMapStyles().get(styleId);
+            RasterTiledMap tiledMap = TerramapClientContext.getContext().getMapStyles().get(styleId);
             if (tiledMap != null) {
                 this.setTiledMap(tiledMap);
             }
@@ -104,7 +104,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
         class StyleEntry extends WidgetContainer {
 
-            final IRasterTiledMap style;
+            final RasterTiledMap style;
 
             final TextWidget nameText;
             final TextWidget infoText;
@@ -117,7 +117,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
             final Animation backgroundColorAnimation = new Animation(200);
 
-            public StyleEntry(IRasterTiledMap style) {
+            public StyleEntry(RasterTiledMap style) {
                 super(0);
                 this.style = style;
                 float y = margin;
@@ -233,7 +233,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
         FlexibleWidgetContainer container = new FlexibleWidgetContainer(0f, 0f, 0, width, 200f);
         List<StyleEntry> styles = TerramapClientContext.getContext().getMapStyles().values()
                 .stream()
-                .sorted(comparing(IRasterTiledMap::getDisplayPriority).reversed())
+                .sorted(comparing(RasterTiledMap::getDisplayPriority).reversed())
                 .map(s -> new StyleEntry(s))
                 .collect(toList());
 

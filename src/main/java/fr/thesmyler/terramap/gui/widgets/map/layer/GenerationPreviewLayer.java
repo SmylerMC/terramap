@@ -1,8 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
-import fr.thesmyler.terramap.maps.raster.IRasterTiledMap;
+import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getTranslator;
@@ -32,7 +31,7 @@ public class GenerationPreviewLayer extends RasterMapLayer {
     }
 
     @Override
-    public IRasterTiledMap getTiledMap() {
+    public RasterTiledMap getTiledMap() {
         return this.map;
     }
 

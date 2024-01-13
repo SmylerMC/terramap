@@ -4,7 +4,7 @@ import fr.thesmyler.terramap.util.geo.TilePos;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 
-public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
+public interface RasterTiledMap extends Comparable<RasterTiledMap> {
 
     /**
      * Initializes the map.
@@ -14,14 +14,14 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
     /**
      * Gets a specific tile from this map.
      *
-     * @paraam position - the position of the tile
+     * @param position the position of the tile
      *
-     * @return
+     * @return the tile at the requested position
      */
-    IRasterTile getTile(TilePos position);
+    RasterTile getTile(TilePos position);
 
     @Deprecated
-    default IRasterTile getTile(int zoom, int x, int y) {
+    default RasterTile getTile(int zoom, int x, int y) {
         return this.getTile(new TilePosImmutable(zoom, x, y));
     }
 
@@ -44,7 +44,7 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
      * Gets a name for this map, translated in the appropriate language,
      * or English if it isn't available.
      * 
-     * @param localeKey - the language key to get the copyright for
+     * @param localeKey the language key to get the copyright for
      * @return the name of this map, translated to the appropriate language.
      */
     String getLocalizedName(String localeKey);
@@ -70,7 +70,7 @@ public interface IRasterTiledMap extends Comparable<IRasterTiledMap> {
     int getDisplayPriority();
 
     /**
-     * @return whether or not the map is allowed on the minimap
+     * @return whether the map is allowed on the minimap
      */
     boolean isAllowedOnMinimap();
 

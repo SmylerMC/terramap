@@ -32,7 +32,7 @@ public class MapStylesLibrary {
 
     private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
     private static File configMapsFile;
-    private static final Map<String, IRasterTiledMap> baseMaps = new HashMap<>();
+    private static final Map<String, RasterTiledMap> baseMaps = new HashMap<>();
     private static final Map<String, UrlTiledMap> userMaps = new HashMap<>();
 
     /**
@@ -42,7 +42,7 @@ public class MapStylesLibrary {
      * 
      * @return a new map that contains id => TiledMap couples
      */
-    public static Map<String, IRasterTiledMap> getBaseMaps() {
+    public static Map<String, RasterTiledMap> getBaseMaps() {
         return new HashMap<>(baseMaps);
     }
 

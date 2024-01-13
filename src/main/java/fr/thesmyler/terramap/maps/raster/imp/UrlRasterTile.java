@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.maps.raster.IRasterTile;
+import fr.thesmyler.terramap.maps.raster.RasterTile;
 import fr.thesmyler.terramap.util.ImageUtil;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import io.netty.buffer.ByteBuf;
@@ -25,7 +25,7 @@ import net.minecraft.util.ResourceLocation;
  * @author SmylerMC
  *
  */
-public class UrlRasterTile implements IRasterTile {
+public class UrlRasterTile implements RasterTile {
 
     private final TilePosImmutable pos;
     private final String url;
