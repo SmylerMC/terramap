@@ -157,8 +157,10 @@ terramap.maps.debug.terrain=Terrain debug
 terramap.mapwidget.layers.raster.desc=Raster tiled map
 terramap.mapwidget.layers.mcchunks.name=Minecraft outlines
 terramap.mapwidget.layers.mcchunks.desc=Regions and chunks
-terramap.mapwidget.layers.distortion.name=Distorion
+terramap.mapwidget.layers.distortion.name=Distortion
 terramap.mapwidget.layers.distortion.desc=Distortion preview
+terramap.mapwidget.layers.preview.name=Generation preview
+terramap.mapwidget.layers.preview.description=Powered by Terra++
 
 #### Full-screen map ####
 
@@ -210,6 +212,7 @@ terramap.terramapscreen.layerscreen.new=New layer
 ## New layer popup
 terramap.terramapscreen.newlayer.raster=Raster tiled map
 terramap.terramapscreen.newlayer.mcchunks=Minecraft regions and chunks
+terramap.terramapscreen.newlayer.generation_preview=Generation preview
 
 #### In game ####
 terramap.ingameactions.copy.noplayer=Could not copy coordinates: no player

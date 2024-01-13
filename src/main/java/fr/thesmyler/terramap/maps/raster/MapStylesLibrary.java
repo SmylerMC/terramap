@@ -22,7 +22,6 @@ import com.google.gson.GsonBuilder;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
@@ -40,7 +39,7 @@ public class MapStylesLibrary {
      * Get the default Terramap maps, loaded from the jar and from the online source
      * The returned map is a new one, and can be mutated safely.
      * Does not actually load the maps, this needs to be done beforehand with {@link MapStylesLibrary#loadBuiltIns()} and {@link MapStylesLibrary#loadFromOnline(String)}
-     *
+     * 
      * @return a new map that contains id => TiledMap couples
      */
     public static Map<String, IRasterTiledMap> getBaseMaps() {
@@ -50,7 +49,7 @@ public class MapStylesLibrary {
     /**
      * Get the default Terramap maps, loaded from config/terramap_user_styles.json.
      * The returned map is a new one, and can be mutated safely.
-     *
+     * 
      * @return a new map that contains id => TiledMap couples
      */
     public static Map<String, UrlTiledMap> getUserMaps() {
@@ -87,10 +86,7 @@ public class MapStylesLibrary {
     public static void loadInternals() {
         TiledMapProvider.INTERNAL.setLastError(null);
         try {
-            if(TerramapConfig.enableDebugMaps) {
-                TerrainPreviewMap terrain = new TerrainPreviewMap();
-                baseMaps.put(terrain.getId(), terrain);
-            }
+            // We currently have no internal styles
         } catch(Exception e) {
             TerramapMod.logger.error("Failed to load internal map styles");
             TerramapMod.logger.catching(e);
@@ -104,9 +100,9 @@ public class MapStylesLibrary {
      * parses it as redirect as would most browsers
      * and does a request to the corresponding url.
      * The body of that request is then parsed as a map style json config file.
-     *
+     * 
      * This should be called after {@link #loadBuiltIns()} so it overwrites it.
-     *
+     * 
      * @param hostname - the hostname to lookup
      */
     public static void loadFromOnline(String hostname) {
@@ -180,7 +176,7 @@ public class MapStylesLibrary {
     /**
      * Set the config file that should contain the user's custom map syles
      * It will be created if it does not exist.
-     *
+     * 
      * @param file - the json config file
      */
     public static void setConfigMapFile(File file) {
