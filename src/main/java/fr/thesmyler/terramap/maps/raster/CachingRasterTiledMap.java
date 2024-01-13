@@ -22,7 +22,7 @@ import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
  *
  * @param <T> The type of tile handled by this map
  */
-public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IRasterTiledMap {
+public abstract class CachingRasterTiledMap<T extends RasterTile> implements RasterTiledMap {
 
     private final LinkedList<T> tileList; // Uses for ordered access when unloading
     private final Map<TilePosImmutable, T> tileMap; // Used for unordered access
@@ -181,7 +181,7 @@ public abstract class CachingRasterTiledMap<T extends IRasterTile> implements IR
     }
 
     @Override
-    public int compareTo(IRasterTiledMap other) {
+    public int compareTo(RasterTiledMap other) {
         return Integer.compare(this.getDisplayPriority(), other.getDisplayPriority());
     }
 
