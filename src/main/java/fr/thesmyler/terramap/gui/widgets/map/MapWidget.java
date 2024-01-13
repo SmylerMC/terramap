@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import java.util.*;
 import java.util.function.Supplier;
 
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
@@ -768,8 +769,8 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @return the map's raster background as an {@link Optional},
      *         or an empty {@link Optional} if no {@link MapLayer layers} fulfilled the definition of a raster background.
      */
-    public Optional<RasterMapLayer> getRasterBackgroundLayer() {
-        return this.getBackgroundLayer().map(l -> l instanceof RasterMapLayer ? (RasterMapLayer) l: null);
+    public Optional<OnlineRasterMapLayer> getRasterBackgroundLayer() {
+        return this.getBackgroundLayer().map(l -> l instanceof RasterMapLayer ? (OnlineRasterMapLayer) l: null);
     }
 
     /**

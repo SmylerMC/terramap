@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public final class MapLayerRegistry {
 
 
     static {
-        INSTANCE.newRegistration(RASTER_LAYER_ID, RasterMapLayer::new)
+        INSTANCE.newRegistration(RASTER_LAYER_ID, OnlineRasterMapLayer::new)
                 .showInNewLayerMenu("terramap.terramapscreen.newlayer.raster")
                 .register();
         INSTANCE.newRegistration(CHUNKS_LAYER_ID, McChunksLayer::new)

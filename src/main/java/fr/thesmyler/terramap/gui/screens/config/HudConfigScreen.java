@@ -67,9 +67,9 @@ public class HudConfigScreen extends Screen {
         final MapController controller = this.minimap.getController();
         List<MapStyleSliderEntry> maps = new ArrayList<>();
         TerramapClientContext.getContext().getMapStyles().values().stream()
-        .sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
-        .filter(IRasterTiledMap::isAllowedOnMinimap)
-        .forEachOrdered(m -> maps.add(new MapStyleSliderEntry(m)));
+            .sorted(((Comparator<IRasterTiledMap>)IRasterTiledMap::compareTo).reversed())
+            .filter(IRasterTiledMap::isAllowedOnMinimap)
+            .forEachOrdered(m -> maps.add(new MapStyleSliderEntry(m)));
         this.mapStyles = maps.toArray(this.mapStyles);
         this.styleSlider = new OptionSliderWidget<>(0, 0, 15, 10, this.mapStyles);
         this.minimap.setInteractive(false);
