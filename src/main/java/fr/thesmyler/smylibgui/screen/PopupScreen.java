@@ -16,6 +16,8 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nullable;
+
 /**
  * A screen that shows up on to of other screens.
  *
@@ -176,7 +178,7 @@ public class PopupScreen extends Screen {
         }
 
         @Override
-        public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
+        public void onKeyTyped(char typedChar, @Nullable Key key, WidgetContainer parent) {
             if(key == Key.KEY_ESCAPE) PopupScreen.this.close();
             else super.onKeyTyped(typedChar, key, parent);
         }

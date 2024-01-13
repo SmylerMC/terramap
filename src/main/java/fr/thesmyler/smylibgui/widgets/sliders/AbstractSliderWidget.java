@@ -95,7 +95,10 @@ public abstract class AbstractSliderWidget implements IWidget {
     }
 
     @Override
-    public void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {
+    public void onKeyTyped(char typedChar, @Nullable Key key, @Nullable WidgetContainer parent) {
+        if (key == null) {
+            return;
+        }
         switch(key) {
             case KEY_DOWN:
             case KEY_LEFT:

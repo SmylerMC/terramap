@@ -207,10 +207,10 @@ public interface IWidget {
      * Called when a key is typed.
      * 
      * @param typedChar     the character represented by the key that was pressed on the current keyboard layout
-     * @param key           the physical key that was pressed
+     * @param key           the physical key that was pressed, might be null in case of a combo (e.g. Alt Gr + ...)
      * @param parent        the parent widget container
      */
-    default void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {}
+    default void onKeyTyped(char typedChar, @Nullable Key key, @Nullable WidgetContainer parent) {}
 
     /**
      * Called when the mouse is over this widget and the wheel is turned
