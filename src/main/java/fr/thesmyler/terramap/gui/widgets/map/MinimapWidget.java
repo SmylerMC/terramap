@@ -8,6 +8,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
@@ -86,13 +87,13 @@ public class MinimapWidget extends MapWidget {
 
         this.restore(state);
 
-        Optional<RasterMapLayer> background = this.getRasterBackgroundLayer();
+        Optional<OnlineRasterMapLayer> background = this.getRasterBackgroundLayer();
         double zoom = TerramapConfig.CLIENT.minimap.zoomLevel;
         double minZoom = 0d;
         double maxZoom = 25d;
         if (background.isPresent()) {
             IRasterTiledMap style = TerramapClientContext.getContext().getMapStyles().get(TerramapConfig.CLIENT.minimap.style);
-            RasterMapLayer layer = background.get();
+            OnlineRasterMapLayer layer = background.get();
             if (style != null) {
                 layer.setTiledMap(style);
             }

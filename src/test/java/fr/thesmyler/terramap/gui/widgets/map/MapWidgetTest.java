@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
 import fr.thesmyler.terramap.TerramapTest;
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
@@ -24,8 +25,8 @@ class MapWidgetTest extends TerramapTest {
         TestingWidgetContainer screen = new TestingWidgetContainer(60, 500f, 500f);
         MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
         screen.addWidget(map);
-        RasterMapLayer raster_osm = (RasterMapLayer) map.createLayer(RASTER_LAYER_ID);
-        RasterMapLayer raster_stamen = (RasterMapLayer) map.createLayer(RASTER_LAYER_ID);
+        OnlineRasterMapLayer raster_osm = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
+        OnlineRasterMapLayer raster_stamen = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         raster_osm.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm"));
         map.setLayerZ(raster_osm, -2);
         raster_stamen.setTiledMap(MapStylesLibrary.getBaseMaps().get("stamen_terrain"));
@@ -75,7 +76,7 @@ class MapWidgetTest extends TerramapTest {
         screen.addWidget(map);
 
         // Let's start in some random state
-        RasterMapLayer rasterLayer = (RasterMapLayer) map.createLayer(RASTER_LAYER_ID);
+        OnlineRasterMapLayer rasterLayer = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         rasterLayer.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm"));
         rasterLayer.setVisibility(false);
         map.setLayerZ(rasterLayer, -1);
@@ -106,7 +107,7 @@ class MapWidgetTest extends TerramapTest {
         assertEquals(0, map.getController().getRotation());
         assertEquals(1, map.getLayers().size()); // Input layer and raster layer
         MapLayer layer = map.getLayers().get(0);
-        assertTrue(layer instanceof RasterMapLayer);
+        assertInstanceOf(RasterMapLayer.class, layer);
         assertEquals("stamen_terrain", ((RasterMapLayer) layer).getTiledMap().getId());
         assertTrue(layer.isVisible());
 

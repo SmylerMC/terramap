@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.*;
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
@@ -431,7 +432,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     private void setZoomRestrictions() {
         MapController controller = this.map.getController();
-        Optional<RasterMapLayer> backgroundLayer = this.map.getRasterBackgroundLayer();
+        Optional<OnlineRasterMapLayer> backgroundLayer = this.map.getRasterBackgroundLayer();
         double minZoom = 0;
         double maxZoom = 25;
         double zoom = controller.getZoom();
@@ -696,7 +697,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private class MapPreview extends MapWidget {
 
         final Consumer<MapPreview> onClick;
-        final RasterMapLayer previewLayer;
+        final OnlineRasterMapLayer previewLayer;
 
         public MapPreview(int z, IRasterTiledMap map, Consumer<MapPreview> onClick) {
             super(z, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
@@ -705,7 +706,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.setCopyrightVisibility(false);
             this.setScaleVisibility(false);
             this.onClick = onClick;
-            this.previewLayer = (RasterMapLayer) this.createLayer(MapLayerRegistry.RASTER_LAYER_ID);
+            this.previewLayer = (OnlineRasterMapLayer) this.createLayer(MapLayerRegistry.RASTER_LAYER_ID);
             this.previewLayer.setTiledMap(map);
         }
 
