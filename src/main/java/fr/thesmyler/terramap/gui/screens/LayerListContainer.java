@@ -19,9 +19,11 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getTranslator;
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.*;
 import static java.util.Comparator.comparing;
 
@@ -136,7 +138,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
         public BackgroundLayerEntry(float y, RasterMapLayer layer) {
             super(layer, y, 20);
             TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
-            TextWidget type = new TextWidget(5, 23, 0, new TextComponentString("Raster background"), TextAlignment.RIGHT, this.getFont());
+            TextWidget type = new TextWidget(5, 23, 0, new TextComponentTranslation("terramap.terramapscreen.layerscreen.raster_background.type"), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
@@ -150,7 +152,11 @@ class LayerListContainer extends FlexibleWidgetContainer {
                     layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
                     () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(layer).show())
             );
-            offsetButton.setTooltip(layer.hasRenderingOffset() ? "Background has a rendering offset": "Set background rendering offset");
+            offsetButton.setTooltip(getTranslator().format(
+                    layer.hasRenderingOffset() ?
+                    "terramap.terramapscreen.layerscreen.raster_background.offset":
+                    "terramap.terramapscreen.layerscreen.raster_background.no_offset"
+            ));
             this.addWidget(offsetButton);
             this.setHeight(37);
         }
@@ -190,7 +196,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
                     LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(lowestLayer, layer).show());
                 }
             );
-            offsetButton.setTooltip(layer.hasRenderingOffset() ? "A rendering offset is set for this layer": "Set layer render offset");
+            offsetButton.setTooltip(getTranslator().format(
+                    layer.hasRenderingOffset() ? "terramap.terramapscreen.layerscreen.generic.offset": "terramap.terramapscreen.layerscreen.generic.no_offset"
+            ));
             this.addWidget(offsetButton);
             this.addWidget(new ToggleButtonWidget(
                     this.getWidth() - 86f, 3f, 0, 15f, 15f,
@@ -205,7 +213,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
             ));
 
             this.alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, layer.getAlpha());
-            this.alphaSlider.setDisplayPrefix("Alpha: ");
+            this.alphaSlider.setDisplayPrefix(getTranslator().format("terramap.terramapscreen.layerscreen.generic.alpha"));
             this.alphaSlider.setOnChange(d -> this.layer.setAlpha(d.floatValue()));
             this.alphaSlider.setEnabled(this.layer.isVisible());
             this.addWidget(alphaSlider);

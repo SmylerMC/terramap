@@ -208,11 +208,24 @@ terramap.terramapscreen.markercontrollers.buttons.name=Toggle players' name visi
 ## Layer panel
 terramap.terramapscreen.layerscreen.title=Advanced layer settings
 terramap.terramapscreen.layerscreen.new=New layer
+terramap.terramapscreen.layerscreen.raster_background.type=Raster background
+terramap.terramapscreen.layerscreen.raster_background.no_offset=Set background rendering offset
+terramap.terramapscreen.layerscreen.raster_background.offset=Background has a rendering offset
+terramap.terramapscreen.layerscreen.generic.no_offset=Set layer render offset
+terramap.terramapscreen.layerscreen.generic.offset=A rendering offset is set for this layer
+terramap.terramapscreen.layerscreen.generic.alpha="Alpha: "
+terramap.terramapscreen.layerscreen.newlayer=Choose a type for the new  layer
 
 ## New layer popup
 terramap.terramapscreen.newlayer.raster=Raster tiled map
 terramap.terramapscreen.newlayer.mcchunks=Minecraft regions and chunks
 terramap.terramapscreen.newlayer.generation_preview=Generation preview
+
+## Region outlines configuration
+terramap.terramapscreen.outlines_config.mca=Vanilla mca regions
+terramap.terramapscreen.outlines_config.3dr=CubicChunks 3dr regions
+terramap.terramapscreen.outlines_config.chunks=Chunks
+terramap.terramapscreen.outlines_config.blocks=Blocks
 
 #### In game ####
 terramap.ingameactions.copy.noplayer=Could not copy coordinates: no player
@@ -232,6 +245,9 @@ terramap.popup.renderoffset.reset=Reset
 terramap.popup.renderoffset.set0=Set to 0
 terramap.popup.renderoffset.cancel=Cancel
 terramap.popup.renderoffset.done=Done
+
+#### HUD ####
+terramap.hud.minimap.offset_warning=Minimap has a rendering offset set.
 
 #### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [player name (optional)]

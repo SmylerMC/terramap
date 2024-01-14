@@ -15,6 +15,8 @@ import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 
+import static fr.thesmyler.smylibgui.SmyLibGui.getTranslator;
+
 public abstract class HudScreenHandler {
 
     private static MinimapWidget map;
@@ -32,7 +34,7 @@ public abstract class HudScreenHandler {
             }
             if (!(Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup)) updateMinimap();
             screen.addWidget(map);
-            offsetWarning.setTooltip("Minimap has a rendering offset set.");
+            offsetWarning.setTooltip(getTranslator().format("terramap.hud.minimap.offset_warning"));
             screen.addWidget(offsetWarning);
 
             float compassX = TerramapConfig.CLIENT.compass.posX * 0.01f * screen.getWidth();
