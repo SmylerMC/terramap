@@ -114,6 +114,24 @@ class MapWidgetTest extends TerramapTest {
     }
 
     @Test
+    public void canRestoreMapStateWithInvalidLayerId() throws InterruptedException {
+
+        TestingWidgetContainer screen = new TestingWidgetContainer(60, 500f, 500f);
+        MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
+        screen.moveMouse(750, 750, 1000);
+        screen.addWidget(map);
+
+        SavedMapState state = new SavedMapState();
+        SavedLayerState layerState = new SavedLayerState();
+        layerState.type = "This is not a valid layer type";
+        state.layers.add(layerState);
+
+        map.restore(state);
+        screen.doTick();
+
+    }
+
+    @Test
     public void layersViewportsAreProperlyUpdatedWhenMapResizes() {
         MapWidget map = new MapWidget(0f, 0f, 0, 100f, 100F, FULLSCREEN, 1d);
         assertEquals(new Vec2dImmutable(100d, 100d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
