@@ -154,7 +154,8 @@ public class ChatWidget implements IWidget, ITabCompleter {
                 // We need to swap the current screen temporarily so Forge client commands are tab completable
                 GuiScreen screen = Minecraft.getMinecraft().currentScreen;
                 Minecraft.getMinecraft().currentScreen = this.guiChat;
-                GUI_CHAT_KEYPRESSED_METHOD.invoke(this.guiChat, typedChar, key);
+                int keyCode = key != null ? key.code: 0;
+                GUI_CHAT_KEYPRESSED_METHOD.invoke(this.guiChat, typedChar, keyCode);
                 Minecraft.getMinecraft().currentScreen = screen;
             }
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
