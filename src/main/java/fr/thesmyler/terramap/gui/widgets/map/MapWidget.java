@@ -139,7 +139,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.errorText = new TextWidget(Integer.MAX_VALUE, font) {
             @Override
             public boolean isVisible(WidgetContainer parent) {
-                return MapWidget.this.reportedErrors.size() > 0 && MapWidget.this.context == MapContext.FULLSCREEN;
+                return !MapWidget.this.reportedErrors.isEmpty() && MapWidget.this.context == MapContext.FULLSCREEN;
             }
         };
         this.errorText.setBackgroundColor(Color.ERROR_OVERLAY).setPadding(5).setAlignment(TextAlignment.CENTER).setShadow(false).setBaseColor(Color.WHITE);
@@ -312,7 +312,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
         this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
         if(!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
-        if(this.reportedErrors.size() > 0) {
+        if(!this.reportedErrors.isEmpty()) {
             String errorText = SmyLibGui.getTranslator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
             this.errorText.setText(new TextComponentString(errorText));
         }
@@ -396,12 +396,12 @@ public class MapWidget extends FlexibleWidgetContainer {
         ITextComponent component = new TextComponentString("");
         for(IWidget widget: this.widgets) 
             if(widget instanceof CopyrightHolder){
-                if(component.getFormattedText().length() > 0) component.appendText(" | ");
+                if(!component.getFormattedText().isEmpty()) component.appendText(" | ");
                 ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(SmyLibGui.getGameContext().getLanguage());
                 component.appendSibling(copyright);
             }
         this.copyright.setText(component);
-        this.copyright.setVisibility(component.getFormattedText().length() > 0);
+        this.copyright.setVisibility(!component.getFormattedText().isEmpty());
     }
 
     private void updateMouseGeoPos(float mouseX, float mouseY) {
@@ -734,14 +734,26 @@ public class MapWidget extends FlexibleWidgetContainer {
         new ArrayList<>(this.layers) // Avoid co-modification problems
                 .forEach(this::removeLayer);
         for (SavedLayerState layerState: state.layers) {
-            MapLayer layer = this.createLayer(layerState.type);
+            MapLayer layer;
+            try {
+                layer = this.createLayer(layerState.type);
+            } catch (IllegalArgumentException e) {
+                TerramapMod.logger.warn("Could not restore a map layer. Did someone mess with the save file?");
+                TerramapMod.logger.catching(e);
+                continue;
+            }
             this.setLayerZ(layer, layerState.z);
             layer.setVisibility(layerState.visible);
             layer.setAlpha(layerState.alpha);
             layer.setRenderingOffset(layerState.cartesianOffset);
             layer.setRotationOffset(layerState.rotationOffset);
             layer.setIsUserLayer(layerState.setByUser);
-            layer.loadSettings(layerState.settings);
+            try {
+                layer.loadSettings(layerState.settings);
+            } catch (Exception e) {
+                TerramapMod.logger.error("Caught exception when loading layer settings. Did someone mess with the save file?");
+                TerramapMod.logger.catching(e);
+            }
         }
         Map<String, FeatureVisibilityController> controllers = this.getVisibilityControllers();
         for (String key: state.visibilitySettings.keySet()) {

@@ -148,11 +148,13 @@ public class ClientSaveManager {
     private SavedClientState loadFromPath(Path path) {
         try (FileReader reader = new FileReader(path.toFile())) {
             return GSON.fromJson(reader, SavedClientState.class);
+        } catch (FileNotFoundException ignored) {
+            // Let's not spam the console when it's just a new save.
         } catch (IOException e) {
             TerramapMod.logger.error("Failed to read a saved client state, will fallback to a new one");
             TerramapMod.logger.catching(e);
-            return this.getDefaultState();
         }
+        return this.getDefaultState();
     }
 
     private void saveStateToPath(Path path, SavedClientState state) {
