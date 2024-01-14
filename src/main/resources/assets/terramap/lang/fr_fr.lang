@@ -1,4 +1,6 @@
-## Config
+smylibgui.popup.info.ok=Ok
+
+# # Config
 terramap.config.minimap.enable=Minimap: activation
 terramap.config.minimap.style=Minimap: style
 terramap.config.minimap.pos_x=Minimap: position X (%%)
@@ -10,6 +12,8 @@ terramap.config.minimap.show_entities=Minimap: montrer les entitées
 terramap.config.minimap.show_players=Minimap: montrer les autres joueurs
 terramap.config.minimap.tile_scaling=Minimap: agrandissement
 terramap.config.minimap.direction=Minimap: Montrer les directions
+terramap.config.minimap.rotation=Minimap: rotation
+terramap.config.minimap.chunk=Minimap: regions & chunks
 terramap.config.compass.visibility=Compass: acitvation
 terramap.config.compass.position.x=Compass: position X (%%)
 terramap.config.compass.position.y=Compass: position Y (%%)
@@ -17,6 +21,8 @@ terramap.config.compass.width=Boussole: Largeur (%%)
 terramap.config.minimap=Minimap
 terramap.config.compass=Boussole
 terramap.config.save_ui_state=Sauvegarder l'interface
+terramap.config.chat_on_map=Afficher le chat sur la carte
+terramap.config.force_terra_world=Force le monde Terra++
 terramap.config.client=Client
 terramap.config.server=Serveur
 terramap.config.enable_debug_maps=Activer les style de carte de deboggage
@@ -54,10 +60,12 @@ terramap.configmenu.title.mapstyles=Configuration de Terramap: styles de cartes
 terramap.configmenu.title.other=Configuration de Terramap: autres
 terramap.configmenu.unlockzoom=Déverouiller le zoom: 
 terramap.configmenu.unlockzoom.tooltip=Déverouille le zoom jusqu'à 25
-terramap.configmenu.saveui=Sauvegarder l'état de l'interface: 
+terramap.configmenu.saveui=Sauvegarder l'interface:
 terramap.configmenu.saveui.tooltip=Se souviens des mods debug et F1 quand la carte plein écran est fermée
-terramap.configmenu.tilescaling=Agrandissement de la carte: 
-terramap.configmenu.doubleclick=Délai du double click: 
+terramap.configmenu.chatonmap=Afficher du chat:
+terramap.configmenu.chatonmap.tooltip=Activer pour afficher le chat par dessus la carte en plein écran
+terramap.configmenu.tilescaling=Échelle de la carte:
+terramap.configmenu.doubleclick=Délai de click:
 terramap.configmenu.tilecache=Taille du cache: 
 terramap.configmenu.tilecache.tooltip=Nombre de tuilles à garder en mémoire pour chaque carte
 terramap.configmenu.lowzoom=Zoom faible: 
@@ -81,7 +89,7 @@ terramap.configmenu.asksave.deny=Non
 terramap.configmenu.asksave.cancel=Annuler
 terramap.configmenu.tilescaling.auto=Auto
 
-## Hud config
+# # Hud config
 terramap.hudconfig.minimap=Minimap: 
 terramap.hudconfig.minimap.tooltip=Change la visibilité de la minimap
 terramap.hudconfig.compass=Boussole: 
@@ -92,14 +100,18 @@ terramap.hudconfig.entities=Entitées:
 terramap.hudconfig.entities.tooltip=Change la visibilité des entitées sur la minimap
 terramap.hudconfig.directions=Directions des joueurs: 
 terramap.hudconfig.directions.tooltip=Change la visibilité des flêches de direction des joueurs sur la minimap
-terramap.hudconfig.scaling=Agrandissment: 
+terramap.hudconfig.rotation=Suivre la rotation du joueur
+terramap.hudconfig.rotation.tooltip=Activer pour que la minimap soit toujours orientée dans la même direction que le joueur
+terramap.hudconfig.chunks=Regions et chunks
+terramap.hudconfig.chunks.tooltip=Activer pour afficher les bordures des chunks
+terramap.hudconfig.scaling=Aggrandisement:
 terramap.hudconfig.scaling.tooltip=Change l'agrandissement de la minimap
 terramap.hudconfig.zoom=Zoom: 
 terramap.hudconfig.zoom.tooltip=Change le niveau de zoom de la minimap
 terramap.hudconfig.mapstyle.tooltip=Change le style de la minimap
 terramap.hudconfig.explain=Déplacez et redimenssionez la minimap et la boussole et utilisez le boutton menu pour plus d'options
 
-## Keys
+# # Keys
 terramap.binding.category=Terramap
 terramap.binding.open_map=Ouvrir la carte
 terramap.binding.toggle_debug=Mode de débogage
@@ -111,7 +123,7 @@ terramap.binding.zoom_out=Dézoomer
 terramap.binding.toggle_minimap=Affichage de la minimap
 terramap.binding.configure_minimap=Ouvrir le menu de l'interface
 
-## Map
+# # Map
 terramap.mapwidget.rclickmenu.teleport=Se téléporter ici
 terramap.mapwidget.rclickmenu.center=Centrer la carte ici
 terramap.mapwidget.rclickmenu.copy=Copier
@@ -119,7 +131,7 @@ terramap.mapwidget.rclickmenu.copy.geo=les coordonnées géographiques
 terramap.mapwidget.rclickmenu.copy.block=les coordonnées du block
 terramap.mapwidget.rclickmenu.copy.chunk=les coordonnées chunk
 terramap.mapwidget.rclickmenu.copy.region=le nom de fichier de la région vanilla
-terramap.mapwidget.rclickmenu.copy.3dr=le nom de fichier de la région 3D en Y=0
+terramap.mapwidget.rclickmenu.copy.3dr=le nom de fichier de la région 3D en Y
 terramap.mapwidget.rclickmenu.copy.2dr=le nom de fichier de la région 2D
 terramap.mapwidget.rclickmenu.open=Afficher dans
 terramap.mapwidget.rclickmenu.open_osm=OpenStreetMaps
@@ -131,8 +143,9 @@ terramap.mapwidget.rclickmenu.open_bing=Bing Maps
 terramap.mapwidget.rclickmenu.open_wikimapia=Wikimapia
 terramap.mapwidget.rclickmenu.open_yandex=Yandex Maps
 terramap.mapwidget.rclickmenu.set_proj=Définir la projection
+terramap.mapwidget.rclickmenu.offset=Décalage de l'arrière plan
 terramap.mapwidget.error.header=Erreur:
-terramap.mapwidget.shortcuts.tp=Clickez pour vous téléporter
+terramap.mapwidget.shortcuts.tp=Cliquez pour vous téléporter
 terramap.mapwidget.error.copyblock=Impossible de copier les coordonnées de blocs en dehors de la projection
 terramap.mapwidget.error.copychunk=Impossible de copier les coordonnées de chunks en dehors de la projection
 terramap.mapwidget.error.copyregion=Impossible de copier les coordonnées de région vanilla en dehors de la projection
@@ -140,10 +153,16 @@ terramap.mapwidget.error.copy3dregion=Impossible de copier les coordonnées de r
 terramap.mapwidget.error.copy2dregion=Impossible de copier les coordonnées de région 2d en dehors de la projection
 terramap.mapwidget.error.tp=Impossible de se téléporter en dehors de la projection
 terramap.maps.debug.terrain=Deboggage du terrain
+terramap.mapwidget.layers.raster.desc=Raster tiled map
+terramap.mapwidget.layers.mcchunks.name=Bordure Minecraft
+terramap.mapwidget.layers.mcchunks.desc=Regions et chunks
+terramap.mapwidget.layers.distortion.name=Distortion
+terramap.mapwidget.layers.distortion.desc=Affichage de la distortion
+terramap.mapwidget.layers.preview.name=Simulation de la generation
+terramap.mapwidget.layers.preview.description=Moteur de Terra++
 
-#### Full-screen map ####
 
-## Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
+# # Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
 terramap.terramapscreen.projection_warning.line1=Terramap n'est pas installé sur ce serveur!!
 terramap.terramapscreen.projection_warning.line2=Il est impossible d'identifier la projection utilisée.
 terramap.terramapscreen.projection_warning.line3=Le contenu du monde Mincraft ne sera pas afficher
@@ -153,17 +172,20 @@ terramap.terramapscreen.mapstylefailed.title=Erreur de chargement de styles.
 terramap.terramapscreen.mapstylefailed.provider=Provider: %1$s
 terramap.terramapscreen.mapstylefailed.exception=Erreur: %1$s
 
-## Buttons
+# # Buttons
 terramap.terramapscreen.buttons.close.tooltip=Fermer la carte
+terramap.terramapscreen.buttons.compass.tooltip=Réinitialiser la rotation
 terramap.terramapscreen.buttons.zoomin.tooltip=Zoomer
 terramap.terramapscreen.buttons.zoomout.tooltip=Dézoomer
 terramap.terramapscreen.buttons.track.tooltip=Suivre le joueur
 terramap.terramapscreen.buttons.style.tooltip=Changer le style de carte
 terramap.terramapscreen.buttons.info.tooltip=Bouger la panneau d'information
 terramap.terramapscreen.buttons.config.tooltip=Ouvrir le menu de configuration
+terramap.terramapscreen.warning.offset.tooltip=Un décalage est définie pour l'arrière plan!
+
 terramap.terramapscreen.search.wip=En cours de dev
 
-## Info panel
+# # Info panel
 terramap.terramapscreen.information.mouse_geo=Position du pointeur: %1$s° %2$s°
 terramap.terramapscreen.information.mouse_mc=X: %1$s Z: %2$s
 terramap.terramapscreen.information.trackedoutsidemap=%1$s est en dehors de la projection
@@ -173,7 +195,7 @@ terramap.terramapscreen.information.playergeo=Position du joueur: %1$s° %2$s°
 terramap.terramapscreen.information.noplayer=Position du joueur: -° -°
 terramap.terramapscreen.information.distortion=Distortion: %1$s blocks/m ; ±%2$s°
 
-## Marker controllers
+# # Marker controllers
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=Changer la visibilité du joueur principal
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=Changer la visibilité des autres joueurs
 terramap.terramapscreen.markercontrollers.buttons.animals=Changer la visibilité des animaux
@@ -181,7 +203,26 @@ terramap.terramapscreen.markercontrollers.buttons.mobs=Changer la visibilité de
 terramap.terramapscreen.markercontrollers.buttons.direction=Changer la visibilité des flêches de direction des joueurs
 terramap.terramapscreen.markercontrollers.buttons.name=Changer la visibilité des noms des joueurs
 
-#### In game ####
+terramap.terramapscreen.layerscreen.title=Paramètres avancés des calques
+terramap.terramapscreen.layerscreen.new=Nouveau calque
+terramap.terramapscreen.layerscreen.raster_background.type=Arrière plan
+terramap.terramapscreen.layerscreen.raster_background.no_offset=Définir le décalage de l'arrière plan
+terramap.terramapscreen.layerscreen.raster_background.offset=L'arrière plan à un décalage défini
+terramap.terramapscreen.layerscreen.generic.no_offset=Définir le décalage
+terramap.terramapscreen.layerscreen.generic.offset=Décalage définit pour ce calque
+terramap.terramapscreen.layerscreen.generic.alpha=Alpha:
+terramap.terramapscreen.layerscreen.newlayer=Choisissez un type de calque
+
+terramap.terramapscreen.newlayer.raster=Carte à tuile
+terramap.terramapscreen.newlayer.mcchunks=Régions et chunks Minecraft
+terramap.terramapscreen.newlayer.generation_preview=Visualisation de la génération
+
+terramap.terramapscreen.outlines_config.mca=Région mca vanilla
+terramap.terramapscreen.outlines_config.3dr=Région 3dr CubicChunks
+terramap.terramapscreen.outlines_config.chunks=Chunks
+terramap.terramapscreen.outlines_config.blocks=Blocks
+
+# ### In game ####
 terramap.ingameactions.copy.noplayer=Impossible de copier les coordonnées: pas de joueur
 terramap.ingameactions.copy.noproj=Impossible de copier les coordonnées: pas de projection
 terramap.ingameactions.copy.outproj=Impossible de copier les coordonnées: vous êtes en dehors de la projection
@@ -190,7 +231,18 @@ terramap.ingameactions.copy.geo=Coordonnées géographiques copiée dans le pres
 terramap.toasts.welcome.title=Terramap
 terramap.toasts.welcome.text=Appuyer sur %1$s pour ouvrir la carte
 
-#### Commands ####
+terramap.popup.renderoffset.title=Définir le décalage
+terramap.popup.renderoffset.x=X (pixels):
+terramap.popup.renderoffset.y=Y (pixels):
+terramap.popup.renderoffset.zoom=Zoom actuel: %s
+terramap.popup.renderoffset.reset=Réinitialiser
+terramap.popup.renderoffset.set0=Remettre à 0
+terramap.popup.renderoffset.cancel=Annuler
+terramap.popup.renderoffset.done=Terminé
+
+terramap.hud.minimap.offset_warning=La minimap a un décalage défini
+
+# ### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
 terramap.commands.terrashow.too_few_parameters=Pas assez de paramètres: /terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
 terramap.commands.terrashow.too_many_parameters=Trop de paramètres: /terrashow <show (montrer)|hide (cacher)|status (status)> [nom du joueur (optionel)]
@@ -210,4 +262,3 @@ terramap.commands.reloadmapstyles.error=Erreur lors du rechargement des styles d
 terramap.commands.opentmap.numberargs=Nombre d'arguments invalide: zoom, latitude et longitude sont requis.
 terramap.commands.opentmap.couldnotopen=Impossible d'ouvrir la carte dans le contexte actuel.
 terramap.commands.opentmap.usage=/opentmap <zoom> <latitude> <longitude>
-
