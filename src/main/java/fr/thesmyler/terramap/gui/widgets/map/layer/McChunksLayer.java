@@ -421,7 +421,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("Vanilla mca regions"), font));
+                new TextComponentTranslation("terramap.terramapscreen.outlines_config.mca"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRender2dr(),
@@ -435,7 +435,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("CubicChunks 3dr regions"), font));
+                new TextComponentTranslation("terramap.terramapscreen.outlines_config.3dr"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRender3dr(),
@@ -449,7 +449,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("Chunks"), font));
+                new TextComponentTranslation("terramap.terramapscreen.outlines_config.chunks"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRenderChunks(),
@@ -463,7 +463,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("Blocks"), font));
+                new TextComponentTranslation("terramap.terramapscreen.outlines_config.blocks"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRenderBlocks(),

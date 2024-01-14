@@ -543,7 +543,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                         .filter(MapLayerRegistry.LayerRegistration::showsOnNewLayerMenu)
                         .collect(toMap(LayerRegistration::getNewLayerMenuTranslationKey, l -> () -> this.addMapLayer(l.getId())));
         this.getContent().scheduleBeforeNextUpdate(() -> 
-            new MultiChoicePopupScreen("Choose a type for the new  layer", options).show()
+            new MultiChoicePopupScreen("terramap.terramapscreen.layerscreen.newlayer", options).show()
         );
     }
 
