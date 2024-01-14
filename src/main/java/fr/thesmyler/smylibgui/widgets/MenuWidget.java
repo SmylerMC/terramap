@@ -104,7 +104,7 @@ public class MenuWidget implements IWidget {
                     float subH = subMenu.getHeight();
                     float subW = subMenu.getWidth();
                     if(subY + subH > parent.getHeight()) subY = parent.getHeight() - subH - 1;
-                    if(subX + subW > parent.getWidth()) subX = subX - subW + width + 1;
+                    if(subX + subW > parent.getWidth()) subX -= subW + width + 1;
                     subMenu.z = this.z + 1;
                     subMenu.isSubMenu = true;
                     subMenu.show(subX, subY);
