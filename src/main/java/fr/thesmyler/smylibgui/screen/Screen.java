@@ -1,21 +1,19 @@
 package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
+import fr.thesmyler.smylibgui.container.RootContainer;
 import fr.thesmyler.smylibgui.devices.Key;
 import fr.thesmyler.smylibgui.util.Scissor;
-import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
 /**
  * A {@link Screen} is where everything happens in SmyLibGui.
  * This class extends from Minecraft's {@link GuiScreen} and can be used as such.
- *
+ * <br>
  * To use this class, add widgets to your screen by retrieving its {@link WidgetContainer} using {@link #getContent()}.
  *
  * @author SmylerMC
@@ -24,9 +22,6 @@ public class Screen extends GuiScreen {
 
     private final WidgetContainer container = new Container();
 
-    private long startHoverTime;
-    private IWidget lastHoveredWidget;
-    private float lastRenderMouseX, lastRenderMouseY;
 
     private final InputProcessor processor;
 
@@ -53,22 +48,6 @@ public class Screen extends GuiScreen {
         this.onUpdate();
         this.container.onUpdate(mouseX, mouseY, null);
         this.container.draw(0, 0, mouseX, mouseY, true, true, null);
-        IWidget hoveredWidget = this.container.getHoveredWidget();
-        boolean mouseMoved = mouseX != this.lastRenderMouseX && mouseY != this.lastRenderMouseY;
-        if(mouseMoved || (hoveredWidget != null && !hoveredWidget.equals(this.lastHoveredWidget))) {
-            this.startHoverTime = System.currentTimeMillis();
-        }
-        if(
-                hoveredWidget != null
-                && hoveredWidget.getTooltipText() != null
-                && !hoveredWidget.getTooltipText().isEmpty()
-                && this.startHoverTime + hoveredWidget.getTooltipDelay() <= System.currentTimeMillis()
-                ) {
-            this.drawHoveringText(hoveredWidget.getTooltipText(), mouseX, mouseY);
-        }
-        this.lastHoveredWidget = hoveredWidget;
-        this.lastRenderMouseX = mouseX;
-        this.lastRenderMouseY = mouseY;
         Scissor.pop();
     }
 
@@ -114,20 +93,6 @@ public class Screen extends GuiScreen {
         for(int i=1; i<lines.length; i++) SmyLibGui.getLogger().warn(lines[i]);
     }
 
-    public void drawHoveringText(String text, double x, double y) {
-        // This is a workaround for vanilla not allowing double coordinates and re-enabling lighting without any check
-        boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
-        GlStateManager.pushMatrix();
-        int px = (int) Math.floor(x);
-        int py = (int) Math.floor(y);
-        double rx = x - px;
-        double ry = y - py;
-        GlStateManager.translate(rx, ry, 0);
-        this.drawHoveringText(text, px, py);
-        GlStateManager.popMatrix();
-        if(!lighting) GlStateManager.disableLighting();
-    }
-
     private void drawBackground() {
         switch(this.background) {
             case NONE:
@@ -144,10 +109,10 @@ public class Screen extends GuiScreen {
         }
     }
 
-    private class Container extends WidgetContainer {
+    private class Container extends RootContainer {
 
         public Container() {
-            super(Integer.MAX_VALUE);
+            super(Screen.this);
         }
 
         @Override

@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.screen;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import fr.thesmyler.smylibgui.container.RootContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import fr.thesmyler.smylibgui.util.Color;
@@ -23,6 +24,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
+import javax.annotation.Nullable;
+
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 
@@ -36,9 +39,10 @@ public final class HudScreen {
 
     private static float renderWidth = 0;
     private static float renderHeight = 0;
+    private static final GuiScreen gui = new GuiChat();
     private static GuiScreen lastTickScreen = null;
 
-    private static final HudScreenContainer CONTAINER = new HudScreenContainer(0);
+    private static final HudScreenContainer CONTAINER = new HudScreenContainer();
     private static final InputProcessor PROCESSOR = new InputProcessor(CONTAINER);
 
     private static final Field NEW_CHAT_DRAW_CHAT_LINES_FIELD = ObfuscationReflectionHelper.findField(GuiNewChat.class, "field_146253_i");
@@ -145,10 +149,19 @@ public final class HudScreen {
         return GUI_INGAME_UPDATE_COUNTER_FIELD.getInt(Minecraft.getMinecraft().ingameGUI);
     }
 
-    private static class HudScreenContainer extends WidgetContainer {
+    private static class HudScreenContainer extends RootContainer {
 
-        public HudScreenContainer(int z) {
-            super(z);
+
+        public HudScreenContainer() {
+            super(HudScreen.gui);
+        }
+
+        @Override
+        public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
+            if(HudScreen.gui.mc == null || HudScreen.gui.width != renderWidth || HudScreen.gui.height != renderHeight) {
+                HudScreen.gui.setWorldAndResolution(Minecraft.getMinecraft(), (int)renderWidth, (int)renderHeight);
+            }
+            super.onUpdate(mouseX, mouseY, parent);
         }
 
         @Override
