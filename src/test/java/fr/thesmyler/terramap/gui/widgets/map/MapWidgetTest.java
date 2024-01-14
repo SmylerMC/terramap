@@ -26,15 +26,15 @@ class MapWidgetTest extends TerramapTest {
         MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
         screen.addWidget(map);
         OnlineRasterMapLayer raster_osm = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
-        OnlineRasterMapLayer raster_stamen = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
+        OnlineRasterMapLayer osm_fr_hot = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         raster_osm.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm"));
         map.setLayerZ(raster_osm, -2);
-        raster_stamen.setTiledMap(MapStylesLibrary.getBaseMaps().get("stamen_terrain"));
-        map.setLayerZ(raster_stamen, -1);
-        raster_stamen.setAlpha(0.5f);
-        raster_stamen.setVisibility(false);
-        raster_stamen.setRenderingOffset(new Vec2dImmutable(0.042d, -0.24d));
-        raster_stamen.setRotationOffset(15f);
+        osm_fr_hot.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm_fr_hot"));
+        map.setLayerZ(osm_fr_hot, -1);
+        osm_fr_hot.setAlpha(0.5f);
+        osm_fr_hot.setVisibility(false);
+        osm_fr_hot.setRenderingOffset(new Vec2dImmutable(0.042d, -0.24d));
+        osm_fr_hot.setRotationOffset(15f);
 
         map.getController().setZoom(10, false);
         map.getController().setRotation(45f, false);
@@ -57,13 +57,13 @@ class MapWidgetTest extends TerramapTest {
         assertEquals(0d, savedOsm.cartesianOffset.subtract(0d, 0d).norm(), 1e-5d);
         assertEquals(0f, savedOsm.rotationOffset, 1e-5f);
 
-        SavedLayerState savedStamen = saved.layers.get(1);
-        assertEquals(RASTER_LAYER_ID, savedStamen.type);
-        assertEquals(-1, savedStamen.z);
-        assertEquals(0.5f, savedStamen.alpha);
-        assertFalse(savedStamen.visible);
-        assertEquals(0, savedStamen.cartesianOffset.subtract(0.042d, -0.24d).norm(), 1e-5d);
-        assertEquals(15f, savedStamen.rotationOffset, 1e-5f);
+        SavedLayerState savedOsmFrHot = saved.layers.get(1);
+        assertEquals(RASTER_LAYER_ID, savedOsmFrHot.type);
+        assertEquals(-1, savedOsmFrHot.z);
+        assertEquals(0.5f, savedOsmFrHot.alpha);
+        assertFalse(savedOsmFrHot.visible);
+        assertEquals(0, savedOsmFrHot.cartesianOffset.subtract(0.042d, -0.24d).norm(), 1e-5d);
+        assertEquals(15f, savedOsmFrHot.rotationOffset, 1e-5f);
 
     }
 
@@ -95,7 +95,7 @@ class MapWidgetTest extends TerramapTest {
         state.rotation = 0;
         SavedLayerState layerState = new SavedLayerState();
         layerState.type = RASTER_LAYER_ID;
-        layerState.settings.add("style", new JsonPrimitive("stamen_terrain"));
+        layerState.settings.add("style", new JsonPrimitive("osm_fr_hot"));
         state.layers.add(layerState);
 
         // And we try restoring...
@@ -108,7 +108,7 @@ class MapWidgetTest extends TerramapTest {
         assertEquals(1, map.getLayers().size()); // Input layer and raster layer
         MapLayer layer = map.getLayers().get(0);
         assertInstanceOf(RasterMapLayer.class, layer);
-        assertEquals("stamen_terrain", ((RasterMapLayer) layer).getTiledMap().getId());
+        assertEquals("osm_fr_hot", ((RasterMapLayer) layer).getTiledMap().getId());
         assertTrue(layer.isVisible());
 
     }
