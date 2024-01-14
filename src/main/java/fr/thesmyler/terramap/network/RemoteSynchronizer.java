@@ -30,7 +30,7 @@ public abstract class RemoteSynchronizer {
     public static final Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<>();
 
     public static void syncPlayers(WorldServer world) {
-        if(playersToUpdate.size() == 0) return;
+        if(playersToUpdate.isEmpty()) return;
         long ctime = System.currentTimeMillis();
         List<TerramapLocalPlayer> players = new ArrayList<>();
         for(EntityPlayer player: world.playerEntities) {
@@ -51,8 +51,8 @@ public abstract class RemoteSynchronizer {
             }
         }
         Iterator<RegisteredForUpdatePlayer> iterator = RemoteSynchronizer.playersToUpdate.values().iterator();
-		while (iterator.hasNext()) {
-			RegisteredForUpdatePlayer player = iterator.next();
+        while (iterator.hasNext()) {
+            RegisteredForUpdatePlayer player = iterator.next();
             if(ctime - player.lastRegisterTime > TerramapConfig.SERVER.syncHeartbeatTimeout) {
                 TerramapMod.logger.debug("Unregistering " + player.player.getName() + " from map update as it did not renew its registration");
                 iterator.remove();
