@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
+import fr.thesmyler.smylibgui.widgets.WarningWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
@@ -9,6 +10,7 @@ import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MinimapWidget;
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,7 @@ public abstract class HudScreenHandler {
 
     private static MinimapWidget map;
     private static RibbonCompassWidget compass;
+    private final static WarningWidget offsetWarning = new WarningWidget(0, 0, 50);
 
     public static void init(WidgetContainer screen) {
 
@@ -29,6 +32,8 @@ public abstract class HudScreenHandler {
             }
             if (!(Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup)) updateMinimap();
             screen.addWidget(map);
+            offsetWarning.setTooltip("Minimap has a rendering offset set.");
+            screen.addWidget(offsetWarning);
 
             float compassX = TerramapConfig.CLIENT.compass.posX * 0.01f * screen.getWidth();
             float compassY = TerramapConfig.CLIENT.compass.posY * 0.01f * screen.getHeight();
@@ -70,8 +75,16 @@ public abstract class HudScreenHandler {
             TerramapConfig.CLIENT.minimap.width / 100f * screen.getWidth(),
             TerramapConfig.CLIENT.minimap.height / 100f * screen.getHeight()
         );
+        offsetWarning.setPosition(map.getX(), map.getY());
 
         map.setVisibility(TerramapConfig.CLIENT.minimap.enable && TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP));
+        offsetWarning.setVisibility(
+                map.isVisible(null)
+                    &&
+                map.getRasterBackgroundLayer()
+                        .map(OnlineRasterMapLayer::hasRenderingOffset)
+                        .orElse(false)
+        );
     }
 
     public static void zoomInMinimap() {
