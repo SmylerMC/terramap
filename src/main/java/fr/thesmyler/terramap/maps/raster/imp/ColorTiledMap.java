@@ -87,6 +87,11 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
         return true;
     }
 
+    @Override
+    public ResourceLocation getDefaultTileTexture() {
+        return this.textureLocation;
+    }
+
     public Color getColor() {
         return this.color;
     }

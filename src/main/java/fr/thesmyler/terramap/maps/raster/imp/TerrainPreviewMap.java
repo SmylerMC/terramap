@@ -4,6 +4,7 @@ import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
+import net.minecraft.util.ResourceLocation;
 
 public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile> {
 
@@ -30,7 +31,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
 
     @Override
     public String getComment() {
-        return "Terra++ terrain perview debug map";
+        return "Terra++ terrain preview debug map";
     }
 
     @Override
@@ -56,6 +57,11 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
     @Override
     public boolean isDebug() {
         return true;
+    }
+
+    @Override
+    public ResourceLocation getDefaultTileTexture() {
+        return null;
     }
 
     @Override

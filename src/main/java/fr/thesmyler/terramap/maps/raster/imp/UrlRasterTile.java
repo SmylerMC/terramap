@@ -32,7 +32,6 @@ public class UrlRasterTile implements RasterTile {
     private ResourceLocation texture = null;
     private CompletableFuture<ByteBuf> textureTask;
 
-    public static ResourceLocation errorTileTexture = null;
 
     public UrlRasterTile(String urlPattern, TilePosImmutable pos) {
         this.pos = pos;
@@ -134,13 +133,6 @@ public class UrlRasterTile implements RasterTile {
     @Override
     public int hashCode() {
         return this.url.hashCode();
-    }
-
-    public static void registerErrorTexture() {
-        TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-        int[] color = {170, 211, 223};
-        DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256,  256, color));
-        UrlRasterTile.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", texture);
     }
 
 }

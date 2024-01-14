@@ -14,15 +14,20 @@ import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
 import fr.thesmyler.terramap.util.CopyrightHolder;
+import fr.thesmyler.terramap.util.ImageUtil;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
 import net.buildtheearth.terraplusplus.util.http.Http;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 /**
  * Instances are usually created in {@link MapStylesLibrary} and {@link SP2CMapStylePacket}.
  * 
- * @author SmylerMC
+ * @author Smyler
  *
  */
 public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements CopyrightHolder {
@@ -44,6 +49,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     private final Map<Integer, WebMercatorBounds> bounds;
 
     private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
+    private ResourceLocation errorTileTexture = null;
 
     public UrlTiledMap(
             String[] urlPatterns,
@@ -100,6 +106,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
      */
     @Override
     public void setup() {
+        this.registerErrorTexture();
         for(String urlPattern: this.getUrlPatterns()) {
             String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
             try {
@@ -259,7 +266,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     }
 
     /**
-     * @return Whether or not this map can be used on the minimap
+     * @return Whether this map can be used on the minimap
      */
     @Override
     public boolean isAllowedOnMinimap() {
@@ -269,6 +276,18 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     @Override
     public WebMercatorBounds getBounds(int zoom) {
         return this.bounds.get(zoom);
+    }
+
+    @Override
+    public ResourceLocation getDefaultTileTexture() {
+        return this.errorTileTexture;
+    }
+
+    public void registerErrorTexture() {
+        TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
+        int[] color = {170, 211, 223};
+        DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256,  256, color));
+        this.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", texture);
     }
 
 }

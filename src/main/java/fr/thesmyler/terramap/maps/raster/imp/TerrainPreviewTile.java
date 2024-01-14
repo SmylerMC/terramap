@@ -37,7 +37,7 @@ public class TerrainPreviewTile implements RasterTile {
     public ResourceLocation getTexture() throws Throwable {
 
         if(this.getPosition().getZoom() < TerrainPreviewMap.BASE_ZOOM_LEVEL)
-            throw new IllegalArgumentException("Trying to request a terrain preview with a zoom that's to low (" + this.position.getZoom() + ")");
+            throw new IllegalArgumentException("Trying to request a terrain preview with a zoom that's too low (" + this.position.getZoom() + ")");
 
         if(this.getPosition().getZoom() != TerrainPreviewMap.BASE_ZOOM_LEVEL) return null;
 

@@ -9,7 +9,6 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.RasterTile;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
 import fr.thesmyler.terramap.util.math.Mat2d;
@@ -51,6 +50,7 @@ abstract public class RasterMapLayer extends MapLayer {
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         final RasterTiledMap tiledMap = this.getTiledMap();
+        final ResourceLocation defaultTexture = tiledMap.getDefaultTileTexture();
 
         Font smallFont = Util.getSmallestFont();
         Minecraft mc = Minecraft.getMinecraft();
@@ -207,7 +207,7 @@ abstract public class RasterMapLayer extends MapLayer {
                 }
 
                 whiteWithAlpha.applyGL();
-                ResourceLocation texture = UrlRasterTile.errorTileTexture;
+                ResourceLocation texture = defaultTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
                     else perfectDraw = false;
@@ -215,18 +215,20 @@ abstract public class RasterMapLayer extends MapLayer {
                     perfectDraw = false;
                     parentMap.reportError(this, e.toString());
                 }
-                textureManager.bindTexture(texture);
-                RenderUtil.drawModalRectWithCustomSizedTexture(
-                        dispX,
-                        dispY,
-                        dX, dY,
-                        displayWidth,
-                        displayHeight,
-                        renderSizedSize,
-                        renderSizedSize
-                        );
+                if (texture != null) {
+                    textureManager.bindTexture(texture);
+                    RenderUtil.drawModalRectWithCustomSizedTexture(
+                            dispX,
+                            dispY,
+                            dX, dY,
+                            displayWidth,
+                            displayHeight,
+                            renderSizedSize,
+                            renderSizedSize
+                    );
+                }
                 if(debug) {
-                    Color lineColor = lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : Color.WHITE;
+                    Color lineColor = texture == null? Color.GREEN: lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : Color.WHITE;
                     RenderUtil.drawClosedStrokeLine(lineColor, 1f,
                             dispX, dispY,
                             dispX, dispY + displayHeight - 1,

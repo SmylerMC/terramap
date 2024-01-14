@@ -3,7 +3,13 @@ package fr.thesmyler.terramap.maps.raster;
 import fr.thesmyler.terramap.util.geo.TilePos;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
+import net.minecraft.util.ResourceLocation;
 
+/**
+ * A raster map made of individual tiles.
+ *
+ * @author Smyler
+ */
 public interface RasterTiledMap extends Comparable<RasterTiledMap> {
 
     /**
@@ -43,7 +49,7 @@ public interface RasterTiledMap extends Comparable<RasterTiledMap> {
     /**
      * Gets a name for this map, translated in the appropriate language,
      * or English if it isn't available.
-     * 
+     *
      * @param localeKey the language key to get the copyright for
      * @return the name of this map, translated to the appropriate language.
      */
@@ -78,7 +84,7 @@ public interface RasterTiledMap extends Comparable<RasterTiledMap> {
      * @return true if this map should be considered a debug map
      */
     boolean isDebug();
-    
+
     /**
      * @param zoom the zoom level to consider
      * 
@@ -88,5 +94,11 @@ public interface RasterTiledMap extends Comparable<RasterTiledMap> {
         return null;
     }
 
+    /**
+     * @return the default tile texture to show when no other is available
+     *         (e.g. because the right tile is still loading).
+     *         Return null to not render anything.
+     */
+    ResourceLocation getDefaultTileTexture();
 
 }
