@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "version": 14,
+        "version": 15,
         "comment": "This file contains the tile servers included by default in Terramap's jar as a fallback to the online version, and is maintained by SmylerMC."
     },
     "maps": {
@@ -58,34 +58,6 @@
             "min_zoom": 0,
             "max_zoom": 19,
             "display_priority": 900,
-            "allow_on_minimap": true,
-            "max_concurrent_requests": 2,
-            "debug": false
-        },
-        "stamen_terrain": {
-            "url": "http://tile.stamen.com/terrain/{z}/{x}/{y}.png",
-            "urls": [
-            	"http://a.tile.stamen.com/terrain/{z}/{x}/{y}.png",
-            	"http://b.tile.stamen.com/terrain/{z}/{x}/{y}.png",
-            	"http://c.tile.stamen.com/terrain/{z}/{x}/{y}.png",
-            	"http://d.tile.stamen.com/terrain/{z}/{x}/{y}.png"
-        	],
-            "name": {
-                "en_us": "Terrain",
-                "fr_fr": "Terrain",
-                "es_es": "Terreno",
-                "de_de": "Terrain",
-                "zh_cn": "地形",
-                "cz_cz": "Terén",
-                "sk_sk": "Terén",
-                "ko_kr": "지형"
-            },
-            "copyright": {
-                "en_us": "[\"\",{\"text\":\"© \",\"color\":\"white\"},{\"text\":\"Map tiles by \"},{\"text\":\"Stamen Design\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://stamen.com/\"}},{\"text\":\", under \"},{\"text\":\"CC BY 3.0\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://creativecommons.org/licenses/by/3.0\"}},{\"text\":\".\",\"underlined\":true,\"color\":\"aqua\"},{\"text\":\" Data by \"},{\"text\":\"OpenStreetMap\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://openstreetmap.org/\"}},{\"text\":\", under \"},{\"text\":\"ODbL\",\"underlined\":true,\"color\":\"aqua\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"http://www.openstreetmap.org/copyright\"}}]"
-            },
-            "min_zoom": 0,
-            "max_zoom": 19,
-            "display_priority": 800,
             "allow_on_minimap": true,
             "max_concurrent_requests": 2,
             "debug": false
