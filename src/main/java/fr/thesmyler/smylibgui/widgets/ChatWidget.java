@@ -120,7 +120,11 @@ public class ChatWidget implements IWidget, ITabCompleter {
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         try {
+            Minecraft mc = Minecraft.getMinecraft();
+            GuiScreen previousScreen =  mc.currentScreen;
+            mc.currentScreen = this.guiChat; // We need to swap the screen or GuiChat refuses the click...
             GUI_CHAT_MOUSE_CLICKED_METHOD.invoke(this.guiChat, Math.round(mouseX), Math.round(mouseY), mouseButton);
+            mc.currentScreen = previousScreen;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             SmyLibGui.getLogger().warn("Failed some reflection in ChatWidget#onCLick");
             SmyLibGui.getLogger().catching(e);
