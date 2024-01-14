@@ -242,6 +242,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         super.removeWidget(layer);
         this.layers.remove(layer);
         this.updateCopyright();
+        this.discardPreviousErrors(layer);
     }
 
     public void setLayerZ(MapLayer layer, int z) {
