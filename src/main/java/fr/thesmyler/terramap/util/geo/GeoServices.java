@@ -35,7 +35,7 @@ public final class GeoServices {
     public static final String GMAPS_PLACE_URL = "https://www.google.com/maps/place/{place}/@{latitude},{longitude},{zoom}z";
     public static final String OSM_SITE_BASE_URL = "https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}";
     public static final String GEARTH_WEB_BASE_URL = "https://earth.google.com/web/@{latitude},{longitude},0a,10000d,1y,-0h,0t,0r";
-    public static final String BTE_SITE_BASE_URL = "https://buildtheearth.net/map?lat={latitude}&lon={longitude}&z={zoom}";
+    public static final String BTE_SITE_BASE_URL = "https://buildtheearth.net/map?z={zoom}&lat={latitude}&lng={longitude}";
 
     public static final String BING_SITE_BASE_URL = "https://www.bing.com/maps?cp={latitude}~{longitude}&lvl={zoom}";
     public static final String WIKIMAPIA_SITE_BASE_URL = "https://wikimapia.org/#lat={latitude}&lon={longitude}&z={zoom}";
@@ -65,7 +65,7 @@ public final class GeoServices {
                     .replace("{place}", dispPlace);
         } catch (UnsupportedEncodingException e) {
             TerramapMod.logger.error("Failed to format a string with coordinates: ");
-            e.printStackTrace();
+            TerramapMod.logger.catching(e);
         }
         return str;
     }
@@ -132,9 +132,9 @@ public final class GeoServices {
         try {
             URI uri = new URI(uriStr);
             Desktop.getDesktop().browse(uri);
-        } catch (IOException e) {
+        } catch (IOException | UnsupportedOperationException e) {
             TerramapMod.logger.error("Failed to open uri: " + uriStr);
-            e.printStackTrace();
+            TerramapMod.logger.catching(e);
         } catch (URISyntaxException e) {
             TerramapMod.logger.error("Tried to open a malformed URI: " + uriStr);
         }
