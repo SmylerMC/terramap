@@ -5,8 +5,8 @@ import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.nio.file.Path;
 
@@ -65,7 +65,7 @@ public class MinecraftGameContext implements GameContext {
     }
 
     @SubscribeEvent
-    public void onRender(TickEvent.RenderTickEvent event) {
+    public void onRender(GuiScreenEvent.InitGuiEvent event) {
         ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
         Minecraft mc = Minecraft.getMinecraft();
         this.scale = res.getScaleFactor();
