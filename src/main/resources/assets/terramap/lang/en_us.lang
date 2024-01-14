@@ -213,7 +213,7 @@ terramap.terramapscreen.layerscreen.raster_background.no_offset=Set background r
 terramap.terramapscreen.layerscreen.raster_background.offset=Background has a rendering offset
 terramap.terramapscreen.layerscreen.generic.no_offset=Set layer render offset
 terramap.terramapscreen.layerscreen.generic.offset=A rendering offset is set for this layer
-terramap.terramapscreen.layerscreen.generic.alpha="Alpha: "
+terramap.terramapscreen.layerscreen.generic.alpha=Alpha:
 terramap.terramapscreen.layerscreen.newlayer=Choose a type for the new  layer
 
 ## New layer popup
