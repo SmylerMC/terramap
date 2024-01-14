@@ -1,13 +1,19 @@
+# IDE
 .idea
-run/*
+eclipse
 .classpath
 .location
-build/*
 .project
 0.tree
-eclipse/*
-.gradle/*
 .settings
+
+# Run files
+run/*
+
+# Build files
+build/*
+out/*
+.gradle/*
 *.launch
 *.xcf
 
@@ -16,6 +22,7 @@ eclipse/*
 
 # Log file
 *.log
+*.log.gz
 
 # BlueJ files
 *.ctxt
