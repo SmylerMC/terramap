@@ -314,6 +314,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         if (TerramapConfig.CLIENT.saveUiState) {
             this.f1Mode = state.f1;
             this.debugMode = state.debug;
+            this.map.setDebugMode(this.debugMode);
         }
         this.infoPanel.setStateNoAnimation(state.infoPanel);
         if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
