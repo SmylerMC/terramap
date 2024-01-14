@@ -33,9 +33,10 @@ import static fr.thesmyler.smylibgui.devices.Key.KEY_RETURN;
  */
 public class ChatWidget implements IWidget, ITabCompleter {
 
-    private float lineSectionX, lineSectionY, lineSectionWidth, LineSectionHeight;
+    private float lineSectionX, lineSectionY, lineSectionWidth, lineSectionHeight;
     private final int z;
     private boolean open;
+    private boolean visible = true;
     private final GuiChat guiChat = new GuiChat();
 
     private static final Method GUI_CHAT_KEYPRESSED_METHOD = ObfuscationReflectionHelper.findMethod(GuiChat.class, "func_73869_a", Void.TYPE, Character.TYPE, Integer.TYPE);
@@ -52,7 +53,7 @@ public class ChatWidget implements IWidget, ITabCompleter {
         this.lineSectionX = bbox[0];
         this.lineSectionY = bbox[1];
         this.lineSectionWidth = bbox[2] - bbox[0];
-        this.LineSectionHeight = bbox[3] - bbox[1];
+        this.lineSectionHeight = bbox[3] - bbox[1];
         WidgetContainer hud = HudScreen.getContent();
         int width = (int) hud.getWidth();
         int height = (int) hud.getHeight();
@@ -86,11 +87,14 @@ public class ChatWidget implements IWidget, ITabCompleter {
 
     @Override
     public float getHeight() {
-        return this.open ? HudScreen.getContent().getHeight(): this.LineSectionHeight;
+        return this.open ? HudScreen.getContent().getHeight(): this.lineSectionHeight;
     }
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        if (!this.visible) {
+            return;
+        }
         Minecraft mc = Minecraft.getMinecraft();
         GuiScreen previousScreen =  mc.currentScreen;
         if(this.open) {
@@ -114,7 +118,12 @@ public class ChatWidget implements IWidget, ITabCompleter {
 
     @Override
     public boolean isVisible(WidgetContainer parent) {
-        return this.LineSectionHeight > 0 || this.open;
+        return this.visible && (this.lineSectionHeight > 0 || this.open);
+    }
+
+    public ChatWidget setVisible(boolean yesNo) {
+        this.visible = yesNo;
+        return this;
     }
 
     @Override

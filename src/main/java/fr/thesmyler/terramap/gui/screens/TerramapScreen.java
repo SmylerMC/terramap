@@ -670,6 +670,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.f1Mode = yesNo;
         this.infoPanel.setVisibility(!yesNo);
         this.stylePanel.setVisibility(!yesNo);
+        this.layerPanel.setVisibility(!yesNo);
+        this.chat.setVisible(!yesNo);
         this.closeButton.setVisibility(!yesNo);
         this.zoomInButton.setVisibility(!yesNo);
         this.zoomOutButton.setVisibility(!yesNo);
