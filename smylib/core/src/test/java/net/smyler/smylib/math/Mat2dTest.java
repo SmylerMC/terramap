@@ -1,5 +1,7 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
+import net.smyler.smylib.math.Mat2d;
+import net.smyler.smylib.math.Vec2dImmutable;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

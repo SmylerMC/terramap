@@ -1,5 +1,9 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
+import net.smyler.smylib.math.Mat2d;
+import net.smyler.smylib.math.Vec2d;
+import net.smyler.smylib.math.Vec2dImmutable;
+import net.smyler.smylib.math.Vec2dMutable;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.Math.sqrt;

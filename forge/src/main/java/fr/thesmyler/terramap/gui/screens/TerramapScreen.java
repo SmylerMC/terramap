@@ -59,7 +59,7 @@ import net.minecraft.util.ITabCompleter;
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
-import static fr.thesmyler.terramap.util.math.Math.clamp;
+import static net.smyler.smylib.math.Math.clamp;
 import static java.util.stream.Collectors.toMap;
 
 

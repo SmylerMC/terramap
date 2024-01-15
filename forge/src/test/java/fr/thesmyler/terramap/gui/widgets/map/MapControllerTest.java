@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapTest;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import net.smyler.smylib.math.Vec2dMutable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

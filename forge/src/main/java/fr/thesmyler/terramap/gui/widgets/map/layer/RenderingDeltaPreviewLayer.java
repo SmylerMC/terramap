@@ -9,8 +9,8 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.util.geo.GeoPoint;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
-import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
+import net.smyler.smylib.math.Vec2dMutable;
+import net.smyler.smylib.math.Vec2dReadOnly;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.profiler.Profiler;
 

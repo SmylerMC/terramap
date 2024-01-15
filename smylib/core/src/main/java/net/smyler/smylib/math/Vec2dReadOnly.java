@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
 /**
  * A vector that provides read only access to a delegate vector.

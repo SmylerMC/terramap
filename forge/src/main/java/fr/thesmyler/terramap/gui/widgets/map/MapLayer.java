@@ -6,9 +6,9 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.math.*;
 import net.smyler.terramap.util.DefaultThreadLocal;
 import fr.thesmyler.terramap.util.geo.*;
-import fr.thesmyler.terramap.util.math.*;
 import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;

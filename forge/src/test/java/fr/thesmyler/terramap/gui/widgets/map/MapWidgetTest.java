@@ -8,7 +8,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
-import fr.thesmyler.terramap.util.math.Vec2dImmutable;
+import net.smyler.smylib.math.Vec2dImmutable;
 import org.junit.jupiter.api.Test;
 
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;

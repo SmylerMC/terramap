@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
 /**
  * Static Math class because for some reason Java is missing some pretty useful stuff like clamp methods.

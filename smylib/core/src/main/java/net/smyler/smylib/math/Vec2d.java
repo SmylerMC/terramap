@@ -1,7 +1,7 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
-import net.smyler.terramap.util.Immutable;
-import net.smyler.terramap.util.Mutable;
+import net.smyler.smylib.Immutable;
+import net.smyler.smylib.Mutable;
 
 import static java.lang.Math.*;
 
@@ -147,7 +147,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
     }
 
     /**
-     * @return the euclidean norm of this vector.
+     * @return the Euclidean norm of this vector.
      */
     default double norm() {
         double x = this.x();
@@ -170,8 +170,8 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
     }
 
     /**
-     * @param other - another vector to compute the distance with.
-     * @return the euclidean between this vector and the other.
+     * @param other another vector to compute the distance with.
+     * @return the Euclidean between this vector and the other.
      */
     default double distanceTo(Vec2d<?> other) {
         double dx = this.x() - other.x();
@@ -180,9 +180,9 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
     }
 
     /**
-     * @param x - the X coordinate of the vector to compute the distance with.
-     * @param y - the Y coordinate of the vector to compute the distance with.
-     * @return the euclidean between this vector and the other.
+     * @param x the X coordinate of the vector to compute the distance with.
+     * @param y the Y coordinate of the vector to compute the distance with.
+     * @return the Euclidean between this vector and the other.
      */
     default double distanceTo(double x, double y) {
         double dx = this.x() - x;
@@ -206,7 +206,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
     }
 
     /**
-     * @return a immutable version of this vector.
+     * @return an immutable version of this vector.
      */
     @Override
     default Vec2dImmutable getImmutable() {

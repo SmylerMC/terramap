@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;

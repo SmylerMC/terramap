@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap;
 
 import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.math.Vec2d;
+import net.smyler.smylib.math.Vec2d;
 
 /**
  * Useful assertions for Terramap specific objects.

@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.maps;
 
 import com.google.gson.JsonObject;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import net.smyler.smylib.math.Vec2dMutable;
 
 /**
  * The saved state of a map layer.

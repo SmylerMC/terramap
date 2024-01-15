@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.util.geo;
 
-import fr.thesmyler.terramap.util.math.Vec2d;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import net.smyler.smylib.math.Vec2d;
+import net.smyler.smylib.math.Vec2dMutable;
 
 import static java.lang.Math.*;
 

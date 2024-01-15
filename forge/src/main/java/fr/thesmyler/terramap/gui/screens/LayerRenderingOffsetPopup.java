@@ -21,9 +21,9 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
-import fr.thesmyler.terramap.util.math.Vec2d;
-import fr.thesmyler.terramap.util.math.Vec2dImmutable;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import net.smyler.smylib.math.Vec2d;
+import net.smyler.smylib.math.Vec2dImmutable;
+import net.smyler.smylib.math.Vec2dMutable;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.OFFSET_PREVIEW;

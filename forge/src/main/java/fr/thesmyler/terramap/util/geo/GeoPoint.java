@@ -1,8 +1,8 @@
 package fr.thesmyler.terramap.util.geo;
 
-import net.smyler.terramap.util.Immutable;
-import net.smyler.terramap.util.Mutable;
-import fr.thesmyler.terramap.util.math.Vec2dImmutable;
+import net.smyler.smylib.Immutable;
+import net.smyler.smylib.Mutable;
+import net.smyler.smylib.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 import net.smyler.terramap.util.geo.GeoUtil;
 

@@ -25,16 +25,16 @@ import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
 import fr.thesmyler.terramap.util.geo.GeoPointMutable;
 import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
 import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
-import fr.thesmyler.terramap.util.math.Vec2d;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
-import fr.thesmyler.terramap.util.math.Vec2dReadOnly;
+import net.smyler.smylib.math.Vec2d;
+import net.smyler.smylib.math.Vec2dMutable;
+import net.smyler.smylib.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getDefaultFont;
-import static fr.thesmyler.terramap.util.math.Math.clamp;
+import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;
 

@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.util.geo;
 
-import fr.thesmyler.terramap.util.math.Vec2dImmutable;
+import net.smyler.smylib.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 import org.junit.jupiter.api.Test;
 

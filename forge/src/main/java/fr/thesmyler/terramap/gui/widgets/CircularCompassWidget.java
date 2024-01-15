@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets;
 
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import net.smyler.smylib.math.Vec2dMutable;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -9,7 +9,7 @@ import fr.thesmyler.smylibgui.util.Animation.AnimationState;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.math.Mat2d;
+import net.smyler.smylib.math.Mat2d;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;

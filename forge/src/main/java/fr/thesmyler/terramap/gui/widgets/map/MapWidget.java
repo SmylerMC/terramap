@@ -8,8 +8,8 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.util.geo.*;
-import fr.thesmyler.terramap.util.math.DoubleRange;
-import fr.thesmyler.terramap.util.math.Vec2dMutable;
+import net.smyler.smylib.math.DoubleRange;
+import net.smyler.smylib.math.Vec2dMutable;
 
 import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;

@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
 
 import static net.smyler.smylib.Preconditions.checkArgument;

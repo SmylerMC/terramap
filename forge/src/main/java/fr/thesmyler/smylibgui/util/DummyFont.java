@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static fr.thesmyler.terramap.util.math.Math.clamp;
+import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.*;
 
 /**

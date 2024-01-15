@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.smylib.math;
 
 abstract class Vec2dAbstract<T extends Vec2dAbstract<?>> implements Vec2d<T> {
 

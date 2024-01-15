@@ -20,7 +20,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Optional;
 
-import static fr.thesmyler.terramap.util.math.Math.clamp;
+import static net.smyler.smylib.math.Math.clamp;
 
 public class MinimapWidget extends MapWidget {
 
