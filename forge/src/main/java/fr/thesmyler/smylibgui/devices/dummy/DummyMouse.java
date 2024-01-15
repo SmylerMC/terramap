@@ -1,7 +1,7 @@
 package fr.thesmyler.smylibgui.devices.dummy;
 
 import fr.thesmyler.smylibgui.devices.Mouse;
-import fr.thesmyler.smylibgui.util.ThreadLocal;
+import net.smyler.smylib.threading.ThreadLocal;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;

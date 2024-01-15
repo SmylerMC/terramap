@@ -1,2 +1,6 @@
 version = "unspecified"
 description = "Core code shared by all versions"
+
+dependencies {
+    implementation project(":smylib:core")
+}

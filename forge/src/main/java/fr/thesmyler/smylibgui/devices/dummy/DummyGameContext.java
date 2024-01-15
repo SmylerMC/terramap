@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.devices.dummy;
 
 import fr.thesmyler.smylibgui.devices.GameContext;
 import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
-import fr.thesmyler.smylibgui.util.ThreadLocal;
+import net.smyler.smylib.threading.ThreadLocal;
 
 import java.io.IOException;
 import java.nio.file.Files;

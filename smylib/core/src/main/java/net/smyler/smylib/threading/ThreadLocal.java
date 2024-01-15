@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.util;
+package net.smyler.smylib.threading;
 
 import java.util.function.Supplier;
 

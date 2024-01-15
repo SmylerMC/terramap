@@ -1,0 +1,4 @@
+group = 'net.smyler.smylib'
+description = 'Version agnostic Minecraft abstraction and utility classes'
+version = 'unspecified'
+

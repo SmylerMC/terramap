@@ -2,3 +2,9 @@ rootProject.name = 'Terramap'
 
 include 'core'
 include "forge"
+include 'smylib'
+include 'smylib:core'
+findProject(':smylib:core')?.name = 'core'
+include 'smylib:forge'
+findProject(':smylib:forge')?.name = 'forge'
+

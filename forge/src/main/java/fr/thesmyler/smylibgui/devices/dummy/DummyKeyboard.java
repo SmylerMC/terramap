@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.devices.dummy;
 
 import fr.thesmyler.smylibgui.devices.Key;
 import fr.thesmyler.smylibgui.devices.Keyboard;
-import fr.thesmyler.smylibgui.util.ThreadLocal;
+import net.smyler.smylib.threading.ThreadLocal;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

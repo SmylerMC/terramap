@@ -76,12 +76,13 @@ repositories {
         name = "OpenCollab Snapshots"
         url = "https://repo.opencollab.dev/snapshot/"
     }
-    mavenCentral()
 }
 
 dependencies {
 
     implementation project(":core")
+    implementation project(":smylib:core")
+    implementation project(":smylib:forge")
 
     minecraft(group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version)
 
@@ -170,10 +171,6 @@ publishing {
             url "file://${project.projectDir}/mcmodsrepo"
         }
     }
-}
-
-test {
-    useJUnitPlatform()
 }
 
 legacy {

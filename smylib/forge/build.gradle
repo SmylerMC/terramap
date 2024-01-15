@@ -1,0 +1,22 @@
+buildscript {
+    repositories {
+        maven {
+            url = "https://maven.minecraftforge.net"
+        }
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+minecraft {
+    mappings channel: project.mappings_channel, version: project.mappings_version
+}
+
+dependencies {
+    minecraft(group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version)
+    implementation project(":smylib:core")
+}
+
