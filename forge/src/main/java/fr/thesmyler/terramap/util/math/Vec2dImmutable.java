@@ -1,9 +1,9 @@
 package fr.thesmyler.terramap.util.math;
 
-import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 /**
- * An unmutable implementation of {@link Vec2d}.
+ * An immutable implementation of {@link Vec2d}.
  *
  * @author SmylerMC
  */
@@ -22,7 +22,7 @@ public final class Vec2dImmutable extends Vec2dAbstract<Vec2dImmutable> {
     }
     
     public Vec2dImmutable(double[] coords) {
-        PValidation.checkArg(coords.length == 2, "Expected a double array of length 2");
+        checkArgument(coords.length == 2, "Expected a double array of length 2");
         this.x = coords[0];
         this.y = coords[1];
     }

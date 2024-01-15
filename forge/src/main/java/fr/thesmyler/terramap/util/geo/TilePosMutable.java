@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.util.geo;
 
-import com.google.common.base.Preconditions;
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 /**
  * Tile position that supports thread safe mutations
@@ -68,7 +68,7 @@ public class TilePosMutable extends TilePos {
      * @throws IllegalArgumentException if the given zoom level is not valid
      */
     public void setZoom(int zoom) {
-        Preconditions.checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, this.yPosition), "Invalid zoom level " + zoom);
+        checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, this.yPosition), "Invalid zoom level " + zoom);
         synchronized(this) {
             int delta = zoom - this.zoom;
             this.zoom = zoom;
@@ -111,7 +111,7 @@ public class TilePosMutable extends TilePos {
      * @throws IllegalArgumentException if the given X position is not in the acceptable range
      */
     public void setX(int x) {
-        Preconditions.checkArgument(WebMercatorUtil.isValidTilePosition(zoom, x, this.yPosition), "Invalid x value " + x + " for zoom level " + this.zoom);
+        checkArgument(WebMercatorUtil.isValidTilePosition(zoom, x, this.yPosition), "Invalid x value " + x + " for zoom level " + this.zoom);
         synchronized(this) {
             this.xPosition = x;
         }
@@ -133,7 +133,7 @@ public class TilePosMutable extends TilePos {
      * @throws IllegalAccessException if the given Y position is not in the acceptable range
      */
     public void setY(int y) {
-        Preconditions.checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, y), "Invalid y value " + y + " for zoom level " + this.zoom);
+        checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, y), "Invalid y value " + y + " for zoom level " + this.zoom);
         synchronized(this) {
             this.yPosition = y;
         }

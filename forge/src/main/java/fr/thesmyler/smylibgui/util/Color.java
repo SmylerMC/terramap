@@ -2,13 +2,13 @@ package fr.thesmyler.smylibgui.util;
 
 import org.lwjgl.opengl.GL11;
 
-import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.Locale;
 
 import static java.lang.Integer.toHexString;
 import static java.lang.Long.parseLong;
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 public class Color {
 
@@ -21,8 +21,8 @@ public class Color {
     }
 
     public Color(int red, int green, int blue, int alpha) {
-        PValidation.checkArg(
-                red >= 0 && red < 256 && 
+        checkArgument(
+                red >= 0 && red < 256 &&
                 green >= 0 && green < 256 &&
                 blue >= 0 && blue < 256 &&
                 alpha >= 0 && alpha < 256,

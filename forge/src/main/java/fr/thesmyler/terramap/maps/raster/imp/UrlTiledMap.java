@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import fr.thesmyler.terramap.TerramapMod;
@@ -23,6 +22,8 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 /**
  * Instances are usually created in {@link MapStylesLibrary} and {@link SP2CMapStylePacket}.
@@ -66,16 +67,16 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
             int maxConcurrentDownloads,
             boolean debug,
             Map<Integer, WebMercatorBounds> bounds) {
-        Preconditions.checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
-        Preconditions.checkArgument(minZoom >= 0, "Zoom level must be at least 0");
-        Preconditions.checkArgument(maxZoom >= 0 && maxZoom <= 25, "Zoom level must be at most 25");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(id), "A valid map id needs to be provided");
-        Preconditions.checkArgument(names != null, "Valid map names needs to be provided");
-        Preconditions.checkArgument(copyright != null, "Valid map coprights needs to be provided");
-        Preconditions.checkArgument(provider != null, "Av alid map provider needs to be provided");
-        Preconditions.checkArgument(version >= 0, "Map version number must be positive");
-        Preconditions.checkArgument(comment != null, "A valid map comment needs to be provided");
-        Preconditions.checkArgument(maxConcurrentDownloads > 0 ,"Max concurent downloads must be at least 1");
+        checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
+        checkArgument(minZoom >= 0, "Zoom level must be at least 0");
+        checkArgument(maxZoom >= 0 && maxZoom <= 25, "Zoom level must be at most 25");
+        checkArgument(!Strings.isNullOrEmpty(id), "A valid map id needs to be provided");
+        checkArgument(names != null, "Valid map names needs to be provided");
+        checkArgument(copyright != null, "Valid map coprights needs to be provided");
+        checkArgument(provider != null, "Av alid map provider needs to be provided");
+        checkArgument(version >= 0, "Map version number must be positive");
+        checkArgument(comment != null, "A valid map comment needs to be provided");
+        checkArgument(maxConcurrentDownloads > 0 ,"Max concurent downloads must be at least 1");
         for(String pattern: urlPatterns) {
             String url = pattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
             try {

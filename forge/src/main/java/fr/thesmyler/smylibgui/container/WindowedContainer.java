@@ -2,8 +2,6 @@ package fr.thesmyler.smylibgui.container;
 
 import org.lwjgl.input.Cursor;
 
-import com.google.common.base.Preconditions;
-
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.Cursors;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -11,6 +9,7 @@ import fr.thesmyler.smylibgui.widgets.IWidget;
 import org.lwjgl.input.Mouse;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 /**
  * A {@link FlexibleWidgetContainer} that takes the form of a window and can optionally moved or resized by the user,
@@ -664,25 +663,25 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public WindowedContainer setMinInnerWidth(float width) {
-        Preconditions.checkArgument(width > 0, "inner width needs to be striclty positive");
+        checkArgument(width > 0, "inner width needs to be strictly positive");
         this.minInnerWidth = width;
         return this;
     }
 
     public WindowedContainer setMaxInnerWidth(float width) {
-        Preconditions.checkArgument(width > 0, "inner width needs to be striclty positive");
+        checkArgument(width > 0, "inner width needs to be strictly positive");
         this.minInnerWidth = width;
         return this;
     }
 
     public WindowedContainer setMinInnerHeight(float height) {
-        Preconditions.checkArgument(height > 0, "inner height needs to be striclty positive");
+        checkArgument(height > 0, "inner height needs to be strictly positive");
         this.minInnerHeight = height;
         return this;
     }
 
     public WindowedContainer setMaxInnerHeight(float height) {
-        Preconditions.checkArgument(height > 0, "inner height needs to be striclty positive");
+        checkArgument(height > 0, "inner height needs to be strictly positive");
         this.minInnerHeight = height;
         return this;
     }
@@ -706,7 +705,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public WindowedContainer setBorderWidth(float width) {
-        Preconditions.checkArgument(width > 0, "border width needs to be strictly positive");
+        checkArgument(width > 0, "border width needs to be strictly positive");
         if(this.borderWidth == this.effectiveBorderSize)
             this.effectiveBorderSize = width;
         this.borderWidth = width;
@@ -755,7 +754,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public WindowedContainer setTopBarHeight(float height) {
-        Preconditions.checkArgument(height > 0, "title bar height must be strictly positive");
+        checkArgument(height > 0, "title bar height must be strictly positive");
         if(this.effectiveTopBarHeight == this.topBarHeight) this.effectiveTopBarHeight = height;
         this.topBarHeight = height;
         return this;

@@ -7,7 +7,8 @@ import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
-import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
+
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 /**
  * A {@link FlexibleWidgetContainer} which contains another {@link FlexibleWidgetContainer} and handles the difference in size
@@ -31,7 +32,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
     
     public ScrollableWidgetContainer(float x, float y, int z, float width, float height, FlexibleWidgetContainer content) {
         super(x, y, z, width, height);
-        PValidation.checkArg(content.getZ() != this.verticalScrollbar.getZ(), "Invalid z level for content");
+        checkArgument(content.getZ() != this.verticalScrollbar.getZ(), "Invalid z level for content");
         this.content = content;
         this.addWidget(this.content);
         this.addWidget(this.verticalScrollbar);

@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.util.math;
 
 
-import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 /**
  * A mutable implementation of {@link Vec2d}
@@ -20,7 +20,7 @@ public final class Vec2dMutable extends Vec2dAbstract<Vec2dMutable> {
     }
 
     public Vec2dMutable(double[] coordinates) {
-        PValidation.checkArg(coordinates.length == 2, "Expected a double array of length 2");
+        checkArgument(coordinates.length == 2, "Expected a double array of length 2");
         this.x = coordinates[0];
         this.y = coordinates[1];
     }

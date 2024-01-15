@@ -2,13 +2,13 @@ package fr.thesmyler.smylibgui.util;
 
 import org.lwjgl.opengl.GL11;
 
-import net.buildtheearth.terraplusplus.dep.net.daporkchop.lib.common.util.PValidation;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 public final class RenderUtil {
 
@@ -96,7 +96,7 @@ public final class RenderUtil {
     }
 
     public static void drawPolygon(double z, Color color, double... points) {
-        PValidation.checkArg(points.length % 2 == 0, "An even number of coordinates is required");
+        checkArgument(points.length % 2 == 0, "An even number of coordinates is required");
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
