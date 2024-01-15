@@ -6,14 +6,14 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.DefaultThreadLocal;
+import net.smyler.terramap.util.DefaultThreadLocal;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.math.*;
 import net.minecraft.client.renderer.GlStateManager;
 
 import javax.annotation.Nullable;
 
-import static fr.thesmyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
+import static net.smyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
 import static java.lang.Math.pow;
 import static java.lang.Math.toRadians;
 

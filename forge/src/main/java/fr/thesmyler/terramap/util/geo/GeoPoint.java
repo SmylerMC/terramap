@@ -1,9 +1,10 @@
 package fr.thesmyler.terramap.util.geo;
 
-import fr.thesmyler.terramap.util.Immutable;
-import fr.thesmyler.terramap.util.Mutable;
+import net.smyler.terramap.util.Immutable;
+import net.smyler.terramap.util.Mutable;
 import fr.thesmyler.terramap.util.math.Vec2dImmutable;
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
+import net.smyler.terramap.util.geo.GeoUtil;
 
 /**
  * A point in the WGS:84 coordinate system.

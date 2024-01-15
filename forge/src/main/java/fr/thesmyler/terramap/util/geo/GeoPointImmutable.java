@@ -2,8 +2,8 @@ package fr.thesmyler.terramap.util.geo;
 
 import net.buildtheearth.terraplusplus.util.geo.LatLng;
 
-import static fr.thesmyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
-import static fr.thesmyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
+import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
+import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
 
 public class GeoPointImmutable extends GeoPointAbstract<GeoPointImmutable> {
     

@@ -1,3 +1,4 @@
 rootProject.name = 'Terramap'
 
+include 'core'
 include "forge"

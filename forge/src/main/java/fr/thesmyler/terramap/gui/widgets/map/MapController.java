@@ -4,10 +4,11 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.util.geo.*;
 import fr.thesmyler.terramap.util.math.*;
+import net.smyler.terramap.util.math.Snapper;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
-import static fr.thesmyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
+import static net.smyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
 import static fr.thesmyler.terramap.util.math.Math.clamp;
 import static java.lang.Math.*;
 

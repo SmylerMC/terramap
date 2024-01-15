@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.collections;
+package net.smyler.terramap.util.collections;
 
 import java.util.Map;
 

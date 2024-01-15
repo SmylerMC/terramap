@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package net.smyler.terramap.util;
 
 import java.util.function.Supplier;
 

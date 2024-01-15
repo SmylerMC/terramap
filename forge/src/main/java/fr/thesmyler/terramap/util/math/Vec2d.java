@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.util.math;
 
-import fr.thesmyler.terramap.util.Immutable;
-import fr.thesmyler.terramap.util.Mutable;
+import net.smyler.terramap.util.Immutable;
+import net.smyler.terramap.util.Mutable;
 
 import static java.lang.Math.*;
 

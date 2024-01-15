@@ -3,7 +3,6 @@ buildscript {
         maven {
             url = "https://maven.minecraftforge.net"
         }
-        mavenCentral()
         gradlePluginPortal()
     }
     dependencies {
@@ -20,7 +19,6 @@ version = project.mod_version
 group = project.mod_group
 archivesBaseName = project.mod_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
 
@@ -83,6 +81,8 @@ repositories {
 
 dependencies {
 
+    implementation project(":core")
+
     minecraft(group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version)
 
     implementation group: "com.twelvemonkeys.imageio", name: "imageio-webp", version: project.twelvemonkeys_version
@@ -103,9 +103,7 @@ dependencies {
     }
 
     runtimeOnly group: "org.apache.commons", name: "commons-imaging", version: "1.0-alpha2"
-    testImplementation group: "org.junit.jupiter", name: "junit-jupiter", version: "5.8.1"
-    testImplementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version)
-    
+
 }
 
 processResources {

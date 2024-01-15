@@ -1,8 +1,26 @@
 apply plugin: 'base'
 
 subprojects {
+
     apply plugin: 'java'
     apply plugin: 'checkstyle'
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
+
+    java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        testImplementation(platform("org.junit:junit-bom:5.9.2"))
+        testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
+    }
+
 }

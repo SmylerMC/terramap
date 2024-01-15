@@ -8,9 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.raster.RasterTile;
-import fr.thesmyler.terramap.util.ImageUtil;
 import fr.thesmyler.terramap.util.geo.TilePosImmutable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;

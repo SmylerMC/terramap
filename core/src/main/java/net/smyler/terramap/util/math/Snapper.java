@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.math;
+package net.smyler.terramap.util.math;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.round;

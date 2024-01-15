@@ -19,6 +19,7 @@ import fr.thesmyler.terramap.files.kml.KmlDocument;
 import fr.thesmyler.terramap.files.kml.KmlFile;
 import fr.thesmyler.terramap.files.kml.KmlPlacemark;
 import fr.thesmyler.terramap.files.kml.KmlPoint;
+import net.smyler.terramap.util.geo.GeoUtil;
 
 /**
  * Utility class to open various geo services such as osm, Google Maps, Earth, etc...

@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.util.geo;
 
 import java.util.Map;
 
-import fr.thesmyler.terramap.util.collections.HashMapBuilder;
+import net.smyler.terramap.util.collections.HashMapBuilder;
 import org.junit.jupiter.api.Test;
 
 import static fr.thesmyler.terramap.util.geo.GeoBounds.*;

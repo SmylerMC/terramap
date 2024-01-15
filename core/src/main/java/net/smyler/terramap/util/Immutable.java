@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util;
+package net.smyler.terramap.util;
 
 /**
  * An immutable object that can be converted to a mutable one.
