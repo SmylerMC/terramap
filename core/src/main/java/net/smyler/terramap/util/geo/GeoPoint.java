@@ -1,10 +1,8 @@
-package fr.thesmyler.terramap.util.geo;
+package net.smyler.terramap.util.geo;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
 import net.smyler.smylib.math.Vec2dImmutable;
-import net.buildtheearth.terraplusplus.util.geo.LatLng;
-import net.smyler.terramap.util.geo.GeoUtil;
 
 /**
  * A point in the WGS:84 coordinate system.
@@ -45,13 +43,6 @@ public interface GeoPoint<T extends GeoPoint<?>> extends Mutable<GeoPointImmutab
      */
     default double[] asArray() {
         return new double[] { this.longitude(), this.latitude() };
-    }
-
-    /**
-     * @return a {@link LatLng} that represents the same point
-     */
-    default LatLng asLatLng() {
-        return new LatLng(this.latitude(), this.longitude());
     }
 
     /**

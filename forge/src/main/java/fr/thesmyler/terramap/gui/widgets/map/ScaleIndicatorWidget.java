@@ -4,8 +4,8 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.terramap.util.geo.GeoPointMutable;
-import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
+import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 //TODO Make this even more accurate
 public class ScaleIndicatorWidget implements IWidget {

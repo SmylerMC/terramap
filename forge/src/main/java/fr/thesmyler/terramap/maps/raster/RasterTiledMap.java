@@ -1,8 +1,8 @@
 package fr.thesmyler.terramap.maps.raster;
 
-import fr.thesmyler.terramap.util.geo.TilePos;
-import fr.thesmyler.terramap.util.geo.TilePosImmutable;
-import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
+import net.smyler.terramap.util.geo.TilePos;
+import net.smyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.util.geo.WebMercatorBounds;
 import net.minecraft.util.ResourceLocation;
 
 /**

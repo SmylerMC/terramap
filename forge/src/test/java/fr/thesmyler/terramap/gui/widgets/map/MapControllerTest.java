@@ -4,14 +4,16 @@ import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapTest;
 import net.smyler.smylib.math.Vec2dMutable;
+import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static fr.thesmyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
-import static fr.thesmyler.terramap.util.geo.GeoPointTest.PARIS;
+import static net.smyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
 import static fr.thesmyler.terramap.Assertions.assertEquals;
 
 public class MapControllerTest extends TerramapTest {
+
+    public static GeoPointImmutable PARIS = new GeoPointImmutable(2.350987d, 48.856667d);
 
     private TestingWidgetContainer screen;
     private MapWidget map;

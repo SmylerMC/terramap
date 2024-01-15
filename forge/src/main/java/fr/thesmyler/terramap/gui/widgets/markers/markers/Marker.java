@@ -4,8 +4,8 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
+import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.minecraft.util.text.ITextComponent;
 

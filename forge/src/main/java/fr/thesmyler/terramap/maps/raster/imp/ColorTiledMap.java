@@ -7,7 +7,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import net.smyler.terramap.util.ImageUtil;
-import fr.thesmyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;

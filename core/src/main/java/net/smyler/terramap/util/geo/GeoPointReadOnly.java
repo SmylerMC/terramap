@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.geo;
+package net.smyler.terramap.util.geo;
 
 public final class GeoPointReadOnly extends GeoPointAbstract<GeoPointImmutable> {
 

@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
+import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;

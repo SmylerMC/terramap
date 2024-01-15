@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.maps.raster.RasterTile;
-import fr.thesmyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;

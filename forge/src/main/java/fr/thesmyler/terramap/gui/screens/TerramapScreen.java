@@ -13,6 +13,9 @@ import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.util.text.*;
+import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.WebMercatorUtil;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.smylibgui.SmyLibGui;

@@ -10,7 +10,9 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.RasterTile;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
-import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
+import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.TilePos;
+import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -20,6 +22,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
+import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 abstract public class RasterMapLayer extends MapLayer {
 

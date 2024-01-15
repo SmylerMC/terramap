@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.maps.raster.RasterTile;
-import fr.thesmyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.util.geo.TilePosImmutable;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import net.buildtheearth.terraplusplus.util.http.Disk;

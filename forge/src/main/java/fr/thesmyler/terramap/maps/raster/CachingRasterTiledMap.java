@@ -6,11 +6,11 @@ import java.util.Map;
 
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.util.geo.TilePos;
-import fr.thesmyler.terramap.util.geo.TilePosImmutable;
-import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
-import fr.thesmyler.terramap.util.geo.WebMercatorUtil;
-import fr.thesmyler.terramap.util.geo.TilePos.InvalidTilePositionException;
+import net.smyler.terramap.util.geo.TilePos;
+import net.smyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.util.geo.WebMercatorBounds;
+import net.smyler.terramap.util.geo.WebMercatorUtil;
+import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
 
 /**
  * This class is in charge of keeping track of and loading the tiles used for rendering a specific map.

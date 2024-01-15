@@ -6,9 +6,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
-import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.GeoPointMutable;
-import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;

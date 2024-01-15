@@ -7,7 +7,6 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
-import fr.thesmyler.terramap.util.geo.*;
 import net.smyler.smylib.math.DoubleRange;
 import net.smyler.smylib.math.Vec2dMutable;
 
@@ -36,6 +35,9 @@ import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.util.geo.GeoPointReadOnly;
 
 import static java.util.Comparator.comparingInt;
 

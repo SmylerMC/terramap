@@ -10,7 +10,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
-import fr.thesmyler.terramap.util.geo.WebMercatorBounds;
+import net.smyler.terramap.util.geo.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

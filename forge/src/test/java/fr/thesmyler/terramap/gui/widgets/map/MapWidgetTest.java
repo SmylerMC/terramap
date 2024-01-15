@@ -9,16 +9,18 @@ import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import net.smyler.smylib.math.Vec2dImmutable;
+import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
-import static fr.thesmyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
-import static fr.thesmyler.terramap.util.geo.GeoPointTest.PARIS;
+import static net.smyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
 import static fr.thesmyler.terramap.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapWidgetTest extends TerramapTest {
+
+    public static GeoPointImmutable PARIS = new GeoPointImmutable(2.350987d, 48.856667d);
 
     @Test
     void canSaveMapWidgetToSavedMapState() throws InterruptedException {

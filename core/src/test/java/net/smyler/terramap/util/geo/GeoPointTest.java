@@ -1,7 +1,7 @@
-package fr.thesmyler.terramap.util.geo;
+package net.smyler.terramap.util.geo;
 
 import net.smyler.smylib.math.Vec2dImmutable;
-import net.buildtheearth.terraplusplus.util.geo.LatLng;
+import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -45,9 +45,6 @@ public class GeoPointTest {
             point = new GeoPointImmutable(coords);
             assertEquals(coords[0], point.longitude(), 0d);
             assertEquals(coords[1], point.latitude(), 0d);
-            point = new GeoPointImmutable(new LatLng(coords[1], coords[0]));
-            assertEquals(coords[0], point.longitude(), 0d);
-            assertEquals(coords[1], point.latitude(), 0d);
         }
     }
     
@@ -69,8 +66,6 @@ public class GeoPointTest {
             GeoPointImmutable point = new GeoPointImmutable(lons[0], 0d);
             assertEquals(lons[1], point.longitude(), 0d);
             point = new GeoPointImmutable(new double[] {lons[0], 0d});
-            assertEquals(lons[1], point.longitude(), 0d);
-            point = new GeoPointImmutable(new LatLng(0d, lons[0]));
             assertEquals(lons[1], point.longitude(), 0d);
         }
     }
@@ -159,9 +154,6 @@ public class GeoPointTest {
         assertEquals(18d, arr[0], 0d);
         assertEquals(39d, arr[1], 0d);
         assertEquals(point.asVec2d(), new Vec2dImmutable(18d, 39d));
-        LatLng tppPos = point.asLatLng();
-        assertEquals(18d, tppPos.getLng(), 0d);
-        assertEquals(39d, tppPos.getLat(), 0d);
     }
     
     @Test

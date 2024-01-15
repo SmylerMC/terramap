@@ -3,9 +3,9 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers;
 import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
-import fr.thesmyler.terramap.util.geo.GeoPointMutable;
-import fr.thesmyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
 public abstract class AbstractMovingMarker extends Marker {

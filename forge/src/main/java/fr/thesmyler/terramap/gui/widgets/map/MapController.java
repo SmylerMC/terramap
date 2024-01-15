@@ -2,10 +2,10 @@ package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.util.geo.*;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
+import net.smyler.terramap.util.geo.*;
 import net.smyler.terramap.util.math.Snapper;
 
 import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;

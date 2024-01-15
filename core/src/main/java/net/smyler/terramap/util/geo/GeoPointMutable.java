@@ -1,6 +1,4 @@
-package fr.thesmyler.terramap.util.geo;
-
-import net.buildtheearth.terraplusplus.util.geo.LatLng;
+package net.smyler.terramap.util.geo;
 
 import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
 import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
@@ -34,15 +32,6 @@ public class GeoPointMutable extends GeoPointAbstract<GeoPointMutable> {
      */
     public GeoPointMutable(double[] lola) {
         this(lola[0], lola[1]);
-    }
-
-    /**
-     * Delegate constructor to {@link #GeoPointMutable(double, double)}
-     *
-     * @param lola a Terra++ {@link LatLng} object to copy
-     */
-    public GeoPointMutable(LatLng lola) {
-        this(lola.getLng(), lola.getLat());
     }
 
     /**
@@ -102,16 +91,6 @@ public class GeoPointMutable extends GeoPointAbstract<GeoPointMutable> {
      */
     public GeoPointMutable set(double[] location) {
         return this.set(location[0], location[1]);
-    }
-
-    /**
-     * Updates this point.
-     *
-     * @param location a location to copy the position from, as {@link LatLng} object
-     * @return this point
-     */
-    public GeoPointMutable set(LatLng location) {
-        return this.set(location.getLng(), location.getLat());
     }
 
     @Override

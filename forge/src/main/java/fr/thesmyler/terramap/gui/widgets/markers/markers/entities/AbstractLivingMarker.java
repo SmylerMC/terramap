@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
-import fr.thesmyler.terramap.util.geo.GeoPointImmutable;
+import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;

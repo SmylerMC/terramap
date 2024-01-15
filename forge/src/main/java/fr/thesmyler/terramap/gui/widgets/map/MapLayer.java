@@ -8,8 +8,10 @@ import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.smyler.smylib.math.*;
 import net.smyler.terramap.util.DefaultThreadLocal;
-import fr.thesmyler.terramap.util.geo.*;
 import net.minecraft.client.renderer.GlStateManager;
+import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import javax.annotation.Nullable;
 

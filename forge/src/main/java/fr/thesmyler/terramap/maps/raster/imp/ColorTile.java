@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.maps.raster.imp;
 
 import fr.thesmyler.terramap.maps.raster.RasterTile;
-import fr.thesmyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.minecraft.util.ResourceLocation;
 
 public class ColorTile implements RasterTile {

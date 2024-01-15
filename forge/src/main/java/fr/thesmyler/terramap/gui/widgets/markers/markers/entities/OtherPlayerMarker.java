@@ -5,7 +5,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
-import fr.thesmyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.util.geo.GeoPoint;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
