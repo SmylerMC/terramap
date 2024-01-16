@@ -1,7 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class PlayerNameVisibilityController implements FeatureVisibilityController {
 
@@ -24,7 +25,7 @@ public class PlayerNameVisibilityController implements FeatureVisibilityControll
                     this.other.setShowNames(b);
                 }
                 );
-        this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.name"));
+        this.button.setTooltip(getGameClient().getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.name"));
     }
 
     @Override

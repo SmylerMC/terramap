@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
@@ -15,6 +15,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
@@ -60,7 +63,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         }
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.getSkin());
-        Color.WHITE.withAlpha(this.getTransparency()).applyGL();
+        applyColor(WHITE.withAlpha(this.getTransparency()));
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 80f / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
 
@@ -70,10 +73,10 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             float strWidth = parent.getFont().getStringWidth(name);
             float nameY = y - parent.getFont().height() - 2;
             RenderUtil.drawRect(x + halfSize - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + halfSize + 2, y - 1, Color.DARK_OVERLAY);
-            parent.getFont().drawCenteredString(x + halfSize, nameY, name, Color.WHITE, false);
+            parent.getFont().drawCenteredString(x + halfSize, nameY, name, WHITE, false);
         }
 
-        Color.WHITE.applyGL();
+        applyColor(WHITE);
     }
 
     protected abstract ResourceLocation getSkin();

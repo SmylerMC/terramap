@@ -1,14 +1,14 @@
 package fr.thesmyler.smylibgui.screen;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.RootContainer;
-import fr.thesmyler.smylibgui.devices.Key;
+import net.smyler.smylib.game.Key;
 import fr.thesmyler.smylibgui.util.Scissor;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.minecraft.client.gui.GuiScreen;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
+import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.SmyLib.getLogger;
 
 /**
  * A {@link Screen} is where everything happens in SmyLibGui.
@@ -43,8 +43,8 @@ public class Screen extends GuiScreen {
         Scissor.scissor(-1f, -1f, this.width + 1f, this.height + 1f);
         this.drawBackground();
         super.drawScreen(nopX, nopY, partialTicks);
-        float mouseX = getMouse().getX();
-        float mouseY = getMouse().getY();
+        float mouseX = getGameClient().getMouse().getX();
+        float mouseY = getGameClient().getMouse().getY();
         this.onUpdate();
         this.container.onUpdate(mouseX, mouseY, null);
         this.container.draw(0, 0, mouseX, mouseY, true, true, null);
@@ -88,9 +88,9 @@ public class Screen extends GuiScreen {
     }
 
     private void warnNotToCall() {
-        SmyLibGui.getLogger().warn("Something called SmyLibGui's ScreenGui native vanilla input handling methods. This could cause weird behavior, call the IWidget floating point variants instead!");
+        getLogger().warn("Something called SmyLibGui's ScreenGui native vanilla input handling methods. This could cause weird behavior, call the IWidget floating point variants instead!");
         StackTraceElement[] lines = Thread.currentThread().getStackTrace();
-        for(int i=1; i<lines.length; i++) SmyLibGui.getLogger().warn(lines[i]);
+        for(int i=1; i<lines.length; i++) getLogger().warn(lines[i]);
     }
 
     private void drawBackground() {

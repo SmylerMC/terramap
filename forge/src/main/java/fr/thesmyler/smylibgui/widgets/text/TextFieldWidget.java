@@ -6,15 +6,13 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
-import fr.thesmyler.smylibgui.devices.Key;
+import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.devices.Keyboard;
+import net.smyler.smylib.game.Keyboard;
 import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.smylibgui.util.Animation.AnimationState;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
@@ -24,10 +22,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.MathHelper;
+import net.smyler.smylib.gui.Font;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getClipboard;
-import static fr.thesmyler.smylibgui.SmyLibGui.getKeyboard;
-import static fr.thesmyler.smylibgui.devices.Key.*;
+import static net.smyler.smylib.Color.BLUE;
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
+import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.game.Key.*;
 
 /**
  * A text field, similar to the vanilla implementation, but with a few improvements.
@@ -111,15 +112,15 @@ public class TextFieldWidget implements IWidget {
     }
 
     public TextFieldWidget(float x, float y, int z, float width) {
-        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, SmyLibGui.getDefaultFont());
+        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, getGameClient().getDefaultFont());
     }
 
     public TextFieldWidget(int z, String defaultText) {
-        this(0, 0, z, 50, SmyLibGui.getDefaultFont());
+        this(0, 0, z, 50, getGameClient().getDefaultFont());
     }
 
     public TextFieldWidget(int z) {
-        this(z, "", SmyLibGui.getDefaultFont());
+        this(z, "", getGameClient().getDefaultFont());
     }
 
     @Override
@@ -144,7 +145,7 @@ public class TextFieldWidget implements IWidget {
         }
 
         if(this.isSearchBar) {
-            Color.WHITE.applyGL();
+            applyColor(WHITE);
             Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();
@@ -205,7 +206,7 @@ public class TextFieldWidget implements IWidget {
         dispX1 = Math.min(dispX1, x + this.getEffectiveWidth());
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
-        Color.BLUE.applyGL();
+        applyColor(BLUE);
         GlStateManager.disableTexture2D();
         GlStateManager.enableColorLogic();
         GlStateManager.colorLogicOp(GlStateManager.LogicOp.OR_REVERSE);
@@ -253,7 +254,7 @@ public class TextFieldWidget implements IWidget {
             return;
         }
 
-        Keyboard keyboard = SmyLibGui.getKeyboard();
+        Keyboard keyboard = getGameClient().getKeyboard();
         this.selecting = keyboard.isShiftPressed();
 
         if (keyboard.isControlPressed() && key == KEY_A) {
@@ -277,22 +278,22 @@ public class TextFieldWidget implements IWidget {
                 case KEY_BACK:
                     this.selecting = false;
                     this.erase(-1);
-                    this.selecting = getKeyboard().isShiftPressed();
+                    this.selecting = getGameClient().getKeyboard().isShiftPressed();
                     return;
                 case KEY_DELETE:
                     this.selecting = false;
                     this.erase(1);
-                    this.selecting = getKeyboard().isShiftPressed();
+                    this.selecting = getGameClient().getKeyboard().isShiftPressed();
                     return;
                 case KEY_RIGHT:
-                    if (getKeyboard().isControlPressed()) {
+                    if (getGameClient().getKeyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(1));
                     } else {
                         this.moveCursor(1);
                     }
                     return;
                 case KEY_LEFT:
-                    if (getKeyboard().isControlPressed()) {
+                    if (getGameClient().getKeyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(-1));
                     } else {
                         this.moveCursor(-1);
@@ -369,7 +370,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     private void erase(int count) {
-        if (getKeyboard().isControlPressed()) this.eraseWords(count);
+        if (getGameClient().getKeyboard().isControlPressed()) this.eraseWords(count);
         else this.eraseCharacters(count);
     }
 
@@ -498,7 +499,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     public void copySelectionToClipboard() {
-        getClipboard().setContent(this.getSelectedText());
+        getGameClient().getClipboard().setContent(this.getSelectedText());
     }
 
     public void cutSelectionToClipboard() {
@@ -507,7 +508,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     public void pasteIn() {
-        this.write(getClipboard().getContent());
+        this.write(getGameClient().getClipboard().getContent());
     }
 
     public int getMaxTextLength() {

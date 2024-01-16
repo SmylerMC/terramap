@@ -6,7 +6,7 @@ import org.lwjgl.opengl.GL11;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Animation;
 import fr.thesmyler.smylibgui.util.Animation.AnimationState;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.smyler.smylib.math.Mat2d;
@@ -14,6 +14,9 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public class CircularCompassWidget implements IWidget {
 
@@ -23,7 +26,7 @@ public class CircularCompassWidget implements IWidget {
     private Color backgroundColor = Color.DARKER_OVERLAY;
     private Color northColor = Color.RED;
     private Color northDarkColor = Color.RED.withRed(0.4f);
-    private Color southColor = Color.WHITE;
+    private Color southColor = WHITE;
     private Color southColorDark = new Color(0.4f, 0.4f, 0.4f);
     private Runnable onClick;
     private boolean visible = true;
@@ -68,7 +71,7 @@ public class CircularCompassWidget implements IWidget {
         GlStateManager.rotate(this.azimuth, 0, 0, 1);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
-        Color.WHITE.applyGL();
+        applyColor(WHITE);
         GlStateManager.shadeModel(7425);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();

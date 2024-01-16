@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonPrimitive;
-import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
+import net.smyler.smylib.gui.TestingWidgetContainer;
 import fr.thesmyler.terramap.TerramapTest;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
 import static net.smyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
-import static fr.thesmyler.terramap.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapWidgetTest extends TerramapTest {

@@ -9,9 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.toast.TextureToast;
-import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
+import net.smyler.smylib.game.MinecraftServerInfo;
 import fr.thesmyler.terramap.saving.client.ClientSaveManager;
 import fr.thesmyler.terramap.saving.client.SavedClientState;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
@@ -45,6 +44,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * Client side context that store important information about the current server, world, proxy, etc.
@@ -87,7 +88,7 @@ public class TerramapClientContext {
     private final ClientSaveManager saveManager;
 
     public TerramapClientContext() {
-        this.saveManager = new ClientSaveManager(SmyLibGui.getGameContext().getGameDirectory().resolve("terramap"));
+        this.saveManager = new ClientSaveManager(getGameClient().getGameDirectory().resolve("terramap"));
         try {
             this.saveManager.createDirectoryIfNecessary();
         } catch (IOException exception) {
@@ -245,7 +246,7 @@ public class TerramapClientContext {
     }
 
     public void reloadState() {
-        MinecraftServerInfo serverInfo = SmyLibGui.getGameContext().getCurrentServerInfo();
+        MinecraftServerInfo serverInfo = getGameClient().getCurrentServerInfo();
         if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
             TerramapMod.logger.debug("Loaded proxy saved state for UUID {} (forced by proxy)", this.proxyUUID);
@@ -491,8 +492,8 @@ public class TerramapClientContext {
             String key = KeyBindings.OPEN_MAP.getDisplayName();
             Minecraft.getMinecraft().getToastGui().add(
                     new TextureToast(
-                            SmyLibGui.getTranslator().format("terramap.toasts.welcome.title"),
-                            SmyLibGui.getTranslator().format("terramap.toasts.welcome.text", key),
+                            getGameClient().getTranslator().format("terramap.toasts.welcome.title"),
+                            getGameClient().getTranslator().format("terramap.toasts.welcome.text", key),
                             new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
             this.setHasShownWelcomeMessage(true);
         }

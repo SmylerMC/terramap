@@ -8,11 +8,9 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.ColorPickerWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
@@ -21,6 +19,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
@@ -33,7 +32,7 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getDefaultFont;
+import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;
@@ -392,12 +391,12 @@ public class McChunksLayer extends MapLayer {
 
     @Override
     public String name() {
-        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.mcchunks.name");
+        return getGameClient().getTranslator().format("terramap.mapwidget.layers.mcchunks.name");
     }
 
     @Override
     public String description() {
-        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.mcchunks.desc");
+        return getGameClient().getTranslator().format("terramap.mapwidget.layers.mcchunks.desc");
     }
 
     @Override
@@ -407,11 +406,10 @@ public class McChunksLayer extends MapLayer {
 
     @Override
     public FlexibleWidgetContainer createConfigurationContainer() {
-        //TODO localize
         float width = 200f;
         float height = 180f;
         FlexibleWidgetContainer container = new FlexibleWidgetContainer(0, 0, 0, width, height);
-        Font font = getDefaultFont();
+        Font font = getGameClient().getDefaultFont();
         float left = 1f;
         float right = 30f;
         float interline = 9f;

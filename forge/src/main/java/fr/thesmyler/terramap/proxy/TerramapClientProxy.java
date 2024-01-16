@@ -1,8 +1,7 @@
 package fr.thesmyler.terramap.proxy;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.SmyLibGuiContext;
 import fr.thesmyler.smylibgui.screen.HudScreen;
+import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
@@ -10,7 +9,6 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
-import fr.thesmyler.terramap.maps.raster.imp.UrlRasterTile;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -26,6 +24,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smyler.smylib.SmyLib;
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.WrappedMinecraft;
 
 import javax.imageio.ImageIO;
 
@@ -54,10 +55,12 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         TerramapMod.logger.debug("Terramap client init");
+        GameClient game = new WrappedMinecraft();
+        MinecraftForge.EVENT_BUS.register(HudScreen.class);
+        MinecraftForge.EVENT_BUS.register(game);
+        SmyLib.initializeGameClient(game, TerramapMod.logger);
         if ("true".equals(System.getProperty("terramap.showTestScreen"))) {
-            SmyLibGui.init(TerramapMod.logger, SmyLibGuiContext.LWJGL2_TEST_SCREEN);
-        } else {
-            SmyLibGui.init(TerramapMod.logger, SmyLibGuiContext.LWJGL2);
+            MinecraftForge.EVENT_BUS.register(TestScreen.class);
         }
 
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());

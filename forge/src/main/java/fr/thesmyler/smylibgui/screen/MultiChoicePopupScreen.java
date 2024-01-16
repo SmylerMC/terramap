@@ -2,7 +2,6 @@ package fr.thesmyler.smylibgui.screen;
 
 import java.util.Map;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -10,6 +9,8 @@ import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.util.text.TextComponentTranslation;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * A {@link PopupScreen} that provides the user with multiple choices, in the form of buttons to click.
@@ -27,7 +28,7 @@ public class MultiChoicePopupScreen extends PopupScreen {
         float y = 5f;
         for(String optionLangKey: options.keySet()) {
             Runnable run = options.get(optionLangKey);
-            container.addWidget(new TextButtonWidget(45f , y, 0, 200f, SmyLibGui.getTranslator().format(optionLangKey), () -> {
+            container.addWidget(new TextButtonWidget(45f , y, 0, 200f, getGameClient().getTranslator().format(optionLangKey), () -> {
                 this.close();
                 run.run();
             }));

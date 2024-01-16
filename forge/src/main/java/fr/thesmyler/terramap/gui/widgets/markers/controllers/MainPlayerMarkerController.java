@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -9,6 +8,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class MainPlayerMarkerController extends AbstractPlayerMarkerController<MainPlayerMarker> {
 
@@ -20,7 +21,7 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
                 74, 108, 74, 122,
                 74, 136, 74, 150,
                 false, null));
-        this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
+        this.button.setTooltip(getGameClient().getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
     }
 
     @Override

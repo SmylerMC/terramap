@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
+import net.smyler.smylib.gui.TestingWidgetContainer;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapTest;
 import net.smyler.smylib.math.Vec2dMutable;

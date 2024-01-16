@@ -1,0 +1,125 @@
+package net.smyler.smylib.game;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.gui.ReflectedFontRenderer;
+
+import java.nio.file.Path;
+
+public class WrappedMinecraft implements GameClient {
+
+    private float width = 1f;
+    private float height = 1f;
+    private int nativeWidth = 1;
+    private int nativeHeight = 1;
+    private int scale = 1;
+
+    private final Mouse mouse = new Lwjgl2Mouse();
+    private final Keyboard keyboard = new Lwjgl2Keyboard();
+    private final Clipboard clipboard = new AwtClipboard();
+    private final SoundSystem soundSystem = new MinecraftSoundSystem();
+    private final Translator translator = new I18nTranslator();
+    private final Font font = new ReflectedFontRenderer(1f);
+
+    @Override
+    public float getWindowWidth() {
+        return this.width;
+    }
+
+    @Override
+    public float getWindowHeight() {
+        return this.height;
+    }
+
+    @Override
+    public int getNativeWindowWidth() {
+        return this.nativeWidth;
+    }
+
+    @Override
+    public int getNativeWindowHeight() {
+        return this.nativeHeight;
+    }
+
+    @Override
+    public int getScaleFactor() {
+        return this.scale;
+    }
+
+    @Override
+    public String getLanguage() {
+        return Minecraft.getMinecraft().gameSettings.language;
+    }
+
+    @Override
+    public boolean isMac() {
+        return Minecraft.IS_RUNNING_ON_MAC;
+    }
+
+    @Override
+    public Path getGameDirectory() {
+        return Minecraft.getMinecraft().gameDir.toPath();
+    }
+
+    @Override
+    public MinecraftServerInfo getCurrentServerInfo() {
+        ServerData data = Minecraft.getMinecraft().getCurrentServerData();
+        return data == null ? null: new MinecraftServerInfo(
+                data.serverName,
+                data.serverIP,
+                data.serverMOTD,
+                data.isOnLAN()
+        );
+    }
+
+    @Override
+    public Mouse getMouse() {
+        return this.mouse;
+    }
+
+    @Override
+    public Keyboard getKeyboard() {
+        return this.keyboard;
+    }
+
+    @Override
+    public Clipboard getClipboard() {
+        return this.clipboard;
+    }
+
+    @Override
+    public SoundSystem getSoundSystem() {
+        return this.soundSystem;
+    }
+
+    @Override
+    public Translator getTranslator() {
+        return this.translator;
+    }
+
+    @Override
+    public Font getDefaultFont() {
+        return this.font;
+    }
+
+    @Override
+    public boolean isGlAvailabale() {
+        return true;
+    }
+
+    @SubscribeEvent
+    public void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
+        ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+        Minecraft mc = Minecraft.getMinecraft();
+        this.scale = res.getScaleFactor();
+        this.width = (float) res.getScaledWidth_double();
+        this.height = (float) res.getScaledHeight_double();
+        this.nativeWidth = mc.displayWidth;
+        this.nativeHeight = mc.displayHeight;
+    }
+
+}

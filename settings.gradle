@@ -7,4 +7,6 @@ include 'smylib:core'
 findProject(':smylib:core')?.name = 'core'
 include 'smylib:forge'
 findProject(':smylib:forge')?.name = 'forge'
+include 'smylib:testing'
+findProject(':smylib:testing')?.name = 'testing'
 

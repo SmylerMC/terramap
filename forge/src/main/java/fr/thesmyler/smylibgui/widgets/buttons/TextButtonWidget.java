@@ -1,12 +1,15 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class TextButtonWidget extends AbstractButtonWidget {
 
@@ -16,7 +19,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     protected Color disabledTextColor = Color.MEDIUM_GRAY;
 
     public TextButtonWidget(float x, float y, int z, float width, String str, Runnable onClick, Runnable onDoubleClick) {
-        super(x, y, z, width, SmyLibGui.getDefaultFont().height() + 11, onClick, onDoubleClick);
+        super(x, y, z, width, getGameClient().getDefaultFont().height() + 11, onClick, onDoubleClick);
         this.str = str;
     }
 
@@ -30,7 +33,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     }
 
     public TextButtonWidget(int z, String str, Runnable onClick, Runnable onDoubleClick) {
-        this(0, 0, z, SmyLibGui.getDefaultFont().height() + 20, str, onClick, onDoubleClick);
+        this(0, 0, z, getGameClient().getDefaultFont().height() + 20, str, onClick, onDoubleClick);
     }
 
     public TextButtonWidget(int z, String str, Runnable onClick) {
@@ -46,7 +49,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        Color.WHITE.applyGL();
+        applyColor(WHITE);
         int textureDelta = 1;
         Color textColor = this.enabledTextColor;
         if (!this.isEnabled()) {

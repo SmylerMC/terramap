@@ -8,11 +8,12 @@ import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
+
+import static net.smyler.smylib.SmyLib.getLogger;
 
 //TODO Reload cursors with resources
 //TODO Have a wrapper class for lwjgl cursors
@@ -26,7 +27,7 @@ public final class Cursors {
 
     static {
         if(Minecraft.IS_RUNNING_ON_MAC) {
-            SmyLibGui.getLogger().error("Running on MacOS, will not use custom cursors.");
+            getLogger().error("Running on MacOS, will not use custom cursors.");
         }
     }
 
@@ -40,7 +41,7 @@ public final class Cursors {
         try {
             Mouse.setNativeCursor(cursor);
         } catch (LWJGLException e) {
-            SmyLibGui.getLogger().catching(e);
+            getLogger().catching(e);
         }
     }
 

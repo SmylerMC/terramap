@@ -1,8 +1,6 @@
 package fr.thesmyler.terramap.maps.raster.imp;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.SmyLibGuiContext;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
@@ -13,6 +11,8 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 
+import static net.smyler.smylib.SmyLib.getGameClient;
+
 public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
 
     private final Color color;
@@ -22,7 +22,7 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
     public ColorTiledMap(Color color, String name) {
         this.color = color;
         this.name = name;
-        if (SmyLibGui.getContext() != SmyLibGuiContext.JUNIT) {
+        if (getGameClient().isGlAvailabale()) {
             TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
             DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256, 256, this.color.asRGBInt()));
             this.textureLocation = textureManager.getDynamicTextureLocation(

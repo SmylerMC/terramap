@@ -10,6 +10,8 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.RasterTile;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
+import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.TilePos;
 import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
@@ -23,6 +25,10 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
+
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 abstract public class RasterMapLayer extends MapLayer {
 
@@ -55,7 +61,7 @@ abstract public class RasterMapLayer extends MapLayer {
         final RasterTiledMap tiledMap = this.getTiledMap();
         final ResourceLocation defaultTexture = tiledMap.getDefaultTileTexture();
 
-        Font smallFont = Util.getSmallestFont();
+        Font smallFont = getGameClient().getSmallestFont();
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager textureManager = mc.getTextureManager();
         float rotation = this.getRotation();
@@ -95,7 +101,7 @@ abstract public class RasterMapLayer extends MapLayer {
         int lowerTileX = (int) Math.floor(upperLeft.x() / renderSize);
         int lowerTileY = (int) Math.floor(upperLeft.y() / renderSize);
 
-        Color whiteWithAlpha = Color.WHITE.withAlpha(this.getAlpha());
+        Color whiteWithAlpha = WHITE.withAlpha(this.getAlpha());
 
         for(int tileX = lowerTileX; tileX * renderSize < maxX; tileX++) {
 
@@ -209,7 +215,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     dY += factorY * renderSizedSize;
                 }
 
-                whiteWithAlpha.applyGL();
+                applyColor(WHITE);
                 ResourceLocation texture = defaultTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
@@ -231,7 +237,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     );
                 }
                 if(debug) {
-                    Color lineColor = texture == null? Color.GREEN: lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : Color.WHITE;
+                    Color lineColor = texture == null? Color.GREEN: lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : WHITE;
                     RenderUtil.drawClosedStrokeLine(lineColor, 1f,
                             dispX, dispY,
                             dispX, dispY + displayHeight - 1,
@@ -242,7 +248,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     smallFont.drawString((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
                     smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
-                Color.WHITE.applyGL();
+                applyColor(WHITE);
             }
         }
 

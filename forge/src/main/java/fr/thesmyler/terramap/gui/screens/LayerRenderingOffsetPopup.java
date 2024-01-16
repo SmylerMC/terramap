@@ -4,10 +4,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
@@ -19,6 +18,8 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.Translator;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2d;
@@ -28,6 +29,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.OFFSET_PREVIEW;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class LayerRenderingOffsetPopup extends PopupScreen {
     
@@ -56,6 +58,8 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
 
     public LayerRenderingOffsetPopup(MapLayer background, MapLayer layer) {
         super(300f, 150f);
+        GameClient game = getGameClient();
+        Translator translator = game.getTranslator();
         this.layer = layer;
         float interline = 20;
         float margin = 8;
@@ -65,19 +69,19 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
                 content.getWidth() / 2, margin, 0,
                 new TextComponentTranslation("terramap.popup.renderoffset.title"),
                 TextAlignment.CENTER,
-                SmyLibGui.getDefaultFont());
+                game.getDefaultFont());
         content.addWidget(title);
         TextWidget xText = new TextWidget(
                 margin, title.getY() + title.getHeight() + interline, 0,
                 new TextComponentTranslation("terramap.popup.renderoffset.x"),
                 TextAlignment.RIGHT,
-                SmyLibGui.getDefaultFont());
+                game.getDefaultFont());
         content.addWidget(xText);
         TextWidget yText = new TextWidget(
                 margin, xText.getY() + xText.getHeight() + interline, 0,
                 new TextComponentTranslation("terramap.popup.renderoffset.y"),
                 TextAlignment.RIGHT,
-                SmyLibGui.getDefaultFont());
+                game.getDefaultFont());
         content.addWidget(yText);
         float inputsX = Math.max(xText.getX() + xText.getWidth(), yText.getX() + yText.getWidth()) + spacing;
         this.xInput = new TextFieldWidget(inputsX, xText.getY() - 6, 0, 70);
@@ -126,21 +130,21 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         TextButtonWidget resetButton = new TextButtonWidget(
                 margin, this.yInput.getY() + this.xInput.getHeight() + interline, 0,
                 (midWidth - spacing) / 2,
-                SmyLibGui.getTranslator().format("terramap.popup.renderoffset.reset"), this::resetMap);
+                translator.format("terramap.popup.renderoffset.reset"), this::resetMap);
         content.addWidget(resetButton);
         TextButtonWidget set0Button = new TextButtonWidget(
                 resetButton.getX() + resetButton.getWidth() + spacing, resetButton.getY(), 0,
                 resetButton.getWidth(),
-                SmyLibGui.getTranslator().format("terramap.popup.renderoffset.set0"), this::setOffsetToZero);
+                translator.format("terramap.popup.renderoffset.set0"), this::setOffsetToZero);
         content.addWidget(set0Button);
         TextButtonWidget cancelButton = new TextButtonWidget(
                 resetButton.getX(), resetButton.getY() + resetButton.getHeight() + 4, 0,
                 resetButton.getWidth(),
-                SmyLibGui.getTranslator().format("terramap.popup.renderoffset.cancel"), this::close);
+                translator.format("terramap.popup.renderoffset.cancel"), this::close);
         content.addWidget(cancelButton);
         this.doneButton = new TextButtonWidget(set0Button.getX(), cancelButton.getY(), 0,
                 set0Button.getWidth(),
-                SmyLibGui.getTranslator().format("terramap.popup.renderoffset.done"), this::applyAndClose);
+                translator.format("terramap.popup.renderoffset.done"), this::applyAndClose);
         content.addWidget(this.doneButton);
         this.yInput.setOnChangeCallback(this::onTextFieldsChange);
         this.xInput.setOnChangeCallback(this::onTextFieldsChange);

@@ -5,17 +5,17 @@ import fr.thesmyler.terramap.TerramapConfig;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 class InputProcessor {
 
     private final WidgetContainer container;
 
     private int touchContactsCount = 0;
-    private final boolean[] mouseButtonsPressed = new boolean[getMouse().getButtonCount()];
-    private final float[] lastClickX = new float[getMouse().getButtonCount()];
-    private final float[] lastClickY = new float[getMouse().getButtonCount()];
-    private final long[] lastClickTime = new long[getMouse().getButtonCount()];
+    private final boolean[] mouseButtonsPressed = new boolean[getGameClient().getMouse().getButtonCount()];
+    private final float[] lastClickX = new float[getGameClient().getMouse().getButtonCount()];
+    private final float[] lastClickY = new float[getGameClient().getMouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getGameClient().getMouse().getButtonCount()];
     private int lastClickedButton = -1;
     private final Minecraft mc = Minecraft.getMinecraft();
 
@@ -24,8 +24,8 @@ class InputProcessor {
     }
 
     public void processMouseEvent() {
-        float mouseX = getMouse().getX();
-        float mouseY = getMouse().getY();
+        float mouseX = getGameClient().getMouse().getX();
+        float mouseY = getGameClient().getMouse().getY();
         int mouseButton = Mouse.getEventButton();
         long ctime = System.currentTimeMillis();
 

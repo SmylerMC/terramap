@@ -2,9 +2,10 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.AbstractSolidWidget;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 //TODO Add the possibility to bind a keybinding to a button
 public abstract class AbstractButtonWidget extends AbstractSolidWidget {
@@ -32,7 +33,7 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        SmyLibGui.getSoundSystem().playClickSound();
+        getGameClient().getSoundSystem().playClickSound();
         parent.setFocus(null); // We don't want to keep the focus
         if(this.onClick != null && mouseButton == 0) {
             this.onClick.run();
@@ -42,7 +43,7 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
 
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        SmyLibGui.getSoundSystem().playClickSound();
+        getGameClient().getSoundSystem().playClickSound();
         parent.setFocus(null);
         if(mouseButton == 0) {
             if(this.onDoubleClick != null) {

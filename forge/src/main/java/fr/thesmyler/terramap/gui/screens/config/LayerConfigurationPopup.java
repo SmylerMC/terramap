@@ -1,10 +1,9 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.devices.GameContext;
+import net.smyler.smylib.game.GameClient;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
@@ -12,10 +11,10 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import net.minecraft.util.text.TextComponentString;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getDefaultFont;
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.CROSS;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class LayerConfigurationPopup extends PopupScreen {
 
@@ -33,7 +32,7 @@ public class LayerConfigurationPopup extends PopupScreen {
         this.container = requireNonNull(layer.createConfigurationContainer());
         this.titleText = new TextWidget(0,
                 new TextComponentString(layer.description()),
-                TextAlignment.CENTER, getDefaultFont());
+                TextAlignment.CENTER, getGameClient().getDefaultFont());
         this.closeButton = new TexturedButtonWidget(0, CROSS, this::close);
         this.scroll = new ScrollableWidgetContainer(1f, 1f, 0,
                 container.getWidth() - 2f, container.getHeight() - 2f,
@@ -47,9 +46,9 @@ public class LayerConfigurationPopup extends PopupScreen {
     public void initGui() {
 
         // Recalculate sizes
-        GameContext gameContext = SmyLibGui.getGameContext();
-        float mcWidth = gameContext.getWindowWidth();
-        float mcHeight = gameContext.getWindowHeight();
+        GameClient game = getGameClient();
+        float mcWidth = game.getWindowWidth();
+        float mcHeight = game.getWindowHeight();
         float contourSize = this.getContourSize();
         float contentWidth = this.container.getWidth();
         float contentHeight = this.container.getHeight();

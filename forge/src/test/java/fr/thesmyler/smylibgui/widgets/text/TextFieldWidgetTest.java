@@ -1,14 +1,14 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
-import fr.thesmyler.smylibgui.SmyLibGuiTest;
-import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
-import fr.thesmyler.smylibgui.devices.Key;
-import fr.thesmyler.smylibgui.util.DummyFont;
+import net.smyler.smylib.gui.TestingWidgetContainer;
+import net.smyler.smylib.SmyLibTest;
+import net.smyler.smylib.game.Key;
+import net.smyler.smylib.gui.DummyFont;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TextFieldWidgetTest extends SmyLibGuiTest {
+public class TextFieldWidgetTest extends SmyLibTest {
 
     @Test
     public void testActivation() throws InterruptedException {

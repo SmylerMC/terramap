@@ -18,5 +18,7 @@ minecraft {
 dependencies {
     minecraft(group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version)
     implementation project(":smylib:core")
+
+    testImplementation project(":smylib:testing")
 }
 

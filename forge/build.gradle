@@ -105,6 +105,8 @@ dependencies {
 
     runtimeOnly group: "org.apache.commons", name: "commons-imaging", version: "1.0-alpha2"
 
+    testImplementation project(":smylib:testing")
+
 }
 
 processResources {

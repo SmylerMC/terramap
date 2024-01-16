@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.gui.widgets;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
 import fr.thesmyler.smylibgui.util.TextureUtil;
 import fr.thesmyler.smylibgui.util.TextureUtil.TextureProperties;
 import fr.thesmyler.smylibgui.util.TextureUtil.UnknownTextureException;
@@ -15,6 +14,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public class RibbonCompassWidget implements IWidget {
 
@@ -87,7 +89,7 @@ public class RibbonCompassWidget implements IWidget {
         tess.draw();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(COMPASS_INDICATOR_TEXTURE);
-        Color.WHITE.applyGL();
+        applyColor(WHITE);
         buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         double indX = x + (double)(this.width - this.indicatorWidth) / 2;
         double indY = y + (double)(this.height - this.indicatorHeight) / 2;

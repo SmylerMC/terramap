@@ -2,12 +2,10 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.Animation;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -19,19 +17,20 @@ import fr.thesmyler.terramap.maps.raster.imp.ColorTiledMap;
 import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.gui.Font;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getDefaultFont;
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 import static fr.thesmyler.smylibgui.util.Animation.AnimationState.LEAVE;
-import static fr.thesmyler.smylibgui.util.Color.*;
+import static net.smyler.smylib.Color.*;
 import static fr.thesmyler.terramap.MapContext.PREVIEW;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHolder {
 
@@ -77,12 +76,12 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
     @Override
     public String name() {
-        return this.tiledMap.getLocalizedName(SmyLibGui.getGameContext().getLanguage());
+        return this.tiledMap.getLocalizedName(getGameClient().getLanguage());
     }
 
     @Override
     public String description() {
-        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.raster.desc");
+        return getGameClient().getTranslator().format("terramap.mapwidget.layers.raster.desc");
     }
 
     public boolean isConfigurable() {
@@ -92,9 +91,10 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
     @Override
     public FlexibleWidgetContainer createConfigurationContainer() {
 
-        final Font font = getDefaultFont();
-        final Font smallFont = new Font(0.5f);
-        final String language = getGameContext().getLanguage();
+        GameClient game = getGameClient();
+        final Font font = game.getDefaultFont();
+        final Font smallFont = game.getDefaultFont().withScale(0.5f);
+        final String language = game.getLanguage();
         final float width = 250f;
         final float margin = 5f;
         final float entryHeight = 60f;

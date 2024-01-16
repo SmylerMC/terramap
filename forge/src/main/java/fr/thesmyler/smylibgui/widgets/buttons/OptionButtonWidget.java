@@ -3,8 +3,9 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.gui.Font;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class OptionButtonWidget<T> extends TextButtonWidget {
 
@@ -31,7 +32,7 @@ public class OptionButtonWidget<T> extends TextButtonWidget {
 
     public OptionButtonWidget(int z, T[] options, int startOption, Consumer<T> onCycle) {
         super(z, "", null, null);
-        Font font = SmyLibGui.getDefaultFont();
+        Font font = getGameClient().getDefaultFont();
         float maxWidth = Arrays.stream(options)
                 .map(Object::toString).map(font::getStringWidth)
                 .max(Float::compareTo).orElse(0f);

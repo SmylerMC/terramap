@@ -1,22 +1,22 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import fr.thesmyler.smylibgui.SmyLibGuiTest;
-import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
-import fr.thesmyler.smylibgui.devices.Key;
+import net.smyler.smylib.gui.TestingWidgetContainer;
+import net.smyler.smylib.SmyLibTest;
+import net.smyler.smylib.game.Key;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getDefaultFont;
-import static fr.thesmyler.smylibgui.util.Color.BLACK;
-import static fr.thesmyler.smylibgui.util.Color.RED;
+import static net.smyler.smylib.Color.BLACK;
+import static net.smyler.smylib.Color.RED;
+import static net.smyler.smylib.SmyLib.getGameClient;
 import static org.junit.jupiter.api.Assertions.*;
 
-class ColorPickerWidgetTest extends SmyLibGuiTest {
+class ColorPickerWidgetTest extends SmyLibTest {
 
     @Test
     void canManipulateColorsWithAccessors() {
-        ColorPickerWidget colorPicker = new ColorPickerWidget(0, 0, 0, BLACK, getDefaultFont());
+        ColorPickerWidget colorPicker = new ColorPickerWidget(0, 0, 0, BLACK, getGameClient().getDefaultFont());
         assertEquals(BLACK, colorPicker.getColor());
         colorPicker.setColor(RED);
         assertEquals(RED, colorPicker.getColor());
@@ -24,7 +24,7 @@ class ColorPickerWidgetTest extends SmyLibGuiTest {
 
     @Test
     void canProperlyDetectValidColors() {
-        ColorPickerWidget widget = new ColorPickerWidget(0, 0, 0, BLACK, getDefaultFont());
+        ColorPickerWidget widget = new ColorPickerWidget(0, 0, 0, BLACK, getGameClient().getDefaultFont());
         assertTrue(widget.hasValidColor());
         widget.setText("#FFFFFF");
         assertTrue(widget.hasValidColor());
@@ -38,7 +38,7 @@ class ColorPickerWidgetTest extends SmyLibGuiTest {
 
     @Test
     void canDealWithCustomOnTextChangedCallback() {
-        ColorPickerWidget colorPicker = new ColorPickerWidget(0, 0, 0, BLACK, getDefaultFont());
+        ColorPickerWidget colorPicker = new ColorPickerWidget(0, 0, 0, BLACK, getGameClient().getDefaultFont());
         AtomicBoolean flag = new AtomicBoolean(false);
         colorPicker.setOnChangeCallback(s -> flag.set(true));
         colorPicker.setColor(RED);
@@ -48,7 +48,7 @@ class ColorPickerWidgetTest extends SmyLibGuiTest {
     @Test
     void canInputColors() throws InterruptedException {
         TestingWidgetContainer container = new TestingWidgetContainer(30, 500f, 500f);
-        ColorPickerWidget colorPicker = new ColorPickerWidget(0, 0, 0, BLACK, getDefaultFont());
+        ColorPickerWidget colorPicker = new ColorPickerWidget(0, 0, 0, BLACK, getGameClient().getDefaultFont());
         container.addWidget(colorPicker);
 
         // Focus the widget and move cursor to the right

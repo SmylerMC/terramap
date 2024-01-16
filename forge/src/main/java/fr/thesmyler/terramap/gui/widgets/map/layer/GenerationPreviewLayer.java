@@ -4,7 +4,7 @@ import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getTranslator;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class GenerationPreviewLayer extends RasterMapLayer {
 
@@ -12,12 +12,12 @@ public class GenerationPreviewLayer extends RasterMapLayer {
 
     @Override
     public String name() {
-        return getTranslator().format("terramap.mapwidget.layers.preview.name");
+        return getGameClient().getTranslator().format("terramap.mapwidget.layers.preview.name");
     }
 
     @Override
     public String description() {
-        return getTranslator().format("terramap.mapwidget.layers.preview.description");
+        return getGameClient().getTranslator().format("terramap.mapwidget.layers.preview.description");
     }
 
     @Override

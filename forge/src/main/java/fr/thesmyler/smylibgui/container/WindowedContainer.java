@@ -2,14 +2,14 @@ package fr.thesmyler.smylibgui.container;
 
 import org.lwjgl.input.Cursor;
 
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.Cursors;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import org.lwjgl.input.Mouse;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 import static net.smyler.smylib.Preconditions.checkArgument;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * A {@link FlexibleWidgetContainer} that takes the form of a window and can optionally moved or resized by the user,
@@ -120,7 +120,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         @Override
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
-            if(this.lastHovered != hovered && !getMouse().isButtonPressed(0)) {
+            if(this.lastHovered != hovered && !getGameClient().getMouse().isButtonPressed(0)) {
                 if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) Cursors.trySetCursor(this.cursor);
                 else if(Mouse.getNativeCursor() == this.cursor) Cursors.trySetCursor(null);
                 this.lastHovered = hovered;

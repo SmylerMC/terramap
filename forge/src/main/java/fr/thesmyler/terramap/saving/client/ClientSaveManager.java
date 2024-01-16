@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.saving.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import fr.thesmyler.smylibgui.util.MinecraftServerInfo;
+import net.smyler.smylib.game.MinecraftServerInfo;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;

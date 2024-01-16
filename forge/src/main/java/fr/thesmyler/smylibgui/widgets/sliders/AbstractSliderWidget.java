@@ -3,19 +3,21 @@ package fr.thesmyler.smylibgui.widgets.sliders;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
-import fr.thesmyler.smylibgui.devices.Key;
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.smyler.smylib.gui.Font;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * AbstractSliderWidget
@@ -114,8 +116,9 @@ public abstract class AbstractSliderWidget implements IWidget {
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
+        GameClient game = getGameClient();
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        Color.WHITE.applyGL();
+        applyColor(WHITE);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -133,8 +136,8 @@ public abstract class AbstractSliderWidget implements IWidget {
 
         float sliderPosition = this.getPosition();
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        Color.WHITE.applyGL();
-        
+        applyColor(WHITE);
+
         float sliderX = x + sliderPosition * (this.width - 8);
         RenderUtil.drawTexturedModalRect(sliderX, y, 0, 66, 4, splitHeight);
         RenderUtil.drawTexturedModalRect(sliderX + 4, y, 196, 66, 4, splitHeight);
@@ -149,11 +152,11 @@ public abstract class AbstractSliderWidget implements IWidget {
         if (!this.isEnabled()) textColor = this.disabledTextColor;
         else if (hovered || hasFocus) textColor = this.activeTextColor;
 
-        float fontSize = SmyLibGui.getDefaultFont().height();
-        double gameScale = getGameContext().getScaleFactor();
+        float fontSize = game.getDefaultFont().height();
+        double gameScale = game.getScaleFactor();
         float fontScale = 1f;
         while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) fontScale++;
-        Font font = new Font(1 / fontScale + 0.0001f);
+        Font font = game.getDefaultFont().withScale(1 / fontScale + 0.0001f);
         font.drawCenteredString(x + this.width / 2, y + (this.height - font.height() + 1) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
 
     }

@@ -1,7 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 
 public class PlayerDirectionsVisibilityController implements FeatureVisibilityController {
@@ -25,7 +26,7 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
                     this.other.setShowDirection(b);
                 }
                 );
-        this.button.setTooltip(SmyLibGui.getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.direction"));
+        this.button.setTooltip(getGameClient().getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.direction"));
     }
 
     @Override

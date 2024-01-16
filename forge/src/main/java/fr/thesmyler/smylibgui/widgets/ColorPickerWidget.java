@@ -1,16 +1,16 @@
 package fr.thesmyler.smylibgui.widgets;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import net.minecraft.client.renderer.GlStateManager;
+import net.smyler.smylib.gui.Font;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static fr.thesmyler.smylibgui.util.Color.*;
+import static net.smyler.smylib.Color.*;
 
 /**
  * A simple widgets that allows the user to input a color.

@@ -1,5 +1,7 @@
 package fr.thesmyler.smylibgui.util;
 
+import net.smyler.smylib.Color;
+
 public class Animation {
 
     protected final long duration;

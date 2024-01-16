@@ -1,5 +1,6 @@
 package fr.thesmyler.smylibgui.util;
 
+import net.smyler.smylib.Color;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.BufferBuilder;
@@ -7,8 +8,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
 import static net.smyler.smylib.Preconditions.checkArgument;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public final class RenderUtil {
 
@@ -101,7 +102,7 @@ public final class RenderUtil {
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        color.applyGL();
+        applyColor(color);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION);
@@ -119,12 +120,12 @@ public final class RenderUtil {
     }
 
     public static void drawStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth(size * getGameContext().getScaleFactor());
+        GL11.glLineWidth(size * getGameClient().getScaleFactor());
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        color.applyGL();
+        applyColor(color);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
@@ -142,12 +143,12 @@ public final class RenderUtil {
     }
 
     public static void drawClosedStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth(size * getGameContext().getScaleFactor());
+        GL11.glLineWidth(size * getGameClient().getScaleFactor());
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        color.applyGL();
+        applyColor(color);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
@@ -162,6 +163,19 @@ public final class RenderUtil {
 
     public static void drawClosedStrokeLine(Color color, float size, double... points) {
         drawClosedStrokeLine(0d, color, size, points);
+    }
+
+    public static void applyColor(Color color) {
+        GlStateManager.color(
+                color.redf(),
+                color.greenf(),
+                color.bluef(),
+                color.alphaf()
+        );
+    }
+
+    public static Color currentColor() {
+        return new Color(GL11.glGetInteger(GL11.GL_CURRENT_COLOR));
     }
 
 }

@@ -6,8 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.gui.Font;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class OptionSliderWidget<T> extends AbstractSliderWidget {
 
@@ -32,7 +33,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 
     public OptionSliderWidget(int z, T[] options, int startOption, Consumer<T> onCycle) {
         this(0, 0, z, 0, 0, options, startOption, onCycle);
-        Font font = SmyLibGui.getDefaultFont();
+        Font font = getGameClient().getDefaultFont();
         float maxWidth = Arrays.stream(options)
                 .map(Object::toString).map(font::getStringWidth)
                 .max(Float::compareTo).orElse(0f);

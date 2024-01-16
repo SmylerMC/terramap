@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -17,6 +17,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+
+import static net.smyler.smylib.Color.WHITE;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
@@ -40,7 +43,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
     @Override
     public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        Color.WHITE.applyGL();
+        applyColor(WHITE);
         boolean drawName = hovered;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
@@ -49,7 +52,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
         GlStateManager.enableAlpha();
         if(hovered) RenderUtil.drawRect(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
-        Color.WHITE.applyGL();
+        applyColor(WHITE);
         GlStateManager.enableBlend();
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.u, this.v, this.width, this.height, this.textureWidth, this.textureHeight);
 
@@ -58,7 +61,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             float strWidth = parent.getFont().getStringWidth(name);
             float nameY = y - parent.getFont().height() - 2;
             RenderUtil.drawRect(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, Color.DARK_OVERLAY);
-            parent.getFont().drawCenteredString(x + this.width / 2, nameY, name, Color.WHITE, false);
+            parent.getFont().drawCenteredString(x + this.width / 2, nameY, name, WHITE, false);
         }
     }
 

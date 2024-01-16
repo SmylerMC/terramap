@@ -15,7 +15,7 @@ import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getTranslator;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public abstract class HudScreenHandler {
 
@@ -34,7 +34,7 @@ public abstract class HudScreenHandler {
             }
             if (!(Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup)) updateMinimap();
             screen.addWidget(map);
-            offsetWarning.setTooltip(getTranslator().format("terramap.hud.minimap.offset_warning"));
+            offsetWarning.setTooltip(getGameClient().getTranslator().format("terramap.hud.minimap.offset_warning"));
             screen.addWidget(offsetWarning);
 
             float compassX = TerramapConfig.CLIENT.compass.posX * 0.01f * screen.getWidth();

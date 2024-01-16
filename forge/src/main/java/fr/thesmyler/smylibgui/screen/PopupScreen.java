@@ -1,10 +1,9 @@
 package fr.thesmyler.smylibgui.screen;
 
-import fr.thesmyler.smylibgui.devices.Key;
+import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
@@ -17,6 +16,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * A screen that shows up on to of other screens.
@@ -107,14 +108,14 @@ public class PopupScreen extends Screen {
      * @param message   the text to display
      */
     public static void showMessage(ITextComponent message) {
-        TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, SmyLibGui.getDefaultFont());
+        TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, getGameClient().getDefaultFont());
         float padding = 10;
         text.setMaxWidth(300);
         text.setAnchorX(text.getWidth() / 2 + padding).setAnchorY(padding);
         TextButtonWidget button = new TextButtonWidget(
                 text.getWidth() / 2 + padding - 20,
                 text.getY() + text.getHeight() + padding,
-                1, 40, SmyLibGui.getTranslator().format("smylibgui.popup.info.ok"));
+                1, 40, getGameClient().getTranslator().format("smylibgui.popup.info.ok"));
         PopupScreen screen = new PopupScreen(text.getWidth() + padding*2, button.getY() + padding + button.getHeight());
         button.setOnClick(screen::close);
         button.enable();

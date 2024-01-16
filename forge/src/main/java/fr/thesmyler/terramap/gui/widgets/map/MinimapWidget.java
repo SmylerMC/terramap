@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.terramap.MapContext;
@@ -20,6 +19,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Optional;
 
+import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
 
 public class MinimapWidget extends MapWidget {
@@ -34,7 +34,7 @@ public class MinimapWidget extends MapWidget {
         this.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
 
         this.setBackgroundOffsetMenuEntry = this.getRightClickMenu().addEntry(
-                SmyLibGui.getTranslator().format("terramap.mapwidget.rclickmenu.offset"),
+                getGameClient().getTranslator().format("terramap.mapwidget.rclickmenu.offset"),
                 () -> this.getRasterBackgroundLayer().ifPresent(
                         l -> new LayerRenderingOffsetPopup(l).show()
                     )

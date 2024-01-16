@@ -7,15 +7,13 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
+import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.math.DoubleRange;
 import net.smyler.smylib.math.Vec2dMutable;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
-import fr.thesmyler.smylibgui.util.Util;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
@@ -40,6 +38,7 @@ import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 
 import static java.util.Comparator.comparingInt;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * The core component of Terramap: the map widget itself.
@@ -126,8 +125,8 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
         this.tileScaling = tileScaling;
 
-        Font font = SmyLibGui.getDefaultFont();
-        Font smallFont = Util.getSmallestFont();
+        Font font = getGameClient().getDefaultFont();
+        Font smallFont = getGameClient().getSmallestFont();
 
         this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
             @Override
@@ -191,7 +190,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     @Override
     public void init() {
-        this.copyright.setFont(Util.getSmallestFont());
+        this.copyright.setFont(getGameClient().getSmallestFont());
         this.updateLayersViewports();
     }
 
@@ -315,7 +314,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
         if(!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
         if(!this.reportedErrors.isEmpty()) {
-            String errorText = SmyLibGui.getTranslator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
+            String errorText = getGameClient().getTranslator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
             this.errorText.setText(new TextComponentString(errorText));
         }
 
@@ -399,7 +398,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         for(IWidget widget: this.widgets) 
             if(widget instanceof CopyrightHolder){
                 if(!component.getFormattedText().isEmpty()) component.appendText(" | ");
-                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(SmyLibGui.getGameContext().getLanguage());
+                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().getLanguage());
                 component.appendSibling(copyright);
             }
         this.copyright.setText(component);

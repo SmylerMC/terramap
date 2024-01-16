@@ -3,14 +3,16 @@ package fr.thesmyler.smylibgui.widgets.text;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.smyler.smylib.gui.Font;
+
+import static net.minecraft.client.gui.GuiUtilRenderComponents.splitText;
 
 public class TextWidget implements IWidget {
 
@@ -100,7 +102,12 @@ public class TextWidget implements IWidget {
     }
 
     protected void updateCoords() {
-        this.lines = this.font.splitText(this.component, this.maxWidth, true, false).toArray(new ITextComponent[] {});
+        this.lines = splitText(
+                this.component,
+                (int) Math.floor(this.maxWidth / this.font.scale()),
+                Minecraft.getMinecraft().fontRenderer,
+                true, false
+        ).toArray(new ITextComponent[] {}); //TODO reimplement this in Font once we have an abstraction for text components
         this.height = this.lines.length * (this.font.height() + this.padding) + this.padding ;
         float w = 0;
         for(ITextComponent line: this.lines) {

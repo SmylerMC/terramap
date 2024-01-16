@@ -1,14 +1,14 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import net.minecraft.util.math.MathHelper;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 //TODO Use a texture
 public class ScrollbarWidget extends WidgetContainer {
@@ -57,7 +57,7 @@ public class ScrollbarWidget extends WidgetContainer {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        SmyLibGui.getSoundSystem().playClickSound();
+        getGameClient().getSoundSystem().playClickSound();
         float i = 4;
         float y = this.drag.getY();
         if(mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.forwardButton.getHeight()) {

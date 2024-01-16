@@ -7,15 +7,14 @@ import java.util.TreeSet;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.devices.Key;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.game.Key;
 import fr.thesmyler.smylibgui.util.Scissor;
 import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
+import net.smyler.smylib.gui.Font;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * A {@link WidgetContainer} is a containers that stores widgets and redistributes events to them.
@@ -50,14 +49,14 @@ public abstract class WidgetContainer implements IWidget{
     private final int z;
     private boolean doScissor = true;
 
-    private final float[] lastClickX = new float[getMouse().getButtonCount()];
-    private final float[] lastClickY = new float[getMouse().getButtonCount()];
-    private final long[] lastClickTime = new long[getMouse().getButtonCount()];
+    private final float[] lastClickX = new float[getGameClient().getMouse().getButtonCount()];
+    private final float[] lastClickY = new float[getGameClient().getMouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getGameClient().getMouse().getButtonCount()];
 
-    private final IWidget[] draggedWidget = new IWidget[getMouse().getButtonCount()];
-    private final float[] dClickX = new float[getMouse().getButtonCount()];
-    private final float[] dClickY = new float[getMouse().getButtonCount()];
-    private final long[] dClickT = new long[getMouse().getButtonCount()];
+    private final IWidget[] draggedWidget = new IWidget[getGameClient().getMouse().getButtonCount()];
+    private final float[] dClickX = new float[getGameClient().getMouse().getButtonCount()];
+    private final float[] dClickY = new float[getGameClient().getMouse().getButtonCount()];
+    private final long[] dClickT = new long[getGameClient().getMouse().getButtonCount()];
 
     private final List<MouseAction> delayedActions = new ArrayList<>();
 
@@ -68,7 +67,7 @@ public abstract class WidgetContainer implements IWidget{
     private float menuToShowX;
     private float menuToShowY;
 
-    private Font font = SmyLibGui.getDefaultFont();
+    private Font font = getGameClient().getDefaultFont();
 
     public WidgetContainer(int z) {
         Arrays.fill(this.lastClickTime, Long.MIN_VALUE);

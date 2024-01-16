@@ -1,9 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
@@ -15,6 +14,8 @@ import net.smyler.smylib.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.renderer.GlStateManager;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * Shows the area and angular distortion from the world's {@link GeographicProjection}.
@@ -70,12 +71,12 @@ public class DistortionLayer extends MapLayer {
 
     @Override
     public String name() {
-        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.distortion.name");
+        return getGameClient().getTranslator().format("terramap.mapwidget.layers.distortion.name");
     }
 
     @Override
     public String description() {
-        return SmyLibGui.getTranslator().format("terramap.mapwidget.layers.distortion.desc");
+        return getGameClient().getTranslator().format("terramap.mapwidget.layers.distortion.desc");
     }
 
     @Override

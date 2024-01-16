@@ -6,7 +6,7 @@ import java.util.List;
 import fr.thesmyler.smylibgui.container.RootContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.Scissor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
@@ -23,11 +23,13 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.smyler.smylib.game.GameClient;
 
 import javax.annotation.Nullable;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getGameContext;
-import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
+import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
+import static fr.thesmyler.smylibgui.util.RenderUtil.currentColor;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * A screen that shows up on top of the regular HUD when playing.
@@ -53,23 +55,24 @@ public final class HudScreen {
     @SubscribeEvent
     public static void onRenderHUD(RenderGameOverlayEvent.Pre e) {
         if(!e.getType().equals(ElementType.HOTBAR)) return;
+        GameClient game = getGameClient();
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
-        float width = getGameContext().getWindowWidth();
-        float height = getGameContext().getWindowHeight();
+        float width = game.getWindowWidth();
+        float height = game.getWindowHeight();
         if(width != renderWidth || height != renderHeight) {
             renderWidth = width;
             renderHeight = height;
             init();
         }
-        float mouseX = getMouse().getX();
-        float mouseY = getMouse().getY();
+        float mouseX = game.getMouse().getX();
+        float mouseY = game.getMouse().getY();
         CONTAINER.onUpdate(mouseX, mouseY, null);
-        Color color = Color.currentGL();
+        Color color = currentColor();
         Scissor.push();
         Scissor.scissor(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
         CONTAINER.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
         GlStateManager.enableAlpha();
-        color.applyGL(); // Reset color to what it was
+        applyColor(color); // Reset color to what it was
     }
 
     @SubscribeEvent
@@ -86,8 +89,8 @@ public final class HudScreen {
     @SubscribeEvent
     public static void onMouseInput(MouseInputEvent.Pre event) {
         if(!(event.getGui() instanceof GuiChat)) return;
-        float mouseX = getMouse().getX();
-        float mouseY = getMouse().getY();
+        float mouseX = getGameClient().getMouse().getX();
+        float mouseY = getGameClient().getMouse().getY();
         if(isOverChat(mouseX, mouseY)) return;
         event.setCanceled(true);
         PROCESSOR.processMouseEvent();

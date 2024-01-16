@@ -4,9 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import fr.thesmyler.smylibgui.devices.Key;
+import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import net.minecraft.client.Minecraft;
@@ -19,8 +18,9 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 
-import static fr.thesmyler.smylibgui.devices.Key.KEY_ESCAPE;
-import static fr.thesmyler.smylibgui.devices.Key.KEY_RETURN;
+import static net.smyler.smylib.SmyLib.getLogger;
+import static net.smyler.smylib.game.Key.KEY_ESCAPE;
+import static net.smyler.smylib.game.Key.KEY_RETURN;
 
 /**
  * Kinda hacky widget to add the chat to a custom screen.
@@ -135,8 +135,8 @@ public class ChatWidget implements IWidget, ITabCompleter {
             GUI_CHAT_MOUSE_CLICKED_METHOD.invoke(this.guiChat, Math.round(mouseX), Math.round(mouseY), mouseButton);
             mc.currentScreen = previousScreen;
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            SmyLibGui.getLogger().warn("Failed some reflection in ChatWidget#onCLick");
-            SmyLibGui.getLogger().catching(e);
+            getLogger().warn("Failed some reflection in ChatWidget#onCLick");
+            getLogger().catching(e);
         }
         return false;
     }
@@ -172,8 +172,8 @@ public class ChatWidget implements IWidget, ITabCompleter {
                 Minecraft.getMinecraft().currentScreen = screen;
             }
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            SmyLibGui.getLogger().warn("Failed some reflection in ChatWidget#onConKeyTyped");
-            SmyLibGui.getLogger().catching(e);
+            getLogger().warn("Failed some reflection in ChatWidget#onConKeyTyped");
+            getLogger().catching(e);
         }
     }
 

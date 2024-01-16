@@ -8,8 +8,8 @@ import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.terramap.util.geo.*;
 import net.smyler.terramap.util.math.Snapper;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getMouse;
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
+import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.*;
@@ -93,7 +93,7 @@ public final class MapController {
             }
         }
         //TODO move the Mouse.isButtonDown(0) out of here
-        if(this.movingSpeed.normSquared() > 0d && dt < 1000 && !getMouse().isButtonPressed(0)) {
+        if(this.movingSpeed.normSquared() > 0d && dt < 1000 && !getGameClient().getMouse().isButtonPressed(0)) {
             double dX = this.movingSpeed.x * dt;
             double dY = this.movingSpeed.y * dt;
             this.movingSpeed.scale(max(0d, 1d - this.movementDrag*dt));

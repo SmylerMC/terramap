@@ -1,13 +1,13 @@
 package fr.thesmyler.smylibgui.util;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
-import fr.thesmyler.smylibgui.devices.GameContext;
+import net.smyler.smylib.game.GameClient;
 import org.lwjgl.opengl.GL11;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import static java.lang.Math.*;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * A wrapper around OpenGL 1.1's scissor feature.
@@ -90,10 +90,10 @@ public class Scissor {
     }
 
     private static void doScissor() {
-        GameContext window = SmyLibGui.getGameContext();
-        float screenWidth = window.getWindowWidth();
-        float screenHeight = window.getWindowHeight();
-        double scale = window.getScaleFactor();
+        GameClient game = getGameClient();
+        float screenWidth = game.getWindowWidth();
+        float screenHeight = game.getWindowHeight();
+        double scale = game.getScaleFactor();
         float y = max(0, min(screenHeight, screenHeight - Scissor.y - height));
         float x = max(0, min(screenWidth, Scissor.x));
         float width = max(0, min(min(Scissor.width + Scissor.x, Scissor.width), screenWidth - Scissor.x));

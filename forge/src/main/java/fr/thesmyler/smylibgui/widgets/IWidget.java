@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.widgets;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.devices.Key;
+import net.smyler.smylib.game.Key;
 
 /**
  * A generic widget that can be added to a {@link WidgetContainer}.

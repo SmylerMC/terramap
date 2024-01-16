@@ -1,12 +1,12 @@
 package fr.thesmyler.smylibgui.widgets.sliders;
 
-import fr.thesmyler.smylibgui.SmyLibGuiTest;
-import fr.thesmyler.smylibgui.container.TestingWidgetContainer;
+import net.smyler.smylib.gui.TestingWidgetContainer;
+import net.smyler.smylib.SmyLibTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OptionSliderWidgetTest extends SmyLibGuiTest {
+public class OptionSliderWidgetTest extends SmyLibTest {
 
     @Test
     public void testActivation() throws InterruptedException {

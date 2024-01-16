@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.files.kml;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;

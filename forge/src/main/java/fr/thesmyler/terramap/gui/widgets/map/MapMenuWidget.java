@@ -1,12 +1,12 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.devices.Translator;
-import fr.thesmyler.smylibgui.util.Font;
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.Translator;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
+import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import fr.thesmyler.terramap.util.geo.GeoServices;
@@ -19,9 +19,9 @@ import net.minecraft.client.gui.GuiScreen;
 
 import javax.annotation.Nullable;
 
-import static fr.thesmyler.smylibgui.SmyLibGui.getClipboard;
 import static java.lang.Math.floorDiv;
 import static java.lang.Math.round;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * The context menu which is opened when the map is right-clicked.
@@ -47,14 +47,15 @@ public class MapMenuWidget extends MenuWidget {
     static { CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
 
     public MapMenuWidget(MapWidget map) {
-        super(1500, SmyLibGui.getDefaultFont());
+        super(1500, getGameClient().getDefaultFont());
 
         this.map = map;
         this.controller = map.getController();
         this.mouseLocation = this.map.getMouseLocation();
 
-        Font font = SmyLibGui.getDefaultFont();
-        Translator translator = SmyLibGui.getTranslator();
+        GameClient game = getGameClient();
+        Font font = game.getDefaultFont();
+        Translator translator = game.getTranslator();
 
         this.addEntry(translator.format("terramap.mapwidget.rclickmenu.teleport"), this::teleport);
         this.centerHere = this.addEntry(translator.format("terramap.mapwidget.rclickmenu.center"), this::moveLocationToCenter);
@@ -177,7 +178,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
-            getClipboard().setContent(dispX + "." + dispY + ".2dr");
+            getGameClient().getClipboard().setContent(dispX + "." + dispY + ".2dr");
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copy2dregion");
         }
@@ -188,7 +189,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 256));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 256));
-            getClipboard().setContent(dispX + ".0." + dispY + ".3dr");
+            getGameClient().getClipboard().setContent(dispX + ".0." + dispY + ".3dr");
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copy2dregion");
         }
@@ -199,7 +200,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 512));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 512));
-            getClipboard().setContent("r." + dispX + "." + dispY + ".mca");
+            getGameClient().getClipboard().setContent("r." + dispX + "." + dispY + ".mca");
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copyregion");
         }
@@ -210,7 +211,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(floorDiv(round(coords[0]), 16));
             String dispY = String.valueOf(floorDiv(round(coords[1]), 16));
-            getClipboard().setContent(dispX + " " + dispY);
+            getGameClient().getClipboard().setContent(dispX + " " + dispY);
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copychunk");
         }
@@ -221,7 +222,7 @@ public class MapMenuWidget extends MenuWidget {
             double[] coords = TerramapClientContext.getContext().getProjection().fromGeo(this.mouseLocation.longitude(), this.mouseLocation.latitude());
             String dispX = String.valueOf(round(coords[0]));
             String dispY = String.valueOf(round(coords[1]));
-            getClipboard().setContent(dispX + " " + dispY);
+            getGameClient().getClipboard().setContent(dispX + " " + dispY);
         } catch (OutOfProjectionBoundsException e) {
             this.reportError("terramap.mapwidget.error.copyblock");
         }
@@ -233,12 +234,12 @@ public class MapMenuWidget extends MenuWidget {
     }
 
     private void copyGeoLocation() {
-        getClipboard().setContent(this.mouseLocation.latitude() + " " + this.mouseLocation.longitude());
+        getGameClient().getClipboard().setContent(this.mouseLocation.latitude() + " " + this.mouseLocation.longitude());
     }
     
     private void reportError(String errorTranslationKey) {
         String s = String.valueOf(System.nanoTime()); // Just a random string
-        this.map.reportError(s, SmyLibGui.getTranslator().format(errorTranslationKey));
+        this.map.reportError(s, getGameClient().getTranslator().format(errorTranslationKey));
         this.map.scheduleBeforeUpdate(() -> this.map.discardPreviousErrors(s), 5000);
     }
 

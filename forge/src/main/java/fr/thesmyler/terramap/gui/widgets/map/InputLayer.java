@@ -1,9 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.smylibgui.SmyLibGui;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Color;
+import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.input.KeyBindings;
@@ -18,6 +17,7 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nullable;
 
 import static java.lang.Math.*;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * Processes inputs for a map and propagates them to the map controller.
@@ -202,7 +202,7 @@ public class InputLayer extends MapLayer {
 
     @Override
     public String getTooltipText() {
-        return isShortcutEnabled() ? SmyLibGui.getTranslator().format("terramap.mapwidget.shortcuts.tp"): "";
+        return isShortcutEnabled() ? getGameClient().getTranslator().format("terramap.mapwidget.shortcuts.tp"): "";
     }
 
     @Override
