@@ -1,6 +1,8 @@
-package fr.thesmyler.smylibgui.util;
+package net.smyler.smylib;
 
-import net.smyler.smylib.Color;
+import static java.lang.Math.abs;
+import static java.lang.Math.round;
+import static net.smyler.smylib.math.Math.saturate;
 
 public class Animation {
 
@@ -32,29 +34,29 @@ public class Animation {
             switch(this.state) {
                 case ENTER:
                     float f = (float)age/(float)this.duration;
-                    this.progress = Util.saturate(f);
+                    this.progress = saturate(f);
                     if(this.progress == 1f) this.state = AnimationState.STOPPED;
                     break;
                 case LEAVE:
                     float g = (float)age/(float)this.duration;
-                    this.progress = 1 - Util.saturate(g);
+                    this.progress = 1 - saturate(g);
                     if(this.progress == 0f) this.state = AnimationState.STOPPED;
                     break;
                 case FLASH:
-                    float k = 2 * Util.saturate(Math.abs(((float)(age % this.duration) - halfDuration)/halfDuration));
+                    float k = 2 * saturate(abs(((float)(age % this.duration) - halfDuration)/halfDuration));
                     this.progress = (int)k;
                     break;
                 case CONTINUOUS_ENTER:
                     float h = (float)(age % this.duration)/(float)this.duration;
-                    this.progress = Util.saturate(h);
+                    this.progress = saturate(h);
                     break;
                 case CONTINUOUS_LEAVE:
                     float i = (float)(age % this.duration)/(float)this.duration;
-                    this.progress = 1 - Util.saturate(i);
+                    this.progress = 1 - saturate(i);
                     break;
                 case BACK_AND_FORTH:
                     float j = ((float)(age % this.duration) - halfDuration)/halfDuration;
-                    this.progress = Util.saturate(Math.abs(j));
+                    this.progress = saturate(abs(j));
                     break;
                 case STOPPED:
                     break;
@@ -63,7 +65,7 @@ public class Animation {
     }
 
     public long blend(long end, long start) {
-        return Math.round((end - start) * (double)this.progress + start);
+        return round((end - start) * (double)this.progress + start);
     }
 
     public int blend(int end, int start) {
@@ -95,7 +97,7 @@ public class Animation {
     }
 
     public Color fadeColor(Color color) {
-        return color.withAlpha(Util.saturate(color.alphaf()*this.progress));
+        return color.withAlpha(saturate(color.alphaf()*this.progress));
     }
 
     public Color rainbowColor() {

@@ -6,8 +6,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Animation;
-import fr.thesmyler.smylibgui.util.Animation.AnimationState;
+import net.smyler.smylib.Animation;
+import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;

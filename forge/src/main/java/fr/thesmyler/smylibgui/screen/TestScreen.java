@@ -2,8 +2,8 @@ package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Animation;
-import fr.thesmyler.smylibgui.util.Animation.AnimationState;
+import net.smyler.smylib.Animation;
+import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.OptionButtonWidget;

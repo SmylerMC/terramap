@@ -2,7 +2,8 @@ package fr.thesmyler.smylibgui.widgets.sliders;
 
 import java.util.function.Consumer;
 
-import fr.thesmyler.smylibgui.util.Util;
+import static net.smyler.smylib.math.Math.clamp;
+import static net.smyler.smylib.math.Math.saturate;
 
 public class FloatSliderWidget extends AbstractSliderWidget {
 
@@ -66,13 +67,13 @@ public class FloatSliderWidget extends AbstractSliderWidget {
 
     @Override
     public void goToNext() {
-        this.setValueFromPos(Util.saturate(this.getPosition() + 0.01f));
+        this.setValueFromPos(saturate(this.getPosition() + 0.01f));
         this.onChange();
     }
 
     @Override
     public void goToPrevious() {
-        this.setValueFromPos(Util.saturate(this.getPosition() - 0.01f));
+        this.setValueFromPos(saturate(this.getPosition() - 0.01f));
         this.onChange();
     }
 
@@ -81,7 +82,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
     }
 
     public void setValue(double value) {
-        this.value = Util.clamp(value, this.min, this.max);
+        this.value = clamp(value, this.min, this.max);
         this.onChange();
     }
 

@@ -9,11 +9,11 @@ import java.util.function.Supplier;
  *
  * @author SmylerMC
  */
-public class ThreadLocal<T> extends java.lang.ThreadLocal<T> {
+public class DefaultThreadLocal<T> extends java.lang.ThreadLocal<T> {
 
     private final Supplier<T> supplier;
 
-    public ThreadLocal(Supplier<T> supplier) {
+    public DefaultThreadLocal(Supplier<T> supplier) {
         this.supplier = supplier;
     }
 

@@ -10,8 +10,8 @@ import net.smyler.smylib.game.Key;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.game.Keyboard;
-import fr.thesmyler.smylibgui.util.Animation;
-import fr.thesmyler.smylibgui.util.Animation.AnimationState;
+import net.smyler.smylib.Animation;
+import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;

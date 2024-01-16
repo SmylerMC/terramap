@@ -1,6 +1,6 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.threading.ThreadLocal;
+import net.smyler.smylib.threading.DefaultThreadLocal;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -8,12 +8,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DummyMouse implements Mouse {
 
-    private final ThreadLocal<AtomicInteger> xBits = new ThreadLocal<>(AtomicInteger::new);
-    private final ThreadLocal<AtomicInteger> yBits = new ThreadLocal<>(AtomicInteger::new);
-    private final ThreadLocal<AtomicInteger> buttonCount = new ThreadLocal<>(AtomicInteger::new);
-    private final ThreadLocal<AtomicBoolean> hasWheel = new ThreadLocal<>(AtomicBoolean::new);
-    private final ThreadLocal<boolean[]> buttons = new ThreadLocal<>(() -> new boolean[this.getButtonCount()]);
-    private final ThreadLocal<String[]> buttonNames = new ThreadLocal<>(() -> new String[this.getButtonCount()]);
+    private final DefaultThreadLocal<AtomicInteger> xBits = new DefaultThreadLocal<>(AtomicInteger::new);
+    private final DefaultThreadLocal<AtomicInteger> yBits = new DefaultThreadLocal<>(AtomicInteger::new);
+    private final DefaultThreadLocal<AtomicInteger> buttonCount = new DefaultThreadLocal<>(AtomicInteger::new);
+    private final DefaultThreadLocal<AtomicBoolean> hasWheel = new DefaultThreadLocal<>(AtomicBoolean::new);
+    private final DefaultThreadLocal<boolean[]> buttons = new DefaultThreadLocal<>(() -> new boolean[this.getButtonCount()]);
+    private final DefaultThreadLocal<String[]> buttonNames = new DefaultThreadLocal<>(() -> new String[this.getButtonCount()]);
 
     @Override
     public float getX() {

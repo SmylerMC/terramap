@@ -1,13 +1,13 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.threading.ThreadLocal;
+import net.smyler.smylib.threading.DefaultThreadLocal;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DummyKeyboard implements Keyboard {
 
-    private final ThreadLocal<boolean[]> states = new ThreadLocal<>(() -> new boolean[Key.values().length]);
-    private final ThreadLocal<AtomicBoolean> repeats = new ThreadLocal<>(AtomicBoolean::new);
+    private final DefaultThreadLocal<boolean[]> states = new DefaultThreadLocal<>(() -> new boolean[Key.values().length]);
+    private final DefaultThreadLocal<AtomicBoolean> repeats = new DefaultThreadLocal<>(AtomicBoolean::new);
 
     @Override
     public boolean isKeyPressed(Key key) {

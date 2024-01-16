@@ -7,7 +7,7 @@ import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.smyler.smylib.math.*;
-import net.smyler.terramap.util.DefaultThreadLocal;
+import net.smyler.smylib.threading.DefaultThreadLocal;
 import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;

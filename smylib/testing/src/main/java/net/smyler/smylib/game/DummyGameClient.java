@@ -1,6 +1,8 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.threading.ThreadLocal;
+import net.smyler.smylib.gui.DummyFont;
+import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.threading.DefaultThreadLocal;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,17 +14,18 @@ import static java.lang.Math.round;
 
 public class DummyGameClient implements GameClient {
 
-    private final ThreadLocal<AtomicInteger> width = new ThreadLocal<>(() -> new AtomicInteger(Float.floatToIntBits(720f)));
-    private final ThreadLocal<AtomicInteger> height = new ThreadLocal<>(() -> new AtomicInteger(Float.floatToIntBits(480f)));
-    private final ThreadLocal<AtomicInteger> scale = new ThreadLocal<>(() -> new AtomicInteger(1));
-    private final ThreadLocal<String> language = new ThreadLocal<>(() -> "en-us");
-    private final ThreadLocal<AtomicBoolean> isMac = new ThreadLocal<>(() -> new AtomicBoolean(false));
+    private final DefaultThreadLocal<AtomicInteger> width = new DefaultThreadLocal<>(() -> new AtomicInteger(Float.floatToIntBits(720f)));
+    private final DefaultThreadLocal<AtomicInteger> height = new DefaultThreadLocal<>(() -> new AtomicInteger(Float.floatToIntBits(480f)));
+    private final DefaultThreadLocal<AtomicInteger> scale = new DefaultThreadLocal<>(() -> new AtomicInteger(1));
+    private final DefaultThreadLocal<String> language = new DefaultThreadLocal<>(() -> "en-us");
+    private final DefaultThreadLocal<AtomicBoolean> isMac = new DefaultThreadLocal<>(() -> new AtomicBoolean(false));
     private final MinecraftServerInfo serverInfo = new MinecraftServerInfo("Dummy Server", "example.com", "Message of the day.", false);
     private final Mouse mouse = new DummyMouse();
     private final Keyboard keyboard = new DummyKeyboard();
     private final Clipboard clipboard = new DummyClipboard();
     private final SoundSystem soundSystem = new DummySoundSystem();
     private final Translator translator = new DummyTranslator();
+    private final Font font = new DummyFont(1f);
 
     private final Path gameDirectory;
 
@@ -115,6 +118,16 @@ public class DummyGameClient implements GameClient {
     @Override
     public Translator getTranslator() {
         return this.translator;
+    }
+
+    @Override
+    public Font getDefaultFont() {
+        return this.font;
+    }
+
+    @Override
+    public boolean isGlAvailabale() {
+        return false;
     }
 
     public void setIsMac(boolean yesNo) {

@@ -9,7 +9,6 @@ import net.smyler.smylib.game.Key;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,6 +17,7 @@ import net.smyler.smylib.gui.Font;
 import static net.smyler.smylib.Color.WHITE;
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.math.Math.saturate;
 
 /**
  * AbstractSliderWidget
@@ -74,7 +74,7 @@ public abstract class AbstractSliderWidget implements IWidget {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-        float pos = Util.saturate((mouseX) / this.getWidth());
+        float pos = saturate((mouseX) / this.getWidth());
         this.setValueFromPos(pos);
         return false;
     }

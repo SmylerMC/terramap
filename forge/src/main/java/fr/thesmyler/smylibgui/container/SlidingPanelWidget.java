@@ -2,8 +2,8 @@ package fr.thesmyler.smylibgui.container;
 
 import javax.annotation.Nullable;
 
-import fr.thesmyler.smylibgui.util.Animation;
-import fr.thesmyler.smylibgui.util.Animation.AnimationState;
+import net.smyler.smylib.Animation;
+import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 

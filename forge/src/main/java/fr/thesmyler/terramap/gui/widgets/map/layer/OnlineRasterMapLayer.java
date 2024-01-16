@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.util.Animation;
+import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static fr.thesmyler.smylibgui.util.Animation.AnimationState.LEAVE;
+import static net.smyler.smylib.Animation.AnimationState.LEAVE;
 import static net.smyler.smylib.Color.*;
 import static fr.thesmyler.terramap.MapContext.PREVIEW;
 import static java.lang.String.format;

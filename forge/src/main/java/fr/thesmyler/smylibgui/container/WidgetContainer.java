@@ -9,12 +9,12 @@ import javax.annotation.Nullable;
 
 import net.smyler.smylib.game.Key;
 import fr.thesmyler.smylibgui.util.Scissor;
-import fr.thesmyler.smylibgui.util.Util;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.math.Math.doBoxesCollide;
 
 /**
  * A {@link WidgetContainer} is a containers that stores widgets and redistributes events to them.
@@ -350,7 +350,7 @@ public abstract class WidgetContainer implements IWidget{
         IWidget wf = null;
         if(screenHovered) {
             for(IWidget widget: this.widgets) {
-                if(!widget.isVisible(this) || this.isOutsideScreen(widget) || !Util.doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) continue;
+                if(!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) continue;
                 if(this.isOverWidget(mouseX - x, mouseY - y, widget)) {
                     wf = widget;
                     break;
@@ -362,7 +362,7 @@ public abstract class WidgetContainer implements IWidget{
             if(
                     !widget.isVisible(this) ||
                     this.isOutsideScreen(widget) ||
-                    !Util.doBoxesCollide(
+                    !doBoxesCollide(
                             x + widget.getX(),
                             y + widget.getY(),
                             widget.getWidth(),
