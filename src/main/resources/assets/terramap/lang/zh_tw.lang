@@ -1,7 +1,7 @@
-# # Smylib GUI
+## Smylib GUI
 smylibgui.popup.info.ok=Ok
 
-# # Config
+## Config
 terramap.config.minimap.enable=小地圖：啟用
 terramap.config.minimap.style=小地圖：樣式
 terramap.config.minimap.pos_x=小地圖：X軸位置 (%%)
@@ -44,8 +44,8 @@ terramap.config.unlock_zoom=解鎖縮放
 terramap.config.low_zoom_level=在縮放層級下保持載入
 terramap.config.cancel=取消
 terramap.config.cancel.tooltip=不儲存並關閉
-terramap.config.reset=重置
-terramap.config.reset.tooltip=重置所有設定值
+terramap.config.reset=重設
+terramap.config.reset.tooltip=重設所有設定值
 terramap.config.save=儲存
 terramap.config.save.tooltip=儲存並關閉
 terramap.config.options.tooltip=更多選項
@@ -54,8 +54,8 @@ terramap.configmenu.save=儲存
 terramap.configmenu.save.tooltip=儲存並關閉
 terramap.configmenu.cancel=取消
 terramap.configmenu.cancel.tooltip=不儲存並關閉
-terramap.configmenu.reset=重置
-terramap.configmenu.reset.tooltip=重置所有設定值
+terramap.configmenu.reset=重設
+terramap.configmenu.reset.tooltip=重設所有設定值
 terramap.configmenu.title.mapsettings=Terramap組態：地圖設置
 terramap.configmenu.title.mapstyles=Terramap組態：地圖樣式
 terramap.configmenu.title.other=Terramap組態：其他
@@ -90,7 +90,7 @@ terramap.configmenu.asksave.deny=否
 terramap.configmenu.asksave.cancel=取消
 terramap.configmenu.tilescaling.auto=自動
 
-# # Hud config
+## Hud config
 terramap.hudconfig.minimap=小地圖：
 terramap.hudconfig.minimap.tooltip=更改小地圖可見性 
 terramap.hudconfig.compass=羅盤：
@@ -112,7 +112,7 @@ terramap.hudconfig.zoom.tooltip=更改小地圖縮放層級
 terramap.hudconfig.mapstyle.tooltip=更改小地圖樣式
 terramap.hudconfig.explain=使用預覽視窗移動小地圖和羅盤的位置並重設尺寸，點擊選單按鈕查看更多選項。
 
-# # Keys
+## Keys
 terramap.binding.category=Terramap
 terramap.binding.open_map=開啟地圖
 terramap.binding.toggle_debug=切換Terramap除錯模式
@@ -124,16 +124,16 @@ terramap.binding.zoom_out=縮小
 terramap.binding.toggle_minimap=切換小地圖的可見性
 terramap.binding.configure_minimap=開啟抬頭顯示器的組態
 
-# # Map
+## Map
 terramap.mapwidget.rclickmenu.teleport=傳送到這裡
 terramap.mapwidget.rclickmenu.center=以此作為地圖中心
 terramap.mapwidget.rclickmenu.copy=複製
 terramap.mapwidget.rclickmenu.copy.geo=地理座標
 terramap.mapwidget.rclickmenu.copy.block=方塊座標
 terramap.mapwidget.rclickmenu.copy.chunk=區塊座標
-terramap.mapwidget.rclickmenu.copy.region=原版區域檔案名
-terramap.mapwidget.rclickmenu.copy.3dr=Y
-terramap.mapwidget.rclickmenu.copy.2dr=2D區域檔案名
+terramap.mapwidget.rclickmenu.copy.region=原版區域檔案名稱
+terramap.mapwidget.rclickmenu.copy.3dr=Y=0 3D區域檔案名稱
+terramap.mapwidget.rclickmenu.copy.2dr=2D區域檔案名稱
 terramap.mapwidget.rclickmenu.open=顯示在
 terramap.mapwidget.rclickmenu.open_osm=開放街圖
 terramap.mapwidget.rclickmenu.open_bte=BTE網站
@@ -159,9 +159,12 @@ terramap.mapwidget.layers.mcchunks.name=Minecraft輪廓
 terramap.mapwidget.layers.mcchunks.desc=區域和區塊
 terramap.mapwidget.layers.distortion.name=變形
 terramap.mapwidget.layers.distortion.desc=預覽變形
+terramap.mapwidget.layers.preview.name=預覽產出
+terramap.mapwidget.layers.preview.description=由Terra++驅動
 
+#### Full-screen map ####
 
-# # Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
+## Message to translators: you can add as many lines as you need for your language here, just add the corresponding number at the end of the key
 terramap.terramapscreen.projection_warning.line1=伺服器未安裝Terramap！！
 terramap.terramapscreen.projection_warning.line2=無法識別使用中的投影。
 terramap.terramapscreen.projection_warning.line3=Minecraft世界中的元素不會顯示在地圖上。
@@ -171,9 +174,9 @@ terramap.terramapscreen.mapstylefailed.title=部分地圖樣式載入失敗。
 terramap.terramapscreen.mapstylefailed.provider=提供者：%1$s
 terramap.terramapscreen.mapstylefailed.exception=例外條款：%1$s
 
-# # Buttons
+## Buttons
 terramap.terramapscreen.buttons.close.tooltip=關閉地圖
-terramap.terramapscreen.buttons.compass.tooltip=重置地圖旋轉
+terramap.terramapscreen.buttons.compass.tooltip=重設地圖旋轉
 terramap.terramapscreen.buttons.zoomin.tooltip=放大
 terramap.terramapscreen.buttons.zoomout.tooltip=縮小
 terramap.terramapscreen.buttons.track.tooltip=追蹤玩家
@@ -184,7 +187,7 @@ terramap.terramapscreen.warning.offset.tooltip=設置當前地圖呈現的偏移
 
 terramap.terramapscreen.search.wip=開發中
 
-# # Info panel
+## Info panel
 terramap.terramapscreen.information.mouse_geo=滑鼠位置： %1$s° %2$s°
 terramap.terramapscreen.information.mouse_mc=X座標：%1$s Z座標：%2$s
 terramap.terramapscreen.information.trackedoutsidemap=%1$s在投影之外
@@ -194,7 +197,7 @@ terramap.terramapscreen.information.playergeo=玩家位置：%1$s° %2$s°
 terramap.terramapscreen.information.noplayer=玩家位置：-° -°
 terramap.terramapscreen.information.distortion=變形：%1$s 格/米；±%2$s°
 
-# # Marker controllers
+## Marker controllers
 terramap.terramapscreen.markercontrollers.buttons.mainplayer=切換主要玩家的可見性
 terramap.terramapscreen.markercontrollers.buttons.otherplayer=切換其他玩家的可見性
 terramap.terramapscreen.markercontrollers.buttons.animals=切換動物的可見性
@@ -202,11 +205,29 @@ terramap.terramapscreen.markercontrollers.buttons.mobs=切換怪物的可見性
 terramap.terramapscreen.markercontrollers.buttons.direction=切換玩家朝向的可見性
 terramap.terramapscreen.markercontrollers.buttons.name=切換玩家名稱的可見性
 
-# # Layer panel
+## Layer panel
 terramap.terramapscreen.layerscreen.title=進階圖層設定
 terramap.terramapscreen.layerscreen.new=新圖層
+terramap.terramapscreen.layerscreen.raster_background.type=網格底圖
+terramap.terramapscreen.layerscreen.raster_background.no_offset=設置底圖投影偏移
+terramap.terramapscreen.layerscreen.raster_background.offset=底圖設定了投影偏移
+terramap.terramapscreen.layerscreen.generic.no_offset=設置圖層投影偏移
+terramap.terramapscreen.layerscreen.generic.offset=為這個圖層設定了投影偏移
+terramap.terramapscreen.layerscreen.generic.alpha=Alpha：
+terramap.terramapscreen.layerscreen.newlayer=為新圖層選擇一個樣式
 
-# ### In game ####
+## New layer popup
+terramap.terramapscreen.newlayer.raster=網格圖磚地圖
+terramap.terramapscreen.newlayer.mcchunks=Minecraft區域和區塊
+terramap.terramapscreen.newlayer.generation_preview=預覽產出
+
+## Region outlines configuration
+terramap.terramapscreen.outlines_config.mca=原版mca區域
+terramap.terramapscreen.outlines_config.3dr=CubicChunks 3dr區域
+terramap.terramapscreen.outlines_config.chunks=區塊
+terramap.terramapscreen.outlines_config.blocks=方塊
+
+#### In game ####
 terramap.ingameactions.copy.noplayer=無法複製座標：沒有玩家
 terramap.ingameactions.copy.noproj=無法複製座標：沒有投影
 terramap.ingameactions.copy.outproj=無法複製座標：你位於投影外
@@ -215,17 +236,20 @@ terramap.ingameactions.copy.geo=地理座標已複製到剪貼簿
 terramap.toasts.welcome.title=Terramap
 terramap.toasts.welcome.text=按%1$s開啟地圖
 
-# ### Rendering offset popup ####
+#### Rendering offset popup ####
 terramap.popup.renderoffset.title=設置圖層呈現的偏移
 terramap.popup.renderoffset.x=X軸(像素)：
 terramap.popup.renderoffset.y=Y軸(像素)：
 terramap.popup.renderoffset.zoom=當前縮放：%s
-terramap.popup.renderoffset.reset=重置
+terramap.popup.renderoffset.reset=重設
 terramap.popup.renderoffset.set0=設置為0
 terramap.popup.renderoffset.cancel=取消
 terramap.popup.renderoffset.done=完成
 
-# ### Commands ####
+#### HUD ####
+terramap.hud.minimap.offset_warning=小地圖設定了投影偏移。
+
+#### Commands ####
 terramap.commands.terrashow.usage=/terrashow <show|hide|status> [玩家名稱（選填）]
 terramap.commands.terrashow.too_few_parameters=參數過少：/terrashow <show|hide|status> [玩家名稱（選填）]
 terramap.commands.terrashow.too_many_parameters=參數過多：/terrashow <show|hide|status> [玩家名稱（選填）]
@@ -244,7 +268,4 @@ terramap.commands.reloadmapstyles.done=完成
 terramap.commands.reloadmapstyles.error=重新載入地圖樣式時出錯。
 terramap.commands.opentmap.numberargs=參數數量無效，需要縮放、緯度和經度。
 terramap.commands.opentmap.couldnotopen=無法在當前條件下開啟Terramap。
-terramap.commands.opentmap.usage=/opentmap <縮放> <latitude> <longitude>terramap.mapwidget.layers.preview.name
-
-terramap.mapwidget.mcchunks.tooltip=顯示區域和區塊的邊界
-terramap.terramapscreen.layerscreen.export=匯出
+terramap.commands.opentmap.usage=/opentmap <縮放> <緯度> <經度>
