@@ -1,11 +1,14 @@
 package fr.thesmyler.smylibgui.screen;
 
 import fr.thesmyler.smylibgui.container.RootContainer;
+import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import fr.thesmyler.smylibgui.util.Scissor;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.minecraft.client.gui.GuiScreen;
+import net.smyler.smylib.game.Mouse;
+import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.SmyLib.getLogger;
@@ -38,16 +41,19 @@ public class Screen extends GuiScreen {
 
     @Override
     public void drawScreen(int nopX, int nopY, float partialTicks) {
+        GameClient client = getGameClient();
+        Mouse mouse = client.mouse();
+        DrawContext context = client.guiDrawContext();
         Scissor.push();
         // We need to make sure everything is visible
         Scissor.scissor(-1f, -1f, this.width + 1f, this.height + 1f);
         this.drawBackground();
         super.drawScreen(nopX, nopY, partialTicks);
-        float mouseX = getGameClient().mouse().x();
-        float mouseY = getGameClient().mouse().y();
+        float mouseX = mouse.x();
+        float mouseY = mouse.y();
         this.onUpdate();
         this.container.onUpdate(mouseX, mouseY, null);
-        this.container.draw(null, 0, 0, mouseX, mouseY, true, true, null);
+        this.container.draw(context, 0, 0, mouseX, mouseY, true, true, null);
         Scissor.pop();
     }
 

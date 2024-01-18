@@ -1,5 +1,7 @@
 package net.smyler.smylib.game;
 
+import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.DummyDrawContext;
 import net.smyler.smylib.gui.DummyFont;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.threading.DefaultThreadLocal;
@@ -25,6 +27,7 @@ public class DummyGameClient implements GameClient {
     private final SoundSystem soundSystem = new DummySoundSystem();
     private final Translator translator = new DummyTranslator();
     private final Font font = new DummyFont(1f);
+    private final DrawContext drawContext = new DummyDrawContext();
 
     private final Path gameDirectory;
 
@@ -117,6 +120,11 @@ public class DummyGameClient implements GameClient {
     @Override
     public Font defaultFont() {
         return this.font;
+    }
+
+    @Override
+    public DrawContext guiDrawContext() {
+        return this.drawContext;
     }
 
     @Override

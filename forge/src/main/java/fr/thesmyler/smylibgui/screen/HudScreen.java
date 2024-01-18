@@ -25,6 +25,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.smyler.smylib.game.GameClient;
 
+import net.smyler.smylib.game.Mouse;
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
@@ -56,6 +58,8 @@ public final class HudScreen {
     public static void onRenderHUD(RenderGameOverlayEvent.Pre e) {
         if(!e.getType().equals(ElementType.HOTBAR)) return;
         GameClient game = getGameClient();
+        Mouse mouse = game.mouse();
+        DrawContext drawContext = game.guiDrawContext();
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
         float width = game.windowWidth();
         float height = game.windowHeight();
@@ -64,13 +68,13 @@ public final class HudScreen {
             renderHeight = height;
             init();
         }
-        float mouseX = game.mouse().x();
-        float mouseY = game.mouse().y();
+        float mouseX = mouse.x();
+        float mouseY = mouse.y();
         CONTAINER.onUpdate(mouseX, mouseY, null);
         Color color = currentColor();
         Scissor.push();
         Scissor.scissor(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
-        CONTAINER.draw(null, 0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
+        CONTAINER.draw(drawContext, 0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
         GlStateManager.enableAlpha();
         applyColor(color); // Reset color to what it was
     }

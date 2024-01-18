@@ -1,5 +1,6 @@
 package net.smyler.smylib.game;
 
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 import org.jetbrains.annotations.Nullable;
 
@@ -74,6 +75,8 @@ public interface GameClient {
     default Font smallestFont() {
         return this.defaultFont().withScale(1f / this.scaleFactor());
     }
+
+    DrawContext guiDrawContext();
 
     boolean isGlAvailabale();
 
