@@ -398,7 +398,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         for(IWidget widget: this.widgets) 
             if(widget instanceof CopyrightHolder){
                 if(!component.getFormattedText().isEmpty()) component.appendText(" | ");
-                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().language());
+                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().translator().language());
                 component.appendSibling(copyright);
             }
         this.copyright.setText(component);

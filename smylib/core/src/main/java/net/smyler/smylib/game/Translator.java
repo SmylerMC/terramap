@@ -6,6 +6,14 @@ package net.smyler.smylib.game;
 public interface Translator {
 
     /**
+     * Gets the current language the game uses.
+     *
+     * @return the language identifier (e.g. "en-us")
+     */
+    String language();
+
+
+    /**
      * Indicates whether the translator knows about the given key.
      *
      * @param key   the key

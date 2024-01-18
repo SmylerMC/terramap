@@ -17,7 +17,6 @@ public class DummyGameClient implements GameClient {
     private final DefaultThreadLocal<AtomicInteger> width = new DefaultThreadLocal<>(() -> new AtomicInteger(Float.floatToIntBits(720f)));
     private final DefaultThreadLocal<AtomicInteger> height = new DefaultThreadLocal<>(() -> new AtomicInteger(Float.floatToIntBits(480f)));
     private final DefaultThreadLocal<AtomicInteger> scale = new DefaultThreadLocal<>(() -> new AtomicInteger(1));
-    private final DefaultThreadLocal<String> language = new DefaultThreadLocal<>(() -> "en-us");
     private final DefaultThreadLocal<AtomicBoolean> isMac = new DefaultThreadLocal<>(() -> new AtomicBoolean(false));
     private final MinecraftServerInfo serverInfo = new MinecraftServerInfo("Dummy Server", "example.com", "Message of the day.", false);
     private final Mouse mouse = new DummyMouse();
@@ -76,11 +75,6 @@ public class DummyGameClient implements GameClient {
     }
 
     @Override
-    public String language() {
-        return this.language.get();
-    }
-
-    @Override
     public boolean isMac() {
         return this.isMac.get().get();
     }
@@ -132,10 +126,6 @@ public class DummyGameClient implements GameClient {
 
     public void setIsMac(boolean yesNo) {
         this.isMac.get().set(yesNo);
-    }
-
-    public void setLanguage(String lang) {
-        this.language.set(lang);
     }
 
     public MinecraftServerInfo setServerInfo(MinecraftServerInfo info) {

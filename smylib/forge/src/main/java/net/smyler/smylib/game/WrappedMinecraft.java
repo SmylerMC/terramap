@@ -51,11 +51,6 @@ public class WrappedMinecraft implements GameClient {
     }
 
     @Override
-    public String language() {
-        return Minecraft.getMinecraft().gameSettings.language;
-    }
-
-    @Override
     public boolean isMac() {
         return Minecraft.IS_RUNNING_ON_MAC;
     }

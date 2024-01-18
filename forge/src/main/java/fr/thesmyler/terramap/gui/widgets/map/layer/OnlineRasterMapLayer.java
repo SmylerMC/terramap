@@ -76,7 +76,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
     @Override
     public String name() {
-        return this.tiledMap.getLocalizedName(getGameClient().language());
+        return this.tiledMap.getLocalizedName(getGameClient().translator().language());
     }
 
     @Override
@@ -94,7 +94,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
         GameClient game = getGameClient();
         final Font font = game.defaultFont();
         final Font smallFont = game.defaultFont().withScale(0.5f);
-        final String language = game.language();
+        final String language = game.translator().language();
         final float width = 250f;
         final float margin = 5f;
         final float entryHeight = 60f;

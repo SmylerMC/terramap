@@ -38,13 +38,6 @@ public interface GameClient {
     int scaleFactor();
 
     /**
-     * Gets the current language the game uses.
-     *
-     * @return the language identifier (e.g. "en-us")
-     */
-    String language();
-
-    /**
      * MacOS does weird things, we may want to account for them.
      *
      * @return whether Minecraft has detected that the underlying system is macOS

@@ -726,7 +726,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
             Color textColor = hovered? Color.SELECTION: Color.WHITE;
-            String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().language());
+            String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().translator().language());
             float width = this.getWidth();
             float height = this.getHeight();
             RenderUtil.drawRect(x, y, x + width, y + 4, Color.DARK_GRAY);
