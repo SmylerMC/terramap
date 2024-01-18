@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.*;
 import java.util.function.Consumer;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.util.*;
@@ -654,7 +655,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             Translator translator = getGameClient().translator();
             Scissor.push();
             Scissor.setScissorState(true);
@@ -723,8 +724,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+            super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
             Color textColor = hovered? Color.SELECTION: Color.WHITE;
             String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().translator().language());
             float width = this.getWidth();

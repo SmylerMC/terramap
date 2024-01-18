@@ -39,6 +39,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
+import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -364,9 +365,9 @@ public class HudConfigScreen extends Screen {
         }
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
             this.compass.setWidth(this.getWidth());
-            super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+            super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }
 
 

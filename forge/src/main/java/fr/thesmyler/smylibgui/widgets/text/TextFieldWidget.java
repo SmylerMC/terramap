@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.widgets.text;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
@@ -124,7 +125,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         this.cursorAnimation.update();
 

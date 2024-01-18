@@ -18,6 +18,7 @@ import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 
 import org.jetbrains.annotations.Nullable;
@@ -164,7 +165,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
             }
 
             @Override
-            public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+            public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
                 float width = this.getWidth();
                 float height = this.getHeight();
                 if (screenHovered) {
@@ -176,7 +177,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
                     background = selectedColor;
                 }
                 RenderUtil.drawRectWithContour(x, y, x + width, y + height, background , 1f, Color.DARK_GRAY);
-                super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+                super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
             }
 
             public void setSelected(boolean selected) {

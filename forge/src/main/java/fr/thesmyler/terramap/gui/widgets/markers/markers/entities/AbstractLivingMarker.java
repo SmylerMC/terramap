@@ -9,6 +9,7 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -42,7 +43,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         applyColor(WHITE);
         boolean drawName = hovered;
         if(parent instanceof MapWidget) {

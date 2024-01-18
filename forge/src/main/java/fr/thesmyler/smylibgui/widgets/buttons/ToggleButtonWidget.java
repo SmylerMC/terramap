@@ -7,6 +7,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Color.WHITE;
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
@@ -84,7 +85,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
         applyColor(WHITE);

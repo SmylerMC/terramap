@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -53,7 +54,7 @@ public class RibbonCompassWidget implements IWidget {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         double blendBorder = 10; // How many pixels to fade to alpha=0 on the sides
         double leftU = (double)(this.azimuth - 180) / 360 + (double)(this.textureWidth - this.width) / this.textureWidth / 2;
         double leftCU = leftU + blendBorder/this.textureWidth;

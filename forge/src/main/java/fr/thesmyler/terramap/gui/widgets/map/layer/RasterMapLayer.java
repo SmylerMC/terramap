@@ -11,6 +11,7 @@ import fr.thesmyler.terramap.maps.raster.RasterTile;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.TilePos;
@@ -56,7 +57,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         final RasterTiledMap tiledMap = this.getTiledMap();
         final ResourceLocation defaultTexture = tiledMap.getDefaultTileTexture();

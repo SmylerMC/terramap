@@ -5,6 +5,7 @@ import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import net.minecraft.client.renderer.GlStateManager;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 
 import java.util.Optional;
@@ -77,8 +78,8 @@ public class ColorPickerWidget extends TextFieldWidget {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
         float width = this.getWidth();

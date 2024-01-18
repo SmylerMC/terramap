@@ -6,6 +6,7 @@ import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.input.KeyBindings;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
@@ -66,7 +67,7 @@ public class InputLayer extends MapLayer {
     protected void initialize() {}
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         if(this.isRotating) {
             // If we are processing rotation input, draw pentagons at the corresponding spot

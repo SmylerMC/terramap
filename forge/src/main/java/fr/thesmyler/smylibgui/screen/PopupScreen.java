@@ -15,6 +15,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -131,11 +132,11 @@ public class PopupScreen extends Screen {
         }
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             float right = x + this.getWidth();
             float bottom = y + this.getHeight();
             RenderUtil.drawRect(x, y, right, bottom, PopupScreen.this.contentBackgroundColor);
-            super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+            super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
             RenderUtil.drawClosedStrokeLine(PopupScreen.this.contourColor, PopupScreen.this.contourSize,
                     x, y,
                     x, bottom,

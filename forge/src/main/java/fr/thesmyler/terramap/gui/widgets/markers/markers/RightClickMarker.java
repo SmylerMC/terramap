@@ -5,6 +5,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +19,7 @@ public class RightClickMarker extends AbstractFixedMarker {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();

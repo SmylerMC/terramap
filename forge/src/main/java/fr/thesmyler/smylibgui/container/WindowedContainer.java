@@ -1,5 +1,6 @@
 package fr.thesmyler.smylibgui.container;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.lwjgl.input.Cursor;
 
 import net.smyler.smylib.Color;
@@ -71,14 +72,14 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
     @Override
     public void draw(
-            float x,
+            DrawContext context, float x,
             float y,
             float mouseX,
             float mouseY,
             boolean screenHovered,
             boolean screenFocused,
             WidgetContainer parent) {
-        super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         protected abstract Color getBackgroundColor();
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
             if(this.lastHovered != hovered && !getGameClient().mouse().isButtonPressed(0)) {
                 if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) Cursors.trySetCursor(this.cursor);
@@ -515,8 +516,8 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         }
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+            super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
             float width = this.getWidth();
             String toDraw = parent.getFont().trimStringToWidth(WindowedContainer.this.windowTitle, this.getWidth());
             float titleY = y + (this.getHeight() - WindowedContainer.this.effectiveBorderSize - parent.getFont().height()) / 2 + 1;

@@ -19,6 +19,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.smyler.terramap.util.geo.GeoPointMutable;
@@ -133,7 +134,7 @@ public class McChunksLayer extends MapLayer {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget)parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;

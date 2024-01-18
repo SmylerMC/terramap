@@ -7,6 +7,7 @@ import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -30,7 +31,7 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         MapWidget parentMap = (MapWidget) parent;
         Profiler profiler = parentMap.getProfiler();

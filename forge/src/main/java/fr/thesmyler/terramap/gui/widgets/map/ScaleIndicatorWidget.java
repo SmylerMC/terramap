@@ -4,6 +4,7 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
@@ -79,7 +80,7 @@ public class ScaleIndicatorWidget implements IWidget {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         float barY = y + 5;
         String lengthstr = "-";
         float barwidth = this.getWidth();

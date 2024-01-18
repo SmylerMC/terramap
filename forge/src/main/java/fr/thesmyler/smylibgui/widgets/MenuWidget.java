@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -52,7 +53,7 @@ public class MenuWidget implements IWidget {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean mouseHoverMenu, boolean hasFocus, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean mouseHoverMenu, boolean hasFocus, WidgetContainer parent) {
         this.mainAnimation.update();
         this.hoverAnimation.update();
         float width = this.getWidth();

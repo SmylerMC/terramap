@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.lwjgl.opengl.GL11;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
@@ -29,7 +30,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         boolean drawName = this.showName(hovered);
         float textureSize = 128f / this.downScaleFactor;
         GlStateManager.enableAlpha();

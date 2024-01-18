@@ -21,6 +21,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.*;
@@ -102,9 +103,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
         }
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
             RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), Color.LIGHT_OVERLAY , 1f, Color.DARK_GRAY);
-            super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+            super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }
 
         void animateSwap(float destinationY) {

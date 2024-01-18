@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets;
 
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.math.Vec2dMutable;
 import org.lwjgl.opengl.GL11;
 
@@ -46,7 +47,7 @@ public class CircularCompassWidget implements IWidget {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         Color background = this.backgroundColor;
         Color north = this.northColor;

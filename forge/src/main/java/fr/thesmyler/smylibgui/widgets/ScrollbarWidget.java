@@ -6,6 +6,7 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import net.minecraft.util.math.MathHelper;
+import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -91,13 +92,13 @@ public class ScrollbarWidget extends WidgetContainer {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
         float width = this.getWidth();
         float height = this.getHeight();
         RenderUtil.drawRect(x, y, x + width, y + height, BAR_BG_COLOR);
         RenderUtil.drawRect(x, y, x + 1, y + height, BAR_BORDER_COLOR);
         RenderUtil.drawRect(x + width - 1, y, x + width, y + height, BAR_BORDER_COLOR);
-        super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
     }
 
     public void scrollBackward() {
@@ -218,7 +219,7 @@ public class ScrollbarWidget extends WidgetContainer {
         }
 
         @Override
-        public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             Color bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
             float height = this.getHeight();
             RenderUtil.drawRect(x, y, x + this.getWidth(), y + height, bgcolor);

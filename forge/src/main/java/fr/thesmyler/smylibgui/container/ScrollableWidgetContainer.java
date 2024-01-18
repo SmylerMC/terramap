@@ -7,6 +7,7 @@ import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 
@@ -92,9 +93,9 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
         RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor);
-        super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), Color.TRANSPARENT, this.contourSize, this.contourColor);
     }
 

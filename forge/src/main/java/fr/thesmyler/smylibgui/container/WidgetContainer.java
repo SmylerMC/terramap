@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.game.Key;
@@ -341,7 +342,7 @@ public abstract class WidgetContainer implements IWidget{
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
         if(this.doScissor) {
             Scissor.push();
             Scissor.setScissorState(true);
@@ -372,7 +373,7 @@ public abstract class WidgetContainer implements IWidget{
                             this.getWidth(),
                             this.getHeight()))
                 return;
-            widget.draw(x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
+            widget.draw(context, x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
         });
         if(this.doScissor) {
             Scissor.pop();

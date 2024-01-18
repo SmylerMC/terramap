@@ -7,6 +7,7 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -36,7 +37,7 @@ public class DistortionLayer extends MapLayer {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget) parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;

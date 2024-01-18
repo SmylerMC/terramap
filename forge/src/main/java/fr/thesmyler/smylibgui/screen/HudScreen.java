@@ -70,7 +70,7 @@ public final class HudScreen {
         Color color = currentColor();
         Scissor.push();
         Scissor.scissor(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
-        CONTAINER.draw(0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
+        CONTAINER.draw(null, 0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
         GlStateManager.enableAlpha();
         applyColor(color); // Reset color to what it was
     }

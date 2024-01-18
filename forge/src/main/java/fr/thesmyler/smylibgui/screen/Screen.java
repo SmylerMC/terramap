@@ -47,7 +47,7 @@ public class Screen extends GuiScreen {
         float mouseY = getGameClient().mouse().y();
         this.onUpdate();
         this.container.onUpdate(mouseX, mouseY, null);
-        this.container.draw(0, 0, mouseX, mouseY, true, true, null);
+        this.container.draw(null, 0, 0, mouseX, mouseY, true, true, null);
         Scissor.pop();
     }
 

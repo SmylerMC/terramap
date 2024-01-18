@@ -3,6 +3,7 @@ package fr.thesmyler.smylibgui.container;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.smyler.smylib.gui.DrawContext;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -28,8 +29,8 @@ public abstract class RootContainer extends WidgetContainer {
     }
 
     @Override
-    public void draw(float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
-        super.draw(x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         IWidget hoveredWidget = this.getHoveredWidget();
         boolean mouseMoved = mouseX != this.lastRenderMouseX && mouseY != this.lastRenderMouseY;
         if(mouseMoved || (hoveredWidget != null && !hoveredWidget.equals(this.lastHoveredWidget))) {

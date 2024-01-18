@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.widgets;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.game.Key;
+import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -44,15 +45,16 @@ public interface IWidget {
     /**
      * This method should draw the widget on the screen.
      * It is the only method in this interface which takes as parameter the absolute position relative to the Minecraft widow.
-     * 
-     * @param x         the x position where to draw the widget on the screen, can be different than this.getX()
-     * @param y         the y position where to draw the widget on the screen, can be different than this.getY()
-     * @param mouseX    the mouse's x position on the screen
-     * @param mouseY    the mouse's y position on the screen
-     * @param focused   indicates whether this widget has its parent's focus (it will get keystrokes and so on)
-     * @param parent    the parent Screen
+     *
+     * @param context plateforme independent rendering helper
+     * @param x       the x position where to draw the widget on the screen, can be different than this.getX()
+     * @param y       the y position where to draw the widget on the screen, can be different than this.getY()
+     * @param mouseX  the mouse's x position on the screen
+     * @param mouseY  the mouse's y position on the screen
+     * @param focused indicates whether this widget has its parent's focus (it will get keystrokes and so on)
+     * @param parent  the parent Screen
      */
-    void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent);
+    void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent);
 
     /**
      * If this returns false, this widget will not be rendered and or notified of user actions
