@@ -74,7 +74,7 @@ public class CircularCompassWidget implements IWidget {
         BufferBuilder builder = tessellator.getBuffer();
         applyColor(WHITE);
         GlStateManager.shadeModel(7425);
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
@@ -91,7 +91,7 @@ public class CircularCompassWidget implements IWidget {
         builder.pos(radius/3, radius * 0.1, 0).color(southColor.redf(), southColor.greenf(), southColor.bluef(), southColor.alphaf()).endVertex();
         tessellator.draw();
         GlStateManager.shadeModel(7424);
-        GlStateManager.disableAlpha();
+        context.glState().disableAlpha();
         GlStateManager.disableBlend();
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();

@@ -33,7 +33,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         boolean drawName = this.showName(hovered);
         float textureSize = 128f / this.downScaleFactor;
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         if(hovered) RenderUtil.drawRect(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.DARK_OVERLAY);
 
         // Draw the direction arrow
@@ -45,7 +45,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             GlStateManager.rotate(azimuth, 0, 0, 1);
             GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
-            GlStateManager.disableAlpha();
+            context.glState().disableAlpha();
             GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             GlStateManager.shadeModel(7425);
             Tessellator tess = Tessellator.getInstance();
@@ -58,7 +58,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             tess.draw();
             GlStateManager.shadeModel(7424);
             GlStateManager.disableBlend();
-            GlStateManager.enableAlpha();
+            context.glState().enableAlpha();
             GlStateManager.enableTexture2D();
             GlStateManager.popMatrix();
         }

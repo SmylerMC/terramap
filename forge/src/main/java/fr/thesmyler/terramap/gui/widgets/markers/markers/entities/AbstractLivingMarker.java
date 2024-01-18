@@ -50,7 +50,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             MapWidget map = (MapWidget) parent;
             drawName = drawName && !map.getContext().equals(MapContext.MINIMAP);
         }
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         if(hovered) RenderUtil.drawRect(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
         applyColor(WHITE);

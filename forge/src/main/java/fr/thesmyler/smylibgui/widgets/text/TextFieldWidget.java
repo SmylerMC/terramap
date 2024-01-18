@@ -148,7 +148,7 @@ public class TextFieldWidget implements IWidget {
         if(this.isSearchBar) {
             applyColor(WHITE);
             Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
-            GlStateManager.enableAlpha();
+            context.glState().enableAlpha();
             GlStateManager.enableBlend();
             RenderUtil.drawModalRectWithCustomSizedTexture(x + this.width - 17, y + 2, 131, 0, 15, 15, 256, 256);
         }

@@ -65,7 +65,7 @@ public class RibbonCompassWidget implements IWidget {
         BufferBuilder buff = tess.getBuffer();
 
         GlStateManager.enableTexture2D();
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         GlStateManager.enableBlend();
         Minecraft.getMinecraft().getTextureManager().bindTexture(COMPASS_BACKGROUND_TEXTURE);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);

@@ -11,7 +11,6 @@ import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.Font;
 
 public class MenuWidget implements IWidget {
@@ -62,7 +61,7 @@ public class MenuWidget implements IWidget {
         float lh = fh + padding * 2;
         float sh = 3;
         float dw = this.font.getStringWidth(" >");
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         Color separatorColor = this.mainAnimation.fadeColor(this.separatorColor);
         Color borderColor = this.mainAnimation.fadeColor(this.borderColor);
         Color backgroundColor = this.mainAnimation.fadeColor(this.backgroundColor);
@@ -118,7 +117,7 @@ public class MenuWidget implements IWidget {
                 ty += sh;
             }
         }
-        GlStateManager.disableAlpha();
+        context.glState().disableAlpha();
     }
 
     @Override

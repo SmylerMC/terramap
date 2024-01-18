@@ -21,7 +21,7 @@ public class RightClickMarker extends AbstractFixedMarker {
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.color(1f, 1f, 1f);
         RenderUtil.drawTexturedModalRect(x, y, 0, hovered? 126:94, 15, 27);

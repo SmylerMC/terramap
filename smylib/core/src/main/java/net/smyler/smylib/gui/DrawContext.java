@@ -4,4 +4,6 @@ public interface DrawContext {
 
     Scissor scissor();
 
+    GlState glState();
+
 }

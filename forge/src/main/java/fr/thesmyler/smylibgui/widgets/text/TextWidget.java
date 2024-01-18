@@ -76,7 +76,7 @@ public class TextWidget implements IWidget {
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         GlStateManager.enableBlend();
         float w = this.getWidth();
         float h = this.getHeight();

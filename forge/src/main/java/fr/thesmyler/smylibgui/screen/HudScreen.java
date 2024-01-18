@@ -75,7 +75,7 @@ public final class HudScreen {
         scissor.push();
         scissor.cropScreen(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
         CONTAINER.draw(drawContext, 0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
-        GlStateManager.enableAlpha();
+        drawContext.glState().enableAlpha();
         applyColor(color); // Reset color to what it was
     }
 

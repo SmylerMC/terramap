@@ -80,7 +80,7 @@ public class ColorPickerWidget extends TextFieldWidget {
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
-        GlStateManager.enableAlpha();
+        context.glState().enableAlpha();
         GlStateManager.enableBlend();
         float width = this.getWidth();
         float height = this.getHeight();
