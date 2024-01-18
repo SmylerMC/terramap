@@ -26,7 +26,7 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
                     this.other.setShowDirection(b);
                 }
                 );
-        this.button.setTooltip(getGameClient().getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.direction"));
+        this.button.setTooltip(getGameClient().translator().format("terramap.terramapscreen.markercontrollers.buttons.direction"));
     }
 
     @Override

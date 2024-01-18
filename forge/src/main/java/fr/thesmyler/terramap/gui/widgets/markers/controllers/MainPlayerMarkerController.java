@@ -21,7 +21,7 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
                 74, 108, 74, 122,
                 74, 136, 74, 150,
                 false, null));
-        this.button.setTooltip(getGameClient().getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
+        this.button.setTooltip(getGameClient().translator().format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
     }
 
     @Override

@@ -27,7 +27,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
 
     @Override
     public String getLocalizedName(String localeKey) {
-        return getGameClient().getTranslator().format("terramap.maps.debug.terrain"); // This is always local
+        return getGameClient().translator().format("terramap.maps.debug.terrain"); // This is always local
     }
 
     @Override

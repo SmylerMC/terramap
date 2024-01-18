@@ -12,12 +12,12 @@ public class GenerationPreviewLayer extends RasterMapLayer {
 
     @Override
     public String name() {
-        return getGameClient().getTranslator().format("terramap.mapwidget.layers.preview.name");
+        return getGameClient().translator().format("terramap.mapwidget.layers.preview.name");
     }
 
     @Override
     public String description() {
-        return getGameClient().getTranslator().format("terramap.mapwidget.layers.preview.description");
+        return getGameClient().translator().format("terramap.mapwidget.layers.preview.description");
     }
 
     @Override

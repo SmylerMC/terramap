@@ -32,7 +32,7 @@ public class LayerConfigurationPopup extends PopupScreen {
         this.container = requireNonNull(layer.createConfigurationContainer());
         this.titleText = new TextWidget(0,
                 new TextComponentString(layer.description()),
-                TextAlignment.CENTER, getGameClient().getDefaultFont());
+                TextAlignment.CENTER, getGameClient().defaultFont());
         this.closeButton = new TexturedButtonWidget(0, CROSS, this::close);
         this.scroll = new ScrollableWidgetContainer(1f, 1f, 0,
                 container.getWidth() - 2f, container.getHeight() - 2f,
@@ -47,8 +47,8 @@ public class LayerConfigurationPopup extends PopupScreen {
 
         // Recalculate sizes
         GameClient game = getGameClient();
-        float mcWidth = game.getWindowWidth();
-        float mcHeight = game.getWindowHeight();
+        float mcWidth = game.windowWidth();
+        float mcHeight = game.windowHeight();
         float contourSize = this.getContourSize();
         float contentWidth = this.container.getWidth();
         float contentHeight = this.container.getHeight();

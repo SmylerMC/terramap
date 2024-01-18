@@ -57,7 +57,7 @@ public class ScrollbarWidget extends WidgetContainer {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        getGameClient().getSoundSystem().playClickSound();
+        getGameClient().soundSystem().playClickSound();
         float i = 4;
         float y = this.drag.getY();
         if(mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.forwardButton.getHeight()) {

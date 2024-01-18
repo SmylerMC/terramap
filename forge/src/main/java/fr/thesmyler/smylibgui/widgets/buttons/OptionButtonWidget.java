@@ -32,7 +32,7 @@ public class OptionButtonWidget<T> extends TextButtonWidget {
 
     public OptionButtonWidget(int z, T[] options, int startOption, Consumer<T> onCycle) {
         super(z, "", null, null);
-        Font font = getGameClient().getDefaultFont();
+        Font font = getGameClient().defaultFont();
         float maxWidth = Arrays.stream(options)
                 .map(Object::toString).map(font::getStringWidth)
                 .max(Float::compareTo).orElse(0f);

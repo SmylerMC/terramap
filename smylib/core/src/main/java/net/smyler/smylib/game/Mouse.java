@@ -10,12 +10,12 @@ public interface Mouse {
     /**
      * @return the X position of the mouse cursor on the game window, taking GUI scaling into account
      */
-    float getX();
+    float x();
 
     /**
      * @return the X position of the mouse cursor on the game window, taking GUI scaling into account
      */
-    float getY();
+    float y();
 
     /**
      * @return the number of physical buttons on the mouse

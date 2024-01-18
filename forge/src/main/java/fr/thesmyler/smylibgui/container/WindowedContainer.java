@@ -120,7 +120,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         @Override
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
-            if(this.lastHovered != hovered && !getGameClient().getMouse().isButtonPressed(0)) {
+            if(this.lastHovered != hovered && !getGameClient().mouse().isButtonPressed(0)) {
                 if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) Cursors.trySetCursor(this.cursor);
                 else if(Mouse.getNativeCursor() == this.cursor) Cursors.trySetCursor(null);
                 this.lastHovered = hovered;

@@ -34,7 +34,7 @@ public class MinimapWidget extends MapWidget {
         this.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
 
         this.setBackgroundOffsetMenuEntry = this.getRightClickMenu().addEntry(
-                getGameClient().getTranslator().format("terramap.mapwidget.rclickmenu.offset"),
+                getGameClient().translator().format("terramap.mapwidget.rclickmenu.offset"),
                 () -> this.getRasterBackgroundLayer().ifPresent(
                         l -> new LayerRenderingOffsetPopup(l).show()
                     )

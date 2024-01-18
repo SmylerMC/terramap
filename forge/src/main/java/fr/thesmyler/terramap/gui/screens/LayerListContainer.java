@@ -152,7 +152,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
                     layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
                     () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(layer).show())
             );
-            offsetButton.setTooltip(getGameClient().getTranslator().format(
+            offsetButton.setTooltip(getGameClient().translator().format(
                     layer.hasRenderingOffset() ?
                     "terramap.terramapscreen.layerscreen.raster_background.offset":
                     "terramap.terramapscreen.layerscreen.raster_background.no_offset"
@@ -196,7 +196,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
                     LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(lowestLayer, layer).show());
                 }
             );
-            offsetButton.setTooltip(getGameClient().getTranslator().format(
+            offsetButton.setTooltip(getGameClient().translator().format(
                     layer.hasRenderingOffset() ? "terramap.terramapscreen.layerscreen.generic.offset": "terramap.terramapscreen.layerscreen.generic.no_offset"
             ));
             this.addWidget(offsetButton);
@@ -213,7 +213,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
             ));
 
             this.alphaSlider = new FloatSliderWidget(this.getWidth() - 86f, 19f, -1, 63f, 15f, 0d, 1d, layer.getAlpha());
-            this.alphaSlider.setDisplayPrefix(getGameClient().getTranslator().format("terramap.terramapscreen.layerscreen.generic.alpha"));
+            this.alphaSlider.setDisplayPrefix(getGameClient().translator().format("terramap.terramapscreen.layerscreen.generic.alpha"));
             this.alphaSlider.setOnChange(d -> this.layer.setAlpha(d.floatValue()));
             this.alphaSlider.setEnabled(this.layer.isVisible());
             this.addWidget(alphaSlider);

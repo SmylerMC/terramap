@@ -16,7 +16,7 @@ public class DummyMouse implements Mouse {
     private final DefaultThreadLocal<String[]> buttonNames = new DefaultThreadLocal<>(() -> new String[this.getButtonCount()]);
 
     @Override
-    public float getX() {
+    public float x() {
         return Float.intBitsToFloat(this.xBits.get().get());
     }
 
@@ -25,7 +25,7 @@ public class DummyMouse implements Mouse {
     }
 
     @Override
-    public float getY() {
+    public float y() {
         return Float.intBitsToFloat(this.yBits.get().get());
     }
 

@@ -39,7 +39,7 @@ public class DummyGameClient implements GameClient {
     }
 
     @Override
-    public float getWindowWidth() {
+    public float windowWidth() {
         return Float.intBitsToFloat(this.width.get().get());
     }
 
@@ -48,7 +48,7 @@ public class DummyGameClient implements GameClient {
     }
 
     @Override
-    public float getWindowHeight() {
+    public float windowHeight() {
         return Float.intBitsToFloat(this.height.get().get());
     }
 
@@ -57,17 +57,17 @@ public class DummyGameClient implements GameClient {
     }
 
     @Override
-    public int getNativeWindowWidth() {
-        return round(this.getWindowWidth() * this.getScaleFactor());
+    public int nativeWindowWidth() {
+        return round(this.windowWidth() * this.scaleFactor());
     }
 
     @Override
-    public int getNativeWindowHeight() {
-        return round(this.getWindowHeight() * this.getScaleFactor());
+    public int nativeWindowHeight() {
+        return round(this.windowHeight() * this.scaleFactor());
     }
 
     @Override
-    public int getScaleFactor() {
+    public int scaleFactor() {
         return this.scale.get().get();
     }
 
@@ -76,7 +76,7 @@ public class DummyGameClient implements GameClient {
     }
 
     @Override
-    public String getLanguage() {
+    public String language() {
         return this.language.get();
     }
 
@@ -86,42 +86,42 @@ public class DummyGameClient implements GameClient {
     }
 
     @Override
-    public Path getGameDirectory() {
+    public Path gameDirectory() {
         return this.gameDirectory;
     }
 
     @Override
-    public MinecraftServerInfo getCurrentServerInfo() {
+    public MinecraftServerInfo currentServerInfo() {
         return this.serverInfo;
     }
 
     @Override
-    public Mouse getMouse() {
+    public Mouse mouse() {
         return this.mouse;
     }
 
     @Override
-    public Keyboard getKeyboard() {
+    public Keyboard keyboard() {
         return this.keyboard;
     }
 
     @Override
-    public Clipboard getClipboard() {
+    public Clipboard clipboard() {
         return this.clipboard;
     }
 
     @Override
-    public SoundSystem getSoundSystem() {
+    public SoundSystem soundSystem() {
         return this.soundSystem;
     }
 
     @Override
-    public Translator getTranslator() {
+    public Translator translator() {
         return this.translator;
     }
 
     @Override
-    public Font getDefaultFont() {
+    public Font defaultFont() {
         return this.font;
     }
 

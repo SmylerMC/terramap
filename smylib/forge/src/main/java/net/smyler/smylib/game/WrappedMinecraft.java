@@ -26,32 +26,32 @@ public class WrappedMinecraft implements GameClient {
     private final Font font = new ReflectedFontRenderer(1f);
 
     @Override
-    public float getWindowWidth() {
+    public float windowWidth() {
         return this.width;
     }
 
     @Override
-    public float getWindowHeight() {
+    public float windowHeight() {
         return this.height;
     }
 
     @Override
-    public int getNativeWindowWidth() {
+    public int nativeWindowWidth() {
         return this.nativeWidth;
     }
 
     @Override
-    public int getNativeWindowHeight() {
+    public int nativeWindowHeight() {
         return this.nativeHeight;
     }
 
     @Override
-    public int getScaleFactor() {
+    public int scaleFactor() {
         return this.scale;
     }
 
     @Override
-    public String getLanguage() {
+    public String language() {
         return Minecraft.getMinecraft().gameSettings.language;
     }
 
@@ -61,12 +61,12 @@ public class WrappedMinecraft implements GameClient {
     }
 
     @Override
-    public Path getGameDirectory() {
+    public Path gameDirectory() {
         return Minecraft.getMinecraft().gameDir.toPath();
     }
 
     @Override
-    public MinecraftServerInfo getCurrentServerInfo() {
+    public MinecraftServerInfo currentServerInfo() {
         ServerData data = Minecraft.getMinecraft().getCurrentServerData();
         return data == null ? null: new MinecraftServerInfo(
                 data.serverName,
@@ -77,32 +77,32 @@ public class WrappedMinecraft implements GameClient {
     }
 
     @Override
-    public Mouse getMouse() {
+    public Mouse mouse() {
         return this.mouse;
     }
 
     @Override
-    public Keyboard getKeyboard() {
+    public Keyboard keyboard() {
         return this.keyboard;
     }
 
     @Override
-    public Clipboard getClipboard() {
+    public Clipboard clipboard() {
         return this.clipboard;
     }
 
     @Override
-    public SoundSystem getSoundSystem() {
+    public SoundSystem soundSystem() {
         return this.soundSystem;
     }
 
     @Override
-    public Translator getTranslator() {
+    public Translator translator() {
         return this.translator;
     }
 
     @Override
-    public Font getDefaultFont() {
+    public Font defaultFont() {
         return this.font;
     }
 

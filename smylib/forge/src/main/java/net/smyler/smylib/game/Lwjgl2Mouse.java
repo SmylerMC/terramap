@@ -5,17 +5,17 @@ import static net.smyler.smylib.SmyLib.getGameClient;
 public class Lwjgl2Mouse implements Mouse {
 
     @Override
-    public float getX() {
+    public float x() {
         int x = org.lwjgl.input.Mouse.getX();
-        return (float) x / getGameClient().getScaleFactor();
+        return (float) x / getGameClient().scaleFactor();
     }
 
     @Override
-    public float getY() {
+    public float y() {
         GameClient game = getGameClient();
         int y = org.lwjgl.input.Mouse.getY();
-        int scale = game.getScaleFactor();
-        float height = game.getWindowHeight();
+        int scale = game.scaleFactor();
+        float height = game.windowHeight();
         return height - (float) y / scale - 1;
     }
 

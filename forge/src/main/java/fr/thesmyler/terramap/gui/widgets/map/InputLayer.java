@@ -202,7 +202,7 @@ public class InputLayer extends MapLayer {
 
     @Override
     public String getTooltipText() {
-        return isShortcutEnabled() ? getGameClient().getTranslator().format("terramap.mapwidget.shortcuts.tp"): "";
+        return isShortcutEnabled() ? getGameClient().translator().format("terramap.mapwidget.shortcuts.tp"): "";
     }
 
     @Override

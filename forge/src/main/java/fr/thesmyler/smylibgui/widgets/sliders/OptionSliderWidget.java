@@ -33,7 +33,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 
     public OptionSliderWidget(int z, T[] options, int startOption, Consumer<T> onCycle) {
         this(0, 0, z, 0, 0, options, startOption, onCycle);
-        Font font = getGameClient().getDefaultFont();
+        Font font = getGameClient().defaultFont();
         float maxWidth = Arrays.stream(options)
                 .map(Object::toString).map(font::getStringWidth)
                 .max(Float::compareTo).orElse(0f);

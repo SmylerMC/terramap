@@ -24,11 +24,11 @@ public abstract class SmyLibTest {
     }
 
     protected DummyMouse getMouse() {
-        return (DummyMouse) this.game.getMouse();
+        return (DummyMouse) this.game.mouse();
     }
 
     protected DummyKeyboard getKeyboard() {
-        return (DummyKeyboard) this.game.getKeyboard();
+        return (DummyKeyboard) this.game.keyboard();
     }
 
 }

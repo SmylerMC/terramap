@@ -53,10 +53,10 @@ public class TestScreen extends Screen {
         this.next = new TexturedButtonWidget(10, IncludedTexturedButtons.RIGHT, this::nextPage);
         this.previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
 
-        this.fpsCounter = new TextWidget(10, new TextComponentString("FPS: 0"), getGameClient().getDefaultFont());
-        this.focus = new TextWidget(10, new TextComponentString("Focused: null"), getGameClient().getDefaultFont());
-        this.hovered = new TextWidget(10, new TextComponentString("Hovered: null"), getGameClient().getDefaultFont());
-        this.textField = new TextFieldWidget(1, "Text field",getGameClient().getDefaultFont());
+        this.fpsCounter = new TextWidget(10, new TextComponentString("FPS: 0"), getGameClient().defaultFont());
+        this.focus = new TextWidget(10, new TextComponentString("Focused: null"), getGameClient().defaultFont());
+        this.hovered = new TextWidget(10, new TextComponentString("Hovered: null"), getGameClient().defaultFont());
+        this.textField = new TextFieldWidget(1, "Text field",getGameClient().defaultFont());
         this.textField.setText("Write and right click");
         this.textField.setCursor(0);
     }
@@ -75,7 +75,7 @@ public class TestScreen extends Screen {
         this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen};
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
-        TextWidget title = new TextWidget(this.width / 2f, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().getDefaultFont());
+        TextWidget title = new TextWidget(this.width / 2f, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
         content.addWidget(title);
         content.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
         content.addWidget(next.setX(this.width - 20).setY(this.height - 20));
@@ -86,10 +86,10 @@ public class TestScreen extends Screen {
                 );
 
         // === Text related stuff and general features examples === //
-        this.hovered = new TextWidget(0, 50, 10, new TextComponentString("Hovered: null"), getGameClient().getDefaultFont());
+        this.hovered = new TextWidget(0, 50, 10, new TextComponentString("Hovered: null"), getGameClient().defaultFont());
 
-        TextWidget counterStr = new TextWidget(0, 100, 10, getGameClient().getDefaultFont());
-        this.colored = new TextWidget(0, 120, 10, new TextComponentString("Color animated text"), getGameClient().getDefaultFont());
+        TextWidget counterStr = new TextWidget(0, 100, 10, getGameClient().defaultFont());
+        this.colored = new TextWidget(0, 120, 10, new TextComponentString("Color animated text"), getGameClient().defaultFont());
         this.colored.setBaseColor(animation.rainbowColor());
         textScreen.addWidget(fpsCounter.setAnchorX(0).setAnchorY(10));
         textScreen.addWidget(focus.setAnchorX(0).setAnchorY(30));
@@ -98,7 +98,7 @@ public class TestScreen extends Screen {
         textScreen.addWidget(counterStr);
         textScreen.addWidget(colored);
         ITextComponent compo = ITextComponent.Serializer.jsonToComponent("[\"\",{\"text\":\"This is red, with a hover event,\",\"color\":\"dark_red\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"I said it's red\"}},{\"text\":\" \"},{\"text\":\"and this is green with an other hover event.\",\"color\":\"dark_green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Don't you trust me? This is green!\"}},{\"text\":\"\\n\"},{\"text\":\"And this is blue, with a click event!\",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://example.com\"}},{\"text\":\"\\n\"},{\"text\":\"And finally, this is \",\"color\":\"white\"},{\"text\":\"black\",\"strikethrough\":true,\"color\":\"white\"},{\"text\":\" white, \",\"color\":\"white\"},{\"text\":\"with\",\"underlined\":true,\"color\":\"white\"},{\"text\":\" various\",\"italic\":true,\"color\":\"white\"},{\"text\":\" styles \",\"bold\":true,\"color\":\"white\"},{\"text\":\"and I bet you can't read that.\",\"obfuscated\":true,\"color\":\"white\"}]");
-        textScreen.addWidget(new TextWidget(textScreen.getWidth()/2, 140, 1, compo, TextAlignment.CENTER, getGameClient().getDefaultFont().withScale(2)).setMaxWidth(textScreen.getWidth()).setBackgroundColor(Color.DARK_OVERLAY).setPadding(10));
+        textScreen.addWidget(new TextWidget(textScreen.getWidth()/2, 140, 1, compo, TextAlignment.CENTER, getGameClient().defaultFont().withScale(2)).setMaxWidth(textScreen.getWidth()).setBackgroundColor(Color.DARK_OVERLAY).setPadding(10));
 
         // === Button screen: examples on how to use button widgets === //
 
@@ -135,13 +135,13 @@ public class TestScreen extends Screen {
 
         // === Menu screen: example on how to use menu widgets === //
 
-        MenuWidget rcm = new MenuWidget(50, getGameClient().getDefaultFont()); //This will be used as our right click menu, the following are it's sub menus
-        MenuWidget animationMenu = new MenuWidget(1, getGameClient().getDefaultFont());
-        MenuWidget here = new MenuWidget(50, getGameClient().getDefaultFont());
-        MenuWidget is = new MenuWidget(50, getGameClient().getDefaultFont());
-        MenuWidget a = new MenuWidget(50, getGameClient().getDefaultFont());
-        MenuWidget very = new MenuWidget(50, getGameClient().getDefaultFont());
-        MenuWidget nested = new MenuWidget(50, getGameClient().getDefaultFont());
+        MenuWidget rcm = new MenuWidget(50, getGameClient().defaultFont()); //This will be used as our right click menu, the following are it's sub menus
+        MenuWidget animationMenu = new MenuWidget(1, getGameClient().defaultFont());
+        MenuWidget here = new MenuWidget(50, getGameClient().defaultFont());
+        MenuWidget is = new MenuWidget(50, getGameClient().defaultFont());
+        MenuWidget a = new MenuWidget(50, getGameClient().defaultFont());
+        MenuWidget very = new MenuWidget(50, getGameClient().defaultFont());
+        MenuWidget nested = new MenuWidget(50, getGameClient().defaultFont());
         animationMenu.addEntry("Show", () -> animation.start(AnimationState.ENTER));
         animationMenu.addEntry("Hide", () -> animation.start(AnimationState.LEAVE));
         animationMenu.addEntry("Flash", () -> animation.start(AnimationState.FLASH));
@@ -160,7 +160,7 @@ public class TestScreen extends Screen {
         rcm.addSeparator();
         rcm.addEntry("Animation", animationMenu);
         rcm.useAsRightClick(); // Calling this tells the menu to open whenever it's parent screen is right clicked
-        menuScreen.addWidget(new TextWidget(menuScreen.getWidth() / 2, menuScreen.getHeight() / 2, 1, new TextComponentString("Please right click anywhere"), TextAlignment.CENTER, getGameClient().getDefaultFont()));
+        menuScreen.addWidget(new TextWidget(menuScreen.getWidth() / 2, menuScreen.getHeight() / 2, 1, new TextComponentString("Please right click anywhere"), TextAlignment.CENTER, getGameClient().defaultFont()));
         menuScreen.addWidget(rcm);
 
 

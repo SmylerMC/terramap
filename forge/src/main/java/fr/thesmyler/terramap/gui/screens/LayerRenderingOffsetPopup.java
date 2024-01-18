@@ -59,7 +59,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
     public LayerRenderingOffsetPopup(MapLayer background, MapLayer layer) {
         super(300f, 150f);
         GameClient game = getGameClient();
-        Translator translator = game.getTranslator();
+        Translator translator = game.translator();
         this.layer = layer;
         float interline = 20;
         float margin = 8;
@@ -69,19 +69,19 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
                 content.getWidth() / 2, margin, 0,
                 new TextComponentTranslation("terramap.popup.renderoffset.title"),
                 TextAlignment.CENTER,
-                game.getDefaultFont());
+                game.defaultFont());
         content.addWidget(title);
         TextWidget xText = new TextWidget(
                 margin, title.getY() + title.getHeight() + interline, 0,
                 new TextComponentTranslation("terramap.popup.renderoffset.x"),
                 TextAlignment.RIGHT,
-                game.getDefaultFont());
+                game.defaultFont());
         content.addWidget(xText);
         TextWidget yText = new TextWidget(
                 margin, xText.getY() + xText.getHeight() + interline, 0,
                 new TextComponentTranslation("terramap.popup.renderoffset.y"),
                 TextAlignment.RIGHT,
-                game.getDefaultFont());
+                game.defaultFont());
         content.addWidget(yText);
         float inputsX = Math.max(xText.getX() + xText.getWidth(), yText.getX() + yText.getWidth()) + spacing;
         this.xInput = new TextFieldWidget(inputsX, xText.getY() - 6, 0, 70);

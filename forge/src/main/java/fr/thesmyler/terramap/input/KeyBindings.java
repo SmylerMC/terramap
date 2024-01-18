@@ -71,7 +71,7 @@ public abstract class KeyBindings {
             } else {
                 try {
                     double[] projectedCoords = projection.toGeo(player.posX, player.posZ);
-                    getGameClient().getClipboard().setContent(projectedCoords[1] + " " + projectedCoords[0]);
+                    getGameClient().clipboard().setContent(projectedCoords[1] + " " + projectedCoords[0]);
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.geo"));
                 } catch(OutOfProjectionBoundsException e) {
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.outproj"));
@@ -84,7 +84,7 @@ public abstract class KeyBindings {
             if(player == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
             } else {
-                getGameClient().getClipboard().setContent(player.posX + " " + player.posY + " " + player.posZ);
+                getGameClient().clipboard().setContent(player.posX + " " + player.posY + " " + player.posZ);
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.mc"));
             }
         }

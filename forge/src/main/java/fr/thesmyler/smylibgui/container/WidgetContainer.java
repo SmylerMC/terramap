@@ -49,14 +49,14 @@ public abstract class WidgetContainer implements IWidget{
     private final int z;
     private boolean doScissor = true;
 
-    private final float[] lastClickX = new float[getGameClient().getMouse().getButtonCount()];
-    private final float[] lastClickY = new float[getGameClient().getMouse().getButtonCount()];
-    private final long[] lastClickTime = new long[getGameClient().getMouse().getButtonCount()];
+    private final float[] lastClickX = new float[getGameClient().mouse().getButtonCount()];
+    private final float[] lastClickY = new float[getGameClient().mouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getGameClient().mouse().getButtonCount()];
 
-    private final IWidget[] draggedWidget = new IWidget[getGameClient().getMouse().getButtonCount()];
-    private final float[] dClickX = new float[getGameClient().getMouse().getButtonCount()];
-    private final float[] dClickY = new float[getGameClient().getMouse().getButtonCount()];
-    private final long[] dClickT = new long[getGameClient().getMouse().getButtonCount()];
+    private final IWidget[] draggedWidget = new IWidget[getGameClient().mouse().getButtonCount()];
+    private final float[] dClickX = new float[getGameClient().mouse().getButtonCount()];
+    private final float[] dClickY = new float[getGameClient().mouse().getButtonCount()];
+    private final long[] dClickT = new long[getGameClient().mouse().getButtonCount()];
 
     private final List<MouseAction> delayedActions = new ArrayList<>();
 
@@ -67,7 +67,7 @@ public abstract class WidgetContainer implements IWidget{
     private float menuToShowX;
     private float menuToShowY;
 
-    private Font font = getGameClient().getDefaultFont();
+    private Font font = getGameClient().defaultFont();
 
     public WidgetContainer(int z) {
         Arrays.fill(this.lastClickTime, Long.MIN_VALUE);

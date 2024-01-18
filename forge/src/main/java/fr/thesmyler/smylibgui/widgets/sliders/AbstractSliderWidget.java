@@ -152,11 +152,11 @@ public abstract class AbstractSliderWidget implements IWidget {
         if (!this.isEnabled()) textColor = this.disabledTextColor;
         else if (hovered || hasFocus) textColor = this.activeTextColor;
 
-        float fontSize = game.getDefaultFont().height();
-        double gameScale = game.getScaleFactor();
+        float fontSize = game.defaultFont().height();
+        double gameScale = game.scaleFactor();
         float fontScale = 1f;
         while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) fontScale++;
-        Font font = game.getDefaultFont().withScale(1 / fontScale + 0.0001f);
+        Font font = game.defaultFont().withScale(1 / fontScale + 0.0001f);
         font.drawCenteredString(x + this.width / 2, y + (this.height - font.height() + 1) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
 
     }

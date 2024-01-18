@@ -28,9 +28,9 @@ public class TestingWidgetContainer extends WidgetContainer {
     private final Queue<MouseWheelEvent> mouseWheelEvents = new PriorityQueue<>();
     private final Queue<KeyboardEvent> keyboardEvents = new PriorityQueue<>();
 
-    private final float[] lastClickX = new float[getGameClient().getMouse().getButtonCount()];
-    private final float[] lastClickY = new float[getGameClient().getMouse().getButtonCount()];
-    private final long[] lastClickTime = new long[getGameClient().getMouse().getButtonCount()];
+    private final float[] lastClickX = new float[getGameClient().mouse().getButtonCount()];
+    private final float[] lastClickY = new float[getGameClient().mouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getGameClient().mouse().getButtonCount()];
     private int lastClickedButton = -1;
 
     /**

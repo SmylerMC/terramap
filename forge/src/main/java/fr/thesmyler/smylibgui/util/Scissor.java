@@ -91,9 +91,9 @@ public class Scissor {
 
     private static void doScissor() {
         GameClient game = getGameClient();
-        float screenWidth = game.getWindowWidth();
-        float screenHeight = game.getWindowHeight();
-        double scale = game.getScaleFactor();
+        float screenWidth = game.windowWidth();
+        float screenHeight = game.windowHeight();
+        double scale = game.scaleFactor();
         float y = max(0, min(screenHeight, screenHeight - Scissor.y - height));
         float x = max(0, min(screenWidth, Scissor.x));
         float width = max(0, min(min(Scissor.width + Scissor.x, Scissor.width), screenWidth - Scissor.x));

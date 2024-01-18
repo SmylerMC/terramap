@@ -112,15 +112,15 @@ public class TextFieldWidget implements IWidget {
     }
 
     public TextFieldWidget(float x, float y, int z, float width) {
-        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, getGameClient().getDefaultFont());
+        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, getGameClient().defaultFont());
     }
 
     public TextFieldWidget(int z, String defaultText) {
-        this(0, 0, z, 50, getGameClient().getDefaultFont());
+        this(0, 0, z, 50, getGameClient().defaultFont());
     }
 
     public TextFieldWidget(int z) {
-        this(z, "", getGameClient().getDefaultFont());
+        this(z, "", getGameClient().defaultFont());
     }
 
     @Override
@@ -254,7 +254,7 @@ public class TextFieldWidget implements IWidget {
             return;
         }
 
-        Keyboard keyboard = getGameClient().getKeyboard();
+        Keyboard keyboard = getGameClient().keyboard();
         this.selecting = keyboard.isShiftPressed();
 
         if (keyboard.isControlPressed() && key == KEY_A) {
@@ -278,22 +278,22 @@ public class TextFieldWidget implements IWidget {
                 case KEY_BACK:
                     this.selecting = false;
                     this.erase(-1);
-                    this.selecting = getGameClient().getKeyboard().isShiftPressed();
+                    this.selecting = getGameClient().keyboard().isShiftPressed();
                     return;
                 case KEY_DELETE:
                     this.selecting = false;
                     this.erase(1);
-                    this.selecting = getGameClient().getKeyboard().isShiftPressed();
+                    this.selecting = getGameClient().keyboard().isShiftPressed();
                     return;
                 case KEY_RIGHT:
-                    if (getGameClient().getKeyboard().isControlPressed()) {
+                    if (getGameClient().keyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(1));
                     } else {
                         this.moveCursor(1);
                     }
                     return;
                 case KEY_LEFT:
-                    if (getGameClient().getKeyboard().isControlPressed()) {
+                    if (getGameClient().keyboard().isControlPressed()) {
                         this.setCursor(this.getWordSkipPosition(-1));
                     } else {
                         this.moveCursor(-1);
@@ -370,7 +370,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     private void erase(int count) {
-        if (getGameClient().getKeyboard().isControlPressed()) this.eraseWords(count);
+        if (getGameClient().keyboard().isControlPressed()) this.eraseWords(count);
         else this.eraseCharacters(count);
     }
 
@@ -499,7 +499,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     public void copySelectionToClipboard() {
-        getGameClient().getClipboard().setContent(this.getSelectedText());
+        getGameClient().clipboard().setContent(this.getSelectedText());
     }
 
     public void cutSelectionToClipboard() {
@@ -508,7 +508,7 @@ public class TextFieldWidget implements IWidget {
     }
 
     public void pasteIn() {
-        this.write(getGameClient().getClipboard().getContent());
+        this.write(getGameClient().clipboard().getContent());
     }
 
     public int getMaxTextLength() {

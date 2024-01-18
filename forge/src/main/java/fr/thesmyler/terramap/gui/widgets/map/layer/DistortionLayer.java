@@ -71,12 +71,12 @@ public class DistortionLayer extends MapLayer {
 
     @Override
     public String name() {
-        return getGameClient().getTranslator().format("terramap.mapwidget.layers.distortion.name");
+        return getGameClient().translator().format("terramap.mapwidget.layers.distortion.name");
     }
 
     @Override
     public String description() {
-        return getGameClient().getTranslator().format("terramap.mapwidget.layers.distortion.desc");
+        return getGameClient().translator().format("terramap.mapwidget.layers.distortion.desc");
     }
 
     @Override

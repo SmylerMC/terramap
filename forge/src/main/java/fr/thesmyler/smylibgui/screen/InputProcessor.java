@@ -12,10 +12,10 @@ class InputProcessor {
     private final WidgetContainer container;
 
     private int touchContactsCount = 0;
-    private final boolean[] mouseButtonsPressed = new boolean[getGameClient().getMouse().getButtonCount()];
-    private final float[] lastClickX = new float[getGameClient().getMouse().getButtonCount()];
-    private final float[] lastClickY = new float[getGameClient().getMouse().getButtonCount()];
-    private final long[] lastClickTime = new long[getGameClient().getMouse().getButtonCount()];
+    private final boolean[] mouseButtonsPressed = new boolean[getGameClient().mouse().getButtonCount()];
+    private final float[] lastClickX = new float[getGameClient().mouse().getButtonCount()];
+    private final float[] lastClickY = new float[getGameClient().mouse().getButtonCount()];
+    private final long[] lastClickTime = new long[getGameClient().mouse().getButtonCount()];
     private int lastClickedButton = -1;
     private final Minecraft mc = Minecraft.getMinecraft();
 
@@ -24,8 +24,8 @@ class InputProcessor {
     }
 
     public void processMouseEvent() {
-        float mouseX = getGameClient().getMouse().getX();
-        float mouseY = getGameClient().getMouse().getY();
+        float mouseX = getGameClient().mouse().x();
+        float mouseY = getGameClient().mouse().y();
         int mouseButton = Mouse.getEventButton();
         long ctime = System.currentTimeMillis();
 

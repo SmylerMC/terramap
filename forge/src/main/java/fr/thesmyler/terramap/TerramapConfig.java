@@ -97,7 +97,7 @@ public class TerramapConfig {
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {
-                return getGameClient().getScaleFactor();
+                return getGameClient().scaleFactor();
             } else {
                 return CLIENT.minimap.tileScaling;
             }
@@ -208,7 +208,7 @@ public class TerramapConfig {
 
         public double getEffectiveTileScaling() {
             if(this.tileScaling == 0) {
-                return getGameClient().getScaleFactor();
+                return getGameClient().scaleFactor();
             } else {
                 return CLIENT.tileScaling;
             }

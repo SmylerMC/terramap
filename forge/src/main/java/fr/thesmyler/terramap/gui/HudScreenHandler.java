@@ -34,7 +34,7 @@ public abstract class HudScreenHandler {
             }
             if (!(Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup)) updateMinimap();
             screen.addWidget(map);
-            offsetWarning.setTooltip(getGameClient().getTranslator().format("terramap.hud.minimap.offset_warning"));
+            offsetWarning.setTooltip(getGameClient().translator().format("terramap.hud.minimap.offset_warning"));
             screen.addWidget(offsetWarning);
 
             float compassX = TerramapConfig.CLIENT.compass.posX * 0.01f * screen.getWidth();

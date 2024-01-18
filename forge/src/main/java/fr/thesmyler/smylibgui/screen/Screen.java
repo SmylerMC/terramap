@@ -43,8 +43,8 @@ public class Screen extends GuiScreen {
         Scissor.scissor(-1f, -1f, this.width + 1f, this.height + 1f);
         this.drawBackground();
         super.drawScreen(nopX, nopY, partialTicks);
-        float mouseX = getGameClient().getMouse().getX();
-        float mouseY = getGameClient().getMouse().getY();
+        float mouseX = getGameClient().mouse().x();
+        float mouseY = getGameClient().mouse().y();
         this.onUpdate();
         this.container.onUpdate(mouseX, mouseY, null);
         this.container.draw(0, 0, mouseX, mouseY, true, true, null);

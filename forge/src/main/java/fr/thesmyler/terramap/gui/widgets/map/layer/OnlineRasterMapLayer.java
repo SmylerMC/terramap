@@ -76,12 +76,12 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
     @Override
     public String name() {
-        return this.tiledMap.getLocalizedName(getGameClient().getLanguage());
+        return this.tiledMap.getLocalizedName(getGameClient().language());
     }
 
     @Override
     public String description() {
-        return getGameClient().getTranslator().format("terramap.mapwidget.layers.raster.desc");
+        return getGameClient().translator().format("terramap.mapwidget.layers.raster.desc");
     }
 
     public boolean isConfigurable() {
@@ -92,9 +92,9 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
     public FlexibleWidgetContainer createConfigurationContainer() {
 
         GameClient game = getGameClient();
-        final Font font = game.getDefaultFont();
-        final Font smallFont = game.getDefaultFont().withScale(0.5f);
-        final String language = game.getLanguage();
+        final Font font = game.defaultFont();
+        final Font smallFont = game.defaultFont().withScale(0.5f);
+        final String language = game.language();
         final float width = 250f;
         final float margin = 5f;
         final float entryHeight = 60f;

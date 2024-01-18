@@ -391,12 +391,12 @@ public class McChunksLayer extends MapLayer {
 
     @Override
     public String name() {
-        return getGameClient().getTranslator().format("terramap.mapwidget.layers.mcchunks.name");
+        return getGameClient().translator().format("terramap.mapwidget.layers.mcchunks.name");
     }
 
     @Override
     public String description() {
-        return getGameClient().getTranslator().format("terramap.mapwidget.layers.mcchunks.desc");
+        return getGameClient().translator().format("terramap.mapwidget.layers.mcchunks.desc");
     }
 
     @Override
@@ -409,7 +409,7 @@ public class McChunksLayer extends MapLayer {
         float width = 200f;
         float height = 180f;
         FlexibleWidgetContainer container = new FlexibleWidgetContainer(0, 0, 0, width, height);
-        Font font = getGameClient().getDefaultFont();
+        Font font = getGameClient().defaultFont();
         float left = 1f;
         float right = 30f;
         float interline = 9f;

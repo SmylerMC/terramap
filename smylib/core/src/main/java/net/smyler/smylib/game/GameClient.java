@@ -15,34 +15,34 @@ public interface GameClient {
     /**
      * @return the effective width of the window when scaling is taken into account
      */
-    float getWindowWidth();
+    float windowWidth();
 
     /**
      * @return the effective height of the window when scaling is taken into account
      */
-    float getWindowHeight();
+    float windowHeight();
 
     /**
      * @return the width of the native window
      */
-    int getNativeWindowWidth();
+    int nativeWindowWidth();
 
     /**
      * @return the height of the native window
      */
-    int getNativeWindowHeight();
+    int nativeWindowHeight();
 
     /**
      * @return the scale factor applied
      */
-    int getScaleFactor();
+    int scaleFactor();
 
     /**
      * Gets the current language the game uses.
      *
      * @return the language identifier (e.g. "en-us")
      */
-    String getLanguage();
+    String language();
 
     /**
      * MacOS does weird things, we may want to account for them.
@@ -56,7 +56,7 @@ public interface GameClient {
      *
      * @return the game directory
      */
-    Path getGameDirectory();
+    Path gameDirectory();
 
     /**
      * Get information on the server which is currently being played on.
@@ -64,22 +64,22 @@ public interface GameClient {
      * @return the server info, or null if not currently playing on a server
      */
     @Nullable
-    MinecraftServerInfo getCurrentServerInfo();
+    MinecraftServerInfo currentServerInfo();
 
-    Mouse getMouse();
+    Mouse mouse();
 
-    Keyboard getKeyboard();
+    Keyboard keyboard();
 
-    Clipboard getClipboard();
+    Clipboard clipboard();
 
-    SoundSystem getSoundSystem();
+    SoundSystem soundSystem();
 
-    Translator getTranslator();
+    Translator translator();
 
-    Font getDefaultFont();
+    Font defaultFont();
 
-    default Font getSmallestFont() {
-        return this.getDefaultFont().withScale(1f / this.getScaleFactor());
+    default Font smallestFont() {
+        return this.defaultFont().withScale(1f / this.scaleFactor());
     }
 
     boolean isGlAvailabale();

@@ -108,14 +108,14 @@ public class PopupScreen extends Screen {
      * @param message   the text to display
      */
     public static void showMessage(ITextComponent message) {
-        TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, getGameClient().getDefaultFont());
+        TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, getGameClient().defaultFont());
         float padding = 10;
         text.setMaxWidth(300);
         text.setAnchorX(text.getWidth() / 2 + padding).setAnchorY(padding);
         TextButtonWidget button = new TextButtonWidget(
                 text.getWidth() / 2 + padding - 20,
                 text.getY() + text.getHeight() + padding,
-                1, 40, getGameClient().getTranslator().format("smylibgui.popup.info.ok"));
+                1, 40, getGameClient().translator().format("smylibgui.popup.info.ok"));
         PopupScreen screen = new PopupScreen(text.getWidth() + padding*2, button.getY() + padding + button.getHeight());
         button.setOnClick(screen::close);
         button.enable();

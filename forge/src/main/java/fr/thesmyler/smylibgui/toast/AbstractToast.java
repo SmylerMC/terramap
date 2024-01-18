@@ -17,10 +17,10 @@ public abstract class AbstractToast implements IToast {
     }
 
     public String getLocalizedDescription() {
-        return getGameClient().getTranslator().format(this.descriptionKey);
+        return getGameClient().translator().format(this.descriptionKey);
     }
 
     public String getLocalizedTitle() {
-        return getGameClient().getTranslator().format(this.titleKey);
+        return getGameClient().translator().format(this.titleKey);
     }
 }

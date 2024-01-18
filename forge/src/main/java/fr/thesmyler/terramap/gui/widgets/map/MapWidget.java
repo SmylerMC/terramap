@@ -125,8 +125,8 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
         this.tileScaling = tileScaling;
 
-        Font font = getGameClient().getDefaultFont();
-        Font smallFont = getGameClient().getSmallestFont();
+        Font font = getGameClient().defaultFont();
+        Font smallFont = getGameClient().smallestFont();
 
         this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
             @Override
@@ -190,7 +190,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     @Override
     public void init() {
-        this.copyright.setFont(getGameClient().getSmallestFont());
+        this.copyright.setFont(getGameClient().smallestFont());
         this.updateLayersViewports();
     }
 
@@ -314,7 +314,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
         if(!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
         if(!this.reportedErrors.isEmpty()) {
-            String errorText = getGameClient().getTranslator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
+            String errorText = getGameClient().translator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
             this.errorText.setText(new TextComponentString(errorText));
         }
 
@@ -398,7 +398,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         for(IWidget widget: this.widgets) 
             if(widget instanceof CopyrightHolder){
                 if(!component.getFormattedText().isEmpty()) component.appendText(" | ");
-                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().getLanguage());
+                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().language());
                 component.appendSibling(copyright);
             }
         this.copyright.setText(component);

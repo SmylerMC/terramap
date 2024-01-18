@@ -120,7 +120,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         TerramapClientContext.getContext().registerForUpdates(true);
         this.restore(state);
         this.map.getRightClickMenu().addEntry(
-                getGameClient().getTranslator().format("terramap.mapwidget.rclickmenu.offset"),
+                getGameClient().translator().format("terramap.mapwidget.rclickmenu.offset"),
                 () -> this.map.getRasterBackgroundLayer().ifPresent(l -> new LayerRenderingOffsetPopup(l).show())
         );
     }
@@ -128,7 +128,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     @Override
     public void initGui() {
         GameClient game = getGameClient();
-        Translator translator = game.getTranslator();
+        Translator translator = game.translator();
 
         WidgetContainer content = this.getContent();
         content.removeAllWidgets();
@@ -159,7 +159,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.zoomInButton.setTooltip(translator.format("terramap.terramapscreen.buttons.zoomin.tooltip"));
         this.zoomInButton.enable();
         content.addWidget(this.zoomInButton);
-        this.zoomText = new TextWidget(49, game.getDefaultFont());
+        this.zoomText = new TextWidget(49, game.defaultFont());
         this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
         this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
         this.zoomText.setVisibility(!this.f1Mode);
@@ -184,7 +184,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         content.addWidget(this.styleButton);
         this.offsetWarning.setTooltip(translator.format("terramap.terramapscreen.warning.offset.tooltip"));
         content.addWidget(this.offsetWarning.setPosition(this.styleButton.getX(), this.styleButton.getY() + this.styleButton.getHeight() + 5));
-        this.debugText = new TextWidget(49, game.getSmallestFont());
+        this.debugText = new TextWidget(49, game.smallestFont());
         this.debugText.setAnchorX(3).setAnchorY(0);
         this.debugText.setAlignment(TextAlignment.RIGHT).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
         this.debugText.setVisibility(this.debugMode);
@@ -302,7 +302,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             Style style = new Style();
             style.setColor(TextFormatting.YELLOW);
             c.setStyle(style);
-            TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, game.getDefaultFont());
+            TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, game.defaultFont());
             warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
             content.addWidget(warningWidget);
         }
@@ -424,7 +424,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     }
                 }
             });
-            debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameClient().getScaleFactor()));
+            debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameClient().scaleFactor()));
             debugBuilder.append("\n\n");
             debugBuilder.append("Locations: ")
                     .append(TextFormatting.RED).append("center ")
@@ -655,7 +655,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            Translator translator = getGameClient().getTranslator();
+            Translator translator = getGameClient().translator();
             Scissor.push();
             Scissor.setScissorState(true);
             Scissor.scissorIntersecting(x, y, this.width, this.height);
@@ -726,7 +726,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         public void draw(float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(x, y, mouseX, mouseY, hovered, focused, parent);
             Color textColor = hovered? Color.SELECTION: Color.WHITE;
-            String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().getLanguage());
+            String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().language());
             float width = this.getWidth();
             float height = this.getHeight();
             RenderUtil.drawRect(x, y, x + width, y + 4, Color.DARK_GRAY);

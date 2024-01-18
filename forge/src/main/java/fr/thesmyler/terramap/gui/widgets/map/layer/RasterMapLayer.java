@@ -61,7 +61,7 @@ abstract public class RasterMapLayer extends MapLayer {
         final RasterTiledMap tiledMap = this.getTiledMap();
         final ResourceLocation defaultTexture = tiledMap.getDefaultTileTexture();
 
-        Font smallFont = getGameClient().getSmallestFont();
+        Font smallFont = getGameClient().smallestFont();
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager textureManager = mc.getTextureManager();
         float rotation = this.getRotation();

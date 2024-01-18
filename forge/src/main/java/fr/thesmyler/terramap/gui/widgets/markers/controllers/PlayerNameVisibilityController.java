@@ -25,7 +25,7 @@ public class PlayerNameVisibilityController implements FeatureVisibilityControll
                     this.other.setShowNames(b);
                 }
                 );
-        this.button.setTooltip(getGameClient().getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.name"));
+        this.button.setTooltip(getGameClient().translator().format("terramap.terramapscreen.markercontrollers.buttons.name"));
     }
 
     @Override

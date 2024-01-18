@@ -19,7 +19,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     protected Color disabledTextColor = Color.MEDIUM_GRAY;
 
     public TextButtonWidget(float x, float y, int z, float width, String str, Runnable onClick, Runnable onDoubleClick) {
-        super(x, y, z, width, getGameClient().getDefaultFont().height() + 11, onClick, onDoubleClick);
+        super(x, y, z, width, getGameClient().defaultFont().height() + 11, onClick, onDoubleClick);
         this.str = str;
     }
 
@@ -33,7 +33,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     }
 
     public TextButtonWidget(int z, String str, Runnable onClick, Runnable onDoubleClick) {
-        this(0, 0, z, getGameClient().getDefaultFont().height() + 20, str, onClick, onDoubleClick);
+        this(0, 0, z, getGameClient().defaultFont().height() + 20, str, onClick, onDoubleClick);
     }
 
     public TextButtonWidget(int z, String str, Runnable onClick) {

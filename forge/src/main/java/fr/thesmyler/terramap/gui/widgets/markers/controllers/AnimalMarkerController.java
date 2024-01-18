@@ -28,7 +28,7 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
     public AnimalMarkerController() {
         super(ID, 700, AnimalMarker.class);
         this.button.setOnChange(this::setVisibility);
-        this.button.setTooltip(getGameClient().getTranslator().format("terramap.terramapscreen.markercontrollers.buttons.animals"));
+        this.button.setTooltip(getGameClient().translator().format("terramap.terramapscreen.markercontrollers.buttons.animals"));
     }
 
     @Override

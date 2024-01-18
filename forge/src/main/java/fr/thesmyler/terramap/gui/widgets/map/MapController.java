@@ -93,7 +93,7 @@ public final class MapController {
             }
         }
         //TODO move the Mouse.isButtonDown(0) out of here
-        if(this.movingSpeed.normSquared() > 0d && dt < 1000 && !getGameClient().getMouse().isButtonPressed(0)) {
+        if(this.movingSpeed.normSquared() > 0d && dt < 1000 && !getGameClient().mouse().isButtonPressed(0)) {
             double dX = this.movingSpeed.x * dt;
             double dY = this.movingSpeed.y * dt;
             this.movingSpeed.scale(max(0d, 1d - this.movementDrag*dt));

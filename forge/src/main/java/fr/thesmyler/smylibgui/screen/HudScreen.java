@@ -57,15 +57,15 @@ public final class HudScreen {
         if(!e.getType().equals(ElementType.HOTBAR)) return;
         GameClient game = getGameClient();
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
-        float width = game.getWindowWidth();
-        float height = game.getWindowHeight();
+        float width = game.windowWidth();
+        float height = game.windowHeight();
         if(width != renderWidth || height != renderHeight) {
             renderWidth = width;
             renderHeight = height;
             init();
         }
-        float mouseX = game.getMouse().getX();
-        float mouseY = game.getMouse().getY();
+        float mouseX = game.mouse().x();
+        float mouseY = game.mouse().y();
         CONTAINER.onUpdate(mouseX, mouseY, null);
         Color color = currentColor();
         Scissor.push();
@@ -89,8 +89,8 @@ public final class HudScreen {
     @SubscribeEvent
     public static void onMouseInput(MouseInputEvent.Pre event) {
         if(!(event.getGui() instanceof GuiChat)) return;
-        float mouseX = getGameClient().getMouse().getX();
-        float mouseY = getGameClient().getMouse().getY();
+        float mouseX = getGameClient().mouse().x();
+        float mouseY = getGameClient().mouse().y();
         if(isOverChat(mouseX, mouseY)) return;
         event.setCanceled(true);
         PROCESSOR.processMouseEvent();

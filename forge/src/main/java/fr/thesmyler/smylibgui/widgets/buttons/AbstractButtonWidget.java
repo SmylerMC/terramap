@@ -33,7 +33,7 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        getGameClient().getSoundSystem().playClickSound();
+        getGameClient().soundSystem().playClickSound();
         parent.setFocus(null); // We don't want to keep the focus
         if(this.onClick != null && mouseButton == 0) {
             this.onClick.run();
@@ -43,7 +43,7 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
 
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        getGameClient().getSoundSystem().playClickSound();
+        getGameClient().soundSystem().playClickSound();
         parent.setFocus(null);
         if(mouseButton == 0) {
             if(this.onDoubleClick != null) {
