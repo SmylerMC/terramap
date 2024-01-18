@@ -7,7 +7,6 @@ import fr.thesmyler.smylibgui.container.RootContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.Scissor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.GuiChat;
@@ -27,10 +26,10 @@ import net.smyler.smylib.game.GameClient;
 
 import net.smyler.smylib.game.Mouse;
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.Scissor;
 import org.jetbrains.annotations.Nullable;
 
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
-import static fr.thesmyler.smylibgui.util.RenderUtil.currentColor;
+import static fr.thesmyler.smylibgui.util.RenderUtil.*;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
@@ -60,6 +59,7 @@ public final class HudScreen {
         GameClient game = getGameClient();
         Mouse mouse = game.mouse();
         DrawContext drawContext = game.guiDrawContext();
+        Scissor scissor = drawContext.scissor();
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
         float width = game.windowWidth();
         float height = game.windowHeight();
@@ -72,8 +72,8 @@ public final class HudScreen {
         float mouseY = mouse.y();
         CONTAINER.onUpdate(mouseX, mouseY, null);
         Color color = currentColor();
-        Scissor.push();
-        Scissor.scissor(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
+        scissor.push();
+        scissor.cropScreen(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
         CONTAINER.draw(drawContext, 0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
         GlStateManager.enableAlpha();
         applyColor(color); // Reset color to what it was

@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.Scissor;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.util.*;
@@ -657,15 +658,16 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         @Override
         public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             Translator translator = getGameClient().translator();
-            Scissor.push();
-            Scissor.setScissorState(true);
-            Scissor.scissorIntersecting(x, y, this.width, this.height);
+            Scissor scissor = context.scissor();
+            scissor.push();
+            scissor.setEnabled(true);
+            scissor.cropSection(x, y, this.width, this.height);
             RenderUtil.drawRect(x, y, x + this.width, y + this.height, Color.YELLOW);
             RenderUtil.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
             parent.getFont().drawCenteredString(x + this.width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), Color.YELLOW, false);
             parent.getFont().drawString(x + 8, y + 16 + parent.getFont().height(), translator.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
             parent.getFont().drawSplitString(x + 8, y + 24 + parent.getFont().height()*2, translator.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16, Color.WHITE, false);
-            Scissor.pop();
+            scissor.pop();
         }
 
     }

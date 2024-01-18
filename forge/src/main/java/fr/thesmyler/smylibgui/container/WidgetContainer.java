@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.TreeSet;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.Scissor;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.game.Key;
-import fr.thesmyler.smylibgui.util.Scissor;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import net.smyler.smylib.gui.Font;
@@ -343,10 +343,11 @@ public abstract class WidgetContainer implements IWidget{
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+        Scissor scissor = context.scissor();
         if(this.doScissor) {
-            Scissor.push();
-            Scissor.setScissorState(true);
-            Scissor.scissorIntersecting(x, y, this.getWidth(), this.getHeight());
+            scissor.push();
+            scissor.setEnabled(true);
+            scissor.cropSection(x, y, this.getWidth(), this.getHeight());
         }
         IWidget wf = null;
         if(screenHovered) {
@@ -376,7 +377,7 @@ public abstract class WidgetContainer implements IWidget{
             widget.draw(context, x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
         });
         if(this.doScissor) {
-            Scissor.pop();
+            scissor.pop();
         }
     }
 
