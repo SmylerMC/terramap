@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.widgets.text;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import net.smyler.smylib.game.Key;

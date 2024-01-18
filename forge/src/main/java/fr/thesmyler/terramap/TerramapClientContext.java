@@ -43,7 +43,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -511,7 +511,7 @@ public class TerramapClientContext {
         Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, state));
     }
 
-    @Nonnull
+    @NotNull
     public static TerramapClientContext getContext() {
         if(TerramapClientContext.instance == null) TerramapClientContext.resetContext();
         return TerramapClientContext.instance;

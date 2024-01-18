@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.widgets;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractSolidWidget implements IWidget {
 

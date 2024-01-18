@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ITabCompleter;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getLogger;
 import static net.smyler.smylib.game.Key.KEY_ESCAPE;

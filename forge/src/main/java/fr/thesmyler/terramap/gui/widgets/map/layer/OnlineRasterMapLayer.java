@@ -20,7 +20,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.Font;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 

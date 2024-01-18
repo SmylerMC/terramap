@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Color;

@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.network.warps;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.warp.Warp;
 import io.netty.buffer.ByteBuf;

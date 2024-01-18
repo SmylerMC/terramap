@@ -13,7 +13,7 @@ import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
 import static java.lang.Math.pow;

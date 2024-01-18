@@ -1,9 +1,8 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import javax.annotation.Nullable;
-
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.game.Key;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A generic widget that can be added to a {@link WidgetContainer}.
@@ -227,7 +226,8 @@ public interface IWidget {
     /**
      * @return the text to draw as a tooltip when this widget is hovered, or null if no tooltip should be displayed
      */
-    @Nullable default String getTooltipText() {
+    @Nullable
+    default String getTooltipText() {
         return null;
     }
 

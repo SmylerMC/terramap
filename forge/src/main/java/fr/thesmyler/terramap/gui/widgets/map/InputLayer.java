@@ -14,7 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static java.lang.Math.*;
 import static net.smyler.smylib.SmyLib.getGameClient;

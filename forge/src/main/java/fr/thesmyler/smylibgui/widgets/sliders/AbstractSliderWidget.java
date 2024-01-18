@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.widgets.sliders;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import net.smyler.smylib.game.GameClient;

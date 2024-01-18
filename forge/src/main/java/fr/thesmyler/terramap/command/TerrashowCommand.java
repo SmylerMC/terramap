@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.command;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;

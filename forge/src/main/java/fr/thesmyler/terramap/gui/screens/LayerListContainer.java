@@ -21,7 +21,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.*;
 import static java.util.Comparator.comparing;

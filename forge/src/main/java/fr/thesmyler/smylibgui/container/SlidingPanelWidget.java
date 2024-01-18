@@ -1,11 +1,10 @@
 package fr.thesmyler.smylibgui.container;
 
-import javax.annotation.Nullable;
-
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
+import org.jetbrains.annotations.Nullable;
 
 public class SlidingPanelWidget extends FlexibleWidgetContainer {
 

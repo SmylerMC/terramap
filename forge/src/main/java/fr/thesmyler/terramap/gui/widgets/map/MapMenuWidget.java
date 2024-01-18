@@ -17,7 +17,7 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static java.lang.Math.floorDiv;
 import static java.lang.Math.round;

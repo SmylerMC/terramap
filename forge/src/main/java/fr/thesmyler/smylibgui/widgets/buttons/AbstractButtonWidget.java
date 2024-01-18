@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.AbstractSolidWidget;

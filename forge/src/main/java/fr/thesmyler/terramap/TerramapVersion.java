@@ -3,7 +3,7 @@ package fr.thesmyler.terramap;
 import java.util.Arrays;
 import java.util.Map;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import org.apache.logging.log4j.util.Strings;
 
@@ -65,7 +65,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
         this(majorTarget, minorTarget, buildTarget, ReleaseType.RELEASE, 0, 0, false, "");
     }
 
-    public TerramapVersion(@Nonnull String versionString) throws InvalidVersionString {
+    public TerramapVersion(@NotNull String versionString) throws InvalidVersionString {
         if("${version}".equals(versionString)) {
             this.majorTarget = this.minorTarget = this.buildTarget = this.build = this.revision = 0;
             this.devBuild = false;

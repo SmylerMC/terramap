@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.*;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.*;

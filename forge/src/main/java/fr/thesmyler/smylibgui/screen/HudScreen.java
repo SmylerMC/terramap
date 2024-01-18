@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.smyler.smylib.game.GameClient;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 import static fr.thesmyler.smylibgui.util.RenderUtil.currentColor;

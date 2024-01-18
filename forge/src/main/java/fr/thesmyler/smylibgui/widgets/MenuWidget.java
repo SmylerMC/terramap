@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Animation;
