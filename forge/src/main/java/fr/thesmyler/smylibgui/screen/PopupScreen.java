@@ -68,7 +68,8 @@ public class PopupScreen extends Screen {
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
         if(this.other != null) this.other.drawScreen(x, y, partialTicks);
-        RenderUtil.drawRect(0, 0, this.width, this.height, this.shadeColor);
+        DrawContext context = getGameClient().guiDrawContext();
+        context.drawRectangle(0, 0, this.width, this.height, this.shadeColor);
         super.drawScreen(x, y, partialTicks);
     }
 
@@ -135,7 +136,7 @@ public class PopupScreen extends Screen {
         public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             float right = x + this.getWidth();
             float bottom = y + this.getHeight();
-            RenderUtil.drawRect(x, y, right, bottom, PopupScreen.this.contentBackgroundColor);
+            context.drawRectangle(x, y, right, bottom, PopupScreen.this.contentBackgroundColor);
             super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
             RenderUtil.drawClosedStrokeLine(PopupScreen.this.contourColor, PopupScreen.this.contourSize,
                     x, y,

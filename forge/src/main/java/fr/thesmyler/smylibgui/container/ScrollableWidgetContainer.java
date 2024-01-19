@@ -94,7 +94,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
-        RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor);
+        context.drawRectangle(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor);
         super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), Color.TRANSPARENT, this.contourSize, this.contourColor);
     }

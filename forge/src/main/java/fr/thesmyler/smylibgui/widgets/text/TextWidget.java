@@ -5,7 +5,6 @@ import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -80,7 +79,7 @@ public class TextWidget implements IWidget {
         GlStateManager.enableBlend();
         float w = this.getWidth();
         float h = this.getHeight();
-        RenderUtil.drawRect(x, y, x + w, y + h, this.backgroundColor);
+        context.drawRectangle(x, y, x + w, y + h, this.backgroundColor);
         float drawY = y + this.padding;
         for(ITextComponent line: this.lines) {
             String formattedText = line.getFormattedText();

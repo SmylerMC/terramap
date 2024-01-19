@@ -10,7 +10,6 @@ import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.Font;
 
 public class MenuWidget implements IWidget {
@@ -69,11 +68,11 @@ public class MenuWidget implements IWidget {
         Color textColor = this.mainAnimation.fadeColor(this.textColor);
         Color disabledTextColor = this.mainAnimation.fadeColor(this.disabledTextColor);
         Color hoveredTextColor = this.mainAnimation.fadeColor(this.hoveredTextColor);
-        RenderUtil.drawRect(x, y, x + width, y + height, backgroundColor);
-        RenderUtil.drawRect(x, y, x + 1, y + height, borderColor);
-        RenderUtil.drawRect(x + width, y, x + width + 1, y + height, borderColor);
-        RenderUtil.drawRect(x, y, x + width, y+1, borderColor);
-        RenderUtil.drawRect(x, y + height, x + width + 1, y + height + 1, borderColor);
+        context.drawRectangle(x, y, x + width, y + height, backgroundColor);
+        context.drawRectangle(x, y, x + 1, y + height, borderColor);
+        context.drawRectangle(x + width, y, x + width + 1, y + height, borderColor);
+        context.drawRectangle(x, y, x + width, y+1, borderColor);
+        context.drawRectangle(x, y + height, x + width + 1, y + height + 1, borderColor);
         float ty = y;
         for(MenuEntry entry: this.entries) {
             int tx = 0;
@@ -90,7 +89,7 @@ public class MenuWidget implements IWidget {
                     }
                     tx += 3 * this.hoverAnimation.getProgress();
                     c = hoveredTextColor;
-                    RenderUtil.drawRect(x+1, ty+1, x + width, ty + fh + padding*2 -1, hoveredColor);
+                    context.drawRectangle(x+1, ty+1, x + width, ty + fh + padding*2 -1, hoveredColor);
                 }
                 MenuWidget subMenu = entry.getSubMenu();
                 if(this.displayedSubMenu != null && mouseHoverMenu && this.displayedSubMenu.equals(subMenu) && !hovered) {
@@ -113,7 +112,7 @@ public class MenuWidget implements IWidget {
                 if(subMenu != null) this.font.drawString(x + width - dw - padding, ty + padding, " >", c, false);
                 ty += lh;
             } else {
-                RenderUtil.drawRect(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
+                context.drawRectangle(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
                 ty += sh;
             }
         }

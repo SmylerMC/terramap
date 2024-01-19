@@ -82,24 +82,24 @@ public class InputLayer extends MapLayer {
             double pointHalfSize = 5.0d;
             Vec2dMutable position = new Vec2dMutable();
             this.getPositionOnWidget(position, this.controller.getTargetLocation());
-            RenderUtil.drawRect(
+            context.drawRectangle(
                     x + position.x - pointHalfSize, y + position.y - pointHalfSize,
                     x + position.x + pointHalfSize, y + position.y + pointHalfSize,
                     Color.BLUE);
             pointHalfSize -= .5d;
             this.getPositionOnWidget(position, this.controller.getZoomStaticLocation());
-            RenderUtil.drawRect(
+            context.drawRectangle(
                     x + position.x - pointHalfSize, y + position.y - pointHalfSize,
                     x + position.x + pointHalfSize, y + position.y + pointHalfSize,
                     Color.GREEN);
             this.getPositionOnWidget(position, this.controller.getRotationStaticLocation());
             pointHalfSize -= .5d;
-            RenderUtil.drawRect(
+            context.drawRectangle(
                     x + position.x - pointHalfSize, y + position.y - pointHalfSize,
                     x + position.x + pointHalfSize, y + position.y + pointHalfSize,
                     Color.YELLOW);
             pointHalfSize -= .5d;
-            RenderUtil.drawRect(
+            context.drawRectangle(
                     x + this.getWidth() / 2 - pointHalfSize, y + this.getHeight() / 2 - pointHalfSize,
                     x + this.getWidth() / 2 + pointHalfSize, y + this.getHeight() / 2 + pointHalfSize,
                     Color.RED);

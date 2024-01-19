@@ -5,7 +5,6 @@ import org.lwjgl.input.Cursor;
 
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.Cursors;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import org.lwjgl.input.Mouse;
 
@@ -120,7 +119,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            RenderUtil.drawRect(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
+            context.drawRectangle(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
             if(this.lastHovered != hovered && !getGameClient().mouse().isButtonPressed(0)) {
                 if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) Cursors.trySetCursor(this.cursor);
                 else if(Mouse.getNativeCursor() == this.cursor) Cursors.trySetCursor(null);

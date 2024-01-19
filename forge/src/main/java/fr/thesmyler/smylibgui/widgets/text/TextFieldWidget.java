@@ -138,11 +138,11 @@ public class TextFieldWidget implements IWidget {
         }
 
         if(this.hasBackground) {
-            RenderUtil.drawRect(x, y, x + this.width, y + this.height, this.backgroundColor);
-            RenderUtil.drawRect(x - 1, y - 1, x + this.width + 1, y, borderColor);
-            RenderUtil.drawRect(x - 1, y + this.height, x + this.width + 1, y + this.height + 1, borderColor);
-            RenderUtil.drawRect(x - 1, y - 1, x, y + this.height + 1, borderColor);
-            RenderUtil.drawRect(x + this.width, y - 1, x + this.width + 1, y + this.height + 1, borderColor);
+            context.drawRectangle(x, y, x + this.width, y + this.height, this.backgroundColor);
+            context.drawRectangle(x - 1, y - 1, x + this.width + 1, y, borderColor);
+            context.drawRectangle(x - 1, y + this.height, x + this.width + 1, y + this.height + 1, borderColor);
+            context.drawRectangle(x - 1, y - 1, x, y + this.height + 1, borderColor);
+            context.drawRectangle(x + this.width, y - 1, x + this.width + 1, y + this.height + 1, borderColor);
         }
 
         if(this.isSearchBar) {
@@ -183,7 +183,7 @@ public class TextFieldWidget implements IWidget {
 
         if(focused && this.isEnabled()) {
             if (isCursorAtEndOfText) {
-                RenderUtil.drawRect(cursorX, textRenderY - 1, cursorX+1, textRenderY+1 + 9, cursorColor);
+                context.drawRectangle(cursorX, textRenderY - 1, cursorX+1, textRenderY+1 + 9, cursorColor);
             } else {
                 this.font.drawString(cursorX, textRenderY, "_", cursorColor, true);
             }

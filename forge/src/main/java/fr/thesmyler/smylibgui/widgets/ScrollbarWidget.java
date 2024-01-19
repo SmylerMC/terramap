@@ -2,7 +2,6 @@ package fr.thesmyler.smylibgui.widgets;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import net.minecraft.util.math.MathHelper;
@@ -95,9 +94,9 @@ public class ScrollbarWidget extends WidgetContainer {
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
         float width = this.getWidth();
         float height = this.getHeight();
-        RenderUtil.drawRect(x, y, x + width, y + height, BAR_BG_COLOR);
-        RenderUtil.drawRect(x, y, x + 1, y + height, BAR_BORDER_COLOR);
-        RenderUtil.drawRect(x + width - 1, y, x + width, y + height, BAR_BORDER_COLOR);
+        context.drawRectangle(x, y, x + width, y + height, BAR_BG_COLOR);
+        context.drawRectangle(x, y, x + 1, y + height, BAR_BORDER_COLOR);
+        context.drawRectangle(x + width - 1, y, x + width, y + height, BAR_BORDER_COLOR);
         super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
     }
 
@@ -222,12 +221,12 @@ public class ScrollbarWidget extends WidgetContainer {
         public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             Color bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
             float height = this.getHeight();
-            RenderUtil.drawRect(x, y, x + this.getWidth(), y + height, bgcolor);
+            context.drawRectangle(x, y, x + this.getWidth(), y + height, bgcolor);
 
-            RenderUtil.drawRect(x, y, x + this.getWidth(), y + 1, DRAG_BORDER_COLOR);
-            RenderUtil.drawRect(x, y + height - 1, x + this.getWidth(), y + height, DRAG_BORDER_COLOR);
-            RenderUtil.drawRect(x, y, x + 1, y + height, DRAG_BORDER_COLOR);
-            RenderUtil.drawRect(x + this.getWidth() - 1, y, x + this.getWidth(), y  + height, DRAG_BORDER_COLOR);
+            context.drawRectangle(x, y, x + this.getWidth(), y + 1, DRAG_BORDER_COLOR);
+            context.drawRectangle(x, y + height - 1, x + this.getWidth(), y + height, DRAG_BORDER_COLOR);
+            context.drawRectangle(x, y, x + 1, y + height, DRAG_BORDER_COLOR);
+            context.drawRectangle(x + this.getWidth() - 1, y, x + this.getWidth(), y  + height, DRAG_BORDER_COLOR);
 
         }
 

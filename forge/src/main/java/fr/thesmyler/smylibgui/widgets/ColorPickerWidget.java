@@ -84,7 +84,7 @@ public class ColorPickerWidget extends TextFieldWidget {
         GlStateManager.enableBlend();
         float width = this.getWidth();
         float height = this.getHeight();
-        RenderUtil.drawRect(x + width - height, y, x + width, y + height, this.color);
+        context.drawRectangle(x + width - height, y, x + width, y + height, this.color);
         Color borderColor = hovered && this.isEnabled() ? this.getBorderColorHovered(): this.getBorderColorNormal();
         float colorSeparatorX = x + width - height;
         RenderUtil.drawStrokeLine(borderColor, 1f,

@@ -7,7 +7,6 @@ import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
 import org.jetbrains.annotations.Nullable;
 
-import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.*;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
@@ -662,8 +661,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             scissor.push();
             scissor.setEnabled(true);
             scissor.cropSection(x, y, this.width, this.height);
-            RenderUtil.drawRect(x, y, x + this.width, y + this.height, Color.YELLOW);
-            RenderUtil.drawRect(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
+            context.drawRectangle(x, y, x + this.width, y + this.height, Color.YELLOW);
+            context.drawRectangle(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
             parent.getFont().drawCenteredString(x + this.width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), Color.YELLOW, false);
             parent.getFont().drawString(x + 8, y + 16 + parent.getFont().height(), translator.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
             parent.getFont().drawSplitString(x + 8, y + 24 + parent.getFont().height()*2, translator.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16, Color.WHITE, false);
@@ -732,10 +731,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().translator().language());
             float width = this.getWidth();
             float height = this.getHeight();
-            RenderUtil.drawRect(x, y, x + width, y + 4, Color.DARK_GRAY);
-            RenderUtil.drawRect(x, y + height - parent.getFont().height() - 4, x + width, y + height, Color.DARK_GRAY);
-            RenderUtil.drawRect(x, y, x + 4, y + height, Color.DARK_GRAY);
-            RenderUtil.drawRect(x + width - 4, y, x + width, y + height, Color.DARK_GRAY);
+            context.drawRectangle(x, y, x + width, y + 4, Color.DARK_GRAY);
+            context.drawRectangle(x, y + height - parent.getFont().height() - 4, x + width, y + height, Color.DARK_GRAY);
+            context.drawRectangle(x, y, x + 4, y + height, Color.DARK_GRAY);
+            context.drawRectangle(x + width - 4, y, x + width, y + height, Color.DARK_GRAY);
             parent.getFont().drawCenteredString(x + width/2, y + height - parent.getFont().height() - 2, text, textColor, true);
 
         }

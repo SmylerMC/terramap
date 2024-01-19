@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.widgets.map;
 
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.IWidget;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointMutable;
@@ -106,9 +105,9 @@ public class ScaleIndicatorWidget implements IWidget {
         }
         float strwidth = parent.getFont().getStringWidth(lengthstr);
         parent.getFont().drawString(x + barwidth/2 - strwidth/2, barY - parent.getFont().height() - 5, lengthstr, Color.DARKER_GRAY, false);
-        RenderUtil.drawRect(x, barY, x + barwidth, barY+2, Color.DARKER_GRAY);
-        RenderUtil.drawRect(x, barY-4, x+2, barY+6, Color.DARKER_GRAY);
-        RenderUtil.drawRect(x-2 + barwidth, barY-4, x + barwidth, barY+6, Color.DARKER_GRAY);
+        context.drawRectangle(x, barY, x + barwidth, barY+2, Color.DARKER_GRAY);
+        context.drawRectangle(x, barY-4, x+2, barY+6, Color.DARKER_GRAY);
+        context.drawRectangle(x-2 + barwidth, barY-4, x + barwidth, barY+6, Color.DARKER_GRAY);
     }
 
 }

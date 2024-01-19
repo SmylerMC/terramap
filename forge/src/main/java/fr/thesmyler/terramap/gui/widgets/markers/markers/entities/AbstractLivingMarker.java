@@ -51,7 +51,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             drawName = drawName && !map.getContext().equals(MapContext.MINIMAP);
         }
         context.glState().enableAlpha();
-        if(hovered) RenderUtil.drawRect(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
+        if(hovered) context.drawRectangle(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
         applyColor(WHITE);
         GlStateManager.enableBlend();
@@ -61,7 +61,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             String name = this.entity.getDisplayName().getFormattedText();
             float strWidth = parent.getFont().getStringWidth(name);
             float nameY = y - parent.getFont().height() - 2;
-            RenderUtil.drawRect(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, Color.DARK_OVERLAY);
+            context.drawRectangle(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, Color.DARK_OVERLAY);
             parent.getFont().drawCenteredString(x + this.width / 2, nameY, name, WHITE, false);
         }
     }

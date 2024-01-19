@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
@@ -62,7 +61,7 @@ public class DistortionLayer extends MapLayer {
                 } catch(OutOfProjectionBoundsException e) {
                     color = color.withRed(0f).withGreen(0).withAlpha(.1f);
                 }
-                RenderUtil.drawRect(x + dx, y + dy, x + dx + res, y + dy + res, color);
+                context.drawRectangle(x + dx, y + dy, x + dx + res, y + dy + res, color);
             }
         }
         
