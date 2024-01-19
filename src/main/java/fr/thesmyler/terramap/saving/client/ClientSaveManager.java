@@ -66,7 +66,8 @@ public class ClientSaveManager {
      * @return {@link SavedClientState} associated with the server
      */
     public SavedClientState loadServerState(MinecraftServerInfo serverInfo) {
-        return this.loadFromPath(this.worldDirectory.resolve(serverInfo.host + EXTENSION));
+        String filename = this.serverInfoToSaveName(serverInfo);
+        return this.loadFromPath(this.serverDirectory.resolve(filename + EXTENSION));
     }
 
     /**
@@ -77,7 +78,7 @@ public class ClientSaveManager {
      * @return {@link SavedClientState} associated with the proxy
      */
     public SavedClientState loadProxyState(UUID proxyUUID) {
-        return this.loadFromPath(this.worldDirectory.resolve(proxyUUID + EXTENSION));
+        return this.loadFromPath(this.proxyDirectory.resolve(proxyUUID + EXTENSION));
     }
 
     /**
@@ -116,11 +117,12 @@ public class ClientSaveManager {
      * Saves a {@link SavedClientState} associated with a specific server, given the server's {@link ServerData}.
      * This method will usually be used when a remote world cannot be uniquely identified and we can only identify the server.
      *
-     * @param serverData    the information of the server to retrieve the save for
+     * @param serverInfo    the information of the server to retrieve the save for
      * @param state         the state to save
      */
-    public void saveServerState(ServerData serverData, SavedClientState state) {
-        this.saveStateToPath(this.serverDirectory.resolve(serverData.serverIP + EXTENSION), state);
+    public void saveServerState(MinecraftServerInfo serverInfo, SavedClientState state) {
+        String filename = this.serverInfoToSaveName(serverInfo);
+        this.saveStateToPath(this.serverDirectory.resolve(filename + EXTENSION), state);
     }
 
     /**
@@ -130,7 +132,7 @@ public class ClientSaveManager {
      * @param state     the state to save
      */
     public void saveProxyState(UUID proxyUUID, SavedClientState state) {
-        this.saveStateToPath(this.serverDirectory.resolve(proxyUUID + EXTENSION), state);
+        this.saveStateToPath(this.proxyDirectory.resolve(proxyUUID + EXTENSION), state);
     }
 
     /**
@@ -149,6 +151,7 @@ public class ClientSaveManager {
         try (FileReader reader = new FileReader(path.toFile())) {
             return GSON.fromJson(reader, SavedClientState.class);
         } catch (FileNotFoundException ignored) {
+            TerramapMod.logger.warn("Save file did not exist and will be created: " + path);
             // Let's not spam the console when it's just a new save.
         } catch (IOException e) {
             TerramapMod.logger.error("Failed to read a saved client state, will fallback to a new one");
@@ -176,6 +179,10 @@ public class ClientSaveManager {
             directory.toFile().deleteOnExit();
         }
         return directory;
+    }
+
+    private String serverInfoToSaveName(MinecraftServerInfo info) {
+        return info.host.replaceAll(":", "-");  // Windows doesn't support colons in filenames...
     }
 
 }

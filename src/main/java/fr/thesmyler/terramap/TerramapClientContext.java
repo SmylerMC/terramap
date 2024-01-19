@@ -276,7 +276,7 @@ public class TerramapClientContext {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
             TerramapMod.logger.debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
         } else if (servData != null) {
-            this.saveManager.saveServerState(servData, this.state);
+            this.saveManager.saveServerState(new MinecraftServerInfo(servData), this.state);
             TerramapMod.logger.debug("Saved server state for server {} ({})",servData.serverName, servData.serverIP);
         } else {
             TerramapMod.logger.debug("Did not save state for unreliable context");
