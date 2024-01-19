@@ -3,8 +3,8 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;

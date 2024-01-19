@@ -1,8 +1,8 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.GameClient;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;

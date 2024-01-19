@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.container;
+package net.smyler.smylib.gui.containers;
 
 /**
  * A widget container that can change shape and position.

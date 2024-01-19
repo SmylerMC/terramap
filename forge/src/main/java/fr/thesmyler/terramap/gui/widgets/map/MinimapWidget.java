@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.widgets.MenuWidget;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;

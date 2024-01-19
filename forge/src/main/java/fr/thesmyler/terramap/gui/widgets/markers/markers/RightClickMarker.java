@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;

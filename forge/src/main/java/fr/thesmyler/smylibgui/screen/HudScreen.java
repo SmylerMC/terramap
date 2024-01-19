@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import fr.thesmyler.smylibgui.container.RootContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import net.smyler.smylib.Color;
 import net.minecraft.client.Minecraft;

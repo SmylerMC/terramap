@@ -1,11 +1,11 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonObject;
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.IWidget;
 import net.smyler.smylib.math.*;
 import net.smyler.smylib.threading.DefaultThreadLocal;
 import net.minecraft.client.renderer.GlStateManager;

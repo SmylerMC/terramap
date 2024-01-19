@@ -9,14 +9,14 @@ import org.jetbrains.annotations.Nullable;
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.Keyboard;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.smylibgui.widgets.MenuWidget;
+import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.MenuWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

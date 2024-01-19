@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.container;
+package net.smyler.smylib.gui.containers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,11 +7,11 @@ import java.util.TreeSet;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.MenuWidget;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.game.Key;
-import fr.thesmyler.smylibgui.widgets.IWidget;
-import fr.thesmyler.smylibgui.widgets.MenuWidget;
 import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -24,14 +24,13 @@ import static net.smyler.smylib.math.Math.doBoxesCollide;
  *
  * @see FlexibleWidgetContainer
  * @see ScrollableWidgetContainer
- * @see WindowedContainer
  * @see SlidingPanelWidget
  * @see TestingWidgetContainer
  *
  * @author SmylerMC
  *
  */
-public abstract class WidgetContainer implements IWidget{
+public abstract class WidgetContainer implements IWidget {
 
     protected final TreeSet<IWidget> widgets = new TreeSet<>(
             (w2, w1) -> {

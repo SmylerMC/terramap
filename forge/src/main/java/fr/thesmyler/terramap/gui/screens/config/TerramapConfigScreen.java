@@ -8,8 +8,8 @@ import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import org.lwjgl.input.Keyboard;
 
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;

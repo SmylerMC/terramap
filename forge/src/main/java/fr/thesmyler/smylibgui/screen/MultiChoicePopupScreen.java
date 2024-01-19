@@ -2,9 +2,9 @@ package fr.thesmyler.smylibgui.screen;
 
 import java.util.Map;
 
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;

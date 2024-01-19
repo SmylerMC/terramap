@@ -3,9 +3,9 @@ package fr.thesmyler.smylibgui.widgets.text;
 import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;

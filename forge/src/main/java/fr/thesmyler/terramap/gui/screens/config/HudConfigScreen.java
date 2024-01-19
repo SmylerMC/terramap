@@ -2,9 +2,9 @@ package fr.thesmyler.terramap.gui.screens.config;
 
 import java.util.*;
 
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.SlidingPanelWidget;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.container.WindowedContainer;
 import fr.thesmyler.smylibgui.container.SlidingPanelWidget.PanelTarget;
 import fr.thesmyler.smylibgui.screen.BackgroundOption;

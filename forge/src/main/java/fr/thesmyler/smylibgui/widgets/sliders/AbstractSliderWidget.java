@@ -7,10 +7,10 @@ import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.IWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.Font;

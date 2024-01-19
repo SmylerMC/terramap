@@ -1,8 +1,8 @@
-package fr.thesmyler.smylibgui.widgets;
+package net.smyler.smylib.gui.widgets;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.jetbrains.annotations.Nullable;
 
 /**

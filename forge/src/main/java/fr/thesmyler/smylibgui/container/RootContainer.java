@@ -1,9 +1,10 @@
 package fr.thesmyler.smylibgui.container;
 
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.IWidget;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;

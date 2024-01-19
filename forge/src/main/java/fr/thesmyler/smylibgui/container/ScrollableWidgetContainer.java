@@ -2,12 +2,14 @@ package fr.thesmyler.smylibgui.container;
 
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.widgets.IWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 

@@ -1,12 +1,12 @@
-package fr.thesmyler.smylibgui.widgets;
+package net.smyler.smylib.gui.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.jetbrains.annotations.Nullable;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;

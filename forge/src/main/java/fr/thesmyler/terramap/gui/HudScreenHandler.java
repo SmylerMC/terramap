@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.smylibgui.widgets.WarningWidget;
 import fr.thesmyler.terramap.MapContext;

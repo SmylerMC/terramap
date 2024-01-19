@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 import java.util.function.Consumer;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

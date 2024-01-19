@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.event;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**

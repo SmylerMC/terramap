@@ -1,11 +1,11 @@
 package fr.thesmyler.smylibgui.screen;
 
-import fr.thesmyler.smylibgui.container.FlexibleWidgetContainer;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.MenuWidget;
+import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.OptionButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;

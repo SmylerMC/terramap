@@ -6,7 +6,8 @@ import java.lang.reflect.Method;
 
 import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;

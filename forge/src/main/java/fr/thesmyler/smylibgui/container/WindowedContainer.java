@@ -1,11 +1,13 @@
 package fr.thesmyler.smylibgui.container;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.lwjgl.input.Cursor;
 
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.Cursors;
-import fr.thesmyler.smylibgui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.IWidget;
 import org.lwjgl.input.Mouse;
 
 import static net.smyler.smylib.Preconditions.checkArgument;

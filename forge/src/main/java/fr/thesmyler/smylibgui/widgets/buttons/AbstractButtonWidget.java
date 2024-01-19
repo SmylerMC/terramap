@@ -3,8 +3,8 @@ package fr.thesmyler.smylibgui.widgets.buttons;
 import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
-import fr.thesmyler.smylibgui.widgets.AbstractSolidWidget;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

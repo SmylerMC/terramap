@@ -4,7 +4,7 @@ import fr.thesmyler.smylibgui.container.RootContainer;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.minecraft.client.gui.GuiScreen;
 import net.smyler.smylib.game.Mouse;
 import net.smyler.smylib.gui.DrawContext;

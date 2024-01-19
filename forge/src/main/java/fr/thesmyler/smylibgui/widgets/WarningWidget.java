@@ -1,10 +1,11 @@
 package fr.thesmyler.smylibgui.widgets;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
-import fr.thesmyler.smylibgui.container.WidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 
 import static net.smyler.smylib.Color.WHITE;
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
