@@ -7,7 +7,6 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
@@ -28,7 +27,6 @@ import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.Includ
 import static java.util.Comparator.comparing;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
-//TODO localize
 class LayerListContainer extends FlexibleWidgetContainer {
 
     private final MapWidget map;
@@ -104,7 +102,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
 
         @Override
         public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
-            RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), Color.LIGHT_OVERLAY , 1f, Color.DARK_GRAY);
+            context.drawRectangleWithContours(x, y, x + this.getWidth(), y + this.getHeight(), Color.LIGHT_OVERLAY , 1f, Color.DARK_GRAY);
             super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }
 

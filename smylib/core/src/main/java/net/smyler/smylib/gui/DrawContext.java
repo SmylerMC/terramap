@@ -16,6 +16,20 @@ public interface DrawContext {
         this.drawGradientRectangle(0d, xLeft, yTop, xRight, yBottom, color, color, color, color);
     }
 
+    default void drawRectangleWithContours(double z, double xLeft, double yTop, double xRight, double yBottom, Color color, float contoursSize, Color contoursColor) {
+        this.drawRectangle(z, xLeft, yTop, xRight, yBottom, color);
+        this.drawClosedStrokeLine(z, contoursColor, contoursSize,
+                xLeft, yTop,
+                xLeft, yBottom,
+                xRight, yBottom,
+                xRight, yTop
+        );
+    }
+
+    default void drawRectangleWithContours(double xLeft, double yTop, double xRight, double yBottom, Color color, float contoursSize, Color contoursColor) {
+        this.drawRectangleWithContours(0, xLeft, yTop, xRight, yBottom, color, contoursSize, contoursColor);
+    }
+
     void drawGradientRectangle(double z, double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor);
 
     default void drawGradientRectangle(double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {

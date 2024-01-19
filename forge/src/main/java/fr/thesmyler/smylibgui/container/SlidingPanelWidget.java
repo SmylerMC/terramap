@@ -3,7 +3,6 @@ package fr.thesmyler.smylibgui.container;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -34,7 +33,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent){
-        RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor, this.contourSize, this.contourColor);
+        context.drawRectangleWithContours(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor, this.contourSize, this.contourColor);
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
         this.mainAnimation.update();
     }

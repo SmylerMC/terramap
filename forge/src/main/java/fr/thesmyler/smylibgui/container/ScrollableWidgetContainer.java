@@ -1,7 +1,6 @@
 package fr.thesmyler.smylibgui.container;
 
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
@@ -98,7 +97,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
         context.drawRectangle(x, y, x + this.getWidth(), y + this.getHeight(), this.backgroundColor);
         super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
-        RenderUtil.drawRectWithContour(x, y, x + this.getWidth(), y + this.getHeight(), Color.TRANSPARENT, this.contourSize, this.contourColor);
+        context.drawRectangleWithContours(x, y, x + this.getWidth(), y + this.getHeight(), Color.TRANSPARENT, this.contourSize, this.contourColor);
     }
 
     public Color getBackgroundColor() {

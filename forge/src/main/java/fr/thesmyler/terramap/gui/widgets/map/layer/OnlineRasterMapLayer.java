@@ -6,7 +6,6 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
@@ -176,7 +175,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
                 if (this.selected) {
                     background = selectedColor;
                 }
-                RenderUtil.drawRectWithContour(x, y, x + width, y + height, background , 1f, Color.DARK_GRAY);
+                context.drawRectangleWithContours(x, y, x + width, y + height, background , 1f, Color.DARK_GRAY);
                 super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
             }
 
