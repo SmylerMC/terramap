@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.container;
 
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.DrawContext;
@@ -20,7 +20,7 @@ import static java.lang.Math.floor;
 public abstract class RootContainer extends WidgetContainer {
 
     private long startHoverTime;
-    private IWidget lastHoveredWidget;
+    private Widget lastHoveredWidget;
     private float lastRenderMouseX, lastRenderMouseY;
     private final GuiScreen screen;
 
@@ -32,7 +32,7 @@ public abstract class RootContainer extends WidgetContainer {
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
         super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
-        IWidget hoveredWidget = this.getHoveredWidget();
+        Widget hoveredWidget = this.getHoveredWidget();
         boolean mouseMoved = mouseX != this.lastRenderMouseX && mouseY != this.lastRenderMouseY;
         if(mouseMoved || (hoveredWidget != null && !hoveredWidget.equals(this.lastHoveredWidget))) {
             this.startHoverTime = System.currentTimeMillis();

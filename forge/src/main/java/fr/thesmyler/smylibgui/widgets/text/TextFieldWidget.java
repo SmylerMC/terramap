@@ -15,7 +15,7 @@ import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -40,7 +40,7 @@ import static net.smyler.smylib.game.Key.*;
  * @author Smyler
  *
  */
-public class TextFieldWidget implements IWidget {
+public class TextFieldWidget implements Widget {
 
     private String text;
     private float x;

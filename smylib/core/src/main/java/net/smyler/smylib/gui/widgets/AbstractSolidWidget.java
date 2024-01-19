@@ -4,7 +4,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractSolidWidget implements IWidget {
+public abstract class AbstractSolidWidget implements Widget {
 
     protected boolean visible = true;
     protected boolean enabled= true;

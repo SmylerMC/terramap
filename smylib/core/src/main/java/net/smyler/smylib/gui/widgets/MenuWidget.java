@@ -12,7 +12,7 @@ import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.Font;
 
-public class MenuWidget implements IWidget {
+public class MenuWidget implements Widget {
 
     protected List<MenuEntry> entries = new ArrayList<>();
     protected MenuEntry hoveredEntry;

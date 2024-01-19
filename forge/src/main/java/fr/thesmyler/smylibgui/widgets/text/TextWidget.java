@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
@@ -14,7 +14,7 @@ import net.smyler.smylib.gui.Font;
 
 import static net.minecraft.client.gui.GuiUtilRenderComponents.splitText;
 
-public class TextWidget implements IWidget {
+public class TextWidget implements Widget {
 
     protected ITextComponent component;
     protected ITextComponent[] lines;

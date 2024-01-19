@@ -5,7 +5,7 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.*;
 import net.smyler.smylib.threading.DefaultThreadLocal;
 import net.minecraft.client.renderer.GlStateManager;
@@ -29,7 +29,7 @@ import static java.lang.Math.toRadians;
  * @author SmylerMC
  *
  */
-public abstract class MapLayer implements IWidget {
+public abstract class MapLayer implements Widget {
 
     private String type;
     private MapWidget map;

@@ -33,7 +33,7 @@ import fr.thesmyler.smylibgui.screen.MultiChoicePopupScreen;
 import fr.thesmyler.smylibgui.screen.Screen;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 import fr.thesmyler.smylibgui.widgets.ChatWidget;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import fr.thesmyler.smylibgui.widgets.WarningWidget;
@@ -566,7 +566,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         BackgroundStylePanelListContainer() {
             super(0, 0, 0, 0, 0);
-            IWidget lw = null;
+            Widget lw = null;
             for(TiledMapProvider provider: TiledMapProvider.values()) {
                 Throwable e = provider.getLastError();
                 if(e == null) continue;

@@ -10,7 +10,7 @@ import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.Font;
@@ -28,7 +28,7 @@ import static net.smyler.smylib.math.Math.saturate;
  * @author Smyler
  *
  */
-public abstract class AbstractSliderWidget implements IWidget {
+public abstract class AbstractSliderWidget implements Widget {
 
     protected float x, y, width, height;
     private final int z;

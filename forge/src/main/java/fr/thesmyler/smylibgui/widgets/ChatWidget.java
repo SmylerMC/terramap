@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 import net.smyler.smylib.game.Key;
 
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,7 @@ import static net.smyler.smylib.game.Key.KEY_RETURN;
  * @author SmylerMC
  *
  */
-public class ChatWidget implements IWidget, ITabCompleter {
+public class ChatWidget implements Widget, ITabCompleter {
 
     private float lineSectionX, lineSectionY, lineSectionWidth, lineSectionHeight;
     private final int z;

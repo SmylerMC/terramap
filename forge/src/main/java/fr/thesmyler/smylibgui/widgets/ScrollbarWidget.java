@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.widgets;
 
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
@@ -183,7 +183,7 @@ public class ScrollbarWidget extends WidgetContainer {
         return this;
     }
     
-    private class Draggable implements IWidget {
+    private class Draggable implements Widget {
 
         @Override
         public float getX() {

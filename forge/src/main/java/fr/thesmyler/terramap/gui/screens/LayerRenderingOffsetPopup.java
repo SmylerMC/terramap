@@ -7,7 +7,7 @@ import java.util.Locale;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
@@ -155,7 +155,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
     }
     
     private void onTextFieldsChange(String unused) {
-        IWidget focused = this.getContent().getFocusedWidget();
+        Widget focused = this.getContent().getFocusedWidget();
         if (focused != this.xInput && focused != this.yInput) return; // We don't want an infinite loop !
         boolean okX = false, okY = false;
         double dX = 0, dY = 0;
@@ -197,7 +197,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
     }
     
     private void updateMap() {
-        IWidget focused = this.getContent().getFocusedWidget();
+        Widget focused = this.getContent().getFocusedWidget();
         double zoom = this.mapController.getZoom();
         WebMercatorUtil.fromGeo(this.updateMapLayerCenter, this.layer.getMap().getController().getCenterLocation(), zoom);
         WebMercatorUtil.fromGeo(this.updateMapDelta, this.mapController.getCenterLocation(), zoom);

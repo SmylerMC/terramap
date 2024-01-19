@@ -7,7 +7,7 @@ import java.util.TreeSet;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,9 +30,9 @@ import static net.smyler.smylib.math.Math.doBoxesCollide;
  * @author SmylerMC
  *
  */
-public abstract class WidgetContainer implements IWidget {
+public abstract class WidgetContainer implements Widget {
 
-    protected final TreeSet<IWidget> widgets = new TreeSet<>(
+    protected final TreeSet<Widget> widgets = new TreeSet<>(
             (w2, w1) -> {
                 if (w2 != null && w2.equals(w1)) return 0;
                 if (w1 == null && w2 == null) return 0;
@@ -53,15 +53,15 @@ public abstract class WidgetContainer implements IWidget {
     private final float[] lastClickY = new float[getGameClient().mouse().getButtonCount()];
     private final long[] lastClickTime = new long[getGameClient().mouse().getButtonCount()];
 
-    private final IWidget[] draggedWidget = new IWidget[getGameClient().mouse().getButtonCount()];
+    private final Widget[] draggedWidget = new Widget[getGameClient().mouse().getButtonCount()];
     private final float[] dClickX = new float[getGameClient().mouse().getButtonCount()];
     private final float[] dClickY = new float[getGameClient().mouse().getButtonCount()];
     private final long[] dClickT = new long[getGameClient().mouse().getButtonCount()];
 
     private final List<MouseAction> delayedActions = new ArrayList<>();
 
-    private IWidget focusedWidget;
-    private IWidget hoveredWidget = null; // Used when drawing to check if a widget has already been considered as hovered
+    private Widget focusedWidget;
+    private Widget hoveredWidget = null; // Used when drawing to check if a widget has already been considered as hovered
 
     private MenuWidget menuToShow = null;
     private float menuToShowX;
@@ -76,12 +76,12 @@ public abstract class WidgetContainer implements IWidget {
 
     public void init() {}
 
-    public WidgetContainer addWidget(IWidget widget) {
+    public WidgetContainer addWidget(Widget widget) {
         this.widgets.add(widget);
         return this;
     }
 
-    public WidgetContainer removeWidget(IWidget widget) {
+    public WidgetContainer removeWidget(Widget widget) {
         if(this.widgets.contains(widget)) {
             widget.onRemoved();
         }
@@ -90,7 +90,7 @@ public abstract class WidgetContainer implements IWidget {
     }
 
     public WidgetContainer removeAllWidgets() {
-        for(IWidget widget: this.widgets) widget.onRemoved();
+        for(Widget widget: this.widgets) widget.onRemoved();
         this.widgets.clear();
         return this;
     }
@@ -103,7 +103,7 @@ public abstract class WidgetContainer implements IWidget {
 
         for(MouseAction event: this.delayedActions) {
             boolean processed = false;
-            for(IWidget widget: this.widgets) {
+            for(Widget widget: this.widgets) {
                 boolean propagate = true;
                 if(!this.isOverWidget(event.mouseX, event.mouseY, widget)) {
                     switch(event.type) {
@@ -168,7 +168,7 @@ public abstract class WidgetContainer implements IWidget {
         this.delayedActions.clear();
         float thisx = this.getX();
         float thisy = this.getY();
-        for(IWidget w: this.widgets) w.onUpdate(mouseX - thisx, mouseY - thisy, this);
+        for(Widget w: this.widgets) w.onUpdate(mouseX - thisx, mouseY - thisy, this);
 
         if(this.menuToShow != null) {
             if(parent != null) parent.showMenu(thisx + this.menuToShowX, thisy + this.menuToShowY, this.menuToShow);
@@ -227,7 +227,7 @@ public abstract class WidgetContainer implements IWidget {
     }
 
     @Override
-    public void onMouseReleased(float mouseX, float mouseY, int mouseButton, @Nullable IWidget draggedWidget) {
+    public void onMouseReleased(float mouseX, float mouseY, int mouseButton, @Nullable Widget draggedWidget) {
         this.delayedActions.add(new MouseAction(MouseActionType.RELEASE, mouseButton, mouseX, mouseY));
     }
 
@@ -236,7 +236,7 @@ public abstract class WidgetContainer implements IWidget {
         if(this.draggedWidget[button] == null) {
             this.dClickX[button] = 0;
             this.dClickY[button] = 0;
-            IWidget widget = this.getWidgetUnder(mouseX, mouseY);
+            Widget widget = this.getWidgetUnder(mouseX, mouseY);
             if (widget != null && widget.takesInputs()) {
                 this.draggedWidget[button] = widget;
             }
@@ -252,11 +252,11 @@ public abstract class WidgetContainer implements IWidget {
      * @param x position relative to this screen's origin
      * @param y position relative to this screen's origin
      *
-     * @return the {@link IWidget} with the highest z value at the given point
+     * @return the {@link Widget} with the highest z value at the given point
      */
     @Nullable 
-    protected IWidget getWidgetUnder(float x, float y) {
-        for(IWidget widget: this.widgets) if(this.isOverWidget(x, y, widget)) return widget;
+    protected Widget getWidgetUnder(float x, float y) {
+        for(Widget widget: this.widgets) if(this.isOverWidget(x, y, widget)) return widget;
         return null;
     }
 
@@ -268,7 +268,7 @@ public abstract class WidgetContainer implements IWidget {
      * 
      * @return a boolean indicating whether the specified point is over a widget
      */
-    protected boolean isOverWidget(float x, float y, IWidget widget) {
+    protected boolean isOverWidget(float x, float y, Widget widget) {
         return
                 widget.getX() <= x
                 && widget.getX() + widget.getWidth() >= x
@@ -288,7 +288,7 @@ public abstract class WidgetContainer implements IWidget {
      * 
      * @param widget    the widget to focus
      */
-    public void setFocus(IWidget widget) {
+    public void setFocus(Widget widget) {
         this.scheduleBeforeNextUpdate(() -> this.focusedWidget = widget);
     }
 
@@ -310,7 +310,7 @@ public abstract class WidgetContainer implements IWidget {
      * @return the current focused widget, goes recursive if it is a screen
      * 
      */
-    public IWidget getFocusedWidget() {
+    public Widget getFocusedWidget() {
         if(this.focusedWidget instanceof WidgetContainer)
             return ((WidgetContainer) this.focusedWidget).getFocusedWidget();
         return this.focusedWidget;
@@ -348,9 +348,9 @@ public abstract class WidgetContainer implements IWidget {
             scissor.setEnabled(true);
             scissor.cropSection(x, y, this.getWidth(), this.getHeight());
         }
-        IWidget wf = null;
+        Widget wf = null;
         if(screenHovered) {
-            for(IWidget widget: this.widgets) {
+            for(Widget widget: this.widgets) {
                 if(!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) continue;
                 if(this.isOverWidget(mouseX - x, mouseY - y, widget)) {
                     wf = widget;
@@ -387,7 +387,7 @@ public abstract class WidgetContainer implements IWidget {
      * 
      * @return false if the widget overlaps with the screen, true otherwise
      */
-    protected boolean isOutsideScreen(IWidget widget) {
+    protected boolean isOutsideScreen(Widget widget) {
         float minX = widget.getX();
         float minY = widget.getY();
         float maxX = minX + widget.getWidth();
@@ -513,7 +513,7 @@ public abstract class WidgetContainer implements IWidget {
         this.doScissor = yesNo;
     }
 
-    @Nullable public IWidget getHoveredWidget() {
+    @Nullable public Widget getHoveredWidget() {
         if(this.hoveredWidget instanceof WidgetContainer)
             return ((WidgetContainer) this.hoveredWidget).getHoveredWidget();
         return this.hoveredWidget;

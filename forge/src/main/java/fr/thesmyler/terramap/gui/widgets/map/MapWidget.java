@@ -15,7 +15,7 @@ import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
@@ -334,7 +334,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @throws UnsupportedOperationException in any case
      */
     @Override @Deprecated
-    public WidgetContainer addWidget(IWidget widget) throws UnsupportedOperationException {
+    public WidgetContainer addWidget(Widget widget) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
@@ -345,7 +345,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @throws UnsupportedOperationException in any case
      */
     @Override @Deprecated
-    public WidgetContainer removeWidget(IWidget widget) throws UnsupportedOperationException {
+    public WidgetContainer removeWidget(Widget widget) throws UnsupportedOperationException {
         throw new UnsupportedOperationException();
     }
 
@@ -396,7 +396,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     public void updateCopyright() {
         ITextComponent component = new TextComponentString("");
-        for(IWidget widget: this.widgets) 
+        for(Widget widget: this.widgets)
             if(widget instanceof CopyrightHolder){
                 if(!component.getFormattedText().isEmpty()) component.appendText(" | ");
                 ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().translator().language());

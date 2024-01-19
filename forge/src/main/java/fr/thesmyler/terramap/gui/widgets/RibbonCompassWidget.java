@@ -7,7 +7,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.util.TextureUtil;
 import fr.thesmyler.smylibgui.util.TextureUtil.TextureProperties;
 import fr.thesmyler.smylibgui.util.TextureUtil.UnknownTextureException;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import static net.smyler.smylib.Color.WHITE;
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
-public class RibbonCompassWidget implements IWidget {
+public class RibbonCompassWidget implements Widget {
 
     private static final ResourceLocation COMPASS_BACKGROUND_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_background.png");
     private static final ResourceLocation COMPASS_INDICATOR_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_indicator.png");

@@ -9,7 +9,7 @@ import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.Mat2d;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -19,7 +19,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import static net.smyler.smylib.Color.WHITE;
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
-public class CircularCompassWidget implements IWidget {
+public class CircularCompassWidget implements Widget {
 
     private float azimuth = 0f;
     private float x, y, size;

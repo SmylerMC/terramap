@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author SmylerMC
  */
-public interface IWidget {
+public interface Widget {
 
     /**
      * @return the x position of this widget in the parent container
@@ -193,7 +193,7 @@ public interface IWidget {
      * @param draggedWidget the widget the user was dragging and drop on this widget
      *
      */
-    default void onMouseReleased(float mouseX, float mouseY, int button, @Nullable IWidget draggedWidget) {}
+    default void onMouseReleased(float mouseX, float mouseY, int button, @Nullable Widget draggedWidget) {}
 
     /**
      * Called between the time the events are processed and the screen is drawn.

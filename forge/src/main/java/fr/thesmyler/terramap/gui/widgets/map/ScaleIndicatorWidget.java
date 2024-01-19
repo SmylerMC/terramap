@@ -2,13 +2,13 @@ package fr.thesmyler.terramap.gui.widgets.map;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 //TODO Make this even more accurate
-public class ScaleIndicatorWidget implements IWidget {
+public class ScaleIndicatorWidget implements Widget {
 
     private float x, y;
     private final int z;

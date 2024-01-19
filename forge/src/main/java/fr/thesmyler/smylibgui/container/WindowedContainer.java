@@ -7,7 +7,7 @@ import org.lwjgl.input.Cursor;
 
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.Cursors;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import org.lwjgl.input.Mouse;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
@@ -101,7 +101,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
 
-    private abstract class BaseDecorationWidget implements IWidget {
+    private abstract class BaseDecorationWidget implements Widget {
 
         private boolean lastHovered = false;
         private final Cursor cursor;

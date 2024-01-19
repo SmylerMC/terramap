@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.container;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.widgets.IWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
@@ -138,7 +138,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
      */
     @Override
     @Deprecated
-    public WidgetContainer addWidget(IWidget widget) {
+    public WidgetContainer addWidget(Widget widget) {
         return super.addWidget(widget);
     }
 
@@ -150,7 +150,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
      */
     @Override
     @Deprecated
-    public WidgetContainer removeWidget(IWidget widget) {
+    public WidgetContainer removeWidget(Widget widget) {
         if (this.content.equals(widget))
             throw new IllegalStateException("Cannot remove the content container from a scrollable content container!");
         return super.removeWidget(widget);
