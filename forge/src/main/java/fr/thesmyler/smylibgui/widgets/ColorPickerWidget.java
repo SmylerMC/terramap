@@ -2,7 +2,6 @@ package fr.thesmyler.smylibgui.widgets;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.DrawContext;
@@ -87,7 +86,7 @@ public class ColorPickerWidget extends TextFieldWidget {
         context.drawRectangle(x + width - height, y, x + width, y + height, this.color);
         Color borderColor = hovered && this.isEnabled() ? this.getBorderColorHovered(): this.getBorderColorNormal();
         float colorSeparatorX = x + width - height;
-        RenderUtil.drawStrokeLine(borderColor, 1f,
+        context.drawStrokeLine(borderColor, 1f,
                 colorSeparatorX, y,
                 colorSeparatorX, y + this.getHeight());
     }

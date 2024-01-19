@@ -4,7 +4,6 @@ import net.smyler.smylib.game.Key;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
@@ -138,7 +137,7 @@ public class PopupScreen extends Screen {
             float bottom = y + this.getHeight();
             context.drawRectangle(x, y, right, bottom, PopupScreen.this.contentBackgroundColor);
             super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
-            RenderUtil.drawClosedStrokeLine(PopupScreen.this.contourColor, PopupScreen.this.contourSize,
+            context.drawClosedStrokeLine(PopupScreen.this.contourColor, PopupScreen.this.contourSize,
                     x, y,
                     x, bottom,
                     right, bottom,

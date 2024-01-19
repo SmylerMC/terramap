@@ -73,8 +73,8 @@ public class InputLayer extends MapLayer {
             // If we are processing rotation input, draw pentagons at the corresponding spot
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + this.rotatePosition.x, y + this.rotatePosition.y, 0);
-            RenderUtil.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_OUTER);
-            RenderUtil.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_INNER);
+            context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_OUTER);
+            context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_INNER);
             GlStateManager.popMatrix();
         }
 

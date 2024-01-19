@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 public final class RenderUtil {
@@ -23,7 +22,7 @@ public final class RenderUtil {
     public static void drawRect(double xLeft, double yTop, double xRight, double yBottom, Color color) {
         drawGradientRect(0, xLeft, yTop, xRight, yBottom, color, color, color, color);
     }
-    
+
     public static void drawRectWithContour(int z, double xLeft, double yTop, double xRight, double yBottom, Color color, float contourSize, Color contourColor) {
         drawRect(z, xLeft, yTop, xRight, yBottom, color);
         drawClosedStrokeLine(z, contourColor, contourSize, 
@@ -88,71 +87,35 @@ public final class RenderUtil {
         drawTexturedModalRect(x, y, 0, minU, minV, maxU, maxV);
     }
 
+    @Deprecated
     public static void drawPolygon(double z, Color color, double... points) {
-        checkArgument(points.length % 2 == 0, "An even number of coordinates is required");
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        applyColor(color);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION);
-        for(int i=0; i<points.length; i+=2) {
-            builder.pos(points[i], points[i+1], z).endVertex();
-        }
-        tessellator.draw();
-        GlStateManager.disableAlpha();
-        GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
+        DrawContext context = getGameClient().guiDrawContext();
+        context.drawPolygon(z, color, points);
     }
 
+    @Deprecated
     public static void drawPolygon(Color color, double... points) {
         drawPolygon(0d, color, points);
     }
 
+    @Deprecated
     public static void drawStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth(size * getGameClient().scaleFactor());
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        applyColor(color);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-        for(int i=0; i<points.length; i+=2) {
-            builder.pos(points[i], points[i+1], z).endVertex();
-        }
-        tessellator.draw();
-        GlStateManager.disableAlpha();
-        GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
+        DrawContext context = getGameClient().guiDrawContext();
+        context.drawStrokeLine(z, color, size, points);
     }
 
+    @Deprecated
     public static void drawStrokeLine(Color color, float size, double... points) {
         drawStrokeLine(0, color, size, points);
     }
 
+    @Deprecated
     public static void drawClosedStrokeLine(double z, Color color, float size, double... points) {
-        GL11.glLineWidth(size * getGameClient().scaleFactor());
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        applyColor(color);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
-        for(int i=0; i<points.length; i+=2) {
-            builder.pos(points[i], points[i+1], z).endVertex();
-        }
-        tessellator.draw();
-        GlStateManager.disableAlpha();
-        GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
+        DrawContext context = getGameClient().guiDrawContext();
+        context.drawClosedStrokeLine(z, color, size, points);
     }
 
+    @Deprecated
     public static void drawClosedStrokeLine(Color color, float size, double... points) {
         drawClosedStrokeLine(0d, color, size, points);
     }

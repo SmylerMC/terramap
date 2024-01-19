@@ -8,7 +8,6 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.Mat2d;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -67,7 +66,7 @@ public class CircularCompassWidget implements Widget {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + radius, y + radius, 0);
-        RenderUtil.drawPolygon(background, this.vertices);
+        context.drawPolygon(background, this.vertices);
         //RenderUtil.drawClosedStrokeLine(Color.BLACK, 1f, vertices);
         GlStateManager.rotate(this.azimuth, 0, 0, 1);
         Tessellator tessellator = Tessellator.getInstance();

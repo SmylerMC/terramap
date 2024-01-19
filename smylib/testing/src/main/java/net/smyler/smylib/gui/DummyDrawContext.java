@@ -22,4 +22,19 @@ public class DummyDrawContext implements DrawContext {
 
     }
 
+    @Override
+    public void drawPolygon(double z, Color color, double... points) {
+
+    }
+
+    @Override
+    public void drawStrokeLine(double z, Color color, float size, double... points) {
+
+    }
+
+    @Override
+    public void drawClosedStrokeLine(double z, Color color, float size, double... points) {
+
+    }
+
 }

@@ -19,7 +19,25 @@ public interface DrawContext {
     void drawGradientRectangle(double z, double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor);
 
     default void drawGradientRectangle(double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
-        this.drawGradientRectangle(0, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
+        this.drawGradientRectangle(0d, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
+    }
+
+    void drawPolygon(double z, Color color, double... points);
+
+    default void drawPolygon(Color color, double... points) {
+        this.drawPolygon(0d, color, points);
+    }
+
+    void drawStrokeLine(double z, Color color, float size, double... points);
+
+    default void drawStrokeLine(Color color, float size, double... points) {
+        this.drawStrokeLine(0d, color, size, points);
+    }
+
+    void drawClosedStrokeLine(double z, Color color, float size, double... points);
+
+    default void drawClosedStrokeLine(Color color, float size, double... points) {
+        this.drawClosedStrokeLine(0d, color, size, points);
     }
 
 }

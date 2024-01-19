@@ -43,7 +43,7 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
 
         GlStateManager.pushMatrix();
         this.applyRotationGl(x, y);
-        RenderUtil.drawStrokeLine(Color.RED, 2f,
+        context.drawStrokeLine(Color.RED, 2f,
                 this.renderSpaceHalfDimensions.x(), this.renderSpaceHalfDimensions.y(),
                 this.realCenterPosition.x, this.renderSpaceHalfDimensions.y(),
                 this.realCenterPosition.x, this.realCenterPosition.y);
@@ -51,16 +51,16 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
 
         float centerHole = 10;
         float linesWidth = 1f;
-        RenderUtil.drawStrokeLine(Color.DARK_GRAY, linesWidth, 
+        context.drawStrokeLine(Color.DARK_GRAY, linesWidth,
                 x + width / 2, y,
                 x + width / 2, y + height / 2 - centerHole);
-        RenderUtil.drawStrokeLine(Color.DARK_GRAY, linesWidth, 
+        context.drawStrokeLine(Color.DARK_GRAY, linesWidth,
                 x + width / 2, y + height / 2 + centerHole,
                 x + width / 2, y + height);
-        RenderUtil.drawStrokeLine(Color.DARK_GRAY, linesWidth, 
+        context.drawStrokeLine(Color.DARK_GRAY, linesWidth,
                 x, y + height / 2,
                 x + width / 2 -  centerHole, y + height / 2);
-        RenderUtil.drawStrokeLine(Color.DARK_GRAY, linesWidth, 
+        context.drawStrokeLine(Color.DARK_GRAY, linesWidth,
                 x + width / 2 + centerHole, y + height / 2,
                 x + width, y + height / 2);
 

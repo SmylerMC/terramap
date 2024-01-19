@@ -11,7 +11,6 @@ import com.google.gson.JsonPrimitive;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.smylibgui.widgets.ColorPickerWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
@@ -170,19 +169,19 @@ public class McChunksLayer extends MapLayer {
 
         float size = 1f;
         if(renderBlocks) {
-            this.renderGrid(x, y, 0, 1, this.colorBlocks.withAlpha(this.getAlpha()), size);
+            this.renderGrid(context, x, y, 0, 1, this.colorBlocks.withAlpha(this.getAlpha()), size);
             size += 1f;
         }
         if(renderChunks) {
-            this.renderGrid(x, y, 1, 16, this.colorChunks.withAlpha(this.getAlpha()), size);
+            this.renderGrid(context, x, y, 1, 16, this.colorChunks.withAlpha(this.getAlpha()), size);
             size += 1f;
         }
         if(render3dr) {
-            this.renderGrid(x, y, 2, 256, this.color3dr.withAlpha(this.getAlpha()), size);
+            this.renderGrid(context, x, y, 2, 256, this.color3dr.withAlpha(this.getAlpha()), size);
             size += 1f;
         }
         if(render2dr) {
-            this.renderGrid(x, y, 3, 512, this.color2dr.withAlpha(this.getAlpha()), size);
+            this.renderGrid(context, x, y, 3, 512, this.color2dr.withAlpha(this.getAlpha()), size);
         }
 
         this.cache.cycle();
@@ -190,7 +189,7 @@ public class McChunksLayer extends MapLayer {
         map.getProfiler().endSection();
     }
     
-    private void renderGrid(float x, float y, int discriminator, long tileSize, Color color, float lineWidth) {
+    private void renderGrid(DrawContext context, float x, float y, int discriminator, long tileSize, Color color, float lineWidth) {
         
         final int maxTiles = 100; // Maximum drawing iterations, for safety
 
@@ -213,7 +212,7 @@ public class McChunksLayer extends MapLayer {
             boolean[] linesInlineIn = new boolean[4];
             while(2*dX*direction < size) {
                 if((direction < 0 && inBottom) || (direction > 0 && inTop))
-                    this.renderTile(x, y, discriminator, color, lineWidth, linesInlineIn);
+                    this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
                 dX += direction;
                 long step = tileSize*direction;
                 for (Vec2dMutable corner : this.corners) corner.add(step, 0);
@@ -227,7 +226,7 @@ public class McChunksLayer extends MapLayer {
 
             while(2*dY*direction < size) {
                 if((direction < 0 && inLeft) || (direction > 0 && inRight))
-                    this.renderTile(x, y, discriminator, color, lineWidth, linesInlineIn);
+                    this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
                 dY += direction;
                 long step = tileSize*direction;
                 for (Vec2dMutable corner : this.corners) corner.add(0, step);
@@ -243,7 +242,7 @@ public class McChunksLayer extends MapLayer {
         }
     }
 
-    private void renderTile(float x, float y, int discriminator, Color color, float lineWidth, boolean[] loopingConditions) {
+    private void renderTile(DrawContext context, float x, float y, int discriminator, Color color, float lineWidth, boolean[] loopingConditions) {
         try {
             for(int i=0; i<this.projectedCorners.length; i++) {
                 this.cache.getRenderPos(this.projectedCorners[i], this.corners[i], discriminator);
@@ -257,7 +256,7 @@ public class McChunksLayer extends MapLayer {
             loopingConditions[2] = loopingConditions[2] || corner.y >= 0;
             loopingConditions[3] = loopingConditions[3] || corner.y <= this.extendedDimensions.y();
         }
-        RenderUtil.drawClosedStrokeLine(color, lineWidth,
+        context.drawClosedStrokeLine(color, lineWidth,
                 x + this.projectedCorners[0].x, y + this.projectedCorners[0].y,
                 x + this.projectedCorners[1].x, y + this.projectedCorners[1].y,
                 x + this.projectedCorners[2].x, y + this.projectedCorners[2].y,
