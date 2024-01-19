@@ -19,17 +19,18 @@ Terramap is an addon to the [Terraplusplus](https://www.curseforge.com/minecraft
 - [Terramap wiki](https://github.com/SmylerMC/terramap/wiki): Advanced users can learn about more technical features there.
 - [Terramap Trello](https://trello.com/b/pXex8eui/terramap): Discover what's being planed and worked on.
 
-## Features:
-- Fully fledged full-screen world map (only raster maps for now)
-- Minimap and compass with an intuituve configuration UI
-- Easy world-wide teleportation using the maps
-- Displays players on the maps, no matter how far away they are from you
-- Quick access to technical information about a place, including distortion or region coordinates
-- Quick access to other map services
-- Support for customized map endpoints, with server to client config synchronization
+## Main Features:
+- Display world maps directly in Minecraft, in a dedicated screen and as a minimal.
+- Display a compass indicating the real geographic north directly on the in game HUD (rather than the Minecraft north)
+- Multi layer maps: maps can display multiple sources on top of each other. Layer types include online raster tiled map, Minecraft regions and Terraplusplus generation preview.
+- Easy world-wide teleportation through the maps' right-click menu or CTRL+click.
+- Display player positions on the map, server or network-wide
+- Quick access to technical information about a place, including distortion or region coordinates.
+- Quick access to other map services. The default provider is OpenStreetMap.
+- Configurable map providers, with server to client config synchronization.
 
 ## Planned features
-- Raster maps
+- Vector maps
 - Geocoding
 - Support for more modding framework (Forge, Fabric, Bukkit)
 - Support for more modern Minecraft versions
