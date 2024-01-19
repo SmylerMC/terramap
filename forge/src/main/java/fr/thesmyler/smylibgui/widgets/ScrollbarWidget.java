@@ -5,11 +5,11 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
-import net.minecraft.util.math.MathHelper;
 import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.math.Math.clamp;
 
 //TODO Use a texture
 public class ScrollbarWidget extends WidgetContainer {
@@ -114,12 +114,12 @@ public class ScrollbarWidget extends WidgetContainer {
     }
 
     public ScrollbarWidget setProgress(float progress) {
-        this.targetProgress = MathHelper.clamp(progress, 0, 1);
+        this.targetProgress = clamp(progress, 0, 1);
         return this;
     }
     
     public ScrollbarWidget setProgressNoAnimation(float progress) {
-        this.progress = MathHelper.clamp(progress, 0, 1);
+        this.progress = clamp(progress, 0, 1);
         this.targetProgress = this.progress;
         return this;
     }
@@ -212,7 +212,7 @@ public class ScrollbarWidget extends WidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, WidgetContainer parent, long dt) {
-            ScrollbarWidget.this.progress = MathHelper.clamp(
+            ScrollbarWidget.this.progress = clamp(
                     ScrollbarWidget.this.orientation.dragMoveToProgress(ScrollbarWidget.this.length, ScrollbarWidget.this.progress, ScrollbarWidget.this.viewPort, dX, dY),
                     0, 1);
             ScrollbarWidget.this.targetProgress = ScrollbarWidget.this.progress;

@@ -22,7 +22,6 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.MathHelper;
 import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.Color.BLUE;
@@ -30,6 +29,7 @@ import static net.smyler.smylib.Color.WHITE;
 import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.game.Key.*;
+import static net.smyler.smylib.math.Math.clamp;
 
 /**
  * A text field, similar to the vanilla implementation, but with a few improvements.
@@ -460,12 +460,12 @@ public class TextFieldWidget implements Widget {
     }
 
     public void setSelectionStart(int cursor) {
-        this.selectionStart = MathHelper.clamp(cursor, 0, this.text.length());
+        this.selectionStart = clamp(cursor, 0, this.text.length());
     }
 
     public void setSelectionEnd(int pos) {
         int txtLength = this.text.length();
-        this.selectionEnd = MathHelper.clamp(pos, 0, txtLength);
+        this.selectionEnd = clamp(pos, 0, txtLength);
         this.firstCharacterIndex = Math.min(this.firstCharacterIndex, txtLength);
 
         float effectiveWidth = this.getEffectiveWidth();
@@ -481,7 +481,7 @@ public class TextFieldWidget implements Widget {
             this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
         }
 
-        this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, txtLength);
+        this.firstCharacterIndex = clamp(this.firstCharacterIndex, 0, txtLength);
     }
 
     private void onChange() {
