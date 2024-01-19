@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.GlState;
 import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -18,7 +19,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
@@ -31,9 +31,11 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        GlState glState = context.glState();
+
         boolean drawName = this.showName(hovered);
         float textureSize = 128f / this.downScaleFactor;
-        context.glState().enableAlpha();
+        glState.enableAlpha();
         if(hovered) context.drawRectangle(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.DARK_OVERLAY);
 
         // Draw the direction arrow
@@ -64,7 +66,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         }
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.getSkin());
-        applyColor(WHITE.withAlpha(this.getTransparency()));
+        glState.setColor(WHITE.withAlpha(this.getTransparency()));
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 80f / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
 
@@ -77,7 +79,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             parent.getFont().drawCenteredString(x + halfSize, nameY, name, WHITE, false);
         }
 
-        applyColor(WHITE);
+        glState.setColor(WHITE);
     }
 
     protected abstract ResourceLocation getSkin();

@@ -8,7 +8,6 @@ import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public class WarningWidget extends AbstractSolidWidget {
 
@@ -18,7 +17,7 @@ public class WarningWidget extends AbstractSolidWidget {
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        applyColor(WHITE);
+        context.glState().setColor(WHITE);
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 15, 54, this.width, this.height, 256, 256);
     }

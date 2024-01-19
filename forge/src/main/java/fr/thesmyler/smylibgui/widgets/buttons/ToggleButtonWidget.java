@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public class ToggleButtonWidget extends AbstractButtonWidget {
 
@@ -88,7 +87,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
-        applyColor(WHITE);
+        context.glState().setColor(WHITE);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

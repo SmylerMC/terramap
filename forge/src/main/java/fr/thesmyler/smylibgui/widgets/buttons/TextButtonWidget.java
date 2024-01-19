@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class TextButtonWidget extends AbstractButtonWidget {
@@ -50,7 +49,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        applyColor(WHITE);
+        context.glState().setColor(WHITE);
         int textureDelta = 1;
         Color textColor = this.enabledTextColor;
         if (!this.isEnabled()) {

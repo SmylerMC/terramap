@@ -1,6 +1,7 @@
 package fr.thesmyler.smylibgui.widgets.sliders;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.GlState;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
@@ -16,7 +17,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.saturate;
 
@@ -118,8 +118,9 @@ public abstract class AbstractSliderWidget implements Widget {
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         GameClient game = getGameClient();
+        GlState glState = context.glState();
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        applyColor(WHITE);
+        glState.setColor(WHITE);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -137,7 +138,7 @@ public abstract class AbstractSliderWidget implements Widget {
 
         float sliderPosition = this.getPosition();
         Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        applyColor(WHITE);
+        glState.setColor(WHITE);
 
         float sliderX = x + sliderPosition * (this.width - 8);
         RenderUtil.drawTexturedModalRect(sliderX, y, 0, 66, 4, splitHeight);

@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.math.Vec2dMutable;
 import org.lwjgl.opengl.GL11;
 
@@ -16,7 +17,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public class CircularCompassWidget implements Widget {
 
@@ -64,6 +64,7 @@ public class CircularCompassWidget implements Widget {
 
         float radius = this.size / 2;
 
+        GlState glState = context.glState();
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + radius, y + radius, 0);
         context.drawPolygon(background, this.vertices);
@@ -71,7 +72,7 @@ public class CircularCompassWidget implements Widget {
         GlStateManager.rotate(this.azimuth, 0, 0, 1);
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
-        applyColor(WHITE);
+        glState.setColor(WHITE);
         GlStateManager.shadeModel(7425);
         context.glState().enableAlpha();
         GlStateManager.enableBlend();

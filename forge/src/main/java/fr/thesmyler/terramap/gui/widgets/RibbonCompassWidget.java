@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.GlState;
 import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -17,7 +18,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public class RibbonCompassWidget implements Widget {
 
@@ -61,11 +61,12 @@ public class RibbonCompassWidget implements Widget {
         double rightU = leftU + (double) this.width / this.textureWidth;
         double rightCU = rightU - blendBorder/this.textureWidth;
 
+        GlState glState = context.glState();
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buff = tess.getBuffer();
 
         GlStateManager.enableTexture2D();
-        context.glState().enableAlpha();
+        glState.enableAlpha();
         GlStateManager.enableBlend();
         Minecraft.getMinecraft().getTextureManager().bindTexture(COMPASS_BACKGROUND_TEXTURE);
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -90,7 +91,7 @@ public class RibbonCompassWidget implements Widget {
         tess.draw();
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(COMPASS_INDICATOR_TEXTURE);
-        applyColor(WHITE);
+        glState.setColor(WHITE);
         buff.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
         double indX = x + (double)(this.width - this.indicatorWidth) / 2;
         double indY = y + (double)(this.height - this.indicatorHeight) / 2;

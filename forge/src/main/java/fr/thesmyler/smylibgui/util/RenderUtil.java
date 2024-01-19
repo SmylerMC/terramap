@@ -118,17 +118,4 @@ public final class RenderUtil {
         drawClosedStrokeLine(0d, color, size, points);
     }
 
-    public static void applyColor(Color color) {
-        GlStateManager.color(
-                color.redf(),
-                color.greenf(),
-                color.bluef(),
-                color.alphaf()
-        );
-    }
-
-    public static Color currentColor() {
-        return new Color(GL11.glGetInteger(GL11.GL_CURRENT_COLOR));
-    }
-
 }

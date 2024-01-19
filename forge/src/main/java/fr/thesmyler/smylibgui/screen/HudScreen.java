@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import fr.thesmyler.smylibgui.container.RootContainer;
+import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import net.smyler.smylib.Color;
@@ -58,6 +59,7 @@ public final class HudScreen {
         GameClient game = getGameClient();
         Mouse mouse = game.mouse();
         DrawContext drawContext = game.guiDrawContext();
+        GlState glState = drawContext.glState();
         Scissor scissor = drawContext.scissor();
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
         float width = game.windowWidth();
@@ -70,12 +72,12 @@ public final class HudScreen {
         float mouseX = mouse.x();
         float mouseY = mouse.y();
         CONTAINER.onUpdate(mouseX, mouseY, null);
-        Color color = currentColor();
+        Color color = glState.getColor();
         scissor.push();
         scissor.cropScreen(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
         CONTAINER.draw(drawContext, 0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
         drawContext.glState().enableAlpha();
-        applyColor(color); // Reset color to what it was
+        glState.setColor(color); // Reset color to what it was
     }
 
     @SubscribeEvent

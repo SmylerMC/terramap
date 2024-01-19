@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public class TexturedButtonWidget extends AbstractButtonWidget {
 
@@ -86,7 +85,7 @@ public class TexturedButtonWidget extends AbstractButtonWidget {
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Minecraft mc = Minecraft.getMinecraft();
         mc.getTextureManager().bindTexture(this.texture);
-        applyColor(WHITE);
+        context.glState().setColor(WHITE);
         int u = this.u;
         int v = this.v;
         if(!this.isEnabled()) {

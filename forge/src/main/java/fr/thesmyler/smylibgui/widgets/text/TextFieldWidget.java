@@ -3,7 +3,9 @@ package fr.thesmyler.smylibgui.widgets.text;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import net.smyler.smylib.gui.ColorLogic;
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.GlState;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.smylibgui.SmyLibGuiTextures;
@@ -18,15 +20,11 @@ import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.Color.BLUE;
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.game.Key.*;
 import static net.smyler.smylib.math.Math.clamp;
@@ -127,6 +125,8 @@ public class TextFieldWidget implements Widget {
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
+        GlState glState = context.glState();
+
         this.cursorAnimation.update();
 
         Color borderColor = this.borderColorNormal;
@@ -146,9 +146,9 @@ public class TextFieldWidget implements Widget {
         }
 
         if(this.isSearchBar) {
-            applyColor(WHITE);
+            glState.setColor(WHITE);
             Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
-            context.glState().enableAlpha();
+            glState.enableAlpha();
             GlStateManager.enableBlend();
             RenderUtil.drawModalRectWithCustomSizedTexture(x + this.width - 17, y + 2, 131, 0, 15, 15, 256, 256);
         }
@@ -192,32 +192,24 @@ public class TextFieldWidget implements Widget {
 
         if (displaySelectionEnd != displaySelectionStart) {
             float selectionBoxRenderRight = textRenderX + this.font.getStringWidth(string.substring(0, displaySelectionEnd));
-            this.drawSelectionHighlight(x, y, cursorX, textRenderY - 1, selectionBoxRenderRight - 1, textRenderY + 1 + 9);
+            this.drawSelectionHighlight(context, x, y, cursorX, textRenderY - 1, selectionBoxRenderRight - 1, textRenderY + 1 + 9);
         }
 
 
     }
 
-    private void drawSelectionHighlight(float x, float y, float x1, float y1, float x2, float y2) {
-        float dispX1 = Math.max(x1, x2);
-        float dispY1 = Math.max(y1, y2);
-        float dispX2 = Math.min(x1, x2);
-        float dispY2 = Math.min(y1, y2);
-        dispX2 = Math.min(dispX2, x + this.getEffectiveWidth());
-        dispX1 = Math.min(dispX1, x + this.getEffectiveWidth());
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        applyColor(BLUE);
+    private void drawSelectionHighlight(DrawContext context, float x, float y, float x1, float y1, float x2, float y2) {
+        float xRight = Math.max(x1, x2);
+        float yBottom = Math.max(y1, y2);
+        float xLeft = Math.min(x1, x2);
+        float yTop = Math.min(y1, y2);
+        xLeft = Math.min(xLeft, x + this.getEffectiveWidth());
+        xRight = Math.min(xRight, x + this.getEffectiveWidth());
         GlStateManager.disableTexture2D();
-        GlStateManager.enableColorLogic();
-        GlStateManager.colorLogicOp(GlStateManager.LogicOp.OR_REVERSE);
-        bufferBuilder.begin(7, DefaultVertexFormats.POSITION);
-        bufferBuilder.pos(dispX1, dispY2, 0.0D).endVertex();
-        bufferBuilder.pos(dispX2, dispY2, 0.0D).endVertex();
-        bufferBuilder.pos(dispX2, dispY1, 0.0D).endVertex();
-        bufferBuilder.pos(dispX1, dispY1, 0.0D).endVertex();
-        tessellator.draw();
-        GlStateManager.disableColorLogic();
+        GlState state = context.glState();
+        state.enableColorLogic(ColorLogic.OR_REVERSE);
+        context.drawRectangle(xLeft, yTop, xRight, yBottom, BLUE);
+        state.disableColorLogic();
         GlStateManager.enableTexture2D();
     }
 

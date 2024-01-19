@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
+import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -20,7 +21,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 
 public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
@@ -44,16 +44,16 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        applyColor(WHITE);
+        GlState glState = context.glState();
         boolean drawName = hovered;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
             drawName = drawName && !map.getContext().equals(MapContext.MINIMAP);
         }
-        context.glState().enableAlpha();
+        glState.enableAlpha();
         if(hovered) context.drawRectangle(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
-        applyColor(WHITE);
+        glState.setColor(WHITE);
         GlStateManager.enableBlend();
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.u, this.v, this.width, this.height, this.textureWidth, this.textureHeight);
 

@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
@@ -28,7 +29,6 @@ import net.minecraft.util.ResourceLocation;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import static net.smyler.smylib.Color.WHITE;
-import static fr.thesmyler.smylibgui.util.RenderUtil.applyColor;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 abstract public class RasterMapLayer extends MapLayer {
@@ -65,6 +65,7 @@ abstract public class RasterMapLayer extends MapLayer {
         Font smallFont = getGameClient().smallestFont();
         Minecraft mc = Minecraft.getMinecraft();
         TextureManager textureManager = mc.getTextureManager();
+        GlState glState = context.glState();
         float rotation = this.getRotation();
 
         boolean perfectDraw = true;
@@ -216,7 +217,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     dY += factorY * renderSizedSize;
                 }
 
-                applyColor(WHITE);
+                glState.setColor(WHITE);
                 ResourceLocation texture = defaultTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
@@ -249,7 +250,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     smallFont.drawString((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
                     smallFont.drawCenteredString((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
-                applyColor(WHITE);
+                glState.setColor(WHITE);
             }
         }
 
