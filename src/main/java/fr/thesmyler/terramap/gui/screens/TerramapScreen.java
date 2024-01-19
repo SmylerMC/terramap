@@ -293,7 +293,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             Style style = new Style();
             style.setColor(TextFormatting.YELLOW);
             c.setStyle(style);
-            TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, SmyLibGui.getDefaultFont());
+            TextWidget warningWidget = new TextWidget(150, 0, 60, 300, c, TextAlignment.CENTER, Color.WHITE, true, SmyLibGui.getDefaultFont());
             warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
             content.addWidget(warningWidget);
         }
