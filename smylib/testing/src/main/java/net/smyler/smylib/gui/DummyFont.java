@@ -78,7 +78,9 @@ public class DummyFont implements Font {
 
     @Override
     public int getWordWrappedHeight(String str, float width) {
-        return super.getWordWrappedHeight(str, width);
+        //TODO implement DummyFont#getWordWrappedHeight()
+        //return super.getWordWrappedHeight(str, width);
+        return 0;
     }
 
     @Override

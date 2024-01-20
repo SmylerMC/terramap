@@ -1,7 +1,6 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.game.Key;
-import fr.thesmyler.terramap.TerramapConfig;
 
 import java.util.Iterator;
 import java.util.PriorityQueue;
@@ -20,7 +19,10 @@ import static net.smyler.smylib.SmyLib.getGameClient;
  * @author SmylerMC
  */
 //FIXME Repair TestingWidgetContainer once GUIs are abstracted
+public class TestingWidgetContainer {
+/*
 public class TestingWidgetContainer extends WidgetContainer {
+
 
     private long screenTime = 0L;
     private final int frameTime;
@@ -39,7 +41,7 @@ public class TestingWidgetContainer extends WidgetContainer {
      * @param fps       the frame-rate to simulate
      * @param width     the initial width of the window
      * @param height    the initial height of the window
-     */
+     * /
     public TestingWidgetContainer(int fps, float width, float height) {
         super(Integer.MAX_VALUE);
         SmyLibGui.getTestGameContext().setWindowWidth(width);
@@ -51,7 +53,7 @@ public class TestingWidgetContainer extends WidgetContainer {
      * Runs this screen for a single frame.
      *
      * @throws InterruptedException if sleeping for the correct timing is interrupted
-     */
+     * /
     public void doTick() throws InterruptedException {
         long stime = System.currentTimeMillis();
         this.processMouseEvents();
@@ -245,5 +247,6 @@ public class TestingWidgetContainer extends WidgetContainer {
             return Long.compare(this.time, other.time);
         }
     }
+    */
 
 }
