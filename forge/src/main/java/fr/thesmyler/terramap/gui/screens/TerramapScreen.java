@@ -36,7 +36,7 @@ import fr.thesmyler.smylibgui.widgets.ChatWidget;
 import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
-import fr.thesmyler.smylibgui.widgets.WarningWidget;
+import net.smyler.smylib.gui.widgets.WarningWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.AbstractButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;

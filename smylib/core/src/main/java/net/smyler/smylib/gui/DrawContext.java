@@ -54,4 +54,10 @@ public interface DrawContext {
         this.drawClosedStrokeLine(0d, color, size, points);
     }
 
+    void drawSprite(double x, double y, double z, Sprite sprite);
+
+    default void drawSprite(double x, double y, Sprite sprite) {
+        this.drawSprite(x, y, 0d, sprite);
+    }
+
 }

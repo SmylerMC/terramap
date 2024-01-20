@@ -1,9 +1,11 @@
 package net.smyler.smylib.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.smyler.smylib.Color;
 import org.lwjgl.opengl.GL11;
 
@@ -59,6 +61,34 @@ public class Lwjgl2DrawContext implements DrawContext {
     public void drawClosedStrokeLine(double z, Color color, float size, double... points) {
         GL11.glLineWidth(size * getGameClient().scaleFactor());
         this.drawMultiPointsGeometry(GL11.GL_LINE_LOOP, z, color, points);
+    }
+
+    @Override
+    public void drawSprite(double x, double y, double z, Sprite sprite) {
+        final ResourceLocation location = new ResourceLocation(sprite.texture.namespace, sprite.texture.path);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(location);
+        double uLeft = sprite.xLeft / sprite.textureWidth;
+        double uRight = sprite.xRight / sprite.textureWidth;
+        double vTop = sprite.yTop / sprite.textureHeight;
+        double vBottom = sprite.yBottom / sprite.textureHeight;
+        double width = sprite.width();
+        double height = sprite.height();
+
+        GlStateManager.color(1f, 1f, 1f, 1f);
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        builder.pos(x, y + height, z).tex(uLeft, vBottom).endVertex();
+        builder.pos(x + width, y + height, z).tex(uRight, vBottom).endVertex();
+        builder.pos(x + width, y, z).tex(uRight, vTop).endVertex();
+        builder.pos(x, y, z).tex(uLeft, vTop).endVertex();
+        tessellator.draw();
+
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
     }
 
     private void drawMultiPointsGeometry(int glType, double z, Color color, double... points) {

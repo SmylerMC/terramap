@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.gui;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
-import fr.thesmyler.smylibgui.widgets.WarningWidget;
+import net.smyler.smylib.gui.widgets.WarningWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
