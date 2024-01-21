@@ -68,6 +68,7 @@ public class TerramapClientProxy extends TerramapProxy {
         MarkerControllerManager.registerBuiltInControllers();
         MapStylesLibrary.reload();
         ClientCommandHandler.instance.registerCommand(new OpenMapCommand());
+        MinecraftForge.EVENT_BUS.register(TestScreen.class);
     }
 
     @Override
