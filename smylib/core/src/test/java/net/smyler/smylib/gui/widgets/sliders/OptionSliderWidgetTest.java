@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.widgets.sliders;
+package net.smyler.smylib.gui.widgets.sliders;
 
 import net.smyler.smylib.gui.TestingWidgetContainer;
 import net.smyler.smylib.SmyLibTest;

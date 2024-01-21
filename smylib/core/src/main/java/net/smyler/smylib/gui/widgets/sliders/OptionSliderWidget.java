@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.widgets.sliders;
+package net.smyler.smylib.gui.widgets.sliders;
 
 import java.util.ArrayList;
 import java.util.Arrays;

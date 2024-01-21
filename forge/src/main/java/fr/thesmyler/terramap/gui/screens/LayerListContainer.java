@@ -9,7 +9,7 @@ import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
-import fr.thesmyler.smylibgui.widgets.sliders.FloatSliderWidget;
+import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.screens.config.LayerConfigurationPopup;

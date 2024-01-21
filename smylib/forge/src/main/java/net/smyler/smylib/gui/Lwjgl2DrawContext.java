@@ -64,19 +64,21 @@ public class Lwjgl2DrawContext implements DrawContext {
     }
 
     @Override
-    public void drawSprite(double x, double y, double z, Sprite sprite) {
+    public void drawSpriteCropped(double x, double y, double z, Sprite sprite, double leftCrop, double topCrop, double rightCrop, double bottomCrop) {
         final ResourceLocation location = new ResourceLocation(sprite.texture.namespace, sprite.texture.path);
         Minecraft.getMinecraft().getTextureManager().bindTexture(location);
-        double uLeft = sprite.xLeft / sprite.textureWidth;
-        double uRight = sprite.xRight / sprite.textureWidth;
-        double vTop = sprite.yTop / sprite.textureHeight;
-        double vBottom = sprite.yBottom / sprite.textureHeight;
-        double width = sprite.width();
-        double height = sprite.height();
+        double uLeft = (sprite.xLeft + leftCrop) / sprite.textureWidth;
+        double uRight = (sprite.xRight - rightCrop) / sprite.textureWidth;
+        double vTop = (sprite.yTop + topCrop) / sprite.textureHeight;
+        double vBottom = (sprite.yBottom - bottomCrop) / sprite.textureHeight;
+        double width = sprite.width() - leftCrop - rightCrop;
+        double height = sprite.height() - topCrop - bottomCrop;
 
         GlStateManager.color(1f, 1f, 1f, 1f);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();

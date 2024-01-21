@@ -1,68 +1,68 @@
-package fr.thesmyler.smylibgui.widgets.sliders;
+package net.smyler.smylib.gui.widgets.sliders;
 
 import java.util.function.Consumer;
 
 import static net.smyler.smylib.math.Math.clamp;
 import static net.smyler.smylib.math.Math.saturate;
 
-public class IntegerSliderWidget extends AbstractSliderWidget {
+public class FloatSliderWidget extends AbstractSliderWidget {
 
-    protected long min, max, value;
-    protected Consumer<Long> onChange;
+    private double min, max, value;
+    private int resolution;
+    protected Consumer<Double> onChange;
 
-    public IntegerSliderWidget(float x, float y, int z, float width, float height, int min, int max, int startValue) {
+    public FloatSliderWidget(float x, float y, int z, float width, float height, double min, double max, double startValue) {
         super(x, y, z, width, height);
         this.min = min;
         this.max = max;
         this.value = startValue;
+        this.updateResolution();
     }
     
-    public IntegerSliderWidget(float x, float y, int z, float width, int min, int max, int startValue) {
+    public FloatSliderWidget(float x, float y, int z, float width, double min, double max, double startValue) {
         this(x, y, z, width, 20, min, max, startValue);
     }
 
-    public IntegerSliderWidget(int z, int min, int max, int startValue) {
+    public FloatSliderWidget(int z, double min, double max, double startValue) {
         this(0, 0, z, 50, min, max, startValue);
     }
 
     @Override
     protected void setValueFromPos(float sliderPosition) {
-        this.value = Math.round((this.max - this.min) * sliderPosition + this.min);
+        this.value = (this.max - this.min) * sliderPosition + this.min;
         this.onChange();
     }
 
     @Override
     protected float getPosition() {
-        return (float)(this.value - this.min)/ (this.max - this.min);
+        return (float) ((this.value - this.min) / (this.max - this.min));
     }
 
     @Override
     protected String getDisplayString() {
-        return String.valueOf(this.value);
+        return String.valueOf((float) Math.round(this.value * this.resolution) / this.resolution);
     }
 
-    public long getMin() {
+    public double getMin() {
         return this.min;
     }
 
-    public IntegerSliderWidget setMin(long min) {
+    public FloatSliderWidget setMin(double min) {
         this.min = min;
         this.setValue(this.value);
+        this.onChange();
         return this;
     }
 
-    public long getMax() {
+    public double getMax() {
         return this.max;
     }
 
-    public IntegerSliderWidget setMax(long max) {
+    public FloatSliderWidget setMax(double max) {
         this.max = max;
         this.setValue(this.value);
+        this.onChange();
         return this;
-    }
-
-    public long getValue() {
-        return this.value;
     }
 
     @Override
@@ -77,16 +77,25 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
         this.onChange();
     }
 
-    public void setValue(long value) {
+    public double getValue() {
+        return this.value;
+    }
+
+    public void setValue(double value) {
         this.value = clamp(value, this.min, this.max);
         this.onChange();
     }
 
     protected void onChange() {
+        this.updateResolution();
         if(this.onChange != null) this.onChange.accept(this.getValue());
     }
 
-    public void setOnChange(Consumer<Long> onChange) {
+    private void updateResolution() {
+        this.resolution = (int) Math.pow(10, Math.max(1, Math.ceil(Math.log10(width / (max - min)))));
+    }
+
+    public void setOnChange(Consumer<Double> onChange) {
         this.onChange = onChange;
     }
 

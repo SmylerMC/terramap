@@ -54,10 +54,18 @@ public interface DrawContext {
         this.drawClosedStrokeLine(0d, color, size, points);
     }
 
-    void drawSprite(double x, double y, double z, Sprite sprite);
+    default void drawSprite(double x, double y, double z, Sprite sprite) {
+        this.drawSpriteCropped(x, y, z, sprite, 0d, 0d, 0d, 0d);
+    }
 
     default void drawSprite(double x, double y, Sprite sprite) {
-        this.drawSprite(x, y, 0d, sprite);
+        this.drawSpriteCropped(x, y, 0d, sprite, 0d, 0d, 0d, 0d);
+    }
+
+    void drawSpriteCropped(double x, double y, double z, Sprite sprite, double leftCrop, double topCrop, double rightCrop, double bottomCrop);
+
+    default void drawSpriteCropped(double x, double y, Sprite sprite, double leftCrop, double topCrop, double rightCrop, double bottomCrop) {
+        this.drawSpriteCropped(x, y, 0d, sprite, leftCrop, topCrop, rightCrop, bottomCrop);
     }
 
 }

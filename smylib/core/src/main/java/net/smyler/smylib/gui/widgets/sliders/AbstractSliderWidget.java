@@ -1,22 +1,19 @@
-package fr.thesmyler.smylibgui.widgets.sliders;
+package net.smyler.smylib.gui.widgets.sliders;
 
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.gui.Sprite;
 import org.jetbrains.annotations.Nullable;
 
-import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.widgets.Widget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.Font;
 
-import static net.smyler.smylib.Color.WHITE;
+import static java.lang.Math.min;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.saturate;
 
@@ -29,6 +26,10 @@ import static net.smyler.smylib.math.Math.saturate;
  *
  */
 public abstract class AbstractSliderWidget implements Widget {
+
+    private static final Identifier TEXTURE = new Identifier("minecraft", "textures/gui/widgets.png");
+    private static final Sprite BACKGROUND = new Sprite(TEXTURE, 256d, 256d, 0d, 46d, 200d, 66d);
+    private static final Sprite SLIDER = new Sprite(TEXTURE, 256d, 256d, 0d, 66d, 200d, 86d);
 
     protected float x, y, width, height;
     private final int z;
@@ -117,47 +118,46 @@ public abstract class AbstractSliderWidget implements Widget {
 
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
-        GameClient game = getGameClient();
-        GlState glState = context.glState();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        glState.setColor(WHITE);
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        float leftWidth = this.width / 2;
-        float rightWidth = this.width - leftWidth;
-        float splitHeight = Math.min(10, this.height / 2);
-        RenderUtil.drawTexturedModalRect(x, y, 0, 46, leftWidth, splitHeight);
-        RenderUtil.drawTexturedModalRect(x + leftWidth, y, 200 - rightWidth, 46, rightWidth, splitHeight);
+
+        double leftWidth = this.width / 2;
+        double splitHeight = min(10, this.height / 2);
+        double xCrop = BACKGROUND.width() - this.width / 2d;
+        double yCrop = BACKGROUND.height() - min(10d, this.height / 2);
+        context.drawSpriteCropped(x, y, BACKGROUND, 0d, 0d, xCrop, yCrop);
+        context.drawSpriteCropped(x + leftWidth, y, BACKGROUND, xCrop, 0, 0, yCrop);
         for(int i=0; i*18 < this.height - 20; i++) {
-            RenderUtil.drawTexturedModalRect(x, y + splitHeight + 18*i, 0, 47, leftWidth, 18);
-            RenderUtil.drawTexturedModalRect(x + leftWidth, y + splitHeight + 18*i, 200 - rightWidth, 47, rightWidth, 18);
+            context.drawSpriteCropped(x, y + splitHeight + 16d * i, BACKGROUND, 0d, 2d, xCrop, 2d);
+            context.drawSpriteCropped(x + leftWidth, y + splitHeight + 16d * i, BACKGROUND, xCrop, 2d, 0d, 2d);
         }
-        RenderUtil.drawTexturedModalRect(x, y + this.height - splitHeight, 0, 46 + 20 - splitHeight, leftWidth, splitHeight);
-        RenderUtil.drawTexturedModalRect(x + leftWidth, y + this.height - splitHeight, 200 - rightWidth, 46 + 20 - splitHeight, rightWidth, splitHeight);
+        context.drawSpriteCropped(x, y + this.height - splitHeight, BACKGROUND, 0, yCrop, xCrop, 0);
+        context.drawSpriteCropped(x + leftWidth, y + this.height - splitHeight, BACKGROUND, xCrop, yCrop, 0, 0);
 
         float sliderPosition = this.getPosition();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.BUTTON_TEXTURES);
-        glState.setColor(WHITE);
 
         float sliderX = x + sliderPosition * (this.width - 8);
-        RenderUtil.drawTexturedModalRect(sliderX, y, 0, 66, 4, splitHeight);
-        RenderUtil.drawTexturedModalRect(sliderX + 4, y, 196, 66, 4, splitHeight);
+        context.drawSpriteCropped(sliderX, y, SLIDER, 0, 0, SLIDER.width() - 4d, SLIDER.height() - splitHeight);
+        context.drawSpriteCropped(sliderX + 4, y, SLIDER, SLIDER.width() - 4d, 0d, 0d, SLIDER.height() - splitHeight);
         for(int i=0; i*18 < this.height - 20; i++) {
-            RenderUtil.drawTexturedModalRect(sliderX, y + splitHeight + 18*i, 0, 68, 4, 15);
-            RenderUtil.drawTexturedModalRect(sliderX + 4, y + splitHeight + 18*i, 196, 68, 4, 15);
+            context.drawSpriteCropped(sliderX, y + splitHeight + 16*i, SLIDER, 0d, 2d, SLIDER.width() - 4d, 2d);
+            context.drawSpriteCropped(sliderX + 4d, y + splitHeight + 16*i, SLIDER, SLIDER.width() - 4d, 2d, 0d, 2d);
         }
-        RenderUtil.drawTexturedModalRect(sliderX, y + this.height - splitHeight, 0, 66 + 20 - splitHeight, 4, splitHeight);
-        RenderUtil.drawTexturedModalRect(sliderX + 4, y + this.height - splitHeight, 196, 66 + 20 -splitHeight, 4, splitHeight);
+        context.drawSpriteCropped(sliderX, y + this.height - splitHeight, SLIDER, 0d, SLIDER.height() - splitHeight, SLIDER.width() - 4d, 0d);
+        context.drawSpriteCropped(sliderX + 4d, y + this.height - splitHeight, SLIDER, SLIDER.width() - 4d, SLIDER.height() - splitHeight, 0d, 0d);
 
         Color textColor = this.enabledTextColor;
-        if (!this.isEnabled()) textColor = this.disabledTextColor;
-        else if (hovered || hasFocus) textColor = this.activeTextColor;
+        if (!this.isEnabled()) {
+            textColor = this.disabledTextColor;
+        } else if (hovered || hasFocus) {
+            textColor = this.activeTextColor;
+        }
 
+        GameClient game = getGameClient();
         float fontSize = game.defaultFont().height();
         double gameScale = game.scaleFactor();
         float fontScale = 1f;
-        while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) fontScale++;
+        while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) {
+            fontScale++;
+        }
         Font font = game.defaultFont().withScale(1 / fontScale + 0.0001f);
         font.drawCenteredString(x + this.width / 2, y + (this.height - font.height() + 1) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
 

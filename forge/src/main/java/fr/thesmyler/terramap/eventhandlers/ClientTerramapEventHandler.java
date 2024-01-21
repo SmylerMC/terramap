@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.eventhandlers;
 
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
+import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
@@ -14,6 +15,7 @@ import net.buildtheearth.terraplusplus.util.CardinalDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;

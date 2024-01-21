@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
+@Deprecated
 public final class RenderUtil {
 
     @Deprecated
@@ -45,6 +46,7 @@ public final class RenderUtil {
         drawGradientRect(0, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
     }
 
+    @Deprecated
     public static void drawModalRectWithCustomSizedTexture(double x, double y, double z, double u, double v, double width, double height, double textureWidth, double textureHeight) {
         double f = 1.0f / textureWidth;
         double f1 = 1.0f / textureHeight;
@@ -62,10 +64,12 @@ public final class RenderUtil {
         GlStateManager.disableBlend();
     }
 
+    @Deprecated
     public static void drawModalRectWithCustomSizedTexture(double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
         drawModalRectWithCustomSizedTexture(x, y, 0d, u, v, width, height, textureWidth, textureHeight);
     }
 
+    @Deprecated
     public static void drawTexturedModalRect(double x, double y, double z, double minU, double minV, double maxU, double maxV) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
@@ -81,6 +85,7 @@ public final class RenderUtil {
         GlStateManager.disableBlend();
     }
 
+    @Deprecated
     public static void drawTexturedModalRect(double x, double y, double minU, double minV, double maxU, double maxV) {
         drawTexturedModalRect(x, y, 0, minU, minV, maxU, maxV);
     }
