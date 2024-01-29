@@ -1,5 +1,6 @@
 package fr.thesmyler.smylibgui.screen;
 
+import com.google.gson.JsonParseException;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
@@ -24,6 +25,8 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static net.smyler.smylib.Color.RED;
+import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class TestScreen extends Screen {
@@ -72,7 +75,8 @@ public class TestScreen extends Screen {
         WidgetContainer buttonScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
         WidgetContainer sliderScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
         WidgetContainer menuScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
-        this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen};
+        WidgetContainer jsonTextScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
+        this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen, jsonTextScreen};
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
         TextWidget title = new TextWidget(this.width / 2f, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
@@ -159,9 +163,35 @@ public class TestScreen extends Screen {
         nested.addEntry("menu");
         rcm.addSeparator();
         rcm.addEntry("Animation", animationMenu);
-        rcm.useAsRightClick(); // Calling this tells the menu to open whenever it's parent screen is right clicked
+        rcm.useAsRightClick(); // Calling this tells the menu to open whenever it's parent screen is right-clicked
         menuScreen.addWidget(new TextWidget(menuScreen.getWidth() / 2, menuScreen.getHeight() / 2, 1, new TextComponentString("Please right click anywhere"), TextAlignment.CENTER, getGameClient().defaultFont()));
         menuScreen.addWidget(rcm);
+
+        // ==== JSON text parsing screen ==== //
+        final TextFieldWidget inputField = new TextFieldWidget(0, 0, 0, jsonTextScreen.getWidth(), getGameClient().defaultFont());
+        final TextWidget text = new TextWidget(
+                jsonTextScreen.getWidth() / 2,
+                (jsonTextScreen.getHeight() - inputField.getHeight()) / 2,
+                0,
+                new TextComponentString(""),
+                TextAlignment.CENTER, getGameClient().defaultFont()
+        );
+        jsonTextScreen.addWidget(inputField);
+        jsonTextScreen.addWidget(text);
+
+        jsonTextScreen.scheduleBeforeEachUpdate(() -> {
+            try {
+                ITextComponent component = ITextComponent.Serializer.jsonToComponent(inputField.getText());
+                if (component == null) {
+                    throw new JsonParseException("");
+                }
+                text.setText(component);
+                text.setAnchorY((jsonTextScreen.getHeight() - inputField.getHeight() - text.getHeight()) / 2 + inputField.getHeight());
+                inputField.setFocusedTextColor(WHITE);
+            } catch (JsonParseException e) {
+                inputField.setFocusedTextColor(RED);
+            }
+        });
 
 
         // ==== Getting everything ready and setting up scheduled tasks === //
