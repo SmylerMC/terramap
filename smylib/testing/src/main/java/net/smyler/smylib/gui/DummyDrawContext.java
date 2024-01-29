@@ -37,4 +37,9 @@ public class DummyDrawContext implements DrawContext {
 
     }
 
+    @Override
+    public void drawSpriteCropped(double x, double y, double z, Sprite sprite, double leftCrop, double topCrop, double rightCrop, double bottomCrop) {
+
+    }
+
 }
