@@ -1,6 +1,7 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
+import net.smyler.smylib.text.Text;
 
 import java.util.List;
 
@@ -49,7 +50,17 @@ public interface Font {
 
     void drawSplitString(float x, float y, String text, float wrapWidth, Color color, boolean shadow);
 
-    //TODO List<TextComponent> splitText()
+    /**
+     * Splits a {@link Text} into multiple lines,
+     * where each line fits within a given maximum render width.
+     * The resulting texts have their content resolved to plain text.
+     * The hierarchical structure of {@link Text texts} is might not be kept.
+     *
+     * @param text      the text to split
+     * @param maxWidth  the maximum line width
+     * @return          an array where each entry is a line
+     */
+    Text[] wrapToWidth(Text text, float maxWidth);
 
     float getStringWidth(String text);
 

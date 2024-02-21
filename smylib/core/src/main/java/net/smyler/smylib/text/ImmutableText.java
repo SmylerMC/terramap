@@ -11,6 +11,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.requireNonNull;
 import static java.util.Spliterator.IMMUTABLE;
 import static java.util.Spliterators.spliteratorUnknownSize;
+import static net.smyler.smylib.text.TextStyle.INHERIT_COLOR;
 
 /**
  * An immutable implementation of {@link Text}.
@@ -19,6 +20,11 @@ import static java.util.Spliterators.spliteratorUnknownSize;
  * @author Smyler
  */
 public final class ImmutableText implements Text {
+
+    public static final ImmutableText EMPTY = new ImmutableText(
+            new PlainTextContent(""),
+             new TextStyle(INHERIT_COLOR)
+    );
 
     @NotNull private final ImmutableText[] siblings;
     @NotNull private final List<Text> siblingList;
@@ -100,6 +106,45 @@ public final class ImmutableText implements Text {
         return new ImmutableText(this.content, this.style, newSiblings);
     }
 
+    public static ImmutableText of(Text text) {
+        if (text instanceof ImmutableText) {
+            return (ImmutableText) text; // I like when it's that simple
+        }
+        ImmutableText[] immutableSiblings = text.siblings().stream()
+                .map(ImmutableText::of)
+                .toArray(ImmutableText[]::new);
+        return new ImmutableText(text.content(), text.style(), immutableSiblings);
+    }
+
+    public static ImmutableText asSolo(Text text) {
+        return new ImmutableText(
+                text.content(),
+                text.style()
+        );
+    }
+
+    public static ImmutableText asResolvedSolo(Text text) {
+        return new ImmutableText(
+                new PlainTextContent(text.content().toString()),
+                text.style()
+        );
+    }
+
+    public static ImmutableText ofFlattened(Text text) {
+        return new ImmutableText(
+                new PlainTextContent(""),
+                new TextStyle(INHERIT_COLOR),
+                text.stream().map(t -> new ImmutableText(t.content(), t.style())).toArray(ImmutableText[]::new)
+        );
+    }
+
+    public static ImmutableText ofPlainText(String text) {
+        return new ImmutableText(
+                new PlainTextContent(text),
+                new TextStyle(INHERIT_COLOR)
+        );
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -119,6 +164,11 @@ public final class ImmutableText implements Text {
         result = 31 * result + content.hashCode();
         result = 31 * result + style.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ImmutableText{" + this.getFormattedText() + "}";
     }
 
     private class ImmutableTextIterator implements Iterator<Text> {

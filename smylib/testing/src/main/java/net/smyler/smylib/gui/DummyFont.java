@@ -13,9 +13,9 @@ import static java.lang.Math.*;
  *
  * @author SmylerMC
  */
-public class DummyFont implements Font {
+public class DummyFont extends BaseFont {
 
-    private static final float CHAR_WIDTH = 9f;
+    public static final float CHAR_WIDTH = 9f;
     private final float size;
 
     public DummyFont(float size) {
