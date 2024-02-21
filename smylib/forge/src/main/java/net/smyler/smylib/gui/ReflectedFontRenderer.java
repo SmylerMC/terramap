@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.smyler.smylib.Color;
 
-public class ReflectedFontRenderer implements Font {
+public class ReflectedFontRenderer extends BaseFont {
 
     protected final float scale;
 
