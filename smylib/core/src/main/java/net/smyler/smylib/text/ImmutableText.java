@@ -30,6 +30,7 @@ public final class ImmutableText implements Text {
     @NotNull private final List<Text> siblingList;
     @NotNull private final TextContent content;
     @NotNull private final TextStyle style;
+    private final boolean resolved;
 
     public ImmutableText(@NotNull TextContent content, @NotNull TextStyle style, @NotNull ImmutableText... siblings) {
         this.siblings = Arrays.stream(siblings)
@@ -39,6 +40,7 @@ public final class ImmutableText implements Text {
         this.siblingList = unmodifiableList(asList(this.siblings));
         this.content = requireNonNull(content);
         this.style = requireNonNull(style);
+        this.resolved = this.stream().map(Text::content).allMatch(TextContent::isResolved);
     }
 
     @Override
@@ -74,6 +76,11 @@ public final class ImmutableText implements Text {
     public Stream<Text> stream() {
         Spliterator<Text> spliterator = spliteratorUnknownSize(this.iterator(), IMMUTABLE);
         return StreamSupport.stream(spliterator, false);
+    }
+
+    @Override
+    public boolean isContentResolved() {
+        return this.resolved;
     }
 
     @NotNull
