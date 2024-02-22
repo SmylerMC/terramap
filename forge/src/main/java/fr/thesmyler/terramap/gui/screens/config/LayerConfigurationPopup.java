@@ -9,12 +9,12 @@ import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
-import net.minecraft.util.text.TextComponentString;
 
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.CROSS;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class LayerConfigurationPopup extends PopupScreen {
 
@@ -31,7 +31,7 @@ public class LayerConfigurationPopup extends PopupScreen {
         WidgetContainer content = this.getContent();
         this.container = requireNonNull(layer.createConfigurationContainer());
         this.titleText = new TextWidget(0,
-                new TextComponentString(layer.description()),
+                ofPlainText(layer.description()),
                 TextAlignment.CENTER, getGameClient().defaultFont());
         this.closeButton = new TexturedButtonWidget(0, CROSS, this::close);
         this.scroll = new ScrollableWidgetContainer(1f, 1f, 0,

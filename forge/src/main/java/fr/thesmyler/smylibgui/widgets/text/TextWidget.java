@@ -1,23 +1,23 @@
 package fr.thesmyler.smylibgui.widgets.text;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.text.ImmutableText;
+import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.smyler.smylib.gui.Font;
 
-import static net.minecraft.client.gui.GuiUtilRenderComponents.splitText;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class TextWidget implements Widget {
 
-    protected ITextComponent component;
-    protected ITextComponent[] lines;
+    protected Text text;
+    protected Text[] lines;
     protected float anchorX, x, anchorY, y;
     protected final int z;
     protected float width, height, maxWidth;
@@ -29,14 +29,14 @@ public class TextWidget implements Widget {
     protected boolean shadow;
     protected float padding = 0;
     protected Font font;
-    protected ITextComponent hovered;
+    protected Text hovered;
     protected TextAlignment alignment;
 
-    public TextWidget(float x, float y, int z, float maxWidth, ITextComponent component, TextAlignment alignment, Color baseColor, boolean shadow, Font font) {
+    public TextWidget(float x, float y, int z, float maxWidth, Text text, TextAlignment alignment, Color baseColor, boolean shadow, Font font) {
         this.anchorX = x;
         this.anchorY = y;
         this.z = z;
-        this.component = component;
+        this.text = text;
         this.font = font;
         this.alignment = alignment;
         this.maxWidth = maxWidth;
@@ -45,32 +45,52 @@ public class TextWidget implements Widget {
         this.updateCoords();
     }
 
-    public TextWidget(float x, float y, int z, ITextComponent component, TextAlignment alignment, Font font) {
-        this(x, y, z, Float.MAX_VALUE, component, alignment, Color.WHITE, true, font);
+    @Deprecated
+    public TextWidget(float x, float y, int z, ITextComponent text, TextAlignment alignment, Font font) {
+        this(x, y, z, ofPlainText(text.getUnformattedText()), alignment, font);
+    }
+
+    public TextWidget(float x, float y, int z, Text text, TextAlignment alignment, Font font) {
+        this(x, y, z, Float.MAX_VALUE, text, alignment, Color.WHITE, true, font);
     }
 
     public TextWidget(float x, float y, int z, TextAlignment alignment, Font font) {
-        this(x, y, z, Float.MAX_VALUE, new TextComponentString(""), alignment, Color.WHITE, true, font);
+        this(x, y, z, Float.MAX_VALUE, ImmutableText.EMPTY, alignment, Color.WHITE, true, font);
     }
 
-    public TextWidget(float x, float y, int z, ITextComponent component, Font font) {
-        this(x, y, z, component, TextAlignment.RIGHT, font);
+    @Deprecated
+    public TextWidget(float x, float y, int z, ITextComponent text, Font font) {
+        this(x, y, z, ofPlainText(text.getUnformattedText()), font);
+    }
+
+    public TextWidget(float x, float y, int z, Text text, Font font) {
+        this(x, y, z, text, TextAlignment.RIGHT, font);
     }
 
     public TextWidget(float x, float y, int z, Font font) {
-        this(x, y, z, new TextComponentString(""), TextAlignment.RIGHT, font);
+        this(x, y, z, ImmutableText.EMPTY, TextAlignment.RIGHT, font);
     }
 
-    public TextWidget(int z, ITextComponent component, TextAlignment alignment, Font font) {
-        this(0, 0, z, Float.MAX_VALUE, component, alignment, Color.WHITE, true, font);
+    @Deprecated
+    public TextWidget(int z, ITextComponent text, TextAlignment alignment, Font font) {
+        this(z, ofPlainText(text.getUnformattedText()), alignment, font);
     }
 
-    public TextWidget(int z, ITextComponent component, Font font) {
-        this(0, 0, z, component, font);
+    public TextWidget(int z, Text text, TextAlignment alignment, Font font) {
+        this(0, 0, z, Float.MAX_VALUE, text, alignment, Color.WHITE, true, font);
+    }
+
+    @Deprecated
+    public TextWidget(int z, ITextComponent text, Font font) {
+        this(z, ofPlainText(text.getUnformattedText()), font);
+    }
+
+    public TextWidget(int z, Text text, Font font) {
+        this(0, 0, z, text, font);
     }
 
     public TextWidget(int z, Font font) {
-        this(0, 0, z, new TextComponentString(""), font);
+        this(0, 0, z, ImmutableText.EMPTY, font);
     }
 
     @Override
@@ -81,7 +101,7 @@ public class TextWidget implements Widget {
         float h = this.getHeight();
         context.drawRectangle(x, y, x + w, y + h, this.backgroundColor);
         float drawY = y + this.padding;
-        for(ITextComponent line: this.lines) {
+        for(Text line: this.lines) {
             String formattedText = line.getFormattedText();
             float lineWidth = this.font.getStringWidth(formattedText);
             float lx = x + this.anchorX - this.x;
@@ -102,15 +122,10 @@ public class TextWidget implements Widget {
     }
 
     protected void updateCoords() {
-        this.lines = splitText(
-                this.component,
-                (int) Math.floor(this.maxWidth / this.font.scale()),
-                Minecraft.getMinecraft().fontRenderer,
-                true, false
-        ).toArray(new ITextComponent[] {}); //TODO reimplement this in Font once we have an abstraction for text components
+        this.lines = this.font.wrapToWidth(this.text, this.maxWidth);
         this.height = this.lines.length * (this.font.height() + this.padding) + this.padding ;
         float w = 0;
-        for(ITextComponent line: this.lines) {
+        for(Text line: this.lines) {
             String ft = line.getFormattedText();
             w = Math.max(w, this.font.getStringWidth(ft));
         }
@@ -130,12 +145,12 @@ public class TextWidget implements Widget {
         this.y = this.anchorY;
     }
 
-    protected ITextComponent getComponentUnder(float x, float y) {
+    protected Text getComponentUnder(float x, float y) {
         if(x < this.padding || x > this.width - this.padding) return null;
         int lineIndex = (int) Math.floor((y - this.padding) / (this.font.height() + this.padding));
         if(lineIndex < 0 || lineIndex >= this.lines.length) return null;
         if(y - this.padding - lineIndex*(this.font.height() + this.padding) > this.font.height()) return null;
-        ITextComponent line = this.lines[lineIndex];
+        Text line = this.lines[lineIndex];
         float pos = this.padding;
         float lineWidth = this.font.getStringWidth(line.getFormattedText());
         switch(this.alignment) {
@@ -148,7 +163,7 @@ public class TextWidget implements Widget {
                 pos = (this.width - lineWidth) / 2;
                 break;
         }
-        for(ITextComponent child: line.getSiblings()) {
+        for(Text child: line) {
             pos += this.font.getStringWidth(child.getFormattedText());
             if(pos >= x) return child;
         }
@@ -157,20 +172,27 @@ public class TextWidget implements Widget {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-        ITextComponent clicked = this.getComponentUnder(mouseX, mouseY);
+        Text clicked = this.getComponentUnder(mouseX, mouseY);
         if(clicked != null) {
-            Minecraft.getMinecraft().currentScreen.handleComponentClick(clicked);
+            //FIXME TextWidget click
+            //Minecraft.getMinecraft().currentScreen.handleComponentClick(clicked);
         }
         parent.setFocus(null); //We don't want to retain focus
         return false;
     }
 
-    public ITextComponent getComponent() {
-        return this.component;
+    public Text getText() {
+        return this.text;
     }
 
+    @Deprecated
     public TextWidget setText(ITextComponent component) {
-        this.component = component;
+        //FIXME do not use ITextComponent at all in TextWidget
+        return this.setText(ofPlainText(component.getUnformattedText()));
+    }
+
+    public TextWidget setText(Text text) {
+        this.text = text;
         this.updateCoords();
         return this;
     }
@@ -267,7 +289,9 @@ public class TextWidget implements Widget {
     public String getTooltipText() {
         try {
             //TODO Adapt to non text tooltips
-            return this.hovered.getStyle().getHoverEvent().getValue().getFormattedText();
+            //FIXME TextWidget hover tooltip
+            return "";
+            //return this.hovered.getStyle().getHoverEvent().getValue().getFormattedText();
         } catch(NullPointerException e) {
             return null;
         }

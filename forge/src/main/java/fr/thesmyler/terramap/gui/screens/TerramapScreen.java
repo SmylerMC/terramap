@@ -5,6 +5,9 @@ import java.util.function.Consumer;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.text.ImmutableText;
+import net.smyler.smylib.text.Text;
+import net.smyler.smylib.text.TextStyle;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.*;
@@ -65,9 +68,11 @@ import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
+import static net.smyler.smylib.Color.YELLOW;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.util.stream.Collectors.toMap;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 
 public class TerramapScreen extends Screen implements ITabCompleter {
@@ -299,10 +304,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 if(warningBuilder.length() > 0) warningBuilder.append('\n');
                 warningBuilder.append(translator.format("terramap.terramapscreen.projection_warning.line" + i));
             }
-            ITextComponent c = new TextComponentString(warningBuilder.toString());
-            Style style = new Style();
-            style.setColor(TextFormatting.YELLOW);
-            c.setStyle(style);
+            ImmutableText c = ofPlainText(warningBuilder.toString());
+            TextStyle style = new TextStyle(YELLOW);
+            c = c.withStyle(style);
             TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, game.defaultFont());
             warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
             content.addWidget(warningWidget);
@@ -349,7 +353,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         MapController controller = this.map.getController();
         this.setZoomRestrictions();
-        this.zoomText.setText(new TextComponentString(formatZoomLevelForDisplay(controller.getZoom())));
+        this.zoomText.setText(ofPlainText(formatZoomLevelForDisplay(controller.getZoom())));
         this.centerButton.setEnabled(!(controller.getTrackedMarker() instanceof MainPlayerMarker));
 
         this.compass.setAzimuth(controller.getRotation());
@@ -435,7 +439,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     .append(TextFormatting.RESET);
             debugBuilder.append('\n');
             this.buildProfilingResult(debugBuilder, "", "");
-            this.debugText.setText(new TextComponentString(debugBuilder.toString()));
+            this.debugText.setText(ofPlainText(debugBuilder.toString()));
             this.debugText.setAnchorY(this.height - this.debugText.getHeight());
         }
     }
@@ -661,9 +665,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             scissor.push();
             scissor.setEnabled(true);
             scissor.cropSection(x, y, this.width, this.height);
-            context.drawRectangle(x, y, x + this.width, y + this.height, Color.YELLOW);
+            context.drawRectangle(x, y, x + this.width, y + this.height, YELLOW);
             context.drawRectangle(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
-            parent.getFont().drawCenteredString(x + this.width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), Color.YELLOW, false);
+            parent.getFont().drawCenteredString(x + this.width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), YELLOW, false);
             parent.getFont().drawString(x + 8, y + 16 + parent.getFont().height(), translator.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
             parent.getFont().drawSplitString(x + 8, y + 24 + parent.getFont().height()*2, translator.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16, Color.WHITE, false);
             scissor.pop();

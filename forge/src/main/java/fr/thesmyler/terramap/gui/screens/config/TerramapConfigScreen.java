@@ -27,10 +27,10 @@ import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class TerramapConfigScreen extends Screen {
 
@@ -190,7 +190,7 @@ public class TerramapConfigScreen extends Screen {
 
         // Footer
         this.getContent().addWidget(this.pages[this.currentSubScreen]);
-        this.title.setText(new TextComponentString(this.titles[this.currentSubScreen]));
+        this.title.setText(ofPlainText(this.titles[this.currentSubScreen]));
         this.getContent().addWidget(this.pageText.setAnchorX(this.width / 2f).setAnchorY(this.height - 45f).setAlignment(TextAlignment.CENTER));
         this.updateButtons();
     }
@@ -199,7 +199,7 @@ public class TerramapConfigScreen extends Screen {
         this.getContent().removeWidget(this.pages[this.currentSubScreen]);
         this.currentSubScreen++;
         this.getContent().addWidget(this.pages[this.currentSubScreen]);
-        this.title.setText(new TextComponentString(this.titles[currentSubScreen]));
+        this.title.setText(ofPlainText(this.titles[currentSubScreen]));
         this.updateButtons();
     }
 
@@ -207,7 +207,7 @@ public class TerramapConfigScreen extends Screen {
         this.getContent().removeWidget(this.pages[this.currentSubScreen]);
         this.currentSubScreen--;
         this.getContent().addWidget(this.pages[this.currentSubScreen]);
-        this.title.setText(new TextComponentString(this.titles[currentSubScreen]));
+        this.title.setText(ofPlainText(this.titles[currentSubScreen]));
         this.updateButtons();
     }
 
