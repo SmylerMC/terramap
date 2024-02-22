@@ -34,12 +34,14 @@ import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.smyler.smylib.text.ImmutableText;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 
 import static java.util.Comparator.comparingInt;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 /**
  * The core component of Terramap: the map widget itself.
@@ -129,7 +131,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         Font font = getGameClient().defaultFont();
         Font smallFont = getGameClient().smallestFont();
 
-        this.copyright = new TextWidget(Integer.MAX_VALUE, new TextComponentString(""), smallFont) {
+        this.copyright = new TextWidget(Integer.MAX_VALUE, ImmutableText.EMPTY, smallFont) {
             @Override
             public boolean isVisible(WidgetContainer parent) {
                 return MapWidget.this.showCopyright;
@@ -316,7 +318,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         if(!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
         if(!this.reportedErrors.isEmpty()) {
             String errorText = getGameClient().translator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
-            this.errorText.setText(new TextComponentString(errorText));
+            this.errorText.setText(ofPlainText(errorText));
         }
 
         this.profiler.endStartSection("update-markers");

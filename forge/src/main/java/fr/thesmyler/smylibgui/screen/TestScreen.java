@@ -21,13 +21,14 @@ import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.smyler.smylib.text.ImmutableText;
 
 import static net.smyler.smylib.Color.RED;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class TestScreen extends Screen {
 
@@ -56,10 +57,10 @@ public class TestScreen extends Screen {
         this.next = new TexturedButtonWidget(10, IncludedTexturedButtons.RIGHT, this::nextPage);
         this.previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
 
-        this.fpsCounter = new TextWidget(10, new TextComponentString("FPS: 0"), getGameClient().defaultFont());
-        this.focus = new TextWidget(10, new TextComponentString("Focused: null"), getGameClient().defaultFont());
-        this.hovered = new TextWidget(10, new TextComponentString("Hovered: null"), getGameClient().defaultFont());
-        this.textField = new TextFieldWidget(1, "Text field",getGameClient().defaultFont());
+        this.fpsCounter = new TextWidget(10, ofPlainText("FPS: 0"), getGameClient().defaultFont());
+        this.focus = new TextWidget(10, ofPlainText("Focused: null"), getGameClient().defaultFont());
+        this.hovered = new TextWidget(10, ofPlainText("Hovered: null"), getGameClient().defaultFont());
+        this.textField = new TextFieldWidget(1, "Text field", getGameClient().defaultFont());
         this.textField.setText("Write and right click");
         this.textField.setCursor(0);
     }
@@ -79,7 +80,7 @@ public class TestScreen extends Screen {
         this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen, jsonTextScreen};
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
-        TextWidget title = new TextWidget(this.width / 2f, 20, 10, new TextComponentString("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget title = new TextWidget(this.width / 2f, 20, 10, ofPlainText("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
         content.addWidget(title);
         content.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
         content.addWidget(next.setX(this.width - 20).setY(this.height - 20));
@@ -90,10 +91,10 @@ public class TestScreen extends Screen {
                 );
 
         // === Text related stuff and general features examples === //
-        this.hovered = new TextWidget(0, 50, 10, new TextComponentString("Hovered: null"), getGameClient().defaultFont());
+        this.hovered = new TextWidget(0, 50, 10, ofPlainText("Hovered: null"), getGameClient().defaultFont());
 
         TextWidget counterStr = new TextWidget(0, 100, 10, getGameClient().defaultFont());
-        this.colored = new TextWidget(0, 120, 10, new TextComponentString("Color animated text"), getGameClient().defaultFont());
+        this.colored = new TextWidget(0, 120, 10, ofPlainText("Color animated text"), getGameClient().defaultFont());
         this.colored.setBaseColor(animation.rainbowColor());
         textScreen.addWidget(fpsCounter.setAnchorX(0).setAnchorY(10));
         textScreen.addWidget(focus.setAnchorX(0).setAnchorY(30));
@@ -102,7 +103,8 @@ public class TestScreen extends Screen {
         textScreen.addWidget(counterStr);
         textScreen.addWidget(colored);
         ITextComponent compo = ITextComponent.Serializer.jsonToComponent("[\"\",{\"text\":\"This is red, with a hover event,\",\"color\":\"dark_red\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"I said it's red\"}},{\"text\":\" \"},{\"text\":\"and this is green with an other hover event.\",\"color\":\"dark_green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Don't you trust me? This is green!\"}},{\"text\":\"\\n\"},{\"text\":\"And this is blue, with a click event!\",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://example.com\"}},{\"text\":\"\\n\"},{\"text\":\"And finally, this is \",\"color\":\"white\"},{\"text\":\"black\",\"strikethrough\":true,\"color\":\"white\"},{\"text\":\" white, \",\"color\":\"white\"},{\"text\":\"with\",\"underlined\":true,\"color\":\"white\"},{\"text\":\" various\",\"italic\":true,\"color\":\"white\"},{\"text\":\" styles \",\"bold\":true,\"color\":\"white\"},{\"text\":\"and I bet you can't read that.\",\"obfuscated\":true,\"color\":\"white\"}]");
-        textScreen.addWidget(new TextWidget(textScreen.getWidth()/2, 140, 1, compo, TextAlignment.CENTER, getGameClient().defaultFont().withScale(2)).setMaxWidth(textScreen.getWidth()).setBackgroundColor(Color.DARK_OVERLAY).setPadding(10));
+        //FIXME add colors back to test screen text
+        textScreen.addWidget(new TextWidget(textScreen.getWidth()/2, 140, 1, ofPlainText(compo.getUnformattedText()), TextAlignment.CENTER, getGameClient().defaultFont().withScale(2)).setMaxWidth(textScreen.getWidth()).setBackgroundColor(Color.DARK_OVERLAY).setPadding(10));
 
         // === Button screen: examples on how to use button widgets === //
 
@@ -164,7 +166,7 @@ public class TestScreen extends Screen {
         rcm.addSeparator();
         rcm.addEntry("Animation", animationMenu);
         rcm.useAsRightClick(); // Calling this tells the menu to open whenever it's parent screen is right-clicked
-        menuScreen.addWidget(new TextWidget(menuScreen.getWidth() / 2, menuScreen.getHeight() / 2, 1, new TextComponentString("Please right click anywhere"), TextAlignment.CENTER, getGameClient().defaultFont()));
+        menuScreen.addWidget(new TextWidget(menuScreen.getWidth() / 2, menuScreen.getHeight() / 2, 1, ofPlainText("Please right click anywhere"), TextAlignment.CENTER, getGameClient().defaultFont()));
         menuScreen.addWidget(rcm);
 
         // ==== JSON text parsing screen ==== //
@@ -173,7 +175,7 @@ public class TestScreen extends Screen {
                 jsonTextScreen.getWidth() / 2,
                 (jsonTextScreen.getHeight() - inputField.getHeight()) / 2,
                 0,
-                new TextComponentString(""),
+                ImmutableText.EMPTY,
                 TextAlignment.CENTER, getGameClient().defaultFont()
         );
         jsonTextScreen.addWidget(inputField);
@@ -199,12 +201,12 @@ public class TestScreen extends Screen {
         content.addWidget(subScreens[this.currentSubScreen]); // A screen is also a widget, that allows for a lot of flexibility
 
         // Same as Javascript's setInterval
-        content.scheduleAtIntervalBeforeUpdate(() -> counterStr.setText(new TextComponentString("Scheduled callback called " + this.counter++)), 1000);
+        content.scheduleAtIntervalBeforeUpdate(() -> counterStr.setText(ofPlainText("Scheduled callback called " + this.counter++)), 1000);
         content.scheduleBeforeEachUpdate(() -> { // Called at every update
             this.animation.update();
-            this.fpsCounter.setText(new TextComponentString("FPS: " + Minecraft.getDebugFPS()));
-            this.focus.setText(new TextComponentString("Focused: " + content.getFocusedWidget()));
-            this.hovered.setText(new TextComponentString("Hovered: " + content.getHoveredWidget()));
+            this.fpsCounter.setText(ofPlainText("FPS: " + Minecraft.getDebugFPS()));
+            this.focus.setText(ofPlainText("Focused: " + content.getFocusedWidget()));
+            this.hovered.setText(ofPlainText("Hovered: " + content.getHoveredWidget()));
             this.colored.setBaseColor(animation.rainbowColor());
         });
         this.updateButtons();

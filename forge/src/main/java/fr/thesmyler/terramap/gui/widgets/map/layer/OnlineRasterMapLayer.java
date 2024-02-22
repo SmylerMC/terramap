@@ -20,6 +20,7 @@ import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 
+import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
@@ -31,6 +32,7 @@ import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHolder {
 
@@ -121,10 +123,10 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
                 super(0);
                 this.style = style;
                 float y = margin;
-                this.nameText = new TextWidget(margin, y, 0, new TextComponentString(style.getLocalizedName(language)), font);
+                this.nameText = new TextWidget(margin, y, 0, ofPlainText(style.getLocalizedName(language)), font);
                 this.addWidget(this.nameText);
                 y += this.nameText.getHeight() + margin;
-                TextComponentString line2 = new TextComponentString(format("%s - %sv%s", style.getId(), style.getProvider(), style.getProviderVersion()));
+                Text line2 = ofPlainText(format("%s - %sv%s", style.getId(), style.getProvider(), style.getProviderVersion()));
                 this.infoText = new TextWidget(this.nameText.getX(), y, 0, line2, smallFont);
                 this.addWidget(this.infoText);
                 if (style instanceof CopyrightHolder) {

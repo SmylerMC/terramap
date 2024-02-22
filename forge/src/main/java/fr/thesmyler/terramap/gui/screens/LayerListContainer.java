@@ -17,7 +17,6 @@ import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import net.smyler.smylib.gui.DrawContext;
@@ -26,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.*;
 import static java.util.Comparator.comparing;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 class LayerListContainer extends FlexibleWidgetContainer {
 
@@ -136,7 +136,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
 
         public BackgroundLayerEntry(float y, RasterMapLayer layer) {
             super(layer, y, 20);
-            TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
+            TextWidget name = new TextWidget(5, 7, 0, ofPlainText(layer.name()), TextAlignment.RIGHT, this.getFont());
             TextWidget type = new TextWidget(5, 23, 0, new TextComponentTranslation("terramap.terramapscreen.layerscreen.raster_background.type"), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
@@ -173,8 +173,8 @@ class LayerListContainer extends FlexibleWidgetContainer {
         public GenericLayerEntry(float y, MapLayer layer) {
             super(layer, y, 20);
             this.layer = layer;
-            TextWidget name = new TextWidget(5, 7, 0, new TextComponentString(layer.name()), TextAlignment.RIGHT, this.getFont());
-            TextWidget type = new TextWidget(5, 23, 0, new TextComponentString(layer.description()), TextAlignment.RIGHT, this.getFont());
+            TextWidget name = new TextWidget(5, 7, 0, ofPlainText(layer.name()), TextAlignment.RIGHT, this.getFont());
+            TextWidget type = new TextWidget(5, 23, 0, ofPlainText(layer.description()), TextAlignment.RIGHT, this.getFont());
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
