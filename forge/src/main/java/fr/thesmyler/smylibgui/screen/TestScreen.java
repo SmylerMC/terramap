@@ -1,5 +1,7 @@
 package fr.thesmyler.smylibgui.screen;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -20,10 +22,11 @@ import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.ImmutableText;
+import net.smyler.smylib.text.Text;
 
 import static net.smyler.smylib.Color.RED;
 import static net.smyler.smylib.Color.WHITE;
@@ -48,6 +51,8 @@ public class TestScreen extends Screen {
 
     private final TexturedButtonWidget previous;
     private final TexturedButtonWidget next;
+
+    private final Gson textJsonParser = new GsonBuilder().registerTypeAdapter(Text.class, new TextJsonAdapter()).create();;
 
     public TestScreen(GuiScreen parent) {
         super(BackgroundOption.DEFAULT);
@@ -102,9 +107,11 @@ public class TestScreen extends Screen {
         textScreen.addWidget(this.textField.setX(0).setY(70).setWidth(150).setOnPressEnterCallback(s -> {this.textField.setText("You pressed enter :)"); return true;}));
         textScreen.addWidget(counterStr);
         textScreen.addWidget(colored);
-        ITextComponent compo = ITextComponent.Serializer.jsonToComponent("[\"\",{\"text\":\"This is red, with a hover event,\",\"color\":\"dark_red\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"I said it's red\"}},{\"text\":\" \"},{\"text\":\"and this is green with an other hover event.\",\"color\":\"dark_green\",\"hoverEvent\":{\"action\":\"show_text\",\"value\":\"Don't you trust me? This is green!\"}},{\"text\":\"\\n\"},{\"text\":\"And this is blue, with a click event!\",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://example.com\"}},{\"text\":\"\\n\"},{\"text\":\"And finally, this is \",\"color\":\"white\"},{\"text\":\"black\",\"strikethrough\":true,\"color\":\"white\"},{\"text\":\" white, \",\"color\":\"white\"},{\"text\":\"with\",\"underlined\":true,\"color\":\"white\"},{\"text\":\" various\",\"italic\":true,\"color\":\"white\"},{\"text\":\" styles \",\"bold\":true,\"color\":\"white\"},{\"text\":\"and I bet you can't read that.\",\"obfuscated\":true,\"color\":\"white\"}]");
-        //FIXME add colors back to test screen text
-        textScreen.addWidget(new TextWidget(textScreen.getWidth()/2, 140, 1, ofPlainText(compo.getUnformattedText()), TextAlignment.CENTER, getGameClient().defaultFont().withScale(2)).setMaxWidth(textScreen.getWidth()).setBackgroundColor(Color.DARK_OVERLAY).setPadding(10));
+        Text compo = this.textJsonParser.fromJson(
+                "[\"\",{\"text\":\"This is red, with a hover event\",\"color\":\"dark_red\",\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Yup, it's red.\"}},{\"text\":\", I said it's \",\"color\":\"dark_red\"},{\"text\":\"red\",\"color\":\"red\"},{\"text\":\",\",\"color\":\"dark_red\"},{\"text\":\" \",\"color\":\"dark_green\"},{\"text\":\"and this is \",\"color\":\"dark_green\",\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Green enough for you?\"}},{\"text\":\"green\",\"color\":\"green\",\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Green enough for you?\"}},{\"text\":\", with another hover event\",\"color\":\"dark_green\",\"hoverEvent\":{\"action\":\"show_text\",\"contents\":\"Green enough for you?\"}},{\"text\":\".\",\"color\":\"dark_green\"},{\"text\":\" Don't you trust me?\",\"color\":\"gray\"},{\"text\":\" This is \",\"color\":\"dark_green\"},{\"text\":\"green\",\"color\":\"green\"},{\"text\":\"! \",\"color\":\"dark_green\"},{\"text\":\"And this is \",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://smyler.net\"}},{\"text\":\"blue\",\"color\":\"blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://smyler.net\"}},{\"text\":\", with a \",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://smyler.net\"}},{\"text\":\"click event\",\"color\":\"dark_gray\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://smyler.net\"}},{\"text\":\"!\",\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://smyler.net\"}},{\"text\":\" And finally, this is \",\"color\":\"gold\"},{\"text\":\"black\",\"color\":\"black\"},{\"text\":\" and \",\"color\":\"gold\"},{\"text\":\"white\",\"color\":\"white\"},{\"text\":\", \",\"color\":\"gold\"},{\"text\":\"and it has \",\"color\":\"light_purple\"},{\"text\":\"various\",\"bold\":true,\"color\":\"dark_purple\"},{\"text\":\" styles\",\"italic\":true,\"color\":\"light_purple\"},{\"text\":\". \",\"color\":\"light_purple\"},{\"text\":\"And finally\",\"underlined\":true,\"color\":\"light_purple\"},{\"text\":\", I bet you \",\"color\":\"light_purple\"},{\"text\":\"can't\",\"strikethrough\":true,\"color\":\"light_purple\"},{\"text\":\" read \",\"color\":\"light_purple\"},{\"text\":\"that\",\"obfuscated\":true,\"color\":\"yellow\"},{\"text\":\".\",\"color\":\"light_purple\"}]",
+                Text.class
+        );
+        textScreen.addWidget(new TextWidget(textScreen.getWidth()/2, 140, 1, compo, TextAlignment.CENTER, getGameClient().defaultFont().withScale(2)).setMaxWidth(textScreen.getWidth()).setBackgroundColor(Color.DARK_OVERLAY).setPadding(10));
 
         // === Button screen: examples on how to use button widgets === //
 
@@ -183,7 +190,7 @@ public class TestScreen extends Screen {
 
         jsonTextScreen.scheduleBeforeEachUpdate(() -> {
             try {
-                ITextComponent component = ITextComponent.Serializer.jsonToComponent(inputField.getText());
+                Text component = this.textJsonParser.fromJson(inputField.getText(), Text.class);
                 if (component == null) {
                     throw new JsonParseException("");
                 }
