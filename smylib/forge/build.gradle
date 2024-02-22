@@ -22,3 +22,6 @@ dependencies {
     testImplementation project(":smylib:testing")
 }
 
+// This is a dirty hack for a problem that started appearing out of nowhere,
+// where Gradle would complain about that task not existing when syncing the project in intelliJ
+tasks.register('idePostSync') {}
