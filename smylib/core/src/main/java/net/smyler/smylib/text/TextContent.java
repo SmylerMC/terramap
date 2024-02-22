@@ -18,4 +18,12 @@ public interface TextContent {
      */
     String toString();
 
+    /**
+     * Indicates whether getting this content as text using {@link #toString()} will have to resolve the actual content
+     * from the game context, by example by translating it. Only {@link PlainTextContent} should be considered resolved.
+     *
+     * @return whether this content is already resolved.
+     */
+    boolean isResolved();
+
 }

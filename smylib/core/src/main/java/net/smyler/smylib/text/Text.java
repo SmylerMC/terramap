@@ -46,4 +46,10 @@ public interface Text extends Iterable<Text> {
      */
     Stream<Text> stream();
 
+    /**
+     * @return whether the content of this {@link Text text} has been resolved. Works recursively with siblings.
+     * @see TextContent#isResolved()
+     */
+    boolean isContentResolved();
+
 }
