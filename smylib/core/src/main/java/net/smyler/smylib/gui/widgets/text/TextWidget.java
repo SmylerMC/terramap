@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.widgets.text;
+package net.smyler.smylib.gui.widgets.text;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.text.ImmutableText;
@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
-import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.Font;
 
 public class TextWidget implements Widget {
@@ -73,7 +72,6 @@ public class TextWidget implements Widget {
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         context.glState().enableAlpha();
-        GlStateManager.enableBlend();
         float w = this.getWidth();
         float h = this.getHeight();
         context.drawRectangle(x, y, x + w, y + h, this.backgroundColor);

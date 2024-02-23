@@ -18,9 +18,9 @@ import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTextu
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.IntegerSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
-import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
+import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
-import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;

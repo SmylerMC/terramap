@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.widgets.text;
+package net.smyler.smylib.gui.widgets.text;
 
 public enum TextAlignment {
 

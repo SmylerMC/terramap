@@ -6,8 +6,8 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.GameClient;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import net.smyler.smylib.gui.widgets.text.TextAlignment;
+import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 
 import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.CROSS;

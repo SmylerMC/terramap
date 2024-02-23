@@ -6,7 +6,7 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;

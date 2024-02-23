@@ -16,8 +16,8 @@ import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTextu
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.IntegerSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
-import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import net.smyler.smylib.gui.widgets.text.TextAlignment;
+import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
@@ -36,7 +36,6 @@ import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.DrawContext;
