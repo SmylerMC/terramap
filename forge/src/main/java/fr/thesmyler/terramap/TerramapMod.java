@@ -3,6 +3,13 @@ package fr.thesmyler.terramap;
 import java.io.File;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
+import net.buildtheearth.terraplusplus.generator.EarthGenerator;
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+import net.smyler.smylib.json.TextJsonAdapter;
+import net.smyler.smylib.text.Text;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
@@ -36,6 +43,17 @@ public class TerramapMod {
     public static final TerramapVersion OLDEST_TERRA121_TERRAMAP_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 7);
 
     public static Logger logger;
+
+    public static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
+            .registerTypeAdapter(Text.class, new TextJsonAdapter())
+            .create();
+
+    public static final Gson GSON_PRETTY = new GsonBuilder()
+            .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
+            .registerTypeAdapter(Text.class, new TextJsonAdapter())
+            .setPrettyPrinting()
+            .create();
 
     /* Proxy things */
     private static final String CLIENT_PROXY_CLASS = "fr.thesmyler.terramap.proxy.TerramapClientProxy";

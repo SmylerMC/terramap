@@ -17,16 +17,17 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import net.buildtheearth.terraplusplus.util.http.Http;
+
+import static fr.thesmyler.terramap.TerramapMod.GSON;
+import static fr.thesmyler.terramap.TerramapMod.GSON_PRETTY;
 
 public class MapStylesLibrary {
 
@@ -153,9 +154,7 @@ public class MapStylesLibrary {
             try {
                 TerramapMod.logger.debug("Map config file did not exist, creating a blank one.");
                 MapStyleFile mapFile = new MapStyleFile(new MapFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
-                GsonBuilder builder = new GsonBuilder();
-                builder.setPrettyPrinting();
-                Files.write(configMapsFile.toPath(), builder.create().toJson(mapFile).getBytes(Charset.defaultCharset()));
+                Files.write(configMapsFile.toPath(), GSON_PRETTY.toJson(mapFile).getBytes(Charset.defaultCharset()));
             } catch (IOException e) {
                 TerramapMod.logger.error("Failed to create map style config file!");
                 TerramapMod.logger.catching(e);
@@ -232,8 +231,7 @@ public class MapStylesLibrary {
     }
 
     private static Map<String, UrlTiledMap> loadFromJson(String json, TiledMapProvider provider) {
-        Gson gson = new Gson();
-        MapStyleFile savedStyles = gson.fromJson(json, MapStyleFile.class);
+        MapStyleFile savedStyles = GSON.fromJson(json, MapStyleFile.class);
         Map<String, UrlTiledMap> styles = new HashMap<>();
         for(String id: savedStyles.maps.keySet()) {
             UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
@@ -272,7 +270,7 @@ public class MapStylesLibrary {
         String url; // Used by legacy versions
         String[] urls;
         Map<String, String> name;
-        Map<String, String> copyright;
+        Map<String, Text> copyright;
         int min_zoom;
         int max_zoom;
         int display_priority;

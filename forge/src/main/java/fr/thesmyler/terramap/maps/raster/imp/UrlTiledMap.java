@@ -13,6 +13,7 @@ import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
 import fr.thesmyler.terramap.util.CopyrightHolder;
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
@@ -42,14 +43,13 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     private final String id;
     private final TiledMapProvider provider;
     private final Map<String, String> names; // A map of language key => name
-    private final Map<String, String> copyrightJsons;
+    private final Map<String, Text> copyrightJsons;
     private final long version;
     private final String comment;
     private final int maxConcurrentRequests; // How many concurrent http connections are allowed by this map provider. This should be two by default, as that's what OSM requires
     private final boolean debug;
     private final Map<Integer, WebMercatorBounds> bounds;
 
-    private static final ITextComponent FALLBACK_COPYRIGHT = ITextComponent.Serializer.jsonToComponent("{\"text\":\"The text component for this copyright notice was malformatted!\",\"color\":\"dark_red\"}");
     private ResourceLocation errorTileTexture = null;
 
     public UrlTiledMap(
@@ -58,7 +58,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
             int maxZoom,
             String id,
             Map<String, String> names,
-            Map<String, String> copyright,
+            Map<String, Text> copyright,
             int displayPriority,
             boolean allowOnMinimap,
             TiledMapProvider provider,
@@ -169,25 +169,14 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
      * @return a copyright as a {@link ITextComponent}, translated to the appropriate language.
      */
     @Override
-    public ITextComponent getCopyright(String localeKey) {
-        String result = this.copyrightJsons.getOrDefault(localeKey, this.copyrightJsons.get("en_us"));
-        if(result == null) {
-            return FALLBACK_COPYRIGHT;
-        } else {
-            try {
-                return ITextComponent.Serializer.jsonToComponent(result);
-            } catch (Exception e) {
-                TerramapMod.logger.error("Copyright notice json failed to be parsing!");
-                TerramapMod.logger.catching(e);
-                return FALLBACK_COPYRIGHT;
-            }
-        }
+    public Text getCopyright(String localeKey) {
+        return this.copyrightJsons.getOrDefault(localeKey, this.copyrightJsons.get("en_us"));
     }
 
     /**
      * @return the language key => copyright json value map for this map
      */
-    public Map<String, String> getUnlocalizedCopyrights() {
+    public Map<String, Text> getUnlocalizedCopyrights() {
         return this.copyrightJsons;
     }
 
