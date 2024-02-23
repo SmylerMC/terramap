@@ -32,15 +32,15 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.smyler.smylib.text.ImmutableText;
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 
 import static java.util.Comparator.comparingInt;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.of;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 /**
@@ -397,12 +397,15 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     public void updateCopyright() {
-        ITextComponent component = new TextComponentString("");
+        ImmutableText component = ImmutableText.EMPTY;
+        ImmutableText separator = ofPlainText(" | ");
         for(Widget widget: this.widgets)
             if(widget instanceof CopyrightHolder){
-                if(!component.getFormattedText().isEmpty()) component.appendText(" | ");
-                ITextComponent copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().translator().language());
-                component.appendSibling(copyright);
+                if(!component.getFormattedText().isEmpty()) {
+                    component = component.withNewSiblings(separator);
+                }
+                Text copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().translator().language());
+                component = component.withNewSiblings(of(copyright));
             }
         this.copyright.setText(component);
         this.copyright.setVisibility(!component.getFormattedText().isEmpty());

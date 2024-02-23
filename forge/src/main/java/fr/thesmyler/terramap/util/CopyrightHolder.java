@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.util;
 
-import net.minecraft.util.text.ITextComponent;
+import net.smyler.smylib.text.Text;
 
 public interface CopyrightHolder {
 
@@ -9,8 +9,8 @@ public interface CopyrightHolder {
      * or English if it isn't available.
      * 
      * @param localeKey - the language key to get the copyright for
-     * @return a copyright as a {@link ITextComponent}, translated to the appropriate language.
+     * @return a copyright as a {@link Text}, translated to the appropriate language.
      */
-    ITextComponent getCopyright(String localeKey);
+    Text getCopyright(String localeKey);
 
 }

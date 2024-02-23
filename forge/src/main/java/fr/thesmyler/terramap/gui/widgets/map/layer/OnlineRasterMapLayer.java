@@ -14,12 +14,11 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.ColorTiledMap;
 import fr.thesmyler.terramap.util.CopyrightHolder;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 
+import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
@@ -48,11 +47,11 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
     }
 
     @Override
-    public ITextComponent getCopyright(String localeKey) {
+    public Text getCopyright(String localeKey) {
         if(this.tiledMap instanceof CopyrightHolder) {
             return ((CopyrightHolder)this.tiledMap).getCopyright(localeKey);
         }
-        return new TextComponentString("");
+        return ImmutableText.EMPTY;
     }
 
     @Override
@@ -131,7 +130,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
                 this.addWidget(this.infoText);
                 if (style instanceof CopyrightHolder) {
                     CopyrightHolder copyrightHolder = (CopyrightHolder) style;
-                    ITextComponent copyright = copyrightHolder.getCopyright(language);
+                    Text copyright = copyrightHolder.getCopyright(language);
                     y += this.infoText.getHeight() + margin;
                     this.copyrightText = new TextWidget(
                             this.infoText.getX(), y, 0,

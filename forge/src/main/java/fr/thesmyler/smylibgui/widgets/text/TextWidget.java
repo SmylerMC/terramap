@@ -9,10 +9,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.ITextComponent;
 import net.smyler.smylib.gui.Font;
-
-import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class TextWidget implements Widget {
 
@@ -51,11 +48,6 @@ public class TextWidget implements Widget {
 
     public TextWidget(float x, float y, int z, TextAlignment alignment, Font font) {
         this(x, y, z, Float.MAX_VALUE, ImmutableText.EMPTY, alignment, Color.WHITE, true, font);
-    }
-
-    @Deprecated
-    public TextWidget(float x, float y, int z, ITextComponent text, Font font) {
-        this(x, y, z, ofPlainText(text.getUnformattedText()), font);
     }
 
     public TextWidget(float x, float y, int z, Text text, Font font) {
@@ -168,12 +160,6 @@ public class TextWidget implements Widget {
 
     public Text getText() {
         return this.text;
-    }
-
-    @Deprecated
-    public TextWidget setText(ITextComponent component) {
-        //FIXME do not use ITextComponent at all in TextWidget
-        return this.setText(ofPlainText(component.getUnformattedText()));
     }
 
     public TextWidget setText(Text text) {

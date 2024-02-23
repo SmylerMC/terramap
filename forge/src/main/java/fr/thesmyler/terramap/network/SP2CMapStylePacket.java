@@ -3,6 +3,8 @@ package fr.thesmyler.terramap.network;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.JsonParseException;
+import net.smyler.smylib.text.Text;
 import org.apache.logging.log4j.util.Strings;
 
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -17,13 +19,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import static fr.thesmyler.terramap.TerramapMod.GSON;
+
 public class SP2CMapStylePacket implements IMessage {
 
     private String id;
     private long providerVersion;
     private String[] urlPatterns;
     private Map<String, String> names;
-    private Map<String, String> copyrights;
+    private Map<String, Text> copyrights;
     private int minZoom;
     private int maxZoom;
     private int displayPriority;
@@ -71,11 +75,16 @@ public class SP2CMapStylePacket implements IMessage {
         }
         this.names = names;
         int copyrightCount = buf.readInt();
-        Map<String, String> copyrights = new HashMap<>();
+        Map<String, Text> copyrights = new HashMap<>();
         for(int i=0; i < copyrightCount; i++) {
             String key = NetworkUtil.decodeStringFromByteBuf(buf);
-            String copyright = NetworkUtil.decodeStringFromByteBuf(buf);
-            copyrights.put(key, copyright);
+            String copyrightJson = NetworkUtil.decodeStringFromByteBuf(buf);
+            try {
+                Text copyright = GSON.fromJson(copyrightJson, Text.class);
+                copyrights.put(key, copyright);
+            } catch (JsonParseException e) {
+                TerramapMod.logger.warn("Received invalid map style copyright from server.");
+            }
         }
         this.copyrights = copyrights;
         this.minZoom = buf.readInt();
@@ -120,7 +129,7 @@ public class SP2CMapStylePacket implements IMessage {
         buf.writeInt(this.copyrights.size());
         for(String key: this.copyrights.keySet()) {
             NetworkUtil.encodeStringToByteBuf(key, buf);
-            NetworkUtil.encodeStringToByteBuf(this.copyrights.get(key), buf);
+            NetworkUtil.encodeStringToByteBuf(GSON.toJson(this.copyrights.get(key)), buf);
         }
         buf.writeInt(this.minZoom);
         buf.writeInt(this.maxZoom);
