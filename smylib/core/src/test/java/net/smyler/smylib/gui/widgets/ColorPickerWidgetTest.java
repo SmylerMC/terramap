@@ -1,8 +1,9 @@
-package fr.thesmyler.smylibgui.widgets;
+package net.smyler.smylib.gui.widgets;
 
 import net.smyler.smylib.gui.TestingWidgetContainer;
 import net.smyler.smylib.SmyLibTest;
 import net.smyler.smylib.game.Key;
+import net.smyler.smylib.gui.widgets.ColorPickerWidget;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;

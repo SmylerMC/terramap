@@ -11,7 +11,7 @@ import com.google.gson.JsonPrimitive;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.ColorPickerWidget;
+import net.smyler.smylib.gui.widgets.ColorPickerWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
