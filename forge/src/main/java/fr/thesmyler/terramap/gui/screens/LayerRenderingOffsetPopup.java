@@ -30,6 +30,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.OFFSET_PREVIEW;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 public class LayerRenderingOffsetPopup extends PopupScreen {
     
@@ -67,19 +68,19 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
         WidgetContainer content = this.getContent();
         TextWidget title = new TextWidget(
                 content.getWidth() / 2, margin, 0,
-                new TextComponentTranslation("terramap.popup.renderoffset.title"),
+                ofTranslation("terramap.popup.renderoffset.title"),
                 TextAlignment.CENTER,
                 game.defaultFont());
         content.addWidget(title);
         TextWidget xText = new TextWidget(
                 margin, title.getY() + title.getHeight() + interline, 0,
-                new TextComponentTranslation("terramap.popup.renderoffset.x"),
+                ofTranslation("terramap.popup.renderoffset.x"),
                 TextAlignment.RIGHT,
                 game.defaultFont());
         content.addWidget(xText);
         TextWidget yText = new TextWidget(
                 margin, xText.getY() + xText.getHeight() + interline, 0,
-                new TextComponentTranslation("terramap.popup.renderoffset.y"),
+                ofTranslation("terramap.popup.renderoffset.y"),
                 TextAlignment.RIGHT,
                 game.defaultFont());
         content.addWidget(yText);
@@ -207,7 +208,7 @@ public class LayerRenderingOffsetPopup extends PopupScreen {
             this.yInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.y()));
         }
         this.background.setPixelRenderingOffset(this.updateMapDelta.scale(-1d));
-        this.zoomText.setText(new TextComponentTranslation("terramap.popup.renderoffset.zoom", formatZoomLevelForDisplay(zoom)));
+        this.zoomText.setText(ofTranslation("terramap.popup.renderoffset.zoom", formatZoomLevelForDisplay(zoom)));
     }
     
     private void setOffsetToZero() {

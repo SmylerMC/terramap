@@ -27,10 +27,10 @@ import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.TextComponentTranslation;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
+import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 public class TerramapConfigScreen extends Screen {
 
@@ -70,7 +70,7 @@ public class TerramapConfigScreen extends Screen {
         WidgetContainer content = this.getContent();
         content.removeAllWidgets(); //Remove the widgets that were already there
         content.cancelAllScheduled(); //Cancel all callbacks that were already there
-        this.title = new TextWidget(this.width / 2f, 10, 5, new TextComponentTranslation("terramap.configmenu.title"), TextAlignment.CENTER, game.defaultFont());
+        this.title = new TextWidget(this.width / 2f, 10, 5, ofTranslation("terramap.configmenu.title"), TextAlignment.CENTER, game.defaultFont());
         content.addWidget(this.title);
         TextButtonWidget save = new TextButtonWidget(
                 this.width / 2f + 30, this.height - 30, 10,
@@ -107,17 +107,17 @@ public class TerramapConfigScreen extends Screen {
         };
 
         // Map settings
-        TextWidget unlockZoomText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.unlockzoom"), TextAlignment.RIGHT, game.defaultFont());
+        TextWidget unlockZoomText = new TextWidget(10, ofTranslation("terramap.configmenu.unlockzoom"), TextAlignment.RIGHT, game.defaultFont());
         unlockZoomText.setAnchorX((mapConfigScreen.getWidth() - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth()) / 2f - 71f).setAnchorY(this.height / 4f - 30);
         mapConfigScreen.addWidget(unlockZoomText);
         this.unlockZoomToggle.setTooltip(translator.format("terramap.configmenu.unlockzoom.tooltip"));
         mapConfigScreen.addWidget(this.unlockZoomToggle.setX(unlockZoomText.getX() + unlockZoomText.getWidth() + 5).setY(unlockZoomText.getAnchorY() - 4));
-        TextWidget saveUIStateText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.saveui"), TextAlignment.RIGHT, game.defaultFont());
+        TextWidget saveUIStateText = new TextWidget(10, ofTranslation("terramap.configmenu.saveui"), TextAlignment.RIGHT, game.defaultFont());
         this.saveUIStateToggle.setTooltip(translator.format("terramap.configmenu.saveui.tooltip"));
         saveUIStateText.setAnchorX((mapConfigScreen.getWidth() - saveUIStateText.getWidth() - this.saveUIStateToggle.getWidth()) / 2f + 64f).setAnchorY(unlockZoomText.getAnchorY());
         mapConfigScreen.addWidget(saveUIStateText);
         mapConfigScreen.addWidget(this.saveUIStateToggle.setX(saveUIStateText.getX() + saveUIStateText.getWidth() + 5).setY(saveUIStateText.getAnchorY() - 4));
-        TextWidget chatOnMapText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.chatonmap"), TextAlignment.RIGHT, game.defaultFont());
+        TextWidget chatOnMapText = new TextWidget(10, ofTranslation("terramap.configmenu.chatonmap"), TextAlignment.RIGHT, game.defaultFont());
         chatOnMapText.setAnchorX(unlockZoomText.getAnchorX()).setAnchorY(unlockZoomText.getAnchorY() + unlockZoomText.getFont().height() + 10);
         mapConfigScreen.addWidget(chatOnMapText);
         this.showChatOnMapToggle.setTooltip(translator.format("terramap.configmenu.chatonmap.tooltip"));
@@ -153,7 +153,7 @@ public class TerramapConfigScreen extends Screen {
         mapConfigScreen.addWidget(hudButton);
 
         // Map styles
-        TextWidget debugMapStylesText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.debugmapstyles"), game.defaultFont());
+        TextWidget debugMapStylesText = new TextWidget(10, ofTranslation("terramap.configmenu.debugmapstyles"), game.defaultFont());
         mapStylesConfigScreen.addWidget(debugMapStylesText.setAnchorX((mapStylesConfigScreen.getWidth() - debugMapStylesToggle.getWidth() - debugMapStylesText.getWidth() - 3) / 2).setAnchorY(mapStylesConfigScreen.getHeight() / 4 - 30));
         debugMapStylesToggle.setTooltip(translator.format("terramap.configmenu.debugmapstyles.tooltip"));
         mapStylesConfigScreen.addWidget(debugMapStylesToggle.setX(debugMapStylesText.getX() + debugMapStylesText.getWidth() + 3).setY(debugMapStylesText.getY() - 4));
@@ -162,11 +162,11 @@ public class TerramapConfigScreen extends Screen {
         Set<String> serverIDs = TerramapClientContext.getContext().getServerMapStyles().keySet();
         Set<String> proxyIDs = TerramapClientContext.getContext().getProxyMapStyles().keySet();
         Set<String> resolved = TerramapClientContext.getContext().getMapStyles().keySet();
-        TextWidget baseText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 40, 10, new TextComponentTranslation("terramap.configmenu.mapstyles.base", baseIDs.size(), String.join(", ", baseIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget proxyText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 57, 10, new TextComponentTranslation("terramap.configmenu.mapstyles.proxy", proxyIDs.size(), String.join(", ", proxyIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget serverText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 74, 10, new TextComponentTranslation("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget userText = new TextWidget( mapStylesConfigScreen.getWidth() / 2, 91, 10, new TextComponentTranslation("terramap.configmenu.mapstyles.custom", userIDs.size(), String.join(", ", userIDs)),TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget effectiveText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 108, 10, new TextComponentTranslation("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget baseText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 40, 10, ofTranslation("terramap.configmenu.mapstyles.base", baseIDs.size(), String.join(", ", baseIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget proxyText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 57, 10, ofTranslation("terramap.configmenu.mapstyles.proxy", proxyIDs.size(), String.join(", ", proxyIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget serverText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 74, 10, ofTranslation("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget userText = new TextWidget( mapStylesConfigScreen.getWidth() / 2, 91, 10, ofTranslation("terramap.configmenu.mapstyles.custom", userIDs.size(), String.join(", ", userIDs)),TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget effectiveText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 108, 10, ofTranslation("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), TextAlignment.CENTER, getGameClient().defaultFont());
         mapStylesConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugMapStylesToggle.getY() + debugMapStylesToggle.getHeight() + 10));
         mapStylesConfigScreen.addWidget(proxyText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(baseText.getY() + baseText.getHeight() + inter));
         mapStylesConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
@@ -184,7 +184,7 @@ public class TerramapConfigScreen extends Screen {
         }));
 
         // Other config screen
-        TextWidget tpCommandText = new TextWidget(10, new TextComponentTranslation("terramap.configmenu.teleportcmd"), TextAlignment.RIGHT, getGameClient().defaultFont());
+        TextWidget tpCommandText = new TextWidget(10, ofTranslation("terramap.configmenu.teleportcmd"), TextAlignment.RIGHT, getGameClient().defaultFont());
         otherConfigScreen.addWidget(tpCommandText.setAnchorX((otherConfigScreen.getWidth() - this.tpCommandField.getWidth() - tpCommandText.getWidth()) / 2).setAnchorY(60));
         otherConfigScreen.addWidget(this.tpCommandField.setX(tpCommandText.getX() + tpCommandText.getWidth() + inter).setY(tpCommandText.getY() - 7));
 
@@ -216,7 +216,7 @@ public class TerramapConfigScreen extends Screen {
         else this.previous.enable();
         if(this.currentSubScreen >= this.pages.length - 1) this.next.disable();
         else this.next.enable();
-        this.pageText.setText(new TextComponentTranslation("terramap.configmenu.pagenumber", this.currentSubScreen + 1, this.pages.length));
+        this.pageText.setText(ofTranslation("terramap.configmenu.pagenumber", this.currentSubScreen + 1, this.pages.length));
     }
 
     private void saveAndClose() {
@@ -271,7 +271,7 @@ public class TerramapConfigScreen extends Screen {
             WidgetContainer content = this.getContent();
             content.removeAllWidgets();
             content.cancelAllScheduled();
-            TextWidget text = new TextWidget(content.getWidth() / 2, content.getHeight() / 2 - 20, 10, new TextComponentTranslation("terramap.configmenu.asksave.prompt"), TextAlignment.CENTER, getGameClient().defaultFont());
+            TextWidget text = new TextWidget(content.getWidth() / 2, content.getHeight() / 2 - 20, 10, ofTranslation("terramap.configmenu.asksave.prompt"), TextAlignment.CENTER, getGameClient().defaultFont());
             content.addWidget(text);
             content.addWidget(new TextButtonWidget(
                     content.getWidth() / 2 - 125, text.getY() + text.getHeight() + 15, 10,

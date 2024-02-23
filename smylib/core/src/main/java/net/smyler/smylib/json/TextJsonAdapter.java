@@ -113,7 +113,7 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
     private Text parseTextFromJsonObject(JsonElement json, Type type, JsonDeserializationContext context) {
         JsonObject object = json.getAsJsonObject();
         TextStyle style = this.parseStyleFromObject(object);
-        TextContent content = this.parseContentFromObject(object);
+        TextContent content = this.parseContentFromObject(object, type, context);
         ImmutableText[] siblings = this.parseSiblingsFromObject(object, type, context);
         return new ImmutableText(
                 content,
@@ -166,10 +166,10 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
         return primitive.getAsBoolean() ? TRUE: FALSE;
     }
 
-    private TextContent parseContentFromObject(JsonObject object) {
-        TextContent content = this.parseContentFromExplicitType(object);
+    private TextContent parseContentFromObject(JsonObject object, Type type, JsonDeserializationContext context) {
+        TextContent content = this.parseContentFromExplicitType(object, type, context);
         if (content == null) {
-            content = this.parseContentImplicit(object);
+            content = this.parseContentImplicit(object, type, context);
         }
         if (content == null) {
             throw new JsonParseException("Failed to parse json object as Text, content is not valid: " + object);
@@ -178,7 +178,7 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
     }
 
     @Nullable
-    private TextContent parseContentFromExplicitType(JsonObject object) {
+    private TextContent parseContentFromExplicitType(JsonObject object, Type type, JsonDeserializationContext context) {
         JsonElement contentTypeElement = object.get("type");
         if (contentTypeElement == null || !contentTypeElement.isJsonPrimitive()) {
             return null;
@@ -193,7 +193,7 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
             return this.parsePlainTextContent(object);
         }
         if ("translatable".equals(contentType) && object.has("translate")) {
-            return this.parseTranslatableContent(object);
+            return this.parseTranslatableContent(object, type, context);
         }
         if ("score".equals(contentType) && object.has("score")) {
             return this.parseScoreContent(object);
@@ -213,12 +213,12 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
         return null;
     }
 
-    private TextContent parseContentImplicit(JsonObject object) {
+    private TextContent parseContentImplicit(JsonObject object, Type type, JsonDeserializationContext context) {
         TextContent content = this.parsePlainTextContent(object);
         if (content != null) {
             return content;
         }
-        content = this.parseTranslatableContent(object);
+        content = this.parseTranslatableContent(object, type, context);
         if (content != null) {
             return content;
         }
@@ -248,17 +248,29 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
     }
 
     @Nullable
-    private TextContent parseTranslatableContent(JsonObject object) {
+    private TextContent parseTranslatableContent(JsonObject object, Type type, JsonDeserializationContext context) {
         String translate = getAsStringOrNull(object.get("translate"));
         if (translate == null) {
             return null;
         }
-        SmyLib.getLogger().warn(
-                "SmyLib is trying to deserialize a translatable text from JSON. " +
-                "This is not yet supported. Will use the translation key as plain text."
+        String fallback = getAsStringOrNull(object.get("fallback"));
+        Text[] with;
+        JsonElement withElement = object.get("with");
+        if (withElement != null && withElement.isJsonArray()) {
+            JsonArray withArray = withElement.getAsJsonArray();
+            with = new Text[withArray.size()];
+            int i = 0;
+            for (JsonElement withChildElement: withArray) {
+                with[i++] = this.deserialize(withChildElement, type, context);
+            }
+        } else {
+            with = new Text[0];
+        }
+        return new TranslatableTextContent(
+                translate,
+                fallback,
+                with
         );
-        //TODO support parsing translatable text contents
-        return new PlainTextContent(translate);
     }
 
     @Nullable

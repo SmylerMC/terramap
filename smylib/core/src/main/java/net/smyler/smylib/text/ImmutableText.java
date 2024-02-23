@@ -1,6 +1,7 @@
 package net.smyler.smylib.text;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -150,6 +151,24 @@ public final class ImmutableText implements Text {
                 new PlainTextContent(text),
                 new TextStyle(INHERIT_COLOR)
         );
+    }
+
+    public static ImmutableText ofTranslationWithFallback(String translationKey, @Nullable String fallback, Object... with) {
+        return new ImmutableText(
+                new TranslatableTextContent(
+                        translationKey,
+                        fallback,
+                        Arrays.stream(with)
+                                .map(Object::toString)
+                                .map(ImmutableText::ofPlainText)
+                                .toArray(Text[]::new)
+                ),
+                new TextStyle(INHERIT_COLOR)
+        );
+    }
+
+    public static ImmutableText ofTranslation(String translationKey, Object... with) {
+        return ofTranslationWithFallback(translationKey, null, with);
     }
 
     @Override

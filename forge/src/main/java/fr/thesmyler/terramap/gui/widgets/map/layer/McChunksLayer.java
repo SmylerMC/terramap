@@ -36,6 +36,7 @@ import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;
+import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 /**
  * Renders Minecraft region (both 2dr and 3dr), chunks, and blocks outlines onto a map widget.
@@ -419,7 +420,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("terramap.terramapscreen.outlines_config.mca"), font));
+                ofTranslation("terramap.terramapscreen.outlines_config.mca"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRender2dr(),
@@ -433,7 +434,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("terramap.terramapscreen.outlines_config.3dr"), font));
+                ofTranslation("terramap.terramapscreen.outlines_config.3dr"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRender3dr(),
@@ -447,7 +448,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("terramap.terramapscreen.outlines_config.chunks"), font));
+                ofTranslation("terramap.terramapscreen.outlines_config.chunks"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRenderChunks(),
@@ -461,7 +462,7 @@ public class McChunksLayer extends MapLayer {
 
         container.addWidget(new TextWidget(
                 left, y + textYOffset, 10,
-                new TextComponentTranslation("terramap.terramapscreen.outlines_config.blocks"), font));
+                ofTranslation("terramap.terramapscreen.outlines_config.blocks"), font));
         container.addWidget(new ToggleButtonWidget(
                 width - right, y, 0,
                 McChunksLayer.this.isRenderBlocks(),
