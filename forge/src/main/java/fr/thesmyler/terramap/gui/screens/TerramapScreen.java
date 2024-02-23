@@ -3,10 +3,10 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.*;
 import java.util.function.Consumer;
 
+import net.minecraft.util.text.TextFormatting;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
 import net.smyler.smylib.text.ImmutableText;
-import net.smyler.smylib.text.Text;
 import net.smyler.smylib.text.TextStyle;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +16,6 @@ import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import fr.thesmyler.terramap.util.geo.*;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
-import net.minecraft.util.text.*;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
@@ -73,6 +72,7 @@ import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.util.stream.Collectors.toMap;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
+import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 
 public class TerramapScreen extends Screen implements ITabCompleter {
@@ -263,7 +263,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.layerPanel.setOpenX(0).setOpenY(this.layerPanel.getClosedY());
         this.layerPanel.addWidget(new TextWidget(
                 this.layerPanel.getWidth() / 2, 7, 1,
-                new TextComponentTranslation("terramap.terramapscreen.layerscreen.title"), TextAlignment.CENTER,
+                ofTranslation("terramap.terramapscreen.layerscreen.title"), TextAlignment.CENTER,
                 content.getFont()));
         this.layerPanel.addWidget(new TexturedButtonWidget(
                 this.layerPanel.getWidth() - 20, 5, 1,
@@ -362,7 +362,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         String formatScale = "-";
         String formatOrientation = "-";
         if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
-            this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
+            this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
         } else {
             if(projection != null) {
                 try {
@@ -371,9 +371,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     formatOrientation = GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
                 } catch (OutOfProjectionBoundsException ignored) {
                 }
-                this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
+                this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
             } else {
-                this.distortionText.setText(new TextComponentTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
+                this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
             }
         }
 
@@ -382,24 +382,24 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             GeoPoint<?> markerLocation = marker.getLocation();
             String markerName = marker.getDisplayName().getFormattedText();
             if(markerLocation == null) {
-                this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
+                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
             } else {
                 String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
                 String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
-                this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
+                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
             }
         } else if(this.map.getMainPlayerMarker() != null){
             Marker marker = this.map.getMainPlayerMarker();
             GeoPoint<?> markerLocation = marker.getLocation();
             if(markerLocation == null) {
-                this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playerout"));
+                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.playerout"));
             } else {
                 String formatedLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
                 String formatedLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
-                this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
+                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
             }
         } else {
-            this.playerGeoLocationText.setText(new TextComponentTranslation("terramap.terramapscreen.information.noplayer"));
+            this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.noplayer"));
         }
 
         this.offsetWarning.setVisibility(this.map.getRasterBackgroundLayer().map(MapLayer::hasRenderingOffset).orElse(false));

@@ -45,11 +45,6 @@ public class TextWidget implements Widget {
         this.updateCoords();
     }
 
-    @Deprecated
-    public TextWidget(float x, float y, int z, ITextComponent text, TextAlignment alignment, Font font) {
-        this(x, y, z, ofPlainText(text.getUnformattedText()), alignment, font);
-    }
-
     public TextWidget(float x, float y, int z, Text text, TextAlignment alignment, Font font) {
         this(x, y, z, Float.MAX_VALUE, text, alignment, Color.WHITE, true, font);
     }
@@ -71,18 +66,8 @@ public class TextWidget implements Widget {
         this(x, y, z, ImmutableText.EMPTY, TextAlignment.RIGHT, font);
     }
 
-    @Deprecated
-    public TextWidget(int z, ITextComponent text, TextAlignment alignment, Font font) {
-        this(z, ofPlainText(text.getUnformattedText()), alignment, font);
-    }
-
     public TextWidget(int z, Text text, TextAlignment alignment, Font font) {
         this(0, 0, z, Float.MAX_VALUE, text, alignment, Color.WHITE, true, font);
-    }
-
-    @Deprecated
-    public TextWidget(int z, ITextComponent text, Font font) {
-        this(z, ofPlainText(text.getUnformattedText()), font);
     }
 
     public TextWidget(int z, Text text, Font font) {

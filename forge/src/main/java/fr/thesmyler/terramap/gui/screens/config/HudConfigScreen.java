@@ -42,6 +42,7 @@ import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 public class HudConfigScreen extends Screen {
 
@@ -181,13 +182,13 @@ public class HudConfigScreen extends Screen {
 
         // Boolean lines
         LinkedList<TextWidget> buttonsTexts = new LinkedList<>();
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.minimap"), game.defaultFont()));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.compass"), game.defaultFont()));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.players"), game.defaultFont()));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.entities"), game.defaultFont()));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.directions"), game.defaultFont()));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.rotation"), game.defaultFont()));
-        buttonsTexts.add(new TextWidget(10, new TextComponentTranslation("terramap.hudconfig.chunks"), game.defaultFont()));
+        buttonsTexts.add(new TextWidget(10, ofTranslation("terramap.hudconfig.minimap"), game.defaultFont()));
+        buttonsTexts.add(new TextWidget(10, ofTranslation("terramap.hudconfig.compass"), game.defaultFont()));
+        buttonsTexts.add(new TextWidget(10, ofTranslation("terramap.hudconfig.players"), game.defaultFont()));
+        buttonsTexts.add(new TextWidget(10, ofTranslation("terramap.hudconfig.entities"), game.defaultFont()));
+        buttonsTexts.add(new TextWidget(10, ofTranslation("terramap.hudconfig.directions"), game.defaultFont()));
+        buttonsTexts.add(new TextWidget(10, ofTranslation("terramap.hudconfig.rotation"), game.defaultFont()));
+        buttonsTexts.add(new TextWidget(10, ofTranslation("terramap.hudconfig.chunks"), game.defaultFont()));
         this.minimapButton.setTooltip(translator.format("terramap.hudconfig.minimap.tooltip"));
         this.compassButton.setTooltip(translator.format("terramap.hudconfig.compass.tooltip"));
         this.otherPlayersButton.setTooltip(translator.format("terramap.hudconfig.players.tooltip"));
@@ -259,7 +260,7 @@ public class HudConfigScreen extends Screen {
         this.buttonPanel.setOpenX(this.buttonPanel.getClosedX()).setOpenY(this.height - this.settingsPanel.getHeight() - this.buttonPanel.getHeight());
         this.settingsPanel.setOpenY(this.height - this.settingsPanel.getHeight());
 
-        TextWidget explain = new TextWidget(this.width / 2f, this.height / 2f - 100f, 10, new TextComponentTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, game.defaultFont());
+        TextWidget explain = new TextWidget(this.width / 2f, this.height / 2f - 100f, 10, ofTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, game.defaultFont());
         content.addWidget(explain.setMaxWidth(this.width * .8f).setAnchorY(this.height / 2f - explain.getHeight() - 10f));
 
         content.addWidget(this.buttonPanel);

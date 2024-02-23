@@ -9,12 +9,12 @@ import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
 import fr.thesmyler.smylibgui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -108,7 +108,7 @@ public class PopupScreen extends Screen {
      *
      * @param message   the text to display
      */
-    public static void showMessage(ITextComponent message) {
+    public static void showMessage(Text message) {
         TextWidget text = new TextWidget(0, 0, 0, message, TextAlignment.CENTER, getGameClient().defaultFont());
         float padding = 10;
         text.setMaxWidth(300);
