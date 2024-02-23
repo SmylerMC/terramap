@@ -1,14 +1,12 @@
-package fr.thesmyler.smylibgui.widgets.text;
+package net.smyler.smylib.gui.widgets.text;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import net.smyler.smylib.gui.ColorLogic;
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.*;
 import org.jetbrains.annotations.Nullable;
 
-import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import net.smyler.smylib.game.Key;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -16,15 +14,10 @@ import net.smyler.smylib.game.Keyboard;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.MenuWidget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.Color.BLUE;
-import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.game.Key.*;
 import static net.smyler.smylib.math.Math.clamp;
@@ -61,6 +54,9 @@ public class TextFieldWidget implements Widget {
     private Consumer<String> onChangeCallback;
     private final MenuWidget rightClickMenu;
     private boolean isSearchBar;
+
+    private final Identifier WIDGET_TEXTURES = new Identifier("terramap", "textures/gui/widgets.png");
+    private final Sprite MAGNIFYING_GLASS = new Sprite(WIDGET_TEXTURES, 256, 256, 0, 54, 15, 69);
 
     public TextFieldWidget(float x, float y, int z, float width, String defaultText,
             Consumer<String> onChange, Predicate<String> onPressEnter, Predicate<String> textValidator,
@@ -146,11 +142,7 @@ public class TextFieldWidget implements Widget {
         }
 
         if(this.isSearchBar) {
-            glState.setColor(WHITE);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(SmyLibGuiTextures.WIDGET_TEXTURES);
-            glState.enableAlpha();
-            GlStateManager.enableBlend();
-            RenderUtil.drawModalRectWithCustomSizedTexture(x + this.width - 17, y + 2, 131, 0, 15, 15, 256, 256);
+            context.drawSprite(x + this.width - 17, y + 2, MAGNIFYING_GLASS);
         }
 
 
@@ -205,12 +197,10 @@ public class TextFieldWidget implements Widget {
         float yTop = Math.min(y1, y2);
         xLeft = Math.min(xLeft, x + this.getEffectiveWidth());
         xRight = Math.min(xRight, x + this.getEffectiveWidth());
-        GlStateManager.disableTexture2D();
         GlState state = context.glState();
         state.enableColorLogic(ColorLogic.OR_REVERSE);
         context.drawRectangle(xLeft, yTop, xRight, yBottom, BLUE);
         state.disableColorLogic();
-        GlStateManager.enableTexture2D();
     }
 
     private float getEffectiveWidth() {

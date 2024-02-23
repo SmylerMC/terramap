@@ -18,7 +18,7 @@ import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.IntegerSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
+import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -104,6 +104,7 @@ public class TestScreen extends Screen {
         textScreen.addWidget(fpsCounter.setAnchorX(0).setAnchorY(10));
         textScreen.addWidget(focus.setAnchorX(0).setAnchorY(30));
         textScreen.addWidget(hovered);
+        this.textField.setIsSearchBar(true);
         textScreen.addWidget(this.textField.setX(0).setY(70).setWidth(150).setOnPressEnterCallback(s -> {this.textField.setText("You pressed enter :)"); return true;}));
         textScreen.addWidget(counterStr);
         textScreen.addWidget(colored);

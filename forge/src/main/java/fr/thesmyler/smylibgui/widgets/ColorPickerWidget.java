@@ -2,7 +2,7 @@ package fr.thesmyler.smylibgui.widgets;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
+import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;

@@ -19,7 +19,7 @@ import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.IntegerSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
+import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;

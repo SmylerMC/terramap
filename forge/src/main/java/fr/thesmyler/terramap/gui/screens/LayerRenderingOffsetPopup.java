@@ -10,7 +10,7 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
+import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;

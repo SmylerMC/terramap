@@ -44,7 +44,7 @@ import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextFieldWidget;
+import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;

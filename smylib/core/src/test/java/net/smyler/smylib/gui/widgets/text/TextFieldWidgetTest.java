@@ -1,9 +1,10 @@
-package fr.thesmyler.smylibgui.widgets.text;
+package net.smyler.smylib.gui.widgets.text;
 
 import net.smyler.smylib.gui.TestingWidgetContainer;
 import net.smyler.smylib.SmyLibTest;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.DummyFont;
+import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
