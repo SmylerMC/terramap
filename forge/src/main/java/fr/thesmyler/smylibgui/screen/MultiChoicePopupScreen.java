@@ -6,8 +6,8 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
-import fr.thesmyler.smylibgui.widgets.text.TextAlignment;
-import fr.thesmyler.smylibgui.widgets.text.TextWidget;
+import net.smyler.smylib.gui.widgets.text.TextAlignment;
+import net.smyler.smylib.gui.widgets.text.TextWidget;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
