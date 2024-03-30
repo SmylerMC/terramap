@@ -59,10 +59,10 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
         if(drawName) {
             String name = this.entity.getDisplayName().getFormattedText();
-            float strWidth = parent.getFont().getStringWidth(name);
+            float strWidth = parent.getFont().computeWidth(name);
             float nameY = y - parent.getFont().height() - 2;
             context.drawRectangle(x + this.width / 2 - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + this.width / 2 + 2, y - 1, Color.DARK_OVERLAY);
-            parent.getFont().drawCenteredString(x + this.width / 2, nameY, name, WHITE, false);
+            parent.getFont().drawCentered(x + this.width / 2, nameY, name, WHITE, false);
         }
     }
 

@@ -1,8 +1,10 @@
 package net.smyler.smylib.text;
 
 import net.smyler.smylib.Color;
+import org.jetbrains.annotations.NotNull;
 
 import static java.util.Arrays.stream;
+import static java.util.Comparator.comparing;
 import static net.smyler.smylib.Color.fromHtmlHexString;
 
 /**
@@ -74,6 +76,34 @@ public enum Formatting {
 
     public String toString() {
         return PREFIX + "" + this.code;
+    }
+
+    public static Formatting fromChar(char chr) {
+        for (Formatting format: values()) {
+            if (format.code == chr) {
+                return format;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Finds the nearest color format code to an RGB color.
+     * The color's alpha channel is ignored.
+     * Euclidean distance is used.
+     *
+     * @param color the color to find the nearest formatting color from
+     * @return the nearest formatting color to the given color
+     */
+    @NotNull
+    public static Formatting nearestFormattingColor(@NotNull Color color) {
+        return stream(COLORS)
+                .min(comparing(c -> {
+                    float red = c.color.redf() - color.redf();
+                    float green = c.color.greenf() - color.greenf();
+                    float blue = c.color.bluef() - color.bluef();
+                    return (red * red) + (green * green) + (blue * blue);
+                })).orElseThrow(IllegalStateException::new);
     }
 
 }

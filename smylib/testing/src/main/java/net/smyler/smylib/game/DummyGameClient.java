@@ -26,7 +26,7 @@ public class DummyGameClient implements GameClient {
     private final Clipboard clipboard = new DummyClipboard();
     private final SoundSystem soundSystem = new DummySoundSystem();
     private final Translator translator = new DummyTranslator();
-    private final Font font = new DummyFont(1f);
+    private final Font font = new DummyFont(1f, 1f);
     private final DrawContext drawContext = new DummyDrawContext();
 
     private final Path gameDirectory;

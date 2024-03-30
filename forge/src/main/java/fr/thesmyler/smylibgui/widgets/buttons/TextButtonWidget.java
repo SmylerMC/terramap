@@ -68,7 +68,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderUtil.drawTexturedModalRect(x, y, 0, 0, 46 + textureDelta * 20, leftWidth, 20);
         RenderUtil.drawTexturedModalRect(x + leftWidth, y, 0, 200 - rightWidth, 46 + textureDelta * 20, rightWidth, 20);
-        parent.getFont().drawCenteredString(x + this.width / 2, y + (this.height - 8) / 2, this.getText(), textColor, true);
+        parent.getFont().drawCentered(x + this.width / 2, y + (this.height - 8) / 2, this.getText(), textColor, true);
 
     }
 

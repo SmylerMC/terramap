@@ -124,6 +124,20 @@ public final class ImmutableText implements Text {
         return new ImmutableText(text.content(), text.style(), immutableSiblings);
     }
 
+    public static ImmutableText ofResolved(Text text) {
+        if (text.isContentResolved() && text instanceof ImmutableText) {
+            return (ImmutableText) text;
+        }
+        ImmutableText[] siblings = text.siblings().stream()
+                .map(ImmutableText::ofResolved)
+                .toArray(ImmutableText[]::new);
+        return new ImmutableText(
+                new PlainTextContent(text.content().toString()),
+                text.style(),
+                siblings
+        );
+    }
+
     public static ImmutableText asSolo(Text text) {
         return new ImmutableText(
                 text.content(),

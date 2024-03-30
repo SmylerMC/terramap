@@ -7,8 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-import static java.util.Arrays.stream;
-import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Objects.requireNonNullElse;
 import static net.smyler.smylib.Preconditions.checkArgument;
@@ -199,14 +197,7 @@ public final class TextStyle {
             return null;
         }
         //TODO check the perf impact of this and maybe cache it
-        return stream(Formatting.values())
-                .filter(Formatting::isColor)
-                .min(comparing(c -> {
-                    float red = c.color.redf() - this.color.redf();
-                    float green = c.color.greenf() - this.color.greenf();
-                    float blue = c.color.bluef() - this.color.bluef();
-                    return (red * red) + (green * green) + (blue * blue);
-                })).orElseThrow(IllegalStateException::new);
+        return Formatting.nearestFormattingColor(this.color);
     }
 
     @Override

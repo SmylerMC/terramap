@@ -73,10 +73,10 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         if(drawName) {
             float halfSize = this.width / 2;
             String name = this.getDisplayName().getFormattedText();
-            float strWidth = parent.getFont().getStringWidth(name);
+            float strWidth = parent.getFont().computeWidth(name);
             float nameY = y - parent.getFont().height() - 2;
             context.drawRectangle(x + halfSize - strWidth / 2 - 2, y - parent.getFont().height() - 4, x + strWidth / 2 + halfSize + 2, y - 1, Color.DARK_OVERLAY);
-            parent.getFont().drawCenteredString(x + halfSize, nameY, name, WHITE, false);
+            parent.getFont().drawCentered(x + halfSize, nameY, name, WHITE, false);
         }
 
         glState.setColor(WHITE);

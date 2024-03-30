@@ -25,7 +25,7 @@ public class WrappedMinecraft implements GameClient {
     private final Clipboard clipboard = new AwtClipboard();
     private final SoundSystem soundSystem = new MinecraftSoundSystem();
     private final Translator translator = new I18nTranslator();
-    private final Font font = new ReflectedFontRenderer(1f);
+    private final Font font = new ReflectedFontRenderer(1f, 0.5f);
     private final DrawContext drawContext = new Lwjgl2DrawContext();
 
     @Override

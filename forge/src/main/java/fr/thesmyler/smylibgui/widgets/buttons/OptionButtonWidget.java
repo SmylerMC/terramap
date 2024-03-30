@@ -34,7 +34,7 @@ public class OptionButtonWidget<T> extends TextButtonWidget {
         super(z, "", null, null);
         Font font = getGameClient().defaultFont();
         float maxWidth = Arrays.stream(options)
-                .map(Object::toString).map(font::getStringWidth)
+                .map(Object::toString).map(font::computeWidth)
                 .max(Float::compareTo).orElse(0f);
         this.width = maxWidth + 20;
         this.onClick = this::cycle;

@@ -78,7 +78,7 @@ public class TextWidget implements Widget {
         float drawY = y + this.padding;
         for(Text line: this.lines) {
             String formattedText = line.getFormattedText();
-            float lineWidth = this.font.getStringWidth(formattedText);
+            float lineWidth = this.font.computeWidth(formattedText);
             float lx = x + this.anchorX - this.x;
             switch(this.alignment) {
                 case RIGHT:
@@ -90,21 +90,16 @@ public class TextWidget implements Widget {
                     lx -= lineWidth/2;
                     break;
             }
-            this.font.drawString(lx, drawY, formattedText, this.baseColor, this.shadow);
-            drawY += this.font.height() + this.padding;
+            this.font.draw(lx, drawY, formattedText, this.baseColor, this.shadow);
+            drawY += this.font.height() + this.font.interline();
         }
         this.hovered = this.getComponentUnder(mouseX - x, mouseY - y);
     }
 
     protected void updateCoords() {
-        this.lines = this.font.wrapToWidth(this.text, this.maxWidth);
-        this.height = this.lines.length * (this.font.height() + this.padding) + this.padding ;
-        float w = 0;
-        for(Text line: this.lines) {
-            String ft = line.getFormattedText();
-            w = Math.max(w, this.font.getStringWidth(ft));
-        }
-        this.width = w + this.padding * 2;
+        this.lines = this.font.wrapToWidth(this.text, this.maxWidth - this.padding * 2);
+        this.height = this.font.computeHeight(this.lines) + this.padding * 2;
+        this.width = this.font.computeWidth(this.lines) + this.padding * 2;
         this.x = this.anchorX;
         switch(this.alignment) {
             case RIGHT:
@@ -127,7 +122,7 @@ public class TextWidget implements Widget {
         if(y - this.padding - lineIndex*(this.font.height() + this.padding) > this.font.height()) return null;
         Text line = this.lines[lineIndex];
         float pos = this.padding;
-        float lineWidth = this.font.getStringWidth(line.getFormattedText());
+        float lineWidth = this.font.computeWidth(line.getFormattedText());
         switch(this.alignment) {
             case RIGHT:
                 break;
@@ -139,7 +134,7 @@ public class TextWidget implements Widget {
                 break;
         }
         for(Text child: line) {
-            pos += this.font.getStringWidth(child.getFormattedText());
+            pos += this.font.computeWidth(child.getFormattedText());
             if(pos >= x) return child;
         }
         return null;

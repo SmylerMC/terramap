@@ -59,7 +59,7 @@ public class MenuWidget implements Widget {
         float fh = this.font.height();
         float lh = fh + padding * 2;
         float sh = 3;
-        float dw = this.font.getStringWidth(" >");
+        float dw = this.font.computeWidth(" >");
         context.glState().enableAlpha();
         Color separatorColor = this.mainAnimation.fadeColor(this.separatorColor);
         Color borderColor = this.mainAnimation.fadeColor(this.borderColor);
@@ -108,8 +108,8 @@ public class MenuWidget implements Widget {
                     subMenu.isSubMenu = true;
                     subMenu.show(subX, subY);
                 }
-                this.font.drawString(x + padding*2 + tx, ty + padding, entry.getText(), c, false);
-                if(subMenu != null) this.font.drawString(x + width - dw - padding, ty + padding, " >", c, false);
+                this.font.draw(x + padding*2 + tx, ty + padding, entry.getText(), c, false);
+                if(subMenu != null) this.font.draw(x + width - dw - padding, ty + padding, " >", c, false);
                 ty += lh;
             } else {
                 context.drawRectangle(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
@@ -204,9 +204,13 @@ public class MenuWidget implements Widget {
     public float getWidth() {
         float mw = 0;
         for(MenuEntry e: this.entries) {
-            mw = Math.max(mw, this.font.getStringWidth(e.getText()));
+            String text = e.getText();
+            if (text == null) {
+                continue;
+            }
+            mw = Math.max(mw, this.font.computeWidth(e.getText()));
         }
-        return mw + padding * 4 + this.font.getStringWidth(" >");
+        return mw + padding * 4 + this.font.computeWidth(" >");
     }
 
     @Override
@@ -360,6 +364,7 @@ public class MenuWidget implements Widget {
             if(this.action != null && this.enabled) this.action.run();
         }
 
+        @Nullable
         public String getText() {
             return this.text;
         }

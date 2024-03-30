@@ -158,7 +158,7 @@ public class TextFieldWidget implements Widget {
 
         if(!string.isEmpty()) {
             String textBeforeCursor = displayCursor ? string.substring(0, displaySelectionStart) : string;
-            startDrawAfterCursorX = this.font.drawString(textRenderX, textRenderY, textBeforeCursor, textColor, true);
+            startDrawAfterCursorX = this.font.draw(textRenderX, textRenderY, textBeforeCursor, textColor, true);
         }
 
         boolean isCursorAtEndOfText = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxTextLength();
@@ -170,20 +170,20 @@ public class TextFieldWidget implements Widget {
         }
 
         if(!string.isEmpty() && displayCursor && displaySelectionStart < string.length()) {
-            this.font.drawString(startDrawAfterCursorX, textRenderY, string.substring(displaySelectionStart), textColor, true);
+            this.font.draw(startDrawAfterCursorX, textRenderY, string.substring(displaySelectionStart), textColor, true);
         }
 
         if(focused && this.isEnabled()) {
             if (isCursorAtEndOfText) {
                 context.drawRectangle(cursorX, textRenderY - 1, cursorX+1, textRenderY+1 + 9, cursorColor);
             } else {
-                this.font.drawString(cursorX, textRenderY, "_", cursorColor, true);
+                this.font.draw(cursorX, textRenderY, "_", cursorColor, true);
             }
         }
 
 
         if (displaySelectionEnd != displaySelectionStart) {
-            float selectionBoxRenderRight = textRenderX + this.font.getStringWidth(string.substring(0, displaySelectionEnd));
+            float selectionBoxRenderRight = textRenderX + this.font.computeWidth(string.substring(0, displaySelectionEnd));
             this.drawSelectionHighlight(context, x, y, cursorX, textRenderY - 1, selectionBoxRenderRight - 1, textRenderY + 1 + 9);
         }
 
@@ -214,7 +214,7 @@ public class TextFieldWidget implements Widget {
             float mPos = mouseX;
             if (this.hasBackground) mPos -= 4;
             String string = this.getVisibleText();
-            this.setCursor(this.font.trimStringToWidth(string, mPos).length() + this.firstCharacterIndex);
+            this.setCursor(this.font.trimRight(string, mPos).length() + this.firstCharacterIndex);
         } else if(mouseButton == 1 && this.menuEnabled) {
             parent.showMenu(mouseX + this.x, mouseY + this.y, this.rightClickMenu);
         }
@@ -308,7 +308,7 @@ public class TextFieldWidget implements Widget {
             float mPos = mouseX;
             if (this.hasBackground) mPos -= 4;
             String string = this.getVisibleText();
-            this.setSelectionEnd(this.font.trimStringToWidth(string, mPos).length() + this.firstCharacterIndex);
+            this.setSelectionEnd(this.font.trimRight(string, mPos).length() + this.firstCharacterIndex);
         }
     }
 
@@ -402,7 +402,7 @@ public class TextFieldWidget implements Widget {
     }
 
     private String getVisibleText() {
-        return this.font.trimStringToWidth(this.text.substring(this.firstCharacterIndex), this.getEffectiveWidth());
+        return this.font.trimRight(this.text.substring(this.firstCharacterIndex), this.getEffectiveWidth());
     }
 
     private int getWordSkipPosition(int wordCount, int startFromPos, boolean includeSpaces) {
@@ -451,10 +451,10 @@ public class TextFieldWidget implements Widget {
         this.firstCharacterIndex = Math.min(this.firstCharacterIndex, txtLength);
 
         float effectiveWidth = this.getEffectiveWidth();
-        String displayedText = this.font.trimStringToWidth(this.text.substring(this.firstCharacterIndex), effectiveWidth);
+        String displayedText = this.font.trimRight(this.text.substring(this.firstCharacterIndex), effectiveWidth);
         int displayEndPos = displayedText.length() + this.firstCharacterIndex;
         if (this.selectionEnd == this.firstCharacterIndex) {
-            this.firstCharacterIndex -= this.font.trimStringToWidth(this.text, effectiveWidth, true).length();
+            this.firstCharacterIndex -= this.font.trimLeft(this.text, effectiveWidth).length();
         }
 
         if (this.selectionEnd > displayEndPos) {

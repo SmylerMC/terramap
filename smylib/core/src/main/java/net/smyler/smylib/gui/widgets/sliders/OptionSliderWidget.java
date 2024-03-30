@@ -35,7 +35,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
         this(0, 0, z, 0, 0, options, startOption, onCycle);
         Font font = getGameClient().defaultFont();
         float maxWidth = Arrays.stream(options)
-                .map(Object::toString).map(font::getStringWidth)
+                .map(Object::toString).map(font::computeWidth)
                 .max(Float::compareTo).orElse(0f);
         this.setWidth(maxWidth + 20);
     }

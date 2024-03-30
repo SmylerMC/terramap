@@ -1,11 +1,8 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.*;
 
 /**
@@ -18,7 +15,8 @@ public class DummyFont extends BaseFont {
     public static final float CHAR_WIDTH = 9f;
     private final float size;
 
-    public DummyFont(float size) {
+    public DummyFont(float size, float interline) {
+        super(interline);
         this.size = size;
     }
 
@@ -29,12 +27,12 @@ public class DummyFont extends BaseFont {
 
     @Override
     public Font withScale(float scale) {
-        return new DummyFont(scale);
+        return new DummyFont(scale, this.interlineFactor);
     }
 
     @Override
     public Font scaled(float scaleFactor) {
-        return new DummyFont(this.size * scaleFactor);
+        return new DummyFont(this.size * scaleFactor, this.interlineFactor);
     }
 
     @Override
@@ -43,21 +41,13 @@ public class DummyFont extends BaseFont {
     }
 
     @Override
-    public float drawString(float x, float y, String text, Color color, boolean shadow) {
+    public Font withInterlineRatio(float interline) {
+        return new DummyFont(this.size, interline);
+    }
+
+    @Override
+    public float draw(float x, float y, @NotNull String text, @NotNull Color color, boolean shadow) {
         return 0f;
-    }
-
-    @Override
-    public void drawCenteredString(float x, float y, String text, Color color, boolean shadow) {
-    }
-
-    @Override
-    public void drawSplitString(float x, float y, String text, float wrapWidth, Color color, boolean shadow) {
-    }
-
-    @Override
-    public float getStringWidth(String text) {
-        return CHAR_WIDTH * this.size * text.length();
     }
 
     @Override
@@ -66,31 +56,8 @@ public class DummyFont extends BaseFont {
     }
 
     @Override
-    public String trimStringToWidth(String text, float width) {
-        return text.substring(0, (int) clamp(width / CHAR_WIDTH / this.size, 0, text.length()));
-    }
-
-    @Override
-    public String trimStringToWidth(String text, float width, boolean reverse) {
-        if (reverse) return text.substring(text.length() - (int) clamp(width / CHAR_WIDTH / this.size, 0, text.length()));
-        else return this.trimStringToWidth(text, width);
-    }
-
-    @Override
-    public int getWordWrappedHeight(String str, float width) {
-        //TODO implement DummyFont#getWordWrappedHeight()
-        //return super.getWordWrappedHeight(str, width);
-        return 0;
-    }
-
-    @Override
     public boolean isUnicode() {
         return false;
-    }
-
-    @Override
-    public List<String> listFormattedStringToWidth(String str, float wrapWidth) {
-        return Arrays.asList(this.wrapFormattedStringToWidth(str, wrapWidth).split("\n"));
     }
 
     String wrapFormattedStringToWidth(String str, float width) {

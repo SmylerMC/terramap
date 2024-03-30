@@ -520,9 +520,9 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
             float width = this.getWidth();
-            String toDraw = parent.getFont().trimStringToWidth(WindowedContainer.this.windowTitle, this.getWidth());
+            String toDraw = parent.getFont().trimRight(WindowedContainer.this.windowTitle, this.getWidth());
             float titleY = y + (this.getHeight() - WindowedContainer.this.effectiveBorderSize - parent.getFont().height()) / 2 + 1;
-            parent.getFont().drawCenteredString(x + width / 2, titleY, toDraw, WindowedContainer.this.titleColor, true);
+            parent.getFont().drawCentered(x + width / 2, titleY, toDraw, WindowedContainer.this.titleColor, true);
         }
 
         @Override

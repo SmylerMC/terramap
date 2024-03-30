@@ -103,8 +103,8 @@ public class ScaleIndicatorWidget implements Widget {
                 lengthstr = Math.round(scale) + " " + units[j];
             }
         }
-        float strwidth = parent.getFont().getStringWidth(lengthstr);
-        parent.getFont().drawString(x + barwidth/2 - strwidth/2, barY - parent.getFont().height() - 5, lengthstr, Color.DARKER_GRAY, false);
+        float strwidth = parent.getFont().computeWidth(lengthstr);
+        parent.getFont().draw(x + barwidth/2 - strwidth/2, barY - parent.getFont().height() - 5, lengthstr, Color.DARKER_GRAY, false);
         context.drawRectangle(x, barY, x + barwidth, barY+2, Color.DARKER_GRAY);
         context.drawRectangle(x, barY-4, x+2, barY+6, Color.DARKER_GRAY);
         context.drawRectangle(x-2 + barwidth, barY-4, x + barwidth, barY+6, Color.DARKER_GRAY);

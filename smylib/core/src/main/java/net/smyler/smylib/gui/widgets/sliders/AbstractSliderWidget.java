@@ -159,7 +159,7 @@ public abstract class AbstractSliderWidget implements Widget {
             fontScale++;
         }
         Font font = game.defaultFont().withScale(1 / fontScale + 0.0001f);
-        font.drawCenteredString(x + this.width / 2, y + (this.height - font.height() + 1) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
+        font.drawCentered(x + this.width / 2, y + (this.height - font.height() + 1) / 2, this.getDisplayPrefix() + this.getDisplayString(), textColor, false);
 
     }
 

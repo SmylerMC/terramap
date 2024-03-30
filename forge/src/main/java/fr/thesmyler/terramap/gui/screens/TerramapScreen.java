@@ -7,6 +7,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
 import net.smyler.smylib.text.ImmutableText;
+import net.smyler.smylib.text.Text;
 import net.smyler.smylib.text.TextStyle;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,6 +68,7 @@ import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
+import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
@@ -667,9 +669,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             scissor.cropSection(x, y, this.width, this.height);
             context.drawRectangle(x, y, x + this.width, y + this.height, YELLOW);
             context.drawRectangle(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
-            parent.getFont().drawCenteredString(x + this.width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), YELLOW, false);
-            parent.getFont().drawString(x + 8, y + 16 + parent.getFont().height(), translator.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
-            parent.getFont().drawSplitString(x + 8, y + 24 + parent.getFont().height()*2, translator.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16, Color.WHITE, false);
+            Font font = parent.getFont();
+            font.drawCentered(x + this.width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), YELLOW, false);
+            font.draw(x + 8, y + 16 + parent.getFont().height(), translator.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
+            String[] lines = font.wrapToWidth(translator.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16);
+            font.drawLines(x + 8, y + 24 + font.height() * 2, WHITE, false, lines);
             scissor.pop();
         }
 
@@ -739,7 +743,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             context.drawRectangle(x, y + height - parent.getFont().height() - 4, x + width, y + height, Color.DARK_GRAY);
             context.drawRectangle(x, y, x + 4, y + height, Color.DARK_GRAY);
             context.drawRectangle(x + width - 4, y, x + width, y + height, Color.DARK_GRAY);
-            parent.getFont().drawCenteredString(x + width/2, y + height - parent.getFont().height() - 2, text, textColor, true);
+            parent.getFont().drawCentered(x + width/2, y + height - parent.getFont().height() - 2, text, textColor, true);
 
         }
 
