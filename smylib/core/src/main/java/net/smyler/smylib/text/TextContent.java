@@ -13,6 +13,7 @@ public interface TextContent {
 
     /**
      * Resolves this text content as a String.
+     * The result should not contain formatting characters.
      *
      * @return this text content as a string
      */

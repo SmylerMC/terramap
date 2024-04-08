@@ -55,6 +55,6 @@ public class TranslatableTextContent implements TextContent {
         Object[] with = this.with.stream()
                 .map(Text::getUnformattedText)
                 .toArray(String[]::new);
-        return translator.format(this.translationKey, with);
+        return translator.format(this.translationKey, with).replace("" + Formatting.PREFIX, "");
     }
 }

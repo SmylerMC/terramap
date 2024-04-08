@@ -18,7 +18,7 @@ public final class PlainTextContent implements TextContent {
      * @throws NullPointerException if content is <code>null</code>
      */
     public PlainTextContent(@NotNull String content) {
-        this.content = requireNonNull(content);
+        this.content = requireNonNull(content).replace("" + Formatting.PREFIX, "");
     }
 
     @Override
