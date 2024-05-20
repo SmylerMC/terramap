@@ -2,7 +2,7 @@ package net.smyler.smylib.gui.widgets.sliders;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.Sprite;
+import net.smyler.smylib.gui.sprites.Sprite;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.game.GameClient;

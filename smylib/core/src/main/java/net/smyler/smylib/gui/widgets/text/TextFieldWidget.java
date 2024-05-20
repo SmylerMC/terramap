@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.*;
+import net.smyler.smylib.gui.sprites.Sprite;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.game.Key;

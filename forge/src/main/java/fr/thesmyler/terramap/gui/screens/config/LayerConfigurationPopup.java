@@ -5,12 +5,12 @@ import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.GameClient;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 
-import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.CROSS;
+import static fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites.CROSS;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -19,7 +19,7 @@ import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 public class LayerConfigurationPopup extends PopupScreen {
 
     private final TextWidget titleText;
-    private final TexturedButtonWidget closeButton;
+    private final SpriteButtonWidget closeButton;
     private final ScrollableWidgetContainer scroll;
     private final FlexibleWidgetContainer container;
 
@@ -33,7 +33,7 @@ public class LayerConfigurationPopup extends PopupScreen {
         this.titleText = new TextWidget(0,
                 ofPlainText(layer.description()),
                 TextAlignment.CENTER, getGameClient().defaultFont());
-        this.closeButton = new TexturedButtonWidget(0, CROSS, this::close);
+        this.closeButton = new SpriteButtonWidget(0, CROSS, this::close);
         this.scroll = new ScrollableWidgetContainer(1f, 1f, 0,
                 container.getWidth() - 2f, container.getHeight() - 2f,
                 container);

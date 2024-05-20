@@ -2,7 +2,7 @@ package net.smyler.smylib.game;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
-import net.smyler.smylib.gui.SpriteLibrary;
+import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;

@@ -6,6 +6,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smyler.smylib.gui.*;
+import net.smyler.smylib.gui.sprites.SpriteLibrary;
 
 import java.nio.file.Path;
 

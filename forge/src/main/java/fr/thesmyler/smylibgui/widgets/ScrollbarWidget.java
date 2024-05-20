@@ -3,8 +3,8 @@ package fr.thesmyler.smylibgui.widgets;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
@@ -22,8 +22,8 @@ public class ScrollbarWidget extends WidgetContainer {
     
     private float x, y, length;
 
-    private TexturedButtonWidget backwardButton;
-    private TexturedButtonWidget forwardButton;
+    private SpriteButtonWidget backwardButton;
+    private SpriteButtonWidget forwardButton;
     private final Draggable drag = new Draggable();
     private float progress = 0f;
     private float targetProgress;
@@ -258,13 +258,13 @@ public class ScrollbarWidget extends WidgetContainer {
             }
 
             @Override
-            TexturedButtonWidget newBackwardButton(float length) {
-                return new TexturedButtonWidget(0f, 0f, 1, IncludedTexturedButtons.LEFT);
+            SpriteButtonWidget newBackwardButton(float length) {
+                return new SpriteButtonWidget(0f, 0f, 1, ButtonSprites.LEFT);
             }
 
             @Override
-            TexturedButtonWidget newForwardButton(float length) {
-                return new TexturedButtonWidget(length - 15f, 0f, 1, IncludedTexturedButtons.RIGHT);
+            SpriteButtonWidget newForwardButton(float length) {
+                return new SpriteButtonWidget(length - 15f, 0f, 1, ButtonSprites.RIGHT);
             }
 
             @Override
@@ -309,13 +309,13 @@ public class ScrollbarWidget extends WidgetContainer {
             }
 
             @Override
-            TexturedButtonWidget newBackwardButton(float length) {
-                return new TexturedButtonWidget(0f, 0f, 1, IncludedTexturedButtons.UP);
+            SpriteButtonWidget newBackwardButton(float length) {
+                return new SpriteButtonWidget(0f, 0f, 1, ButtonSprites.UP);
             }
 
             @Override
-            TexturedButtonWidget newForwardButton(float length) {
-                return new TexturedButtonWidget(0f, length - 15f, 1, IncludedTexturedButtons.DOWN);
+            SpriteButtonWidget newForwardButton(float length) {
+                return new SpriteButtonWidget(0f, length - 15f, 1, ButtonSprites.DOWN);
             }
 
             @Override
@@ -352,9 +352,9 @@ public class ScrollbarWidget extends WidgetContainer {
         
         abstract float height(float length);
         
-        abstract TexturedButtonWidget newBackwardButton(float length);
+        abstract SpriteButtonWidget newBackwardButton(float length);
         
-        abstract TexturedButtonWidget newForwardButton(float length);
+        abstract SpriteButtonWidget newForwardButton(float length);
         
         abstract float dragX(float length, float progress, float viewPort);
         

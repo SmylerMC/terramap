@@ -7,7 +7,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
 import net.smyler.smylib.text.ImmutableText;
-import net.smyler.smylib.text.Text;
 import net.smyler.smylib.text.TextStyle;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,8 +41,8 @@ import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import net.smyler.smylib.gui.widgets.WarningWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.AbstractButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
@@ -85,18 +84,18 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     // Main map area widgets
     private final MapWidget map;
-    private final TexturedButtonWidget closeButton = new TexturedButtonWidget(50, IncludedTexturedButtons.CROSS);
-    private final TexturedButtonWidget zoomInButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PLUS);
-    private final TexturedButtonWidget zoomOutButton = new TexturedButtonWidget(50, IncludedTexturedButtons.MINUS);
-    private final TexturedButtonWidget centerButton = new TexturedButtonWidget(50, IncludedTexturedButtons.CENTER);
-    private final TexturedButtonWidget styleButton = new TexturedButtonWidget(50, IncludedTexturedButtons.PAPER);
+    private final SpriteButtonWidget closeButton = new SpriteButtonWidget(50, ButtonSprites.CROSS);
+    private final SpriteButtonWidget zoomInButton = new SpriteButtonWidget(50, ButtonSprites.PLUS);
+    private final SpriteButtonWidget zoomOutButton = new SpriteButtonWidget(50, ButtonSprites.MINUS);
+    private final SpriteButtonWidget centerButton = new SpriteButtonWidget(50, ButtonSprites.CENTER);
+    private final SpriteButtonWidget styleButton = new SpriteButtonWidget(50, ButtonSprites.PAPER);
     private final CircularCompassWidget compass = new CircularCompassWidget(100, 100, 50, 100);
     private final WarningWidget offsetWarning = new WarningWidget(0, 0, 50);
 
     // Info panel widgets
     private TextWidget zoomText;
     private final SlidingPanelWidget infoPanel = new SlidingPanelWidget(70, 200);
-    private TexturedButtonWidget panelButton = new TexturedButtonWidget(230, 5, 10, IncludedTexturedButtons.RIGHT, this::toggleInfoPanel);
+    private SpriteButtonWidget panelButton = new SpriteButtonWidget(230, 5, 10, ButtonSprites.RIGHT, this::toggleInfoPanel);
     private TextWidget distortionText;
     private TextWidget debugText;
     private TextWidget playerGeoLocationText;
@@ -205,12 +204,12 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-this.infoPanel.getWidth() + 25).setClosedY(0);
         this.panelButton.setTooltip(translator.format("terramap.terramapscreen.buttons.info.tooltip"));
         this.infoPanel.addWidget(this.panelButton);
-        TexturedButtonWidget openConfigButton = new TexturedButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, IncludedTexturedButtons.WRENCH, this::openConfig);
+        SpriteButtonWidget openConfigButton = new SpriteButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, ButtonSprites.WRENCH, this::openConfig);
         openConfigButton.setTooltip(translator.format("terramap.terramapscreen.buttons.config.tooltip"));
         this.infoPanel.addWidget(openConfigButton);
-        TexturedButtonWidget openLayerListButton = new TexturedButtonWidget(
+        SpriteButtonWidget openLayerListButton = new SpriteButtonWidget(
                 openConfigButton.getX(), openConfigButton.getY() + openConfigButton.getHeight() + 3, 100,
-                IncludedTexturedButtons.PAPER, () -> {
+                ButtonSprites.PAPER, () -> {
                     if(this.layerPanel.getTarget() == PanelTarget.CLOSED) {
                         this.layerPanel.open();
                         if(this.infoPanel.getTarget() == PanelTarget.CLOSED) this.toggleInfoPanel();
@@ -247,7 +246,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.searchBox.setText(translator.format("terramap.terramapscreen.search.wip")).disable();
         this.searchBox.setOnPressEnterCallback(this::search);
         this.infoPanel.addWidget(this.searchBox);
-        TexturedButtonWidget searchButton = new TexturedButtonWidget(50, IncludedTexturedButtons.SEARCH);
+        SpriteButtonWidget searchButton = new SpriteButtonWidget(50, ButtonSprites.SEARCH);
         searchButton.setX(this.searchBox.getX() + this.searchBox.getWidth() + 2).setY(this.searchBox.getY() - 1);
         searchButton.setOnClick(() -> this.search(this.searchBox.getText()));
         //searchButton.enable();
@@ -267,9 +266,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 this.layerPanel.getWidth() / 2, 7, 1,
                 ofTranslation("terramap.terramapscreen.layerscreen.title"), TextAlignment.CENTER,
                 content.getFont()));
-        this.layerPanel.addWidget(new TexturedButtonWidget(
+        this.layerPanel.addWidget(new SpriteButtonWidget(
                 this.layerPanel.getWidth() - 20, 5, 1,
-                IncludedTexturedButtons.CROSS, this.layerPanel::close));
+                ButtonSprites.CROSS, this.layerPanel::close));
         this.layerList.setPosition(5f, 25f);
         this.layerList.setSize(this.layerPanel.getWidth() - 10, this.layerPanel.getHeight() - 55f);
         this.layerList.setContourColor(Color.DARK_OVERLAY).setContourSize(1f);
@@ -337,7 +336,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             float x = this.panelButton.getX();
             float y = this.panelButton.getY();
             int z = this.panelButton.getZ();
-            TexturedButtonWidget newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPanel);
+            SpriteButtonWidget newButton = new SpriteButtonWidget(x, y, z, ButtonSprites.LEFT, this::toggleInfoPanel);
             newButton.setTooltip(this.panelButton.getTooltipText());
             this.infoPanel.removeWidget(this.panelButton);
             this.panelButton = newButton;
@@ -484,14 +483,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         float x = this.panelButton.getX();
         float y = this.panelButton.getY();
         int z = this.panelButton.getZ();
-        TexturedButtonWidget newButton;
+        SpriteButtonWidget newButton;
         if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
             this.infoPanel.close();
             if(this.layerPanel.getTarget() == PanelTarget.OPENED) this.layerPanel.close();
-            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.RIGHT, this::toggleInfoPanel);
+            newButton = new SpriteButtonWidget(x, y, z, ButtonSprites.RIGHT, this::toggleInfoPanel);
         } else {
             this.infoPanel.open();
-            newButton = new TexturedButtonWidget(x, y, z, IncludedTexturedButtons.LEFT, this::toggleInfoPanel);
+            newButton = new SpriteButtonWidget(x, y, z, ButtonSprites.LEFT, this::toggleInfoPanel);
         }
         newButton.setTooltip(this.panelButton.getTooltipText());
         this.infoPanel.removeWidget(this.panelButton);

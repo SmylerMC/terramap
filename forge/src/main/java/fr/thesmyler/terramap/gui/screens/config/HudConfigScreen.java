@@ -11,8 +11,8 @@ import fr.thesmyler.smylibgui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.Screen;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.IntegerSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
@@ -173,9 +173,9 @@ public class HudConfigScreen extends Screen {
                         this::saveAndClose)
                         .setTooltip(translator.format("terramap.config.save.tooltip")));
         this.buttonPanel.addWidget(
-                new TexturedButtonWidget(
+                new SpriteButtonWidget(
                         168, 3, 10,
-                        IncludedTexturedButtons.OPTIONS_20,
+                        ButtonSprites.BURGER_20,
                         this::toggleSettingsPanel)
                         .setTooltip(translator.format("terramap.config.options.tooltip")));
 

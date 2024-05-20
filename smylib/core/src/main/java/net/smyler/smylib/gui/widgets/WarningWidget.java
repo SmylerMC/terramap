@@ -1,7 +1,7 @@
 package net.smyler.smylib.gui.widgets;
 
 import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.Sprite;
+import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.DrawContext;
 

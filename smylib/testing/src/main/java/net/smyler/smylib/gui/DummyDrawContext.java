@@ -1,6 +1,7 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.sprites.Sprite;
 
 public class DummyDrawContext implements DrawContext {
 

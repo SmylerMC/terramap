@@ -7,7 +7,7 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
@@ -21,7 +21,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
-import static fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons.*;
+import static fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites.*;
 import static java.util.Comparator.comparing;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
@@ -141,13 +141,13 @@ class LayerListContainer extends FlexibleWidgetContainer {
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
-            TexturedButtonWidget settingsButton = new TexturedButtonWidget(this.getWidth() - 18, 3, 0, WRENCH);
+            SpriteButtonWidget settingsButton = new SpriteButtonWidget(this.getWidth() - 18, 3, 0, WRENCH);
             if (layer.isConfigurable()) {
                 settingsButton.setOnClick(() -> new LayerConfigurationPopup(layer).show());
                 settingsButton.enable();
             }
             this.addWidget(settingsButton);
-            TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 37, 3, 0,
+            SpriteButtonWidget offsetButton = new SpriteButtonWidget(this.getWidth() - 37, 3, 0,
                     layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
                     () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(layer).show())
             );
@@ -167,8 +167,8 @@ class LayerListContainer extends FlexibleWidgetContainer {
         final MapLayer layer;
         final FloatSliderWidget alphaSlider;
 
-        private final TexturedButtonWidget nextButton = new TexturedButtonWidget(this.getWidth() - 18, 19, 0, DOWN, this::moveDown);
-        private final TexturedButtonWidget previousButton = new TexturedButtonWidget(this.getWidth() - 18, 3, 0, UP, this::moveUp);
+        private final SpriteButtonWidget nextButton = new SpriteButtonWidget(this.getWidth() - 18, 19, 0, DOWN, this::moveDown);
+        private final SpriteButtonWidget previousButton = new SpriteButtonWidget(this.getWidth() - 18, 3, 0, UP, this::moveUp);
 
         public GenericLayerEntry(float y, MapLayer layer) {
             super(layer, y, 20);
@@ -178,17 +178,17 @@ class LayerListContainer extends FlexibleWidgetContainer {
             type.setBaseColor(Color.MEDIUM_GRAY);
             this.addWidget(name);
             this.addWidget(type);
-            TexturedButtonWidget remove = new TexturedButtonWidget(this.getWidth() - 38, 3, 0, TRASH, this::remove);
+            SpriteButtonWidget remove = new SpriteButtonWidget(this.getWidth() - 38, 3, 0, TRASH, this::remove);
             this.addWidget(this.previousButton);
             this.addWidget(this.nextButton);
             this.addWidget(remove.setEnabled(layer.isUserLayer()));
-            TexturedButtonWidget settingsButton = new TexturedButtonWidget(this.getWidth() - 54, 3, 0, WRENCH);
+            SpriteButtonWidget settingsButton = new SpriteButtonWidget(this.getWidth() - 54, 3, 0, WRENCH);
             if (layer.isConfigurable()) {
                 settingsButton.setOnClick(() -> new LayerConfigurationPopup(layer).show());
                 settingsButton.enable();
             }
             this.addWidget(settingsButton);
-            TexturedButtonWidget offsetButton = new TexturedButtonWidget(this.getWidth() - 70, 3, 0,
+            SpriteButtonWidget offsetButton = new SpriteButtonWidget(this.getWidth() - 70, 3, 0,
                 layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
                 () -> {
                     MapLayer lowestLayer = LayerListContainer.this.map.getLayers().stream().min(comparing(MapLayer::getZ)).orElse(layer);

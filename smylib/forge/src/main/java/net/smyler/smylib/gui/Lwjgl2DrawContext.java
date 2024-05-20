@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.sprites.Sprite;
 import org.lwjgl.opengl.GL11;
 
 import static net.smyler.smylib.Preconditions.checkArgument;

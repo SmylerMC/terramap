@@ -11,8 +11,8 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.OptionButtonWidget;
 import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.IntegerSliderWidget;
@@ -49,8 +49,8 @@ public class TestScreen extends Screen {
     private WidgetContainer[] subScreens;
     private int currentSubScreen = 0;
 
-    private final TexturedButtonWidget previous;
-    private final TexturedButtonWidget next;
+    private final SpriteButtonWidget previous;
+    private final SpriteButtonWidget next;
 
     private final Gson textJsonParser = new GsonBuilder().registerTypeAdapter(Text.class, new TextJsonAdapter()).create();;
 
@@ -59,8 +59,8 @@ public class TestScreen extends Screen {
         this.parent = parent;
         this.animation = new Animation(5000); // We will use an animation to set the color of one of the displayed strings
         this.animation.start(AnimationState.CONTINUOUS_ENTER);
-        this.next = new TexturedButtonWidget(10, IncludedTexturedButtons.RIGHT, this::nextPage);
-        this.previous = new TexturedButtonWidget(10, IncludedTexturedButtons.LEFT, this::previousPage);
+        this.next = new SpriteButtonWidget(10, ButtonSprites.RIGHT, this::nextPage);
+        this.previous = new SpriteButtonWidget(10, ButtonSprites.LEFT, this::previousPage);
 
         this.fpsCounter = new TextWidget(10, ofPlainText("FPS: 0"), getGameClient().defaultFont());
         this.focus = new TextWidget(10, ofPlainText("Focused: null"), getGameClient().defaultFont());
@@ -87,7 +87,7 @@ public class TestScreen extends Screen {
 
         TextWidget title = new TextWidget(this.width / 2f, 20, 10, ofPlainText("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
         content.addWidget(title);
-        content.addWidget(new TexturedButtonWidget(this.width - 20, 5, 10, IncludedTexturedButtons.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
+        content.addWidget(new SpriteButtonWidget(this.width - 20, 5, 10, ButtonSprites.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
         content.addWidget(next.setX(this.width - 20).setY(this.height - 20));
         content.addWidget(previous.setX(5).setY(this.height - 20));
         content.addWidget(
@@ -124,14 +124,14 @@ public class TestScreen extends Screen {
                 }
                 );
         buttonScreen.addWidget(testButton);
-        buttonScreen.addWidget(new TexturedButtonWidget(0, 30, 1, IncludedTexturedButtons.BLANK_15, null));
-        buttonScreen.addWidget(new TexturedButtonWidget(30, 30, 1, IncludedTexturedButtons.CROSS, null));
-        buttonScreen.addWidget(new TexturedButtonWidget(30, 30, 1, IncludedTexturedButtons.PLUS, null));
-        buttonScreen.addWidget(new TexturedButtonWidget(60, 30, 1, IncludedTexturedButtons.MINUS, null));
-        buttonScreen.addWidget(new TexturedButtonWidget(90, 30, 1, IncludedTexturedButtons.LEFT, null));
-        buttonScreen.addWidget(new TexturedButtonWidget(120, 30, 1, IncludedTexturedButtons.UP, null));
-        buttonScreen.addWidget(new TexturedButtonWidget(150, 30, 1, IncludedTexturedButtons.DOWN, null));
-        buttonScreen.addWidget(new TexturedButtonWidget(180, 30, 1, IncludedTexturedButtons.RIGHT, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(0, 30, 1, ButtonSprites.BLANK_15, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(30, 30, 1, ButtonSprites.CROSS, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(30, 30, 1, ButtonSprites.PLUS, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(60, 30, 1, ButtonSprites.MINUS, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(90, 30, 1, ButtonSprites.LEFT, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(120, 30, 1, ButtonSprites.UP, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(150, 30, 1, ButtonSprites.DOWN, null));
+        buttonScreen.addWidget(new SpriteButtonWidget(180, 30, 1, ButtonSprites.RIGHT, null));
         ToggleButtonWidget tb1 = new ToggleButtonWidget(0, 60, 1, true);
         buttonScreen.addWidget(tb1);
         buttonScreen.addWidget(new ToggleButtonWidget(30, 60, 1, true, tb1::setEnabled));

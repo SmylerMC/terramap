@@ -1,6 +1,8 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.smylib.gui.sprites.SpriteLibrary;
 
 public class LegacyVanillaSprites extends SpriteLibrary {
 

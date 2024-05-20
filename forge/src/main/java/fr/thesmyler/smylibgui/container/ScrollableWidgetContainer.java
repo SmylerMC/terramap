@@ -5,8 +5,8 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.TexturedButtonWidget.IncludedTexturedButtons;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
+import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 
@@ -23,7 +23,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
     private final FlexibleWidgetContainer content;
     private final ScrollbarWidget verticalScrollbar = new ScrollbarWidget(Integer.MAX_VALUE, ScrollbarOrientation.VERTICAL);
     private final ScrollbarWidget horizontalScrollbar = new ScrollbarWidget(Integer.MAX_VALUE, ScrollbarOrientation.HORIZONTAL);
-    private final TexturedButtonWidget button = new TexturedButtonWidget(Integer.MAX_VALUE, IncludedTexturedButtons.BLANK_15);
+    private final SpriteButtonWidget button = new SpriteButtonWidget(Integer.MAX_VALUE, ButtonSprites.BLANK_15);
 
     private boolean verticalWasVisibleLastUpdate = false;
     private boolean horizontalWasVisibleLastUpdate = false;

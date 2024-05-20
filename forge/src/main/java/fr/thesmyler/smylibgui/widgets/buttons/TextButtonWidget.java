@@ -1,8 +1,8 @@
 package fr.thesmyler.smylibgui.widgets.buttons;
 
 import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.Sprite;
-import net.smyler.smylib.gui.SpriteLibrary;
+import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.DrawContext;
