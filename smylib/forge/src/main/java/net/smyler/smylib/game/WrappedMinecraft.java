@@ -5,10 +5,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.Font;
-import net.smyler.smylib.gui.Lwjgl2DrawContext;
-import net.smyler.smylib.gui.ReflectedFontRenderer;
+import net.smyler.smylib.gui.*;
 
 import java.nio.file.Path;
 
@@ -27,6 +24,7 @@ public class WrappedMinecraft implements GameClient {
     private final Translator translator = new I18nTranslator();
     private final Font font = new ReflectedFontRenderer(1f, 0.5f);
     private final DrawContext drawContext = new Lwjgl2DrawContext();
+    private final SpriteLibrary sprites = new LegacyVanillaSprites();
 
     @Override
     public float windowWidth() {
@@ -107,6 +105,11 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public DrawContext guiDrawContext() {
         return this.drawContext;
+    }
+
+    @Override
+    public SpriteLibrary sprites() {
+        return this.sprites;
     }
 
     @Override

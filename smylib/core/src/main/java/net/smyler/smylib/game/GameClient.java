@@ -2,6 +2,7 @@ package net.smyler.smylib.game;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.gui.SpriteLibrary;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -77,6 +78,15 @@ public interface GameClient {
     }
 
     DrawContext guiDrawContext();
+
+    /**
+     * Get the sprites for this client.
+     * This offers an abstraction over the vanilla texture and sprite systems,
+     * which have changed from one version to another.
+     *
+     * @return the known vanilla sprites from this client
+     */
+    SpriteLibrary sprites();
 
     boolean isGlAvailabale();
 
