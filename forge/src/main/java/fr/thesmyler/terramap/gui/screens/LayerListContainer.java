@@ -7,8 +7,8 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
@@ -21,7 +21,9 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
-import static fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites.*;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
+import static net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites.*;
 import static java.util.Comparator.comparing;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
@@ -200,13 +202,10 @@ class LayerListContainer extends FlexibleWidgetContainer {
             ));
             this.addWidget(offsetButton);
             this.addWidget(new ToggleButtonWidget(
-                    this.getWidth() - 86f, 3f, 0, 15f, 15f,
-                    100, 164, // On enabled
-                    100, 179, // Off enabled
-                    100, 224, // On disabled
-                    100, 239, // Off disabled
-                    100, 194, // On focused
-                    100, 209, // Off focused
+                    this.getWidth() - 86f, 3f, 0,
+                    BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
+                    BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
+                    BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
                     layer.isVisible(),
                     this::toggleVisibility
             ));

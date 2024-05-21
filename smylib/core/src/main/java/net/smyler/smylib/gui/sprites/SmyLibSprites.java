@@ -104,16 +104,15 @@ public enum SmyLibSprites {
 
     // === 26x16 ===
 
-    BUTTON_TOGGLE_ON("button_toggle_on", 30d, 2d, 28d, 16d),
-    BUTTON_TOGGLE_OFF("button_toggle_off", 2d, 2d, 28d, 16d),
-    BUTTON_TOGGLE_ON_DISABLED("button_toggle_on_disabled", 30d, 20d, 28d, 36d),
-    BUTTON_TOGGLE_OFF_DISABLED("button_toggle_off_disabled", 2d, 20d, 28d, 36d),
-    BUTTON_TOGGLE_ON_HIGHLIGHTED("button_toggle_on_highlighted", 30d, 38d, 28d, 54d),
-    BUTTON_TOGGLE_OFF_HIGHLIGHTED("button_toggle_off_highlighted", 2d, 38d, 28d, 54d);
+    BUTTON_TOGGLE_ON("button_toggle_on", 30d, 2d, 56d, 18d),
+    BUTTON_TOGGLE_OFF("button_toggle_off", 2d, 2d, 28d, 18d),
+    BUTTON_TOGGLE_ON_DISABLED("button_toggle_on_disabled", 30d, 38d, 56d, 54d),
+    BUTTON_TOGGLE_OFF_DISABLED("button_toggle_off_disabled", 2d, 38d, 28d, 54d),
+    BUTTON_TOGGLE_ON_HIGHLIGHTED("button_toggle_on_highlighted", 30d, 20d, 56d, 36d),
+    BUTTON_TOGGLE_OFF_HIGHLIGHTED("button_toggle_off_highlighted", 2d, 20d, 28d, 36d);
 
     public final Identifier identifier;
     public final Sprite sprite;
-
 
     SmyLibSprites(String name, double xLeft, double yTop, double xRight, double yBottom) {
         this.identifier = new Identifier("smylib", name);

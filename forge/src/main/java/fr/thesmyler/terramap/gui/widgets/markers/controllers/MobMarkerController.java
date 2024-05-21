@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
@@ -13,14 +13,17 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
+
 public class MobMarkerController extends MarkerController<MobMarker> {
 
     public static final String ID = "mobs";
 
     protected final ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-            102, 108, 102, 122,
-            102, 108, 102, 122,
-            102, 136, 102, 150,
+            BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
+            BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
+            BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
             this.isVisible(), null);
 
     public MobMarkerController() {

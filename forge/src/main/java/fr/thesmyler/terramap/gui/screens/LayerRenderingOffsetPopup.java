@@ -8,7 +8,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
-import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;

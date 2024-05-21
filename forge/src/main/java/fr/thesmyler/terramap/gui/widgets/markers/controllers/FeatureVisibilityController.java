@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 
 public interface FeatureVisibilityController {
 

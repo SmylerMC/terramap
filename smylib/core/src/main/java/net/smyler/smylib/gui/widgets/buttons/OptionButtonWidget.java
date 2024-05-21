@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.widgets.buttons;
+package net.smyler.smylib.gui.widgets.buttons;
 
 import java.util.Arrays;
 import java.util.function.Consumer;

@@ -1,10 +1,10 @@
-package fr.thesmyler.smylibgui.widgets.buttons;
+package net.smyler.smylib.gui.widgets.buttons;
 
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

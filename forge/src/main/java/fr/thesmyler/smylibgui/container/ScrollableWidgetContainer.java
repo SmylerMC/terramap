@@ -5,8 +5,8 @@ import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget;
 import fr.thesmyler.smylibgui.widgets.ScrollbarWidget.ScrollbarOrientation;
-import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
+import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 

@@ -3,8 +3,8 @@ package fr.thesmyler.smylibgui.widgets;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget;
-import fr.thesmyler.smylibgui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
+import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.Preconditions.checkArgument;

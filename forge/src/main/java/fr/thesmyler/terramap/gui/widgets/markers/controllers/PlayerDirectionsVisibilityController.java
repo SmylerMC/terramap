@@ -1,8 +1,10 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
 
 
 public class PlayerDirectionsVisibilityController implements FeatureVisibilityController {
@@ -17,9 +19,9 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
         this.main = main;
         this.other = other;
         this.button = new ToggleButtonWidget(10, 14, 14,
-                158, 108, 158, 122,
-                158, 108, 158, 122,
-                158, 136, 158, 150,
+                BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
+                BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
+                BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
                 this.main.doesShowDirection(),
                 b -> {
                     this.main.setShowDirection(b);

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
@@ -14,15 +14,17 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
 
 public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
     public static final String ID = "creatures";
 
     protected final ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-            116, 108, 116, 122,
-            116, 108, 116, 122,
-            116, 136, 116, 150,
+            BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
+            BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
+            BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
             this.isVisible(), null);
 
     public AnimalMarkerController() {

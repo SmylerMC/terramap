@@ -4,7 +4,7 @@ import net.smyler.smylib.game.Key;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import net.minecraft.client.Minecraft;

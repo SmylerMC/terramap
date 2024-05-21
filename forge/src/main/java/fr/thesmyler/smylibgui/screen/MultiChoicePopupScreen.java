@@ -5,7 +5,7 @@ import java.util.Map;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.widgets.buttons.TextButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 

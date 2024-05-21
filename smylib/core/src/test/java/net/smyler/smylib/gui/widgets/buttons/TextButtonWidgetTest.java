@@ -1,7 +1,8 @@
-package fr.thesmyler.smylibgui.widgets.buttons;
+package net.smyler.smylib.gui.widgets.buttons;
 
-import net.smyler.smylib.gui.TestingWidgetContainer;
+
 import net.smyler.smylib.SmyLibTest;
+import net.smyler.smylib.gui.TestingWidgetContainer;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;

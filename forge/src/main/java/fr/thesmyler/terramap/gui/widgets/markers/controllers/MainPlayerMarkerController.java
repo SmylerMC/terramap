@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import fr.thesmyler.smylibgui.widgets.buttons.ToggleButtonWidget;
+import net.smyler.smylib.gui.sprites.SmyLibSprites;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
@@ -10,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 
 public class MainPlayerMarkerController extends AbstractPlayerMarkerController<MainPlayerMarker> {
 
@@ -17,9 +19,9 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
 
     public MainPlayerMarkerController() {
         super(ID, 900, MainPlayerMarker.class, new ToggleButtonWidget(10, 14, 14,
-                74, 108, 74, 122,
-                74, 108, 74, 122,
-                74, 136, 74, 150,
+                BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
+                BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
+                BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
                 false, null));
         this.button.setTooltip(getGameClient().translator().format("terramap.terramapscreen.markercontrollers.buttons.mainplayer"));
     }

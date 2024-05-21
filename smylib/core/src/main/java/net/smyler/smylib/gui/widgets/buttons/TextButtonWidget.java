@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.widgets.buttons;
+package net.smyler.smylib.gui.widgets.buttons;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.sprites.Sprite;
