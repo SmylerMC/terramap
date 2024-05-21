@@ -4,6 +4,11 @@ import net.smyler.smylib.Identifier;
 
 public enum SmyLibSprites {
 
+    // === 14x14 ===
+
+    MAGNIFYING_GLASS_14("magnifying_glass_14", 1d, 54d, 15d, 68d),
+    WARNING_14("warning_14", 15d, 54d, 29d, 68d),
+
     // === 15x15 ===
 
     BUTTON_BLANK_15("button_blank_15", 60d, 0d, 75d, 15d),
@@ -70,6 +75,13 @@ public enum SmyLibSprites {
     BUTTON_OFFSET_WARNING_15_DISABLED("button_offset_warning_15_disabled", 211d, 75d, 226d, 90d),
     BUTTON_OFFSET_WARNING_15_HIGHLIGHTED("button_offset_warning_15_highlighted", 211d, 60d, 226d, 75d),
 
+    BUTTON_VISIBILITY_ON_15("button_visibility_on_15", 100d, 164d, 115d, 179d),
+    BUTTON_VISIBILITY_OFF_15("button_visibility_off_15", 100d, 179d, 115d, 194d),
+    BUTTON_VISIBILITY_ON_15_DISABLED("button_visibility_on_15_disabled", 100d, 164d, 115d, 179d),
+    BUTTON_VISIBILITY_OFF_15_DISABLED("button_visibility_off_15_disabled", 100d, 224d, 115d, 239d),
+    BUTTON_VISIBILITY_ON_15_HIGHLIGHTED("button_visibility_on_15_highlighted", 100d, 194d, 115d, 209d),
+    BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED("button_visibility_off_15_highlighted", 100d, 209d, 115d, 224d),
+
     // === 20x20 ===
 
     BUTTON_BLANK_20("button_blank_20", 60d, 164d, 80d, 184d),
@@ -88,7 +100,16 @@ public enum SmyLibSprites {
 
     BUTTON_SEARCH_21("button_search_21", 81d, 45d, 102d, 66d),
     BUTTON_SEARCH_21_DISABLED("button_search_21_disabled", 81d, 87d, 102d, 108d),
-    BUTTON_SEARCH_21_HIGHLIGHTED("button_search_21_highlighted", 81d, 66d, 102d, 87d);
+    BUTTON_SEARCH_21_HIGHLIGHTED("button_search_21_highlighted", 81d, 66d, 102d, 87d),
+
+    // === 26x16 ===
+
+    BUTTON_TOGGLE_ON("button_toggle_on", 30d, 2d, 28d, 16d),
+    BUTTON_TOGGLE_OFF("button_toggle_off", 2d, 2d, 28d, 16d),
+    BUTTON_TOGGLE_ON_DISABLED("button_toggle_on_disabled", 30d, 20d, 28d, 36d),
+    BUTTON_TOGGLE_OFF_DISABLED("button_toggle_off_disabled", 2d, 20d, 28d, 36d),
+    BUTTON_TOGGLE_ON_HIGHLIGHTED("button_toggle_on_highlighted", 30d, 38d, 28d, 54d),
+    BUTTON_TOGGLE_OFF_HIGHLIGHTED("button_toggle_off_highlighted", 2d, 38d, 28d, 54d);
 
     public final Identifier identifier;
     public final Sprite sprite;
