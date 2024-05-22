@@ -46,4 +46,8 @@ public class SpriteLibrary {
         return this.registered.get(requireNonNull(identifier));
     }
 
+    public Sprite getSprite(@NotNull String identifier) {
+        return this.registered.get(Identifier.parse(identifier));
+    }
+
 }

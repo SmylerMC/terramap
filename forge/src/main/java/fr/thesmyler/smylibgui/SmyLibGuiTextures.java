@@ -1,10 +1,7 @@
 package fr.thesmyler.smylibgui;
 
 import fr.thesmyler.terramap.TerramapMod;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public final class SmyLibGuiTextures {
 

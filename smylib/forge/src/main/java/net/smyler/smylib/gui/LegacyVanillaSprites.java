@@ -18,6 +18,8 @@ public class LegacyVanillaSprites extends SpriteLibrary {
         this.registerVanillaButton("minecraft:unlocked_button", 20d, 146d, 40d, 166d);
         this.registerVanillaButton("minecraft:unlocked_button_disabled", 20d, 186d, 40d, 206d);
         this.registerVanillaButton("minecraft:unlocked_button_highlighted", 20d, 166d, 40d, 186d);
+        this.registerVanillaButton("minecraft:slider", 0d, 46d, 200d, 66d);
+        this.registerVanillaButton("minecraft:slider_handle", 0d, 66d, 200d, 86d);
     }
 
     private void registerVanillaButton(String identifier, double xLeft, double yTop, double xRight, double yBottom) {

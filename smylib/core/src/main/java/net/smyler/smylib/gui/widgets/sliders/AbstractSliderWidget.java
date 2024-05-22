@@ -1,6 +1,5 @@
 package net.smyler.smylib.gui.widgets.sliders;
 
-import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.jetbrains.annotations.Nullable;
@@ -27,9 +26,8 @@ import static net.smyler.smylib.math.Math.saturate;
  */
 public abstract class AbstractSliderWidget implements Widget {
 
-    private static final Identifier TEXTURE = new Identifier("minecraft", "textures/gui/widgets.png");
-    private static final Sprite BACKGROUND = new Sprite(TEXTURE, 256d, 256d, 0d, 46d, 200d, 66d);
-    private static final Sprite SLIDER = new Sprite(TEXTURE, 256d, 256d, 0d, 66d, 200d, 86d);
+    private static final Sprite SLIDER = getGameClient().sprites().getSprite("minecraft:slider");
+    private static final Sprite SLIDER_HANDLE = getGameClient().sprites().getSprite("minecraft:slider_handle");
 
     protected float x, y, width, height;
     private final int z;
@@ -121,28 +119,28 @@ public abstract class AbstractSliderWidget implements Widget {
 
         double leftWidth = this.width / 2;
         double splitHeight = min(10, this.height / 2);
-        double xCrop = BACKGROUND.width() - this.width / 2d;
-        double yCrop = BACKGROUND.height() - min(10d, this.height / 2);
-        context.drawSpriteCropped(x, y, BACKGROUND, 0d, 0d, xCrop, yCrop);
-        context.drawSpriteCropped(x + leftWidth, y, BACKGROUND, xCrop, 0, 0, yCrop);
+        double xCrop = SLIDER.width() - this.width / 2d;
+        double yCrop = SLIDER.height() - min(10d, this.height / 2);
+        context.drawSpriteCropped(x, y, SLIDER, 0d, 0d, xCrop, yCrop);
+        context.drawSpriteCropped(x + leftWidth, y, SLIDER, xCrop, 0, 0, yCrop);
         for(int i=0; i*18 < this.height - 20; i++) {
-            context.drawSpriteCropped(x, y + splitHeight + 16d * i, BACKGROUND, 0d, 2d, xCrop, 2d);
-            context.drawSpriteCropped(x + leftWidth, y + splitHeight + 16d * i, BACKGROUND, xCrop, 2d, 0d, 2d);
+            context.drawSpriteCropped(x, y + splitHeight + 16d * i, SLIDER, 0d, 2d, xCrop, 2d);
+            context.drawSpriteCropped(x + leftWidth, y + splitHeight + 16d * i, SLIDER, xCrop, 2d, 0d, 2d);
         }
-        context.drawSpriteCropped(x, y + this.height - splitHeight, BACKGROUND, 0, yCrop, xCrop, 0);
-        context.drawSpriteCropped(x + leftWidth, y + this.height - splitHeight, BACKGROUND, xCrop, yCrop, 0, 0);
+        context.drawSpriteCropped(x, y + this.height - splitHeight, SLIDER, 0, yCrop, xCrop, 0);
+        context.drawSpriteCropped(x + leftWidth, y + this.height - splitHeight, SLIDER, xCrop, yCrop, 0, 0);
 
         float sliderPosition = this.getPosition();
 
         float sliderX = x + sliderPosition * (this.width - 8);
-        context.drawSpriteCropped(sliderX, y, SLIDER, 0, 0, SLIDER.width() - 4d, SLIDER.height() - splitHeight);
-        context.drawSpriteCropped(sliderX + 4, y, SLIDER, SLIDER.width() - 4d, 0d, 0d, SLIDER.height() - splitHeight);
+        context.drawSpriteCropped(sliderX, y, SLIDER_HANDLE, 0, 0, SLIDER_HANDLE.width() - 4d, SLIDER_HANDLE.height() - splitHeight);
+        context.drawSpriteCropped(sliderX + 4, y, SLIDER_HANDLE, SLIDER_HANDLE.width() - 4d, 0d, 0d, SLIDER_HANDLE.height() - splitHeight);
         for(int i=0; i*18 < this.height - 20; i++) {
-            context.drawSpriteCropped(sliderX, y + splitHeight + 16*i, SLIDER, 0d, 2d, SLIDER.width() - 4d, 2d);
-            context.drawSpriteCropped(sliderX + 4d, y + splitHeight + 16*i, SLIDER, SLIDER.width() - 4d, 2d, 0d, 2d);
+            context.drawSpriteCropped(sliderX, y + splitHeight + 16*i, SLIDER_HANDLE, 0d, 2d, SLIDER_HANDLE.width() - 4d, 2d);
+            context.drawSpriteCropped(sliderX + 4d, y + splitHeight + 16*i, SLIDER_HANDLE, SLIDER_HANDLE.width() - 4d, 2d, 0d, 2d);
         }
-        context.drawSpriteCropped(sliderX, y + this.height - splitHeight, SLIDER, 0d, SLIDER.height() - splitHeight, SLIDER.width() - 4d, 0d);
-        context.drawSpriteCropped(sliderX + 4d, y + this.height - splitHeight, SLIDER, SLIDER.width() - 4d, SLIDER.height() - splitHeight, 0d, 0d);
+        context.drawSpriteCropped(sliderX, y + this.height - splitHeight, SLIDER_HANDLE, 0d, SLIDER_HANDLE.height() - splitHeight, SLIDER_HANDLE.width() - 4d, 0d);
+        context.drawSpriteCropped(sliderX + 4d, y + this.height - splitHeight, SLIDER_HANDLE, SLIDER_HANDLE.width() - 4d, SLIDER_HANDLE.height() - splitHeight, 0d, 0d);
 
         Color textColor = this.enabledTextColor;
         if (!this.isEnabled()) {
@@ -214,7 +212,7 @@ public abstract class AbstractSliderWidget implements Widget {
     }
 
     public Color getEnabledTextColor() {
-        return enabledTextColor;
+        return this.enabledTextColor;
     }
 
     public void setEnabledTextColor(Color enabledTextColor) {
@@ -222,7 +220,7 @@ public abstract class AbstractSliderWidget implements Widget {
     }
 
     public Color getActiveTextColor() {
-        return activeTextColor;
+        return this.activeTextColor;
     }
 
     public void setActiveTextColor(Color activeTextColor) {
@@ -230,7 +228,7 @@ public abstract class AbstractSliderWidget implements Widget {
     }
 
     public Color getDisabledTextColor() {
-        return disabledTextColor;
+        return this.disabledTextColor;
     }
 
     public void setDisabledTextColor(Color disabledTextColor) {
