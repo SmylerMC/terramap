@@ -60,7 +60,7 @@ public class PopupScreen extends Screen {
 
     @Override
     public void initGui() {
-        if(this.other != null) this.other.setWorldAndResolution(this.mc, this.width, this.height);
+        if(this.other != null) this.other.setWorldAndResolution(this.mc, this.getWidth(), this.getHeight());
         super.initGui();
     }
 
@@ -68,7 +68,7 @@ public class PopupScreen extends Screen {
     public void drawScreen(int x, int y, float partialTicks) {
         if(this.other != null) this.other.drawScreen(x, y, partialTicks);
         DrawContext context = getGameClient().guiDrawContext();
-        context.drawRectangle(0, 0, this.width, this.height, this.shadeColor);
+        context.drawRectangle(0, 0, this.getWidth(), this.getHeight(), this.shadeColor);
         super.drawScreen(x, y, partialTicks);
     }
 
@@ -146,7 +146,7 @@ public class PopupScreen extends Screen {
 
         @Override
         public float getX() {
-            return (PopupScreen.this.width - this.getWidth()) / 2;
+            return (PopupScreen.this.getWidth() - this.getWidth()) / 2;
         }
 
         @Override

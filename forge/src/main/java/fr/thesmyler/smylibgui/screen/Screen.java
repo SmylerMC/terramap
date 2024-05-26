@@ -116,6 +116,14 @@ public class Screen extends GuiScreen {
         }
     }
 
+    public int getWidth() {
+        return this.width;
+    }
+
+    public int getHeight() {
+        return this.height;
+    }
+
     private class Container extends RootContainer {
 
         @Override
