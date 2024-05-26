@@ -137,16 +137,19 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         GameClient game = getGameClient();
         Translator translator = game.translator();
 
+        float width = this.getWidth();
+        float height = this.getHeight();
+
         WidgetContainer content = this.getContent();
         content.removeAllWidgets();
         this.map.setPosition(0, 0);
-        this.map.setSize(this.width, this.height);
+        this.map.setSize(width, height);
         this.map.setTileScaling(TerramapConfig.CLIENT.getEffectiveTileScaling());
 
         content.addWidget(this.map);
 
         // Map control buttons
-        this.closeButton.setX(this.width - this.closeButton.getWidth() - 5).setY(5);
+        this.closeButton.setX(width - this.closeButton.getWidth() - 5).setY(5);
         this.closeButton.setOnClick(() -> Minecraft.getMinecraft().displayGuiScreen(this.parent));
         this.closeButton.setTooltip(translator.format("terramap.terramapscreen.buttons.close.tooltip"));
         this.closeButton.enable();
@@ -200,7 +203,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         // Info panel
         Font infoFont = content.getFont();
         this.infoPanel.removeAllWidgets();
-        this.infoPanel.setSize(250, this.height);
+        this.infoPanel.setSize(250, height);
         this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-this.infoPanel.getWidth() + 25).setClosedY(0);
         this.panelButton.setTooltip(translator.format("terramap.terramapscreen.buttons.info.tooltip"));
         this.infoPanel.addWidget(this.panelButton);
@@ -259,7 +262,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.layerPanel.cancelAllScheduled();
         this.layerPanel.setSize(
                 this.infoPanel.getWidth(),
-                this.height - this.infoPanel.getHeight());
+                height - this.infoPanel.getHeight());
         this.layerPanel.setClosedX(-this.layerPanel.getWidth()).setClosedY(this.infoPanel.getHeight());
         this.layerPanel.setOpenX(0).setOpenY(this.layerPanel.getClosedY());
         this.layerPanel.addWidget(new TextWidget(
@@ -285,14 +288,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         content.addWidget(this.layerPanel);
 
         // Style panel
-        this.stylePanel.setSize(200, this.height);
-        this.stylePanel.setClosedX(this.width + 1).setClosedY(0).setOpenX(this.width - this.stylePanel.getWidth()).setOpenY(0);
+        this.stylePanel.setSize(200, height);
+        this.stylePanel.setClosedX(width + 1).setClosedY(0).setOpenX(width - this.stylePanel.getWidth()).setOpenY(0);
         this.stylePanel.setCloseOnClickOther(false);
         this.stylePanel.removeAllWidgets();
         this.styleScrollbar.setPosition(this.stylePanel.getWidth() - 15f, 0);
-        this.styleScrollbar.setLength(this.height);
+        this.styleScrollbar.setLength(height);
         this.stylePanel.addWidget(this.styleScrollbar);
-        this.styleScrollbar.setViewPort(this.height / (this.backgroundStylePanelListContainer.getHeight() - 10f));
+        this.styleScrollbar.setViewPort(height / (this.backgroundStylePanelListContainer.getHeight() - 10f));
         if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
         this.stylePanel.addWidget(this.backgroundStylePanelListContainer);
         content.addWidget(this.stylePanel);
@@ -309,7 +312,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             TextStyle style = new TextStyle(YELLOW);
             c = c.withStyle(style);
             TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, game.defaultFont());
-            warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(this.height - warningWidget.getHeight());
+            warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(height - warningWidget.getHeight());
             content.addWidget(warningWidget);
         }
 
@@ -441,7 +444,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             debugBuilder.append('\n');
             this.buildProfilingResult(debugBuilder, "", "");
             this.debugText.setText(ofPlainText(debugBuilder.toString()));
-            this.debugText.setAnchorY(this.height - this.debugText.getHeight());
+            this.debugText.setAnchorY(this.getHeight() - this.debugText.getHeight());
         }
     }
 
@@ -643,7 +646,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public float getY() {
-            return 5 - (this.getHeight() - TerramapScreen.this.height) * TerramapScreen.this.styleScrollbar.getProgress();
+            return 5 - (this.getHeight() - TerramapScreen.this.getHeight()) * TerramapScreen.this.styleScrollbar.getProgress();
         }
 
     }
@@ -661,17 +664,19 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+            float width = this.getWidth();
+            float height = this.getHeight();
             Translator translator = getGameClient().translator();
             Scissor scissor = context.scissor();
             scissor.push();
             scissor.setEnabled(true);
-            scissor.cropSection(x, y, this.width, this.height);
-            context.drawRectangle(x, y, x + this.width, y + this.height, YELLOW);
-            context.drawRectangle(x + 4, y + 4, x + this.width - 4, y + this.height - 4, Color.DARK_GRAY);
+            scissor.cropSection(x, y, width, height);
+            context.drawRectangle(x, y, x + width, y + height, YELLOW);
+            context.drawRectangle(x + 4, y + 4, x + width - 4, y + height - 4, Color.DARK_GRAY);
             Font font = parent.getFont();
-            font.drawCentered(x + this.width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), YELLOW, false);
+            font.drawCentered(x + width / 2, y + 8, translator.format("terramap.terramapscreen.mapstylefailed.title"), YELLOW, false);
             font.draw(x + 8, y + 16 + parent.getFont().height(), translator.format("terramap.terramapscreen.mapstylefailed.provider", this.provider), Color.WHITE, false);
-            String[] lines = font.wrapToWidth(translator.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), this.width - 16);
+            String[] lines = font.wrapToWidth(translator.format("terramap.terramapscreen.mapstylefailed.exception", this.exception), width - 16);
             font.drawLines(x + 8, y + 24 + font.height() * 2, WHITE, false, lines);
             scissor.pop();
         }

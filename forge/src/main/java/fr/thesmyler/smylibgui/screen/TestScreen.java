@@ -76,20 +76,23 @@ public class TestScreen extends Screen {
         content.removeAllWidgets(); // Remove the widgets that were already there
         content.cancelAllScheduled(); // Cancel all callbacks that were already there
 
+        float width = this.getWidth();
+        float height = this.getHeight();
+
         //Main screen
-        WidgetContainer textScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
-        WidgetContainer buttonScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
-        WidgetContainer sliderScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
-        WidgetContainer menuScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
-        WidgetContainer jsonTextScreen = new FlexibleWidgetContainer(20, 50, 1, this.width - 40, this.height - 70);
+        WidgetContainer textScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
+        WidgetContainer buttonScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
+        WidgetContainer sliderScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
+        WidgetContainer menuScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
+        WidgetContainer jsonTextScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
         this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen, jsonTextScreen};
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
-        TextWidget title = new TextWidget(this.width / 2f, 20, 10, ofPlainText("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget title = new TextWidget(width / 2f, 20, 10, ofPlainText("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
         content.addWidget(title);
-        content.addWidget(new SpriteButtonWidget(this.width - 20, 5, 10, ButtonSprites.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
-        content.addWidget(next.setX(this.width - 20).setY(this.height - 20));
-        content.addWidget(previous.setX(5).setY(this.height - 20));
+        content.addWidget(new SpriteButtonWidget(width - 20, 5, 10, ButtonSprites.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
+        content.addWidget(next.setX(width - 20).setY(height - 20));
+        content.addWidget(previous.setX(5).setY(height - 20));
         content.addWidget(
                 new TextButtonWidget(13, 13, 10, 100, "Reset screen",
                         () -> Minecraft.getMinecraft().displayGuiScreen(new TestScreen(this.parent)))

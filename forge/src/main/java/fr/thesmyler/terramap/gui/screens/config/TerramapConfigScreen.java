@@ -66,24 +66,27 @@ public class TerramapConfigScreen extends Screen {
         GameClient game = getGameClient();
         Translator translator = game.translator();
 
+        float width = this.getWidth();
+        float height = this.getHeight();
+
         int inter = 9;
         WidgetContainer content = this.getContent();
         content.removeAllWidgets(); //Remove the widgets that were already there
         content.cancelAllScheduled(); //Cancel all callbacks that were already there
-        this.title = new TextWidget(this.width / 2f, 10, 5, ofTranslation("terramap.configmenu.title"), TextAlignment.CENTER, game.defaultFont());
+        this.title = new TextWidget(width / 2f, 10, 5, ofTranslation("terramap.configmenu.title"), TextAlignment.CENTER, game.defaultFont());
         content.addWidget(this.title);
         TextButtonWidget save = new TextButtonWidget(
-                this.width / 2f + 30, this.height - 30, 10,
+                width / 2f + 30, height - 30, 10,
                 100,
                 translator.format("terramap.configmenu.save"),
                 this::saveAndClose);
         TextButtonWidget cancel = new TextButtonWidget(
-                this.width / 2f - 130, save.getY(), save.getZ(),
+                width / 2f - 130, save.getY(), save.getZ(),
                 save.getWidth(),
                 translator.format("terramap.configmenu.cancel"),
                 this::close);
         TextButtonWidget reset = new TextButtonWidget(
-                this.width / 2f - 25, save.getY(), save.getZ(),
+                width / 2f - 25, save.getY(), save.getZ(),
                 50,
                 translator.format("terramap.configmenu.reset"),
                 this::reset);
@@ -92,9 +95,9 @@ public class TerramapConfigScreen extends Screen {
         content.addWidget(reset.setTooltip(translator.format("terramap.configmenu.reset")));
         content.addWidget(this.next.setX(save.getX() + save.getWidth() + 5).setY(save.getY() + 2));
         content.addWidget(this.previous.setX(cancel.getX() - 20).setY(this.next.getY()));
-        FlexibleWidgetContainer mapConfigScreen = new FlexibleWidgetContainer(20, 20, 1, this.width - 40, this.height - 75);
-        FlexibleWidgetContainer mapStylesConfigScreen = new FlexibleWidgetContainer(20, 20, 1, this.width - 40, this.height - 75);
-        FlexibleWidgetContainer otherConfigScreen = new FlexibleWidgetContainer(20, 20, 1, this.width - 40, this.height - 75);
+        FlexibleWidgetContainer mapConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
+        FlexibleWidgetContainer mapStylesConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
+        FlexibleWidgetContainer otherConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
         this.pages = new FlexibleWidgetContainer[] {
                 mapConfigScreen,
                 mapStylesConfigScreen,
@@ -108,7 +111,7 @@ public class TerramapConfigScreen extends Screen {
 
         // Map settings
         TextWidget unlockZoomText = new TextWidget(10, ofTranslation("terramap.configmenu.unlockzoom"), TextAlignment.RIGHT, game.defaultFont());
-        unlockZoomText.setAnchorX((mapConfigScreen.getWidth() - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth()) / 2f - 71f).setAnchorY(this.height / 4f - 30);
+        unlockZoomText.setAnchorX((mapConfigScreen.getWidth() - unlockZoomText.getWidth() - this.unlockZoomToggle.getWidth()) / 2f - 71f).setAnchorY(height / 4f - 30);
         mapConfigScreen.addWidget(unlockZoomText);
         this.unlockZoomToggle.setTooltip(translator.format("terramap.configmenu.unlockzoom.tooltip"));
         mapConfigScreen.addWidget(this.unlockZoomToggle.setX(unlockZoomText.getX() + unlockZoomText.getWidth() + 5).setY(unlockZoomText.getAnchorY() - 4));
@@ -191,7 +194,7 @@ public class TerramapConfigScreen extends Screen {
         // Footer
         this.getContent().addWidget(this.pages[this.currentSubScreen]);
         this.title.setText(ofPlainText(this.titles[this.currentSubScreen]));
-        this.getContent().addWidget(this.pageText.setAnchorX(this.width / 2f).setAnchorY(this.height - 45f).setAlignment(TextAlignment.CENTER));
+        this.getContent().addWidget(this.pageText.setAnchorX(width / 2f).setAnchorY(height - 45f).setAlignment(TextAlignment.CENTER));
         this.updateButtons();
     }
 
