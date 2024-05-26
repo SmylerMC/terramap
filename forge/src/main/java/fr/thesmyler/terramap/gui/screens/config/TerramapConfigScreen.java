@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.util.Set;
 
 import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Translator;
-import org.lwjgl.input.Keyboard;
+import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.BackgroundOption;
-import fr.thesmyler.smylibgui.screen.Screen;
+import net.smyler.smylib.gui.screen.BackgroundOption;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
@@ -25,8 +26,6 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
@@ -34,7 +33,7 @@ import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 public class TerramapConfigScreen extends Screen {
 
-    private final GuiScreen parent;
+    private final Screen parent;
     private FlexibleWidgetContainer[] pages;
     private String[] titles;
     private TextWidget title;
@@ -53,7 +52,7 @@ public class TerramapConfigScreen extends Screen {
     private final TextFieldWidget tpCommandField;
     private final TextWidget pageText;
 
-    public TerramapConfigScreen(GuiScreen parent) {
+    public TerramapConfigScreen(Screen parent) {
         super(BackgroundOption.DEFAULT);
         this.parent = parent;
         this.pageText = new TextWidget(10, getGameClient().defaultFont());
@@ -62,7 +61,7 @@ public class TerramapConfigScreen extends Screen {
     }
 
     @Override
-    public void initGui() {
+    public void init() {
         GameClient game = getGameClient();
         Translator translator = game.translator();
 
@@ -151,7 +150,7 @@ public class TerramapConfigScreen extends Screen {
         TextButtonWidget hudButton = new TextButtonWidget(
                 mapConfigScreen.getWidth() / 2 - 100, this.lowZoomLevelSlider.getY() + this.lowZoomLevelSlider.getHeight() + inter, 10,
                 200,
-                translator.format("terramap.configmenu.configureminimap"), () -> Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen()));
+                translator.format("terramap.configmenu.configureminimap"), () -> getGameClient().displayScreen(new HudConfigScreen()));
         hudButton.setTooltip(translator.format("terramap.configmenu.configureminimap.tooltip"));
         mapConfigScreen.addWidget(hudButton);
 
@@ -175,7 +174,7 @@ public class TerramapConfigScreen extends Screen {
         mapStylesConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
         mapStylesConfigScreen.addWidget(userText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(serverText.getY() + serverText.getHeight() + inter));
         mapStylesConfigScreen.addWidget(effectiveText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(userText.getY() + userText.getHeight() + inter));
-        this.reloadMapStylesButton = new TextButtonWidget(mapStylesConfigScreen.getWidth() / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + mapStylesConfigScreen.getHeight()) / 2 - 10, 10, 150, translator.format("terramap.configmenu.mapstyles.reload"), () -> {MapStylesLibrary.reload(); TerramapConfigScreen.this.initGui();});
+        this.reloadMapStylesButton = new TextButtonWidget(mapStylesConfigScreen.getWidth() / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + mapStylesConfigScreen.getHeight()) / 2 - 10, 10, 150, translator.format("terramap.configmenu.mapstyles.reload"), () -> {MapStylesLibrary.reload(); TerramapConfigScreen.this.init();});
         mapStylesConfigScreen.addWidget(this.reloadMapStylesButton);
         mapStylesConfigScreen.addWidget(new TextButtonWidget(this.reloadMapStylesButton.getX() + this.reloadMapStylesButton.getWidth() + 3, this.reloadMapStylesButton.getY(), 10, 150, translator.format("terramap.configmenu.mapstyles.open"), () ->  {
             try {
@@ -237,7 +236,7 @@ public class TerramapConfigScreen extends Screen {
     }
 
     private void close() {
-        Minecraft.getMinecraft().displayGuiScreen(this.parent);
+        getGameClient().displayScreen(this.parent);
     }
 
     private void reset() {
@@ -253,12 +252,11 @@ public class TerramapConfigScreen extends Screen {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode) {
-        switch(keyCode) {
-            case Keyboard.KEY_ESCAPE:
-                Minecraft.getMinecraft().displayGuiScreen(new ConfirmScreen());
-                break;
-            default: super.keyTyped(typedChar, keyCode);
+    public void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {
+        if (key == Key.KEY_ESCAPE) {
+            getGameClient().displayScreen(new ConfirmScreen());
+        } else {
+            super.onKeyTyped(typedChar, key, parent);
         }
     }
 
@@ -269,7 +267,7 @@ public class TerramapConfigScreen extends Screen {
         }
 
         @Override
-        public void initGui() {
+        public void init() {
             Translator translator = getGameClient().translator();
             WidgetContainer content = this.getContent();
             content.removeAllWidgets();
@@ -285,7 +283,7 @@ public class TerramapConfigScreen extends Screen {
                     content.getWidth() / 2 - 40, text.getY() + text.getHeight() + 15, 10,
                     80,
                     translator.format("terramap.configmenu.asksave.cancel"),
-                    () -> Minecraft.getMinecraft().displayGuiScreen(TerramapConfigScreen.this)));
+                    () -> getGameClient().displayScreen(TerramapConfigScreen.this)));
             content.addWidget(new TextButtonWidget(
                     content.getWidth() / 2 + 45, text.getY() + text.getHeight() + 15, 10,
                     80,

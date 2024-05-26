@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.screen;
+package net.smyler.smylib.gui.screen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,10 +20,6 @@ import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
@@ -35,9 +31,7 @@ import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class TestScreen extends Screen {
 
-    private static boolean wasShown = false;
-
-    private final GuiScreen parent;
+    private final Screen parent;
     private final Animation animation;
     private int counter = 0;
     private final TextWidget fpsCounter;
@@ -54,7 +48,7 @@ public class TestScreen extends Screen {
 
     private final Gson textJsonParser = new GsonBuilder().registerTypeAdapter(Text.class, new TextJsonAdapter()).create();;
 
-    public TestScreen(GuiScreen parent) {
+    public TestScreen(Screen parent) {
         super(BackgroundOption.DEFAULT);
         this.parent = parent;
         this.animation = new Animation(5000); // We will use an animation to set the color of one of the displayed strings
@@ -71,7 +65,9 @@ public class TestScreen extends Screen {
     }
 
     @Override
-    public void initGui() {
+    public void init() {
+        super.init();
+
         WidgetContainer content = this.getContent();
         content.removeAllWidgets(); // Remove the widgets that were already there
         content.cancelAllScheduled(); // Cancel all callbacks that were already there
@@ -90,12 +86,12 @@ public class TestScreen extends Screen {
 
         TextWidget title = new TextWidget(width / 2f, 20, 10, ofPlainText("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
         content.addWidget(title);
-        content.addWidget(new SpriteButtonWidget(width - 20, 5, 10, ButtonSprites.CROSS, () -> Minecraft.getMinecraft().displayGuiScreen(this.parent)));
+        content.addWidget(new SpriteButtonWidget(width - 20, 5, 10, ButtonSprites.CROSS, () -> getGameClient().displayScreen(this.parent)));
         content.addWidget(next.setX(width - 20).setY(height - 20));
         content.addWidget(previous.setX(5).setY(height - 20));
         content.addWidget(
                 new TextButtonWidget(13, 13, 10, 100, "Reset screen",
-                        () -> Minecraft.getMinecraft().displayGuiScreen(new TestScreen(this.parent)))
+                        () -> getGameClient().displayScreen(new TestScreen(this.parent)))
                 );
 
         // === Text related stuff and general features examples === //
@@ -166,7 +162,7 @@ public class TestScreen extends Screen {
         animationMenu.addEntry("Continuous backward", () -> animation.start(AnimationState.CONTINUOUS_LEAVE));
         animationMenu.addEntry("Back and forth", () -> animation.start(AnimationState.BACK_AND_FORTH));
         animationMenu.addEntry("Stop", () -> animation.start(AnimationState.STOPPED));
-        rcm.addEntry("Close", () -> Minecraft.getMinecraft().displayGuiScreen(this.parent));
+        rcm.addEntry("Close", () -> getGameClient().displayScreen(this.parent));
         rcm.addEntry("Disabled Entry");
         rcm.addEntry("Here", here);
         here.addEntry("is", is);
@@ -215,7 +211,7 @@ public class TestScreen extends Screen {
         content.scheduleAtIntervalBeforeUpdate(() -> counterStr.setText(ofPlainText("Scheduled callback called " + this.counter++)), 1000);
         content.scheduleBeforeEachUpdate(() -> { // Called at every update
             this.animation.update();
-            this.fpsCounter.setText(ofPlainText("FPS: " + Minecraft.getDebugFPS()));
+            this.fpsCounter.setText(ofPlainText("FPS: " + getGameClient().currentFPS()));
             this.focus.setText(ofPlainText("Focused: " + content.getFocusedWidget()));
             this.hovered.setText(ofPlainText("Hovered: " + content.getHoveredWidget()));
             this.colored.setBaseColor(animation.rainbowColor());
@@ -244,12 +240,5 @@ public class TestScreen extends Screen {
         else this.next.enable();
     }
 
-    @SubscribeEvent
-    public static void onGuiScreenInit(GuiScreenEvent.InitGuiEvent event) {
-        if(!wasShown && !(event.getGui() instanceof Screen)) {
-            Minecraft.getMinecraft().displayGuiScreen(new TestScreen(event.getGui()));
-            wasShown = true;
-        }
-    }
 
 }

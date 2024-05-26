@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.container;
+package net.smyler.smylib.gui.screen;
 
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;

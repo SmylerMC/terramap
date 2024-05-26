@@ -1,13 +1,12 @@
-package fr.thesmyler.smylibgui.screen;
+package net.smyler.smylib.gui.screen;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.terramap.TerramapConfig;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
-class InputProcessor {
+public class InputProcessor {
 
     private final WidgetContainer container;
 
@@ -32,7 +31,8 @@ class InputProcessor {
         if(Mouse.getEventButtonState()) {
             if (this.mc.gameSettings.touchscreen && this.touchContactsCount++ > 0) return;
             this.mouseButtonsPressed[mouseButton] = true;
-            if(ctime - this.lastClickTime[mouseButton] <= TerramapConfig.CLIENT.doubleClickDelay && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
+            //TODO read double click delay from config (or even better, system config)
+            if(ctime - this.lastClickTime[mouseButton] <= 500 && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
                 this.container.onDoubleClick(mouseX, mouseY, mouseButton, null);
             } else {
                 this.container.onClick(mouseX, mouseY, mouseButton, null);

@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
+import net.smyler.smylib.gui.screen.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.GameClient;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
@@ -43,7 +43,7 @@ public class LayerConfigurationPopup extends PopupScreen {
     }
 
     @Override
-    public void initGui() {
+    public void init() {
 
         // Recalculate sizes
         GameClient game = getGameClient();
@@ -65,7 +65,7 @@ public class LayerConfigurationPopup extends PopupScreen {
         this.titleText.setAnchorY(CONTENT_MARGIN + 2f);
         this.closeButton.setX(windowWidth - CONTENT_MARGIN - this.closeButton.getWidth());
         this.closeButton.setY(CONTENT_MARGIN);
-        super.initGui();
+        super.init();
     }
 
 }

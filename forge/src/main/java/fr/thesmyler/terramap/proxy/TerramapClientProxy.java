@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.proxy;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
-import fr.thesmyler.smylibgui.screen.TestScreen;
+import net.smyler.smylib.gui.screen.TestScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
@@ -55,12 +55,12 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         TerramapMod.logger.debug("Terramap client init");
-        GameClient game = new WrappedMinecraft();
+        WrappedMinecraft game = new WrappedMinecraft(Minecraft.getMinecraft());
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(game);
         SmyLib.initializeGameClient(game, TerramapMod.logger);
         if ("true".equals(System.getProperty("terramap.showTestScreen"))) {
-            MinecraftForge.EVENT_BUS.register(TestScreen.class);
+            game.showTestScreen();
         }
 
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());

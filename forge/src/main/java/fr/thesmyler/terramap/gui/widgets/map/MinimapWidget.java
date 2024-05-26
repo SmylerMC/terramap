@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -14,8 +15,6 @@ import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiScreen;
 
 import java.util.Optional;
 
@@ -111,13 +110,13 @@ public class MinimapWidget extends MapWidget {
 
     private void forceTracking() {
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
-        GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+        Screen screen = getGameClient().getCurrentScreen();
         if (projection == null) {
             return; // We can't track anyway if we can't calculate where the player is
         }
-        if (screen instanceof GuiChat) {
+        /*if (screen instanceof GuiChat) { //FIXME Let users interact with the minimap when the chat is open
             return; // We want to user to be free to interact with the map when the chat is open
-        }
+        }*/
         if (screen instanceof LayerRenderingOffsetPopup) {
             /*
              * The layer rendering offset screen holds a reference to the layer it is working with and uses it for calculations,

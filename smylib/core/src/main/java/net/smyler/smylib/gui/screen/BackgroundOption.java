@@ -1,4 +1,4 @@
-package fr.thesmyler.smylibgui.screen;
+package net.smyler.smylib.gui.screen;
 
 /**
  * The different options for a SmyLibGui {@link Screen} background.

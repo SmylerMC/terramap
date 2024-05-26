@@ -28,11 +28,11 @@ public abstract class HudScreenHandler {
         screen.removeAllWidgets();
         screen.cancelAllScheduled();
 
-        if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(Minecraft.getMinecraft().currentScreen instanceof HudConfigScreen)) {
+        if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(getGameClient().getCurrentScreen() instanceof HudConfigScreen)) {
             if (map == null) {
                 map = new MinimapWidget(10);
             }
-            if (!(Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup)) updateMinimap();
+            if (!(getGameClient().getCurrentScreen() instanceof LayerRenderingOffsetPopup)) updateMinimap();
             screen.addWidget(map);
             offsetWarning.setTooltip(getGameClient().translator().format("terramap.hud.minimap.offset_warning"));
             screen.addWidget(offsetWarning);

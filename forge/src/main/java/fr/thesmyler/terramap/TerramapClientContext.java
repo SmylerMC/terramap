@@ -500,7 +500,7 @@ public class TerramapClientContext {
     }
 
     public void openMap() {
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, this.getSavedState().mainScreen));
+       getGameClient().displayScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, this.getSavedState().mainScreen));
     }
 
     public void openMapAt(double zoom, double lon, double lat) {
@@ -508,7 +508,7 @@ public class TerramapClientContext {
         state.map.center.set(lon, lat);
         state.map.zoom = zoom;
         state.map.trackedMarker = null;
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, state));
+        getGameClient().displayScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, state));
     }
 
     @NotNull
