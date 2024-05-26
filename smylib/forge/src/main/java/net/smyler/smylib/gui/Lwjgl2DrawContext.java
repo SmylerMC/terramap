@@ -1,6 +1,7 @@
 package net.smyler.smylib.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -10,6 +11,7 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.lwjgl.opengl.GL11;
 
+import static java.lang.Math.floor;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -92,6 +94,26 @@ public class Lwjgl2DrawContext implements DrawContext {
 
         GlStateManager.disableAlpha();
         GlStateManager.disableBlend();
+    }
+
+    @Override
+    public void drawTooltip(String text, double x, double y) {
+        GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+        if (currentScreen == null) {
+            //TODO make it draw by the HUD instead (once we have a working HUD system)
+            return;  // We are in game, not in a GUI
+        }
+        // This is a workaround for vanilla not allowing double coordinates and re-enabling lighting without any check
+        boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
+        GlStateManager.pushMatrix();
+        int px = (int) floor(x);
+        int py = (int) floor(y);
+        double rx = x - px;
+        double ry = y - py;
+        GlStateManager.translate(rx, ry, 0);
+        currentScreen.drawHoveringText(text, px, py);
+        GlStateManager.popMatrix();
+        if(!lighting) GlStateManager.disableLighting();
     }
 
     private void drawMultiPointsGeometry(int glType, double z, Color color, double... points) {
