@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.eventhandlers;
 
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
-import fr.thesmyler.smylibgui.screen.TestScreen;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
@@ -15,7 +14,6 @@ import net.buildtheearth.terraplusplus.util.CardinalDirection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -28,6 +26,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * Event handler for the physical client
@@ -102,13 +102,13 @@ public class ClientTerramapEventHandler {
     
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
-        if(event.getGui() instanceof GuiChat && Minecraft.getMinecraft().currentScreen instanceof LayerRenderingOffsetPopup) {
+        if(event.getGui() instanceof GuiChat && getGameClient().getCurrentScreen() instanceof LayerRenderingOffsetPopup) {
             /*
              * Take care of propagating offset changes once the popup is closed
              * when the minimap background offset was changed from a popup opened from the chat,
              * by right-clicking the minimap.
              */
-            LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) Minecraft.getMinecraft().currentScreen;
+            LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) getGameClient().getCurrentScreen();
             MapLayer layer = popup.getLayer();
             TerramapClientContext.getContext().getSavedState().minimap.layers.stream()
                     .filter(l -> l.z == layer.getZ() && Objects.equals(l.type, layer.getType()) && l.settings.equals(layer.saveSettings()))

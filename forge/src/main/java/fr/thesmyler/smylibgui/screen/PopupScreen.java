@@ -4,6 +4,8 @@ import net.smyler.smylib.game.Key;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.screen.BackgroundOption;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
@@ -50,7 +52,7 @@ public class PopupScreen extends Screen {
             
             @SubscribeEvent
             public void onPostGuiDraw(GuiScreenEvent.DrawScreenEvent.Post event) {
-                Minecraft.getMinecraft().displayGuiScreen(PopupScreen.this);
+                getGameClient().displayScreen(PopupScreen.this);
                 MinecraftForge.EVENT_BUS.unregister(this);
             }
             
@@ -59,24 +61,23 @@ public class PopupScreen extends Screen {
     }
 
     @Override
-    public void initGui() {
-        if(this.other != null) this.other.setWorldAndResolution(this.mc, this.getWidth(), this.getHeight());
-        super.initGui();
+    public void init() {
+        if(this.other != null) this.other.setWorldAndResolution(Minecraft.getMinecraft(), (int)this.getWidth(), (int)this.getHeight());
+        super.init();
     }
 
     @Override
-    public void drawScreen(int x, int y, float partialTicks) {
-        if(this.other != null) this.other.drawScreen(x, y, partialTicks);
-        DrawContext context = getGameClient().guiDrawContext();
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        if(this.other != null) this.other.drawScreen(-1, -1, 0);
         context.drawRectangle(0, 0, this.getWidth(), this.getHeight(), this.shadeColor);
-        super.drawScreen(x, y, partialTicks);
+        super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
     }
 
 
     @Override
-    public void updateScreen() {
+    public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         this.other.updateScreen();
-        super.updateScreen();
+        super.onUpdate(mouseX, mouseY, parent);
     }
 
     @Override
@@ -85,7 +86,7 @@ public class PopupScreen extends Screen {
     }
 
     public void close() {
-        if(Minecraft.getMinecraft().currentScreen != this) return;
+        if(getGameClient().getCurrentScreen() != this) return;
         Minecraft.getMinecraft().displayGuiScreen(this.other);
     }
 
@@ -151,7 +152,7 @@ public class PopupScreen extends Screen {
 
         @Override
         public float getY() {
-            return (PopupScreen.this.height - this.getHeight()) / 2;
+            return (PopupScreen.this.getHeight() - this.getHeight()) / 2;
         }
 
         @Override

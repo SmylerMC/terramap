@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.PopupScreen;
-import fr.thesmyler.smylibgui.screen.Screen;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.*;
 import net.smyler.smylib.threading.DefaultThreadLocal;

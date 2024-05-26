@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ import static net.smyler.smylib.math.Math.doBoxesCollide;
 /**
  * A {@link WidgetContainer} is a containers that stores widgets and redistributes events to them.
  * A {@link WidgetContainer} can also process scheduled tasks.
- * Each {@link fr.thesmyler.smylibgui.screen.Screen} has its own {@link WidgetContainer} into which widgets can be added.
+ * Each {@link Screen} has its own {@link WidgetContainer} into which widgets can be added.
  *
  * @see FlexibleWidgetContainer
  * @see ScrollableWidgetContainer

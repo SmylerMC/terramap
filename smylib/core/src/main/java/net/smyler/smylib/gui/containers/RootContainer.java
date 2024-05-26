@@ -1,10 +1,8 @@
-package fr.thesmyler.smylibgui.container;
+package net.smyler.smylib.gui.containers;
 
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**
@@ -24,8 +22,8 @@ public abstract class RootContainer extends WidgetContainer {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
-        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer alwaysNull) {
+        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, null);
         Widget hoveredWidget = this.getHoveredWidget();
         boolean mouseMoved = mouseX != this.lastRenderMouseX && mouseY != this.lastRenderMouseY;
         if(mouseMoved || (hoveredWidget != null && !hoveredWidget.equals(this.lastHoveredWidget))) {

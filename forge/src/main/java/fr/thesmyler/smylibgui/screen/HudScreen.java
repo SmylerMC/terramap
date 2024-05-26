@@ -3,7 +3,7 @@ package fr.thesmyler.smylibgui.screen;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import fr.thesmyler.smylibgui.container.RootContainer;
+import net.smyler.smylib.gui.containers.RootContainer;
 import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
@@ -27,6 +27,7 @@ import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Mouse;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.screen.InputProcessor;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

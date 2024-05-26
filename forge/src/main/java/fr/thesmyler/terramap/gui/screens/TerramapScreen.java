@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import net.minecraft.util.text.TextFormatting;
+import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
 import net.smyler.smylib.text.ImmutableText;
@@ -23,16 +24,15 @@ import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
-import org.lwjgl.input.Keyboard;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import fr.thesmyler.smylibgui.container.ScrollableWidgetContainer;
-import fr.thesmyler.smylibgui.container.SlidingPanelWidget;
-import fr.thesmyler.smylibgui.container.SlidingPanelWidget.PanelTarget;
+import net.smyler.smylib.gui.screen.ScrollableWidgetContainer;
+import net.smyler.smylib.gui.screen.SlidingPanelWidget;
+import net.smyler.smylib.gui.screen.SlidingPanelWidget.PanelTarget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.BackgroundOption;
+import net.smyler.smylib.gui.screen.BackgroundOption;
 import fr.thesmyler.smylibgui.screen.MultiChoicePopupScreen;
-import fr.thesmyler.smylibgui.screen.Screen;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 import fr.thesmyler.smylibgui.widgets.ChatWidget;
 import net.smyler.smylib.gui.widgets.Widget;
@@ -64,12 +64,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
+import org.lwjgl.input.Keyboard;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.game.Key.*;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.util.stream.Collectors.toMap;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
@@ -133,7 +135,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     @Override
-    public void initGui() {
+    public void init() {
         GameClient game = getGameClient();
         Translator translator = game.translator();
 
@@ -351,7 +353,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     @Override
-    public void onUpdate() {
+    public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
+        super.onUpdate(mouseX, mouseY, parent);
 
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
 
@@ -502,29 +505,29 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     @Override
-    public void keyTyped(char typedChar, int keyCode) {
+    public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
         if(this.getContent().getFocusedWidget() == null || (!this.getContent().getFocusedWidget().equals(this.searchBox) && !this.chat.isOpen())) {
             MapController controller = this.map.getController();
-            if(keyCode == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
-            if(keyCode == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || keyCode == Keyboard.KEY_UP) controller.moveMap(0, 30, true);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || keyCode == Keyboard.KEY_DOWN) controller.moveMap(0, -30, true);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || keyCode == Keyboard.KEY_RIGHT) controller.moveMap(-30, 0, true);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || keyCode == Keyboard.KEY_LEFT) controller.moveMap(30, 0, true);
-            if(keyCode == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
-            if(keyCode == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
-            if(keyCode == KeyBindings.OPEN_MAP.getKeyCode() || keyCode == Keyboard.KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
-            if(keyCode == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) {
+            if(key.code == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
+            if(key.code == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
+            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || key == KEY_UP) controller.moveMap(0, 30, true);
+            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || key == KEY_DOWN) controller.moveMap(0, -30, true);
+            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || key == KEY_RIGHT) controller.moveMap(-30, 0, true);
+            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || key == KEY_LEFT) controller.moveMap(30, 0, true);
+            if(key.code == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
+            if(key.code == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
+            if(key.code == KeyBindings.OPEN_MAP.getKeyCode() || key == KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
+            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) {
                 this.map.stopPassiveInputs();
                 this.chat.setOpen(!this.chat.isOpen());
             }
         } else {
-            super.keyTyped(typedChar, keyCode);
+            super.onKeyTyped(typedChar, key, parent);
         }
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
+    public boolean shouldPauseGame() {
         /*
          * We cannot "pause the game" in single player.
          * It stops the integrated server from processing client packets, including the player movements packets.
@@ -684,7 +687,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     @Override
-    public void onGuiClosed() {
+    public void onClosed() {
         //TODO Also save if minecraft is closed from the OS
         this.saveToState(TerramapClientContext.getContext().getSavedState().mainScreen);
         TerramapClientContext.getContext().saveState();
@@ -713,7 +716,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private void openConfig() {
-        Minecraft.getMinecraft().displayGuiScreen(new TerramapConfigScreen(this));
+        getGameClient().displayScreen(new TerramapConfigScreen(this));
     }
 
     private Collection<FeatureVisibilityController> getButtonProviders() {

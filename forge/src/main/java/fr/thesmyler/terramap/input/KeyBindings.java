@@ -35,7 +35,7 @@ public abstract class KeyBindings {
     private static final IKeyConflictContext TERRAMAP_SCREEN_CONTEXT = new IKeyConflictContext() {
         @Override
         public boolean isActive() {
-            return Minecraft.getMinecraft().currentScreen instanceof TerramapScreen;
+            return getGameClient().getCurrentScreen() instanceof TerramapScreen;
         }
         @Override
         public boolean conflicts(IKeyConflictContext other) {
@@ -95,7 +95,7 @@ public abstract class KeyBindings {
 
         if(TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleWidgets();
 
-        if(OPEN_HUD_CONFIG.isPressed()) Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen());
+        if(OPEN_HUD_CONFIG.isPressed()) getGameClient().displayScreen(new HudConfigScreen());
     }
 
 }
