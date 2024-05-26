@@ -29,7 +29,6 @@ import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
 import org.jetbrains.annotations.Nullable;
 
-import static fr.thesmyler.smylibgui.util.RenderUtil.*;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
@@ -158,11 +157,6 @@ public final class HudScreen {
     }
 
     private static class HudScreenContainer extends RootContainer {
-
-
-        public HudScreenContainer() {
-            super(HudScreen.gui);
-        }
 
         @Override
         public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {

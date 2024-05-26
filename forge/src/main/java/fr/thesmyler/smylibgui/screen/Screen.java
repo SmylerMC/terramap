@@ -118,10 +118,6 @@ public class Screen extends GuiScreen {
 
     private class Container extends RootContainer {
 
-        public Container() {
-            super(Screen.this);
-        }
-
         @Override
         public float getX() {
             return 0;

@@ -69,4 +69,7 @@ public interface DrawContext {
         this.drawSpriteCropped(x, y, 0d, sprite, leftCrop, topCrop, rightCrop, bottomCrop);
     }
 
+    //TODO use Text in drawTooltip
+    void drawTooltip(String text, double x, double y);
+
 }
