@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.gui.screens.config;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.smylib.gui.screen.ScrollableWidgetContainer;
+import net.smyler.smylib.gui.containers.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;

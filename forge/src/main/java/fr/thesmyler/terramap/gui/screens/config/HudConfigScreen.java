@@ -3,10 +3,10 @@ package fr.thesmyler.terramap.gui.screens.config;
 import java.util.*;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.screen.SlidingPanelWidget;
+import net.smyler.smylib.gui.containers.SlidingPanelWidget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.container.WindowedContainer;
-import net.smyler.smylib.gui.screen.SlidingPanelWidget.PanelTarget;
+import net.smyler.smylib.gui.containers.SlidingPanelWidget.PanelTarget;
 import net.smyler.smylib.gui.screen.BackgroundOption;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.Color;
