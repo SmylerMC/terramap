@@ -26,9 +26,9 @@ import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.screen.ScrollableWidgetContainer;
-import net.smyler.smylib.gui.screen.SlidingPanelWidget;
-import net.smyler.smylib.gui.screen.SlidingPanelWidget.PanelTarget;
+import net.smyler.smylib.gui.containers.ScrollableWidgetContainer;
+import net.smyler.smylib.gui.containers.SlidingPanelWidget;
+import net.smyler.smylib.gui.containers.SlidingPanelWidget.PanelTarget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.screen.BackgroundOption;
 import net.smyler.smylib.gui.popups.MultiChoicePopup;

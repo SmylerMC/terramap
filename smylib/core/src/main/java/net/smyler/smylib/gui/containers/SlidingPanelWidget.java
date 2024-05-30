@@ -1,11 +1,9 @@
-package net.smyler.smylib.gui.screen;
+package net.smyler.smylib.gui.containers;
 
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.jetbrains.annotations.Nullable;
 
 public class SlidingPanelWidget extends FlexibleWidgetContainer {
