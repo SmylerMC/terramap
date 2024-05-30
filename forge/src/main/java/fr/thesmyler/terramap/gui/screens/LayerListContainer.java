@@ -145,13 +145,13 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(type);
             SpriteButtonWidget settingsButton = new SpriteButtonWidget(this.getWidth() - 18, 3, 0, WRENCH);
             if (layer.isConfigurable()) {
-                settingsButton.setOnClick(() -> new LayerConfigurationPopup(layer).show());
+                settingsButton.setOnClick(() -> getGameClient().displayPopup( new LayerConfigurationPopup(layer)));
                 settingsButton.enable();
             }
             this.addWidget(settingsButton);
             SpriteButtonWidget offsetButton = new SpriteButtonWidget(this.getWidth() - 37, 3, 0,
                     layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
-                    () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(layer).show())
+                    () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(layer)))
             );
             offsetButton.setTooltip(getGameClient().translator().format(
                     layer.hasRenderingOffset() ?
@@ -186,7 +186,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(remove.setEnabled(layer.isUserLayer()));
             SpriteButtonWidget settingsButton = new SpriteButtonWidget(this.getWidth() - 54, 3, 0, WRENCH);
             if (layer.isConfigurable()) {
-                settingsButton.setOnClick(() -> new LayerConfigurationPopup(layer).show());
+                settingsButton.setOnClick(() -> getGameClient().displayPopup(new LayerConfigurationPopup(layer)));
                 settingsButton.enable();
             }
             this.addWidget(settingsButton);
@@ -194,7 +194,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
                 layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
                 () -> {
                     MapLayer lowestLayer = LayerListContainer.this.map.getLayers().stream().min(comparing(MapLayer::getZ)).orElse(layer);
-                    LayerListContainer.this.scheduleBeforeNextUpdate(() -> new LayerRenderingOffsetPopup(lowestLayer, layer).show());
+                    LayerListContainer.this.scheduleBeforeNextUpdate(() -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(lowestLayer, layer)));
                 }
             );
             offsetButton.setTooltip(getGameClient().translator().format(

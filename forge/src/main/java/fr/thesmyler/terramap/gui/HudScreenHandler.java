@@ -32,7 +32,7 @@ public abstract class HudScreenHandler {
             if (map == null) {
                 map = new MinimapWidget(10);
             }
-            if (!(getGameClient().getCurrentScreen() instanceof LayerRenderingOffsetPopup)) updateMinimap();
+            if (!(getGameClient().getTopPopup() instanceof LayerRenderingOffsetPopup)) updateMinimap();
             screen.addWidget(map);
             offsetWarning.setTooltip(getGameClient().translator().format("terramap.hud.minimap.offset_warning"));
             screen.addWidget(offsetWarning);

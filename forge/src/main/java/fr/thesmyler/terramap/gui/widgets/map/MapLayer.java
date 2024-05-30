@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import com.google.gson.JsonObject;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
+import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.*;
@@ -432,7 +432,7 @@ public abstract class MapLayer implements Widget {
     public abstract String description();
 
     /**
-     * Indicates whether this layer may be configured by the user using a configuration {@link PopupScreen popup}.
+     * Indicates whether this layer may be configured by the user using a configuration {@link Popup popup}.
      *
      * @see #isConfigurable()
      * @return <code>true</code> if {@link #createConfigurationContainer()} returns a configuration GUI,

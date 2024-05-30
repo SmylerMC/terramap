@@ -31,7 +31,7 @@ import net.smyler.smylib.gui.screen.SlidingPanelWidget;
 import net.smyler.smylib.gui.screen.SlidingPanelWidget.PanelTarget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.screen.BackgroundOption;
-import fr.thesmyler.smylibgui.screen.MultiChoicePopupScreen;
+import net.smyler.smylib.gui.popups.MultiChoicePopup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 import fr.thesmyler.smylibgui.widgets.ChatWidget;
@@ -130,7 +130,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.restore(state);
         this.map.getRightClickMenu().addEntry(
                 getGameClient().translator().format("terramap.mapwidget.rclickmenu.offset"),
-                () -> this.map.getRasterBackgroundLayer().ifPresent(l -> new LayerRenderingOffsetPopup(l).show())
+                () -> this.map.getRasterBackgroundLayer().ifPresent(l -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(l)))
         );
     }
 
@@ -563,8 +563,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         Map<String, Runnable> options = MapLayerRegistry.INSTANCE.getRegistrations().values().stream()
                         .filter(MapLayerRegistry.LayerRegistration::showsOnNewLayerMenu)
                         .collect(toMap(LayerRegistration::getNewLayerMenuTranslationKey, l -> () -> this.addMapLayer(l.getId())));
-        this.getContent().scheduleBeforeNextUpdate(() -> 
-            new MultiChoicePopupScreen("terramap.terramapscreen.layerscreen.newlayer", options).show()
+        this.getContent().scheduleBeforeNextUpdate(() ->
+            getGameClient().displayPopup(new MultiChoicePopup("terramap.terramapscreen.layerscreen.newlayer", options))
         );
     }
 

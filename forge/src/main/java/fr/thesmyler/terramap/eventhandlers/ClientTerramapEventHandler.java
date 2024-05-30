@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToSe
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.smyler.smylib.gui.popups.Popup;
 
 import java.util.Objects;
 
@@ -102,14 +103,15 @@ public class ClientTerramapEventHandler {
     
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
-        if(event.getGui() instanceof GuiChat && getGameClient().getCurrentScreen() instanceof LayerRenderingOffsetPopup) {
+        Popup popup = getGameClient().getTopPopup();
+        if(event.getGui() instanceof GuiChat && popup instanceof LayerRenderingOffsetPopup) {
             /*
              * Take care of propagating offset changes once the popup is closed
              * when the minimap background offset was changed from a popup opened from the chat,
              * by right-clicking the minimap.
              */
-            LayerRenderingOffsetPopup popup = (LayerRenderingOffsetPopup) getGameClient().getCurrentScreen();
-            MapLayer layer = popup.getLayer();
+            LayerRenderingOffsetPopup layerPopup = (LayerRenderingOffsetPopup) popup;
+            MapLayer layer = layerPopup.getLayer();
             TerramapClientContext.getContext().getSavedState().minimap.layers.stream()
                     .filter(l -> l.z == layer.getZ() && Objects.equals(l.type, layer.getType()) && l.settings.equals(layer.saveSettings()))
                     .forEach(l -> {

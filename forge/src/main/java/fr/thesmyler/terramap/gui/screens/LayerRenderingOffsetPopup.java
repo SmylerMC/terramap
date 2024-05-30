@@ -5,7 +5,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
+import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
@@ -31,7 +31,7 @@ import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDispl
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
-public class LayerRenderingOffsetPopup extends PopupScreen {
+public class LayerRenderingOffsetPopup extends Popup {
     
     private static final DecimalFormat OFFSET_FORMATTER = new DecimalFormat();
     
