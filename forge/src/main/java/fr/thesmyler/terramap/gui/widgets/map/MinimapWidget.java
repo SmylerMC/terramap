@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.terramap.MapContext;
@@ -35,7 +36,7 @@ public class MinimapWidget extends MapWidget {
         this.setBackgroundOffsetMenuEntry = this.getRightClickMenu().addEntry(
                 getGameClient().translator().format("terramap.mapwidget.rclickmenu.offset"),
                 () -> this.getRasterBackgroundLayer().ifPresent(
-                        l -> new LayerRenderingOffsetPopup(l).show()
+                        l -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(l))
                     )
         );
     }
@@ -111,13 +112,14 @@ public class MinimapWidget extends MapWidget {
     private void forceTracking() {
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         Screen screen = getGameClient().getCurrentScreen();
+        Popup popup = getGameClient().getTopPopup();
         if (projection == null) {
             return; // We can't track anyway if we can't calculate where the player is
         }
         /*if (screen instanceof GuiChat) { //FIXME Let users interact with the minimap when the chat is open
             return; // We want to user to be free to interact with the map when the chat is open
         }*/
-        if (screen instanceof LayerRenderingOffsetPopup) {
+        if (popup instanceof LayerRenderingOffsetPopup) {
             /*
              * The layer rendering offset screen holds a reference to the layer it is working with and uses it for calculations,
              * we don't want to screw that up by moving the center or rotating.

@@ -1,10 +1,10 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.GameClient;
-import fr.thesmyler.smylibgui.screen.PopupScreen;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
-public class LayerConfigurationPopup extends PopupScreen {
+public class LayerConfigurationPopup extends Popup {
 
     private final TextWidget titleText;
     private final SpriteButtonWidget closeButton;
@@ -56,7 +56,7 @@ public class LayerConfigurationPopup extends PopupScreen {
         float windowWidth = scrollWidth + contourSize + CONTENT_MARGIN * 2f;
         float scrollHeight = min(mcHeight - contourSize - HEADER_HEIGHT - CONTENT_MARGIN, contentHeight + 15f);
         float windowHeight = scrollHeight + contourSize + HEADER_HEIGHT + CONTENT_MARGIN;
-        this.setContentSize(windowWidth, windowHeight);
+        this.resize(windowWidth, windowHeight);
         this.scroll.setPosition(CONTENT_MARGIN + contourSize, HEADER_HEIGHT);
         this.scroll.setSize(scrollWidth, scrollHeight);
 

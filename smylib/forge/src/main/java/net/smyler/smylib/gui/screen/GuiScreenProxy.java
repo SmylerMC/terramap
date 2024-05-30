@@ -7,6 +7,7 @@ import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Mouse;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
+import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -55,7 +56,7 @@ public class GuiScreenProxy extends GuiScreen {
     }
 
     @Override
-    public void setWorldAndResolution(Minecraft minecraft, int width, int height) {
+    public void setWorldAndResolution(@NotNull Minecraft minecraft, int width, int height) {
         this.screen.width = width;
         this.screen.height = height;
         super.setWorldAndResolution(minecraft, width, height);
@@ -92,6 +93,10 @@ public class GuiScreenProxy extends GuiScreen {
                 this.drawGradientRect(0, 0, this.width, this.height, -1072689136, -804253680);
                 break;
         }
+    }
+
+    public Screen getScreen() {
+        return this.screen;
     }
 
 }

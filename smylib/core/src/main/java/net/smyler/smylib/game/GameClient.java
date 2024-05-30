@@ -2,8 +2,10 @@ package net.smyler.smylib.game;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -94,6 +96,34 @@ public interface GameClient {
     void displayScreen(Screen screen);
 
     Screen getCurrentScreen();
+
+    /**
+     * Display a popup on top of the current screen.
+     * Multiple popup's may be shown at once, in which case they stack on top of each other.
+     *
+     * @param popup the popup to show
+     */
+    void displayPopup(@NotNull Popup popup);
+
+    /**
+     * @return the top popup, or null if no popup is displayed
+     */
+    @Nullable Popup getTopPopup();
+
+    /**
+     * Closes the top popup, if one is opened.
+     * If no popup is being displayed, nothing is done.
+     *
+     * @return the popup that was closed, or null if no popup was opened
+     */
+    @Nullable Popup closeTopPopup();
+
+    /**
+     * Close all open popups.
+     *
+     * @return the number of popups that were closed
+     */
+    int closeAllPopups();
 
     int currentFPS();
 

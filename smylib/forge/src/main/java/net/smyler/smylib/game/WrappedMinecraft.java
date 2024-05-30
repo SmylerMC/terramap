@@ -5,15 +5,18 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smyler.smylib.gui.*;
-import net.smyler.smylib.gui.screen.GuiScreenProxy;
-import net.smyler.smylib.gui.screen.Screen;
-import net.smyler.smylib.gui.screen.TestScreen;
-import net.smyler.smylib.gui.screen.WrappedVanillaScreen;
+import net.smyler.smylib.gui.popups.Popup;
+import net.smyler.smylib.gui.popups.PopupScreenImplementation;
+import net.smyler.smylib.gui.screen.*;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
 
 import java.nio.file.Path;
+
+import static net.smyler.smylib.Preconditions.checkState;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class WrappedMinecraft implements GameClient {
 
@@ -147,11 +150,63 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public Screen getCurrentScreen() {
         GuiScreen currentGuiScreen = this.minecraft.currentScreen;
+        if (currentGuiScreen instanceof GuiScreenProxy) {
+            return ((GuiScreenProxy)currentGuiScreen).getScreen();
+        }
+        // If it is not a SmyLib screen avoid creating a new wrapper each time
         if (this.lastAccessedVanillaScreen != null && currentGuiScreen == this.lastAccessedVanillaScreen.getWrapped()) {
             return this.lastAccessedVanillaScreen;
         }
         this.lastAccessedVanillaScreen = new WrappedVanillaScreen(currentGuiScreen);
         return this.lastAccessedVanillaScreen;
+    }
+
+    @Override
+    public void displayPopup(Popup popup) {
+        final PopupScreen screen = new PopupScreenImplementation(this.minecraft.currentScreen, popup);
+        Object o = new Object() {
+            @SubscribeEvent
+            public void onPostGuiDraw(GuiScreenEvent.DrawScreenEvent.Post event) {
+                WrappedMinecraft.this.displayScreen(screen);
+                MinecraftForge.EVENT_BUS.unregister(this);
+            }
+        };
+        MinecraftForge.EVENT_BUS.register(o);
+    }
+
+    @Override
+    public Popup getTopPopup() {
+        Screen currentScreen = getGameClient().getCurrentScreen();
+        if (!(currentScreen instanceof PopupScreen)) {
+            return null;
+        }
+        PopupScreen popupScreen = (PopupScreen) currentScreen;
+        return popupScreen.getPopup();
+    }
+
+    @Override
+    public Popup closeTopPopup() {
+        Screen currentScreen = this.getCurrentScreen();
+        if (!(currentScreen instanceof PopupScreen)) {
+            return null;
+        }
+        checkState(
+            currentScreen instanceof PopupScreenImplementation,
+            "Illegal PopupScreen implementation: " + currentScreen.getClass().getCanonicalName()
+        );
+        PopupScreenImplementation popupScreen = (PopupScreenImplementation) currentScreen;
+        this.minecraft.displayGuiScreen(popupScreen.getBackgroundScreen());
+        return popupScreen.getPopup();
+    }
+
+    @Override
+    public int closeAllPopups() {
+        int i = 0;
+        while(this.getCurrentScreen() instanceof PopupScreen) {
+            this.closeTopPopup();
+            i++;
+        }
+        return i;
     }
 
     @Override
