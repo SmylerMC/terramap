@@ -9,7 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.smylib.gui.popups.PopupScreenImplementation;
+import net.smyler.smylib.gui.screen.PopupScreenImplementation;
 import net.smyler.smylib.gui.screen.*;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
 

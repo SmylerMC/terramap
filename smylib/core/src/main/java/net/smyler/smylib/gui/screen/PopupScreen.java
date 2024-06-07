@@ -15,7 +15,7 @@ public abstract class PopupScreen extends Screen {
 
     private final Popup popup;
 
-    public PopupScreen(Popup popup) {
+    PopupScreen(Popup popup) {
         super(BackgroundOption.NONE);
         this.popup = popup;
         this.addWidget(popup);

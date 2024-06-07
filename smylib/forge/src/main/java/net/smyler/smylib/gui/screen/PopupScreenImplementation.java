@@ -1,11 +1,13 @@
-package net.smyler.smylib.gui.popups;
+package net.smyler.smylib.gui.screen;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.gui.screen.PopupScreen;
+import net.smyler.smylib.gui.popups.Popup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import net.smyler.smylib.gui.DrawContext;
+
+import static net.smyler.smylib.gui.popups.PopupImplementationProxy.setPopupPosition;
 
 
 public class PopupScreenImplementation extends PopupScreen {
@@ -35,7 +37,8 @@ public class PopupScreenImplementation extends PopupScreen {
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         this.other.updateScreen();
         Popup popup = this.getPopup();
-        this.getPopup().setPosition(
+        setPopupPosition(
+                this.getPopup(),
                 (this.getWidth() - popup.getWidth()) / 2,
                 (this.getHeight() - popup.getHeight()) / 2
         );

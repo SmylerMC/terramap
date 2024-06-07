@@ -1,13 +1,14 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonPrimitive;
-import net.smyler.smylib.gui.TestingWidgetContainer;
+import net.smyler.smylib.game.TestGameClient;
 import fr.thesmyler.terramap.TerramapTest;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
 import static net.smyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
+import static fr.thesmyler.terramap.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapWidgetTest extends TerramapTest {
@@ -23,9 +25,11 @@ class MapWidgetTest extends TerramapTest {
 
     @Test
     void canSaveMapWidgetToSavedMapState() throws InterruptedException {
-        TestingWidgetContainer screen = new TestingWidgetContainer(60, 500f, 500f);
+        TestGameClient client = this.getTestGameClient();
+        client.setWindowDimensions(500f, 500f);
+        client.setTargetFps(60);
         MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
-        screen.addWidget(map);
+        client.getCurrentScreen().addWidget(map);
         OnlineRasterMapLayer raster_osm = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         OnlineRasterMapLayer osm_fr_hot = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         raster_osm.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm"));
@@ -39,10 +43,10 @@ class MapWidgetTest extends TerramapTest {
 
         map.getController().setZoom(10, false);
         map.getController().setRotation(45f, false);
-        screen.doTick();
+        client.doTick();
 
         map.getController().moveLocationToCenter(PARIS, false);
-        screen.doTick();
+        client.doTick();
 
         SavedMapState saved = map.save();
 
@@ -71,9 +75,13 @@ class MapWidgetTest extends TerramapTest {
     @Test
     public void canRestoreMapState() throws InterruptedException {
 
-        TestingWidgetContainer screen = new TestingWidgetContainer(60, 500f, 500f);
+        TestGameClient client = this.getTestGameClient();
+        client.setWindowDimensions(500f, 500f);
+        client.setTargetFps(60);
+        Screen screen = client.getCurrentScreen();
+
         MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
-        screen.moveMouse(750, 750, 1000);
+        client.moveMouse(750, 750, 1000);
         screen.addWidget(map);
 
         // Let's start in some random state
@@ -83,9 +91,9 @@ class MapWidgetTest extends TerramapTest {
         map.setLayerZ(rasterLayer, -1);
         map.getController().setZoomStaticLocation(PARIS);
         map.getController().setZoom(18, true);
-        screen.runFor(1000);
+        client.runFor(1000);
         map.getController().moveLocationToCenter(PARIS, true);
-        screen.runFor(1000);
+        client.runFor(1000);
         map.getController().setRotationStaticLocation(PARIS);
         map.getController().setRotation(45f, true);
 
@@ -101,7 +109,7 @@ class MapWidgetTest extends TerramapTest {
 
         // And we try restoring...
         map.restore(state);
-        screen.doTick();
+        client.doTick();
 
         assertEquals(ORIGIN, map.getController().getCenterLocation().getImmutable());
         assertEquals(0, map.getController().getZoom());
@@ -117,9 +125,14 @@ class MapWidgetTest extends TerramapTest {
     @Test
     public void canRestoreMapStateWithInvalidLayerId() throws InterruptedException {
 
-        TestingWidgetContainer screen = new TestingWidgetContainer(60, 500f, 500f);
+        TestGameClient client = this.getTestGameClient();
+        client.setWindowDimensions(500f, 500f);
+        client.setTargetFps(60);
+
+        Screen screen = client.getCurrentScreen();
+
         MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
-        screen.moveMouse(750, 750, 1000);
+        client.moveMouse(750, 750, 1000);
         screen.addWidget(map);
 
         SavedMapState state = new SavedMapState();
@@ -128,7 +141,7 @@ class MapWidgetTest extends TerramapTest {
         state.layers.add(layerState);
 
         map.restore(state);
-        screen.doTick();
+        client.doTick();
 
     }
 

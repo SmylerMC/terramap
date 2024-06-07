@@ -1,9 +1,9 @@
 package net.smyler.smylib.gui.widgets;
 
-import net.smyler.smylib.gui.TestingWidgetContainer;
+import net.smyler.smylib.game.TestGameClient;
 import net.smyler.smylib.SmyLibTest;
 import net.smyler.smylib.game.Key;
-import net.smyler.smylib.gui.widgets.ColorPickerWidget;
+import net.smyler.smylib.gui.screen.Screen;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,68 +48,62 @@ class ColorPickerWidgetTest extends SmyLibTest {
 
     @Test
     void canInputColors() throws InterruptedException {
-        //TODO repair ColorPickerWidgetTest
-        /*
-        TestingWidgetContainer container = new TestingWidgetContainer(30, 500f, 500f);
+        TestGameClient client = this.getTestGameClient();
+        Screen container = client.getCurrentScreen();
         ColorPickerWidget colorPicker = new ColorPickerWidget(0, 0, 0, BLACK, getGameClient().defaultFont());
         container.addWidget(colorPicker);
 
         // Focus the widget and move cursor to the right
-        container.moveMouse(10f, 10f, 500);
-        container.click(0);
+        client.moveMouse(10f, 10f, 500);
+        client.click(0);
         for (int i = 0; i < 10; i++) {
-            container.pressKey((char)Key.KEY_RIGHT.code, Key.KEY_RIGHT);
-            container.doTick();
+            client.pressKey((char)Key.KEY_RIGHT.code, Key.KEY_RIGHT);
+            client.doTick();
         }
 
-        container.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
-        container.doTick();
-        container.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
-        container.doTick();
-        container.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
-        container.doTick();
+        client.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
+        client.doTick();
+        client.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
+        client.doTick();
+        client.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
+        client.doTick();
 
         assertFalse(colorPicker.hasValidColor());
         assertEquals("#000", colorPicker.getText());
 
-        container.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
-        container.doTick();
-        container.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
-        container.doTick();
-        container.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
-        container.doTick();
+        client.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
+        client.doTick();
+        client.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
+        client.doTick();
+        client.pressKey((char) Key.KEY_BACK.code, Key.KEY_BACK);
+        client.doTick();
 
         assertFalse(colorPicker.hasValidColor());
         assertEquals("#", colorPicker.getText());
 
-        container.pressKey('F', Key.KEY_F);
-        container.doTick();
-        container.pressKey('F', Key.KEY_F);
-        container.doTick();
-        container.pressKey('0', Key.KEY_0);
-        container.doTick();
-        container.pressKey('0', Key.KEY_0);
-        container.doTick();
-        container.pressKey('0', Key.KEY_0);
-        container.doTick();
-        container.pressKey('0', Key.KEY_0);
-        container.doTick();
+        client.pressKey('F', Key.KEY_F);
+        client.doTick();
+        client.pressKey('F', Key.KEY_F);
+        client.doTick();
+        client.pressKey('0', Key.KEY_0);
+        client.doTick();
+        client.pressKey('0', Key.KEY_0);
+        client.doTick();
+        client.pressKey('0', Key.KEY_0);
+        client.doTick();
+        client.pressKey('0', Key.KEY_0);
+        client.doTick();
 
         assertTrue(colorPicker.hasValidColor());
         assertEquals(RED, colorPicker.getColor());
 
-        container.pressKey('F', Key.KEY_F);
-        container.doTick();
-        container.pressKey('F', Key.KEY_F);
-        container.doTick();
+        client.pressKey('F', Key.KEY_F);
+        client.doTick();
+        client.pressKey('F', Key.KEY_F);
+        client.doTick();
 
         assertTrue(colorPicker.hasValidColor());
         assertEquals(RED, colorPicker.getColor());
-        */
-    }
-
-    @Test
-    void setOnColorChange() {
     }
 
 }

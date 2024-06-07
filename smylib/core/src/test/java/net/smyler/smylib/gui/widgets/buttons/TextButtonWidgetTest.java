@@ -2,7 +2,8 @@ package net.smyler.smylib.gui.widgets.buttons;
 
 
 import net.smyler.smylib.SmyLibTest;
-import net.smyler.smylib.gui.TestingWidgetContainer;
+import net.smyler.smylib.game.TestGameClient;
+import net.smyler.smylib.gui.screen.Screen;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -15,43 +16,44 @@ public class TextButtonWidgetTest extends SmyLibTest {
     @Test
     public void testActivation() throws InterruptedException {
         AtomicInteger clickCounter = new AtomicInteger();
-        TestingWidgetContainer screen = new TestingWidgetContainer(30, 400, 300);
+        TestGameClient client = this.getTestGameClient();
+        Screen screen = this.getTestGameClient().getCurrentScreen();
         TextButtonWidget button = new TextButtonWidget(10, 10, 0, 200, "Test button", clickCounter::incrementAndGet);
         screen.addWidget(button);
 
         assertNull(screen.getFocusedWidget());
 
-        screen.moveMouse(30, 30, 500);
-        screen.click(0);
-        screen.doTick();
-        screen.doTick(); // We are giving it a frame to lose focus
+        client.moveMouse(30, 30, 500);
+        client.click(0);
+        client.doTick();
+        client.doTick(); // We are giving it a frame to lose focus
         assertEquals(1, clickCounter.get());
         assertNull(screen.getFocusedWidget());
 
-        screen.doubleClick(0);
-        screen.doTick();
-        screen.doTick();
+        client.doubleClick(0);
+        client.doTick();
+        client.doTick();
         assertEquals(3, clickCounter.get());
         assertNull(screen.getFocusedWidget());
 
-        screen.moveMouse(1, 1, 500);
-        screen.click(0);
-        screen.doTick();
-        screen.doTick();
+        client.moveMouse(1, 1, 500);
+        client.click(0);
+        client.doTick();
+        client.doTick();
         assertEquals(3, clickCounter.get());
         assertNull(screen.getFocusedWidget());
 
-        screen.moveMouse(30, 30, 500);
-        screen.click(0);
-        screen.doTick();
-        screen.doTick();
+        client.moveMouse(30, 30, 500);
+        client.click(0);
+        client.doTick();
+        client.doTick();
         assertEquals(4, clickCounter.get());
         assertNull(screen.getFocusedWidget());
 
         button.setEnabled(false);
-        screen.click(0);
-        screen.doTick();
-        screen.doTick();
+        client.click(0);
+        client.doTick();
+        client.doTick();
         assertEquals(4, clickCounter.get());
         assertNull(screen.getFocusedWidget());
     }
