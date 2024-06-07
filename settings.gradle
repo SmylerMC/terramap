@@ -1,12 +1,24 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'Terramap'
 
 include 'core'
-include "forge"
+//include "forge"
 include 'smylib'
 include 'smylib:core'
 findProject(':smylib:core')?.name = 'core'
-include 'smylib:forge'
-findProject(':smylib:forge')?.name = 'forge'
+//include 'smylib:forge'
+//findProject(':smylib:forge')?.name = 'forge'
 include 'smylib:testing'
 findProject(':smylib:testing')?.name = 'testing'
+include 'fabric'
 
