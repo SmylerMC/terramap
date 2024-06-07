@@ -68,9 +68,8 @@ public class TestScreen extends Screen {
     public void init() {
         super.init();
 
-        WidgetContainer content = this.getContent();
-        content.removeAllWidgets(); // Remove the widgets that were already there
-        content.cancelAllScheduled(); // Cancel all callbacks that were already there
+        this.removeAllWidgets(); // Remove the widgets that were already there
+        this.cancelAllScheduled(); // Cancel all callbacks that were already there
 
         float width = this.getWidth();
         float height = this.getHeight();
@@ -85,11 +84,11 @@ public class TestScreen extends Screen {
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
         TextWidget title = new TextWidget(width / 2f, 20, 10, ofPlainText("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
-        content.addWidget(title);
-        content.addWidget(new SpriteButtonWidget(width - 20, 5, 10, ButtonSprites.CROSS, () -> getGameClient().displayScreen(this.parent)));
-        content.addWidget(next.setX(width - 20).setY(height - 20));
-        content.addWidget(previous.setX(5).setY(height - 20));
-        content.addWidget(
+        this.addWidget(title);
+        this.addWidget(new SpriteButtonWidget(width - 20, 5, 10, ButtonSprites.CROSS, () -> getGameClient().displayScreen(this.parent)));
+        this.addWidget(next.setX(width - 20).setY(height - 20));
+        this.addWidget(previous.setX(5).setY(height - 20));
+        this.addWidget(
                 new TextButtonWidget(13, 13, 10, 100, "Reset screen",
                         () -> getGameClient().displayScreen(new TestScreen(this.parent)))
                 );
@@ -205,31 +204,31 @@ public class TestScreen extends Screen {
 
         // ==== Getting everything ready and setting up scheduled tasks === //
 
-        content.addWidget(subScreens[this.currentSubScreen]); // A screen is also a widget, that allows for a lot of flexibility
+        this.addWidget(subScreens[this.currentSubScreen]); // A screen is also a widget, that allows for a lot of flexibility
 
         // Same as Javascript's setInterval
-        content.scheduleAtIntervalBeforeUpdate(() -> counterStr.setText(ofPlainText("Scheduled callback called " + this.counter++)), 1000);
-        content.scheduleBeforeEachUpdate(() -> { // Called at every update
+        this.scheduleAtIntervalBeforeUpdate(() -> counterStr.setText(ofPlainText("Scheduled callback called " + this.counter++)), 1000);
+        this.scheduleBeforeEachUpdate(() -> { // Called at every update
             this.animation.update();
             this.fpsCounter.setText(ofPlainText("FPS: " + getGameClient().currentFPS()));
-            this.focus.setText(ofPlainText("Focused: " + content.getFocusedWidget()));
-            this.hovered.setText(ofPlainText("Hovered: " + content.getHoveredWidget()));
+            this.focus.setText(ofPlainText("Focused: " + this.getFocusedWidget()));
+            this.hovered.setText(ofPlainText("Hovered: " + this.getHoveredWidget()));
             this.colored.setBaseColor(animation.rainbowColor());
         });
         this.updateButtons();
     }
 
     private void nextPage() {
-        this.getContent().removeWidget(this.subScreens[this.currentSubScreen]);
+        this.removeWidget(this.subScreens[this.currentSubScreen]);
         this.currentSubScreen++;
-        this.getContent().addWidget(this.subScreens[this.currentSubScreen]);
+        this.addWidget(this.subScreens[this.currentSubScreen]);
         this.updateButtons();
     }
 
     private void previousPage() {
-        this.getContent().removeWidget(this.subScreens[this.currentSubScreen]);
+        this.removeWidget(this.subScreens[this.currentSubScreen]);
         this.currentSubScreen--;
-        this.getContent().addWidget(this.subScreens[this.currentSubScreen]);
+        this.addWidget(this.subScreens[this.currentSubScreen]);
         this.updateButtons();
     }
 

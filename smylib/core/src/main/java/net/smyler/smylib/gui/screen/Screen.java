@@ -2,12 +2,9 @@ package net.smyler.smylib.gui.screen;
 
 import net.smyler.smylib.gui.containers.RootContainer;
 
-import net.smyler.smylib.gui.containers.WidgetContainer;
 
 /**
  * A {@link Screen} is where everything happens in SmyLib.
- * <br>
- * To use this class, add widgets to your screen by retrieving its {@link WidgetContainer} using {@link #getContent()}.
  *
  * @author Smyler
  */
@@ -19,11 +16,6 @@ public class Screen extends RootContainer {
 
     public Screen(BackgroundOption background) {
         this.background = background;
-    }
-
-    @Deprecated
-    public WidgetContainer getContent() {
-        return this;
     }
 
     public boolean shouldPauseGame() {
