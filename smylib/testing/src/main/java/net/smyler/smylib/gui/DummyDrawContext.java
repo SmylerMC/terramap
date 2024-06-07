@@ -43,4 +43,9 @@ public class DummyDrawContext implements DrawContext {
 
     }
 
+    @Override
+    public void drawTooltip(String text, double x, double y) {
+
+    }
+
 }

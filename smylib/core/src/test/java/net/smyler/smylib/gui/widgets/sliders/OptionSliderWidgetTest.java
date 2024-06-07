@@ -1,10 +1,6 @@
 package net.smyler.smylib.gui.widgets.sliders;
 
-import net.smyler.smylib.gui.TestingWidgetContainer;
 import net.smyler.smylib.SmyLibTest;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class OptionSliderWidgetTest extends SmyLibTest {
 

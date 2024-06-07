@@ -26,9 +26,8 @@ import static net.smyler.smylib.math.Math.doBoxesCollide;
  * @see FlexibleWidgetContainer
  * @see ScrollableWidgetContainer
  * @see SlidingPanelWidget
- * @see TestingWidgetContainer
  *
- * @author SmylerMC
+ * @author Smyler
  *
  */
 public abstract class WidgetContainer implements Widget {

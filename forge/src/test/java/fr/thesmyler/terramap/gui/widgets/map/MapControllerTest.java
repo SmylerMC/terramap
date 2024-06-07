@@ -1,8 +1,9 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import net.smyler.smylib.gui.TestingWidgetContainer;
+import net.smyler.smylib.game.TestGameClient;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapTest;
+import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,16 +16,19 @@ public class MapControllerTest extends TerramapTest {
 
     public static GeoPointImmutable PARIS = new GeoPointImmutable(2.350987d, 48.856667d);
 
-    private TestingWidgetContainer screen;
+    private Screen screen;
     private MapWidget map;
     private MapController controller;
 
     @BeforeEach
     public void setupMap() {
-        this.screen = new TestingWidgetContainer(60, 1280f, 720f);
+        TestGameClient client = this.getTestGameClient();
+        client.setWindowDimensions(1280f, 720f);
+        client.setTargetFps(60);
+        this.screen = client.getCurrentScreen();
         this.map = new MapWidget(-4f, -2f, 10,  141f, 83f, MapContext.MINIMAP, 2.0f);
         this.screen.addWidget(this.map);
-        this.controller = map.getController();
+        this.controller = this.map.getController();
     }
 
 
