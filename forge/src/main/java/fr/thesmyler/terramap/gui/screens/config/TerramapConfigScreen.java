@@ -69,11 +69,10 @@ public class TerramapConfigScreen extends Screen {
         float height = this.getHeight();
 
         int inter = 9;
-        WidgetContainer content = this.getContent();
-        content.removeAllWidgets(); //Remove the widgets that were already there
-        content.cancelAllScheduled(); //Cancel all callbacks that were already there
+        this.removeAllWidgets(); //Remove the widgets that were already there
+        this.cancelAllScheduled(); //Cancel all callbacks that were already there
         this.title = new TextWidget(width / 2f, 10, 5, ofTranslation("terramap.configmenu.title"), TextAlignment.CENTER, game.defaultFont());
-        content.addWidget(this.title);
+        this.addWidget(this.title);
         TextButtonWidget save = new TextButtonWidget(
                 width / 2f + 30, height - 30, 10,
                 100,
@@ -89,11 +88,11 @@ public class TerramapConfigScreen extends Screen {
                 50,
                 translator.format("terramap.configmenu.reset"),
                 this::reset);
-        content.addWidget(save.setTooltip(translator.format("terramap.configmenu.save.tooltip")));
-        content.addWidget(cancel.setTooltip(translator.format("terramap.configmenu.cancel")));
-        content.addWidget(reset.setTooltip(translator.format("terramap.configmenu.reset")));
-        content.addWidget(this.next.setX(save.getX() + save.getWidth() + 5).setY(save.getY() + 2));
-        content.addWidget(this.previous.setX(cancel.getX() - 20).setY(this.next.getY()));
+        this.addWidget(save.setTooltip(translator.format("terramap.configmenu.save.tooltip")));
+        this.addWidget(cancel.setTooltip(translator.format("terramap.configmenu.cancel")));
+        this.addWidget(reset.setTooltip(translator.format("terramap.configmenu.reset")));
+        this.addWidget(this.next.setX(save.getX() + save.getWidth() + 5).setY(save.getY() + 2));
+        this.addWidget(this.previous.setX(cancel.getX() - 20).setY(this.next.getY()));
         FlexibleWidgetContainer mapConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
         FlexibleWidgetContainer mapStylesConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
         FlexibleWidgetContainer otherConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
@@ -191,24 +190,24 @@ public class TerramapConfigScreen extends Screen {
         otherConfigScreen.addWidget(this.tpCommandField.setX(tpCommandText.getX() + tpCommandText.getWidth() + inter).setY(tpCommandText.getY() - 7));
 
         // Footer
-        this.getContent().addWidget(this.pages[this.currentSubScreen]);
+        this.addWidget(this.pages[this.currentSubScreen]);
         this.title.setText(ofPlainText(this.titles[this.currentSubScreen]));
-        this.getContent().addWidget(this.pageText.setAnchorX(width / 2f).setAnchorY(height - 45f).setAlignment(TextAlignment.CENTER));
+        this.addWidget(this.pageText.setAnchorX(width / 2f).setAnchorY(height - 45f).setAlignment(TextAlignment.CENTER));
         this.updateButtons();
     }
 
     private void nextPage() {
-        this.getContent().removeWidget(this.pages[this.currentSubScreen]);
+        this.removeWidget(this.pages[this.currentSubScreen]);
         this.currentSubScreen++;
-        this.getContent().addWidget(this.pages[this.currentSubScreen]);
+        this.addWidget(this.pages[this.currentSubScreen]);
         this.title.setText(ofPlainText(this.titles[currentSubScreen]));
         this.updateButtons();
     }
 
     private void previousPage() {
-        this.getContent().removeWidget(this.pages[this.currentSubScreen]);
+        this.removeWidget(this.pages[this.currentSubScreen]);
         this.currentSubScreen--;
-        this.getContent().addWidget(this.pages[this.currentSubScreen]);
+        this.addWidget(this.pages[this.currentSubScreen]);
         this.title.setText(ofPlainText(this.titles[currentSubScreen]));
         this.updateButtons();
     }
@@ -269,23 +268,22 @@ public class TerramapConfigScreen extends Screen {
         @Override
         public void init() {
             Translator translator = getGameClient().translator();
-            WidgetContainer content = this.getContent();
-            content.removeAllWidgets();
-            content.cancelAllScheduled();
-            TextWidget text = new TextWidget(content.getWidth() / 2, content.getHeight() / 2 - 20, 10, ofTranslation("terramap.configmenu.asksave.prompt"), TextAlignment.CENTER, getGameClient().defaultFont());
-            content.addWidget(text);
-            content.addWidget(new TextButtonWidget(
-                    content.getWidth() / 2 - 125, text.getY() + text.getHeight() + 15, 10,
+            this.removeAllWidgets();
+            this.cancelAllScheduled();
+            TextWidget text = new TextWidget(this.getWidth() / 2, this.getHeight() / 2 - 20, 10, ofTranslation("terramap.configmenu.asksave.prompt"), TextAlignment.CENTER, getGameClient().defaultFont());
+            this.addWidget(text);
+            this.addWidget(new TextButtonWidget(
+                    this.getWidth() / 2 - 125, text.getY() + text.getHeight() + 15, 10,
                     80,
                     translator.format("terramap.configmenu.asksave.deny"),
                     TerramapConfigScreen.this::close));
-            content.addWidget(new TextButtonWidget(
-                    content.getWidth() / 2 - 40, text.getY() + text.getHeight() + 15, 10,
+            this.addWidget(new TextButtonWidget(
+                    this.getWidth() / 2 - 40, text.getY() + text.getHeight() + 15, 10,
                     80,
                     translator.format("terramap.configmenu.asksave.cancel"),
                     () -> getGameClient().displayScreen(TerramapConfigScreen.this)));
-            content.addWidget(new TextButtonWidget(
-                    content.getWidth() / 2 + 45, text.getY() + text.getHeight() + 15, 10,
+            this.addWidget(new TextButtonWidget(
+                    this.getWidth() / 2 + 45, text.getY() + text.getHeight() + 15, 10,
                     80,
                     translator.format("terramap.configmenu.asksave.confirm"),
                     TerramapConfigScreen.this::saveAndClose));

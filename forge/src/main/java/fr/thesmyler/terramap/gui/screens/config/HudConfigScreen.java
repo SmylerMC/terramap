@@ -129,8 +129,7 @@ public class HudConfigScreen extends Screen {
     public void init() {
         GameClient game = getGameClient();
         Translator translator = game.translator();
-        WidgetContainer content = this.getContent();
-        content.removeAllWidgets();
+        this.removeAllWidgets();
 
         float width = this.getWidth();
         float height = this.getHeight();
@@ -152,7 +151,7 @@ public class HudConfigScreen extends Screen {
             this.compassWindow.setWidth(this.compassWindow.getWidth() / this.lastWidth * width);
         }
         this.minimapWindow.init();
-        content.addWidget(this.minimapWindow);
+        this.addWidget(this.minimapWindow);
 
         // Buttons
         this.buttonPanel.addWidget(
@@ -264,11 +263,11 @@ public class HudConfigScreen extends Screen {
         this.settingsPanel.setOpenY(height - this.settingsPanel.getHeight());
 
         TextWidget explain = new TextWidget(width / 2f, height / 2f - 100f, 10, ofTranslation("terramap.hudconfig.explain"), TextAlignment.CENTER, game.defaultFont());
-        content.addWidget(explain.setMaxWidth(width * .8f).setAnchorY(height / 2f - explain.getHeight() - 10f));
+        this.addWidget(explain.setMaxWidth(width * .8f).setAnchorY(height / 2f - explain.getHeight() - 10f));
 
-        content.addWidget(this.buttonPanel);
-        content.addWidget(this.settingsPanel);
-        content.addWidget(this.compassWindow);
+        this.addWidget(this.buttonPanel);
+        this.addWidget(this.settingsPanel);
+        this.addWidget(this.compassWindow);
         this.lastHeight = height;
         this.lastWidth = width;
     }
