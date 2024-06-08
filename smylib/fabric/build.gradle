@@ -1,0 +1,12 @@
+plugins {
+    id 'fabric-loom' version '1.6-SNAPSHOT'
+}
+
+dependencies {
+    implementation project(":smylib:core")
+    testImplementation project(":smylib:testing")
+
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+}

@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.smyler.terramap.mixins",
-  "refmap": "${mod_id}.refmap.json",
+  "package": "net.smyler.smylib.mixins",
+  "refmap": "smylib.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "client": [
-    "ShowTestScreenMixin"
+    "UiGraphicsInjectorMixin"
   ],
   "server": [],
   "injectors": {
