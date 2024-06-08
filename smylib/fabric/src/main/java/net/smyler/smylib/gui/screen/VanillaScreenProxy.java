@@ -1,7 +1,6 @@
 package net.smyler.smylib.gui.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.WrappedGuiGraphics;
@@ -9,11 +8,10 @@ import net.smyler.smylib.gui.WrappedGuiGraphics;
 import static com.google.common.base.Preconditions.checkState;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
-public class VanillaScreenProxy extends Screen {
+public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen {
+    private final Screen screen;
 
-    private final net.smyler.smylib.gui.screen.Screen screen;
-
-    public VanillaScreenProxy(net.smyler.smylib.gui.screen.Screen screen) {
+    public VanillaScreenProxy(Screen screen) {
         super(Component.literal("SmyLib screen"));
         this.screen = screen;
     }
@@ -32,6 +30,14 @@ public class VanillaScreenProxy extends Screen {
         float mouseY = game.mouse().y();
         this.screen.onUpdate(mouseX, mouseY, null);
         this.screen.draw(uiDrawContext, 0, 0, mouseX, mouseY, true, true, null);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.screen.width = this.width;
+        this.screen.height = this.height;
+        this.screen.init();
     }
 
     @Override
