@@ -8,6 +8,7 @@ public class WrappedGuiGraphics implements DrawContext {
 
     public final GuiGraphics vanillaGraphics;
     private final Scissor scissor = new WrappedGuiGraphicsScissor();
+    private final GlState glState = new Lwjgl3GlState();
 
     public WrappedGuiGraphics(GuiGraphics vanillaGraphics) {
         this.vanillaGraphics = vanillaGraphics;
@@ -20,7 +21,7 @@ public class WrappedGuiGraphics implements DrawContext {
 
     @Override
     public GlState glState() {
-        return null;
+        return this.glState;
     }
 
     @Override
