@@ -2,10 +2,8 @@ package net.smyler.smylib.gui;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.smyler.smylib.Color;
-import net.smyler.smylib.game.WrappedMinecraft;
 import org.jetbrains.annotations.NotNull;
 
-import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class WrappedFont extends BaseFont {
 

@@ -21,6 +21,7 @@ public class WrappedMinecraft implements GameClient {
     private final Mouse mouse;
     private WrappedFont font;
     private WrappedGuiGraphics uiDrawContext;
+    private final SpriteLibrary spriteLibrary = new SpriteLibrary();
 
     private WrappedVanillaScreen lastAccessedVanillaScreen = null;
 
@@ -116,7 +117,7 @@ public class WrappedMinecraft implements GameClient {
 
     @Override
     public SpriteLibrary sprites() {
-        return null;  //TODO
+        return this.spriteLibrary;  //TODO register sprites
     }
 
     @Override

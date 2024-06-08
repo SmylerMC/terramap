@@ -1,7 +1,6 @@
 package net.smyler.smylib.game;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHandler;
 
 public class Lwjgl3Mouse implements Mouse {
 
