@@ -1,9 +1,7 @@
 package net.smyler.smylib.game;
 
 import net.minecraft.client.Minecraft;
-import net.smyler.smylib.gui.Font;
-import net.smyler.smylib.gui.WrappedFont;
-import net.smyler.smylib.gui.WrappedGuiGraphics;
+import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.screen.VanillaScreenProxy;
@@ -21,7 +19,7 @@ public class WrappedMinecraft implements GameClient {
     private final Mouse mouse;
     private WrappedFont font;
     private WrappedGuiGraphics uiDrawContext;
-    private final SpriteLibrary spriteLibrary = new SpriteLibrary();
+    private final SpriteLibrary spriteLibrary = new VanillaSprites();
 
     private WrappedVanillaScreen lastAccessedVanillaScreen = null;
 
