@@ -19,7 +19,7 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
 
     @Override
     public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-        super.render(guiGraphics, x, y, partialTicks);
+
         GameClient game = getGameClient();
         WrappedGuiGraphics uiDrawContext = (WrappedGuiGraphics) game.guiDrawContext();
         checkState(
@@ -28,8 +28,11 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
         );
         float mouseX = game.mouse().x();
         float mouseY = game.mouse().y();
+
         this.screen.onUpdate(mouseX, mouseY, null);
-        this.screen.draw(uiDrawContext, 0, 0, mouseX, mouseY, true, true, null);
+        this.drawBackground(guiGraphics);
+        super.render(guiGraphics, x, y, partialTicks);
+        //this.screen.draw(uiDrawContext, 0, 0, mouseX, mouseY, true, true, null);
     }
 
     @Override
@@ -90,6 +93,22 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
 
     public net.smyler.smylib.gui.screen.Screen getScreen() {
         return screen;
+    }
+
+    private void drawBackground(GuiGraphics guiGraphics) {
+        switch(this.screen.background) {
+            case NONE:
+                break;
+            case DEFAULT:
+                this.renderBackground(guiGraphics);
+                break;
+            case DIRT:
+                this.renderDirtBackground(guiGraphics);
+                break;
+            case OVERLAY:
+                guiGraphics.fillGradient(0, 0, this.width, this.height, -1072689136, -804253680);
+                break;
+        }
     }
 
 }
