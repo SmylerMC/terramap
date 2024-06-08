@@ -7,6 +7,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.sprites.WarningWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ import fr.thesmyler.smylibgui.widgets.ChatWidget;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.ScrollbarWidget;
 import net.smyler.smylib.gui.widgets.ScrollbarWidget.ScrollbarOrientation;
-import net.smyler.smylib.gui.widgets.WarningWidget;
+import net.smyler.smylib.gui.widgets.SpriteWidget;
 import net.smyler.smylib.gui.widgets.buttons.AbstractButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
@@ -92,7 +93,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private final SpriteButtonWidget centerButton = new SpriteButtonWidget(50, ButtonSprites.CENTER);
     private final SpriteButtonWidget styleButton = new SpriteButtonWidget(50, ButtonSprites.PAPER);
     private final CircularCompassWidget compass = new CircularCompassWidget(100, 100, 50, 100);
-    private final WarningWidget offsetWarning = new WarningWidget(0, 0, 50);
+    private final SpriteWidget offsetWarning = new WarningWidget(0, 0, 50);
 
     // Info panel widgets
     private TextWidget zoomText;

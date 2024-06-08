@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.Preconditions.checkState;
@@ -14,6 +15,7 @@ import static net.smyler.smylib.Preconditions.checkState;
 public class SpriteLibrary {
 
     private final Map<Identifier, Sprite> registered = new HashMap<>();
+    private final Map<Identifier, Sprite> readOnly = unmodifiableMap(this.registered);
 
     public SpriteLibrary() {
         for(SmyLibSprites sprite: SmyLibSprites.values()) {
@@ -48,6 +50,15 @@ public class SpriteLibrary {
 
     public Sprite getSprite(@NotNull String identifier) {
         return this.registered.get(Identifier.parse(identifier));
+    }
+
+    /**
+     * Allow access to all registered sprites.
+     *
+     * @return a read-only vue over the registered sprites
+     */
+    public Map<Identifier, Sprite> getSprites() {
+        return this.readOnly;
     }
 
 }

@@ -3,12 +3,17 @@ package net.smyler.smylib.gui.screen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.gui.widgets.MenuWidget;
+import net.smyler.smylib.gui.widgets.SpriteWidget;
 import net.smyler.smylib.gui.widgets.buttons.OptionButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
@@ -24,6 +29,13 @@ import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.lang.Math.max;
+import static java.lang.Math.round;
+import static java.util.Comparator.comparing;
 import static net.smyler.smylib.Color.RED;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -46,7 +58,7 @@ public class TestScreen extends Screen {
     private final SpriteButtonWidget previous;
     private final SpriteButtonWidget next;
 
-    private final Gson textJsonParser = new GsonBuilder().registerTypeAdapter(Text.class, new TextJsonAdapter()).create();;
+    private final Gson textJsonParser = new GsonBuilder().registerTypeAdapter(Text.class, new TextJsonAdapter()).create();
 
     public TestScreen(Screen parent) {
         super(BackgroundOption.DEFAULT);
@@ -80,7 +92,9 @@ public class TestScreen extends Screen {
         WidgetContainer sliderScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
         WidgetContainer menuScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
         WidgetContainer jsonTextScreen = new FlexibleWidgetContainer(20, 50, 1, width - 40, height - 70);
-        this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen, jsonTextScreen};
+        FlexibleWidgetContainer spriteScreenContent = new FlexibleWidgetContainer(20, 50, 1, width - 40, 10f);
+        WidgetContainer spritesScreen = new ScrollableWidgetContainer(20, 50, 1, width - 40, height - 70, spriteScreenContent);
+        this.subScreens = new WidgetContainer[] { textScreen, buttonScreen, sliderScreen, menuScreen, jsonTextScreen, spritesScreen};
         for(WidgetContainer container: this.subScreens) container.setDoScissor(false);
 
         TextWidget title = new TextWidget(width / 2f, 20, 10, ofPlainText("SmyLibGui demo test screen"), TextAlignment.CENTER, getGameClient().defaultFont());
@@ -200,6 +214,34 @@ public class TestScreen extends Screen {
                 inputField.setFocusedTextColor(RED);
             }
         });
+
+        // ==== Sprites ==== /
+        float y = 0f;
+        Font font = getGameClient().defaultFont();
+        List<Map.Entry<Identifier, Sprite>> sprites = getGameClient().sprites().getSprites()
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey(comparing(Identifier::toString)))
+                .collect(Collectors.toList());
+        for (Map.Entry<Identifier, Sprite> entry: sprites) {
+            Text id = ImmutableText.ofPlainText(entry.getKey().toString());
+            Sprite sprite = entry.getValue();
+            float entryHeight = round(max(font.height(), sprite.height())) + 10f;
+            spriteScreenContent.addWidget(new TextWidget(
+                    0, y + (entryHeight - font.height()) / 2, 0,
+                    id,
+                    font
+            ));
+            SpriteWidget spriteWidget = new SpriteWidget(
+                    font.computeWidth(id) + 10f, (float) (y + (entryHeight - sprite.height()) / 2), 0,
+                    sprite
+            );
+            spriteScreenContent.addWidget(spriteWidget);
+            spriteScreenContent.setWidth(max(spriteScreenContent.getWidth(), spriteWidget.getX() + spriteWidget.getWidth() + 10f));
+            y += entryHeight;
+        }
+        spriteScreenContent.setHeight(y + 10f);
+        spritesScreen.setDoScissor(true);
 
 
         // ==== Getting everything ready and setting up scheduled tasks === //

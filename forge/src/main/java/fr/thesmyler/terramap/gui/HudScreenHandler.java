@@ -2,7 +2,8 @@ package fr.thesmyler.terramap.gui;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
-import net.smyler.smylib.gui.widgets.WarningWidget;
+import net.smyler.smylib.gui.sprites.WarningWidget;
+import net.smyler.smylib.gui.widgets.SpriteWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
@@ -21,7 +22,7 @@ public abstract class HudScreenHandler {
 
     private static MinimapWidget map;
     private static RibbonCompassWidget compass;
-    private final static WarningWidget offsetWarning = new WarningWidget(0, 0, 50);
+    private final static SpriteWidget offsetWarning = new WarningWidget(0, 0, 50);
 
     public static void init(WidgetContainer screen) {
 
