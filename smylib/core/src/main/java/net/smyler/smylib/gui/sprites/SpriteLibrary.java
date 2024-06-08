@@ -11,6 +11,7 @@ import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.Preconditions.checkState;
+import static net.smyler.smylib.SmyLib.getLogger;
 
 public class SpriteLibrary {
 
@@ -45,11 +46,15 @@ public class SpriteLibrary {
     }
 
     public Sprite getSprite(@NotNull Identifier identifier) {
-        return this.registered.get(requireNonNull(identifier));
+        Sprite sprite = this.readOnly.get(identifier);
+        if (sprite == null) {
+            getLogger().warn("Tried to get missing sprite for identifier {}", identifier);
+        }
+        return sprite;
     }
 
     public Sprite getSprite(@NotNull String identifier) {
-        return this.registered.get(Identifier.parse(identifier));
+        return this.getSprite(Identifier.parse(identifier));
     }
 
     /**
