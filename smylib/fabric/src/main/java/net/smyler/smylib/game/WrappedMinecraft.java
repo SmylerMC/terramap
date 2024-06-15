@@ -19,13 +19,14 @@ public class WrappedMinecraft implements GameClient {
     private final Mouse mouse;
     private WrappedFont font;
     private WrappedGuiGraphics uiDrawContext;
+    private final WrappedSoundSystem soundSystem = new WrappedSoundSystem();
     private final SpriteLibrary spriteLibrary = new VanillaSprites();
 
     private WrappedVanillaScreen lastAccessedVanillaScreen = null;
 
     public WrappedMinecraft(Minecraft client) {
         this.client = client;
-        this.mouse = new Lwjgl3Mouse(this.client);
+        this.mouse = new GlfwMouse(this.client);
     }
 
     @Override
@@ -87,7 +88,7 @@ public class WrappedMinecraft implements GameClient {
 
     @Override
     public SoundSystem soundSystem() {
-        return null; //TODO
+        return this.soundSystem;
     }
 
     @Override
@@ -120,7 +121,7 @@ public class WrappedMinecraft implements GameClient {
 
     @Override
     public boolean isGlAvailabale() {
-        return false;  //TODO
+        return true;
     }
 
     @Override
@@ -171,6 +172,7 @@ public class WrappedMinecraft implements GameClient {
 
     @Override
     public int currentFPS() {
-        return 0;  //TODO
+        return this.client.getFps();
     }
+
 }
