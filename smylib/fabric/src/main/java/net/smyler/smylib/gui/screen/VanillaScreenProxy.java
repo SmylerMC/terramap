@@ -6,6 +6,7 @@ import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.WrappedGuiGraphics;
 
 import static com.google.common.base.Preconditions.checkState;
+import static java.lang.Math.round;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen {
@@ -57,23 +58,29 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
     //FIXME mouse and keyboard support in screen proxy
 
     @Override
-    public boolean mouseClicked(double d, double e, int i) {
-        return super.mouseClicked(d, e, i);
+    public boolean mouseClicked(double x, double y, int button) {
+        //TODO implement double clicks
+        this.screen.onClick((float)x, (float)y, button, null);
+        return super.mouseClicked(x, y, button);
     }
 
     @Override
-    public boolean mouseReleased(double d, double e, int i) {
-        return super.mouseReleased(d, e, i);
+    public boolean mouseReleased(double x, double y, int button) {
+        this.screen.onMouseReleased((float)x, (float)y, button, null);  //FIXME track dragged widget
+        return super.mouseReleased(x, y, button);
     }
 
     @Override
-    public boolean mouseDragged(double d, double e, int i, double f, double g) {
-        return super.mouseDragged(d, e, i, f, g);
+    public boolean mouseDragged(double x, double y, int button, double dX, double dY) {
+        //TODO verify arguments are what they seem
+        this.screen.onMouseDragged((float)x, (float)y, (float)dX, (float) dY, button, null, 0);  //FIXME provide dt
+        return super.mouseDragged(x, y, button, dX, dY);
     }
 
     @Override
-    public boolean mouseScrolled(double d, double e, double f) {
-        return super.mouseScrolled(d, e, f);
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        this.screen.onMouseWheeled((float)mouseX, (float)mouseY, (int)round(amount), null);
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override
