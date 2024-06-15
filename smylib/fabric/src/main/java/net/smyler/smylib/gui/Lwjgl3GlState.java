@@ -1,5 +1,6 @@
 package net.smyler.smylib.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.smyler.smylib.Color;
 
 public class Lwjgl3GlState implements GlState {
@@ -15,7 +16,7 @@ public class Lwjgl3GlState implements GlState {
 
     @Override
     public void setColor(Color color) {
-        //TODO set color
+        RenderSystem.setShaderColor(color.redf(), color.greenf(), color.bluef(), color.alphaf());
     }
 
     @Override
@@ -25,12 +26,12 @@ public class Lwjgl3GlState implements GlState {
 
     @Override
     public void enableColorLogic(ColorLogic colorLogic) {
-        //TODO enable color logic
+        RenderSystem.enableColorLogicOp();
     }
 
     @Override
     public void disableColorLogic() {
-        //TODO disable color logic
+        RenderSystem.disableColorLogicOp();
     }
 
 }
