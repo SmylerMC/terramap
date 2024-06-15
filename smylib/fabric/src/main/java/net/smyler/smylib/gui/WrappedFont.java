@@ -47,8 +47,8 @@ public class WrappedFont extends BaseFont {
 
     @Override
     public float draw(float x, float y, @NotNull String text, @NotNull Color color, boolean shadow) {
-        //TODO support color when drawing strings
-        return this.vanillaGraphics.drawString(this.vanillaFont, text, (int) x, (int) y, 0);
+        this.vanillaGraphics.setColor(color.redf(), color.greenf(), color.bluef(), color.alphaf());
+        return this.vanillaGraphics.drawString(this.vanillaFont, text, (int) x, (int) y, color.asInt());
     }
 
     @Override
