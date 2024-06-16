@@ -3,6 +3,7 @@ package net.smyler.smylib.gui.screen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.GlfwKeyboard;
 import net.smyler.smylib.gui.WrappedGuiGraphics;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -85,11 +86,13 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
 
     @Override
     public boolean keyReleased(int i, int j, int k) {
+        this.screen.onKeyTyped('\0', GlfwKeyboard.lookupKeyCode(i), null);
         return super.keyReleased(i, j, k);
     }
 
     @Override
     public boolean charTyped(char c, int i) {
+        this.screen.onKeyTyped(c, GlfwKeyboard.lookupKeyCode(i), null);
         return super.charTyped(c, i);
     }
 

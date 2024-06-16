@@ -17,6 +17,7 @@ public class WrappedMinecraft implements GameClient {
 
     private final Minecraft client;
     private final Mouse mouse;
+    private final Keyboard keyboard;
     private WrappedFont font;
     private WrappedGuiGraphics uiDrawContext;
     private final WrappedSoundSystem soundSystem = new WrappedSoundSystem();
@@ -27,6 +28,7 @@ public class WrappedMinecraft implements GameClient {
     public WrappedMinecraft(Minecraft client) {
         this.client = client;
         this.mouse = new GlfwMouse(this.client);
+        this.keyboard = new GlfwKeyboard(this.client);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class WrappedMinecraft implements GameClient {
 
     @Override
     public Keyboard keyboard() {
-        return null;  //TODO
+        return this.keyboard;
     }
 
     @Override
