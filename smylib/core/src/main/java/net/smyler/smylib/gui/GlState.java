@@ -16,4 +16,14 @@ public interface GlState {
 
     void disableColorLogic();
 
+    void pushViewMatrix();
+
+    void rotate(double angle);
+
+    void translate(double x, double y);
+
+    void scale(double x, double y);
+
+    void popViewMatrix();
+
 }

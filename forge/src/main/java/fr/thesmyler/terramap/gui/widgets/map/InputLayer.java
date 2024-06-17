@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.smylib.gui.DrawContext;
@@ -11,11 +10,9 @@ import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.input.Keyboard;
 
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 
 import static java.lang.Math.*;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -71,11 +68,11 @@ public class InputLayer extends MapLayer {
 
         if(this.isRotating) {
             // If we are processing rotation input, draw pentagons at the corresponding spot
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x + this.rotatePosition.x, y + this.rotatePosition.y, 0);
+            context.glState().pushViewMatrix();
+            context.glState().translate(x + this.rotatePosition.x, y + this.rotatePosition.y);
             context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_OUTER);
             context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_INNER);
-            GlStateManager.popMatrix();
+            context.glState().popViewMatrix();
         }
 
         if (this.getMap().isDebugMode()) {

@@ -78,4 +78,29 @@ public class LwjglState implements GlState {
         GlStateManager.disableColorLogic();
     }
 
+    @Override
+    public void pushViewMatrix() {
+        GlStateManager.pushMatrix();
+    }
+
+    @Override
+    public void rotate(double angle) {
+        GlStateManager.rotate((float)angle, 0, 0, 1f);
+    }
+
+    @Override
+    public void translate(double x, double y) {
+        GlStateManager.translate(x, y, 0);
+    }
+
+    @Override
+    public void scale(double x, double y) {
+        GlStateManager.scale(x, y, 1d);
+    }
+
+    @Override
+    public void popViewMatrix() {
+        GlStateManager.popMatrix();
+    }
+
 }

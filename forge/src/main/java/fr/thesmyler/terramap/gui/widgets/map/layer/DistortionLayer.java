@@ -13,7 +13,6 @@ import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.minecraft.client.renderer.GlStateManager;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -41,8 +40,8 @@ public class DistortionLayer extends MapLayer {
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
         map.getProfiler().startSection("layer-distortion");
-        GlStateManager.pushMatrix();
-        this.applyRotationGl(x, y);
+        context.glState().pushViewMatrix();
+        this.applyRotationGl(context, x, y);
 
         double maxX = this.renderSpaceDimensions.x();
         double maxY = this.renderSpaceDimensions.y();
@@ -64,8 +63,8 @@ public class DistortionLayer extends MapLayer {
                 context.drawRectangle(x + dx, y + dy, x + dx + res, y + dy + res, color);
             }
         }
-        
-        GlStateManager.popMatrix();
+
+        context.glState().popViewMatrix();
         map.getProfiler().endSection();
     }
 

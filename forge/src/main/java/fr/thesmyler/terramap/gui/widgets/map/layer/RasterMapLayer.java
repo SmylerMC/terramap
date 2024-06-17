@@ -22,7 +22,6 @@ import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.ResourceLocation;
@@ -77,7 +76,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
         profiler.startSection("render-raster-layer_" + tiledMap.getId());
 
-        GlStateManager.pushMatrix();
+        context.glState().pushViewMatrix();
         float widthViewPort = this.getWidth();
         float heightViewPort = this.getHeight();
         double zoom = this.getMap().getController().getZoom();
@@ -87,7 +86,7 @@ abstract public class RasterMapLayer extends MapLayer {
         Vec2dImmutable xvec = rotationMatrix.line1();
         Vec2dImmutable yvec = rotationMatrix.line2();
 
-        this.applyRotationGl(x, y);
+        this.applyRotationGl(context, x, y);
 
         Vec2dReadOnly upperLeft = this.getUpperLeftRenderCornerPositionInMercatorSpace();
 
@@ -286,7 +285,7 @@ abstract public class RasterMapLayer extends MapLayer {
         this.lastNeededTiles.forEach(RasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;
 
-        GlStateManager.popMatrix();
+        context.glState().popViewMatrix();
         profiler.endSection();
 
     }

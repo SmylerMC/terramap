@@ -11,7 +11,6 @@ import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.profiler.Profiler;
 
 public class RenderingDeltaPreviewLayer extends MapLayer {
@@ -40,13 +39,13 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
         float height = this.getHeight();
         this.getLocationPositionInRenderSpace(this.realCenterPosition, this.realCenter);
 
-        GlStateManager.pushMatrix();
-        this.applyRotationGl(x, y);
+        context.glState().pushViewMatrix();
+        this.applyRotationGl(context, x, y);
         context.drawStrokeLine(Color.RED, 2f,
                 this.renderSpaceHalfDimensions.x(), this.renderSpaceHalfDimensions.y(),
                 this.realCenterPosition.x, this.renderSpaceHalfDimensions.y(),
                 this.realCenterPosition.x, this.realCenterPosition.y);
-        GlStateManager.popMatrix();
+        context.glState().popViewMatrix();
 
         float centerHole = 10;
         float linesWidth = 1f;

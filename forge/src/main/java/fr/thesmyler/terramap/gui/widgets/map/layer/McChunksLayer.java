@@ -29,7 +29,6 @@ import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.minecraft.client.renderer.GlStateManager;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
@@ -163,8 +162,8 @@ public class McChunksLayer extends MapLayer {
             return;
         }
 
-        GlStateManager.pushMatrix();
-        this.applyRotationGl(x, y);
+        context.glState().pushViewMatrix();
+        this.applyRotationGl(context, x, y);
         
 
         float size = 1f;
@@ -185,7 +184,7 @@ public class McChunksLayer extends MapLayer {
         }
 
         this.cache.cycle();
-        GlStateManager.popMatrix();
+        context.glState().popViewMatrix();
         map.getProfiler().endSection();
     }
     

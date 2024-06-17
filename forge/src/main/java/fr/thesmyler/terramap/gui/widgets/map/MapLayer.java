@@ -1,6 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonObject;
+import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.popups.Popup;
@@ -200,10 +202,11 @@ public abstract class MapLayer implements Widget {
      * @param drawX the X coordinate the widget is supposed to be drawn at
      * @param drawY the Y coordinate the widget is supposed to be drawn at
      */
-    protected void applyRotationGl(float drawX, float drawY) {
-        GlStateManager.translate(drawX + this.map.getWidth() / 2, drawY + this.map.getHeight() / 2, 0);
-        GlStateManager.rotate(this.rotation, 0, 0, 1);
-        GlStateManager.translate(-this.renderSpaceDimensionsHalf.x, -this.renderSpaceDimensionsHalf.y, 0);
+    protected void applyRotationGl(DrawContext context, float drawX, float drawY) {
+        GlState gl = context.glState();
+        gl.translate(drawX + this.map.getWidth() / 2, drawY + this.map.getHeight() / 2);
+        gl.rotate(this.rotation);
+        gl.translate(-this.renderSpaceDimensionsHalf.x, -this.renderSpaceDimensionsHalf.y);
     }
 
     /**
