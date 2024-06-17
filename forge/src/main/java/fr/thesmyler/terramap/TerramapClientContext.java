@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import fr.thesmyler.smylibgui.toast.TextureToast;
+import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.MinecraftServerInfo;
 import fr.thesmyler.terramap.saving.client.ClientSaveManager;
 import fr.thesmyler.terramap.saving.client.SavedClientState;
@@ -500,15 +501,17 @@ public class TerramapClientContext {
     }
 
     public void openMap() {
-       getGameClient().displayScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, this.getSavedState().mainScreen));
+        GameClient client = getGameClient();
+        client.displayScreen(new TerramapScreen(client.getCurrentScreen(), this.getSavedState().mainScreen));
     }
 
     public void openMapAt(double zoom, double lon, double lat) {
         SavedMainScreenState state = this.getSavedState().mainScreen;
+        GameClient client = getGameClient();
         state.map.center.set(lon, lat);
         state.map.zoom = zoom;
         state.map.trackedMarker = null;
-        getGameClient().displayScreen(new TerramapScreen(Minecraft.getMinecraft().currentScreen, state));
+        client.displayScreen(new TerramapScreen(client.getCurrentScreen(), state));
     }
 
     @NotNull

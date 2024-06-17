@@ -116,7 +116,7 @@ public class InputLayer extends MapLayer {
         if(this.isShortcutEnabled()) {
             this.map.getRightClickMenu().teleport();
             if(this.map.getContext().equals(MapContext.FULLSCREEN)) {
-                Minecraft.getMinecraft().displayGuiScreen(null); //TODO change this so it can work from any menu
+                getGameClient().displayScreen(null); //TODO change this so it can work from any menu
             }
         }
         if(this.map.isRightClickMenuEnabled() && mouseButton == 1 && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.mouseLocation)) {

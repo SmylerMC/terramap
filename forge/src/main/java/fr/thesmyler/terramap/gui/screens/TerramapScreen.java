@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.*;
 import java.util.function.Consumer;
 
-import net.minecraft.util.text.TextFormatting;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Scissor;
@@ -62,10 +61,8 @@ import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
-import org.lwjgl.input.Keyboard;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
@@ -75,13 +72,14 @@ import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.game.Key.*;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.util.stream.Collectors.toMap;
+import static net.smyler.smylib.text.Formatting.*;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 
 public class TerramapScreen extends Screen implements ITabCompleter {
 
-    private final GuiScreen parent;
+    private final Screen parent;
 
     private final ChatWidget chat = new ChatWidget(1000);
 
@@ -118,7 +116,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private boolean f1Mode = false;
     private boolean debugMode = false;
 
-    public TerramapScreen(GuiScreen parent, SavedMainScreenState state) {
+    public TerramapScreen(Screen parent, SavedMainScreenState state) {
         super(BackgroundOption.OVERLAY);
         this.parent = parent;
         this.map = new MapWidget(10, MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
@@ -152,7 +150,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         // Map control buttons
         this.closeButton.setX(width - this.closeButton.getWidth() - 5).setY(5);
-        this.closeButton.setOnClick(() -> Minecraft.getMinecraft().displayGuiScreen(this.parent));
+        this.closeButton.setOnClick(() -> game.displayScreen(this.parent));
         this.closeButton.setTooltip(translator.format("terramap.terramapscreen.buttons.close.tooltip"));
         this.closeButton.enable();
         this.addWidget(this.closeButton);
@@ -416,7 +414,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             Locale locale = Locale.US;
             TerramapClientContext srv = TerramapClientContext.getContext();
             EarthGeneratorSettings generationSettings = srv.getGeneratorSettings();
-            debugBuilder.append(String.format(locale, "FPS: %s", Minecraft.getDebugFPS()));
+            debugBuilder.append(String.format(locale, "FPS: %s", getGameClient().currentFPS()));
             debugBuilder.append(String.format(locale, "\nClient: %s", TerramapMod.getVersion()));
             debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
@@ -439,11 +437,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             debugBuilder.append(String.format(locale, "\nScaling: %.2f/%s", this.map.getTileScaling(), getGameClient().scaleFactor()));
             debugBuilder.append("\n\n");
             debugBuilder.append("Locations: ")
-                    .append(TextFormatting.RED).append("center ")
-                    .append(TextFormatting.BLUE).append("center target ")
-                    .append(TextFormatting.GREEN).append("zoom target ")
-                    .append(TextFormatting.GOLD).append("rotation target ")
-                    .append(TextFormatting.RESET);
+                    .append(RED).append("center ")
+                    .append(BLUE).append("center target ")
+                    .append(GREEN).append("zoom target ")
+                    .append(GOLD).append("rotation target ")
+                    .append(RESET);
             debugBuilder.append('\n');
             this.buildProfilingResult(debugBuilder, "", "");
             this.debugText.setText(ofPlainText(debugBuilder.toString()));
@@ -509,14 +507,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         if(this.getFocusedWidget() == null || (!this.getFocusedWidget().equals(this.searchBox) && !this.chat.isOpen())) {
             MapController controller = this.map.getController();
             if(key.code == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
-            if(key.code == Keyboard.KEY_F1) this.setF1Mode(!this.f1Mode);
+            if(key == KEY_F1) this.setF1Mode(!this.f1Mode);
             if(key.code == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || key == KEY_UP) controller.moveMap(0, 30, true);
             if(key.code == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || key == KEY_DOWN) controller.moveMap(0, -30, true);
             if(key.code == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || key == KEY_RIGHT) controller.moveMap(-30, 0, true);
             if(key.code == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || key == KEY_LEFT) controller.moveMap(30, 0, true);
             if(key.code == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
             if(key.code == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
-            if(key.code == KeyBindings.OPEN_MAP.getKeyCode() || key == KEY_ESCAPE) Minecraft.getMinecraft().displayGuiScreen(this.parent);
+            if(key.code == KeyBindings.OPEN_MAP.getKeyCode() || key == KEY_ESCAPE) getGameClient().displayScreen(this.parent);
             if(key.code == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) {
                 this.map.stopPassiveInputs();
                 this.chat.setOpen(!this.chat.isOpen());

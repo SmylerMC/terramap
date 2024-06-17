@@ -297,7 +297,7 @@ public class HudConfigScreen extends Screen {
     }
 
     private void close() {
-        Minecraft.getMinecraft().displayGuiScreen(null);
+        getGameClient().displayScreen(null);
     }
 
     private void reset() {
