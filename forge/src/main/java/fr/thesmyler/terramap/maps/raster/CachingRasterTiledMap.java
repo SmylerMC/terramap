@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.TilePos;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
@@ -108,8 +108,8 @@ public abstract class CachingRasterTiledMap<T extends RasterTile> implements Ras
                     try {
                         this.getTile(zoom, x, y).getTexture();
                     } catch (Throwable e) {
-                        TerramapMod.logger.error("Failed to load a low level texture for map: %s-%sv%s at %s/%s/%s", this.getId(), this.getProvider(), this.getProviderVersion(),zoom, x, y);
-                        TerramapMod.logger.catching(e);
+                        Terramap.instance().logger().error("Failed to load a low level texture for map: %s-%sv%s at %s/%s/%s", this.getId(), this.getProvider(), this.getProviderVersion(),zoom, x, y);
+                        Terramap.instance().logger().catching(e);
                     }
                 }
             }

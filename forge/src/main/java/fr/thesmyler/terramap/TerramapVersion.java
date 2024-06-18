@@ -3,6 +3,7 @@ package fr.thesmyler.terramap;
 import java.util.Arrays;
 import java.util.Map;
 
+import net.smyler.terramap.Terramap;
 import org.jetbrains.annotations.NotNull;
 
 import org.apache.logging.log4j.util.Strings;
@@ -307,7 +308,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
             try {
                 version = new TerramapVersion(remoteVersion);
             } catch(InvalidVersionString e) {
-                TerramapMod.logger.warn("Failed to parse a client's Terramap version: " + remoteVersion + " : " + e.getLocalizedMessage());
+                Terramap.instance().logger().warn("Failed to parse a client's Terramap version: {} : {}", remoteVersion, e.getLocalizedMessage());
             }
         }
         return version;

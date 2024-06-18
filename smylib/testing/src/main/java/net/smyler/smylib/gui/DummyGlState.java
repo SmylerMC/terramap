@@ -36,4 +36,29 @@ public class DummyGlState implements GlState {
 
     }
 
+    @Override
+    public void pushViewMatrix() {
+
+    }
+
+    @Override
+    public void rotate(double angle) {
+
+    }
+
+    @Override
+    public void translate(double x, double y) {
+
+    }
+
+    @Override
+    public void scale(double x, double y) {
+
+    }
+
+    @Override
+    public void popViewMatrix() {
+
+    }
+
 }

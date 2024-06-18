@@ -3,6 +3,7 @@ description = "Core code shared by all versions"
 
 dependencies {
     implementation project(":smylib:core")
+    implementation 'org.apache.logging.log4j:log4j-api:2.8.1'
 
     testImplementation project(":smylib:testing")
 }

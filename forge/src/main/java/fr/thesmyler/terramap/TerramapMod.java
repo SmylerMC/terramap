@@ -6,10 +6,10 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
-import net.buildtheearth.terraplusplus.generator.EarthGenerator;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 //TODO Credit TwelveMonkeys in the readme
 @Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
-public class TerramapMod {
+public class TerramapMod implements Terramap {
 
     public static final String MODID = "terramap";
     public static final String AUTHOR_EMAIL = "smyler at mail dot com";
@@ -63,6 +63,7 @@ public class TerramapMod {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        Terramap.InstanceHolder.setInstance(this);
         logger = event.getModLog();
         String versionStr = event.getModMetadata().version;
         if (System.getProperties().containsKey("terramap.debug")) {
@@ -107,5 +108,10 @@ public class TerramapMod {
         proxy.onServerStarting(event);
     }
 
+
+    @Override
+    public Logger logger() {
+        return TerramapMod.logger;
+    }
 
 }

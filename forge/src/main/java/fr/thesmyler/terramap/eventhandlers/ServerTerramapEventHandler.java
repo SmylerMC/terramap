@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.smyler.terramap.Terramap;
 
 @SideOnly(Side.SERVER)
 public class ServerTerramapEventHandler {
@@ -25,14 +26,14 @@ public class ServerTerramapEventHandler {
                 if(TerramapConfig.SERVER.joinWithoutModMessage.length() > 0)
                     player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithoutModMessage));
             } catch(Exception e) {
-                TerramapMod.logger.error("Failed to send custom join message to client, make sure your json text is valid");
+                Terramap.instance().logger().error("Failed to send custom join message to client, make sure your json text is valid");
             }
         } else if(remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
             try {
                 if(TerramapConfig.SERVER.joinWithOutdatedModMessage.length() > 0)
                     player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithOutdatedModMessage));
             } catch(Exception e) {
-                TerramapMod.logger.error("Failed to send custom join message to client, make sure your json text is valid");
+                Terramap.instance().logger().error("Failed to send custom join message to client, make sure your json text is valid");
             }
         }
     }

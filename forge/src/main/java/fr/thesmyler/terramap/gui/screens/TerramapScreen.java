@@ -9,6 +9,7 @@ import net.smyler.smylib.gui.Scissor;
 import net.smyler.smylib.gui.sprites.WarningWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
+import net.smyler.terramap.Terramap;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.*;
@@ -539,7 +540,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private boolean search(String text) {
-        TerramapMod.logger.info("Geo search: " + text);
+        Terramap.instance().logger().info("Geo search: {}", text);
         //TODO Search
         return true; // Let the search box loose focus
     }

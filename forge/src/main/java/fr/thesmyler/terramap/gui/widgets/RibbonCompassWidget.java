@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.widgets;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.GlState;
+import net.smyler.terramap.Terramap;
 import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -43,8 +44,8 @@ public class RibbonCompassWidget implements Widget {
             this.indicatorHeight = p2.getHeight();
             this.indicatorWidth = p2.getWidth();
         } catch (UnknownTextureException e) {
-            TerramapMod.logger.error("Failed to get texture heiht for ribbon compass");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Failed to get texture heiht for ribbon compass");
+            Terramap.instance().logger().catching(e);
             this.height = 16;
         }
     }

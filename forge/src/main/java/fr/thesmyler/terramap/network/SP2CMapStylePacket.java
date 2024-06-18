@@ -5,10 +5,10 @@ import java.util.Map;
 
 import com.google.gson.JsonParseException;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import org.apache.logging.log4j.util.Strings;
 
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
@@ -83,7 +83,7 @@ public class SP2CMapStylePacket implements IMessage {
                 Text copyright = GSON.fromJson(copyrightJson, Text.class);
                 copyrights.put(key, copyright);
             } catch (JsonParseException e) {
-                TerramapMod.logger.warn("Received invalid map style copyright from server.");
+                Terramap.instance().logger().warn("Received invalid map style copyright from server.");
             }
         }
         this.copyrights = copyrights;
@@ -185,16 +185,16 @@ public class SP2CMapStylePacket implements IMessage {
         public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
             try {
                 UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER);
-                TerramapMod.logger.debug("Got custom map style from server: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
+                Terramap.instance().logger().debug("Got custom map style from server: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
-                    TerramapMod.logger.debug("Ignoring debug map from server: " + map.getId());
+                    Terramap.instance().logger().debug("Ignoring debug map from server: {}", map.getId());
                     return null;
                 }
                 Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerMapStyle(map));
 
             } catch(Exception e) {
-                TerramapMod.logger.error("Failed to unpack a map style sent by the server");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to unpack a map style sent by the server");
+                Terramap.instance().logger().catching(e);
                 TiledMapProvider.SERVER.setLastError(e);
             }
             return null;
@@ -210,15 +210,15 @@ public class SP2CMapStylePacket implements IMessage {
         public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
             try {
                 UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY);
-                TerramapMod.logger.debug("Got custom map style from proxy: " + map.getId() + " / " + String.join(";", map.getUrlPatterns()));
+                Terramap.instance().logger().debug("Got custom map style from proxy: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
-                    TerramapMod.logger.debug("Ignoring debug map from proxy: " + map.getId());
+                    Terramap.instance().logger().debug("Ignoring debug map from proxy: {}", map.getId());
                     return null;
                 }
                 Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyMapStyle(map));
             } catch(Exception e) {
-                TerramapMod.logger.error("Failed to unpack a map style sent by the proxy");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to unpack a map style sent by the proxy");
+                Terramap.instance().logger().catching(e);
                 TiledMapProvider.PROXY.setLastError(e);
             }
             return null;

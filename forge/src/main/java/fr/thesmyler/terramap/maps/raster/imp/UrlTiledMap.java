@@ -14,6 +14,7 @@ import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
 import fr.thesmyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
@@ -116,8 +117,8 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
                     Http.setMaximumConcurrentRequestsTo(url, this.getMaxConcurrentRequests());
                 }
             } catch(IllegalArgumentException | MalformedURLException e) {
-                TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + url);
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
+                Terramap.instance().logger().catching(e);
             }
         }
         super.setup();

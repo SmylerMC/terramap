@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import net.smyler.terramap.Terramap;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 
@@ -50,8 +51,8 @@ public class KmlFile {
                 }
             }
         } catch(JAXBException e) {
-            TerramapMod.logger.error("Something went seriously wrong when saving a kml file. Save aborted.");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Something went seriously wrong when saving a kml file. Save aborted.");
+            Terramap.instance().logger().catching(e);
         }
     }
 

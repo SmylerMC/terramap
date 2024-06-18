@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
+import net.smyler.terramap.Terramap;
 
 public abstract class MarkerControllerManager {
 
@@ -31,9 +31,9 @@ public abstract class MarkerControllerManager {
             controller.newInstance();
             CONTROLLER_CLASSES.get(context).add(controller);
         } catch(Exception e) {
-            TerramapMod.logger.error("Failed to create a test marker controller instance for " + controller.getCanonicalName());
-            TerramapMod.logger.error("This marker controller class will not be registered. See stack trace for details.");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Failed to create a test marker controller instance for {}", controller.getCanonicalName());
+            Terramap.instance().logger().error("This marker controller class will not be registered. See stack trace for details.");
+            Terramap.instance().logger().catching(e);
         }
     }
 
@@ -44,9 +44,9 @@ public abstract class MarkerControllerManager {
             try {
                 controllers[i++] = clazz.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                TerramapMod.logger.error("Failed to create a marker controller, things will be unstable!");
-                TerramapMod.logger.error("Failed to instantiate " + clazz.getCanonicalName());
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to create a marker controller, things will be unstable!");
+                Terramap.instance().logger().error("Failed to instantiate {}", clazz.getCanonicalName());
+                Terramap.instance().logger().catching(e);
             }
         }
         return controllers;

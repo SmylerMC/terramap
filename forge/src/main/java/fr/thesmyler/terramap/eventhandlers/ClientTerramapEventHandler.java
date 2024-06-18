@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smyler.smylib.gui.popups.Popup;
+import net.smyler.terramap.Terramap;
 
 import java.util.Objects;
 
@@ -81,7 +82,7 @@ public class ClientTerramapEventHandler {
     @SubscribeEvent
     public void onChangeDimension(PlayerChangedDimensionEvent event) {
         // Not called on client...
-        TerramapMod.logger.info(event.player.world.isRemote);
+        Terramap.instance().logger().info(event.player.world.isRemote);
         if(event.player.world.isRemote) {
             TerramapClientContext.getContext().resetWorld();
         }

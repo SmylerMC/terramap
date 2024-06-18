@@ -7,6 +7,7 @@ import java.util.Set;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Translator;
+import net.smyler.terramap.Terramap;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
@@ -23,7 +24,6 @@ import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 
@@ -179,8 +179,8 @@ public class TerramapConfigScreen extends Screen {
             try {
                 Desktop.getDesktop().open(MapStylesLibrary.getFile());
             } catch (IOException e) {
-                TerramapMod.logger.error("Failed to open map style config file: ");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to open map style config file: ");
+                Terramap.instance().logger().catching(e);
             }
         }));
 

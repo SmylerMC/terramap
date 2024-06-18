@@ -2,6 +2,7 @@ package fr.thesmyler.smylibgui.util;
 
 import java.nio.IntBuffer;
 
+import net.smyler.terramap.Terramap;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
@@ -66,8 +67,8 @@ public final class Cursors {
             try {
                 return new Cursor(width, height, hotX, hotY, 1, buffer, BufferUtils.createIntBuffer(1));
             } catch (LWJGLException e) {
-                TerramapMod.logger.error("Failed to load a cutom cursor for " + loc);
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to load a custom cursor for {}", loc);
+                Terramap.instance().logger().catching(e);
             }
         }
         return Mouse.getNativeCursor();
