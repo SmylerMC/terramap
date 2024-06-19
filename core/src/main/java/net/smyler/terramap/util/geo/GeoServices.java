@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.geo;
+package net.smyler.terramap.util.geo;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -14,12 +14,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import fr.thesmyler.terramap.files.kml.KmlDocument;
-import fr.thesmyler.terramap.files.kml.KmlFile;
-import fr.thesmyler.terramap.files.kml.KmlPlacemark;
-import fr.thesmyler.terramap.files.kml.KmlPoint;
+import net.smyler.terramap.files.kml.KmlDocument;
+import net.smyler.terramap.files.kml.KmlFile;
+import net.smyler.terramap.files.kml.KmlPlacemark;
+import net.smyler.terramap.files.kml.KmlPoint;
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.util.geo.GeoUtil;
 
 /**
  * Utility class to open various geo services such as osm, Google Maps, Earth, etc...

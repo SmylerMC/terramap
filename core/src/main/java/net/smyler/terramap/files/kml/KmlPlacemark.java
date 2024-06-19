@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.files.kml;
+package net.smyler.terramap.files.kml;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;

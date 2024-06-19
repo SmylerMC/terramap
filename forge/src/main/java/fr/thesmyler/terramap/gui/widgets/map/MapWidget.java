@@ -29,7 +29,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilit
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.util.CopyrightHolder;
+import net.smyler.terramap.util.CopyrightHolder;
 import net.minecraft.profiler.Profiler;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;

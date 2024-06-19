@@ -8,6 +8,7 @@ public interface Terramap {
         return InstanceHolder.instance;
     }
 
+    String MOD_ID = "terramap";
     Logger logger();
 
     class InstanceHolder {

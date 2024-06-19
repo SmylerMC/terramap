@@ -2,12 +2,11 @@ package fr.thesmyler.terramap.eventhandlers;
 
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.util.geo.GeoServices;
+import net.smyler.terramap.util.geo.GeoServices;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;

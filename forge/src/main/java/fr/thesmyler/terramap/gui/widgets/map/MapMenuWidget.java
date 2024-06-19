@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
-import fr.thesmyler.terramap.util.geo.GeoServices;
+import net.smyler.terramap.util.geo.GeoServices;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
