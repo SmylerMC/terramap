@@ -10,6 +10,8 @@ import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.http.HttpClient;
+import net.smyler.terramap.http.TerraplusplusHttpClient;
 import org.apache.logging.log4j.Logger;
 
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
@@ -37,6 +39,8 @@ public class TerramapMod implements Terramap {
     public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
     private static TerramapVersion version; // Read from the metadata
 
+    private static final HttpClient http = new TerraplusplusHttpClient();
+
     // These are notable versions
     public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
     public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
@@ -63,8 +67,8 @@ public class TerramapMod implements Terramap {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        Terramap.InstanceHolder.setInstance(this);
         logger = event.getModLog();
+        Terramap.InstanceHolder.setInstance(this);
         String versionStr = event.getModMetadata().version;
         if (System.getProperties().containsKey("terramap.debug")) {
             logger.info("Debug flag is set, forcing a development version string.");
@@ -112,6 +116,11 @@ public class TerramapMod implements Terramap {
     @Override
     public Logger logger() {
         return TerramapMod.logger;
+    }
+
+    @Override
+    public HttpClient http() {
+        return http;
     }
 
 }

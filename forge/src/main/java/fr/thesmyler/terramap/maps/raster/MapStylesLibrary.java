@@ -1,17 +1,12 @@
 package fr.thesmyler.terramap.maps.raster;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
@@ -23,9 +18,6 @@ import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import net.buildtheearth.terraplusplus.util.http.Http;
 
 import static fr.thesmyler.terramap.TerramapMod.GSON;
 import static fr.thesmyler.terramap.TerramapMod.GSON_PRETTY;
@@ -78,7 +70,7 @@ public class MapStylesLibrary {
             }
         } catch(Exception e) {
             Terramap.instance().logger().fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
-            Terramap.instance().logger().fatal("Path: " + path);
+            Terramap.instance().logger().fatal("Path: {}", path);
             Terramap.instance().logger().catching(e);
             TiledMapProvider.BUILT_IN.setLastError(e);
         }
@@ -117,14 +109,14 @@ public class MapStylesLibrary {
             Terramap.instance().logger().catching(e1);
             return;
         }
-        CompletableFuture<ByteBuf> request = Http.get(url);
-        request.whenComplete((b, e) -> {
+
+        Terramap.instance().http().get(url).whenComplete((b, e) -> {
             if(e != null) {
                 Terramap.instance().logger().error("Failed to download updated map style file!");
                 Terramap.instance().logger().catching(e);
                 TiledMapProvider.ONLINE.setLastError(e);
             }
-            try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteBufInputStream(b)))) {
+            try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(b)))) {
                 StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
                 while(line != null) {

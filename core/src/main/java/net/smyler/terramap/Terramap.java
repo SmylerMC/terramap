@@ -1,5 +1,6 @@
 package net.smyler.terramap;
 
+import net.smyler.terramap.http.HttpClient;
 import org.apache.logging.log4j.Logger;
 
 public interface Terramap {
@@ -9,7 +10,10 @@ public interface Terramap {
     }
 
     String MOD_ID = "terramap";
+
     Logger logger();
+
+    HttpClient http();
 
     class InstanceHolder {
         private static Terramap instance;
