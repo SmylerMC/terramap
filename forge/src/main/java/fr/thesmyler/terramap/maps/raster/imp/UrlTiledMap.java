@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.google.common.base.Strings;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
@@ -278,7 +277,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
         int[] color = {170, 211, 223};
         DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256,  256, color));
-        this.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", texture);
+        this.errorTileTexture = textureManager.getDynamicTextureLocation(Terramap.MOD_ID + ":error_tile_texture", texture);
     }
 
 }

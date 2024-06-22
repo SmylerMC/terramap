@@ -31,11 +31,9 @@ import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
 //TODO Credit TwelveMonkeys in the readme
-@Mod(modid=TerramapMod.MODID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
+@Mod(modid=Terramap.MOD_ID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
 public class TerramapMod implements Terramap {
 
-    public static final String MODID = "terramap";
-    public static final String AUTHOR_EMAIL = "smyler at mail dot com";
     public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
     private static TerramapVersion version; // Read from the metadata
 
@@ -43,10 +41,9 @@ public class TerramapMod implements Terramap {
 
     // These are notable versions
     public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
-    public static final TerramapVersion OLDEST_COMPATIBLE_SERVER = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
     public static final TerramapVersion OLDEST_TERRA121_TERRAMAP_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 7);
 
-    public static Logger logger;
+    private Logger logger;
 
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
@@ -67,20 +64,20 @@ public class TerramapMod implements Terramap {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
+        this.logger = event.getModLog();
         Terramap.InstanceHolder.setInstance(this);
         String versionStr = event.getModMetadata().version;
         if (System.getProperties().containsKey("terramap.debug")) {
-            logger.info("Debug flag is set, forcing a development version string.");
+            this.logger.info("Debug flag is set, forcing a development version string.");
             versionStr= "${version}";
         }
         try {
             TerramapMod.version = new TerramapVersion(versionStr);
         } catch(InvalidVersionString e) {
-            logger.error("Failed to parse Terramap version number from string " + versionStr + ", will be assuming a 1.0.0 release.");
+            this.logger.error("Failed to parse Terramap version number from string {}, will be assuming a 1.0.0 release.", versionStr);
             TerramapMod.version = new TerramapVersion(1, 0, 0);
         }
-        TerramapMod.logger.info("Terramap version: " + getVersion());
+        this.logger.info("Terramap version: {}", getVersion());
         TerramapMod.proxy.preInit(event);
         File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
         MapStylesLibrary.setConfigMapFile(mapStyleFile);
@@ -115,7 +112,7 @@ public class TerramapMod implements Terramap {
 
     @Override
     public Logger logger() {
-        return TerramapMod.logger;
+        return this.logger;
     }
 
     @Override

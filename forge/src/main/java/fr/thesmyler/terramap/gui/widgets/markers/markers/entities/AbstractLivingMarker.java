@@ -6,11 +6,11 @@ import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import net.smyler.smylib.gui.DrawContext;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
@@ -24,7 +24,7 @@ import static net.smyler.smylib.Color.WHITE;
 
 public abstract class AbstractLivingMarker extends AbstractMovingMarker {
 
-    protected static final ResourceLocation ENTITY_MARKERS_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/entity_markers.png");
+    protected static final ResourceLocation ENTITY_MARKERS_TEXTURE = new ResourceLocation(Terramap.MOD_ID, "textures/gui/entity_markers.png");
 
     protected ResourceLocation texture;
     protected int u, v, textureWidth, textureHeight;

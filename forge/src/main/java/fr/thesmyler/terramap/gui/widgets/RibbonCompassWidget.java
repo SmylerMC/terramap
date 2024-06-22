@@ -10,7 +10,6 @@ import fr.thesmyler.smylibgui.util.TextureUtil;
 import fr.thesmyler.smylibgui.util.TextureUtil.TextureProperties;
 import fr.thesmyler.smylibgui.util.TextureUtil.UnknownTextureException;
 import net.smyler.smylib.gui.widgets.Widget;
-import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,8 +21,8 @@ import static net.smyler.smylib.Color.WHITE;
 
 public class RibbonCompassWidget implements Widget {
 
-    private static final ResourceLocation COMPASS_BACKGROUND_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_background.png");
-    private static final ResourceLocation COMPASS_INDICATOR_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_indicator.png");
+    private static final ResourceLocation COMPASS_BACKGROUND_TEXTURE = new ResourceLocation(Terramap.MOD_ID, "textures/gui/compass_ribbon_background.png");
+    private static final ResourceLocation COMPASS_INDICATOR_TEXTURE = new ResourceLocation(Terramap.MOD_ID, "textures/gui/compass_ribbon_indicator.png");
 
     private float x, y;
     private final int z;

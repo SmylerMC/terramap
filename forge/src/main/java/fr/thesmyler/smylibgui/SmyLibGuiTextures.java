@@ -1,7 +1,7 @@
 package fr.thesmyler.smylibgui;
 
-import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.util.ResourceLocation;
+import net.smyler.terramap.Terramap;
 
 public final class SmyLibGuiTextures {
 
@@ -10,7 +10,7 @@ public final class SmyLibGuiTextures {
     public static final ResourceLocation WIDGET_TEXTURES;
 
     static {
-        WIDGET_TEXTURES = new ResourceLocation(TerramapMod.MODID, "textures/gui/widgets.png");
+        WIDGET_TEXTURES = new ResourceLocation(Terramap.MOD_ID, "textures/gui/widgets.png");
     }
 
 }

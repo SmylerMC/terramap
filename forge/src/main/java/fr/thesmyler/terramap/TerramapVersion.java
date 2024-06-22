@@ -303,7 +303,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
     public static TerramapVersion getClientVersion(EntityPlayerMP player) {
         Map<String, String> modList = NetworkDispatcher.get(player.connection.netManager).getModList();
         TerramapVersion version = null;
-        String remoteVersion = modList.get(TerramapMod.MODID);
+        String remoteVersion = modList.get(Terramap.MOD_ID);
         if(remoteVersion != null) {
             try {
                 version = new TerramapVersion(remoteVersion);

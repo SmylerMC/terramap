@@ -96,7 +96,7 @@ public class TerramapClientProxy extends TerramapProxy {
 
     @Override
     public void onConfigChanged(OnConfigChangedEvent event) {
-        if (event.getModID().equals(TerramapMod.MODID)) {
+        if (event.getModID().equals(Terramap.MOD_ID)) {
             if(TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
                 HudScreenHandler.updateMinimap();
             }

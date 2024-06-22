@@ -499,7 +499,7 @@ public class TerramapClientContext {
                     new TextureToast(
                             getGameClient().translator().format("terramap.toasts.welcome.title"),
                             getGameClient().translator().format("terramap.toasts.welcome.text", key),
-                            new ResourceLocation(TerramapMod.MODID, "logo/50.png")));
+                            new ResourceLocation(Terramap.MOD_ID, "logo/50.png")));
             this.setHasShownWelcomeMessage(true);
         }
     }

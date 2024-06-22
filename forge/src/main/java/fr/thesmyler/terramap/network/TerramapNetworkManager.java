@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.network;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.network.P2CSledgehammerHelloPacket.P2CSledgehammerHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTpCommandPacket.S2CTpCommandPacketHandler;
@@ -17,14 +16,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smyler.terramap.Terramap;
 
-//TODO Test the warp protocol
 public abstract class TerramapNetworkManager {
 
     // The channel instances
-    public static final SimpleNetworkWrapper CHANNEL_TERRAMAP = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID + ":terramap");
-    public static final SimpleNetworkWrapper CHANNEL_MAPSYNC = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID + ":mapsync");
-    public static final SimpleNetworkWrapper CHANNEL_SLEDGEHAMMER = NetworkRegistry.INSTANCE.newSimpleChannel(TerramapMod.MODID + ":sh"); // Forge does not support channel names longer than 20
+    public static final SimpleNetworkWrapper CHANNEL_TERRAMAP = NetworkRegistry.INSTANCE.newSimpleChannel(Terramap.MOD_ID + ":terramap");
+    public static final SimpleNetworkWrapper CHANNEL_MAPSYNC = NetworkRegistry.INSTANCE.newSimpleChannel(Terramap.MOD_ID + ":mapsync");
+    public static final SimpleNetworkWrapper CHANNEL_SLEDGEHAMMER = NetworkRegistry.INSTANCE.newSimpleChannel(Terramap.MOD_ID + ":sh"); // Forge does not support channel names longer than 20
 
     /**
      * Registers the handlers
@@ -49,15 +48,6 @@ public abstract class TerramapNetworkManager {
     private static final int S2C_TERRAMAP_HELLO_DISCRIMINATOR = 0;
     private static final int S2C_TERRAMAP_TPCMD_DISCRIMINATOR = 1;
     private static final int S2C_TERRAMAP_MAPSTYLE_DISCRIMINATOR = 2;
-    private static final int C2S_TERRAMAP_REQUEST_WARP_DISCRIMINATOR = 3;
-    private static final int S2C_TERRAMAP_WARP_DISCRIMINATOR = 4;
-    private static final int C2S_TERRAMAP_REQUEST_MULTI_WARP_DISCRIMINATOR = 5;
-    private static final int S2C_TERRAMAP_MULTI_WARP_DISCRIMINATOR = 6;
-    private static final int C2S_TERRAMAP_CREATE_WARP_DISCRIMINATOR = 7;
-    private static final int S2C_TERRAMAP_CREATE_WARP_CONFIRMATION_DISCRIMINATOR = 8;
-    private static final int C2S_TERRAMAP_EDIT_WARP_DISCRIMINATOR = 9;
-    private static final int S2C_TERRAMAP_EDIT_WARP_CONFIRMATION_DISCRIMINATOR = 10;
-    private static final int S2C_TERRAMAP_WARP_COMMAND_DISCRIMINATOR = 11;
 
     // terramap:mapsync
     private static final int C2SP_MAPSYNC_REGISTER_DISCRIMINATOR = 0;
@@ -67,15 +57,6 @@ public abstract class TerramapNetworkManager {
     //terramap:sh
     private static final int P2C_SH_HELLO_DISCRIMINATOR = 0;
     private static final int P2C_SH_MAPSTYLE_DISCRIMINATOR = 2;
-    private static final int C2P_SH_REQUEST_WARP_DISCRIMINATOR = 3;
-    private static final int P2C_SH_WARP_DISCRIMINATOR = 4;
-    private static final int C2P_SH_REQUEST_MULTI_WARP_DISCRIMINATOR = 5;
-    private static final int P2C_SH_MULTI_WARP_DISCRIMINATOR = 6;
-    private static final int C2P_SH_CREATE_WARP_DISCRIMINATOR = 7;
-    private static final int P2C_SH_CREATE_WARP_CONFIRMATION_DISCRIMINATOR = 8;
-    private static final int C2P_SH_EDIT_WARP_DISCRIMINATOR = 9;
-    private static final int P2C_SH_EDIT_WARP_CONFIRMATION_DISCRIMINATOR = 10;
-    private static final int P2C_SH_WARP_COMMAND_DISCRIMINATOR = 11;
 
     private static <REQ extends IMessage, REPLY extends IMessage> void registerTerramapS2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
         CHANNEL_TERRAMAP.registerMessage(handlerclass, msgclass, discriminator, Side.CLIENT);

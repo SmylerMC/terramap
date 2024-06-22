@@ -5,6 +5,7 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.smyler.terramap.Terramap;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -14,7 +15,7 @@ import static net.smyler.smylib.SmyLib.getGameClient;
  * Terramap's config
  * 
  */
-@Config(modid=TerramapMod.MODID)
+@Config(modid=Terramap.MOD_ID)
 public class TerramapConfig {
 
     public static final class Minimap {
@@ -288,10 +289,10 @@ public class TerramapConfig {
     public static boolean enableDebugMaps = false;
 
     public static void sync() {
-        ConfigManager.sync(TerramapMod.MODID, Config.Type.INSTANCE);
+        ConfigManager.sync(Terramap.MOD_ID, Config.Type.INSTANCE);
     }
 
-    @Mod.EventBusSubscriber(modid = TerramapMod.MODID)
+    @Mod.EventBusSubscriber(modid = Terramap.MOD_ID)
     private static class EventHandler {
 
         /**
@@ -301,7 +302,7 @@ public class TerramapConfig {
          */
         @SubscribeEvent
         public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
-            if (event.getModID().equals(TerramapMod.MODID)) {
+            if (event.getModID().equals(Terramap.MOD_ID)) {
                 TerramapConfig.sync();
             }
             TerramapMod.proxy.onConfigChanged(event);
