@@ -38,7 +38,6 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.buildtheearth.terraplusplus.projection.mercator.WebMercatorProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -271,7 +270,7 @@ public class TerramapClientContext {
     }
 
     public void saveState() {
-        ServerData servData = Minecraft.getMinecraft().getCurrentServerData();
+        MinecraftServerInfo servData = getGameClient().currentServerInfo();
         if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
             Terramap.instance().logger().debug("Saved proxy state for UUID {} (forced by proxy)", this.proxyUUID);
@@ -283,7 +282,7 @@ public class TerramapClientContext {
             Terramap.instance().logger().debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
         } else if (servData != null) {
             this.saveManager.saveServerState(servData, this.state);
-            Terramap.instance().logger().debug("Saved server state for server {} ({})",servData.serverName, servData.serverIP);
+            Terramap.instance().logger().debug("Saved server state for server {} ({})",servData.name, servData.host);
         } else {
             Terramap.instance().logger().debug("Did not save state for unreliable context");
         }

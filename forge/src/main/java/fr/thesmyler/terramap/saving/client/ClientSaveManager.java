@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.saving.client;
 
 import com.google.gson.Gson;
 import net.smyler.smylib.game.MinecraftServerInfo;
-import net.minecraft.client.multiplayer.ServerData;
 import net.smyler.terramap.Terramap;
 
 import java.io.*;
@@ -53,8 +52,8 @@ public class ClientSaveManager {
     }
 
     /**
-     * Loads a {@link SavedClientState} associated with a specific server, given the server's {@link ServerData}.
-     * This method will usually be used when a remote world cannot be uniquely identified and we can only identify the server.
+     * Loads a {@link SavedClientState} associated with a specific server, given the server's {@link MinecraftServerInfo}.
+     * This method will usually be used when a remote world cannot be uniquely identified, and we can only identify the server.
      *
      * @param serverInfo the information of the server to retrieve the save for
      *
@@ -108,14 +107,14 @@ public class ClientSaveManager {
     }
 
     /**
-     * Saves a {@link SavedClientState} associated with a specific server, given the server's {@link ServerData}.
-     * This method will usually be used when a remote world cannot be uniquely identified and we can only identify the server.
+     * Saves a {@link SavedClientState} associated with a specific server, given the server's {@link MinecraftServerInfo}.
+     * This method will usually be used when a remote world cannot be uniquely identified, and we can only identify the server.
      *
      * @param serverData    the information of the server to retrieve the save for
      * @param state         the state to save
      */
-    public void saveServerState(ServerData serverData, SavedClientState state) {
-        this.saveStateToPath(this.serverDirectory.resolve(serverData.serverIP + EXTENSION), state);
+    public void saveServerState(MinecraftServerInfo serverData, SavedClientState state) {
+        this.saveStateToPath(this.serverDirectory.resolve(serverData.host + EXTENSION), state);
     }
 
     /**
