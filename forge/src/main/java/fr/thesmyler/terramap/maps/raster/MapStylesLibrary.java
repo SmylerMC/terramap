@@ -1,17 +1,12 @@
 package fr.thesmyler.terramap.maps.raster;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
@@ -21,13 +16,9 @@ import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import net.buildtheearth.terraplusplus.util.http.Http;
 
-import static fr.thesmyler.terramap.TerramapMod.GSON;
-import static fr.thesmyler.terramap.TerramapMod.GSON_PRETTY;
 
 public class MapStylesLibrary {
 
@@ -76,9 +67,9 @@ public class MapStylesLibrary {
                 baseMaps.putAll(loadFromJson(json.toString(), TiledMapProvider.BUILT_IN));
             }
         } catch(Exception e) {
-            TerramapMod.logger.fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
-            TerramapMod.logger.fatal("Path: " + path);
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
+            Terramap.instance().logger().fatal("Path: {}", path);
+            Terramap.instance().logger().catching(e);
             TiledMapProvider.BUILT_IN.setLastError(e);
         }
 
@@ -89,8 +80,8 @@ public class MapStylesLibrary {
         try {
             // We currently have no internal styles
         } catch(Exception e) {
-            TerramapMod.logger.error("Failed to load internal map styles");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Failed to load internal map styles");
+            Terramap.instance().logger().catching(e);
             TiledMapProvider.INTERNAL.setLastError(e);
         }
     }
@@ -101,7 +92,7 @@ public class MapStylesLibrary {
      * parses it as redirect as would most browsers
      * and does a request to the corresponding url.
      * The body of that request is then parsed as a map style json config file.
-     * 
+     * <br>
      * This should be called after {@link #loadBuiltIns()} so it overwrites it.
      * 
      * @param hostname - the hostname to lookup
@@ -112,18 +103,18 @@ public class MapStylesLibrary {
         try {
             url = resolveUpdateURL(hostname);
         } catch (UnknownHostException | NamingException e1) {
-            TerramapMod.logger.error("Failed to resolve map styles urls!");
-            TerramapMod.logger.catching(e1);
+            Terramap.instance().logger().error("Failed to resolve map styles urls!");
+            Terramap.instance().logger().catching(e1);
             return;
         }
-        CompletableFuture<ByteBuf> request = Http.get(url);
-        request.whenComplete((b, e) -> {
+
+        Terramap.instance().http().get(url).whenComplete((b, e) -> {
             if(e != null) {
-                TerramapMod.logger.error("Failed to download updated map style file!");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to download updated map style file!");
+                Terramap.instance().logger().catching(e);
                 TiledMapProvider.ONLINE.setLastError(e);
             }
-            try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteBufInputStream(b)))) {
+            try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(b)))) {
                 StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
                 while(line != null) {
@@ -132,8 +123,8 @@ public class MapStylesLibrary {
                 }
                 baseMaps.putAll(loadFromJson(json.toString(), TiledMapProvider.ONLINE));
             } catch(Exception f) {
-                TerramapMod.logger.error("Failed to parse updated map style file!");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to parse updated map style file!");
+                Terramap.instance().logger().catching(e);
                 TiledMapProvider.ONLINE.setLastError(e);
             }
         });
@@ -146,18 +137,18 @@ public class MapStylesLibrary {
     public static void loadFromConfigFile() {
         TiledMapProvider.CUSTOM.setLastError(null);
         if(configMapsFile == null) {
-            TerramapMod.logger.error("Map config file was null!");
+            Terramap.instance().logger().error("Map config file was null!");
             TiledMapProvider.CUSTOM.setLastError(new NullPointerException("Map style config files was null"));
             return;
         }
         if(!configMapsFile.exists()) {
             try {
-                TerramapMod.logger.debug("Map config file did not exist, creating a blank one.");
+                Terramap.instance().logger().debug("Map config file did not exist, creating a blank one.");
                 MapStyleFile mapFile = new MapStyleFile(new MapFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
-                Files.write(configMapsFile.toPath(), GSON_PRETTY.toJson(mapFile).getBytes(Charset.defaultCharset()));
+                Files.write(configMapsFile.toPath(), Terramap.instance().gsonPretty().toJson(mapFile).getBytes(Charset.defaultCharset()));
             } catch (IOException e) {
-                TerramapMod.logger.error("Failed to create map style config file!");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to create map style config file!");
+                Terramap.instance().logger().catching(e);
                 TiledMapProvider.CUSTOM.setLastError(e);
 
             }
@@ -165,8 +156,8 @@ public class MapStylesLibrary {
             try {
                 userMaps.putAll(loadFromFile(configMapsFile, TiledMapProvider.CUSTOM));
             } catch (Exception e) {
-                TerramapMod.logger.error("Failed to read map style config file!");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to read map style config file!");
+                Terramap.instance().logger().catching(e);
                 TiledMapProvider.CUSTOM.setLastError(e);
             }
         }
@@ -231,12 +222,12 @@ public class MapStylesLibrary {
     }
 
     private static Map<String, UrlTiledMap> loadFromJson(String json, TiledMapProvider provider) {
-        MapStyleFile savedStyles = GSON.fromJson(json, MapStyleFile.class);
+        MapStyleFile savedStyles = Terramap.instance().gson().fromJson(json, MapStyleFile.class);
         Map<String, UrlTiledMap> styles = new HashMap<>();
         for(String id: savedStyles.maps.keySet()) {
             UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
             if(!TerramapConfig.enableDebugMaps && style.isDebug()) {
-                TerramapMod.logger.info("Not loading debug map style " + style.getId());
+                Terramap.instance().logger().info("Not loading debug map style {}", style.getId());
                 continue;
             }
             styles.put(id, style);
@@ -281,6 +272,7 @@ public class MapStylesLibrary {
 
     }
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static class MapStyleFile {
 
         Map<String, SavedMapStyle> maps;

@@ -27,7 +27,7 @@ import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.OFFSET_PREVIEW;
-import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
+import static net.smyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 

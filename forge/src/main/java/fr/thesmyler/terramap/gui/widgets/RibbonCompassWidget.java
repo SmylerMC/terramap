@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.widgets;
 
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.GlState;
+import net.smyler.terramap.Terramap;
 import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -9,7 +10,6 @@ import fr.thesmyler.smylibgui.util.TextureUtil;
 import fr.thesmyler.smylibgui.util.TextureUtil.TextureProperties;
 import fr.thesmyler.smylibgui.util.TextureUtil.UnknownTextureException;
 import net.smyler.smylib.gui.widgets.Widget;
-import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,8 +21,8 @@ import static net.smyler.smylib.Color.WHITE;
 
 public class RibbonCompassWidget implements Widget {
 
-    private static final ResourceLocation COMPASS_BACKGROUND_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_background.png");
-    private static final ResourceLocation COMPASS_INDICATOR_TEXTURE = new ResourceLocation(TerramapMod.MODID, "textures/gui/compass_ribbon_indicator.png");
+    private static final ResourceLocation COMPASS_BACKGROUND_TEXTURE = new ResourceLocation(Terramap.MOD_ID, "textures/gui/compass_ribbon_background.png");
+    private static final ResourceLocation COMPASS_INDICATOR_TEXTURE = new ResourceLocation(Terramap.MOD_ID, "textures/gui/compass_ribbon_indicator.png");
 
     private float x, y;
     private final int z;
@@ -43,8 +43,8 @@ public class RibbonCompassWidget implements Widget {
             this.indicatorHeight = p2.getHeight();
             this.indicatorWidth = p2.getWidth();
         } catch (UnknownTextureException e) {
-            TerramapMod.logger.error("Failed to get texture heiht for ribbon compass");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Failed to get texture heiht for ribbon compass");
+            Terramap.instance().logger().catching(e);
             this.height = 16;
         }
     }

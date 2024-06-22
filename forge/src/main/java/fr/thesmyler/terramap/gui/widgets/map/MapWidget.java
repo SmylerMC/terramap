@@ -19,7 +19,6 @@ import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
@@ -30,10 +29,11 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilit
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.util.CopyrightHolder;
+import net.smyler.terramap.util.CopyrightHolder;
 import net.minecraft.profiler.Profiler;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
@@ -383,7 +383,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                     if(id != null && id.equals(this.restoreTrackingId)) {
                         this.controller.track(markerToAdd);
                         this.restoreTrackingId = null;
-                        TerramapMod.logger.debug("Restored tracking with " + id);
+                        Terramap.instance().logger().debug("Restored tracking with {}", id);
                     }
                 }
             }
@@ -745,8 +745,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             try {
                 layer = this.createLayer(layerState.type);
             } catch (IllegalArgumentException e) {
-                TerramapMod.logger.warn("Could not restore a map layer. Did someone mess with the save file?");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().warn("Could not restore a map layer. Did someone mess with the save file?");
+                Terramap.instance().logger().catching(e);
                 continue;
             }
             this.setLayerZ(layer, layerState.z);
@@ -758,8 +758,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             try {
                 layer.loadSettings(layerState.settings);
             } catch (Exception e) {
-                TerramapMod.logger.error("Caught exception when loading layer settings. Did someone mess with the save file?");
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Caught exception when loading layer settings. Did someone mess with the save file?");
+                Terramap.instance().logger().catching(e);
             }
         }
         Map<String, FeatureVisibilityController> controllers = this.getVisibilityControllers();

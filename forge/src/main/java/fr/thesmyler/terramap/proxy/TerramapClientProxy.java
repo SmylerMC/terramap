@@ -25,8 +25,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smyler.smylib.SmyLib;
-import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.WrappedMinecraft;
+import net.smyler.terramap.Terramap;
 
 import javax.imageio.ImageIO;
 
@@ -39,26 +39,26 @@ public class TerramapClientProxy extends TerramapProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        TerramapMod.logger.debug("Terramap client pre-init");
+        Terramap.instance().logger().debug("Terramap client pre-init");
         TerramapNetworkManager.registerHandlers(Side.CLIENT);
         if (!ImageIO.getImageReadersBySuffix("webp").hasNext()) {
-            TerramapMod.logger.warn("ImageIO does not have WebP support, triggering a plugin scan!");
+            Terramap.instance().logger().warn("ImageIO does not have WebP support, triggering a plugin scan!");
             ImageIO.scanForPlugins();
             if (ImageIO.getImageReadersBySuffix("webp").hasNext()) {
-                TerramapMod.logger.info("Found a WebP ImageIO reader.");
+                Terramap.instance().logger().info("Found a WebP ImageIO reader.");
             } else {
-                TerramapMod.logger.error("Could not find a WebP ImageIO reader! WebP will not be supported.");
+                Terramap.instance().logger().error("Could not find a WebP ImageIO reader! WebP will not be supported.");
             }
         }
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
-        TerramapMod.logger.debug("Terramap client init");
+        Terramap.instance().logger().debug("Terramap client init");
         WrappedMinecraft game = new WrappedMinecraft(Minecraft.getMinecraft());
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(game);
-        SmyLib.initializeGameClient(game, TerramapMod.logger);
+        SmyLib.initializeGameClient(game, Terramap.instance().logger());
         if ("true".equals(System.getProperty("terramap.showTestScreen"))) {
             game.showTestScreen();
         }
@@ -90,13 +90,13 @@ public class TerramapClientProxy extends TerramapProxy {
             NetworkPlayerInfo i = connection.getPlayerInfo(e.getUniqueID());
             if(i != null) return i.getGameType();
         }
-        TerramapMod.logger.error("Failed to determine player gamemode.");
+        Terramap.instance().logger().error("Failed to determine player gamemode.");
         return GameType.NOT_SET;
     }
 
     @Override
     public void onConfigChanged(OnConfigChangedEvent event) {
-        if (event.getModID().equals(TerramapMod.MODID)) {
+        if (event.getModID().equals(Terramap.MOD_ID)) {
             if(TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
                 HudScreenHandler.updateMinimap();
             }

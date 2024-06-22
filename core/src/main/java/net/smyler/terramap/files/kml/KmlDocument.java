@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.files.kml;
+package net.smyler.terramap.files.kml;
 
 import java.util.ArrayList;
 import java.util.List;

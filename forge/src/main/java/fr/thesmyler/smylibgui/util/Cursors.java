@@ -2,13 +2,13 @@ package fr.thesmyler.smylibgui.util;
 
 import java.nio.IntBuffer;
 
+import net.smyler.terramap.Terramap;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
@@ -19,11 +19,11 @@ import static net.smyler.smylib.SmyLib.getLogger;
 //TODO Have a wrapper class for lwjgl cursors
 public final class Cursors {
 
-    public static final Cursor CURSOR_MOVE = loadCursorFromTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/cursors/move.png"), 32, 32);
-    public static final Cursor CURSOR_RESIZE_VERTICAL = loadCursorFromTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/cursors/resize_vertical.png"), 16, 32);
-    public static final Cursor CURSOR_RESIZE_HORIZONTAL = loadCursorFromTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/cursors/resize_horizontal.png"), 32, 16);
-    public static final Cursor CURSOR_RESIZE_DIAGONAL_1 = loadCursorFromTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/cursors/resize_diag1.png"), 32, 32);
-    public static final Cursor CURSOR_RESIZE_DIAGONAL_2 = loadCursorFromTexture(new ResourceLocation(TerramapMod.MODID, "textures/gui/cursors/resize_diag2.png"), 32, 32);
+    public static final Cursor CURSOR_MOVE = loadCursorFromTexture(new ResourceLocation(Terramap.MOD_ID, "textures/gui/cursors/move.png"), 32, 32);
+    public static final Cursor CURSOR_RESIZE_VERTICAL = loadCursorFromTexture(new ResourceLocation(Terramap.MOD_ID, "textures/gui/cursors/resize_vertical.png"), 16, 32);
+    public static final Cursor CURSOR_RESIZE_HORIZONTAL = loadCursorFromTexture(new ResourceLocation(Terramap.MOD_ID, "textures/gui/cursors/resize_horizontal.png"), 32, 16);
+    public static final Cursor CURSOR_RESIZE_DIAGONAL_1 = loadCursorFromTexture(new ResourceLocation(Terramap.MOD_ID, "textures/gui/cursors/resize_diag1.png"), 32, 32);
+    public static final Cursor CURSOR_RESIZE_DIAGONAL_2 = loadCursorFromTexture(new ResourceLocation(Terramap.MOD_ID, "textures/gui/cursors/resize_diag2.png"), 32, 32);
 
     static {
         if(Minecraft.IS_RUNNING_ON_MAC) {
@@ -66,8 +66,8 @@ public final class Cursors {
             try {
                 return new Cursor(width, height, hotX, hotY, 1, buffer, BufferUtils.createIntBuffer(1));
             } catch (LWJGLException e) {
-                TerramapMod.logger.error("Failed to load a cutom cursor for " + loc);
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to load a custom cursor for {}", loc);
+                Terramap.instance().logger().catching(e);
             }
         }
         return Mouse.getNativeCursor();

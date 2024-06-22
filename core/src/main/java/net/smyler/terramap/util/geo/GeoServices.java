@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.util.geo;
+package net.smyler.terramap.util.geo;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -14,12 +14,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.files.kml.KmlDocument;
-import fr.thesmyler.terramap.files.kml.KmlFile;
-import fr.thesmyler.terramap.files.kml.KmlPlacemark;
-import fr.thesmyler.terramap.files.kml.KmlPoint;
-import net.smyler.terramap.util.geo.GeoUtil;
+import net.smyler.terramap.files.kml.KmlDocument;
+import net.smyler.terramap.files.kml.KmlFile;
+import net.smyler.terramap.files.kml.KmlPlacemark;
+import net.smyler.terramap.files.kml.KmlPoint;
+import net.smyler.terramap.Terramap;
 
 /**
  * Utility class to open various geo services such as osm, Google Maps, Earth, etc...
@@ -65,8 +64,8 @@ public final class GeoServices {
                     .replace("{longitude}", dispLong)
                     .replace("{place}", dispPlace);
         } catch (UnsupportedEncodingException e) {
-            TerramapMod.logger.error("Failed to format a string with coordinates: ");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Failed to format a string with coordinates: ");
+            Terramap.instance().logger().catching(e);
         }
         return str;
     }
@@ -124,8 +123,8 @@ public final class GeoServices {
             Desktop.getDesktop().open(file);
             file.deleteOnExit();
         } catch(Exception e) {
-            TerramapMod.logger.error("There was an error when trying to open a place in Google Earth");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("There was an error when trying to open a place in Google Earth");
+            Terramap.instance().logger().catching(e);
         }
     }
 
@@ -134,10 +133,10 @@ public final class GeoServices {
             URI uri = new URI(uriStr);
             Desktop.getDesktop().browse(uri);
         } catch (IOException | UnsupportedOperationException e) {
-            TerramapMod.logger.error("Failed to open uri: " + uriStr);
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Failed to open uri: {}", uriStr);
+            Terramap.instance().logger().catching(e);
         } catch (URISyntaxException e) {
-            TerramapMod.logger.error("Tried to open a malformed URI: " + uriStr);
+            Terramap.instance().logger().error("Tried to open a malformed URI: {}", uriStr);
         }
 
     }

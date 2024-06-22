@@ -13,7 +13,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.ColorTiledMap;
-import fr.thesmyler.terramap.util.CopyrightHolder;
+import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;

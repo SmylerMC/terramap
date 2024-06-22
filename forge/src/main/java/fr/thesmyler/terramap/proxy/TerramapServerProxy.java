@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.proxy;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.TerrashowCommand;
 import fr.thesmyler.terramap.command.TilesetReloadCommand;
 import fr.thesmyler.terramap.eventhandlers.ServerTerramapEventHandler;
@@ -14,6 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smyler.terramap.Terramap;
 
 public class TerramapServerProxy extends TerramapProxy {
 
@@ -24,13 +24,13 @@ public class TerramapServerProxy extends TerramapProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        TerramapMod.logger.debug("Terramap server pre-init");
+        Terramap.instance().logger().debug("Terramap server pre-init");
         TerramapNetworkManager.registerHandlers(Side.SERVER);
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
-        TerramapMod.logger.debug("Terramap server init");
+        Terramap.instance().logger().debug("Terramap server init");
         MinecraftForge.EVENT_BUS.register(new ServerTerramapEventHandler());
     }
 

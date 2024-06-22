@@ -1,19 +1,16 @@
 package fr.thesmyler.terramap.maps.raster.imp;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.maps.raster.RasterTile;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.TilePosImmutable;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import net.buildtheearth.terraplusplus.util.http.Disk;
-import net.buildtheearth.terraplusplus.util.http.Http;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -28,7 +25,7 @@ public class UrlRasterTile implements RasterTile {
     private final TilePosImmutable pos;
     private final String url;
     private ResourceLocation texture = null;
-    private CompletableFuture<ByteBuf> textureTask;
+    private CompletableFuture<byte[]> textureTask;
 
 
     public UrlRasterTile(String urlPattern, TilePosImmutable pos) {
@@ -62,7 +59,7 @@ public class UrlRasterTile implements RasterTile {
     public ResourceLocation getTexture() throws Throwable {
         if(this.texture == null) {
             if(this.textureTask == null) {
-                this.textureTask = Http.get(this.getURL());
+                this.textureTask = Terramap.instance().http().get(this.getURL());
             } else this.tryLoadingTexture();
         }
         return this.texture;
@@ -85,11 +82,11 @@ public class UrlRasterTile implements RasterTile {
             }
             Minecraft mc = Minecraft.getMinecraft();
             TextureManager textureManager = mc.getTextureManager();
-            ByteBuf buf = this.textureTask.get();
+            byte[] buf = this.textureTask.get();
             if(buf == null) throw new IOException("404 response");
-            try (ByteBufInputStream is = new ByteBufInputStream(buf)) {
+            try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
                 BufferedImage image = ImageIO.read(is);
-                if(image == null) throw new IOException("Failed to read image! url: " + this.getURL() + " file: " + Disk.cacheFileFor(new URL(this.getURL()).getFile()).toString());
+                if(image == null) throw new IOException("Failed to read image! url: " + this.getURL());
                 this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.getURL(), new DynamicTexture(image));
             }
         }

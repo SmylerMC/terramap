@@ -6,14 +6,14 @@ import java.util.Map;
 
 import com.google.common.base.Strings;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
-import fr.thesmyler.terramap.util.CopyrightHolder;
+import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
@@ -116,8 +116,8 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
                     Http.setMaximumConcurrentRequestsTo(url, this.getMaxConcurrentRequests());
                 }
             } catch(IllegalArgumentException | MalformedURLException e) {
-                TerramapMod.logger.error("Failed to set max concurrent requests for host. Url :" + url);
-                TerramapMod.logger.catching(e);
+                Terramap.instance().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
+                Terramap.instance().logger().catching(e);
             }
         }
         super.setup();
@@ -277,7 +277,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
         int[] color = {170, 211, 223};
         DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256,  256, color));
-        this.errorTileTexture = textureManager.getDynamicTextureLocation(TerramapMod.MODID + ":error_tile_texture", texture);
+        this.errorTileTexture = textureManager.getDynamicTextureLocation(Terramap.MOD_ID + ":error_tile_texture", texture);
     }
 
 }

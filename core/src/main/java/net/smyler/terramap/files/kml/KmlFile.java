@@ -1,9 +1,11 @@
-package fr.thesmyler.terramap.files.kml;
+package net.smyler.terramap.files.kml;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -13,10 +15,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import net.smyler.terramap.Terramap;
 
-import fr.thesmyler.terramap.TerramapMod;
 
 @XmlRootElement(name="kml")
 public class KmlFile {
@@ -39,19 +39,18 @@ public class KmlFile {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             try(OutputStream stream = Files.newOutputStream(file.toPath())) {
                 if(compressed) {
-                    try(ZipArchiveOutputStream compressedStream = new ZipArchiveOutputStream(stream)) {
-                        ZipArchiveEntry entry = new ZipArchiveEntry("terramap.kml");
-                        compressedStream.putArchiveEntry(entry);
+                    try(ZipOutputStream compressedStream = new ZipOutputStream(stream)) {
+                        ZipEntry entry = new ZipEntry("terramap.kml");
+                        compressedStream.putNextEntry(entry);
                         marshaller.marshal(this, compressedStream);
-                        compressedStream.closeArchiveEntry();
                     }
                 } else {
                     marshaller.marshal(this, stream);
                 }
             }
         } catch(JAXBException e) {
-            TerramapMod.logger.error("Something went seriously wrong when saving a kml file. Save aborted.");
-            TerramapMod.logger.catching(e);
+            Terramap.instance().logger().error("Something went seriously wrong when saving a kml file. Save aborted.");
+            Terramap.instance().logger().catching(e);
         }
     }
 

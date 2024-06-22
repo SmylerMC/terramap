@@ -15,11 +15,11 @@ import net.smyler.smylib.gui.widgets.ColorPickerWidget;
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
@@ -120,7 +120,7 @@ public class McChunksLayer extends MapLayer {
             this.setRenderBlocks(json.get("renderBlocks").getAsBoolean());
             this.loadColor(json.getAsJsonObject("colorBlocks"), this::setColorBlocks);
         } catch (NullPointerException | ClassCastException | IllegalStateException e) {
-            TerramapMod.logger.warn("Failed to load mc boundaries layer settings: {}", json);
+            Terramap.instance().logger().warn("Failed to load mc boundaries layer settings: {}", json);
         }
     }
 

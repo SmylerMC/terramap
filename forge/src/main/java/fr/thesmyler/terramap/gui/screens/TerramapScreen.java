@@ -9,13 +9,14 @@ import net.smyler.smylib.gui.Scissor;
 import net.smyler.smylib.gui.sprites.WarningWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
+import net.smyler.terramap.Terramap;
+import net.smyler.terramap.util.geo.GeoServices;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.*;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
-import fr.thesmyler.terramap.util.geo.*;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
@@ -65,7 +66,7 @@ import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
-import static fr.thesmyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
+import static net.smyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -539,7 +540,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private boolean search(String text) {
-        TerramapMod.logger.info("Geo search: " + text);
+        Terramap.instance().logger().info("Geo search: {}", text);
         //TODO Search
         return true; // Let the search box loose focus
     }
