@@ -1,5 +1,6 @@
 package net.smyler.terramap;
 
+import com.google.gson.Gson;
 import net.smyler.terramap.http.HttpClient;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +15,10 @@ public interface Terramap {
     Logger logger();
 
     HttpClient http();
+
+    Gson gson();
+
+    Gson gsonPretty();
 
     class InstanceHolder {
         private static Terramap instance;

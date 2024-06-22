@@ -1,10 +1,7 @@
 package fr.thesmyler.terramap.saving.client;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.smyler.smylib.game.MinecraftServerInfo;
-import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.client.multiplayer.ServerData;
 import net.smyler.terramap.Terramap;
 
@@ -25,24 +22,22 @@ public class ClientSaveManager {
     private Path worldDirectory;
     private Path serverDirectory;
     private Path proxyDirectory;
+    private final Gson gson;
 
     private static final String EXTENSION = ".json";
     private static final String DEFAULT_SAVE_PATH = "/assets/terramap/defaultstate.json";
-    private static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
-            .setPrettyPrinting()
-            .create();
 
     /**
      * Constructs a new {@link ClientSaveManager} given a save directory.
      *
      * @param saveDirectory a path to a directory where data will be saved
      */
-    public ClientSaveManager(Path saveDirectory) {
+    public ClientSaveManager(Path saveDirectory, Gson gson) {
         this.saveDirectory = saveDirectory.toAbsolutePath();
         this.worldDirectory = this.saveDirectory.resolve("worlds");
         this.serverDirectory = this.saveDirectory.resolve("servers");
         this.proxyDirectory = this.saveDirectory.resolve("proxies");
+        this.gson = gson;
     }
 
     /**
@@ -92,7 +87,7 @@ public class ClientSaveManager {
             return new SavedClientState();
         }
         try (InputStreamReader reader = new InputStreamReader(stream)) {
-            return GSON.fromJson(reader, SavedClientState.class);
+            return this.gson.fromJson(reader, SavedClientState.class);
         } catch (IOException e) {
             Terramap.instance().logger().error("Failed to read internal default map state");
             Terramap.instance().logger().catching(e);
@@ -147,7 +142,7 @@ public class ClientSaveManager {
 
     private SavedClientState loadFromPath(Path path) {
         try (FileReader reader = new FileReader(path.toFile())) {
-            return GSON.fromJson(reader, SavedClientState.class);
+            return this.gson.fromJson(reader, SavedClientState.class);
         } catch (FileNotFoundException ignored) {
             // Let's not spam the console when it's just a new save.
         } catch (IOException e) {
@@ -159,7 +154,7 @@ public class ClientSaveManager {
 
     private void saveStateToPath(Path path, SavedClientState state) {
         try (FileWriter writer = new FileWriter(path.toFile())) {
-            GSON.toJson(state, writer);
+            this.gson.toJson(state, writer);
         } catch (IOException e) {
             Terramap.instance().logger().error("Failed to save a client state");
             Terramap.instance().logger().catching(e);

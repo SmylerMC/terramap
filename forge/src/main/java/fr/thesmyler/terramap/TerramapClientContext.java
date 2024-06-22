@@ -90,7 +90,10 @@ public class TerramapClientContext {
     private final ClientSaveManager saveManager;
 
     public TerramapClientContext() {
-        this.saveManager = new ClientSaveManager(getGameClient().gameDirectory().resolve("terramap"));
+        this.saveManager = new ClientSaveManager(
+                getGameClient().gameDirectory().resolve("terramap"),
+                Terramap.instance().gsonPretty()
+        );
         try {
             this.saveManager.createDirectoryIfNecessary();
         } catch (IOException exception) {

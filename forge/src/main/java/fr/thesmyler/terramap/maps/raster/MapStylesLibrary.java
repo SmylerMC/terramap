@@ -19,8 +19,6 @@ import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 
-import static fr.thesmyler.terramap.TerramapMod.GSON;
-import static fr.thesmyler.terramap.TerramapMod.GSON_PRETTY;
 
 public class MapStylesLibrary {
 
@@ -94,7 +92,7 @@ public class MapStylesLibrary {
      * parses it as redirect as would most browsers
      * and does a request to the corresponding url.
      * The body of that request is then parsed as a map style json config file.
-     * 
+     * <br>
      * This should be called after {@link #loadBuiltIns()} so it overwrites it.
      * 
      * @param hostname - the hostname to lookup
@@ -147,7 +145,7 @@ public class MapStylesLibrary {
             try {
                 Terramap.instance().logger().debug("Map config file did not exist, creating a blank one.");
                 MapStyleFile mapFile = new MapStyleFile(new MapFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
-                Files.write(configMapsFile.toPath(), GSON_PRETTY.toJson(mapFile).getBytes(Charset.defaultCharset()));
+                Files.write(configMapsFile.toPath(), Terramap.instance().gsonPretty().toJson(mapFile).getBytes(Charset.defaultCharset()));
             } catch (IOException e) {
                 Terramap.instance().logger().error("Failed to create map style config file!");
                 Terramap.instance().logger().catching(e);
@@ -224,7 +222,7 @@ public class MapStylesLibrary {
     }
 
     private static Map<String, UrlTiledMap> loadFromJson(String json, TiledMapProvider provider) {
-        MapStyleFile savedStyles = GSON.fromJson(json, MapStyleFile.class);
+        MapStyleFile savedStyles = Terramap.instance().gson().fromJson(json, MapStyleFile.class);
         Map<String, UrlTiledMap> styles = new HashMap<>();
         for(String id: savedStyles.maps.keySet()) {
             UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
@@ -274,6 +272,7 @@ public class MapStylesLibrary {
 
     }
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static class MapStyleFile {
 
         Map<String, SavedMapStyle> maps;

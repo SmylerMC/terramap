@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapConfig;
@@ -30,7 +28,6 @@ public class TerramapServerPreferences {
     private static boolean loggedDebugError = false;
     private static long lastErrorLog = Long.MIN_VALUE;
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * Tells whether the given player should be visible on the map on a given world
@@ -171,7 +168,7 @@ public class TerramapServerPreferences {
         if(fileToLoad.exists()) {
             try {
                 String text = String.join("\n", Files.readAllLines(fileToLoad.toPath(), Charset.defaultCharset()));
-                preferences = GSON.fromJson(text, WorldPreferences.class);
+                preferences = Terramap.instance().gsonPretty().fromJson(text, WorldPreferences.class);
             } catch (IOException | JsonSyntaxException e) {
                 Terramap.instance().logger().error("Failed to load server preference file, setting to default");
                 Terramap.instance().logger().catching(e);
@@ -186,7 +183,7 @@ public class TerramapServerPreferences {
     }
 
     private static void save(File file, WorldPreferences preferences) throws IOException {
-        String str = GSON.toJson(preferences);
+        String str = Terramap.instance().gsonPretty().toJson(preferences);
         Files.write(file.toPath(), str.getBytes(Charset.defaultCharset()));
     }
 

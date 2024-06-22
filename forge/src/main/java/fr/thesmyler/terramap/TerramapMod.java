@@ -39,7 +39,7 @@ public class TerramapMod implements Terramap {
     public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
     private static TerramapVersion version; // Read from the metadata
 
-    private static final HttpClient http = new TerraplusplusHttpClient();
+    private final HttpClient http = new TerraplusplusHttpClient();
 
     // These are notable versions
     public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
@@ -48,12 +48,12 @@ public class TerramapMod implements Terramap {
 
     public static Logger logger;
 
-    public static final Gson GSON = new GsonBuilder()
+    private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
             .registerTypeAdapter(Text.class, new TextJsonAdapter())
             .create();
 
-    public static final Gson GSON_PRETTY = new GsonBuilder()
+    private final Gson gsonPretty = new GsonBuilder()
             .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
             .registerTypeAdapter(Text.class, new TextJsonAdapter())
             .setPrettyPrinting()
@@ -120,7 +120,17 @@ public class TerramapMod implements Terramap {
 
     @Override
     public HttpClient http() {
-        return http;
+        return this.http;
+    }
+
+    @Override
+    public Gson gson() {
+        return this.gson;
+    }
+
+    @Override
+    public Gson gsonPretty() {
+        return this.gsonPretty;
     }
 
 }

@@ -19,7 +19,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import static fr.thesmyler.terramap.TerramapMod.GSON;
 
 public class SP2CMapStylePacket implements IMessage {
 
@@ -80,7 +79,7 @@ public class SP2CMapStylePacket implements IMessage {
             String key = NetworkUtil.decodeStringFromByteBuf(buf);
             String copyrightJson = NetworkUtil.decodeStringFromByteBuf(buf);
             try {
-                Text copyright = GSON.fromJson(copyrightJson, Text.class);
+                Text copyright = Terramap.instance().gson().fromJson(copyrightJson, Text.class);
                 copyrights.put(key, copyright);
             } catch (JsonParseException e) {
                 Terramap.instance().logger().warn("Received invalid map style copyright from server.");
@@ -129,7 +128,7 @@ public class SP2CMapStylePacket implements IMessage {
         buf.writeInt(this.copyrights.size());
         for(String key: this.copyrights.keySet()) {
             NetworkUtil.encodeStringToByteBuf(key, buf);
-            NetworkUtil.encodeStringToByteBuf(GSON.toJson(this.copyrights.get(key)), buf);
+            NetworkUtil.encodeStringToByteBuf(Terramap.instance().gson().toJson(this.copyrights.get(key)), buf);
         }
         buf.writeInt(this.minZoom);
         buf.writeInt(this.maxZoom);
