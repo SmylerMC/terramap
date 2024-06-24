@@ -18,7 +18,6 @@ public final class TerramapUtil {
     private TerramapUtil() {}
 
     public static final EarthGeneratorSettings BTE_GENERATOR_SETTINGS = EarthGeneratorSettings.parse(EarthGeneratorSettings.BTE_DEFAULT_SETTINGS);
-    public static final long EARTH_CIRCUMFERENCE = 40075017;
 
     public static boolean isServerEarthWorld(World world) {
         if(!(world.getWorldType() instanceof EarthWorldType)) return false; // Is this a terra save?

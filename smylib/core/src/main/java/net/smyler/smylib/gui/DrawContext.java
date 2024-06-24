@@ -1,7 +1,11 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.sprites.Sprite;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public interface DrawContext {
 
@@ -71,5 +75,11 @@ public interface DrawContext {
 
     //TODO use Text in drawTooltip
     void drawTooltip(String text, double x, double y);
+
+    void drawTexture(Identifier texture, double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight);
+
+    Identifier loadDynamicTexture(BufferedImage image);
+
+    void unloadDynamicTexture(Identifier texture);
 
 }

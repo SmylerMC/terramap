@@ -3,13 +3,11 @@ package fr.thesmyler.terramap.maps.raster.imp;
 import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
-import net.smyler.terramap.Terramap;
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.ResourceLocation;
+
+import java.awt.image.BufferedImage;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -17,16 +15,14 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
 
     private final Color color;
     private final String name;
-    private final ResourceLocation textureLocation;
+    private final Identifier textureLocation;
 
     public ColorTiledMap(Color color, String name) {
         this.color = color;
         this.name = name;
         if (getGameClient().isGlAvailabale()) {
-            TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
-            DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256, 256, this.color.asRGBInt()));
-            this.textureLocation = textureManager.getDynamicTextureLocation(
-                    Terramap.MOD_ID + ":color_tile_" + this.color.asHexString(), texture);
+            BufferedImage image = ImageUtil.imageFromColor(256, 256, this.color.asRGBInt());
+            this.textureLocation = getGameClient().guiDrawContext().loadDynamicTexture(image);
         } else {
             this.textureLocation = null;
         }
@@ -88,7 +84,7 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
     }
 
     @Override
-    public ResourceLocation getDefaultTileTexture() {
+    public Identifier getDefaultTileTexture() {
         return this.textureLocation;
     }
 

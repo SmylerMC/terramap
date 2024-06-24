@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.maps.raster.imp;
 
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.minecraft.util.ResourceLocation;
 
@@ -61,7 +62,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
     }
 
     @Override
-    public ResourceLocation getDefaultTileTexture() {
+    public Identifier getDefaultTileTexture() {
         return null;
     }
 

@@ -1,15 +1,15 @@
 package fr.thesmyler.terramap.maps.raster.imp;
 
 import fr.thesmyler.terramap.maps.raster.RasterTile;
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePosImmutable;
-import net.minecraft.util.ResourceLocation;
 
 public class ColorTile implements RasterTile {
 
     private final TilePosImmutable position;
-    private final ResourceLocation texture;
+    private final Identifier texture;
 
-    public ColorTile(TilePosImmutable position, ResourceLocation texture) {
+    public ColorTile(TilePosImmutable position, Identifier texture) {
         this.position = position;
         this.texture = texture;
     }
@@ -20,7 +20,7 @@ public class ColorTile implements RasterTile {
     }
 
     @Override
-    public ResourceLocation getTexture() {
+    public Identifier getTexture() {
         return this.texture;
     }
 

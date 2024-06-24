@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.maps.raster.imp;
 
+import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
@@ -11,20 +12,16 @@ import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import fr.thesmyler.terramap.network.SP2CMapStylePacket;
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
-import net.buildtheearth.terraplusplus.util.http.Http;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * Instances are usually created in {@link MapStylesLibrary} and {@link SP2CMapStylePacket}.
@@ -50,7 +47,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     private final boolean debug;
     private final Map<Integer, WebMercatorBounds> bounds;
 
-    private ResourceLocation errorTileTexture = null;
+    private Identifier errorTileTexture = null;
 
     public UrlTiledMap(
             String[] urlPatterns,
@@ -113,7 +110,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
             try {
                 URL parsed = new URL(url);
                 if(parsed.getProtocol().startsWith("http")) {
-                    Http.setMaximumConcurrentRequestsTo(url, this.getMaxConcurrentRequests());
+                    Terramap.instance().http().setMaxConcurrentRequests(url, this.getMaxConcurrentRequests());
                 }
             } catch(IllegalArgumentException | MalformedURLException e) {
                 Terramap.instance().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
@@ -166,7 +163,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
      * 
      * 
      * @param localeKey - the language key to get the copyright for
-     * @return a copyright as a {@link ITextComponent}, translated to the appropriate language.
+     * @return a copyright as a {@link Text}, translated to the appropriate language.
      */
     @Override
     public Text getCopyright(String localeKey) {
@@ -269,15 +266,14 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     }
 
     @Override
-    public ResourceLocation getDefaultTileTexture() {
+    public Identifier getDefaultTileTexture() {
         return this.errorTileTexture;
     }
 
     public void registerErrorTexture() {
-        TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
         int[] color = {170, 211, 223};
-        DynamicTexture texture = new DynamicTexture(ImageUtil.imageFromColor(256,  256, color));
-        this.errorTileTexture = textureManager.getDynamicTextureLocation(Terramap.MOD_ID + ":error_tile_texture", texture);
+        BufferedImage image = ImageUtil.imageFromColor(256,  256, color);
+        this.errorTileTexture = getGameClient().guiDrawContext().loadDynamicTexture(image);
     }
 
 }

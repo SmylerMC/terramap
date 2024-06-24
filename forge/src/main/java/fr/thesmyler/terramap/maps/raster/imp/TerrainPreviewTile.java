@@ -6,17 +6,16 @@ import java.util.concurrent.ExecutionException;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.maps.raster.RasterTile;
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.ResourceLocation;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class TerrainPreviewTile implements RasterTile {
 
     private final TilePosImmutable position;
-    private ResourceLocation texture;
+    private Identifier texture;
     private CompletableFuture<BufferedImage> textureTask;
 
     public TerrainPreviewTile(TilePosImmutable position) {
@@ -34,7 +33,7 @@ public class TerrainPreviewTile implements RasterTile {
     }
 
     @Override
-    public ResourceLocation getTexture() throws Throwable {
+    public Identifier getTexture() throws Throwable {
 
         if(this.getPosition().getZoom() < TerrainPreviewMap.BASE_ZOOM_LEVEL)
             throw new IllegalArgumentException("Trying to request a terrain preview with a zoom that's too low (" + this.position.getZoom() + ")");
@@ -60,9 +59,7 @@ public class TerrainPreviewTile implements RasterTile {
     public void unloadTexture() {
         this.cancelTextureLoading();
         if(this.texture != null) {
-            Minecraft mc = Minecraft.getMinecraft();
-            TextureManager textureManager = mc.getTextureManager();
-            textureManager.deleteTexture(this.texture);
+            getGameClient().guiDrawContext().unloadDynamicTexture(this.texture);
             this.texture = null;
         }
     }
@@ -86,10 +83,8 @@ public class TerrainPreviewTile implements RasterTile {
                 this.textureTask = null;
                 return;
             }
-            Minecraft mc = Minecraft.getMinecraft();
-            TextureManager textureManager = mc.getTextureManager();
             BufferedImage image = this.textureTask.get();
-            this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/debugterrainpreviewmap/" + this.position.getZoom() + "/" + this.position.getX() + "/" + this.position.getY(), new DynamicTexture(image));
+            this.texture = getGameClient().guiDrawContext().loadDynamicTexture(image);
             this.textureTask = null;
         }
     }

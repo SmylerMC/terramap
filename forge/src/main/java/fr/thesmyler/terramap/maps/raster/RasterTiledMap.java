@@ -1,9 +1,9 @@
 package fr.thesmyler.terramap.maps.raster;
 
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePos;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * A raster map made of individual tiles.
@@ -99,6 +99,6 @@ public interface RasterTiledMap extends Comparable<RasterTiledMap> {
      *         (e.g. because the right tile is still loading).
      *         Return null to not render anything.
      */
-    ResourceLocation getDefaultTileTexture();
+    Identifier getDefaultTileTexture();
 
 }

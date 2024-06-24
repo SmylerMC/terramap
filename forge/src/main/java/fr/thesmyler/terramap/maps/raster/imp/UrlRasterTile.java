@@ -9,12 +9,12 @@ import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 
 import fr.thesmyler.terramap.maps.raster.RasterTile;
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.TilePosImmutable;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.ResourceLocation;
+
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
  * @author SmylerMC
@@ -24,7 +24,7 @@ public class UrlRasterTile implements RasterTile {
 
     private final TilePosImmutable pos;
     private final String url;
-    private ResourceLocation texture = null;
+    private Identifier texture = null;
     private CompletableFuture<byte[]> textureTask;
 
 
@@ -56,7 +56,7 @@ public class UrlRasterTile implements RasterTile {
     }
 
     @Override
-    public ResourceLocation getTexture() throws Throwable {
+    public Identifier getTexture() throws Throwable {
         if(this.texture == null) {
             if(this.textureTask == null) {
                 this.textureTask = Terramap.instance().http().get(this.getURL());
@@ -80,14 +80,12 @@ public class UrlRasterTile implements RasterTile {
                 }
                 return;
             }
-            Minecraft mc = Minecraft.getMinecraft();
-            TextureManager textureManager = mc.getTextureManager();
             byte[] buf = this.textureTask.get();
             if(buf == null) throw new IOException("404 response");
             try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
                 BufferedImage image = ImageIO.read(is);
                 if(image == null) throw new IOException("Failed to read image! url: " + this.getURL());
-                this.texture = textureManager.getDynamicTextureLocation("textures/gui/maps/" + this.getURL(), new DynamicTexture(image));
+                this.texture = getGameClient().guiDrawContext().loadDynamicTexture(image);
             }
         }
     }
@@ -104,9 +102,7 @@ public class UrlRasterTile implements RasterTile {
     public void unloadTexture() {
         this.cancelTextureLoading();
         if(this.texture != null) {
-            Minecraft mc = Minecraft.getMinecraft();
-            TextureManager textureManager = mc.getTextureManager();
-            textureManager.deleteTexture(this.texture);
+            getGameClient().guiDrawContext().unloadDynamicTexture(this.texture);
             this.texture = null;
         }
     }

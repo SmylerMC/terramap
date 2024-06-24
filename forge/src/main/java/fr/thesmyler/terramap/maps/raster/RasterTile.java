@@ -1,13 +1,13 @@
 package fr.thesmyler.terramap.maps.raster;
 
+import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePosImmutable;
-import net.minecraft.util.ResourceLocation;
 
 public interface RasterTile {
 
     boolean isTextureAvailable();
 
-    ResourceLocation getTexture() throws Throwable;
+    Identifier getTexture() throws Throwable;
 
     void cancelTextureLoading();
 

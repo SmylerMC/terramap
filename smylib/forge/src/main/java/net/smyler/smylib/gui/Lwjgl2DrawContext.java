@@ -1,17 +1,22 @@
 package net.smyler.smylib.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static java.lang.Math.floor;
+import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -19,6 +24,7 @@ public class Lwjgl2DrawContext implements DrawContext {
 
     private final Scissor scissor = new Gl11Scissor();
     private final GlState glState = new LwjglState();
+    private final AtomicInteger dynamicTextureCounter = new AtomicInteger(0);
 
     @Override
     public Scissor scissor() {
@@ -69,7 +75,7 @@ public class Lwjgl2DrawContext implements DrawContext {
     @Override
     public void drawSpriteCropped(double x, double y, double z, Sprite sprite, double leftCrop, double topCrop, double rightCrop, double bottomCrop) {
         final ResourceLocation location = new ResourceLocation(sprite.texture.namespace, sprite.texture.path);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(location);
+        getMinecraft().getTextureManager().bindTexture(location);
         double uLeft = (sprite.xLeft + leftCrop) / sprite.textureWidth;
         double uRight = (sprite.xRight - rightCrop) / sprite.textureWidth;
         double vTop = (sprite.yTop + topCrop) / sprite.textureHeight;
@@ -98,7 +104,7 @@ public class Lwjgl2DrawContext implements DrawContext {
 
     @Override
     public void drawTooltip(String text, double x, double y) {
-        GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+        GuiScreen currentScreen = getMinecraft().currentScreen;
         if (currentScreen == null) {
             //TODO make it draw by the HUD instead (once we have a working HUD system)
             return;  // We are in game, not in a GUI
@@ -114,6 +120,38 @@ public class Lwjgl2DrawContext implements DrawContext {
         currentScreen.drawHoveringText(text, px, py);
         GlStateManager.popMatrix();
         if(!lighting) GlStateManager.disableLighting();
+    }
+
+    @Override
+    public void drawTexture(Identifier texture, double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
+        getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture.namespace, texture.path));
+        double f = 1.0f / textureWidth;
+        double f1 = 1.0f / textureHeight;
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.getBuffer();
+        builder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        builder.pos(x, y + height, 0d).tex(u * f, (v + height) * f1).endVertex();
+        builder.pos(x + width, y + height, 0d).tex((u + width) * f, (v + height) * f1).endVertex();
+        builder.pos(x + width, y, 0d).tex((u + width) * f, v * f1).endVertex();
+        builder.pos(x, y, 0d).tex(u * f, v * f1).endVertex();
+        tessellator.draw();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+    }
+
+    @Override
+    public Identifier loadDynamicTexture(BufferedImage image) {
+        DynamicTexture dynamicTexture = new DynamicTexture(image);
+        String name = "smylib/dynamic/" + this.dynamicTextureCounter.getAndIncrement() + ".png";
+        ResourceLocation location = getMinecraft().getTextureManager().getDynamicTextureLocation(name, dynamicTexture);
+        return new Identifier(location.getNamespace(), location.getPath());
+    }
+
+    @Override
+    public void unloadDynamicTexture(Identifier texture) {
+        getMinecraft().getTextureManager().deleteTexture(new ResourceLocation(texture.namespace, texture.path));
     }
 
     private void drawMultiPointsGeometry(int glType, double z, Color color, double... points) {

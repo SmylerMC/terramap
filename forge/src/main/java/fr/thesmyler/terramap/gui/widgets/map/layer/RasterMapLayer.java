@@ -3,9 +3,9 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.maps.raster.RasterTile;
@@ -21,10 +21,7 @@ import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.util.ResourceLocation;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import static net.smyler.smylib.Color.WHITE;
@@ -59,11 +56,9 @@ abstract public class RasterMapLayer extends MapLayer {
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         final RasterTiledMap tiledMap = this.getTiledMap();
-        final ResourceLocation defaultTexture = tiledMap.getDefaultTileTexture();
+        final Identifier defaultTexture = tiledMap.getDefaultTileTexture();
 
         Font smallFont = getGameClient().smallestFont();
-        Minecraft mc = Minecraft.getMinecraft();
-        TextureManager textureManager = mc.getTextureManager();
         GlState glState = context.glState();
         float rotation = this.getRotation();
 
@@ -217,7 +212,7 @@ abstract public class RasterMapLayer extends MapLayer {
                 }
 
                 glState.setColor(WHITE);
-                ResourceLocation texture = defaultTexture;
+                Identifier texture = defaultTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
                     else perfectDraw = false;
@@ -226,15 +221,12 @@ abstract public class RasterMapLayer extends MapLayer {
                     parentMap.reportError(this, e.toString());
                 }
                 if (texture != null) {
-                    textureManager.bindTexture(texture);
-                    RenderUtil.drawModalRectWithCustomSizedTexture(
-                            dispX,
-                            dispY,
+                    context.drawTexture(
+                            texture,
+                            dispX, dispY,
                             dX, dY,
-                            displayWidth,
-                            displayHeight,
-                            renderSizedSize,
-                            renderSizedSize
+                            displayWidth, displayHeight,
+                            renderSizedSize, renderSizedSize
                     );
                 }
                 if(debug) {
