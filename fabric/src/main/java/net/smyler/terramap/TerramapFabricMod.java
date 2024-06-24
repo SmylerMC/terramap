@@ -9,6 +9,7 @@ import net.smyler.smylib.game.WrappedMinecraft;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.http.HttpClient;
+import net.smyler.terramap.http.TerramapHttpClient;
 import org.apache.logging.log4j.Logger;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
@@ -23,11 +24,12 @@ public class TerramapFabricMod implements ModInitializer, Terramap {
             .registerTypeAdapter(Text.class, new TextJsonAdapter())
             .setPrettyPrinting()
             .create();
+    private final HttpClient httpClient = new TerramapHttpClient(this.logger);
 
     @Override
     public void onInitialize() {
-        Terramap.InstanceHolder.setInstance(this);
         this.logger.info("Initializing Terramap");
+        Terramap.InstanceHolder.setInstance(this);
         SmyLib.initializeGameClient(new WrappedMinecraft(Minecraft.getInstance()), this.logger);
     }
 
@@ -38,7 +40,7 @@ public class TerramapFabricMod implements ModInitializer, Terramap {
 
     @Override
     public HttpClient http() {
-        return null;
+        return this.httpClient;
     }
 
     @Override
