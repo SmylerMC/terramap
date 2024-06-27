@@ -12,7 +12,6 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import net.smyler.smylib.text.Text;
@@ -185,7 +184,7 @@ public class MapStylesLibrary {
         userMaps.clear();
         loadBuiltIns();
         loadInternals();
-        loadFromOnline(TerramapMod.STYLE_UPDATE_HOSTNAME);
+        loadFromOnline(Terramap.STYLE_UPDATE_HOSTNAME);
         loadFromConfigFile();
     }
 

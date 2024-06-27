@@ -34,7 +34,6 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid=Terramap.MOD_ID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
 public class TerramapMod implements Terramap {
 
-    public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
     private static TerramapVersion version; // Read from the metadata
 
     private final HttpClient http = new TerraplusplusHttpClient();

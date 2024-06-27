@@ -11,6 +11,7 @@ public interface Terramap {
     }
 
     String MOD_ID = "terramap";
+    String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";  //TODO use smyler.net
 
     String version();
 
