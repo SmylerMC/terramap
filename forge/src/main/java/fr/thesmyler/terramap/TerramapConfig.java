@@ -152,16 +152,6 @@ public class TerramapConfig {
         @Config.RangeDouble(min=0.0, max=8.0)
         public double tileScaling = 0;
 
-        @Config.Ignore public final int TILE_LOAD_MIN = 128;
-        @Config.Ignore public final int TILE_LOAD_DEFAULT = 512;
-        @Config.Ignore public final int TILE_LOAD_MAX = 4096;
-        @Config.Name("max_tile_load")
-        @Config.LangKey("terramap.config.max_tile_load")
-        @Config.Comment("This is the maximum number of tiles to keep loaded. A lower number implies lower memory usage, however, if this is lower than the number of tiles displayed on your screen at once you will experience a huge performance drop. Change for a higher value if you experience lag when displaying a map on a large display")
-        @Config.RangeInt(min=TILE_LOAD_MIN, max=TILE_LOAD_MAX)
-        @Config.SlidingOption
-        public int maxTileLoad = TILE_LOAD_DEFAULT;
-
         @Config.Ignore public final int LOW_ZOOM_LEVEL_MIN = 0;
         @Config.Ignore public final int LOW_ZOOM_LEVEL_DEFAULT = 2;
         @Config.Ignore public final int LOW_ZOOM_LEVEL_MAX = 3;

@@ -158,22 +158,23 @@ public class SP2CMapStylePacket implements IMessage {
     }
 
     public UrlTiledMap getTiledMap(TiledMapProvider provider) {
-        return new UrlTiledMap(
+        UrlTiledMap tiledMap = new UrlTiledMap(
                 this.urlPatterns,
                 this.minZoom,
                 this.maxZoom,
                 this.id,
-                this.names,
-                this.copyrights,
                 this.displayPriority,
                 this.isAllowedOnMinimap,
                 provider,
                 this.providerVersion,
                 this.comment,
                 this.maxConcurrentConnections,
-                this.debug,
-                this.bounds
-                );
+                this.debug
+        );
+        this.names.forEach(tiledMap::setNameTranslation);
+        this.copyrights.forEach(tiledMap::setTranslatedCopyright);
+        this.bounds.forEach(tiledMap::setBounds);
+        return tiledMap;
     }
 
     public static class SP2CMapStylePacketTerramapHandler implements IMessageHandler<SP2CMapStylePacket, IMessage> {

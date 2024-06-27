@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.maps.raster.imp;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.common.base.Strings;
@@ -11,7 +12,6 @@ import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
-import fr.thesmyler.terramap.network.SP2CMapStylePacket;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
@@ -24,7 +24,7 @@ import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
- * Instances are usually created in {@link MapStylesLibrary} and {@link SP2CMapStylePacket}.
+ * Instances are usually created in {@link MapStylesLibrary} or packets.
  * 
  * @author Smyler
  *
@@ -39,41 +39,36 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
 
     private final String id;
     private final TiledMapProvider provider;
-    private final Map<String, String> names; // A map of language key => name
-    private final Map<String, Text> copyrightJsons;
+    private final Map<String, String> names = new HashMap<>(); // A map of language key => name
+    private final Map<String, Text> copyrights = new HashMap<>();
     private final long version;
     private final String comment;
     private final int maxConcurrentRequests; // How many concurrent http connections are allowed by this map provider. This should be two by default, as that's what OSM requires
     private final boolean debug;
-    private final Map<Integer, WebMercatorBounds> bounds;
+    private final Map<Integer, WebMercatorBounds> bounds = new HashMap<>();
 
     private Identifier errorTileTexture = null;
 
     public UrlTiledMap(
             String[] urlPatterns,
-            int minZoom,
-            int maxZoom,
+            int minZoom, int maxZoom,
             String id,
-            Map<String, String> names,
-            Map<String, Text> copyright,
             int displayPriority,
             boolean allowOnMinimap,
             TiledMapProvider provider,
             long version,
             String comment,
             int maxConcurrentDownloads,
-            boolean debug,
-            Map<Integer, WebMercatorBounds> bounds) {
+            boolean debug
+    ) {
         checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
         checkArgument(minZoom >= 0, "Zoom level must be at least 0");
         checkArgument(maxZoom >= 0 && maxZoom <= 25, "Zoom level must be at most 25");
         checkArgument(!Strings.isNullOrEmpty(id), "A valid map id needs to be provided");
-        checkArgument(names != null, "Valid map names needs to be provided");
-        checkArgument(copyright != null, "Valid map coprights needs to be provided");
-        checkArgument(provider != null, "Av alid map provider needs to be provided");
+        checkArgument(provider != null, "A valid map provider needs to be provided");
         checkArgument(version >= 0, "Map version number must be positive");
         checkArgument(comment != null, "A valid map comment needs to be provided");
-        checkArgument(maxConcurrentDownloads > 0 ,"Max concurent downloads must be at least 1");
+        checkArgument(maxConcurrentDownloads > 0 ,"Max concurrent downloads must be at least 1");
         for(String pattern: urlPatterns) {
             String url = pattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
             try {
@@ -86,8 +81,6 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         this.maxZoom = maxZoom;
         this.minZoom = minZoom;
         this.id = id;
-        this.copyrightJsons = copyright;
-        this.names = names;
         this.provider = provider;
         this.version = version;
         this.comment = comment;
@@ -95,7 +88,6 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         this.displayPriority = displayPriority;
         this.maxConcurrentRequests = maxConcurrentDownloads;
         this.debug = debug;
-        this.bounds = bounds;
     }
 
     /**
@@ -167,14 +159,14 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
      */
     @Override
     public Text getCopyright(String localeKey) {
-        return this.copyrightJsons.getOrDefault(localeKey, this.copyrightJsons.get("en_us"));
+        return this.copyrights.getOrDefault(localeKey, this.copyrights.get("en_us"));
     }
 
     /**
      * @return the language key => copyright json value map for this map
      */
     public Map<String, Text> getUnlocalizedCopyrights() {
-        return this.copyrightJsons;
+        return this.copyrights;
     }
 
     /**
@@ -268,6 +260,53 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     @Override
     public Identifier getDefaultTileTexture() {
         return this.errorTileTexture;
+    }
+
+    /**
+     * Set the localized name of this map in a given language.
+     * If the provided value is null, unset the translation for the given language.
+     *
+     * @param languageKey   a language key (e.g. eu_US)
+     * @param value         the translated map name
+     */
+    public void setNameTranslation(String languageKey, String value) {
+        checkArgument(languageKey != null, "Language key cannot be null");
+        if (value == null) {
+            this.names.remove(languageKey);
+        } else {
+            this.names.put(languageKey, value);
+        }
+    }
+
+    /**
+     * Set the localized copyright of this map in a given language.
+     * If the provided value is null, unset the translation for the given language.
+     *
+     * @param languageKey   a language key (e.g. en_US)
+     * @param value         the translated copyright {@link Text}
+     */
+    public void setTranslatedCopyright(String languageKey, Text value) {
+        checkArgument(languageKey != null, "Language key cannot be null");
+        if (value == null) {
+            this.copyrights.remove(languageKey);
+        } else {
+            this.copyrights.put(languageKey, value);
+        }
+    }
+
+    /**
+     * Set the bounds of this map at a given zoom level.
+     * If the provided bounds are null, existing bounds are removed from the given zoom level.
+     *
+     * @param zoomLevel the zoom level for which to apply the bounds
+     * @param bounds    the bounds
+     */
+    public void setBounds(int zoomLevel, WebMercatorBounds bounds) {
+        if (bounds == null) {
+            this.bounds.remove(zoomLevel);
+        } else {
+            this.bounds.put(zoomLevel, bounds);
+        }
     }
 
     public void registerErrorTexture() {

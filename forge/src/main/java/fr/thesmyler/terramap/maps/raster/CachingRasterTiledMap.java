@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import fr.thesmyler.terramap.TerramapConfig;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.TilePos;
 import net.smyler.terramap.util.geo.TilePosImmutable;
@@ -18,23 +17,23 @@ import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
  * Tiles with zoom levels lower than a certain value will also never be unloaded, so that backup textures are always kept.
  * It also holds the metadata defined in the map config.
  * 
- * @author SmylerMC
+ * @author Smyler
  *
  * @param <T> The type of tile handled by this map
  */
 public abstract class CachingRasterTiledMap<T extends RasterTile> implements RasterTiledMap {
 
+    public static final int CACHE_SIZE = 512;
+    public static final int LOW_ZOOM = 2;
+
     private final LinkedList<T> tileList; // Uses for ordered access when unloading
     private final Map<TilePosImmutable, T> tileMap; // Used for unordered access
-    private int lowZoom = 0;
     private boolean useLowZoom = true;
-    private int maxLoaded;
     private int baseLoad = 0;
 
     public CachingRasterTiledMap() {
         this.tileList = new LinkedList<>();
         this.tileMap = new HashMap<>();
-        this.maxLoaded = TerramapConfig.CLIENT.maxTileLoad;
     }
 
     @Override
@@ -67,7 +66,7 @@ public abstract class CachingRasterTiledMap<T extends RasterTile> implements Ras
 
     /**
      * Unloads the given tile:
-     * unload it's texture from the GPU and stop any pending http request to get that texture, and forgets about it.
+     * unload its texture from the GPU and stop any pending http request to get that texture, and forgets about it.
      * 
      * @param tile - the tile to unload
      */
@@ -88,7 +87,9 @@ public abstract class CachingRasterTiledMap<T extends RasterTile> implements Ras
     }
 
     private void needTile(T tile) {
-        if(tile.getPosition().getZoom() <= this.lowZoom) return; // Those should stay where they are
+        if(tile.getPosition().getZoom() <= LOW_ZOOM) {
+            return; // Those should stay where they are
+        }
         this.tileList.remove(tile);
         if(this.tileList.size() >= this.baseLoad) {
             this.tileList.add(this.baseLoad, tile);
@@ -100,15 +101,17 @@ public abstract class CachingRasterTiledMap<T extends RasterTile> implements Ras
 
     private void prepareLowTiles() {
         this.unloadAll();
-        this.lowZoom = Math.min(3, TerramapConfig.CLIENT.lowZoomLevel); // We hard-code that here because we really don't want that to go above 3, 4 would already be 341 tiles
         if(this.useLowZoom) {
-            for(int zoom=this.getMinZoom(); zoom<=Math.min(this.getMaxZoom(), this.lowZoom); zoom++) {
+            for(int zoom=this.getMinZoom(); zoom<=Math.min(this.getMaxZoom(), LOW_ZOOM); zoom++) {
                 int size = WebMercatorUtil.getDimensionsInTile(zoom);
                 for(int x=0; x<size; x++) for(int y=0; y<size; y++) {
                     try {
                         this.getTile(zoom, x, y).getTexture();
                     } catch (Throwable e) {
-                        Terramap.instance().logger().error("Failed to load a low level texture for map: %s-%sv%s at %s/%s/%s", this.getId(), this.getProvider(), this.getProviderVersion(),zoom, x, y);
+                        Terramap.instance().logger().error(
+                                "Failed to load a low level texture for map: {}-{}v{} at {}/{}/{}",
+                                this.getId(), this.getProvider(), this.getProviderVersion(), zoom, x, y
+                        );
                         Terramap.instance().logger().catching(e);
                     }
                 }
@@ -119,38 +122,21 @@ public abstract class CachingRasterTiledMap<T extends RasterTile> implements Ras
 
     @Override
     public void setup() {
-        if(this.maxLoaded != TerramapConfig.CLIENT.maxTileLoad) {
-            this.maxLoaded = TerramapConfig.CLIENT.maxTileLoad;
-            this.unloadToMaxLoad();
+        this.unloadToMaxLoad();
+        if(this.baseLoad <= 0){
+            this.prepareLowTiles();
         }
-        if(baseLoad <= 0 || this.lowZoom != TerramapConfig.CLIENT.lowZoomLevel) this.prepareLowTiles();
     }
 
     /**
-     * 
-     * @return the maximum number of tiles to keep loaded
-     */
-    public int getMaxLoad() {
-        return this.maxLoaded;
-    }
-
-    /**
-     * Set the maximum number of tiles to keep loaded
-     * 
-     * @param maxLoad
-     */
-    public void setMaxLoad(int maxLoad) {
-        this.maxLoaded = maxLoad;
-    }
-
-    /**
-     * Unloads all tiles, after this operation, this map will be as it it was just instantiated.
+     * Unloads all tiles, after this operation, this map will be as if it was just instantiated.
      */
     public void unloadAll() {
-        int i = this.maxLoaded;
-        this.maxLoaded = 0;
-        this.unloadToMaxLoad();
-        this.maxLoaded = i;
+        while(!this.tileList.isEmpty()) {
+            T toUnload = this.tileList.removeLast();
+            this.tileMap.remove(toUnload.getPosition());
+            this.unloadTile(toUnload);
+        }
         this.baseLoad = 0;
     }
 
@@ -165,18 +151,14 @@ public abstract class CachingRasterTiledMap<T extends RasterTile> implements Ras
      * Unloads tiles until we are at the max number of loaded tiles
      */
     public void unloadToMaxLoad() {
-        while(this.tileList.size() > this.maxLoaded) {
+        while(this.tileList.size() > CACHE_SIZE) {
             T toUnload = this.tileList.removeLast();
             this.tileMap.remove(toUnload.getPosition());
             this.unloadTile(toUnload);
         }
     }
 
-    public boolean getUsesLowZoom() {
-        return this.useLowZoom;
-    }
-
-    public void setUseLowZoom(boolean yesNo) {
+    public void setUsesLowZoom(boolean yesNo) {
         this.useLowZoom = yesNo;
     }
 

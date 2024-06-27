@@ -19,6 +19,9 @@ import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 
+import static java.lang.Integer.parseInt;
+import static net.smyler.smylib.Preconditions.checkState;
+
 
 public class MapStylesLibrary {
 
@@ -57,6 +60,7 @@ public class MapStylesLibrary {
         try {
             // https://github.com/MinecraftForge/MinecraftForge/issues/5713
             InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+            checkState(in != null, "Resource not found: " + path);
             try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(in))) {
                 StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
@@ -193,27 +197,32 @@ public class MapStylesLibrary {
                 patterns = new String[] {saved.url};
             } else throw new IllegalArgumentException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
         }
-        Map<Integer, WebMercatorBounds> bounds = new HashMap<>();
-        if(saved.bounds != null) for(String key: saved.bounds.keySet()) {
-            int zoom = Integer.parseInt(key);
-            bounds.put(zoom, saved.bounds.get(key));
-        }
-        return new UrlTiledMap(
+        UrlTiledMap map = new UrlTiledMap(
                 patterns,
                 saved.min_zoom,
                 saved.max_zoom,
                 id,
-                saved.name,
-                saved.copyright,
                 saved.display_priority,
                 saved.allow_on_minimap,
                 provider,
                 version,
                 comment,
                 saved.max_concurrent_requests,
-                saved.debug,
-                bounds
-                );
+                saved.debug
+        );
+        saved.name.forEach(map::setNameTranslation);
+        saved.copyright.forEach(map::setTranslatedCopyright);
+        if (saved.bounds != null) {
+            saved.bounds.forEach((i, b) -> {
+                try {
+                    int zoomLevel = parseInt(i);
+                    map.setBounds(zoomLevel, b);
+                } catch (NumberFormatException e) {
+                    Terramap.instance().logger().warn("Ignoring invalid zoom level: {}: {}", i, e.getMessage());
+                }
+            });
+        }
+        return map;
     }
 
     private static Map<String, UrlTiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
@@ -256,6 +265,7 @@ public class MapStylesLibrary {
         return configMapsFile;
     }
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static class SavedMapStyle {
 
         String url; // Used by legacy versions

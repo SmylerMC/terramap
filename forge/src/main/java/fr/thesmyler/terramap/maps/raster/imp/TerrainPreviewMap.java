@@ -4,7 +4,6 @@ import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
 import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePosImmutable;
-import net.minecraft.util.ResourceLocation;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -13,8 +12,7 @@ public class TerrainPreviewMap extends CachingRasterTiledMap<TerrainPreviewTile>
     public static final int BASE_ZOOM_LEVEL = 16;
 
     public TerrainPreviewMap() {
-        super();
-        this.setUseLowZoom(false); // Loading tiles at low zoom levels takes forever here
+        this.setUsesLowZoom(false); // Loading tiles at low zoom levels takes forever here
     }
     @Override
     protected TerrainPreviewTile createNewTile(TilePosImmutable position) {

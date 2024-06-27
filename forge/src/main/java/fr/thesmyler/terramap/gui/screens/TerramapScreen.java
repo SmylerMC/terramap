@@ -426,7 +426,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 debugBuilder.append(String.format(locale, "\nMap provider: %sv%s", backgroundStyle.getProvider(), backgroundStyle.getProviderVersion()));
                 if (backgroundStyle instanceof CachingRasterTiledMap) {
                     CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) backgroundStyle;
-                    debugBuilder.append(String.format(locale, "\nLoaded tiles: %d/%d/%d", cachingMap.getBaseLoad(), cachingMap.getLoadedCount(), cachingMap.getMaxLoad()));
+                    debugBuilder.append(String.format(locale, "\nLoaded tiles: %d/%d/%d", cachingMap.getBaseLoad(), cachingMap.getLoadedCount(), CachingRasterTiledMap.CACHE_SIZE));
                     if (cachingMap instanceof UrlTiledMap) {
                         UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
                         String[] urls = urlMap.getUrlPatterns();
