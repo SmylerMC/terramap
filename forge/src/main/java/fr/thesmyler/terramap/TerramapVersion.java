@@ -13,10 +13,13 @@ import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
 /**
  * Represents a version of Terramap
+ *
+ * @deprecated Do not depend on the main version string, use dedicated version numbers instead.
  * 
  * @author SmylerMC
  *
  */
+@Deprecated
 public class TerramapVersion implements Comparable<TerramapVersion> {
 
     public final int majorTarget;
@@ -56,10 +59,6 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 
     public TerramapVersion(int majorTarget, int minorTarget, int buildTarget, ReleaseType type, int build, int revision) {
         this(majorTarget, minorTarget, buildTarget, type, build, revision, false, "");
-    }
-
-    public TerramapVersion(int majorTarget, int minorTarget, int buildTarget, ReleaseType type, int build) {
-        this(majorTarget, minorTarget, buildTarget, type, build, 0, false, "");
     }
 
     public TerramapVersion(int majorTarget, int minorTarget, int buildTarget) {
@@ -214,7 +213,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
     }
 
     @Override
-    public int compareTo(TerramapVersion other) {
+    public int compareTo(@NotNull TerramapVersion other) {
 
         if(other == null) {
             // Null means not installed, so we are always ahead

@@ -416,7 +416,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             TerramapClientContext srv = TerramapClientContext.getContext();
             EarthGeneratorSettings generationSettings = srv.getGeneratorSettings();
             debugBuilder.append(String.format(locale, "FPS: %s", getGameClient().currentFPS()));
-            debugBuilder.append(String.format(locale, "\nClient: %s", TerramapMod.getVersion()));
+            debugBuilder.append(String.format(locale, "\nClient: %s", Terramap.instance().version()));
             debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
             debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));

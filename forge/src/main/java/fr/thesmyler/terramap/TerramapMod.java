@@ -111,6 +111,11 @@ public class TerramapMod implements Terramap {
 
 
     @Override
+    public String version() {
+        return getVersion().toString();
+    }
+
+    @Override
     public Logger logger() {
         return this.logger;
     }

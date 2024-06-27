@@ -12,6 +12,8 @@ public interface Terramap {
 
     String MOD_ID = "terramap";
 
+    String version();
+
     Logger logger();
 
     HttpClient http();

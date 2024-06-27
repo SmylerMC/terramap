@@ -255,7 +255,7 @@ public class MapStylesLibrary {
             throw new UnknownHostException(String.format("No txt record was found at %s ?? Something is wrong, either with the name server or with your dns provider!", hostname));
         }
         try {
-            return attribute.split("\\|")[1].replace("${version}", TerramapMod.getVersion().toString());
+            return attribute.split("\\|")[1].replace("${version}", Terramap.instance().version());
         } catch(IndexOutOfBoundsException e) {
             throw new UnknownHostException("TXT record was malformatted");
         }
