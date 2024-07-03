@@ -8,8 +8,8 @@ import net.smyler.smylib.gui.GlState;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.maps.raster.RasterTile;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
+import net.smyler.terramap.tilesets.raster.RasterTile;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
@@ -42,7 +42,7 @@ abstract public class RasterMapLayer extends MapLayer {
     private Vec2dReadOnly renderingSpaceDimensions;
     private Vec2dReadOnly halfRenderingSpaceDimensions;
 
-    public abstract RasterTiledMap getTiledMap();
+    public abstract RasterTileSet getTiledMap();
 
     @Override
     protected void initialize() {
@@ -55,7 +55,7 @@ abstract public class RasterMapLayer extends MapLayer {
     @Override
     public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
-        final RasterTiledMap tiledMap = this.getTiledMap();
+        final RasterTileSet tiledMap = this.getTiledMap();
         final Identifier defaultTexture = tiledMap.getDefaultTileTexture();
 
         Font smallFont = getGameClient().smallestFont();

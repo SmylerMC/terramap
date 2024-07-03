@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.proxy;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
+import fr.thesmyler.terramap.TerramapConfig;
 import net.smyler.smylib.gui.screen.TestScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
@@ -8,7 +9,6 @@ import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -66,7 +66,7 @@ public class TerramapClientProxy extends TerramapProxy {
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
         KeyBindings.registerBindings();
         MarkerControllerManager.registerBuiltInControllers();
-        MapStylesLibrary.reload();
+        Terramap.instance().rasterTileSetManager().reload(TerramapConfig.enableDebugMaps);
         ClientCommandHandler.instance.registerCommand(new OpenMapCommand());
         MinecraftForge.EVENT_BUS.register(TestScreen.class);
     }

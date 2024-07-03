@@ -1,8 +1,6 @@
-package fr.thesmyler.terramap.maps.raster.imp;
+package net.smyler.terramap.tilesets.raster;
 
 import net.smyler.smylib.Color;
-import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
@@ -11,13 +9,13 @@ import java.awt.image.BufferedImage;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
-public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
+public class ColorTileSet extends CachingRasterTileSet {
 
     private final Color color;
     private final String name;
     private final Identifier textureLocation;
 
-    public ColorTiledMap(Color color, String name) {
+    public ColorTileSet(Color color, String name) {
         this.color = color;
         this.name = name;
         if (getGameClient().isGlAvailabale()) {
@@ -29,7 +27,7 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
     }
 
     @Override
-    protected ColorTile createNewTile(TilePosImmutable pos) {
+    protected RasterTile createNewTile(TilePosImmutable pos) {
         return new ColorTile(pos, this.textureLocation);
     }
 
@@ -59,8 +57,8 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
     }
 
     @Override
-    public TiledMapProvider getProvider() {
-        return TiledMapProvider.INTERNAL;
+    public RasterTileSetProvider getProvider() {
+        return RasterTileSetProvider.INTERNAL;
     }
 
     @Override
@@ -92,4 +90,39 @@ public class ColorTiledMap extends CachingRasterTiledMap<ColorTile> {
         return this.color;
     }
 
+    private static class ColorTile implements RasterTile {
+
+        private final TilePosImmutable position;
+        private final Identifier texture;
+
+        public ColorTile(TilePosImmutable position, Identifier texture) {
+            this.position = position;
+            this.texture = texture;
+        }
+
+        @Override
+        public boolean isTextureAvailable() {
+            return this.texture != null;
+        }
+
+        @Override
+        public Identifier getTexture() {
+            return this.texture;
+        }
+
+        @Override
+        public void cancelTextureLoading() {
+        }
+
+        @Override
+        public void unloadTexture() {
+            // Nop, we don't want to do that !
+        }
+
+        @Override
+        public TilePosImmutable getPosition() {
+            return this.position;
+        }
+
+    }
 }

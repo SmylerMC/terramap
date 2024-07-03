@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.raster;
+package net.smyler.terramap.tilesets.raster;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -12,49 +12,57 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.InitialDirContext;
 
-import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 
 import static java.lang.Integer.parseInt;
+import static java.util.Collections.unmodifiableMap;
 import static net.smyler.smylib.Preconditions.checkState;
 
 
-public class MapStylesLibrary {
+public class RasterTileSetManager {
 
     private static final String BUILT_IN_MAPS = "assets/terramap/mapstyles.json";
-    private static File configMapsFile;
-    private static final Map<String, RasterTiledMap> baseMaps = new HashMap<>();
-    private static final Map<String, UrlTiledMap> userMaps = new HashMap<>();
 
-    /**
-     * Get the default Terramap maps, loaded from the jar and from the online source
-     * The returned map is a new one, and can be mutated safely.
-     * Does not actually load the maps, this needs to be done beforehand with {@link MapStylesLibrary#loadBuiltIns()} and {@link MapStylesLibrary#loadFromOnline(String)}
-     * 
-     * @return a new map that contains id => TiledMap couples
-     */
-    public static Map<String, RasterTiledMap> getBaseMaps() {
-        return new HashMap<>(baseMaps);
+    private final File configMapsFile;
+
+    private final Map<String, RasterTileSet> baseMaps = new HashMap<>();
+    private final Map<String, RasterTileSet> baseMapsReadOnly = unmodifiableMap(this.baseMaps);
+    private final Map<String, UrlRasterTileSet> userMaps = new HashMap<>();
+    private final Map<String, UrlRasterTileSet> userMapsReadOnly = unmodifiableMap(this.userMaps);
+
+    public RasterTileSetManager(File file) {
+        this.configMapsFile = file;
     }
 
     /**
-     * Get the default Terramap maps, loaded from config/terramap_user_styles.json.
-     * The returned map is a new one, and can be mutated safely.
-     * 
-     * @return a new map that contains id => TiledMap couples
+     * Provides access to the default Terramap raster map styles,
+     * which were loaded from the JAR and from the online configuration file.
+     * <br>
+     * Those maps have to be loaded beforehand with {@link RasterTileSetManager#loadBuiltIns()}
+     * and {@link RasterTileSetManager#loadFromOnline(String)}.
+     *
+     * @return a read-only vue of a map that contains id => {@link RasterTileSet} couples
      */
-    public static Map<String, UrlTiledMap> getUserMaps() {
-        return new HashMap<>(userMaps);
+    public Map<String, RasterTileSet> getBaseMaps() {
+        return this.baseMapsReadOnly;
+    }
+
+    /**
+     * Provides access to the map styles configured by the user in config/terramap_user_styles.json.
+     *
+     * @return a read-only vue of a map that contains id => {@link RasterTileSet} couples
+     */
+    public Map<String, UrlRasterTileSet> getUserMaps() {
+        return this.userMapsReadOnly;
     }
 
     /**
      * Loads map styles from the mod's jar.
      */
-    public static void loadBuiltIns() {
-        TiledMapProvider.BUILT_IN.setLastError(null);
+    public void loadBuiltIns() {
+        RasterTileSetProvider.BUILT_IN.setLastError(null);
         String path = BUILT_IN_MAPS;
         try {
             // https://github.com/MinecraftForge/MinecraftForge/issues/5713
@@ -67,26 +75,15 @@ public class MapStylesLibrary {
                     json.append(line);
                     line = txtReader.readLine();
                 }
-                baseMaps.putAll(loadFromJson(json.toString(), TiledMapProvider.BUILT_IN));
+                this.baseMaps.putAll(loadFromJson(json.toString(), RasterTileSetProvider.BUILT_IN));
             }
         } catch(Exception e) {
             Terramap.instance().logger().fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
             Terramap.instance().logger().fatal("Path: {}", path);
             Terramap.instance().logger().catching(e);
-            TiledMapProvider.BUILT_IN.setLastError(e);
+            RasterTileSetProvider.BUILT_IN.setLastError(e);
         }
 
-    }
-
-    public static void loadInternals() {
-        TiledMapProvider.INTERNAL.setLastError(null);
-        try {
-            // We currently have no internal styles
-        } catch(Exception e) {
-            Terramap.instance().logger().error("Failed to load internal map styles");
-            Terramap.instance().logger().catching(e);
-            TiledMapProvider.INTERNAL.setLastError(e);
-        }
     }
 
     /**
@@ -100,11 +97,11 @@ public class MapStylesLibrary {
      * 
      * @param hostname - the hostname to lookup
      */
-    public static void loadFromOnline(String hostname) {
-        TiledMapProvider.ONLINE.setLastError(null);
+    public void loadFromOnline(String hostname) {
+        RasterTileSetProvider.ONLINE.setLastError(null);
         String url;
         try {
-            url = resolveUpdateURL(hostname);
+            url = this.resolveUpdateURL(hostname);
         } catch (UnknownHostException | NamingException e1) {
             Terramap.instance().logger().error("Failed to resolve map styles urls!");
             Terramap.instance().logger().catching(e1);
@@ -115,7 +112,7 @@ public class MapStylesLibrary {
             if(e != null) {
                 Terramap.instance().logger().error("Failed to download updated map style file!");
                 Terramap.instance().logger().catching(e);
-                TiledMapProvider.ONLINE.setLastError(e);
+                RasterTileSetProvider.ONLINE.setLastError(e);
             }
             try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(b)))) {
                 StringBuilder json = new StringBuilder();
@@ -124,71 +121,62 @@ public class MapStylesLibrary {
                     json.append(line);
                     line = txtReader.readLine();
                 }
-                baseMaps.putAll(loadFromJson(json.toString(), TiledMapProvider.ONLINE));
+                baseMaps.putAll(loadFromJson(json.toString(), RasterTileSetProvider.ONLINE));
             } catch(Exception f) {
                 Terramap.instance().logger().error("Failed to parse updated map style file!");
                 Terramap.instance().logger().catching(e);
-                TiledMapProvider.ONLINE.setLastError(e);
+                RasterTileSetProvider.ONLINE.setLastError(e);
             }
         });
     }
 
     /**
      * Load map styles defined in config/terramap_user_styles.json.
-     * The file to load from needs to be set first with {@link #setConfigMapFile(File)}
      */
-    public static void loadFromConfigFile() {
-        TiledMapProvider.CUSTOM.setLastError(null);
-        if(configMapsFile == null) {
-            Terramap.instance().logger().error("Map config file was null!");
-            TiledMapProvider.CUSTOM.setLastError(new NullPointerException("Map style config files was null"));
+    public void loadFromConfigFile() {
+        if (this.configMapsFile == null) {
+            Terramap.instance().logger().info("No tile sets config file provided!");
             return;
         }
-        if(!configMapsFile.exists()) {
+        RasterTileSetProvider.CUSTOM.setLastError(null);
+        if(!this.configMapsFile.exists()) {
             try {
                 Terramap.instance().logger().debug("Map config file did not exist, creating a blank one.");
-                MapStyleFile mapFile = new MapStyleFile(new MapFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
-                Files.write(configMapsFile.toPath(), Terramap.instance().gsonPretty().toJson(mapFile).getBytes(Charset.defaultCharset()));
+                TileSetFile mapFile = new TileSetFile(new TileSetFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
+                Files.write(this.configMapsFile.toPath(), Terramap.instance().gsonPretty().toJson(mapFile).getBytes(Charset.defaultCharset()));
             } catch (IOException e) {
                 Terramap.instance().logger().error("Failed to create map style config file!");
                 Terramap.instance().logger().catching(e);
-                TiledMapProvider.CUSTOM.setLastError(e);
+                RasterTileSetProvider.CUSTOM.setLastError(e);
 
             }
         } else {
             try {
-                userMaps.putAll(loadFromFile(configMapsFile, TiledMapProvider.CUSTOM));
+                this.userMaps.putAll(this.loadFromCustomFile(this.configMapsFile));
             } catch (Exception e) {
                 Terramap.instance().logger().error("Failed to read map style config file!");
                 Terramap.instance().logger().catching(e);
-                TiledMapProvider.CUSTOM.setLastError(e);
+                RasterTileSetProvider.CUSTOM.setLastError(e);
             }
         }
-    }
-
-    /**
-     * Set the config file that should contain the user's custom map syles
-     * It will be created if it does not exist.
-     * 
-     * @param file - the json config file
-     */
-    public static void setConfigMapFile(File file) {
-        configMapsFile = file;
     }
 
     /**
      * Reload map styles from the jar, online, and config/terramap_user_styles.json
      */
-    public static void reload() {
-        baseMaps.clear();
-        userMaps.clear();
-        loadBuiltIns();
-        loadInternals();
-        loadFromOnline(Terramap.STYLE_UPDATE_HOSTNAME);
-        loadFromConfigFile();
+    public void reload(boolean enableDebugTileSet) {
+        this.baseMaps.clear();
+        this.userMaps.clear();
+        this.loadBuiltIns();
+        this.loadFromOnline(Terramap.STYLE_UPDATE_HOSTNAME);
+        this.loadFromConfigFile();
+        if (!enableDebugTileSet) {
+            this.baseMaps.values().removeIf(RasterTileSet::isDebug);
+            this.userMaps.values().removeIf(RasterTileSet::isDebug);
+        }
     }
 
-    private static UrlTiledMap readFromSaved(String id, SavedMapStyle saved, TiledMapProvider provider, long version, String comment) {
+    private UrlRasterTileSet readFromSaved(String id, TileSetDefinition saved, RasterTileSetProvider provider, long version, String comment) {
         String[] patterns = saved.urls;
         if(patterns == null || patterns.length == 0) {
             if(saved.url != null) {
@@ -196,7 +184,7 @@ public class MapStylesLibrary {
                 patterns = new String[] {saved.url};
             } else throw new IllegalArgumentException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);
         }
-        UrlTiledMap map = new UrlTiledMap(
+        UrlRasterTileSet map = new UrlRasterTileSet(
                 patterns,
                 saved.min_zoom,
                 saved.max_zoom,
@@ -224,26 +212,22 @@ public class MapStylesLibrary {
         return map;
     }
 
-    private static Map<String, UrlTiledMap> loadFromFile(File file, TiledMapProvider provider) throws IOException {
+    private Map<String, UrlRasterTileSet> loadFromCustomFile(File file) throws IOException {
         String json = String.join("", Files.readAllLines(file.toPath()));
-        return loadFromJson(json, provider);
+        return loadFromJson(json, RasterTileSetProvider.CUSTOM);
     }
 
-    private static Map<String, UrlTiledMap> loadFromJson(String json, TiledMapProvider provider) {
-        MapStyleFile savedStyles = Terramap.instance().gson().fromJson(json, MapStyleFile.class);
-        Map<String, UrlTiledMap> styles = new HashMap<>();
+    private Map<String, UrlRasterTileSet> loadFromJson(String json, RasterTileSetProvider provider) {
+        TileSetFile savedStyles = Terramap.instance().gson().fromJson(json, TileSetFile.class);
+        Map<String, UrlRasterTileSet> styles = new HashMap<>();
         for(String id: savedStyles.maps.keySet()) {
-            UrlTiledMap style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
-            if(!TerramapConfig.enableDebugMaps && style.isDebug()) {
-                Terramap.instance().logger().info("Not loading debug map style {}", style.getId());
-                continue;
-            }
+            UrlRasterTileSet style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
             styles.put(id, style);
         }
         return styles;
     }
 
-    private static String resolveUpdateURL(String hostname) throws UnknownHostException, NamingException {
+    private String resolveUpdateURL(String hostname) throws UnknownHostException, NamingException {
         InetAddress inetAddress = InetAddress.getByName(hostname);
         InitialDirContext iDirC = new InitialDirContext();
         Attributes attributes = iDirC.getAttributes("dns:/" + inetAddress.getHostName(), new String[] {"TXT"});
@@ -260,12 +244,12 @@ public class MapStylesLibrary {
         }
     }
 
-    public static File getFile() {
-        return configMapsFile;
+    public File getFile() {
+        return this.configMapsFile;
     }
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private static class SavedMapStyle {
+    private static class TileSetDefinition {
 
         String url; // Used by legacy versions
         String[] urls;
@@ -282,24 +266,24 @@ public class MapStylesLibrary {
     }
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private static class MapStyleFile {
+    private static class TileSetFile {
 
-        Map<String, SavedMapStyle> maps;
-        MapFileMetadata metadata;
+        Map<String, TileSetDefinition> maps;
+        TileSetFileMetadata metadata;
 
-        MapStyleFile(MapFileMetadata metadata) {
+        TileSetFile(TileSetFileMetadata metadata) {
             this.metadata = metadata;
             this.maps = new HashMap<>();
         }
 
     }
 
-    private static class MapFileMetadata {
+    private static class TileSetFileMetadata {
 
         long version;
         String comment;
 
-        MapFileMetadata(long version, String comment) {
+        TileSetFileMetadata(long version, String comment) {
             this.comment = comment;
             this.version = version;
         }

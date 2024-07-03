@@ -1,17 +1,15 @@
-package fr.thesmyler.terramap.maps.raster.imp;
+package net.smyler.terramap.tilesets.raster;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
-import com.google.common.base.Strings;
-
-import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
-import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
@@ -20,16 +18,19 @@ import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 
+import javax.imageio.ImageIO;
+
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.Strings.isNullOrEmpty;
 
 /**
- * Instances are usually created in {@link MapStylesLibrary} or packets.
+ * Instances are usually created in {@link RasterTileSetManager} or packets.
  * 
  * @author Smyler
  *
  */
-public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements CopyrightHolder {
+public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightHolder {
 
     private final String[] urlPatterns;
     private final int maxZoom;
@@ -38,7 +39,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     private final boolean allowOnMinimap;
 
     private final String id;
-    private final TiledMapProvider provider;
+    private final RasterTileSetProvider provider;
     private final Map<String, String> names = new HashMap<>(); // A map of language key => name
     private final Map<String, Text> copyrights = new HashMap<>();
     private final long version;
@@ -49,13 +50,13 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
 
     private Identifier errorTileTexture = null;
 
-    public UrlTiledMap(
+    public UrlRasterTileSet(
             String[] urlPatterns,
             int minZoom, int maxZoom,
             String id,
             int displayPriority,
             boolean allowOnMinimap,
-            TiledMapProvider provider,
+            RasterTileSetProvider provider,
             long version,
             String comment,
             int maxConcurrentDownloads,
@@ -64,18 +65,13 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         checkArgument(urlPatterns.length > 0, "At least one url pattern needed");
         checkArgument(minZoom >= 0, "Zoom level must be at least 0");
         checkArgument(maxZoom >= 0 && maxZoom <= 25, "Zoom level must be at most 25");
-        checkArgument(!Strings.isNullOrEmpty(id), "A valid map id needs to be provided");
+        checkArgument(!isNullOrEmpty(id), "A valid map id needs to be provided");
         checkArgument(provider != null, "A valid map provider needs to be provided");
         checkArgument(version >= 0, "Map version number must be positive");
         checkArgument(comment != null, "A valid map comment needs to be provided");
         checkArgument(maxConcurrentDownloads > 0 ,"Max concurrent downloads must be at least 1");
         for(String pattern: urlPatterns) {
-            String url = pattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
-            try {
-                new URL(url); // Checking if the URL is valid
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException(url + " is not a valid url pattern");
-            }
+            checkUrlPattern(pattern);
         }
         this.urlPatterns = urlPatterns;
         this.maxZoom = maxZoom;
@@ -90,30 +86,15 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         this.debug = debug;
     }
 
-    /**
-     * Initializes this map by loading all tiles bellow a certain zoom level specified in {@link TerramapConfig}, and starts loading their textures, if it hasn't been done yet.
-     * Also makes sure the cache follows the mod's config
-     */
     @Override
     public void setup() {
         this.registerErrorTexture();
-        for(String urlPattern: this.getUrlPatterns()) {
-            String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
-            try {
-                URL parsed = new URL(url);
-                if(parsed.getProtocol().startsWith("http")) {
-                    Terramap.instance().http().setMaxConcurrentRequests(url, this.getMaxConcurrentRequests());
-                }
-            } catch(IllegalArgumentException | MalformedURLException e) {
-                Terramap.instance().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
-                Terramap.instance().logger().catching(e);
-            }
-        }
+        this.enforceMaxConcurrentRequests();
         super.setup();
     }
 
     @Override
-    protected UrlRasterTile createNewTile(TilePosImmutable pos) {
+    protected RasterTile createNewTile(TilePosImmutable pos) {
         String pat = this.urlPatterns[(pos.getZoom() + pos.getX() + pos.getY()) % this.urlPatterns.length];
         return new UrlRasterTile(pat, pos);
     }
@@ -124,8 +105,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     }
 
     /**
-     * 
-     * @return the minimum zoom level that map supports, that's usually 0
+     * @return the minimum zoom level supported by this tile set, which is usually 0
      */
     @Override
     public int getMinZoom() {
@@ -133,7 +113,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
     }
 
     /**
-     * @return the maximum zoom level this map supports
+     * @return the maximum zoom level supported by this tile set
      */
     @Override
     public int getMaxZoom() {
@@ -215,7 +195,7 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
      * @return this map's provider
      */
     @Override
-    public TiledMapProvider getProvider() {
+    public RasterTileSetProvider getProvider() {
         return this.provider;
     }
 
@@ -309,10 +289,136 @@ public class UrlTiledMap extends CachingRasterTiledMap<UrlRasterTile> implements
         }
     }
 
-    public void registerErrorTexture() {
+    private void registerErrorTexture() {
         int[] color = {170, 211, 223};
         BufferedImage image = ImageUtil.imageFromColor(256,  256, color);
         this.errorTileTexture = getGameClient().guiDrawContext().loadDynamicTexture(image);
     }
 
+    private void enforceMaxConcurrentRequests() {
+        for(String urlPattern: this.getUrlPatterns()) {
+            String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
+            try {
+                URL parsed = new URL(url);
+                if(parsed.getProtocol().startsWith("http")) {
+                    Terramap.instance().http().setMaxConcurrentRequests(url, this.getMaxConcurrentRequests());
+                }
+            } catch(IllegalArgumentException | MalformedURLException e) {
+                Terramap.instance().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
+                Terramap.instance().logger().catching(e);
+            }
+        }
+    }
+
+    private static void checkUrlPattern(String pattern) {
+        String url = pattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
+        try {
+            new URL(url); // Checking if the URL is valid
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException(url + " is not a valid url pattern");
+        }
+    }
+
+    private static class UrlRasterTile implements RasterTile {
+
+        private final TilePosImmutable pos;
+        private final String url;
+        private Identifier texture = null;
+        private CompletableFuture<byte[]> textureTask;
+
+        public UrlRasterTile(String urlPattern, TilePosImmutable pos) {
+            this.pos = pos;
+            this.url = urlPattern
+                    .replace("{x}", String.valueOf(this.getPosition().getX()))
+                    .replace("{y}", String.valueOf(this.getPosition().getY()))
+                    .replace("{z}", String.valueOf(this.getPosition().getZoom()));
+        }
+
+        public String getURL() {
+            return this.url;
+        }
+
+        @Override
+        public boolean isTextureAvailable() {
+            if(texture != null) return true; // Don't try loading the texture if it has already been loaded
+            try {
+                this.tryLoadingTexture();
+            } catch (Throwable e) {
+                return false;
+            }
+            return this.texture != null;
+        }
+
+        @Override
+        public Identifier getTexture() throws Throwable {
+            if(this.texture == null) {
+                if(this.textureTask == null) {
+                    this.textureTask = Terramap.instance().http().get(this.getURL());
+                } else this.tryLoadingTexture();
+            }
+            return this.texture;
+        }
+
+        private void tryLoadingTexture() throws Throwable {
+            //TODO Do that fully async, DynamicTexture::new is expensive
+            if(this.textureTask != null && this.textureTask.isDone()){
+                if(this.textureTask.isCompletedExceptionally()) {
+                    if(this.textureTask.isCancelled()) {
+                        this.textureTask = null;
+                    } else {
+                        try {
+                            this.textureTask.get(); // That will throw an exception
+                        } catch(ExecutionException e) {
+                            throw e.getCause();
+                        }
+                    }
+                    return;
+                }
+                byte[] buf = this.textureTask.get();
+                if(buf == null) throw new IOException("404 response");
+                try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
+                    BufferedImage image = ImageIO.read(is);
+                    if(image == null) throw new IOException("Failed to read image! url: " + this.getURL());
+                    this.texture = getGameClient().guiDrawContext().loadDynamicTexture(image);
+                }
+            }
+        }
+
+        @Override
+        public void cancelTextureLoading() {
+            if(this.textureTask != null) {
+                this.textureTask.cancel(true);
+                this.textureTask = null;
+            }
+        }
+
+        @Override
+        public void unloadTexture() {
+            this.cancelTextureLoading();
+            if(this.texture != null) {
+                getGameClient().guiDrawContext().unloadDynamicTexture(this.texture);
+                this.texture = null;
+            }
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj == this) return true;
+            if(obj == null) return false;
+            if(!(obj instanceof UrlRasterTile)) return false;
+            UrlRasterTile other = (UrlRasterTile) obj;
+            return other.url.equals(this.url);
+        }
+
+        @Override
+        public TilePosImmutable getPosition() {
+            return this.pos;
+        }
+
+        @Override
+        public int hashCode() {
+            return this.url.hashCode();
+        }
+
+    }
 }

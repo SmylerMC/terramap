@@ -13,7 +13,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.SavedMapState;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
 
@@ -91,7 +91,7 @@ public class MinimapWidget extends MapWidget {
         double minZoom = 0d;
         double maxZoom = 25d;
         if (background.isPresent()) {
-            RasterTiledMap style = TerramapClientContext.getContext().getMapStyles().get(TerramapConfig.CLIENT.minimap.style);
+            RasterTileSet style = TerramapClientContext.getContext().getRasterTileSets().get(TerramapConfig.CLIENT.minimap.style);
             OnlineRasterMapLayer layer = background.get();
             if (style != null) {
                 layer.setTiledMap(style);

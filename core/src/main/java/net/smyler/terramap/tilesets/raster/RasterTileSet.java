@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.raster;
+package net.smyler.terramap.tilesets.raster;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePos;
@@ -6,11 +6,11 @@ import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 
 /**
- * A raster map made of individual tiles.
+ * A set of raster tiles that make up a map.
  *
  * @author Smyler
  */
-public interface RasterTiledMap extends Comparable<RasterTiledMap> {
+public interface RasterTileSet extends Comparable<RasterTileSet> {
 
     /**
      * Initializes the map.
@@ -63,7 +63,7 @@ public interface RasterTiledMap extends Comparable<RasterTiledMap> {
     /**
      * @return this map's provider
      */
-    TiledMapProvider getProvider();
+    RasterTileSetProvider getProvider();
 
     /**
      * @return the version of this map's provider

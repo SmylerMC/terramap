@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.maps.raster;
+package net.smyler.terramap.tilesets.raster;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.geo.TilePosImmutable;

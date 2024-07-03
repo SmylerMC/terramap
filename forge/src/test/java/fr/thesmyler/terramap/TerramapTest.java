@@ -1,10 +1,10 @@
 package fr.thesmyler.terramap;
 
 import com.google.gson.Gson;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import net.smyler.smylib.SmyLibTest;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.http.HttpClient;
+import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,10 +12,12 @@ import org.junit.jupiter.api.BeforeEach;
 public class TerramapTest extends SmyLibTest implements Terramap {
 
     private final Logger logger = LogManager.getLogger("Terramap unit test");
+    private final RasterTileSetManager rasterTileSetManager = new RasterTileSetManager(null);
+
     @BeforeEach
     public void initTerramap() {
         Terramap.InstanceHolder.setInstance(this);
-        MapStylesLibrary.reload();
+        this.rasterTileSetManager.reload(true);
         TerramapClientContext.resetContext();
     }
 
@@ -43,6 +45,11 @@ public class TerramapTest extends SmyLibTest implements Terramap {
     @Override
     public Gson gsonPretty() {
         this.logger.warn("GSON not implemented in tests");
+        return null;
+    }
+
+    @Override
+    public RasterTileSetManager rasterTileSetManager() {
         return null;
     }
 

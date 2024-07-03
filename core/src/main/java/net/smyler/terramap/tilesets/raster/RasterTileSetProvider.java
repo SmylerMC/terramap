@@ -1,6 +1,6 @@
-package fr.thesmyler.terramap.maps.raster;
+package net.smyler.terramap.tilesets.raster;
 
-public enum TiledMapProvider {
+public enum RasterTileSetProvider {
 
     BUILT_IN, // From the jar, should never be used
     INTERNAL, // Loaded from code, usually debug maps
