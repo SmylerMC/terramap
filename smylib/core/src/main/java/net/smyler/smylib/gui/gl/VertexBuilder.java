@@ -1,4 +1,4 @@
-package net.smyler.smylib.gui.advanced;
+package net.smyler.smylib.gui.gl;
 
 import net.smyler.smylib.Color;
 

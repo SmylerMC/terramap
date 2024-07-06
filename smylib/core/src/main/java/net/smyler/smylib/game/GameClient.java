@@ -1,6 +1,6 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
@@ -80,7 +80,7 @@ public interface GameClient {
         return this.defaultFont().withScale(1f / this.scaleFactor());
     }
 
-    DrawContext guiDrawContext();
+    UiDrawContext guiDrawContext();
 
     /**
      * Get the sprites for this client.

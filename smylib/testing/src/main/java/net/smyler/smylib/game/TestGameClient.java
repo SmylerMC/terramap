@@ -1,9 +1,8 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.DummyDrawContext;
-import net.smyler.smylib.gui.DummyFont;
-import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.gui.*;
+import net.smyler.smylib.gui.DummyUiDrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.PopupScreen;
 import net.smyler.smylib.gui.screen.Screen;
@@ -37,7 +36,7 @@ public class TestGameClient implements GameClient {
     private final SoundSystem soundSystem = new DummySoundSystem();
     private final Translator translator = new DummyTranslator();
     private final Font font = new DummyFont(1f, 1f);
-    private final DrawContext drawContext = new DummyDrawContext();
+    private final UiDrawContext uiDrawContext = new DummyUiDrawContext();
     private final SpriteLibrary spriteLibrary = new SpriteLibrary();
 
     private final Path gameDirectory;
@@ -153,8 +152,8 @@ public class TestGameClient implements GameClient {
     }
 
     @Override
-    public DrawContext guiDrawContext() {
-        return this.drawContext;
+    public UiDrawContext guiDrawContext() {
+        return this.uiDrawContext;
     }
 
     @Override

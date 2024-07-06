@@ -5,8 +5,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Mouse;
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.Scissor;
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -41,7 +41,7 @@ public class GuiScreenProxy extends GuiScreen {
     public void drawScreen(int nopX, int nopY, float partialTicks) {
         GameClient client = getGameClient();
         Mouse mouse = client.mouse();
-        DrawContext context = client.guiDrawContext();
+        UiDrawContext context = client.guiDrawContext();
         Scissor scissor = context.scissor();
         scissor.push();
         // We need to make sure everything is visible

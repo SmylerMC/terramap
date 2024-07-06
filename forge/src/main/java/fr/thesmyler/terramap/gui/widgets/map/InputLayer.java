@@ -1,11 +1,11 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.input.KeyBindings;
-import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
@@ -64,15 +64,15 @@ public class InputLayer extends MapLayer {
     protected void initialize() {}
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         if(this.isRotating) {
             // If we are processing rotation input, draw pentagons at the corresponding spot
-            context.glState().pushViewMatrix();
-            context.glState().translate(x + this.rotatePosition.x, y + this.rotatePosition.y);
+            context.gl().pushViewMatrix();
+            context.gl().translate(x + this.rotatePosition.x, y + this.rotatePosition.y);
             context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_OUTER);
             context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_INNER);
-            context.glState().popViewMatrix();
+            context.gl().popViewMatrix();
         }
 
         if (this.getMap().isDebugMode()) {

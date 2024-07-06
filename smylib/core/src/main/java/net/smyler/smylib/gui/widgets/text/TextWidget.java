@@ -1,6 +1,6 @@
 package net.smyler.smylib.gui.widgets.text;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
@@ -70,8 +70,8 @@ public class TextWidget implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        context.glState().enableAlpha();
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        context.gl().enableAlpha();
         float w = this.getWidth();
         float h = this.getHeight();
         context.drawRectangle(x, y, x + w, y + h, this.backgroundColor);

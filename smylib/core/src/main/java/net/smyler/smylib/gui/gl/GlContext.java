@@ -1,8 +1,9 @@
-package net.smyler.smylib.gui;
+package net.smyler.smylib.gui.gl;
 
 import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
 
-public interface GlState {
+public interface GlContext {
 
     void enableAlpha();
 
@@ -11,6 +12,8 @@ public interface GlState {
     void setColor(Color color);
 
     Color getColor();
+
+    void setTexture(Identifier texture);
 
     void enableColorLogic(ColorLogic colorLogic);
 
@@ -26,4 +29,9 @@ public interface GlState {
 
     void popViewMatrix();
 
+    void startDrawing(DrawMode mode, VertexFormat format);
+
+    VertexBuilder vertex();
+
+    void draw();
 }

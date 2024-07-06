@@ -1,4 +1,4 @@
-package net.smyler.smylib.gui.advanced;
+package net.smyler.smylib.gui.gl;
 
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.Preconditions.checkState;
 
-public class TesselatorAdvancedDrawing implements AdvancedDrawing {
+public class Lwjgl2GlContext implements GlContext {
 
     private final Tessellator tessellator = Tessellator.getInstance();
     private final BufferBuilder bufferBuilder = this.tessellator.getBuffer();
@@ -22,7 +22,110 @@ public class TesselatorAdvancedDrawing implements AdvancedDrawing {
     private VertexFormat currentFormat = null;
 
     @Override
-    public void begin(DrawMode mode, VertexFormat format) {
+    public void enableAlpha() {
+        GlStateManager.enableAlpha();
+    }
+
+    @Override
+    public void disableAlpha() {
+        GlStateManager.disableAlpha();
+    }
+
+    @Override
+    public void setColor(Color color) {
+        GlStateManager.color(
+            color.redf(),
+            color.greenf(),
+            color.bluef(),
+            color.alphaf()
+        );
+    }
+
+    @Override
+    public Color getColor() {
+        return new Color(GL11.glGetInteger(GL11.GL_CURRENT_COLOR));
+    }
+
+    @Override
+    public void setTexture(Identifier identifier) {
+        this.textureManager.bindTexture(new ResourceLocation(identifier.namespace, identifier.path));
+    }
+
+    @Override
+    public void enableColorLogic(ColorLogic colorLogic) {
+        GlStateManager.LogicOp op = this.getGlColorLogic(colorLogic);
+        GlStateManager.colorLogicOp(op);
+        GlStateManager.enableColorLogic();
+    }
+
+    private GlStateManager.LogicOp getGlColorLogic(ColorLogic logic) {
+        switch (logic) {
+            case CLEAR:
+                return GlStateManager.LogicOp.CLEAR;
+            case SET:
+                return GlStateManager.LogicOp.SET;
+            case COPY:
+                return GlStateManager.LogicOp.COPY;
+            case COPY_INVERTED:
+                return GlStateManager.LogicOp.COPY_INVERTED;
+            case NOOP:
+                return GlStateManager.LogicOp.NOOP;
+            case INVERT:
+                return GlStateManager.LogicOp.INVERT;
+            case AND:
+                return GlStateManager.LogicOp.AND;
+            case NAND:
+                return GlStateManager.LogicOp.NAND;
+            case OR:
+                return GlStateManager.LogicOp.OR;
+            case NOR:
+                return GlStateManager.LogicOp.NOR;
+            case XOR:
+                return GlStateManager.LogicOp.XOR;
+            case EQUIV:
+                return GlStateManager.LogicOp.EQUIV;
+            case AND_REVERSE:
+                return GlStateManager.LogicOp.AND_REVERSE;
+            case OR_REVERSE:
+                return GlStateManager.LogicOp.OR_REVERSE;
+            case OR_INVERTED:
+                return GlStateManager.LogicOp.OR_INVERTED;
+        }
+        throw new IllegalStateException("Illegal enum value");
+    }
+
+    @Override
+    public void disableColorLogic() {
+        GlStateManager.disableColorLogic();
+    }
+
+    @Override
+    public void pushViewMatrix() {
+        GlStateManager.pushMatrix();
+    }
+
+    @Override
+    public void rotate(double angle) {
+        GlStateManager.rotate((float)angle, 0, 0, 1f);
+    }
+
+    @Override
+    public void translate(double x, double y) {
+        GlStateManager.translate(x, y, 0);
+    }
+
+    @Override
+    public void scale(double x, double y) {
+        GlStateManager.scale(x, y, 1d);
+    }
+
+    @Override
+    public void popViewMatrix() {
+        GlStateManager.popMatrix();
+    }
+
+    @Override
+    public void startDrawing(DrawMode mode, VertexFormat format) {
         int glMode;
         net.minecraft.client.renderer.vertex.VertexFormat glVertexFormat;
         switch (mode) {
@@ -68,16 +171,6 @@ public class TesselatorAdvancedDrawing implements AdvancedDrawing {
     }
 
     @Override
-    public void texture(Identifier identifier) {
-        this.textureManager.bindTexture(new ResourceLocation(identifier.namespace, identifier.path));
-    }
-
-    @Override
-    public void color(Color color) {
-        GlStateManager.color(color.redf(), color.greenf(), color.bluef(), color.alphaf());
-    }
-
-    @Override
     public VertexBuilder vertex() {
         checkState(this.currentFormat != null, "Not building!");
         return new VertexBuilderImplementation();
@@ -85,6 +178,7 @@ public class TesselatorAdvancedDrawing implements AdvancedDrawing {
 
     @Override
     public void draw() {
+        checkState(this.currentFormat != null, "Not building!");
         if (this.currentFormat.texture) {
             GlStateManager.enableTexture2D();
             GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -136,15 +230,16 @@ public class TesselatorAdvancedDrawing implements AdvancedDrawing {
 
         @Override
         public void end() {
-            VertexFormat format = TesselatorAdvancedDrawing.this.currentFormat;
-            TesselatorAdvancedDrawing.this.bufferBuilder.pos(this.x, this.y, this.z);
+            VertexFormat format = Lwjgl2GlContext.this.currentFormat;
+            BufferBuilder builder = Lwjgl2GlContext.this.bufferBuilder;
+            builder.pos(this.x, this.y, this.z);
             if (format.texture) {
-                TesselatorAdvancedDrawing.this.bufferBuilder.tex(this.u, this.v);
+                builder.tex(this.u, this.v);
             }
             if (format.color) {
-                TesselatorAdvancedDrawing.this.bufferBuilder.color(this.r, this.g, this.b, this.a);
+                builder.color(this.r, this.g, this.b, this.a);
             }
-            TesselatorAdvancedDrawing.this.bufferBuilder.endVertex();
+            builder.endVertex();
         }
     }
 

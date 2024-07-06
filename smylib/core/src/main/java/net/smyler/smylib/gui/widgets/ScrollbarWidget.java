@@ -4,7 +4,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -91,7 +91,7 @@ public class ScrollbarWidget extends WidgetContainer {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
         float width = this.getWidth();
         float height = this.getHeight();
         context.drawRectangle(x, y, x + width, y + height, BAR_BG_COLOR);
@@ -218,7 +218,7 @@ public class ScrollbarWidget extends WidgetContainer {
         }
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             Color bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
             float height = this.getHeight();
             context.drawRectangle(x, y, x + this.getWidth(), y + height, bgcolor);

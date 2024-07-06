@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
@@ -18,7 +19,6 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 
-import net.smyler.smylib.gui.DrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
@@ -103,7 +103,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
         }
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
             context.drawRectangleWithContours(x, y, x + this.getWidth(), y + this.getHeight(), Color.LIGHT_OVERLAY , 1f, Color.DARK_GRAY);
             super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }

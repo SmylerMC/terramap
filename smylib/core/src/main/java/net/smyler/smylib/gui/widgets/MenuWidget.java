@@ -3,7 +3,7 @@ package net.smyler.smylib.gui.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +51,7 @@ public class MenuWidget implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean mouseHoverMenu, boolean hasFocus, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean mouseHoverMenu, boolean hasFocus, WidgetContainer parent) {
         this.mainAnimation.update();
         this.hoverAnimation.update();
         float width = this.getWidth();
@@ -60,7 +60,7 @@ public class MenuWidget implements Widget {
         float lh = fh + padding * 2;
         float sh = 3;
         float dw = this.font.computeWidth(" >");
-        context.glState().enableAlpha();
+        context.gl().enableAlpha();
         Color separatorColor = this.mainAnimation.fadeColor(this.separatorColor);
         Color borderColor = this.mainAnimation.fadeColor(this.borderColor);
         Color backgroundColor = this.mainAnimation.fadeColor(this.backgroundColor);
@@ -116,7 +116,7 @@ public class MenuWidget implements Widget {
                 ty += sh;
             }
         }
-        context.glState().disableAlpha();
+        context.gl().disableAlpha();
     }
 
     @Override

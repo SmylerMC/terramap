@@ -4,14 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.terramap.tilesets.raster.RasterTile;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.GeoServices;
@@ -53,13 +53,13 @@ abstract public class RasterMapLayer extends MapLayer {
 
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         final RasterTileSet tiledMap = this.getTiledMap();
         final Identifier defaultTexture = tiledMap.getDefaultTileTexture();
 
         Font smallFont = getGameClient().smallestFont();
-        GlState glState = context.glState();
+        GlContext gl = context.gl();
         float rotation = this.getRotation();
 
         boolean perfectDraw = true;
@@ -71,7 +71,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
         profiler.startSection("render-raster-layer_" + tiledMap.getId());
 
-        context.glState().pushViewMatrix();
+        context.gl().pushViewMatrix();
         float widthViewPort = this.getWidth();
         float heightViewPort = this.getHeight();
         double zoom = this.getMap().getController().getZoom();
@@ -211,7 +211,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     dY += factorY * renderSizedSize;
                 }
 
-                glState.setColor(WHITE);
+                gl.setColor(WHITE);
                 Identifier texture = defaultTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
@@ -241,7 +241,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     smallFont.draw((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
                     smallFont.drawCentered((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
-                glState.setColor(WHITE);
+                gl.setColor(WHITE);
             }
         }
 
@@ -277,7 +277,7 @@ abstract public class RasterMapLayer extends MapLayer {
         this.lastNeededTiles.forEach(RasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;
 
-        context.glState().popViewMatrix();
+        context.gl().popViewMatrix();
         profiler.endSection();
 
     }

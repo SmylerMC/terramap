@@ -1,8 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets;
 
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.GlState;
-import net.smyler.smylib.gui.advanced.AdvancedDrawing;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.math.Vec2dMutable;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -13,8 +12,8 @@ import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.Mat2d;
 
 import static net.smyler.smylib.Color.*;
-import static net.smyler.smylib.gui.advanced.DrawMode.*;
-import static net.smyler.smylib.gui.advanced.VertexFormat.*;
+import static net.smyler.smylib.gui.gl.DrawMode.*;
+import static net.smyler.smylib.gui.gl.VertexFormat.*;
 
 public class CircularCompassWidget implements Widget {
 
@@ -44,7 +43,7 @@ public class CircularCompassWidget implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         Color background = this.backgroundColor;
         Color north = this.northColor;
@@ -62,42 +61,40 @@ public class CircularCompassWidget implements Widget {
 
         float radius = this.size / 2;
 
-        AdvancedDrawing drawing = context.advancedDrawing();
-
-        GlState glState = context.glState();
-        glState.pushViewMatrix();
-        glState.translate(x + radius, y + radius);
+        GlContext gl = context.gl();
+        gl.pushViewMatrix();
+        gl.translate(x + radius, y + radius);
 
         // Background dark circle
-        drawing.begin(TRIANGLE_FAN, POSITION);
-        drawing.color(background);
-        drawing.vertex().position(0d, 0d, 0d).end();
+        gl.startDrawing(TRIANGLE_FAN, POSITION);
+        gl.setColor(background);
+        gl.vertex().position(0d, 0d, 0d).end();
         for (double[] vertex : this.vertices) {
-            drawing.vertex().position(vertex[0], vertex[1], 0d).end();
+            gl.vertex().position(vertex[0], vertex[1], 0d).end();
         }
-        drawing.vertex().position(this.vertices[0][0], this.vertices[0][1], 0d).end();
-        drawing.draw();
+        gl.vertex().position(this.vertices[0][0], this.vertices[0][1], 0d).end();
+        gl.draw();
 
-        glState.rotate(this.azimuth);
+        gl.rotate(this.azimuth);
 
         // North arrow
-        drawing.begin(TRIANGLE_FAN, POSITION_COLOR);
-        drawing.color(WHITE);
-        drawing.vertex().position(0d, -radius, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
-        drawing.vertex().position(-radius/3, radius * 0.1, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
-        drawing.vertex().position(0d, 0d, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
-        drawing.vertex().position(radius/3, radius * 0.1, 0d).color(northDark.redf(), northDark.greenf(), northDark.bluef(), northDark.alphaf()).end();
-        drawing.draw();
+        gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
+        gl.setColor(WHITE);
+        gl.vertex().position(0d, -radius, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
+        gl.vertex().position(-radius/3, radius * 0.1, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
+        gl.vertex().position(0d, 0d, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
+        gl.vertex().position(radius/3, radius * 0.1, 0d).color(northDark.redf(), northDark.greenf(), northDark.bluef(), northDark.alphaf()).end();
+        gl.draw();
 
         // South arrow
-        drawing.begin(TRIANGLE_FAN, POSITION_COLOR);
-        drawing.vertex().position(0, 0, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
-        drawing.vertex().position(-radius/3, radius * 0.1, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
-        drawing.vertex().position(0, radius, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
-        drawing.vertex().position(radius/3, radius * 0.1, 0).color(southColor.redf(), southColor.greenf(), southColor.bluef(), southColor.alphaf()).end();
-        drawing.draw();
+        gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
+        gl.vertex().position(0, 0, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
+        gl.vertex().position(-radius/3, radius * 0.1, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
+        gl.vertex().position(0, radius, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
+        gl.vertex().position(radius/3, radius * 0.1, 0).color(southColor.redf(), southColor.greenf(), southColor.bluef(), southColor.alphaf()).end();
+        gl.draw();
 
-        glState.popViewMatrix();
+        gl.popViewMatrix();
     }
 
     @Override

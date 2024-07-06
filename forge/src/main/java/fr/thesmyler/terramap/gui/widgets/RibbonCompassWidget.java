@@ -1,9 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets;
 
 import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.GlState;
-import net.smyler.smylib.gui.advanced.AdvancedDrawing;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.terramap.Terramap;
 import org.lwjgl.opengl.GL11;
 
@@ -12,9 +11,9 @@ import net.smyler.smylib.gui.widgets.Widget;
 import net.minecraft.client.renderer.GlStateManager;
 
 import static net.smyler.smylib.Color.WHITE;
-import static net.smyler.smylib.gui.advanced.DrawMode.QUADS;
-import static net.smyler.smylib.gui.advanced.VertexFormat.POSITION_TEXTURE;
-import static net.smyler.smylib.gui.advanced.VertexFormat.POSITION_TEXTURE_COLOR;
+import static net.smyler.smylib.gui.gl.DrawMode.QUADS;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION_TEXTURE;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION_TEXTURE_COLOR;
 
 public class RibbonCompassWidget implements Widget {
 
@@ -43,53 +42,51 @@ public class RibbonCompassWidget implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         double blendBorder = 10d; // How many pixels to fade to alpha=0 on the sides
         double leftU = (double)(this.azimuth - 180) / 360 + (double)(this.textureWidth - this.width) / this.textureWidth / 2;
         double leftCU = leftU + blendBorder/this.textureWidth;
         double rightU = leftU + (double) this.width / this.textureWidth;
         double rightCU = rightU - blendBorder/this.textureWidth;
 
-        GlState glState = context.glState();
+        GlContext gl = context.gl();
 
-        glState.enableAlpha();
+        gl.enableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
 
-        AdvancedDrawing drawing = context.advancedDrawing();
+        gl.startDrawing(QUADS, POSITION_TEXTURE_COLOR);
+        gl.setTexture(COMPASS_BACKGROUND_TEXTURE);
 
-        drawing.begin(QUADS, POSITION_TEXTURE_COLOR);
-        drawing.texture(COMPASS_BACKGROUND_TEXTURE);
+        gl.vertex().position(x, y, 0d).texture(leftU, 0d).color(1f, 1f, 1f, 0f).end();
+        gl.vertex().position(x, y + this.height, 0d).texture(leftU, 1d).color(1f, 1f, 1f, 0f).end();
+        gl.vertex().position(x + blendBorder, y + this.height, 0d).texture(leftCU, 1f).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + blendBorder, y, 0d).texture(leftCU, 0f).color(1f, 1f, 1f, 1f).end();
 
-        drawing.vertex().position(x, y, 0d).texture(leftU, 0d).color(1f, 1f, 1f, 0f).end();
-        drawing.vertex().position(x, y + this.height, 0d).texture(leftU, 1d).color(1f, 1f, 1f, 0f).end();
-        drawing.vertex().position(x + blendBorder, y + this.height, 0d).texture(leftCU, 1f).color(1f, 1f, 1f, 1f).end();
-        drawing.vertex().position(x + blendBorder, y, 0d).texture(leftCU, 0f).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + blendBorder, y, 0d).texture(leftCU, 0d).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + blendBorder, y + this.height, 0d).texture(leftCU, 1d).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + this.width - blendBorder, y + this.height, 0d).texture(rightCU, 1d).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + this.width - blendBorder, y, 0d).texture(rightCU, 0d).color(1f, 1f, 1f, 1f).end();
 
-        drawing.vertex().position(x + blendBorder, y, 0d).texture(leftCU, 0d).color(1f, 1f, 1f, 1f).end();
-        drawing.vertex().position(x + blendBorder, y + this.height, 0d).texture(leftCU, 1d).color(1f, 1f, 1f, 1f).end();
-        drawing.vertex().position(x + this.width - blendBorder, y + this.height, 0d).texture(rightCU, 1d).color(1f, 1f, 1f, 1f).end();
-        drawing.vertex().position(x + this.width - blendBorder, y, 0d).texture(rightCU, 0d).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + this.width - blendBorder, y, 0d).texture(rightCU, 0d).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + this.width - blendBorder, y + this.height, 0d).texture(rightCU, 1d).color(1f, 1f, 1f, 1f).end();
+        gl.vertex().position(x + this.width, y + this.height, 0d).texture(rightU, 1d).color(1f, 1f, 1f, 0f).end();
+        gl.vertex().position(x + this.width, y, 0d).texture(rightU, 0d).color(1f, 1f, 1f, 0f).end();
 
-        drawing.vertex().position(x + this.width - blendBorder, y, 0d).texture(rightCU, 0d).color(1f, 1f, 1f, 1f).end();
-        drawing.vertex().position(x + this.width - blendBorder, y + this.height, 0d).texture(rightCU, 1d).color(1f, 1f, 1f, 1f).end();
-        drawing.vertex().position(x + this.width, y + this.height, 0d).texture(rightU, 1d).color(1f, 1f, 1f, 0f).end();
-        drawing.vertex().position(x + this.width, y, 0d).texture(rightU, 0d).color(1f, 1f, 1f, 0f).end();
+        gl.draw();
 
-        drawing.draw();
-
-        glState.setColor(WHITE);
+        gl.setColor(WHITE);
 
         double indX = x + (double)(this.width - this.indicatorWidth) / 2;
         double indY = y + (double)(this.height - this.indicatorHeight) / 2;
 
-        drawing.begin(QUADS, POSITION_TEXTURE);
-        drawing.texture(COMPASS_INDICATOR_TEXTURE);
-        drawing.vertex().position(indX, indY, 0d).texture(0d, 0d).end();
-        drawing.vertex().position(indX, indY + this.indicatorHeight, 0d).texture(0d, 1d).end();
-        drawing.vertex().position(indX + this.indicatorWidth, indY + this.indicatorHeight, 0d).texture(1d, 1d).end();
-        drawing.vertex().position(indX + this.indicatorWidth, indY, 0d).texture(1d, 0d).end();
-        drawing.draw();
+        gl.startDrawing(QUADS, POSITION_TEXTURE);
+        gl.setTexture(COMPASS_INDICATOR_TEXTURE);
+        gl.vertex().position(indX, indY, 0d).texture(0d, 0d).end();
+        gl.vertex().position(indX, indY + this.indicatorHeight, 0d).texture(0d, 1d).end();
+        gl.vertex().position(indX + this.indicatorWidth, indY + this.indicatorHeight, 0d).texture(1d, 1d).end();
+        gl.vertex().position(indX + this.indicatorWidth, indY, 0d).texture(1d, 0d).end();
+        gl.draw();
 
     }
 

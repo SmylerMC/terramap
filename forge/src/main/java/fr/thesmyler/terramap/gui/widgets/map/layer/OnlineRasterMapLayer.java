@@ -15,7 +15,7 @@ import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.terramap.tilesets.raster.ColorTileSet;
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.game.GameClient;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 
 import net.smyler.smylib.text.ImmutableText;
@@ -165,7 +165,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
             }
 
             @Override
-            public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+            public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
                 float width = this.getWidth();
                 float height = this.getHeight();
                 if (screenHovered) {

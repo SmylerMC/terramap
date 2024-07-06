@@ -1,9 +1,9 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.terramap.TerramapResources;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
@@ -28,7 +28,7 @@ public class RightClickMarker extends AbstractFixedMarker {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         context.drawSprite(x, y, hovered ? SPRITE_HOVERED : SPRITE);
     }
 

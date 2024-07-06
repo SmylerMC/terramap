@@ -2,7 +2,7 @@ package net.smyler.smylib.gui.popups;
 
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.Key;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +33,7 @@ public class Popup extends WidgetContainer {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         float right = x + this.getWidth();
         float bottom = y + this.getHeight();
         context.drawRectangle(x, y, right, bottom, this.backgroundColor);

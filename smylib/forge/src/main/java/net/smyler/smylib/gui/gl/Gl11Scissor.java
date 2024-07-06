@@ -1,4 +1,4 @@
-package net.smyler.smylib.gui;
+package net.smyler.smylib.gui.gl;
 
 import net.smyler.smylib.game.GameClient;
 import org.lwjgl.opengl.GL11;

@@ -1,12 +1,12 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -35,12 +35,12 @@ public class DistortionLayer extends MapLayer {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget) parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
         map.getProfiler().startSection("layer-distortion");
-        context.glState().pushViewMatrix();
+        context.gl().pushViewMatrix();
         this.applyRotationGl(context, x, y);
 
         double maxX = this.renderSpaceDimensions.x();
@@ -64,7 +64,7 @@ public class DistortionLayer extends MapLayer {
             }
         }
 
-        context.glState().popViewMatrix();
+        context.gl().popViewMatrix();
         map.getProfiler().endSection();
     }
 

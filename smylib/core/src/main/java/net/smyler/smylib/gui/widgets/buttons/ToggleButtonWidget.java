@@ -3,7 +3,7 @@ package net.smyler.smylib.gui.widgets.buttons;
 import java.util.function.Consumer;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.sprites.Sprite;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
@@ -100,7 +100,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Sprite sprite;
         if(!this.isEnabled()) {
             if(this.getState()) {

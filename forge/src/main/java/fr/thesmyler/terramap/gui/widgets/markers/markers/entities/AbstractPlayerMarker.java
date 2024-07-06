@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.GlContext;
 import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -30,8 +30,8 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        GlState glState = context.glState();
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        GlContext glState = context.gl();
 
         boolean drawName = this.showName(hovered);
         float textureSize = 128f / this.downScaleFactor;
@@ -45,7 +45,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
                 azimuth += ((MapWidget)parent).getController().getRotation();
             }
 
-            GlState gl = context.glState();
+            GlContext gl = context.gl();
             gl.pushViewMatrix();
 
             gl.translate(x + this.width / 2, y + this.height / 2);
@@ -53,7 +53,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
             GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
-            context.glState().disableAlpha();
+            context.gl().disableAlpha();
             GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             GlStateManager.shadeModel(7425);
             Tessellator tess = Tessellator.getInstance();
@@ -66,7 +66,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             tess.draw();
             GlStateManager.shadeModel(7424);
             GlStateManager.disableBlend();
-            context.glState().enableAlpha();
+            context.gl().enableAlpha();
             GlStateManager.enableTexture2D();
             GlStateManager.popMatrix();
         }

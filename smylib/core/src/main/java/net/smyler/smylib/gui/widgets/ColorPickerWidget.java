@@ -3,7 +3,7 @@ package net.smyler.smylib.gui.widgets;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 
 import java.util.Optional;
@@ -76,7 +76,7 @@ public class ColorPickerWidget extends TextFieldWidget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
         float width = this.getWidth();
         float height = this.getHeight();

@@ -1,7 +1,7 @@
 package net.smyler.smylib.gui.widgets;
 
 import net.smyler.smylib.game.Key;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +54,7 @@ public interface Widget {
      * @param focused indicates whether this widget has its parent's focus (it will get keystrokes and so on)
      * @param parent  the parent Screen
      */
-    void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent);
+    void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, @Nullable WidgetContainer parent);
 
     /**
      * If this returns false, this widget will not be rendered and or notified of user actions

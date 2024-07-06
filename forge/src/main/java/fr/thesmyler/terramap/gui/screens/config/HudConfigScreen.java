@@ -38,7 +38,7 @@ import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException
 import net.minecraft.client.Minecraft;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
@@ -372,7 +372,7 @@ public class HudConfigScreen extends Screen {
         }
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
             this.compass.setWidth(this.getWidth());
             super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }

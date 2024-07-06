@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.MenuWidget;
@@ -347,7 +347,7 @@ public abstract class WidgetContainer implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
         Scissor scissor = context.scissor();
         if(this.doScissor) {
             scissor.push();

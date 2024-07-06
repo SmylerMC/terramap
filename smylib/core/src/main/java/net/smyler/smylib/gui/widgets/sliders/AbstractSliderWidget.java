@@ -1,6 +1,6 @@
 package net.smyler.smylib.gui.widgets.sliders;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,7 +115,7 @@ public abstract class AbstractSliderWidget implements Widget {
 
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
 
         double leftWidth = this.width / 2;
         double splitHeight = min(10, this.height / 2);

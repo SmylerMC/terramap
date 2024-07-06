@@ -9,8 +9,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.advanced.AdvancedDrawing;
-import net.smyler.smylib.gui.advanced.TesselatorAdvancedDrawing;
+import net.smyler.smylib.gui.gl.*;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.lwjgl.opengl.GL11;
 
@@ -22,11 +21,10 @@ import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
-public class Lwjgl2DrawContext implements DrawContext {
+public class Lwjgl2UiDrawContext implements UiDrawContext {
 
     private final Scissor scissor = new Gl11Scissor();
-    private final GlState glState = new LwjglState();
-    private final AdvancedDrawing advancedDrawing = new TesselatorAdvancedDrawing();
+    private final GlContext gl = new Lwjgl2GlContext();
     private final AtomicInteger dynamicTextureCounter = new AtomicInteger(0);
 
     @Override
@@ -35,8 +33,8 @@ public class Lwjgl2DrawContext implements DrawContext {
     }
 
     @Override
-    public GlState glState() {
-        return this.glState;
+    public GlContext gl() {
+        return this.gl;
     }
 
     @Override
@@ -156,11 +154,6 @@ public class Lwjgl2DrawContext implements DrawContext {
     @Override
     public void unloadDynamicTexture(Identifier texture) {
         getMinecraft().getTextureManager().deleteTexture(new ResourceLocation(texture.namespace, texture.path));
-    }
-
-    @Override
-    public AdvancedDrawing advancedDrawing() {
-        return this.advancedDrawing;
     }
 
     private void drawMultiPointsGeometry(int glType, double z, Color color, double... points) {

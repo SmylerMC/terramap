@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import net.smyler.smylib.gui.containers.RootContainer;
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
 import net.smyler.smylib.Color;
@@ -25,8 +25,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.smyler.smylib.game.GameClient;
 
 import net.smyler.smylib.game.Mouse;
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.screen.InputProcessor;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,8 +58,8 @@ public final class HudScreen {
         if(!e.getType().equals(ElementType.HOTBAR)) return;
         GameClient game = getGameClient();
         Mouse mouse = game.mouse();
-        DrawContext drawContext = game.guiDrawContext();
-        GlState glState = drawContext.glState();
+        UiDrawContext drawContext = game.guiDrawContext();
+        GlContext gl = drawContext.gl();
         Scissor scissor = drawContext.scissor();
         boolean chatOpen = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
         float width = game.windowWidth();
@@ -72,12 +72,12 @@ public final class HudScreen {
         float mouseX = mouse.x();
         float mouseY = mouse.y();
         CONTAINER.onUpdate(mouseX, mouseY, null);
-        Color color = glState.getColor();
+        Color color = gl.getColor();
         scissor.push();
         scissor.cropScreen(-1f, -1f, renderWidth + 1f, renderHeight + 1f);
         CONTAINER.draw(drawContext, 0, 0, mouseX, mouseY, chatOpen && !isOverChat(mouseX, mouseY), false, null);
-        drawContext.glState().enableAlpha();
-        glState.setColor(color); // Reset color to what it was
+        drawContext.gl().enableAlpha();
+        gl.setColor(color); // Reset color to what it was
     }
 
     @SubscribeEvent

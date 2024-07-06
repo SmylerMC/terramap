@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ITabCompleter;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getLogger;
@@ -93,7 +93,7 @@ public class ChatWidget implements Widget, ITabCompleter {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         if (!this.visible) {
             return;
         }

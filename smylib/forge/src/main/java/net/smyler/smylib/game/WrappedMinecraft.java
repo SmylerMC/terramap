@@ -34,7 +34,7 @@ public class WrappedMinecraft implements GameClient {
     private final SoundSystem soundSystem = new MinecraftSoundSystem();
     private final Translator translator = new I18nTranslator();
     private final Font font = new ReflectedFontRenderer(1f, 0.5f);
-    private final DrawContext drawContext = new Lwjgl2DrawContext();
+    private final UiDrawContext uiDrawContext = new Lwjgl2UiDrawContext();
     private final SpriteLibrary sprites = new LegacyVanillaSprites();
 
     private WrappedVanillaScreen lastAccessedVanillaScreen = null;
@@ -120,8 +120,8 @@ public class WrappedMinecraft implements GameClient {
     }
 
     @Override
-    public DrawContext guiDrawContext() {
-        return this.drawContext;
+    public UiDrawContext guiDrawContext() {
+        return this.uiDrawContext;
     }
 
     @Override

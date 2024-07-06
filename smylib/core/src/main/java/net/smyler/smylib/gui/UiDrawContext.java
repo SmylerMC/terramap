@@ -2,16 +2,17 @@ package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.advanced.AdvancedDrawing;
+import net.smyler.smylib.gui.gl.GlContext;
+import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.Sprite;
 
 import java.awt.image.BufferedImage;
 
-public interface DrawContext {
+public interface UiDrawContext {
 
     Scissor scissor();
 
-    GlState glState();
+    GlContext gl();
 
     default void drawRectangle(double z, double xLeft, double yTop, double xRight, double yBottom, Color color) {
         this.drawGradientRectangle(z, xLeft, yTop, xRight, yBottom, color, color, color, color);
@@ -84,7 +85,5 @@ public interface DrawContext {
     Identifier loadDynamicTexture(BufferedImage image);
 
     void unloadDynamicTexture(Identifier texture);
-
-    AdvancedDrawing advancedDrawing();
 
 }
