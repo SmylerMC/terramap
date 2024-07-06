@@ -15,6 +15,7 @@ public final class RenderUtil {
         double f1 = 1.0f / textureHeight;
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
+        GlStateManager.enableTexture2D();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(7, DefaultVertexFormats.POSITION_TEX);

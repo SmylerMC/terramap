@@ -100,6 +100,16 @@ public class Lwjgl2GlContext implements GlContext {
     }
 
     @Override
+    public void enableSmoothShading() {
+        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+    }
+
+    @Override
+    public void enableFlatShading() {
+        GlStateManager.shadeModel(GL11.GL_FLAT);
+    }
+
+    @Override
     public void pushViewMatrix() {
         GlStateManager.pushMatrix();
     }
@@ -181,10 +191,8 @@ public class Lwjgl2GlContext implements GlContext {
         checkState(this.currentFormat != null, "Not building!");
         if (this.currentFormat.texture) {
             GlStateManager.enableTexture2D();
-            GlStateManager.shadeModel(GL11.GL_FLAT);
         } else {
             GlStateManager.disableTexture2D();
-            GlStateManager.shadeModel(GL11.GL_SMOOTH);
         }
         GlStateManager.enableAlpha();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);

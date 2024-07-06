@@ -62,6 +62,7 @@ public class CircularCompassWidget implements Widget {
         float radius = this.size / 2;
 
         GlContext gl = context.gl();
+        gl.enableSmoothShading();
         gl.pushViewMatrix();
         gl.translate(x + radius, y + radius);
 

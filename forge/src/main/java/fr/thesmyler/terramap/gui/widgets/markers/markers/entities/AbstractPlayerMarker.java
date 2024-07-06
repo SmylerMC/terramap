@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.GlContext;
-import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
@@ -12,13 +11,12 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarke
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 import static net.smyler.smylib.Color.WHITE;
+import static net.smyler.smylib.gui.gl.DrawMode.TRIANGLE_FAN;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION_COLOR;
 
 public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
@@ -46,28 +44,20 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             }
 
             GlContext gl = context.gl();
-            gl.pushViewMatrix();
 
+            gl.pushViewMatrix();
             gl.translate(x + this.width / 2, y + this.height / 2);
             gl.rotate(azimuth);
 
-            GlStateManager.disableTexture2D();
-            GlStateManager.enableBlend();
-            context.gl().disableAlpha();
-            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            GlStateManager.shadeModel(7425);
-            Tessellator tess = Tessellator.getInstance();
-            BufferBuilder buff = tess.getBuffer();
-            buff.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_COLOR);
-            buff.pos(0, -this.height*1.2, 0).color(1f, 0, 0, 0.7f).endVertex();
-            buff.pos(-this.width/2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).endVertex();
-            buff.pos(0, -this.height * 0.8, 0).color(0.5f, 0, 0, 1f).endVertex();
-            buff.pos(this.width/2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).endVertex();
-            tess.draw();
-            GlStateManager.shadeModel(7424);
-            GlStateManager.disableBlend();
-            context.gl().enableAlpha();
-            GlStateManager.enableTexture2D();
+            gl.disableAlpha();
+            gl.enableSmoothShading();
+            gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
+            gl.vertex().position(0, -this.height*1.2, 0).color(1f, 0, 0, 0.7f).end();
+            gl.vertex().position(-this.width/2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).end();
+            gl.vertex().position(0, -this.height * 0.8, 0).color(0.5f, 0, 0, 1f).end();
+            gl.vertex().position(this.width/2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).end();
+            gl.draw();
+
             GlStateManager.popMatrix();
         }
 

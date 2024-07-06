@@ -44,6 +44,16 @@ public class DummyGlContext implements GlContext {
     }
 
     @Override
+    public void enableSmoothShading() {
+
+    }
+
+    @Override
+    public void enableFlatShading() {
+
+    }
+
+    @Override
     public void pushViewMatrix() {
 
     }

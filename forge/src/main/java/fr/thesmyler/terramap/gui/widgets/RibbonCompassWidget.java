@@ -4,11 +4,9 @@ import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.terramap.Terramap;
-import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
-import net.minecraft.client.renderer.GlStateManager;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.gui.gl.DrawMode.QUADS;
@@ -52,8 +50,7 @@ public class RibbonCompassWidget implements Widget {
         GlContext gl = context.gl();
 
         gl.enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        gl.enableSmoothShading();
 
         gl.startDrawing(QUADS, POSITION_TEXTURE_COLOR);
         gl.setTexture(COMPASS_BACKGROUND_TEXTURE);

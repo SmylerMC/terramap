@@ -3,6 +3,12 @@ package net.smyler.smylib.gui.gl;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
 
+
+/**
+ * Provides a more direct access to the underlying OpenGL context.
+ *
+ * @author Smyler
+ */
 public interface GlContext {
 
     void enableAlpha();
@@ -18,6 +24,10 @@ public interface GlContext {
     void enableColorLogic(ColorLogic colorLogic);
 
     void disableColorLogic();
+
+    void enableSmoothShading();
+
+    void enableFlatShading();
 
     void pushViewMatrix();
 
