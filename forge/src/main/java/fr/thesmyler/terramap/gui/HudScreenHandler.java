@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
-import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
+import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MinimapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;

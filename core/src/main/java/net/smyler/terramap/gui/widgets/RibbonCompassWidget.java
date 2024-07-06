@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets;
+package net.smyler.terramap.gui.widgets;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.UiDrawContext;
