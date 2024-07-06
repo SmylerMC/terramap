@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.thesmyler.terramap.TerramapMod;
 import net.smyler.terramap.Terramap;
 import org.jetbrains.annotations.Nullable;
 

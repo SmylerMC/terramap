@@ -41,10 +41,16 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         // Draw the direction arrow
         if(this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
             float azimuth = this.azimuth;
-            if(parent instanceof MapWidget) azimuth += ((MapWidget)parent).getController().getRotation();
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x + this.width / 2, y + this.height / 2, 0);
-            GlStateManager.rotate(azimuth, 0, 0, 1);
+            if(parent instanceof MapWidget) {
+                azimuth += ((MapWidget)parent).getController().getRotation();
+            }
+
+            GlState gl = context.glState();
+            gl.pushViewMatrix();
+
+            gl.translate(x + this.width / 2, y + this.height / 2);
+            gl.rotate(azimuth);
+
             GlStateManager.disableTexture2D();
             GlStateManager.enableBlend();
             context.glState().disableAlpha();

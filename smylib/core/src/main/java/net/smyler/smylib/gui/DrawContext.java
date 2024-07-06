@@ -2,9 +2,9 @@ package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.advanced.AdvancedDrawing;
 import net.smyler.smylib.gui.sprites.Sprite;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public interface DrawContext {
@@ -41,8 +41,10 @@ public interface DrawContext {
         this.drawGradientRectangle(0d, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
     }
 
+    @Deprecated
     void drawPolygon(double z, Color color, double... points);
 
+    @Deprecated
     default void drawPolygon(Color color, double... points) {
         this.drawPolygon(0d, color, points);
     }
@@ -76,10 +78,13 @@ public interface DrawContext {
     //TODO use Text in drawTooltip
     void drawTooltip(String text, double x, double y);
 
+    @Deprecated
     void drawTexture(Identifier texture, double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight);
 
     Identifier loadDynamicTexture(BufferedImage image);
 
     void unloadDynamicTexture(Identifier texture);
+
+    AdvancedDrawing advancedDrawing();
 
 }
