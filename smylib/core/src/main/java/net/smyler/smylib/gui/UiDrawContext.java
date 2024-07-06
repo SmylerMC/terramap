@@ -42,14 +42,6 @@ public interface UiDrawContext {
         this.drawGradientRectangle(0d, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
     }
 
-    @Deprecated
-    void drawPolygon(double z, Color color, double... points);
-
-    @Deprecated
-    default void drawPolygon(Color color, double... points) {
-        this.drawPolygon(0d, color, points);
-    }
-
     void drawStrokeLine(double z, Color color, float size, double... points);
 
     default void drawStrokeLine(Color color, float size, double... points) {
@@ -78,9 +70,6 @@ public interface UiDrawContext {
 
     //TODO use Text in drawTooltip
     void drawTooltip(String text, double x, double y);
-
-    @Deprecated
-    void drawTexture(Identifier texture, double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight);
 
     Identifier loadDynamicTexture(BufferedImage image);
 

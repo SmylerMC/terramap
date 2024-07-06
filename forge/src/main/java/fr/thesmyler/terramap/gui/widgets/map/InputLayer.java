@@ -6,6 +6,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.input.KeyBindings;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
@@ -16,6 +17,8 @@ import org.lwjgl.input.Keyboard;
 
 import static java.lang.Math.*;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.gl.DrawMode.TRIANGLE_FAN;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION;
 
 /**
  * Processes inputs for a map and propagates them to the map controller.
@@ -34,8 +37,8 @@ public class InputLayer extends MapLayer {
 
     // Stuff that can be pre-computed and that's used later when drawing a polygon at the place the map rotates around.
     private static final int ROTATION_POLYGON_VERTEX_COUNT = 5;
-    private static final double[] ROTATION_POLYGON_VERTICES_OUTER = new double[ROTATION_POLYGON_VERTEX_COUNT * 2];
-    private static final double[] ROTATION_POLYGON_VERTICES_INNER = new double[ROTATION_POLYGON_VERTEX_COUNT * 2];
+    private static final double[][] ROTATION_POLYGON_VERTICES_OUTER = new double[ROTATION_POLYGON_VERTEX_COUNT][2];
+    private static final double[][] ROTATION_POLYGON_VERTICES_INNER = new double[ROTATION_POLYGON_VERTEX_COUNT][2];
     private static final float ROTATION_POLYGON_RADIUS_OUTER = 5;
     private static final float ROTATION_POLYGON_RADIUS_INNER = 2;
     static {
@@ -43,10 +46,14 @@ public class InputLayer extends MapLayer {
         Vec2dMutable inner = new Vec2dMutable(0, -ROTATION_POLYGON_RADIUS_INNER);
         Mat2d rot = Mat2d.forRotation(-PI*2 / ROTATION_POLYGON_VERTEX_COUNT);
         for(int i = 0; i < ROTATION_POLYGON_VERTEX_COUNT; i++) {
-            ROTATION_POLYGON_VERTICES_OUTER[2*i] = outer.x;
-            ROTATION_POLYGON_VERTICES_OUTER[2*i + 1] = outer.y;
-            ROTATION_POLYGON_VERTICES_INNER[2*i] = inner.x;
-            ROTATION_POLYGON_VERTICES_INNER[2*i + 1] = inner.y;
+            ROTATION_POLYGON_VERTICES_OUTER[i] = new double[] {
+                    outer.x,
+                    outer.y
+            };
+            ROTATION_POLYGON_VERTICES_INNER[i] = new double[] {
+                    inner.x,
+                    inner.y
+            };
             outer.apply(rot);
             inner.apply(rot);
         }
@@ -68,11 +75,7 @@ public class InputLayer extends MapLayer {
 
         if(this.isRotating) {
             // If we are processing rotation input, draw pentagons at the corresponding spot
-            context.gl().pushViewMatrix();
-            context.gl().translate(x + this.rotatePosition.x, y + this.rotatePosition.y);
-            context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_OUTER);
-            context.drawPolygon(Color.DARK_OVERLAY, ROTATION_POLYGON_VERTICES_INNER);
-            context.gl().popViewMatrix();
+            this.drawRotationSpot(context, x + this.rotatePosition.x, y + this.rotatePosition.y);
         }
 
         if (this.getMap().isDebugMode()) {
@@ -230,6 +233,26 @@ public class InputLayer extends MapLayer {
 
     private boolean isShortcutEnabled() {
         return this.map.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode()) && this.map.allowsQuickTp();
+    }
+
+    private void drawRotationSpot(UiDrawContext context, double x, double y) {
+        GlContext gl = context.gl();
+        gl.pushViewMatrix();
+        gl.translate(x, y);
+        gl.setColor(Color.DARK_OVERLAY);
+        this.drawConvexPolygon(gl, ROTATION_POLYGON_VERTICES_OUTER);
+        this.drawConvexPolygon(gl, ROTATION_POLYGON_VERTICES_INNER);
+        gl.popViewMatrix();
+    }
+
+    private void drawConvexPolygon(GlContext gl, double[][] vertices) {
+        gl.startDrawing(TRIANGLE_FAN, POSITION);
+        gl.vertex().position(0d, 0d, 0d);
+        for (double[] vertex : vertices) {
+            gl.vertex().position(vertex[0], vertex[1], 0d).end();
+        }
+        gl.vertex().position(0d, 0d, 0d);
+        gl.draw();
     }
 
 }

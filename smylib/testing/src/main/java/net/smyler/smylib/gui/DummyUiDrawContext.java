@@ -33,11 +33,6 @@ public class DummyUiDrawContext implements UiDrawContext {
     }
 
     @Override
-    public void drawPolygon(double z, Color color, double... points) {
-
-    }
-
-    @Override
     public void drawStrokeLine(double z, Color color, float size, double... points) {
 
     }
@@ -54,11 +49,6 @@ public class DummyUiDrawContext implements UiDrawContext {
 
     @Override
     public void drawTooltip(String text, double x, double y) {
-
-    }
-
-    @Override
-    public void drawTexture(Identifier texture, double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
 
     }
 

@@ -26,6 +26,8 @@ import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.gl.DrawMode.QUADS;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION_TEXTURE;
 
 abstract public class RasterMapLayer extends MapLayer {
 
@@ -211,7 +213,6 @@ abstract public class RasterMapLayer extends MapLayer {
                     dY += factorY * renderSizedSize;
                 }
 
-                gl.setColor(WHITE);
                 Identifier texture = defaultTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
@@ -221,13 +222,19 @@ abstract public class RasterMapLayer extends MapLayer {
                     parentMap.reportError(this, e.toString());
                 }
                 if (texture != null) {
-                    context.drawTexture(
-                            texture,
-                            dispX, dispY,
-                            dX, dY,
-                            displayWidth, displayHeight,
-                            renderSizedSize, renderSizedSize
-                    );
+                    double f = 1.0f / renderSizedSize;
+                    double uLeft = dX * f;
+                    double uRight = (dX + displayWidth) * f;
+                    double uTop = dY * f;
+                    double uBottom = (dY + displayHeight) * f;
+                    gl.setTexture(texture);
+                    gl.setColor(whiteWithAlpha);
+                    gl.startDrawing(QUADS, POSITION_TEXTURE);
+                    gl.vertex().position(dispX, dispY + displayHeight, 0d).texture(uLeft, uBottom).end();
+                    gl.vertex().position(dispX + displayWidth, dispY + displayHeight, 0d).texture(uRight, uBottom).end();
+                    gl.vertex().position(dispX + displayWidth, dispY, 0d).texture(uRight, uTop).end();
+                    gl.vertex().position(dispX, dispY, 0d).texture(uLeft, uTop).end();
+                    gl.draw();
                 }
                 if(debug) {
                     Color lineColor = texture == null? Color.GREEN: lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : WHITE;
@@ -241,7 +248,6 @@ abstract public class RasterMapLayer extends MapLayer {
                     smallFont.draw((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
                     smallFont.drawCentered((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
-                gl.setColor(WHITE);
             }
         }
 

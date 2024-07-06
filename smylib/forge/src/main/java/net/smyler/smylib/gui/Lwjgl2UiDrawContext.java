@@ -57,11 +57,6 @@ public class Lwjgl2UiDrawContext implements UiDrawContext {
     }
 
     @Override
-    public void drawPolygon(double z, Color color, double... points) {
-        this.drawMultiPointsGeometry(GL11.GL_POLYGON, z, color, points);
-    }
-
-    @Override
     public void drawStrokeLine(double z, Color color, float size, double... points) {
         GL11.glLineWidth(size * getGameClient().scaleFactor());
         this.drawMultiPointsGeometry(GL11.GL_LINE_STRIP, z, color, points);
@@ -122,25 +117,6 @@ public class Lwjgl2UiDrawContext implements UiDrawContext {
         currentScreen.drawHoveringText(text, px, py);
         GlStateManager.popMatrix();
         if(!lighting) GlStateManager.disableLighting();
-    }
-
-    @Override
-    public void drawTexture(Identifier texture, double x, double y, double u, double v, double width, double height, double textureWidth, double textureHeight) {
-        getMinecraft().getTextureManager().bindTexture(new ResourceLocation(texture.namespace, texture.path));
-        double f = 1.0f / textureWidth;
-        double f1 = 1.0f / textureHeight;
-        GlStateManager.enableAlpha();
-        GlStateManager.enableBlend();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
-        builder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        builder.pos(x, y + height, 0d).tex(u * f, (v + height) * f1).endVertex();
-        builder.pos(x + width, y + height, 0d).tex((u + width) * f, (v + height) * f1).endVertex();
-        builder.pos(x + width, y, 0d).tex((u + width) * f, v * f1).endVertex();
-        builder.pos(x, y, 0d).tex(u * f, v * f1).endVertex();
-        tessellator.draw();
-        GlStateManager.disableAlpha();
-        GlStateManager.disableBlend();
     }
 
     @Override
