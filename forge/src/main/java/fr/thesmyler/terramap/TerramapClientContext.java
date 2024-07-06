@@ -18,11 +18,7 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
-import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
-import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
-import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
+import net.smyler.terramap.tilesets.raster.*;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
@@ -58,7 +54,7 @@ public class TerramapClientContext {
 
     private static TerramapClientContext instance;
 
-    private static final GeographicProjection TERRAIN_PREVIEW_PROJECTION = new WebMercatorProjection(TerrainPreviewMap.BASE_ZOOM_LEVEL);
+    private static final GeographicProjection TERRAIN_PREVIEW_PROJECTION = new WebMercatorProjection(TerrainPreviewTileSet.BASE_ZOOM_LEVEL);
 
     private final Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<>();
     private PlayerSyncStatus serverSyncPlayers = PlayerSyncStatus.DISABLED;
@@ -71,8 +67,8 @@ public class TerramapClientContext {
     private TerrainPreview terrainPreview = null;
     private boolean isRegisteredForUpdates = false;
     private String tpCommand = null;
-    private final Map<String, RasterTiledMap> serverMaps = new HashMap<>();
-    private final Map<String, RasterTiledMap> proxyMaps = new HashMap<>();
+    private final Map<String, RasterTileSet> serverMaps = new HashMap<>();
+    private final Map<String, RasterTileSet> proxyMaps = new HashMap<>();
     private boolean proxyHasWarpSupport = false;
     private boolean serverHasWarpSupport = false;
     private boolean allowPlayerRadar = true;
@@ -193,12 +189,12 @@ public class TerramapClientContext {
         return Minecraft.getMinecraft().world.loadedEntityList;
     }
 
-    public void addServerMapStyle(UrlTiledMap map) {
+    public void addServerRasterTileSet(UrlRasterTileSet map) {
         this.serverMaps.put(map.getId(), map);
         HudScreenHandler.updateMinimap();
     }
 
-    public void addProxyMapStyle(UrlTiledMap map) {
+    public void addProxyRasterTileSet(UrlRasterTileSet map) {
         this.proxyMaps.put(map.getId(), map);
         HudScreenHandler.updateMinimap();
     }
@@ -210,23 +206,24 @@ public class TerramapClientContext {
         HudScreenHandler.updateMinimap();
     }
 
-    public Map<String, RasterTiledMap> getServerMapStyles() {
+    public Map<String, RasterTileSet> getServerRasterTileSets() {
         return this.serverMaps;
     }
 
-    public Map<String, RasterTiledMap> getProxyMapStyles() {
+    public Map<String, RasterTileSet> getProxyRasterTileSets() {
         return this.proxyMaps;
     }
 
     /**
-     * @return a new Map containing all available mapstyles
+     * @return a new Map containing all available raster tile sets
      */
-    public Map<String, RasterTiledMap> getMapStyles() {
-        Map<String, RasterTiledMap> maps = new HashMap<>();
-        maps.putAll(MapStylesLibrary.getBaseMaps());
+    public Map<String, RasterTileSet> getRasterTileSets() {
+        Map<String, RasterTileSet> maps = new HashMap<>();
+        RasterTileSetManager manager = Terramap.instance().rasterTileSetManager();
+        maps.putAll(manager.getBaseMaps());
         maps.putAll(this.proxyMaps);
         maps.putAll(this.serverMaps);
-        maps.putAll(MapStylesLibrary.getUserMaps());
+        maps.putAll(manager.getUserMaps());
         return maps;
     }
 
@@ -471,7 +468,7 @@ public class TerramapClientContext {
     }
 
     public void setupMaps() {
-        for(RasterTiledMap map: this.getMapStyles().values()) {
+        for(RasterTileSet map: this.getRasterTileSets().values()) {
             map.setup();
         }
     }
@@ -525,8 +522,8 @@ public class TerramapClientContext {
 
     public static void resetContext() {
         Terramap.instance().logger().info("Reseting client context");
-        TiledMapProvider.SERVER.setLastError(null);
-        TiledMapProvider.PROXY.setLastError(null);
+        RasterTileSetProvider.SERVER.setLastError(null);
+        RasterTileSetProvider.PROXY.setLastError(null);
         TerramapClientContext.instance = new TerramapClientContext();
     }
 

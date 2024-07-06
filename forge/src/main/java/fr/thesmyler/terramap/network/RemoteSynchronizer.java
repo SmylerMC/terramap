@@ -9,8 +9,7 @@ import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.TerraDependency;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
-import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
+import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
@@ -109,14 +108,14 @@ public abstract class RemoteSynchronizer {
             TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandPacket(TerramapConfig.tpllcmd), player);
     }
 
-    public static void sendMapStylesToClient(EntityPlayerMP player) {
+    public static void sendRasterTileSetsToClient(EntityPlayerMP player) {
         TerramapVersion clientVersion = TerramapVersion.getClientVersion(player);
         if(clientVersion == null) return;
         boolean compat = clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS;
         if(TerramapConfig.SERVER.sendCusomMapsToClient) {
-            for(UrlTiledMap map: MapStylesLibrary.getUserMaps().values()) {
+            for(UrlRasterTileSet map: Terramap.instance().rasterTileSetManager().getUserMaps().values()) {
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) continue;
-                SP2CMapStylePacket pkt = new SP2CMapStylePacket(map);
+                SP2CRasterTileSetPacket pkt = new SP2CRasterTileSetPacket(map);
                 if(compat) pkt.setBackwardCompat();
                 TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(pkt, player);
             }

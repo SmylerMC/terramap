@@ -7,7 +7,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.math.DoubleRange;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -283,7 +283,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         this.profiler.endSection(); // End rest of the screen section
         this.profiler.startSection("draw");
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);

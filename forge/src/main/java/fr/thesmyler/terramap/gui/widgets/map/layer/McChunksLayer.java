@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
@@ -17,7 +18,6 @@ import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import net.smyler.smylib.gui.DrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
@@ -132,7 +132,7 @@ public class McChunksLayer extends MapLayer {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget)parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
@@ -162,7 +162,7 @@ public class McChunksLayer extends MapLayer {
             return;
         }
 
-        context.glState().pushViewMatrix();
+        context.gl().pushViewMatrix();
         this.applyRotationGl(context, x, y);
         
 
@@ -184,11 +184,11 @@ public class McChunksLayer extends MapLayer {
         }
 
         this.cache.cycle();
-        context.glState().popViewMatrix();
+        context.gl().popViewMatrix();
         map.getProfiler().endSection();
     }
     
-    private void renderGrid(DrawContext context, float x, float y, int discriminator, long tileSize, Color color, float lineWidth) {
+    private void renderGrid(UiDrawContext context, float x, float y, int discriminator, long tileSize, Color color, float lineWidth) {
         
         final int maxTiles = 100; // Maximum drawing iterations, for safety
 
@@ -241,7 +241,7 @@ public class McChunksLayer extends MapLayer {
         }
     }
 
-    private void renderTile(DrawContext context, float x, float y, int discriminator, Color color, float lineWidth, boolean[] loopingConditions) {
+    private void renderTile(UiDrawContext context, float x, float y, int discriminator, Color color, float lineWidth, boolean[] loopingConditions) {
         try {
             for(int i=0; i<this.projectedCorners.length; i++) {
                 this.cache.getRenderPos(this.projectedCorners[i], this.corners[i], discriminator);

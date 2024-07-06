@@ -5,6 +5,8 @@ import java.util.function.Predicate;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.*;
+import net.smyler.smylib.gui.gl.ColorLogic;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.jetbrains.annotations.Nullable;
 
@@ -120,9 +122,9 @@ public class TextFieldWidget implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
-        GlState glState = context.glState();
+        GlContext gl = context.gl();
 
         this.cursorAnimation.update();
 
@@ -191,14 +193,14 @@ public class TextFieldWidget implements Widget {
 
     }
 
-    private void drawSelectionHighlight(DrawContext context, float x, float y, float x1, float y1, float x2, float y2) {
+    private void drawSelectionHighlight(UiDrawContext context, float x, float y, float x1, float y1, float x2, float y2) {
         float xRight = Math.max(x1, x2);
         float yBottom = Math.max(y1, y2);
         float xLeft = Math.min(x1, x2);
         float yTop = Math.min(y1, y2);
         xLeft = Math.min(xLeft, x + this.getEffectiveWidth());
         xRight = Math.min(xRight, x + this.getEffectiveWidth());
-        GlState state = context.glState();
+        GlContext state = context.gl();
         state.enableColorLogic(ColorLogic.OR_REVERSE);
         context.drawRectangle(xLeft, yTop, xRight, yBottom, BLUE);
         state.disableColorLogic();

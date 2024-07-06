@@ -3,7 +3,7 @@ package fr.thesmyler.terramap.gui.widgets.map;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
@@ -79,7 +79,7 @@ public class ScaleIndicatorWidget implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         float barY = y + 5;
         String lengthstr = "-";
         float barwidth = this.getWidth();

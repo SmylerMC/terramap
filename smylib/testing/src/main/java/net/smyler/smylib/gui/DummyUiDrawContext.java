@@ -1,12 +1,21 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.gl.GlContext;
+import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.Sprite;
 
-public class DummyDrawContext implements DrawContext {
+import java.awt.image.BufferedImage;
+import java.util.HashSet;
+import java.util.Set;
+
+public class DummyUiDrawContext implements UiDrawContext {
 
     private final Scissor scissor = new DummyScissor();
-    private final GlState state = new DummyGlState();
+    private final GlContext state = new DummyGlContext();
+    private int dynamicTextureIndex = 0;
+    private final Set<Identifier> dynamicTextures = new HashSet<>();
 
     @Override
     public Scissor scissor() {
@@ -14,17 +23,12 @@ public class DummyDrawContext implements DrawContext {
     }
 
     @Override
-    public GlState glState() {
+    public GlContext gl() {
         return this.state;
     }
 
     @Override
     public void drawGradientRectangle(double z, double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
-
-    }
-
-    @Override
-    public void drawPolygon(double z, Color color, double... points) {
 
     }
 
@@ -46,6 +50,23 @@ public class DummyDrawContext implements DrawContext {
     @Override
     public void drawTooltip(String text, double x, double y) {
 
+    }
+
+    @Override
+    public Identifier loadDynamicTexture(BufferedImage image) {
+        Identifier id = new Identifier(
+                "smylib",
+                "smylib_test_dynamic_" + this.dynamicTextureIndex++
+        );
+        this.dynamicTextures.add(id);
+        return id;
+    }
+
+    @Override
+    public void unloadDynamicTexture(Identifier texture) {
+        if (!this.dynamicTextures.remove(texture)) {
+            throw new IllegalStateException("Tried to unload a dynamic texture that is not loaded.");
+        }
     }
 
 }

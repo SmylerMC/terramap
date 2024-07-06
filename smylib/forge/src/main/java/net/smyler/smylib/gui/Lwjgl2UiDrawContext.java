@@ -1,24 +1,31 @@
 package net.smyler.smylib.gui;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.gl.*;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static java.lang.Math.floor;
+import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
-public class Lwjgl2DrawContext implements DrawContext {
+public class Lwjgl2UiDrawContext implements UiDrawContext {
 
     private final Scissor scissor = new Gl11Scissor();
-    private final GlState glState = new LwjglState();
+    private final GlContext gl = new Lwjgl2GlContext();
+    private final AtomicInteger dynamicTextureCounter = new AtomicInteger(0);
 
     @Override
     public Scissor scissor() {
@@ -26,8 +33,8 @@ public class Lwjgl2DrawContext implements DrawContext {
     }
 
     @Override
-    public GlState glState() {
-        return this.glState;
+    public GlContext gl() {
+        return this.gl;
     }
 
     @Override
@@ -50,11 +57,6 @@ public class Lwjgl2DrawContext implements DrawContext {
     }
 
     @Override
-    public void drawPolygon(double z, Color color, double... points) {
-        this.drawMultiPointsGeometry(GL11.GL_POLYGON, z, color, points);
-    }
-
-    @Override
     public void drawStrokeLine(double z, Color color, float size, double... points) {
         GL11.glLineWidth(size * getGameClient().scaleFactor());
         this.drawMultiPointsGeometry(GL11.GL_LINE_STRIP, z, color, points);
@@ -69,7 +71,7 @@ public class Lwjgl2DrawContext implements DrawContext {
     @Override
     public void drawSpriteCropped(double x, double y, double z, Sprite sprite, double leftCrop, double topCrop, double rightCrop, double bottomCrop) {
         final ResourceLocation location = new ResourceLocation(sprite.texture.namespace, sprite.texture.path);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(location);
+        getMinecraft().getTextureManager().bindTexture(location);
         double uLeft = (sprite.xLeft + leftCrop) / sprite.textureWidth;
         double uRight = (sprite.xRight - rightCrop) / sprite.textureWidth;
         double vTop = (sprite.yTop + topCrop) / sprite.textureHeight;
@@ -80,6 +82,7 @@ public class Lwjgl2DrawContext implements DrawContext {
         GlStateManager.color(1f, 1f, 1f, 1f);
         GlStateManager.enableAlpha();
         GlStateManager.enableBlend();
+        GlStateManager.enableTexture2D();
         GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
@@ -98,7 +101,7 @@ public class Lwjgl2DrawContext implements DrawContext {
 
     @Override
     public void drawTooltip(String text, double x, double y) {
-        GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+        GuiScreen currentScreen = getMinecraft().currentScreen;
         if (currentScreen == null) {
             //TODO make it draw by the HUD instead (once we have a working HUD system)
             return;  // We are in game, not in a GUI
@@ -114,6 +117,19 @@ public class Lwjgl2DrawContext implements DrawContext {
         currentScreen.drawHoveringText(text, px, py);
         GlStateManager.popMatrix();
         if(!lighting) GlStateManager.disableLighting();
+    }
+
+    @Override
+    public Identifier loadDynamicTexture(BufferedImage image) {
+        DynamicTexture dynamicTexture = new DynamicTexture(image);
+        String name = "smylib/dynamic/" + this.dynamicTextureCounter.getAndIncrement() + ".png";
+        ResourceLocation location = getMinecraft().getTextureManager().getDynamicTextureLocation(name, dynamicTexture);
+        return new Identifier(location.getNamespace(), location.getPath());
+    }
+
+    @Override
+    public void unloadDynamicTexture(Identifier texture) {
+        getMinecraft().getTextureManager().deleteTexture(new ResourceLocation(texture.namespace, texture.path));
     }
 
     private void drawMultiPointsGeometry(int glType, double z, Color color, double... points) {

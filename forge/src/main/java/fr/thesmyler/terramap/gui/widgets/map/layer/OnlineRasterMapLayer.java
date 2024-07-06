@@ -11,11 +11,11 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.imp.ColorTiledMap;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
+import net.smyler.terramap.tilesets.raster.ColorTileSet;
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.game.GameClient;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 
 import net.smyler.smylib.text.ImmutableText;
@@ -35,13 +35,13 @@ import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHolder {
 
-    protected RasterTiledMap tiledMap = new ColorTiledMap(Color.WHITE, "Empty map");
+    protected RasterTileSet tiledMap = new ColorTileSet(Color.WHITE, "Empty map");
 
-    public RasterTiledMap getTiledMap() {
+    public RasterTileSet getTiledMap() {
         return this.tiledMap;
     }
 
-    public void setTiledMap(RasterTiledMap map) {
+    public void setTiledMap(RasterTileSet map) {
         this.tiledMap = map;
         this.getMap().updateCopyright();
     }
@@ -66,7 +66,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
         try {
             JsonPrimitive primitiveValue = json.getAsJsonPrimitive("style");
             String styleId = primitiveValue.getAsString();
-            RasterTiledMap tiledMap = TerramapClientContext.getContext().getMapStyles().get(styleId);
+            RasterTileSet tiledMap = TerramapClientContext.getContext().getRasterTileSets().get(styleId);
             if (tiledMap != null) {
                 this.setTiledMap(tiledMap);
             }
@@ -105,7 +105,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
         class StyleEntry extends WidgetContainer {
 
-            final RasterTiledMap style;
+            final RasterTileSet style;
 
             final TextWidget nameText;
             final TextWidget infoText;
@@ -118,7 +118,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
             final Animation backgroundColorAnimation = new Animation(200);
 
-            public StyleEntry(RasterTiledMap style) {
+            public StyleEntry(RasterTileSet style) {
                 super(0);
                 this.style = style;
                 float y = margin;
@@ -165,7 +165,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
             }
 
             @Override
-            public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+            public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
                 float width = this.getWidth();
                 float height = this.getHeight();
                 if (screenHovered) {
@@ -232,9 +232,9 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
         }
 
         FlexibleWidgetContainer container = new FlexibleWidgetContainer(0f, 0f, 0, width, 200f);
-        List<StyleEntry> styles = TerramapClientContext.getContext().getMapStyles().values()
+        List<StyleEntry> styles = TerramapClientContext.getContext().getRasterTileSets().values()
                 .stream()
-                .sorted(comparing(RasterTiledMap::getDisplayPriority).reversed())
+                .sorted(comparing(RasterTileSet::getDisplayPriority).reversed())
                 .map(s -> new StyleEntry(s))
                 .collect(toList());
 

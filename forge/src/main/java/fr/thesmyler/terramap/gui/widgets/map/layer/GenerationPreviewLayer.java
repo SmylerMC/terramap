@@ -1,14 +1,14 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.imp.TerrainPreviewMap;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
+import net.smyler.terramap.tilesets.raster.TerrainPreviewTileSet;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class GenerationPreviewLayer extends RasterMapLayer {
 
-    private final TerrainPreviewMap map = new TerrainPreviewMap();
+    private final TerrainPreviewTileSet map = new TerrainPreviewTileSet();
 
     @Override
     public String name() {
@@ -31,7 +31,7 @@ public class GenerationPreviewLayer extends RasterMapLayer {
     }
 
     @Override
-    public RasterTiledMap getTiledMap() {
+    public RasterTileSet getTiledMap() {
         return this.map;
     }
 

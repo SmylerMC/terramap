@@ -1,13 +1,18 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.gl.GlContext;
+import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.Sprite;
 
-public interface DrawContext {
+import java.awt.image.BufferedImage;
+
+public interface UiDrawContext {
 
     Scissor scissor();
 
-    GlState glState();
+    GlContext gl();
 
     default void drawRectangle(double z, double xLeft, double yTop, double xRight, double yBottom, Color color) {
         this.drawGradientRectangle(z, xLeft, yTop, xRight, yBottom, color, color, color, color);
@@ -35,12 +40,6 @@ public interface DrawContext {
 
     default void drawGradientRectangle(double xLeft, double yTop, double xRight, double yBottom, Color upperLeftColor, Color lowerLeftColor, Color lowerRightColor, Color upperRightColor) {
         this.drawGradientRectangle(0d, xLeft, yTop, xRight, yBottom, upperLeftColor, lowerLeftColor, lowerRightColor, upperRightColor);
-    }
-
-    void drawPolygon(double z, Color color, double... points);
-
-    default void drawPolygon(Color color, double... points) {
-        this.drawPolygon(0d, color, points);
     }
 
     void drawStrokeLine(double z, Color color, float size, double... points);
@@ -71,5 +70,9 @@ public interface DrawContext {
 
     //TODO use Text in drawTooltip
     void drawTooltip(String text, double x, double y);
+
+    Identifier loadDynamicTexture(BufferedImage image);
+
+    void unloadDynamicTexture(Identifier texture);
 
 }

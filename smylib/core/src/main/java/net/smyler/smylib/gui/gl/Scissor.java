@@ -1,4 +1,4 @@
-package net.smyler.smylib.gui;
+package net.smyler.smylib.gui.gl;
 
 /**
  * Limits rendering to a specific part of the screen.

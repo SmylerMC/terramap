@@ -1,9 +1,8 @@
-package fr.thesmyler.terramap.gui.widgets;
+package net.smyler.terramap.gui.widgets;
 
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.math.Vec2dMutable;
-import org.lwjgl.opengl.GL11;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
@@ -11,12 +10,10 @@ import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.Mat2d;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-import static net.smyler.smylib.Color.WHITE;
+import static net.smyler.smylib.Color.*;
+import static net.smyler.smylib.gui.gl.DrawMode.*;
+import static net.smyler.smylib.gui.gl.VertexFormat.*;
 
 public class CircularCompassWidget implements Widget {
 
@@ -24,8 +21,8 @@ public class CircularCompassWidget implements Widget {
     private float x, y, size;
     private final int z;
     private Color backgroundColor = Color.DARKER_OVERLAY;
-    private Color northColor = Color.RED;
-    private Color northDarkColor = Color.RED.withRed(0.4f);
+    private Color northColor = RED;
+    private Color northDarkColor = RED.withRed(0.4f);
     private Color southColor = WHITE;
     private Color southColorDark = new Color(0.4f, 0.4f, 0.4f);
     private Runnable onClick;
@@ -35,7 +32,7 @@ public class CircularCompassWidget implements Widget {
 
     private final Animation fader = new Animation(1000);
 
-    private double[] vertices;
+    private double[][] vertices;
     private final Vec2dMutable vertexCalculationHelper = new Vec2dMutable();
 
     public CircularCompassWidget(float x, float y, int z, float size) {
@@ -46,7 +43,7 @@ public class CircularCompassWidget implements Widget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         Color background = this.backgroundColor;
         Color north = this.northColor;
@@ -64,37 +61,41 @@ public class CircularCompassWidget implements Widget {
 
         float radius = this.size / 2;
 
-        GlState glState = context.glState();
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x + radius, y + radius, 0);
-        context.drawPolygon(background, this.vertices);
-        //RenderUtil.drawClosedStrokeLine(Color.BLACK, 1f, vertices);
-        GlStateManager.rotate(this.azimuth, 0, 0, 1);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
-        glState.setColor(WHITE);
-        GlStateManager.shadeModel(7425);
-        context.glState().enableAlpha();
-        GlStateManager.enableBlend();
-        GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        builder.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_COLOR);
-        builder.pos(0d, -radius, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).endVertex();
-        builder.pos(-radius/3, radius * 0.1, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).endVertex();
-        builder.pos(0d, 0d, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).endVertex();
-        builder.pos(radius/3, radius * 0.1, 0d).color(northDark.redf(), northDark.greenf(), northDark.bluef(), northDark.alphaf()).endVertex();
-        tessellator.draw();
-        builder.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_COLOR);
-        builder.pos(0, 0, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).endVertex();
-        builder.pos(-radius/3, radius * 0.1, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).endVertex();
-        builder.pos(0, radius, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).endVertex();
-        builder.pos(radius/3, radius * 0.1, 0).color(southColor.redf(), southColor.greenf(), southColor.bluef(), southColor.alphaf()).endVertex();
-        tessellator.draw();
-        GlStateManager.shadeModel(7424);
-        context.glState().disableAlpha();
-        GlStateManager.disableBlend();
-        GlStateManager.enableTexture2D();
-        GlStateManager.popMatrix();
+        GlContext gl = context.gl();
+        gl.enableSmoothShading();
+        gl.pushViewMatrix();
+        gl.translate(x + radius, y + radius);
+
+        // Background dark circle
+        gl.startDrawing(TRIANGLE_FAN, POSITION);
+        gl.setColor(background);
+        gl.vertex().position(0d, 0d, 0d).end();
+        for (double[] vertex : this.vertices) {
+            gl.vertex().position(vertex[0], vertex[1], 0d).end();
+        }
+        gl.vertex().position(this.vertices[0][0], this.vertices[0][1], 0d).end();
+        gl.draw();
+
+        gl.rotate(this.azimuth);
+
+        // North arrow
+        gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
+        gl.setColor(WHITE);
+        gl.vertex().position(0d, -radius, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
+        gl.vertex().position(-radius/3, radius * 0.1, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
+        gl.vertex().position(0d, 0d, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
+        gl.vertex().position(radius/3, radius * 0.1, 0d).color(northDark.redf(), northDark.greenf(), northDark.bluef(), northDark.alphaf()).end();
+        gl.draw();
+
+        // South arrow
+        gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
+        gl.vertex().position(0, 0, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
+        gl.vertex().position(-radius/3, radius * 0.1, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
+        gl.vertex().position(0, radius, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
+        gl.vertex().position(radius/3, radius * 0.1, 0).color(southColor.redf(), southColor.greenf(), southColor.bluef(), southColor.alphaf()).end();
+        gl.draw();
+
+        gl.popViewMatrix();
     }
 
     @Override
@@ -167,12 +168,14 @@ public class CircularCompassWidget implements Widget {
         this.size = size;
         int vertexCount = (int) (2*Math.PI*this.size);
         float radius = this.size / 2;
-        this.vertices = new double[vertexCount*2];
+        this.vertices = new double[vertexCount][2];
         this.vertexCalculationHelper.set(0, -radius);
         Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
         for(int i = 0; i < vertexCount; i++) {
-            this.vertices[2*i] = this.vertexCalculationHelper.x();
-            this.vertices[2*i + 1] = this.vertexCalculationHelper.y();
+            this.vertices[i] = new double[] {
+                    this.vertexCalculationHelper.x(),
+                    this.vertexCalculationHelper.y()
+            };
             this.vertexCalculationHelper.apply(rot);
         }
     }

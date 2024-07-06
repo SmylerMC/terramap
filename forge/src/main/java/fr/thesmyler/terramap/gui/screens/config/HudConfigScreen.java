@@ -22,7 +22,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen.TileScalingOption;
-import fr.thesmyler.terramap.gui.widgets.RibbonCompassWidget;
+import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
@@ -32,13 +32,13 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerCo
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
@@ -51,8 +51,8 @@ public class HudConfigScreen extends Screen {
     private final WindowedContainer compassWindow = new WindowedContainer(16, this.compassScreen, "");
     private final OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<>(10, TileScalingOption.values());
     private final IntegerSliderWidget zoomSlider = new IntegerSliderWidget(11, 0, 20, 10);
-    private final OptionSliderWidget<MapStyleSliderEntry> styleSlider;
-    private MapStyleSliderEntry[] mapStyles = new MapStyleSliderEntry[0];
+    private final OptionSliderWidget<RasterTileSetSliderEntry> styleSlider;
+    private RasterTileSetSliderEntry[] tileSets = new RasterTileSetSliderEntry[0];
     private final ToggleButtonWidget otherPlayersButton = new ToggleButtonWidget(10, false);
     private final ToggleButtonWidget entitiesButton = new ToggleButtonWidget(10, false);
     private final ToggleButtonWidget minimapButton = new ToggleButtonWidget(10, false);
@@ -67,13 +67,13 @@ public class HudConfigScreen extends Screen {
     public HudConfigScreen() {
         super(BackgroundOption.NONE);
         final MapController controller = this.minimap.getController();
-        List<MapStyleSliderEntry> maps = new ArrayList<>();
-        TerramapClientContext.getContext().getMapStyles().values().stream()
-            .sorted(((Comparator<RasterTiledMap>) RasterTiledMap::compareTo).reversed())
-            .filter(RasterTiledMap::isAllowedOnMinimap)
-            .forEachOrdered(m -> maps.add(new MapStyleSliderEntry(m)));
-        this.mapStyles = maps.toArray(this.mapStyles);
-        this.styleSlider = new OptionSliderWidget<>(0, 0, 15, 10, this.mapStyles);
+        List<RasterTileSetSliderEntry> maps = new ArrayList<>();
+        TerramapClientContext.getContext().getRasterTileSets().values().stream()
+            .sorted(((Comparator<RasterTileSet>) RasterTileSet::compareTo).reversed())
+            .filter(RasterTileSet::isAllowedOnMinimap)
+            .forEachOrdered(m -> maps.add(new RasterTileSetSliderEntry(m)));
+        this.tileSets = maps.toArray(this.tileSets);
+        this.styleSlider = new OptionSliderWidget<>(0, 0, 15, 10, this.tileSets);
         this.minimap.setInteractive(false);
         this.minimap.setCopyrightVisibility(false);
         this.minimap.setRightClickMenuEnabled(false);
@@ -317,7 +317,7 @@ public class HudConfigScreen extends Screen {
         MapController minimapController = this.minimap.getController();
         minimapController.setTracksRotation(TerramapConfig.CLIENT.minimap.playerRotation);
         if(!TerramapConfig.CLIENT.minimap.playerRotation) minimapController.setRotation(0f, false);
-        for(MapStyleSliderEntry map: this.mapStyles) if(map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
+        for(RasterTileSetSliderEntry map: this.tileSets) if(map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
             this.styleSlider.setCurrentOption(map);
             break;
         }
@@ -372,7 +372,7 @@ public class HudConfigScreen extends Screen {
         }
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, WidgetContainer parent) {
             this.compass.setWidth(this.getWidth());
             super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }
@@ -380,9 +380,9 @@ public class HudConfigScreen extends Screen {
 
     }
 
-    private static class MapStyleSliderEntry {
-        private final RasterTiledMap map;
-        private MapStyleSliderEntry(RasterTiledMap map) {
+    private static class RasterTileSetSliderEntry {
+        private final RasterTileSet map;
+        private RasterTileSetSliderEntry(RasterTileSet map) {
             this.map = map;
         }
         @Override

@@ -1,11 +1,10 @@
 package net.smyler.smylib.gui.screen;
 
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.popups.Popup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-
-import net.smyler.smylib.gui.DrawContext;
 
 import static net.smyler.smylib.gui.popups.PopupImplementationProxy.setPopupPosition;
 
@@ -26,7 +25,7 @@ public class PopupScreenImplementation extends PopupScreen {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         if(this.other != null) this.other.drawScreen((int) mouseX, (int) mouseY, 0);
         context.drawRectangle(0, 0, this.getWidth(), this.getHeight(), this.getPopup().getShadingColor());
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);

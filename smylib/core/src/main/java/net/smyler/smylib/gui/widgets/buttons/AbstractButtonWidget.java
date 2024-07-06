@@ -1,6 +1,6 @@
 package net.smyler.smylib.gui.widgets.buttons;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,7 +30,7 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
     }
 
     @Override
-    public abstract void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent);
+    public abstract void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent);
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {

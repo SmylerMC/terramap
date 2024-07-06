@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
@@ -9,7 +10,6 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
-import net.smyler.smylib.gui.DrawContext;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
@@ -43,17 +43,17 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        GlState glState = context.glState();
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        GlContext gl = context.gl();
         boolean drawName = hovered;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
             drawName = drawName && !map.getContext().equals(MapContext.MINIMAP);
         }
-        glState.enableAlpha();
+        gl.enableAlpha();
         if(hovered) context.drawRectangle(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
         Minecraft.getMinecraft().getTextureManager().bindTexture(this.texture);
-        glState.setColor(WHITE);
+        gl.setColor(WHITE);
         GlStateManager.enableBlend();
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.u, this.v, this.width, this.height, this.textureWidth, this.textureHeight);
 

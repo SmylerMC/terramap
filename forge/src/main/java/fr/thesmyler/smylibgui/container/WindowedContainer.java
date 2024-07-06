@@ -1,6 +1,6 @@
 package fr.thesmyler.smylibgui.container;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.lwjgl.input.Cursor;
@@ -73,7 +73,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
     @Override
     public void draw(
-            DrawContext context, float x,
+            UiDrawContext context, float x,
             float y,
             float mouseX,
             float mouseY,
@@ -120,7 +120,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         protected abstract Color getBackgroundColor();
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             context.drawRectangle(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
             if(this.lastHovered != hovered && !getGameClient().mouse().isButtonPressed(0)) {
                 if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) Cursors.trySetCursor(this.cursor);
@@ -517,7 +517,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         }
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
             float width = this.getWidth();
             String toDraw = parent.getFont().trimRight(WindowedContainer.this.windowTitle, this.getWidth());

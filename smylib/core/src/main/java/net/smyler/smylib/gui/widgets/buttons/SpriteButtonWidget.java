@@ -1,6 +1,6 @@
 package net.smyler.smylib.gui.widgets.buttons;
 
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +71,7 @@ public class SpriteButtonWidget extends AbstractButtonWidget {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Sprite sprite = this.sprite;
         if(!this.isEnabled()) {
             sprite = this.spriteDisabled;

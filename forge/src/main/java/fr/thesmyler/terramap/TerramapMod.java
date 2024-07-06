@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
+import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,10 +34,11 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid=Terramap.MOD_ID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
 public class TerramapMod implements Terramap {
 
-    public static final String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";
     private static TerramapVersion version; // Read from the metadata
 
     private final HttpClient http = new TerraplusplusHttpClient();
+
+    private RasterTileSetManager rasterTileSetManager;
 
     // These are notable versions
     public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
@@ -79,8 +80,8 @@ public class TerramapMod implements Terramap {
         }
         this.logger.info("Terramap version: {}", getVersion());
         TerramapMod.proxy.preInit(event);
-        File mapStyleFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
-        MapStylesLibrary.setConfigMapFile(mapStyleFile);
+        File tileSetsConfigFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
+        this.rasterTileSetManager = new RasterTileSetManager(tileSetsConfigFile);
     }
 
     @EventHandler
@@ -88,7 +89,7 @@ public class TerramapMod implements Terramap {
         MinecraftForge.EVENT_BUS.register(new CommonTerramapEventHandler());
         TerramapMod.proxy.init(event);
         PermissionManager.registerNodes();
-        MapStylesLibrary.loadFromConfigFile();
+        this.rasterTileSetManager().loadFromConfigFile();
     }
 
     public static TerramapVersion getVersion() {
@@ -111,6 +112,11 @@ public class TerramapMod implements Terramap {
 
 
     @Override
+    public String version() {
+        return getVersion().toString();
+    }
+
+    @Override
     public Logger logger() {
         return this.logger;
     }
@@ -128,6 +134,11 @@ public class TerramapMod implements Terramap {
     @Override
     public Gson gsonPretty() {
         return this.gsonPretty;
+    }
+
+    @Override
+    public RasterTileSetManager rasterTileSetManager() {
+        return this.rasterTileSetManager;
     }
 
 }

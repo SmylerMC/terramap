@@ -16,9 +16,8 @@ public class TerraplusplusHttpClient implements HttpClient {
         CompletableFuture<byte[]> result = future.thenApply(ByteBufUtil::getBytes);
         result.exceptionally(t -> {
             if (t instanceof CancellationException) {
-                System.out.println("Was cancelled");
+                future.cancel(true);
             }
-            future.cancel(true);
             return null;
         });
         return result;

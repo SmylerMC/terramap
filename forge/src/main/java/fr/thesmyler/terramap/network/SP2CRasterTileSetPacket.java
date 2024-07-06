@@ -6,12 +6,12 @@ import java.util.Map;
 import com.google.gson.JsonParseException;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import org.apache.logging.log4j.util.Strings;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
-import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
+import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 
-public class SP2CMapStylePacket implements IMessage {
+public class SP2CRasterTileSetPacket implements IMessage {
 
     private String id;
     private long providerVersion;
@@ -37,7 +37,7 @@ public class SP2CMapStylePacket implements IMessage {
     private boolean backwardCompat = false;
     private Map<Integer, WebMercatorBounds> bounds;
 
-    public SP2CMapStylePacket(UrlTiledMap map) {
+    public SP2CRasterTileSetPacket(UrlRasterTileSet map) {
         this.id = map.getId();
         this.providerVersion = map.getProviderVersion();
         this.urlPatterns = map.getUrlPatterns();
@@ -57,7 +57,7 @@ public class SP2CMapStylePacket implements IMessage {
         }
     }
 
-    public SP2CMapStylePacket() {}
+    public SP2CRasterTileSetPacket() {}
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -157,68 +157,69 @@ public class SP2CMapStylePacket implements IMessage {
         return this.backwardCompat;
     }
 
-    public UrlTiledMap getTiledMap(TiledMapProvider provider) {
-        return new UrlTiledMap(
+    public UrlRasterTileSet getTiledMap(RasterTileSetProvider provider) {
+        UrlRasterTileSet tiledMap = new UrlRasterTileSet(
                 this.urlPatterns,
                 this.minZoom,
                 this.maxZoom,
                 this.id,
-                this.names,
-                this.copyrights,
                 this.displayPriority,
                 this.isAllowedOnMinimap,
                 provider,
                 this.providerVersion,
                 this.comment,
                 this.maxConcurrentConnections,
-                this.debug,
-                this.bounds
-                );
+                this.debug
+        );
+        this.names.forEach(tiledMap::setNameTranslation);
+        this.copyrights.forEach(tiledMap::setTranslatedCopyright);
+        this.bounds.forEach(tiledMap::setBounds);
+        return tiledMap;
     }
 
-    public static class SP2CMapStylePacketTerramapHandler implements IMessageHandler<SP2CMapStylePacket, IMessage> {
+    public static class SP2CRasterTileSetPacketTerramapHandler implements IMessageHandler<SP2CRasterTileSetPacket, IMessage> {
 
-        public SP2CMapStylePacketTerramapHandler() {}
+        public SP2CRasterTileSetPacketTerramapHandler() {}
 
         @Override
-        public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
+        public IMessage onMessage(SP2CRasterTileSetPacket message, MessageContext ctx) {
             try {
-                UrlTiledMap map = message.getTiledMap(TiledMapProvider.SERVER);
+                UrlRasterTileSet map = message.getTiledMap(RasterTileSetProvider.SERVER);
                 Terramap.instance().logger().debug("Got custom map style from server: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
                     Terramap.instance().logger().debug("Ignoring debug map from server: {}", map.getId());
                     return null;
                 }
-                Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerMapStyle(map));
+                Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerRasterTileSet(map));
 
             } catch(Exception e) {
                 Terramap.instance().logger().error("Failed to unpack a map style sent by the server");
                 Terramap.instance().logger().catching(e);
-                TiledMapProvider.SERVER.setLastError(e);
+                RasterTileSetProvider.SERVER.setLastError(e);
             }
             return null;
         }
 
     }
 
-    public static class SP2CMapStylePacketSledgehammerHandler implements IMessageHandler<SP2CMapStylePacket, IMessage> {
+    public static class SP2CRasterTileSetPacketSledgehammerHandler implements IMessageHandler<SP2CRasterTileSetPacket, IMessage> {
 
-        public SP2CMapStylePacketSledgehammerHandler() {}
+        public SP2CRasterTileSetPacketSledgehammerHandler() {}
 
         @Override
-        public IMessage onMessage(SP2CMapStylePacket message, MessageContext ctx) {
+        public IMessage onMessage(SP2CRasterTileSetPacket message, MessageContext ctx) {
             try {
-                UrlTiledMap map = message.getTiledMap(TiledMapProvider.PROXY);
+                UrlRasterTileSet map = message.getTiledMap(RasterTileSetProvider.PROXY);
                 Terramap.instance().logger().debug("Got custom map style from proxy: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
                     Terramap.instance().logger().debug("Ignoring debug map from proxy: {}", map.getId());
                     return null;
                 }
-                Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyMapStyle(map));
+                Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyRasterTileSet(map));
             } catch(Exception e) {
                 Terramap.instance().logger().error("Failed to unpack a map style sent by the proxy");
                 Terramap.instance().logger().catching(e);
-                TiledMapProvider.PROXY.setLastError(e);
+                RasterTileSetProvider.PROXY.setLastError(e);
             }
             return null;
         }

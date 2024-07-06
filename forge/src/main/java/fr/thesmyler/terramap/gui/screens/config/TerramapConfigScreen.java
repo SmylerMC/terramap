@@ -4,10 +4,12 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.util.Set;
 
+import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Translator;
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
@@ -25,7 +27,6 @@ import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
@@ -45,10 +46,9 @@ public class TerramapConfigScreen extends Screen {
     private final ToggleButtonWidget showChatOnMapToggle = new ToggleButtonWidget(10, false);
     private final OptionSliderWidget<TileScalingOption> tileScalingSlider = new OptionSliderWidget<>(10, TileScalingOption.values());
     private final IntegerSliderWidget doubleClickDelaySlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MIN, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_MAX, TerramapConfig.CLIENT.DOUBLE_CLICK_DELAY_DEFAULT);
-    private final IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.TILE_LOAD_MIN, TerramapConfig.CLIENT.TILE_LOAD_MAX, TerramapConfig.CLIENT.TILE_LOAD_DEFAULT);
+    private final IntegerSliderWidget maxLoadedTilesSlider = new IntegerSliderWidget(10, 0, 1024, 512);
     private final IntegerSliderWidget lowZoomLevelSlider = new IntegerSliderWidget(10, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MIN, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_MAX, TerramapConfig.CLIENT.LOW_ZOOM_LEVEL_DEFAULT);
-    private final ToggleButtonWidget debugMapStylesToggle = new ToggleButtonWidget(10, false);
-    private TextButtonWidget reloadMapStylesButton;
+    private final ToggleButtonWidget debugRasterTileSetsToggle = new ToggleButtonWidget(10, false);
     private final TextFieldWidget tpCommandField;
     private final TextWidget pageText;
 
@@ -94,11 +94,11 @@ public class TerramapConfigScreen extends Screen {
         this.addWidget(this.next.setX(save.getX() + save.getWidth() + 5).setY(save.getY() + 2));
         this.addWidget(this.previous.setX(cancel.getX() - 20).setY(this.next.getY()));
         FlexibleWidgetContainer mapConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
-        FlexibleWidgetContainer mapStylesConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
+        FlexibleWidgetContainer tileSetsConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
         FlexibleWidgetContainer otherConfigScreen = new FlexibleWidgetContainer(20, 20, 1, width - 40, height - 75);
         this.pages = new FlexibleWidgetContainer[] {
                 mapConfigScreen,
-                mapStylesConfigScreen,
+                tileSetsConfigScreen,
                 otherConfigScreen
         };
         this.titles = new String[] {
@@ -153,31 +153,35 @@ public class TerramapConfigScreen extends Screen {
         hudButton.setTooltip(translator.format("terramap.configmenu.configureminimap.tooltip"));
         mapConfigScreen.addWidget(hudButton);
 
-        // Map styles
-        TextWidget debugMapStylesText = new TextWidget(10, ofTranslation("terramap.configmenu.debugmapstyles"), game.defaultFont());
-        mapStylesConfigScreen.addWidget(debugMapStylesText.setAnchorX((mapStylesConfigScreen.getWidth() - debugMapStylesToggle.getWidth() - debugMapStylesText.getWidth() - 3) / 2).setAnchorY(mapStylesConfigScreen.getHeight() / 4 - 30));
-        debugMapStylesToggle.setTooltip(translator.format("terramap.configmenu.debugmapstyles.tooltip"));
-        mapStylesConfigScreen.addWidget(debugMapStylesToggle.setX(debugMapStylesText.getX() + debugMapStylesText.getWidth() + 3).setY(debugMapStylesText.getY() - 4));
-        Set<String> baseIDs = MapStylesLibrary.getBaseMaps().keySet();
-        Set<String> userIDs = MapStylesLibrary.getUserMaps().keySet();
-        Set<String> serverIDs = TerramapClientContext.getContext().getServerMapStyles().keySet();
-        Set<String> proxyIDs = TerramapClientContext.getContext().getProxyMapStyles().keySet();
-        Set<String> resolved = TerramapClientContext.getContext().getMapStyles().keySet();
-        TextWidget baseText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 40, 10, ofTranslation("terramap.configmenu.mapstyles.base", baseIDs.size(), String.join(", ", baseIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget proxyText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 57, 10, ofTranslation("terramap.configmenu.mapstyles.proxy", proxyIDs.size(), String.join(", ", proxyIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget serverText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 74, 10, ofTranslation("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget userText = new TextWidget( mapStylesConfigScreen.getWidth() / 2, 91, 10, ofTranslation("terramap.configmenu.mapstyles.custom", userIDs.size(), String.join(", ", userIDs)),TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget effectiveText = new TextWidget(mapStylesConfigScreen.getWidth() / 2, 108, 10, ofTranslation("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), TextAlignment.CENTER, getGameClient().defaultFont());
-        mapStylesConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugMapStylesToggle.getY() + debugMapStylesToggle.getHeight() + 10));
-        mapStylesConfigScreen.addWidget(proxyText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(baseText.getY() + baseText.getHeight() + inter));
-        mapStylesConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
-        mapStylesConfigScreen.addWidget(userText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(serverText.getY() + serverText.getHeight() + inter));
-        mapStylesConfigScreen.addWidget(effectiveText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(userText.getY() + userText.getHeight() + inter));
-        this.reloadMapStylesButton = new TextButtonWidget(mapStylesConfigScreen.getWidth() / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + mapStylesConfigScreen.getHeight()) / 2 - 10, 10, 150, translator.format("terramap.configmenu.mapstyles.reload"), () -> {MapStylesLibrary.reload(); TerramapConfigScreen.this.init();});
-        mapStylesConfigScreen.addWidget(this.reloadMapStylesButton);
-        mapStylesConfigScreen.addWidget(new TextButtonWidget(this.reloadMapStylesButton.getX() + this.reloadMapStylesButton.getWidth() + 3, this.reloadMapStylesButton.getY(), 10, 150, translator.format("terramap.configmenu.mapstyles.open"), () ->  {
+        // Tile sets
+        RasterTileSetManager tileSetManager = Terramap.instance().rasterTileSetManager();
+        TextWidget debugRasterTileSetsText = new TextWidget(10, ofTranslation("terramap.configmenu.debugmapstyles"), game.defaultFont());
+        tileSetsConfigScreen.addWidget(debugRasterTileSetsText.setAnchorX((tileSetsConfigScreen.getWidth() - debugRasterTileSetsToggle.getWidth() - debugRasterTileSetsText.getWidth() - 3) / 2).setAnchorY(tileSetsConfigScreen.getHeight() / 4 - 30));
+        debugRasterTileSetsToggle.setTooltip(translator.format("terramap.configmenu.debugmapstyles.tooltip"));
+        tileSetsConfigScreen.addWidget(debugRasterTileSetsToggle.setX(debugRasterTileSetsText.getX() + debugRasterTileSetsText.getWidth() + 3).setY(debugRasterTileSetsText.getY() - 4));
+        Set<String> baseIDs = tileSetManager.getBaseMaps().keySet();
+        Set<String> userIDs = tileSetManager.getUserMaps().keySet();
+        Set<String> serverIDs = TerramapClientContext.getContext().getServerRasterTileSets().keySet();
+        Set<String> proxyIDs = TerramapClientContext.getContext().getProxyRasterTileSets().keySet();
+        Set<String> resolved = TerramapClientContext.getContext().getRasterTileSets().keySet();
+        TextWidget baseText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 40, 10, ofTranslation("terramap.configmenu.mapstyles.base", baseIDs.size(), String.join(", ", baseIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget proxyText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 57, 10, ofTranslation("terramap.configmenu.mapstyles.proxy", proxyIDs.size(), String.join(", ", proxyIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget serverText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 74, 10, ofTranslation("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget userText = new TextWidget( tileSetsConfigScreen.getWidth() / 2, 91, 10, ofTranslation("terramap.configmenu.mapstyles.custom", userIDs.size(), String.join(", ", userIDs)),TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget effectiveText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 108, 10, ofTranslation("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), TextAlignment.CENTER, getGameClient().defaultFont());
+        tileSetsConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugRasterTileSetsToggle.getY() + debugRasterTileSetsToggle.getHeight() + 10));
+        tileSetsConfigScreen.addWidget(proxyText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(baseText.getY() + baseText.getHeight() + inter));
+        tileSetsConfigScreen.addWidget(serverText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(proxyText.getY() + proxyText.getHeight() + inter));
+        tileSetsConfigScreen.addWidget(userText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(serverText.getY() + serverText.getHeight() + inter));
+        tileSetsConfigScreen.addWidget(effectiveText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(userText.getY() + userText.getHeight() + inter));
+        TextButtonWidget reloadRasterTileSetsButton = new TextButtonWidget(tileSetsConfigScreen.getWidth() / 2 - 153, (effectiveText.getY() + effectiveText.getHeight() + tileSetsConfigScreen.getHeight()) / 2 - 10, 10, 150, translator.format("terramap.configmenu.mapstyles.reload"), () -> {
+            tileSetManager.reload(TerramapConfig.enableDebugMaps);
+            TerramapConfigScreen.this.init();
+        });
+        tileSetsConfigScreen.addWidget(reloadRasterTileSetsButton);
+        tileSetsConfigScreen.addWidget(new TextButtonWidget(reloadRasterTileSetsButton.getX() + reloadRasterTileSetsButton.getWidth() + 3, reloadRasterTileSetsButton.getY(), 10, 150, translator.format("terramap.configmenu.mapstyles.open"), () ->  {
             try {
-                Desktop.getDesktop().open(MapStylesLibrary.getFile());
+                Desktop.getDesktop().open(tileSetManager.getFile());
             } catch (IOException e) {
                 Terramap.instance().logger().error("Failed to open map style config file: ");
                 Terramap.instance().logger().catching(e);
@@ -226,10 +230,9 @@ public class TerramapConfigScreen extends Screen {
         TerramapConfig.CLIENT.saveUiState = this.saveUIStateToggle.getState();
         TerramapConfig.CLIENT.chatOnMap = this.showChatOnMapToggle.getState();
         TerramapConfig.CLIENT.doubleClickDelay = (int) this.doubleClickDelaySlider.getValue();
-        TerramapConfig.CLIENT.maxTileLoad = (int) this.maxLoadedTilesSlider.getValue();
         TerramapConfig.CLIENT.lowZoomLevel = (int) this.lowZoomLevelSlider.getValue();
         TerramapConfig.tpllcmd = this.tpCommandField.getText();
-        TerramapConfig.enableDebugMaps = this.debugMapStylesToggle.getState();
+        TerramapConfig.enableDebugMaps = this.debugRasterTileSetsToggle.getState();
         TerramapConfig.sync();
         this.close();
     }
@@ -244,10 +247,11 @@ public class TerramapConfigScreen extends Screen {
         this.saveUIStateToggle.setState(TerramapConfig.CLIENT.saveUiState);
         this.showChatOnMapToggle.setState(TerramapConfig.CLIENT.chatOnMap);
         this.doubleClickDelaySlider.setValue(TerramapConfig.CLIENT.doubleClickDelay);
-        this.maxLoadedTilesSlider.setValue(TerramapConfig.CLIENT.maxTileLoad);
-        this.lowZoomLevelSlider.setValue(TerramapConfig.CLIENT.lowZoomLevel);
+        this.maxLoadedTilesSlider.setValue(CachingRasterTileSet.CACHE_SIZE);
+        this.maxLoadedTilesSlider.setEnabled(false);
+        this.lowZoomLevelSlider.setValue(CachingRasterTileSet.LOW_ZOOM);
         this.tpCommandField.setText(TerramapConfig.tpllcmd);
-        this.debugMapStylesToggle.setState(TerramapConfig.enableDebugMaps);
+        this.debugRasterTileSetsToggle.setState(TerramapConfig.enableDebugMaps);
     }
 
     @Override

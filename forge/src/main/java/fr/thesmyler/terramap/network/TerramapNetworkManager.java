@@ -3,8 +3,8 @@ package fr.thesmyler.terramap.network;
 import fr.thesmyler.terramap.network.P2CSledgehammerHelloPacket.P2CSledgehammerHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTpCommandPacket.S2CTpCommandPacketHandler;
-import fr.thesmyler.terramap.network.SP2CMapStylePacket.SP2CMapStylePacketSledgehammerHandler;
-import fr.thesmyler.terramap.network.SP2CMapStylePacket.SP2CMapStylePacketTerramapHandler;
+import fr.thesmyler.terramap.network.SP2CRasterTileSetPacket.SP2CRasterTileSetPacketSledgehammerHandler;
+import fr.thesmyler.terramap.network.SP2CRasterTileSetPacket.SP2CRasterTileSetPacketTerramapHandler;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket.C2SRegisterForUpdatesPacketHandler;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
@@ -33,21 +33,21 @@ public abstract class TerramapNetworkManager {
     public static void registerHandlers(Side side){
         registerTerramapS2C(S2C_TERRAMAP_HELLO_DISCRIMINATOR, S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
         registerTerramapS2C(S2C_TERRAMAP_TPCMD_DISCRIMINATOR, S2CTpCommandPacketHandler.class, S2CTpCommandPacket.class);
-        registerTerramapS2C(S2C_TERRAMAP_MAPSTYLE_DISCRIMINATOR, SP2CMapStylePacketTerramapHandler.class, SP2CMapStylePacket.class);
+        registerTerramapS2C(S2C_TERRAMAP_RASTER_TILE_SET_DISCRIMINATOR, SP2CRasterTileSetPacketTerramapHandler.class, SP2CRasterTileSetPacket.class);
 
         registerMapsyncCP2S(C2SP_MAPSYNC_REGISTER_DISCRIMINATOR, C2SRegisterForUpdatesPacketHandler.class, C2SPRegisterForUpdatesPacket.class);
         registerMapsyncSP2C(SP2C_MAPSYNC_PLAYERSYNC_DISCRIMINATOR, S2CPlayerSyncPacketHandler.class, SP2CPlayerSyncPacket.class);
         registerMapsyncSP2C(SP2C_MAPSYNC_REGISTRATION_EXPIRES_DISCRIMINATOR, S2CRegistrationExpiresPacketHandler.class, SP2CRegistrationExpiresPacket.class);
 
         registerSledgehammerP2C(P2C_SH_HELLO_DISCRIMINATOR, P2CSledgehammerHelloPacketHandler.class, P2CSledgehammerHelloPacket.class);
-        registerSledgehammerP2C(P2C_SH_MAPSTYLE_DISCRIMINATOR, SP2CMapStylePacketSledgehammerHandler.class, SP2CMapStylePacket.class);
+        registerSledgehammerP2C(P2C_SH_RASTER_TILESET_DISCRIMINATOR, SP2CRasterTileSetPacketSledgehammerHandler.class, SP2CRasterTileSetPacket.class);
 
     }
 
     // terramap:terramap
     private static final int S2C_TERRAMAP_HELLO_DISCRIMINATOR = 0;
     private static final int S2C_TERRAMAP_TPCMD_DISCRIMINATOR = 1;
-    private static final int S2C_TERRAMAP_MAPSTYLE_DISCRIMINATOR = 2;
+    private static final int S2C_TERRAMAP_RASTER_TILE_SET_DISCRIMINATOR = 2;
 
     // terramap:mapsync
     private static final int C2SP_MAPSYNC_REGISTER_DISCRIMINATOR = 0;
@@ -56,7 +56,7 @@ public abstract class TerramapNetworkManager {
 
     //terramap:sh
     private static final int P2C_SH_HELLO_DISCRIMINATOR = 0;
-    private static final int P2C_SH_MAPSTYLE_DISCRIMINATOR = 2;
+    private static final int P2C_SH_RASTER_TILESET_DISCRIMINATOR = 2;
 
     private static <REQ extends IMessage, REPLY extends IMessage> void registerTerramapS2C(int discriminator, Class<? extends IMessageHandler<REQ, REPLY>> handlerclass, Class<REQ> msgclass) {
         CHANNEL_TERRAMAP.registerMessage(handlerclass, msgclass, discriminator, Side.CLIENT);

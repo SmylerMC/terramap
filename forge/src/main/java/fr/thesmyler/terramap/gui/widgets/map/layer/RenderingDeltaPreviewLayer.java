@@ -6,7 +6,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -29,7 +29,7 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
     }
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
         MapWidget parentMap = (MapWidget) parent;
         Profiler profiler = parentMap.getProfiler();
@@ -39,13 +39,13 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
         float height = this.getHeight();
         this.getLocationPositionInRenderSpace(this.realCenterPosition, this.realCenter);
 
-        context.glState().pushViewMatrix();
+        context.gl().pushViewMatrix();
         this.applyRotationGl(context, x, y);
         context.drawStrokeLine(Color.RED, 2f,
                 this.renderSpaceHalfDimensions.x(), this.renderSpaceHalfDimensions.y(),
                 this.realCenterPosition.x, this.renderSpaceHalfDimensions.y(),
                 this.realCenterPosition.x, this.realCenterPosition.y);
-        context.glState().popViewMatrix();
+        context.gl().popViewMatrix();
 
         float centerHole = 10;
         float linesWidth = 1f;

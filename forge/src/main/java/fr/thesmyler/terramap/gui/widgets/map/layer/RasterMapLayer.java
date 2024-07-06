@@ -3,15 +3,15 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.smyler.smylib.gui.GlState;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.util.*;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.maps.raster.RasterTile;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
+import net.smyler.terramap.tilesets.raster.RasterTile;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.DrawContext;
+import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.GeoServices;
@@ -21,14 +21,13 @@ import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.util.ResourceLocation;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.gl.DrawMode.QUADS;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION_TEXTURE;
 
 abstract public class RasterMapLayer extends MapLayer {
 
@@ -45,7 +44,7 @@ abstract public class RasterMapLayer extends MapLayer {
     private Vec2dReadOnly renderingSpaceDimensions;
     private Vec2dReadOnly halfRenderingSpaceDimensions;
 
-    public abstract RasterTiledMap getTiledMap();
+    public abstract RasterTileSet getTiledMap();
 
     @Override
     protected void initialize() {
@@ -56,15 +55,13 @@ abstract public class RasterMapLayer extends MapLayer {
 
 
     @Override
-    public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
-        final RasterTiledMap tiledMap = this.getTiledMap();
-        final ResourceLocation defaultTexture = tiledMap.getDefaultTileTexture();
+        final RasterTileSet tiledMap = this.getTiledMap();
+        final Identifier defaultTexture = tiledMap.getDefaultTileTexture();
 
         Font smallFont = getGameClient().smallestFont();
-        Minecraft mc = Minecraft.getMinecraft();
-        TextureManager textureManager = mc.getTextureManager();
-        GlState glState = context.glState();
+        GlContext gl = context.gl();
         float rotation = this.getRotation();
 
         boolean perfectDraw = true;
@@ -76,7 +73,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
         profiler.startSection("render-raster-layer_" + tiledMap.getId());
 
-        context.glState().pushViewMatrix();
+        context.gl().pushViewMatrix();
         float widthViewPort = this.getWidth();
         float heightViewPort = this.getHeight();
         double zoom = this.getMap().getController().getZoom();
@@ -216,8 +213,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     dY += factorY * renderSizedSize;
                 }
 
-                glState.setColor(WHITE);
-                ResourceLocation texture = defaultTexture;
+                Identifier texture = defaultTexture;
                 try {
                     if(tile.isTextureAvailable()) texture = tile.getTexture();
                     else perfectDraw = false;
@@ -226,16 +222,19 @@ abstract public class RasterMapLayer extends MapLayer {
                     parentMap.reportError(this, e.toString());
                 }
                 if (texture != null) {
-                    textureManager.bindTexture(texture);
-                    RenderUtil.drawModalRectWithCustomSizedTexture(
-                            dispX,
-                            dispY,
-                            dX, dY,
-                            displayWidth,
-                            displayHeight,
-                            renderSizedSize,
-                            renderSizedSize
-                    );
+                    double f = 1.0f / renderSizedSize;
+                    double uLeft = dX * f;
+                    double uRight = (dX + displayWidth) * f;
+                    double uTop = dY * f;
+                    double uBottom = (dY + displayHeight) * f;
+                    gl.setTexture(texture);
+                    gl.setColor(whiteWithAlpha);
+                    gl.startDrawing(QUADS, POSITION_TEXTURE);
+                    gl.vertex().position(dispX, dispY + displayHeight, 0d).texture(uLeft, uBottom).end();
+                    gl.vertex().position(dispX + displayWidth, dispY + displayHeight, 0d).texture(uRight, uBottom).end();
+                    gl.vertex().position(dispX + displayWidth, dispY, 0d).texture(uRight, uTop).end();
+                    gl.vertex().position(dispX, dispY, 0d).texture(uLeft, uTop).end();
+                    gl.draw();
                 }
                 if(debug) {
                     Color lineColor = texture == null? Color.GREEN: lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : WHITE;
@@ -249,7 +248,6 @@ abstract public class RasterMapLayer extends MapLayer {
                     smallFont.draw((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
                     smallFont.drawCentered((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
-                glState.setColor(WHITE);
             }
         }
 
@@ -285,7 +283,7 @@ abstract public class RasterMapLayer extends MapLayer {
         this.lastNeededTiles.forEach(RasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;
 
-        context.glState().popViewMatrix();
+        context.gl().popViewMatrix();
         profiler.endSection();
 
     }

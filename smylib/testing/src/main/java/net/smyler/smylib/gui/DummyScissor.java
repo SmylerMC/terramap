@@ -1,5 +1,7 @@
 package net.smyler.smylib.gui;
 
+import net.smyler.smylib.gui.gl.Scissor;
+
 public class DummyScissor implements Scissor {
     @Override
     public void setEnabled(boolean yesNo) {

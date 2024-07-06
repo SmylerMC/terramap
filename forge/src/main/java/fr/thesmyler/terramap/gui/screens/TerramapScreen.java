@@ -4,19 +4,19 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import net.smyler.smylib.game.Key;
-import net.smyler.smylib.gui.DrawContext;
-import net.smyler.smylib.gui.Scissor;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.WarningWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import net.smyler.terramap.util.geo.GeoServices;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.*;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import fr.thesmyler.terramap.maps.raster.CachingRasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.imp.UrlTiledMap;
+import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
@@ -49,16 +49,15 @@ import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
-import fr.thesmyler.terramap.gui.widgets.CircularCompassWidget;
+import net.smyler.terramap.gui.widgets.CircularCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import fr.thesmyler.terramap.input.KeyBindings;
-import fr.thesmyler.terramap.maps.raster.RasterTiledMap;
-import fr.thesmyler.terramap.maps.raster.TiledMapProvider;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
+import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
@@ -416,19 +415,19 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             TerramapClientContext srv = TerramapClientContext.getContext();
             EarthGeneratorSettings generationSettings = srv.getGeneratorSettings();
             debugBuilder.append(String.format(locale, "FPS: %s", getGameClient().currentFPS()));
-            debugBuilder.append(String.format(locale, "\nClient: %s", TerramapMod.getVersion()));
+            debugBuilder.append(String.format(locale, "\nClient: %s", Terramap.instance().version()));
             debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
             debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
             this.map.getRasterBackgroundLayer().ifPresent(layer -> {
-                RasterTiledMap backgroundStyle = layer.getTiledMap();
+                RasterTileSet backgroundStyle = layer.getTiledMap();
                 debugBuilder.append(String.format(locale, "\nMap id: %s", backgroundStyle.getId()));
                 debugBuilder.append(String.format(locale, "\nMap provider: %sv%s", backgroundStyle.getProvider(), backgroundStyle.getProviderVersion()));
-                if (backgroundStyle instanceof CachingRasterTiledMap) {
-                    CachingRasterTiledMap<?> cachingMap = (CachingRasterTiledMap<?>) backgroundStyle;
-                    debugBuilder.append(String.format(locale, "\nLoaded tiles: %d/%d/%d", cachingMap.getBaseLoad(), cachingMap.getLoadedCount(), cachingMap.getMaxLoad()));
-                    if (cachingMap instanceof UrlTiledMap) {
-                        UrlTiledMap urlMap = (UrlTiledMap) cachingMap;
+                if (backgroundStyle instanceof CachingRasterTileSet) {
+                    CachingRasterTileSet cachingMap = (CachingRasterTileSet) backgroundStyle;
+                    debugBuilder.append(String.format(locale, "\nLoaded tiles: %d/%d/%d", cachingMap.getBaseLoad(), cachingMap.getLoadedCount(), CachingRasterTileSet.CACHE_SIZE));
+                    if (cachingMap instanceof UrlRasterTileSet) {
+                        UrlRasterTileSet urlMap = (UrlRasterTileSet) cachingMap;
                         String[] urls = urlMap.getUrlPatterns();
                         int showingIndex = (int) ((System.currentTimeMillis() / 3000) % urls.length);
                         debugBuilder.append(String.format(locale, "\nMap urls (%d) %s", urls.length, urls[showingIndex]));
@@ -457,7 +456,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         double maxZoom = 25;
         double zoom = controller.getZoom();
         if (backgroundLayer.isPresent()) {
-            RasterTiledMap style = backgroundLayer.get().getTiledMap();
+            RasterTileSet style = backgroundLayer.get().getTiledMap();
             minZoom = style.getMinZoom();
             if (!TerramapConfig.CLIENT.unlockZoom) {
                 maxZoom = style.getMaxZoom();
@@ -577,7 +576,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         BackgroundStylePanelListContainer() {
             super(0, 0, 0, 0, 0);
             Widget lw = null;
-            for(TiledMapProvider provider: TiledMapProvider.values()) {
+            for(RasterTileSetProvider provider: RasterTileSetProvider.values()) {
                 Throwable e = provider.getLastError();
                 if(e == null) continue;
                 float x = 0;
@@ -589,9 +588,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 this.addWidget(w);
                 lw = w;
             }
-            ArrayList<RasterTiledMap> maps = new ArrayList<>(TerramapClientContext.getContext().getMapStyles().values());
+            ArrayList<RasterTileSet> maps = new ArrayList<>(TerramapClientContext.getContext().getRasterTileSets().values());
             maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
-            for(RasterTiledMap map: maps) {
+            for(RasterTileSet map: maps) {
                 MapPreview w = new MapPreview(50, map, m -> {
                     TerramapScreen.this.map.getRasterBackgroundLayer().ifPresent(l -> {
                         l.setTiledMap(m.previewLayer.getTiledMap());
@@ -655,17 +654,17 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     private static class FailedMapLoadingNotice extends AbstractSolidWidget {
 
-        private final TiledMapProvider provider;
+        private final RasterTileSetProvider provider;
         private final Throwable exception;
 
-        public FailedMapLoadingNotice(float x, float y, int z, float width, float height, TiledMapProvider provider, Throwable e) {
+        public FailedMapLoadingNotice(float x, float y, int z, float width, float height, RasterTileSetProvider provider, Throwable e) {
             super(x, y, z, width, height);
             this.provider = provider;
             this.exception = e;
         }
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             float width = this.getWidth();
             float height = this.getHeight();
             Translator translator = getGameClient().translator();
@@ -727,7 +726,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         final Consumer<MapPreview> onClick;
         final OnlineRasterMapLayer previewLayer;
 
-        public MapPreview(int z, RasterTiledMap map, Consumer<MapPreview> onClick) {
+        public MapPreview(int z, RasterTileSet map, Consumer<MapPreview> onClick) {
             super(z, MapContext.PREVIEW, TerramapScreen.this.map.getTileScaling());
             this.setInteractive(false);
             this.setRightClickMenuEnabled(false);
@@ -739,7 +738,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
 
         @Override
-        public void draw(DrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
+        public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
             Color textColor = hovered? Color.SELECTION: Color.WHITE;
             String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().translator().language());

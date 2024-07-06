@@ -1,4 +1,4 @@
-package net.smyler.smylib.gui;
+package net.smyler.smylib.gui.gl;
 
 public enum ColorLogic {
     CLEAR,         // 0

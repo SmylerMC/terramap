@@ -7,9 +7,10 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
-import fr.thesmyler.terramap.maps.raster.MapStylesLibrary;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.math.Vec2dImmutable;
+import net.smyler.terramap.Terramap;
+import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
@@ -26,15 +27,16 @@ class MapWidgetTest extends TerramapTest {
     @Test
     void canSaveMapWidgetToSavedMapState() throws InterruptedException {
         TestGameClient client = this.getTestGameClient();
+        RasterTileSetManager tileSetManager = Terramap.instance().rasterTileSetManager();
         client.setWindowDimensions(500f, 500f);
         client.setTargetFps(60);
         MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
         client.getCurrentScreen().addWidget(map);
         OnlineRasterMapLayer raster_osm = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
         OnlineRasterMapLayer osm_fr_hot = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
-        raster_osm.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm"));
+        raster_osm.setTiledMap(tileSetManager.getBaseMaps().get("osm"));
         map.setLayerZ(raster_osm, -2);
-        osm_fr_hot.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm_fr_hot"));
+        osm_fr_hot.setTiledMap(tileSetManager.getBaseMaps().get("osm_fr_hot"));
         map.setLayerZ(osm_fr_hot, -1);
         osm_fr_hot.setAlpha(0.5f);
         osm_fr_hot.setVisibility(false);
@@ -76,6 +78,7 @@ class MapWidgetTest extends TerramapTest {
     public void canRestoreMapState() throws InterruptedException {
 
         TestGameClient client = this.getTestGameClient();
+        RasterTileSetManager tileSetManager = Terramap.instance().rasterTileSetManager();
         client.setWindowDimensions(500f, 500f);
         client.setTargetFps(60);
         Screen screen = client.getCurrentScreen();
@@ -86,7 +89,7 @@ class MapWidgetTest extends TerramapTest {
 
         // Let's start in some random state
         OnlineRasterMapLayer rasterLayer = (OnlineRasterMapLayer) map.createLayer(RASTER_LAYER_ID);
-        rasterLayer.setTiledMap(MapStylesLibrary.getBaseMaps().get("osm"));
+        rasterLayer.setTiledMap(tileSetManager.getBaseMaps().get("osm"));
         rasterLayer.setVisibility(false);
         map.setLayerZ(rasterLayer, -1);
         map.getController().setZoomStaticLocation(PARIS);

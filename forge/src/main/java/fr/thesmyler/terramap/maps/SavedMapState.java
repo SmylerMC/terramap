@@ -11,7 +11,7 @@ import java.util.Map;
  * A map saved state.
  * Having this in a different class makes it side independent, which might come in handy in the future.
  *
- * @author Smylermap
+ * @author Smyler
  */
 public class SavedMapState {
 

@@ -18,7 +18,7 @@ public class ServerTerramapEventHandler {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerLoggedInEvent event){
         EntityPlayerMP player = (EntityPlayerMP) event.player;
-        RemoteSynchronizer.sendMapStylesToClient(player);
+        RemoteSynchronizer.sendRasterTileSetsToClient(player);
         TerramapVersion remoteVersion = TerramapVersion.getClientVersion(player);
 
         if(remoteVersion == null) { // Not installed on client
