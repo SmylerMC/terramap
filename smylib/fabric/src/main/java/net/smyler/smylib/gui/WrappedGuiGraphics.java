@@ -2,20 +2,28 @@ package net.smyler.smylib.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.gl.Blaze3dGlContext;
+import net.smyler.smylib.gui.gl.GlContext;
+import net.smyler.smylib.gui.gl.Scissor;
+import net.smyler.smylib.gui.gl.WrappedGuiGraphicsScissor;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.joml.Matrix4f;
 
+import java.awt.image.BufferedImage;
+
 import static net.smyler.smylib.Preconditions.checkArgument;
 
-public class WrappedGuiGraphics implements DrawContext {
+public class WrappedGuiGraphics implements UiDrawContext {
 
     public final GuiGraphics vanillaGraphics;
     private final Scissor scissor = new WrappedGuiGraphicsScissor();
-    private final GlState glState = new Lwjgl3GlState();
+    private final GlContext glState = new Blaze3dGlContext(Minecraft.getInstance());
 
     public WrappedGuiGraphics(GuiGraphics vanillaGraphics) {
         this.vanillaGraphics = vanillaGraphics;
@@ -27,7 +35,7 @@ public class WrappedGuiGraphics implements DrawContext {
     }
 
     @Override
-    public GlState glState() {
+    public GlContext gl() {
         return this.glState;
     }
 
@@ -50,14 +58,9 @@ public class WrappedGuiGraphics implements DrawContext {
     }
 
     @Override
-    public void drawPolygon(double z, Color color, double... points) {
-        //TODO implement drawPolygon
-    }
-
-    @Override
     public void drawStrokeLine(double z, Color color, float size, double... points) {
         RenderSystem.lineWidth(size);
-        this.drawMultiPointsGeometry(VertexFormat.Mode.LINE_STRIP, z, color, points);
+        this.drawMultiPointsGeometry(z, color, points);
     }
 
     @Override
@@ -66,8 +69,8 @@ public class WrappedGuiGraphics implements DrawContext {
             return;
         }
         RenderSystem.lineWidth(size);
-        this.drawMultiPointsGeometry(VertexFormat.Mode.LINE_STRIP, z, color, points);
-        this.drawMultiPointsGeometry(VertexFormat.Mode.LINE_STRIP, z, color,
+        this.drawMultiPointsGeometry(z, color, points);
+        this.drawMultiPointsGeometry(z, color,
                 points[points.length - 2], points[points.length - 1],
                 points[0], points[1]
         );
@@ -108,14 +111,24 @@ public class WrappedGuiGraphics implements DrawContext {
         //TODO implement drawTooltip
     }
 
-    private void drawMultiPointsGeometry(VertexFormat.Mode mode, double z, Color color, double... points) {
+    @Override
+    public Identifier loadDynamicTexture(BufferedImage image) {
+        return null;
+    }
+
+    @Override
+    public void unloadDynamicTexture(Identifier texture) {
+
+    }
+
+    private void drawMultiPointsGeometry(double z, Color color, double... points) {
         checkArgument(points.length % 2 == 0, "An even number of coordinates is required");
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
         RenderSystem.setShaderColor(color.redf(), color.greenf(), color.bluef(), color.alphaf());
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(mode, DefaultVertexFormat.POSITION);
+        builder.begin(VertexFormat.Mode.LINE_STRIP, DefaultVertexFormat.POSITION);
         for(int i=0; i<points.length; i+=2) {
             builder.vertex(points[i], points[i+1], z).endVertex();
         }

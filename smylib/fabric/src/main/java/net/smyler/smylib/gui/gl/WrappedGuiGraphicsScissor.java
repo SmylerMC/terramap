@@ -1,4 +1,4 @@
-package net.smyler.smylib.gui;
+package net.smyler.smylib.gui.gl;
 
 //FIXME implement scissors
 public class WrappedGuiGraphicsScissor implements Scissor {
