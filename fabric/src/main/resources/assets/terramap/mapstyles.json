@@ -1,0 +1,68 @@
+{
+    "metadata": {
+        "version": 16,
+        "comment": "This file contains the tile servers included by default in Terramap's jar as a fallback to the online version, and is maintained by SmylerMC."
+    },
+    "maps": {
+        "osm": {
+            "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "urls": [
+            	"https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            	"https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            	"https://c.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        	],
+            "name": {
+                "en_us": "OpenStreetMap",
+                "fr_fr": "OpenStreetMap",
+                "es_es": "OpenStreetMap",
+                "de_de": "OpenStreetMap",
+                "zh_cn": "OpenStreetMap",
+                "cz_cz": "OpenStreetMap",
+                "sk_sk": "OpenStreetMap",
+                "ko_kr": "OpenStreetMap"
+            },
+            "copyright": {
+                "en_us": ["",{"text":"© ","color":"white"},{ "text":"OpenStreetMap","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://www.openstreetmap.org"}},{"text":" contributors","color":"white"}],
+                "fr_fr": ["",{"text":"© Contributeurs de ","color":"white"},{"text":"OpenStreetMap","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://www.openstreetmap.org"}}],
+                "cz_cz": ["",{"text":"© "},{"text":"p\u0159isp\u011bvatelé OpenStreetMap","underlined":true,"color":"dark_aqua","clickEvent":{"action":"open_url","value":"https://www.openstreetmap.org"}}],
+                "sk_sk": ["",{"text":"© "},{"text":"prispievatelia OpenStreetMap","underlined":true,"color":"dark_aqua","clickEvent":{"action":"open_url","value":"https://www.openstreetmap.org"}}]
+            },
+            "min_zoom": 0,
+            "max_zoom": 19,
+            "display_priority": 1000,
+            "allow_on_minimap": true,
+            "max_concurrent_requests": 2,
+            "debug": false
+        },
+        "osm_fr_hot": {
+            "url": "https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+            "urls": [
+            	"http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
+            	"http://b.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+        	],
+            "name": {
+                "en_us": "Humanitarian",
+                "fr_fr": "Humanitaire",
+                "es_es": "Humanitario",
+                "de_de": "Humanitär",
+                "zh_cn": "Humanitarian",
+                "cz_cz": "Humanitární",
+                "sk_sk": "Humanitárna",
+                "ko_kr": "Humanitarian"
+            },
+            "copyright": {
+                "en_us": ["",{"text":"© "},{"text":"OpenStreetMap contributors","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://www.openstreetmap.org/copyright"}},{"text":". Tiles style by "},{"text":"Humanitarian OpenStreetMap Team","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://www.hotosm.org/"}},{"text":" hosted by "},{"text":"OpenStreetMap France","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://www.openstreetmap.fr/"}}],
+                "fr_fr": ["",{"text":"Données ©; "},{"text":"OpenStreetMap","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://osm.org/copyright"}},{"text":"/ODbL - Tiles courtesy of "},{"text":"Humanitarian OpenStreetMap Team","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://hot.openstreetmap.org/"}}],
+                "es_es": ["",{"text":"Datos ©; "},{"text":"OpenStreetMap","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://osm.org/copyright"}},{"text":"/ODbL - Losetas cortesía de "},{"text":"Humanitarian OpenStreetMap Team","underlined":true,"color":"aqua","clickEvent":{"action":"open_url","value":"https://hot.openstreetmap.org/"}}]
+            },
+            "min_zoom": 0,
+            "max_zoom": 19,
+            "display_priority": 900,
+            "allow_on_minimap": true,
+            "max_concurrent_requests": 2,
+            "debug": false
+        }
+    }
+    
+}
+

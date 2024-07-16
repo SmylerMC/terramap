@@ -1,13 +1,8 @@
-package fr.thesmyler.terramap.gui.widgets.map;
+package net.smyler.terramap.gui.widgets.map;
 
 import java.util.*;
 import java.util.function.Supplier;
 
-import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-import fr.thesmyler.terramap.maps.SavedLayerState;
-import fr.thesmyler.terramap.maps.SavedMapState;
-import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.math.DoubleRange;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -18,22 +13,12 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVisibilityController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
+import net.smyler.terramap.MapContext;
+import net.smyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
+import net.smyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import net.smyler.terramap.util.CopyrightHolder;
-import net.minecraft.profiler.Profiler;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
@@ -73,15 +58,6 @@ public class MapWidget extends FlexibleWidgetContainer {
     private final MapController controller = new MapController(this);
     private final List<MapLayer> layers = new ArrayList<>();
     private final List<MapLayer> layersReadOnly = Collections.unmodifiableList(this.layers);
-    private final List<Marker> markers = new ArrayList<>();
-    private final Map<String, MarkerController<?>> markerControllers = new LinkedHashMap<>();
-    private RightClickMarkerController rcmMarkerController;
-    private MainPlayerMarkerController mainPlayerMarkerController;
-    private OtherPlayerMarkerController otherPlayerMarkerController;
-    private MainPlayerMarker mainPlayerMarker;
-    private String restoreTrackingId;
-    private PlayerDirectionsVisibilityController directionVisibility;
-    private PlayerNameVisibilityController nameVisibility;
 
     private final GeoPointMutable mouseLocation = new GeoPointMutable();
     private long lastUpdateTime = Long.MIN_VALUE;
@@ -92,8 +68,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     private final TextWidget copyright;
     private final ScaleIndicatorWidget scale = new ScaleIndicatorWidget(-1);
-
-    private final Profiler profiler = new Profiler();
 
     private final TextWidget errorText;
 
@@ -166,22 +140,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 
 
         this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
-
-        for (MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
-            if(controller instanceof RightClickMarkerController) {
-                this.rcmMarkerController = (RightClickMarkerController) controller;
-            } else if(controller instanceof MainPlayerMarkerController) {
-                this.mainPlayerMarkerController = (MainPlayerMarkerController) controller;
-            } else if(controller instanceof OtherPlayerMarkerController) {
-                this.otherPlayerMarkerController = (OtherPlayerMarkerController) controller;
-            }
-            this.markerControllers.put(controller.getId(), controller);
-        }
-
-        if(this.mainPlayerMarkerController != null && this.otherPlayerMarkerController != null) {
-            this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
-            this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
-        }
 
         this.updateLayersViewports();
 
@@ -261,55 +219,14 @@ public class MapWidget extends FlexibleWidgetContainer {
         return this.layersReadOnly;
     }
 
-    /**
-     * Adds a marker to this map
-     *
-     * @param marker a marker to add to this map
-     */
-    private void addMarker(Marker marker) {
-        this.markers.add(marker);
-        super.addWidget(marker);
-    }
-
-    /**
-     * Removes the given marker from this map.
-     * Marker should be added via a {@link MarkerController}
-     *
-     * @param marker a marker to remove from this map
-     */
-    public void removeMarker(Marker marker) {
-        this.markers.remove(marker);
-        super.removeWidget(marker);
-    }
-
-    @Override
-    public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        this.profiler.endSection(); // End rest of the screen section
-        this.profiler.startSection("draw");
-        super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
-        this.profiler.endSection();
-    }
-
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 
-        this.profiler.startSection("update-movement");
         long currentTime = System.currentTimeMillis();
         long dt = currentTime - this.lastUpdateTime;
 
-        if(this.controller.isTracking()) {
-            Marker tracked = this.controller.getTrackedMarker();
-            if(this.widgets.contains(tracked)) {
-                // Force update, so we don't lag behind, this one needs to be updated twice
-                tracked.onUpdate(mouseX - tracked.getX(), mouseY - tracked.getY(), this);
-            } else {
-                this.controller.stopTracking();
-            }
-        }
-
         this.controller.update(dt);
 
-        this.profiler.endStartSection("update-all");
         super.onUpdate(mouseX, mouseY, parent);
 
         this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
@@ -320,11 +237,6 @@ public class MapWidget extends FlexibleWidgetContainer {
             String errorText = getGameClient().translator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
             this.errorText.setText(ofPlainText(errorText));
         }
-
-        this.profiler.endStartSection("update-markers");
-        this.updateMarkers(mouseX, mouseY);
-
-        this.profiler.endStartSection("rest-of-screen");
 
         this.lastUpdateTime = currentTime;
     }
@@ -351,51 +263,6 @@ public class MapWidget extends FlexibleWidgetContainer {
         throw new UnsupportedOperationException();
     }
 
-    private void updateMarkers(float mouseX, float mouseY) {
-        // Gather the existing classes
-        Map<Class<?>, List<Marker>> markers = new HashMap<>();
-        for(MarkerController<?> controller: this.markerControllers.values()) {
-            markers.put(controller.getMarkerType(), new ArrayList<>());
-        }
-
-        // Sort the markers by class
-        for(Marker marker: this.markers) {
-            for(Class<?> clazz: markers.keySet()) {
-                if(clazz.isInstance(marker)) {
-                    markers.get(clazz).add(marker);
-                }
-            }
-        }
-
-        // Update the markers
-        for(MarkerController<?> controller: this.markerControllers.values()) {
-            Marker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new Marker[] {});
-            Marker[] newMarkers = controller.getNewMarkers(existingMarkers, this);
-            for(Marker markerToAdd: newMarkers) {
-                this.addMarker(markerToAdd);
-            }
-            if(controller.getMarkerType().equals(MainPlayerMarker.class) && newMarkers.length > 0) {
-                this.mainPlayerMarker = (MainPlayerMarker) newMarkers[0];
-            }
-            if(this.restoreTrackingId != null) {
-                for(Marker markerToAdd: newMarkers) {
-                    String id = markerToAdd.getIdentifier();
-                    if(id != null && id.equals(this.restoreTrackingId)) {
-                        this.controller.track(markerToAdd);
-                        this.restoreTrackingId = null;
-                        Terramap.instance().logger().debug("Restored tracking with {}", id);
-                    }
-                }
-            }
-        }
-
-        // Update right click marker visibility
-        if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
-
-        for(Marker marker: this.markers) marker.onUpdate(mouseX, mouseY, this);
-
-    }
-
     public void updateCopyright() {
         ImmutableText component = ImmutableText.EMPTY;
         ImmutableText separator = ofPlainText(" | ");
@@ -415,16 +282,6 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.inputLayer.getLocationAtPositionOnWidget(this.mouseLocation, mouseX, mouseY);
     }
 
-    /**
-     * @return the {@link FeatureVisibilityController} active for this map (the {@link Map} returned is a copy)
-     */
-    public Map<String, FeatureVisibilityController> getVisibilityControllers() {
-        Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers); // Order matters !
-        if (this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
-        if (this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
-        return m;
-    }
-    
     /**
      * @return the location hovered by the mouse
      */
@@ -587,34 +444,6 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     /**
-     * @return the {@link MainPlayerMarker} marker for this client, or null if it does not exist
-     */
-    public MainPlayerMarker getMainPlayerMarker() {
-        return this.mainPlayerMarker;
-    }
-
-    /**
-     * Tries to set a feature's visibility, or does nothing if the feature does not exist for this map.
-     * 
-     * @param controllerId - the id of the {@link FeatureVisibilityController} to set the visibility for
-     * @param value - visibility
-     * 
-     */
-    public void trySetFeatureVisibility(String controllerId, boolean value) {
-        FeatureVisibilityController c = this.getVisibilityControllers().get(controllerId);
-        if(c != null) c.setVisibility(value);
-    }
-
-    /**
-     * Tries to resume tracking a marker using its string id, does nothing if the marker is not found.
-     * 
-     * @param markerId the id of a marker to find and track
-     */
-    public void restoreTracking(String markerId) {
-        this.restoreTrackingId = markerId;
-    }
-
-    /**
      * @return whether this map shows debug information
      */
     public boolean isDebugMode() {
@@ -628,8 +457,6 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
-        this.profiler.profilingEnabled = debugMode;
-        if(!debugMode) this.profiler.clearProfiling();
     }
 
     /**
@@ -707,68 +534,6 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
     }
 
-    public SavedMapState save() {
-        SavedMapState state = new SavedMapState();
-        state.center.set(this.controller.getTargetLocation());
-        state.zoom = this.controller.getTargetZoom();
-        state.rotation = this.controller.getTargetRotation();
-        Marker tracked = this.controller.getTrackedMarker();
-        state.trackedMarker = tracked != null ? tracked.getIdentifier(): null;
-        for (MapLayer layer: this.layers) {
-            SavedLayerState layerState = new SavedLayerState();
-            layerState.type = layer.getType();
-            layerState.z = layer.getZ();
-            layerState.setByUser = layer.isUserLayer();
-            layerState.cartesianOffset.set(layer.getRenderingOffset());
-            layerState.rotationOffset = layer.getRotationOffset();
-            layerState.visible = layer.isVisible();
-            layerState.alpha = layer.getAlpha();
-            layerState.settings = layer.saveSettings();
-            state.layers.add(layerState);
-        }
-        state.visibilitySettings.clear();
-        this.getVisibilityControllers().values().forEach(c -> state.visibilitySettings.put(c.getSaveName(), c.isVisible()));
-        return state;
-    }
-
-    public void restore(SavedMapState state) {
-        this.controller.moveLocationToCenter(state.center, false);
-        this.controller.setRotationStaticLocation(state.center);
-        this.controller.setRotation(state.rotation, false);
-        this.controller.setZoomStaticLocation(state.center);
-        this.controller.setZoom(state.zoom, false);
-        this.restoreTracking(state.trackedMarker);
-        new ArrayList<>(this.layers) // Avoid co-modification problems
-                .forEach(this::removeLayer);
-        for (SavedLayerState layerState: state.layers) {
-            MapLayer layer;
-            try {
-                layer = this.createLayer(layerState.type);
-            } catch (IllegalArgumentException e) {
-                Terramap.instance().logger().warn("Could not restore a map layer. Did someone mess with the save file?");
-                Terramap.instance().logger().catching(e);
-                continue;
-            }
-            this.setLayerZ(layer, layerState.z);
-            layer.setVisibility(layerState.visible);
-            layer.setAlpha(layerState.alpha);
-            layer.setRenderingOffset(layerState.cartesianOffset);
-            layer.setRotationOffset(layerState.rotationOffset);
-            layer.setIsUserLayer(layerState.setByUser);
-            try {
-                layer.loadSettings(layerState.settings);
-            } catch (Exception e) {
-                Terramap.instance().logger().error("Caught exception when loading layer settings. Did someone mess with the save file?");
-                Terramap.instance().logger().catching(e);
-            }
-        }
-        Map<String, FeatureVisibilityController> controllers = this.getVisibilityControllers();
-        for (String key: state.visibilitySettings.keySet()) {
-            FeatureVisibilityController controller = controllers.get(key);
-            if (controller != null) controller.setVisibility(state.visibilitySettings.get(key));
-        }
-    }
-
     /**
      * Utility method to access a map's background when it has one.
      * The map's background is considered to be the {@link MapLayer layer} with the lowest negative Z level.
@@ -792,13 +557,6 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public Optional<OnlineRasterMapLayer> getRasterBackgroundLayer() {
         return this.getBackgroundLayer().map(l -> l instanceof RasterMapLayer ? (OnlineRasterMapLayer) l: null);
-    }
-
-    /**
-     * @return this map's profiler
-     */
-    public Profiler getProfiler() {
-        return this.profiler;
     }
 
     /**

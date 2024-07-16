@@ -1,11 +1,9 @@
-package fr.thesmyler.terramap.gui.widgets.map;
+package net.smyler.terramap.gui.widgets.map;
 
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
@@ -13,7 +11,6 @@ import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dMutable;
 
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.input.Keyboard;
 
 import static java.lang.Math.*;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -111,14 +108,7 @@ public class InputLayer extends MapLayer {
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         this.controller.stopPanning();
         this.controller.stopRotating();
-        this.controller.stopTracking();
         this.isRotating = false;
-        if(this.isShortcutEnabled()) {
-            this.map.getRightClickMenu().teleport();
-            if(this.map.getContext().equals(MapContext.FULLSCREEN)) {
-                getGameClient().displayScreen(null); //TODO change this so it can work from any menu
-            }
-        }
         if(this.map.isRightClickMenuEnabled() && mouseButton == 1 && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.mouseLocation)) {
             parent.showMenu(mouseX, mouseY, this.map.getRightClickMenu());
         }
@@ -135,7 +125,6 @@ public class InputLayer extends MapLayer {
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         this.controller.stopPanning();
         this.controller.stopRotating();
-        this.controller.stopTracking();
         this.isRotating = false;
         if (mouseButton != 0) {
             // We don't care about double right and middle clicks
@@ -232,7 +221,7 @@ public class InputLayer extends MapLayer {
     }
 
     private boolean isShortcutEnabled() {
-        return this.map.isInteractive() && Keyboard.isKeyDown(KeyBindings.MAP_SHORTCUT.getKeyCode()) && this.map.allowsQuickTp();
+        return false;
     }
 
     private void drawRotationSpot(UiDrawContext context, double x, double y) {

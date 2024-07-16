@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap;
+package net.smyler.terramap;
 
 /**
  * Represents the context in which a map exists, ie. it's either the fullscreen map, a minimap, or something else

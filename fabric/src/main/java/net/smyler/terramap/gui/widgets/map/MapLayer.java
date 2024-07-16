@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.map;
+package net.smyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonObject;
 import net.smyler.smylib.gui.UiDrawContext;
@@ -10,7 +10,6 @@ import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.*;
 import net.smyler.smylib.threading.DefaultThreadLocal;
-import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
@@ -197,7 +196,7 @@ public abstract class MapLayer implements Widget {
      * This method needs to be called before rendering anything in implementing subclasses,
      * or the rendered content will not be rotated according to this layer's settings.
      * <br>
-     * The caller is responsible for calling {@link GlStateManager#pushMatrix()} and {@link GlStateManager#popMatrix()}.
+     * The caller is responsible for calling {@link GlContext#pushViewMatrix()} and {@link GlContext#popViewMatrix()}.
      *
      * @param drawX the X coordinate the widget is supposed to be drawn at
      * @param drawY the Y coordinate the widget is supposed to be drawn at

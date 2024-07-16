@@ -3,6 +3,7 @@ package net.smyler.terramap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
@@ -11,10 +12,14 @@ import net.fabricmc.loader.impl.util.version.StringVersion;
 import net.minecraft.client.Minecraft;
 import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.WrappedMinecraft;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.http.*;
+import net.smyler.terramap.gui.screens.TerramapScreen;
+import net.smyler.terramap.http.CachingHttpClient;
+import net.smyler.terramap.http.HttpClient;
+import net.smyler.terramap.http.TerramapHttpClient;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,6 +74,12 @@ public class TerramapFabricMod implements ModInitializer, Terramap {
             });
         }, 10, 10, MINUTES);
 
+        Terramap.instance().rasterTileSetManager().reload(TerramapConfig.enableDebugMaps);
+        ClientTickEvents.END_CLIENT_TICK.register(c -> {
+            if (client.keyboard().isKeyPressed(Key.KEY_M)) {
+                client.displayScreen(new TerramapScreen(client.getCurrentScreen()));
+            }
+        });
     }
 
     @Override

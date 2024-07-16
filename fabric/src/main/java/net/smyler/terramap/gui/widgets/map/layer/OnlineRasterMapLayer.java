@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.map.layer;
+package net.smyler.terramap.gui.widgets.map.layer;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -7,10 +7,10 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.gui.widgets.map.MapController;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import net.smyler.terramap.TerramapConfig;
+import net.smyler.terramap.TerramapClientContext;
+import net.smyler.terramap.gui.widgets.map.MapController;
+import net.smyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.terramap.tilesets.raster.ColorTileSet;
 import net.smyler.terramap.util.CopyrightHolder;
@@ -26,12 +26,12 @@ import java.util.function.Consumer;
 
 import static net.smyler.smylib.Animation.AnimationState.LEAVE;
 import static net.smyler.smylib.Color.*;
-import static fr.thesmyler.terramap.MapContext.PREVIEW;
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
+import static net.smyler.terramap.MapContext.PREVIEW;
 
 public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHolder {
 

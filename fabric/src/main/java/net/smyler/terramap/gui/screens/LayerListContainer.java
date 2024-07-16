@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.screens;
+package net.smyler.terramap.gui.screens;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,11 @@ import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.gui.screens.config.LayerConfigurationPopup;
-import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
-import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 
+import net.smyler.terramap.gui.widgets.map.InputLayer;
+import net.smyler.terramap.gui.widgets.map.MapLayer;
+import net.smyler.terramap.gui.widgets.map.MapWidget;
+import net.smyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
@@ -144,14 +143,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(name);
             this.addWidget(type);
             SpriteButtonWidget settingsButton = new SpriteButtonWidget(this.getWidth() - 18, 3, 0, WRENCH);
-            if (layer.isConfigurable()) {
-                settingsButton.setOnClick(() -> getGameClient().displayPopup( new LayerConfigurationPopup(layer)));
-                settingsButton.enable();
-            }
             this.addWidget(settingsButton);
             SpriteButtonWidget offsetButton = new SpriteButtonWidget(this.getWidth() - 37, 3, 0,
-                    layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
-                    () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(layer)))
+                    layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET
             );
             offsetButton.setTooltip(getGameClient().translator().format(
                     layer.hasRenderingOffset() ?
@@ -185,17 +179,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(this.nextButton);
             this.addWidget(remove.setEnabled(layer.isUserLayer()));
             SpriteButtonWidget settingsButton = new SpriteButtonWidget(this.getWidth() - 54, 3, 0, WRENCH);
-            if (layer.isConfigurable()) {
-                settingsButton.setOnClick(() -> getGameClient().displayPopup(new LayerConfigurationPopup(layer)));
-                settingsButton.enable();
-            }
             this.addWidget(settingsButton);
             SpriteButtonWidget offsetButton = new SpriteButtonWidget(this.getWidth() - 70, 3, 0,
-                layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
-                () -> {
-                    MapLayer lowestLayer = LayerListContainer.this.map.getLayers().stream().min(comparing(MapLayer::getZ)).orElse(layer);
-                    LayerListContainer.this.scheduleBeforeNextUpdate(() -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(lowestLayer, layer)));
-                }
+                layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET
             );
             offsetButton.setTooltip(getGameClient().translator().format(
                     layer.hasRenderingOffset() ? "terramap.terramapscreen.layerscreen.generic.offset": "terramap.terramapscreen.layerscreen.generic.no_offset"

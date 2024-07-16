@@ -1,13 +1,9 @@
-package fr.thesmyler.terramap.gui.widgets.map;
-
-import fr.thesmyler.terramap.gui.widgets.map.layer.GenerationPreviewLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
+package net.smyler.terramap.gui.widgets.map;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import net.smyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Objects.requireNonNull;
@@ -17,22 +13,11 @@ public final class MapLayerRegistry {
     public static final MapLayerRegistry INSTANCE = new MapLayerRegistry();
 
     public static final String RASTER_LAYER_ID = "terramap:raster";
-    public static final String CHUNKS_LAYER_ID = "terramap:chunks";
-    public static final String GENERATION_PREVIEW_LAYER_ID = "terramap:generation_preview";
-    public static final String OFFSET_PREVIEW = "terramap:offset_preview";
 
 
     static {
         INSTANCE.newRegistration(RASTER_LAYER_ID, OnlineRasterMapLayer::new)
                 .showInNewLayerMenu("terramap.terramapscreen.newlayer.raster")
-                .register();
-        INSTANCE.newRegistration(CHUNKS_LAYER_ID, McChunksLayer::new)
-                .showInNewLayerMenu("terramap.terramapscreen.newlayer.mcchunks")
-                .register();
-        INSTANCE.newRegistration(GENERATION_PREVIEW_LAYER_ID, GenerationPreviewLayer::new)
-                .showInNewLayerMenu("terramap.terramapscreen.newlayer.generation_preview")
-                .register();
-        INSTANCE.newRegistration(OFFSET_PREVIEW, RenderingDeltaPreviewLayer::new)
                 .register();
     }
 

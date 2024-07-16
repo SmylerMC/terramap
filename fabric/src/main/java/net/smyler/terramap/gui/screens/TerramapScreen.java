@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.screens;
+package net.smyler.terramap.gui.screens;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -7,22 +7,20 @@ import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.WarningWidget;
-import net.smyler.smylib.text.ImmutableText;
-import net.smyler.smylib.text.TextStyle;
+import net.smyler.smylib.gui.widgets.Widget;
+import net.smyler.terramap.MapContext;
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
-import net.smyler.terramap.util.geo.GeoServices;
+import net.smyler.terramap.TerramapClientContext;
+import net.smyler.terramap.TerramapConfig;
+import net.smyler.terramap.gui.widgets.map.*;
+import net.smyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
+import net.smyler.terramap.tilesets.raster.*;
 import org.jetbrains.annotations.Nullable;
 
-import fr.thesmyler.terramap.gui.widgets.map.*;
-import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.Font;
-import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
@@ -35,36 +33,18 @@ import net.smyler.smylib.gui.screen.BackgroundOption;
 import net.smyler.smylib.gui.popups.MultiChoicePopup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
-import fr.thesmyler.smylibgui.widgets.ChatWidget;
-import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.ScrollbarWidget;
 import net.smyler.smylib.gui.widgets.ScrollbarWidget.ScrollbarOrientation;
 import net.smyler.smylib.gui.widgets.SpriteWidget;
-import net.smyler.smylib.gui.widgets.buttons.AbstractButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
 import net.smyler.terramap.gui.widgets.CircularCompassWidget;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.input.KeyBindings;
-import net.smyler.terramap.tilesets.raster.RasterTileSet;
-import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.minecraft.client.Minecraft;
-import net.minecraft.profiler.Profiler.Result;
-import net.minecraft.util.ITabCompleter;
+import net.smyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 
-import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static net.smyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
@@ -77,11 +57,9 @@ import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
 
-public class TerramapScreen extends Screen implements ITabCompleter {
+public class TerramapScreen extends Screen {
 
     private final Screen parent;
-
-    private final ChatWidget chat = new ChatWidget(1000);
 
     // Main map area widgets
     private final MapWidget map;
@@ -116,20 +94,21 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     private boolean f1Mode = false;
     private boolean debugMode = false;
 
-    public TerramapScreen(Screen parent, SavedMainScreenState state) {
+    public TerramapScreen(Screen parent) {
         super(BackgroundOption.OVERLAY);
         this.parent = parent;
         this.map = new MapWidget(10, MapContext.FULLSCREEN, TerramapConfig.CLIENT.getEffectiveTileScaling());
+        OnlineRasterMapLayer layer = (OnlineRasterMapLayer) this.map.createLayer("terramap:raster");
+        this.map.setLayerZ(layer, Integer.MIN_VALUE);
+        RasterTileSet tileSet = Terramap.instance().rasterTileSetManager().getBaseMaps().values().stream().findAny().get();
+        layer.setTiledMap(tileSet);
         this.backgroundStylePanelListContainer = new BackgroundStylePanelListContainer();
         this.infoPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
         this.layerPanel.setContourColor(Color.DARKER_GRAY.withAlpha(.5f));
         this.layerListContainer = new LayerListContainer(0, 0, 0, 100, this.map);
         this.layerList = new ScrollableWidgetContainer(0, 0, 10, 10, 10, this.layerListContainer);
-        TerramapClientContext.getContext().registerForUpdates(true);
-        this.restore(state);
         this.map.getRightClickMenu().addEntry(
-                getGameClient().translator().format("terramap.mapwidget.rclickmenu.offset"),
-                () -> this.map.getRasterBackgroundLayer().ifPresent(l -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(l)))
+                getGameClient().translator().format("terramap.mapwidget.rclickmenu.offset")
         );
     }
 
@@ -183,8 +162,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.zoomOutButton.enable();
         this.addWidget(this.zoomOutButton);
         this.centerButton.setX(this.zoomOutButton.getX()).setY(this.zoomOutButton.getY() + this.zoomOutButton.getHeight() + 15);
-        this.centerButton.setOnClick(() -> this.map.getController().track(this.map.getMainPlayerMarker()));
-        this.centerButton.enable();
         this.centerButton.setTooltip(translator.format("terramap.terramapscreen.buttons.track.tooltip"));
         this.addWidget(this.centerButton);
         this.styleButton.setX(this.centerButton.getX()).setY(this.centerButton.getY() + this.centerButton.getHeight() + 5);
@@ -207,7 +184,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.infoPanel.setOpenX(0).setOpenY(0).setClosedX(-this.infoPanel.getWidth() + 25).setClosedY(0);
         this.panelButton.setTooltip(translator.format("terramap.terramapscreen.buttons.info.tooltip"));
         this.infoPanel.addWidget(this.panelButton);
-        SpriteButtonWidget openConfigButton = new SpriteButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, ButtonSprites.WRENCH, this::openConfig);
+        SpriteButtonWidget openConfigButton = new SpriteButtonWidget(this.panelButton.getX(), this.panelButton.getY() + this.panelButton.getHeight() + 3, 100, ButtonSprites.WRENCH);
         openConfigButton.setTooltip(translator.format("terramap.terramapscreen.buttons.config.tooltip"));
         this.infoPanel.addWidget(openConfigButton);
         SpriteButtonWidget openLayerListButton = new SpriteButtonWidget(
@@ -228,22 +205,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.infoPanel.addWidget(this.distortionText);
         float y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
         float lineHeight = 0;
-        float x = 5;
-        for(FeatureVisibilityController provider: this.getButtonProviders()) {
-            if(!provider.showButton()) continue;
-            AbstractButtonWidget button = provider.getButton();
-            if(button == null) continue;
-            if(x + button.getWidth() > this.infoPanel.getWidth() - 20) {
-                x = 5;
-                y += lineHeight + 3;
-                lineHeight = 0;
-            }
-            lineHeight = Math.max(lineHeight, button.getHeight());
-            button.setX(x);
-            x += button.getWidth() + 3;
-            button.setY(y);
-            this.infoPanel.addWidget(button);
-        }
         this.searchBox.setX(5).setY(y + lineHeight + 4).setWidth(186);
         this.searchBox.enableRightClickMenu();
         this.searchBox.setText(translator.format("terramap.terramapscreen.search.wip")).disable();
@@ -300,66 +261,15 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.stylePanel.addWidget(this.backgroundStylePanelListContainer);
         this.addWidget(this.stylePanel);
 
-        if(TerramapConfig.CLIENT.chatOnMap) this.addWidget(this.chat);
-
-        if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
-            StringBuilder warningBuilder = new StringBuilder();
-            for(int i=1; translator.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
-                if(warningBuilder.length() > 0) warningBuilder.append('\n');
-                warningBuilder.append(translator.format("terramap.terramapscreen.projection_warning.line" + i));
-            }
-            ImmutableText c = ofPlainText(warningBuilder.toString());
-            TextStyle style = new TextStyle(YELLOW);
-            c = c.withStyle(style);
-            TextWidget warningWidget = new TextWidget(150, 0, 1000, 300, c, TextAlignment.CENTER, Color.WHITE, true, game.defaultFont());
-            warningWidget.setBackgroundColor(Color.DARKER_OVERLAY).setPadding(5).setAnchorY(height - warningWidget.getHeight());
-            this.addWidget(warningWidget);
-        }
-
-        TerramapClientContext.getContext().setupMaps();
-    }
-
-    public void saveToState(SavedMainScreenState state) {
-        state.map = this.map.save();
-        state.f1 = TerramapConfig.CLIENT.saveUiState && this.f1Mode;
-        state.debug = TerramapConfig.CLIENT.saveUiState && this.debugMode;
-        state.infoPanel = this.infoPanel.getTarget().equals(PanelTarget.OPENED);
-        state.layerPanel = this.layerPanel.getTarget().equals(PanelTarget.OPENED);
-    }
-
-    private void restore(SavedMainScreenState state) {
-        this.map.restore(state.map);
-        if (TerramapConfig.CLIENT.saveUiState) {
-            this.f1Mode = state.f1;
-            this.debugMode = state.debug;
-            this.map.setDebugMode(this.debugMode);
-        }
-        this.infoPanel.setStateNoAnimation(state.infoPanel);
-        if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
-            float x = this.panelButton.getX();
-            float y = this.panelButton.getY();
-            int z = this.panelButton.getZ();
-            SpriteButtonWidget newButton = new SpriteButtonWidget(x, y, z, ButtonSprites.LEFT, this::toggleInfoPanel);
-            newButton.setTooltip(this.panelButton.getTooltipText());
-            this.infoPanel.removeWidget(this.panelButton);
-            this.panelButton = newButton;
-            this.infoPanel.addWidget(this.panelButton);
-        }
-        this.layerPanel.setStateNoAnimation(state.layerPanel);
-
-        this.setZoomRestrictions();
     }
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         super.onUpdate(mouseX, mouseY, parent);
 
-        GeographicProjection projection = TerramapClientContext.getContext().getProjection();
-
         MapController controller = this.map.getController();
         this.setZoomRestrictions();
         this.zoomText.setText(ofPlainText(formatZoomLevelForDisplay(controller.getZoom())));
-        this.centerButton.setEnabled(!(controller.getTrackedMarker() instanceof MainPlayerMarker));
 
         this.compass.setAzimuth(controller.getRotation());
 
@@ -368,57 +278,17 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         String formatOrientation = "-";
         if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
             this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
-        } else {
-            if(projection != null) {
-                try {
-                    double[] dist = projection.tissot(mouseLocation.longitude(), mouseLocation.latitude());
-                    formatScale = GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
-                    formatOrientation = GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
-                } catch (OutOfProjectionBoundsException ignored) {
-                }
-                this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
-            } else {
-                this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
-            }
         }
 
-        if(controller.isTracking()) {
-            Marker marker = controller.getTrackedMarker();
-            GeoPoint<?> markerLocation = marker.getLocation();
-            String markerName = marker.getDisplayName().getFormattedText();
-            if(markerLocation == null) {
-                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
-            } else {
-                String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
-                String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
-                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
-            }
-        } else if(this.map.getMainPlayerMarker() != null){
-            Marker marker = this.map.getMainPlayerMarker();
-            GeoPoint<?> markerLocation = marker.getLocation();
-            if(markerLocation == null) {
-                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.playerout"));
-            } else {
-                String formatedLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
-                String formatedLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
-                this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.playergeo", formatedLat, formatedLon));
-            }
-        } else {
-            this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.noplayer"));
-        }
+        this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.noplayer"));
 
         this.offsetWarning.setVisibility(this.map.getRasterBackgroundLayer().map(MapLayer::hasRenderingOffset).orElse(false));
 
         if(this.debugMode) {
             StringBuilder debugBuilder = new StringBuilder();
             Locale locale = Locale.US;
-            TerramapClientContext srv = TerramapClientContext.getContext();
-            EarthGeneratorSettings generationSettings = srv.getGeneratorSettings();
             debugBuilder.append(String.format(locale, "FPS: %s", getGameClient().currentFPS()));
             debugBuilder.append(String.format(locale, "\nClient: %s", Terramap.instance().version()));
-            debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
-            debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
-            debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
             this.map.getRasterBackgroundLayer().ifPresent(layer -> {
                 RasterTileSet backgroundStyle = layer.getTiledMap();
                 debugBuilder.append(String.format(locale, "\nMap id: %s", backgroundStyle.getId()));
@@ -443,7 +313,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     .append(GOLD).append("rotation target ")
                     .append(RESET);
             debugBuilder.append('\n');
-            this.buildProfilingResult(debugBuilder, "", "");
             this.debugText.setText(ofPlainText(debugBuilder.toString()));
             this.debugText.setAnchorY(this.getHeight() - this.debugText.getHeight());
         }
@@ -471,18 +340,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.zoomOutButton.setEnabled(controller.getZoom() > controller.getMinZoom());
     }
 
-    private void buildProfilingResult(StringBuilder builder, String sectionName, String padding) {
-        List<Result> results = this.map.getProfiler().getProfilingData(sectionName);
-        for(Result result: results) {
-            String name = result.profilerName;
-            if("".equals(name) || name.equals(sectionName) || (sectionName + ".").equals(name)) continue;
-            long use = Math.round(result.usePercentage);
-            if("unspecified".equals(name) && use >= 100) continue;
-            builder.append('\n').append(padding).append(String.format(Locale.US, "%1$s: %2$d%%", name, use));
-            this.buildProfilingResult(builder, name, padding + "  ");
-        }
-    }
-
     private void toggleInfoPanel() {
         float x = this.panelButton.getX();
         float y = this.panelButton.getY();
@@ -504,21 +361,17 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     @Override
     public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
-        if(this.getFocusedWidget() == null || (!this.getFocusedWidget().equals(this.searchBox) && !this.chat.isOpen())) {
+        if(this.getFocusedWidget() == null || (!this.getFocusedWidget().equals(this.searchBox))) {
             MapController controller = this.map.getController();
-            if(key.code == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
+            if(key == KEY_P) this.setDebugMode(!this.debugMode);
             if(key == KEY_F1) this.setF1Mode(!this.f1Mode);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || key == KEY_UP) controller.moveMap(0, 30, true);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || key == KEY_DOWN) controller.moveMap(0, -30, true);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || key == KEY_RIGHT) controller.moveMap(-30, 0, true);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || key == KEY_LEFT) controller.moveMap(30, 0, true);
-            if(key.code == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
-            if(key.code == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
-            if(key.code == KeyBindings.OPEN_MAP.getKeyCode() || key == KEY_ESCAPE) getGameClient().displayScreen(this.parent);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) {
-                this.map.stopPassiveInputs();
-                this.chat.setOpen(!this.chat.isOpen());
-            }
+            if(key == KEY_Z || key == KEY_UP) controller.moveMap(0, 30, true);
+            if(key == KEY_S || key == KEY_DOWN) controller.moveMap(0, -30, true);
+            if(key == KEY_D || key == KEY_RIGHT) controller.moveMap(-30, 0, true);
+            if(key == KEY_Q || key == KEY_LEFT) controller.moveMap(30, 0, true);
+            if(key == KEY_V) this.zoomInButton.getOnClick().run();
+            if(key == KEY_B) this.zoomOutButton.getOnClick().run();
+            if(key == KEY_M || key == KEY_ESCAPE) getGameClient().displayScreen(this.parent);
         } else {
             super.onKeyTyped(typedChar, key, parent);
         }
@@ -684,20 +537,11 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     }
 
-    @Override
-    public void onClosed() {
-        //TODO Also save if minecraft is closed from the OS
-        this.saveToState(TerramapClientContext.getContext().getSavedState().mainScreen);
-        TerramapClientContext.getContext().saveState();
-        TerramapClientContext.getContext().registerForUpdates(false);
-    }
-
     public void setF1Mode(boolean yesNo) {
         this.f1Mode = yesNo;
         this.infoPanel.setVisibility(!yesNo);
         this.stylePanel.setVisibility(!yesNo);
         this.layerPanel.setVisibility(!yesNo);
-        this.chat.setVisible(!yesNo);
         this.closeButton.setVisibility(!yesNo);
         this.zoomInButton.setVisibility(!yesNo);
         this.zoomOutButton.setVisibility(!yesNo);
@@ -711,14 +555,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.debugMode = yesNo;
         if(this.debugText != null) this.debugText.setVisibility(yesNo);
         this.map.setDebugMode(yesNo);
-    }
-
-    private void openConfig() {
-        getGameClient().displayScreen(new TerramapConfigScreen(this));
-    }
-
-    private Collection<FeatureVisibilityController> getButtonProviders() {
-        return Collections.unmodifiableCollection(this.map.getVisibilityControllers().values());
     }
 
     private class MapPreview extends MapWidget {
@@ -770,11 +606,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             return 0;
         }
 
-    }
-
-    @Override
-    public void setCompletions(String... newCompletions) {
-        this.chat.setCompletions(newCompletions);
     }
 
 }

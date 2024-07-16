@@ -1,15 +1,13 @@
-package fr.thesmyler.terramap.gui.widgets.map;
+package net.smyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.terramap.util.geo.*;
 import net.smyler.terramap.util.math.Snapper;
 
-import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
 import static net.smyler.terramap.util.geo.GeoUtil.getAzimuthInRange;
 import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.*;
@@ -35,7 +33,6 @@ public final class MapController {
             new GeoPointImmutable(-180d, -89.9999),
             new GeoPointImmutable(180d, 89.9999)
     );
-    private GeoBounds bounds; //TODO implement bounds in MapController
 
     private final GeoPointMutable zoomLocation = new GeoPointMutable();
     private double zoom = 0d;
@@ -50,9 +47,6 @@ public final class MapController {
     private float rotationTarget = 0f;
     private final Snapper rotationSnapper = new Snapper(90d, 5d);
     private float rotationResponsiveness = 0.005f;
-
-    private Marker trackedMarker;
-    private boolean tracksRotation = false;
 
     private final Vec2dMutable staticPosition = new Vec2dMutable();
     private final GeoPointMutable staticLocation = new GeoPointMutable();
@@ -70,10 +64,8 @@ public final class MapController {
         if (processTimeDependant) {
             this.processZoom(dt);
             this.processRotation(dt);
-            if (this.trackedMarker == null || this.processTracking()) {
-                this.processInertia(dt);
-            }
         }
+        this.processInertia(dt);
     }
 
     private void processInertia(long dt) {
@@ -101,7 +93,6 @@ public final class MapController {
             if (maxNorm < 0.1d) {
                 this.movingSpeed.set(Vec2dImmutable.NULL);
             }
-            this.stopTracking();
             this.inputLayer.getLocationAtPositionOnWidget(this.centerLocation, this.map.getWidth()/2 - dX, this.map.getHeight()/2 - dY);
             this.inputLayer.updateViewPorts();
         }
@@ -159,23 +150,6 @@ public final class MapController {
         this.ensureStaticLocationHasNotMoved();
     }
 
-    private boolean processTracking() {
-        if (this.trackedMarker.isVisible(this.map)) {
-            this.centerLocation.set(this.trackedMarker.getLocation());
-            this.centerLocationTarget.set(this.centerLocation);
-            this.movingSpeed.set(Vec2dImmutable.NULL);
-            if(this.tracksRotation && this.trackedMarker instanceof AbstractMovingMarker) {
-                float azimuth = ((AbstractMovingMarker)this.trackedMarker).getAzimuth();
-                azimuth = getAzimuthInRange(-azimuth);
-                this.rotation = this.rotationTarget = azimuth;
-            }
-            return false;
-        } else {
-            this.trackedMarker = null;
-            return true;
-        }
-    }
-
     /**
      * @return the location at the center of the map
      */
@@ -230,7 +204,6 @@ public final class MapController {
      */
     public void moveMap(double dX, double dY, boolean animate) {
         if (!Double.isFinite(dX) || !Double.isFinite(dY)) throw new IllegalArgumentException("Cannot move the map of a non finite number");
-        this.stopTracking();
         this.inputLayer.getPositionOnWidget(this.positionCalculationResult, this.centerLocationTarget);
         this.inputLayer.getLocationAtPositionOnWidget(this.centerLocationTarget, this.positionCalculationResult.subtract(dX, dY));
         if (!animate) {
@@ -486,56 +459,6 @@ public final class MapController {
         this.stopZooming();
         this.stopPanning();
         this.stopRotating();
-        this.stopTracking();
-    }
-
-    /**
-     * Start tracking a marker.
-     *
-     * @param marker    the marker to track
-     *
-     * @throws NullPointerException if marker is null
-     */
-    public void track(Marker marker) {
-        if (marker == null) throw new NullPointerException("Cannot track a null marker");
-        this.trackedMarker = marker;
-    }
-
-    /**
-     * @return whether this controller is currently tracking a marker
-     */
-    public boolean isTracking() {
-        return this.trackedMarker != null;
-    }
-
-    /**
-     * Stops tracking the currently tracked marker, if there is one.
-     */
-    public void stopTracking() {
-        this.trackedMarker = null;
-    }
-
-    /**
-     * @return whether this map follows the rotation of the markers it tracks
-     */
-    public boolean tracksRotation() {
-        return this.tracksRotation;
-    }
-
-    /**
-     * Changes whether this map should follow the rotation of markers it tracks.
-     *
-     * @param yesNo whether to follow rotations
-     */
-    public void setTracksRotation(boolean yesNo) {
-        this.tracksRotation = yesNo;
-    }
-
-    /**
-     * @return the marker which is currently being tracked, or null if none is being tracked
-     */
-    public Marker getTrackedMarker() {
-        return this.trackedMarker;
     }
 
     /**

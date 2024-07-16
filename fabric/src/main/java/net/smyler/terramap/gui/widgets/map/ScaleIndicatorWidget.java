@@ -1,4 +1,4 @@
-package fr.thesmyler.terramap.gui.widgets.map;
+package net.smyler.terramap.gui.widgets.map;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
