@@ -21,7 +21,7 @@ public class UiGraphicsInjectorMixin {
             return;
         }
         GuiGraphics thisObject = (GuiGraphics) (Object) this;
-        wrappedClient.setUidDrawContext(new WrappedGuiGraphics(thisObject));
+        wrappedClient.setUidDrawContext(new WrappedGuiGraphics(Minecraft.getInstance(), thisObject));
     }
 
 }
