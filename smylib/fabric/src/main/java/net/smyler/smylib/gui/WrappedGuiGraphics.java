@@ -1,10 +1,13 @@
 package net.smyler.smylib.gui;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
@@ -23,10 +26,13 @@ public class WrappedGuiGraphics implements UiDrawContext {
 
     public final GuiGraphics vanillaGraphics;
     private final Scissor scissor = new WrappedGuiGraphicsScissor();
-    private final GlContext glState = new Blaze3dGlContext(Minecraft.getInstance());
+    private final GlContext glState = new Blaze3dGlContext();
+    private final TextureManager textureManager;
+    private int dynamicTextureLocationCounter = 0;
 
-    public WrappedGuiGraphics(GuiGraphics vanillaGraphics) {
+    public WrappedGuiGraphics(Minecraft minecraft, GuiGraphics vanillaGraphics) {
         this.vanillaGraphics = vanillaGraphics;
+        this.textureManager = minecraft.getTextureManager();
     }
 
     @Override
@@ -113,12 +119,23 @@ public class WrappedGuiGraphics implements UiDrawContext {
 
     @Override
     public Identifier loadDynamicTexture(BufferedImage image) {
-        return null;
+        try (NativeImage nativeImage = new NativeImage(image.getWidth(), image.getHeight(), false)) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                for (int y = 0; y < image.getHeight(); y++) {
+                    int pixel = image.getRGB(x, y);
+                    nativeImage.setPixelRGBA(x, y, pixel);
+                }
+            }
+            ResourceLocation location = new ResourceLocation("smylib", "dynamic_texture/" + this.dynamicTextureLocationCounter++);
+            DynamicTexture texture = new DynamicTexture(nativeImage);
+            this.textureManager.register(location, texture);
+            return new Identifier(location.getNamespace(), location.getPath());
+        }
     }
 
     @Override
     public void unloadDynamicTexture(Identifier texture) {
-
+        this.textureManager.release(new ResourceLocation(texture.path, texture.namespace));
     }
 
     private void drawMultiPointsGeometry(double z, Color color, double... points) {

@@ -1,30 +1,26 @@
 package net.smyler.smylib.gui.gl;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureManager;
+import com.mojang.blaze3d.vertex.*;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
+
+import java.util.function.Supplier;
 
 import static net.smyler.smylib.Preconditions.checkState;
 
 
 public class Blaze3dGlContext implements GlContext {
 
-    private final TextureManager textureManager;
-    private final Tesselator tesselator;
     private final BufferBuilder bufferBuilder;
     private VertexFormat currentFormat;
 
-    public Blaze3dGlContext(Minecraft minecraft) {
-        this.textureManager = minecraft.getTextureManager();
-        this.tesselator = Tesselator.getInstance();
-        this.bufferBuilder = this.tesselator.getBuilder();
+    public Blaze3dGlContext() {
+        Tesselator tesselator = Tesselator.getInstance();
+        this.bufferBuilder = tesselator.getBuilder();
     }
 
     @Override
@@ -50,7 +46,7 @@ public class Blaze3dGlContext implements GlContext {
 
     @Override
     public void setTexture(Identifier texture) {
-        this.textureManager.bindForSetup(new ResourceLocation(texture.namespace, texture.path));
+        RenderSystem.setShaderTexture(0, new ResourceLocation(texture.namespace, texture.path));
     }
 
     @Override
@@ -116,6 +112,13 @@ public class Blaze3dGlContext implements GlContext {
             case POSITION_COLOR -> DefaultVertexFormat.POSITION_COLOR;
             case POSITION_TEXTURE_COLOR -> DefaultVertexFormat.POSITION_TEX_COLOR;
         };
+        Supplier<ShaderInstance> shader = switch (format) {
+            case POSITION -> GameRenderer::getPositionShader;
+            case POSITION_TEXTURE -> GameRenderer::getPositionTexShader;
+            case POSITION_COLOR -> GameRenderer::getPositionColorShader;
+            case POSITION_TEXTURE_COLOR -> GameRenderer::getPositionTexColorShader;
+        };
+        RenderSystem.setShader(shader);
         this.bufferBuilder.begin(blazeMode, blazeFormat);
     }
 
@@ -127,7 +130,8 @@ public class Blaze3dGlContext implements GlContext {
     @Override
     public void draw() {
         checkState(this.currentFormat != null, "Not drawing!");
-        this.tesselator.end();
+        BufferUploader.drawWithShader(this.bufferBuilder.end());
+        this.currentFormat = null;
     }
 
     private class VertexBuilderImplementation implements VertexBuilder {
