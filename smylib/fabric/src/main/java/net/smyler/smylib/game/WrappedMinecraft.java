@@ -22,6 +22,7 @@ public class WrappedMinecraft implements GameClient {
     private WrappedGuiGraphics uiDrawContext;
     private final WrappedSoundSystem soundSystem = new WrappedSoundSystem();
     private final SpriteLibrary spriteLibrary = new VanillaSprites();
+    private final Translator translator;
 
     private WrappedVanillaScreen lastAccessedVanillaScreen = null;
 
@@ -29,6 +30,7 @@ public class WrappedMinecraft implements GameClient {
         this.client = client;
         this.mouse = new GlfwMouse(this.client);
         this.keyboard = new GlfwKeyboard(this.client);
+        this.translator = new I18nTranslator(this.client);
     }
 
     @Override
@@ -95,7 +97,7 @@ public class WrappedMinecraft implements GameClient {
 
     @Override
     public Translator translator() {
-        return null;  //TODO
+        return this.translator;
     }
 
     @Override
