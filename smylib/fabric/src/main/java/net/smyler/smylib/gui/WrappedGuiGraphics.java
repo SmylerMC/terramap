@@ -50,6 +50,7 @@ public class WrappedGuiGraphics implements UiDrawContext {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         Matrix4f matrix = this.vanillaGraphics.pose().last().pose();
         BufferBuilder builder = Tesselator.getInstance().getBuilder();
