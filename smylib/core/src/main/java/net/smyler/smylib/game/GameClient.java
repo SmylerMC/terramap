@@ -18,6 +18,16 @@ import java.nio.file.Path;
 public interface GameClient {
 
     /**
+     * @return the version of the game
+     */
+    String gameVersion();
+
+    /**
+     * @return the current mod loader (e.g. Forge, Fabric...)
+     */
+    String modLoader();
+
+    /**
      * @return the effective width of the window when scaling is taken into account
      */
     float windowWidth();

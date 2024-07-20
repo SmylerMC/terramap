@@ -64,6 +64,16 @@ public class TestGameClient implements GameClient {
     }
 
     @Override
+    public String gameVersion() {
+        return "test";
+    }
+
+    @Override
+    public String modLoader() {
+        return "JUnit";
+    }
+
+    @Override
     public float windowWidth() {
         return this.width;
     }

@@ -11,6 +11,7 @@ import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.PopupScreenImplementation;
 import net.smyler.smylib.gui.screen.*;
+import net.smyler.smylib.gui.screen.test.TestScreen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
 
 import java.nio.file.Path;
@@ -41,6 +42,16 @@ public class WrappedMinecraft implements GameClient {
 
     public WrappedMinecraft(Minecraft minecraft) {
         this.minecraft = minecraft;
+    }
+
+    @Override
+    public String gameVersion() {
+        return this.minecraft.getVersion();
+    }
+
+    @Override
+    public String modLoader() {
+        return "Forge";
     }
 
     @Override

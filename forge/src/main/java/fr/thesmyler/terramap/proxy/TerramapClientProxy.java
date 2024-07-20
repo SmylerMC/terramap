@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.proxy;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.TerramapConfig;
-import net.smyler.smylib.gui.screen.TestScreen;
+import net.smyler.smylib.gui.screen.test.TestScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
