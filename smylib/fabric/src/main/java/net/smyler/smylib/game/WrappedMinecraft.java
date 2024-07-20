@@ -34,6 +34,16 @@ public class WrappedMinecraft implements GameClient {
     }
 
     @Override
+    public String gameVersion() {
+        return this.client.getLaunchedVersion();
+    }
+
+    @Override
+    public String modLoader() {
+        return "Fabric";
+    }
+
+    @Override
     public float windowWidth() {
         return this.client.getWindow().getGuiScaledWidth();
     }
@@ -103,7 +113,7 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public Font defaultFont() {
         if (this.font == null) {
-            this.font = new WrappedFont(1f, this.client.font);
+            this.font = new WrappedFont(1f, 1f, this.client.font);
         }
         return this.font;
     }
