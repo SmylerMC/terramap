@@ -4,12 +4,14 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.widgets.Widget;
+import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.min;
 import static net.smyler.smylib.Color.WHITE;
 
 public class TabbedContainer extends FlexibleWidgetContainer {
@@ -17,11 +19,17 @@ public class TabbedContainer extends FlexibleWidgetContainer {
     public static final Color UNSELECTED_COLOR = new Color(0, 0, 0, 200);
     public static final Color LIGHT_TRANSPARENT = new Color(237, 237, 237, 175);
 
+    private final float BUTTON_HORIZONTAL_OFFSET = 2f;
+
     private final float buttonBaseHeight = 20f;
     private final float buttonSelectedHeight = 24f;
 
     private final List<TabContainer> tabs = new ArrayList<>();
     private TabContainer selectedTab;
+
+    private float buttonWidth = 80f;
+    private boolean centerTabs = false;
+    private float centeringOffset = 0f;
 
     public TabbedContainer(float x, float y, int z, float width, float height) {
         super(x, y, z, width, height);
@@ -40,6 +48,8 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
+        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+
         float height = this.getHeight();
         float width = this.getWidth();
         float topContentY =  y + this.buttonSelectedHeight;
@@ -57,15 +67,45 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
         context.drawRectangle(x + width - 1f, topContentY + 1f, x + width, y + height - 1f, LIGHT_TRANSPARENT);
         context.drawRectangle(x + width - 2f, topContentY + 2f, x + width - 1f, y + height - 2f, UNSELECTED_COLOR);
+    }
 
-        super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
+    @Override
+    public void init() {
+        super.init();
+        this.updateButtonWidths(this.getFont());
+    }
+
+    private void updateButtonWidths(Font font) {
+        float buttonWidth = this.tabs.stream()
+                .map(TabContainer::getButton)
+                .map(TabButton::getText)
+                .map(font::computeWidth)
+                .map(f -> f + TabButton.INNER_TEXT_OFFSET * 2f)
+                .max(Float::compareTo)
+                .orElse(0f);
+        float maxButtonWidth = (this.getWidth() - BUTTON_HORIZONTAL_OFFSET * 2f) / this.tabs.size();
+        this.buttonWidth = min(buttonWidth, maxButtonWidth);
+        if (this.centerTabs) {
+            this.centeringOffset = (this.getWidth() - this.buttonWidth * this.tabs.size() - BUTTON_HORIZONTAL_OFFSET * 2f) / 2f;
+        } else {
+            this.centeringOffset = 0f;
+        }
+    }
+
+    public TabbedContainer setCenterTabs(boolean centerTabs) {
+        this.centerTabs = centerTabs;
+        return this;
+    }
+
+    public boolean isCenterTags() {
+        return this.centerTabs;
     }
 
     public class TabContainer extends WidgetContainer {
 
         boolean selected = false;
         private final TabButton button;
-        private Color backgroundColor = new Color(0, 0, 0, 30);
+        private final Color backgroundColor = new Color(0, 0, 0, 30);
 
         private TabContainer(int z, int index, Text title) {
             super(z);
@@ -89,22 +129,22 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return 0;
+            return BUTTON_HORIZONTAL_OFFSET;
         }
 
         @Override
         public float getY() {
-            return TabbedContainer.this.buttonSelectedHeight;
+            return TabbedContainer.this.buttonSelectedHeight + 2f;
         }
 
         @Override
         public float getWidth() {
-            return TabbedContainer.this.getWidth();
+            return TabbedContainer.this.getWidth() - 4f;
         }
 
         @Override
         public float getHeight() {
-            return TabbedContainer.this.getHeight() - TabbedContainer.this.buttonBaseHeight;
+            return TabbedContainer.this.getHeight() - TabbedContainer.this.buttonSelectedHeight - 4f;
         }
 
         @Override
@@ -112,15 +152,18 @@ public class TabbedContainer extends FlexibleWidgetContainer {
             return this.selected;
         }
 
+        private TabButton getButton() {
+            return button;
+        }
+
     }
 
     public class TabButton implements Widget {
 
-        private static final float BUTTON_WIDTH = 60f;
-
         private final TabContainer tab;
-        private int index;
+        private final int index;
         private Text text;
+        private static final float INNER_TEXT_OFFSET = 7f;
 
         private TabButton(int index, TabContainer tab, Text text) {
             this.tab = tab;
@@ -130,7 +173,7 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getX() {
-            return this.index * BUTTON_WIDTH + 2f;
+            return this.index * TabbedContainer.this.buttonWidth + BUTTON_HORIZONTAL_OFFSET + TabbedContainer.this.centeringOffset;
         }
 
         @Override
@@ -149,7 +192,7 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
         @Override
         public float getWidth() {
-            return BUTTON_WIDTH;
+            return TabbedContainer.this.buttonWidth;
         }
 
         @Override
@@ -185,7 +228,7 @@ public class TabbedContainer extends FlexibleWidgetContainer {
                 backgroundColor = UNSELECTED_COLOR;
             }
 
-            context.drawRectangle(x + 2f, y + 2f, x + BUTTON_WIDTH - 2f, y + height, backgroundColor);
+            context.drawRectangle(x + 2f, y + 2f, x + TabbedContainer.this.buttonWidth - 2f, y + height, backgroundColor);
 
             context.drawRectangle(x, y, x + 1f, outerDownY, outerOutline);
             context.drawRectangle(x + 1f, y, x + width - 1f, y + 1f, outerOutline);
@@ -201,7 +244,14 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
             Font font = parent.getFont();
             float textY = (height - font.height()) / 2;
-            font.draw(x + 7f, y + textY + 2f,  this.text, WHITE, true);
+
+            float textWidth = font.computeWidth(this.text);
+            Text text = this.text;
+            if (textWidth > this.getWidth() - 14f) {
+                text = font.trimRight(text, this.getWidth() - 14f - font.computeWidth("..."));
+                text = ImmutableText.of(text).withNewSiblings(ImmutableText.ofPlainText("..."));
+            }
+            font.drawCentered(x + this.getWidth() / 2f, y + textY + 2f,  text, WHITE, true);
         }
 
         @Override
@@ -209,6 +259,26 @@ public class TabbedContainer extends FlexibleWidgetContainer {
             this.tab.setActive();
             return false;
         }
+
+        @Override
+        public long getTooltipDelay() {
+            return 1000;
+        }
+
+        @Override
+        public @Nullable String getTooltipText() {
+            return this.text.getFormattedText();
+        }
+
+        public Text getText() {
+            return this.text;
+        }
+
+        public TabButton setText(Text text) {
+            this.text = text;
+            return this;
+        }
+
     }
 
 }
