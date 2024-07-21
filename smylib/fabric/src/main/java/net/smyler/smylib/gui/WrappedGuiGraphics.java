@@ -12,9 +12,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.gl.Blaze3dGlContext;
+import net.smyler.smylib.gui.gl.Gl20Scissor;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.gl.Scissor;
-import net.smyler.smylib.gui.gl.WrappedGuiGraphicsScissor;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.joml.Matrix4f;
 
@@ -25,7 +25,7 @@ import static net.smyler.smylib.Preconditions.checkArgument;
 public class WrappedGuiGraphics implements UiDrawContext {
 
     public final GuiGraphics vanillaGraphics;
-    private final Scissor scissor = new WrappedGuiGraphicsScissor();
+    private final Scissor scissor = new Gl20Scissor();
     private final GlContext glState = new Blaze3dGlContext();
     private final TextureManager textureManager;
     private int dynamicTextureLocationCounter = 0;
