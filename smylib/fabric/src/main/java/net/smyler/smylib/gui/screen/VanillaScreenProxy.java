@@ -33,6 +33,7 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
 
         this.screen.onUpdate(mouseX, mouseY, null);
         this.drawBackground(guiGraphics);
+        uiDrawContext.scissor().cropScreen(-1f, -1f, this.width + 1f, height + 1f);
         super.render(guiGraphics, x, y, partialTicks);
         this.screen.draw(uiDrawContext, 0, 0, mouseX, mouseY, true, true, null);
     }
