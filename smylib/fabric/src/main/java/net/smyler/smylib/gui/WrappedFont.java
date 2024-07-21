@@ -65,7 +65,13 @@ public class WrappedFont extends BaseFont {
         gl.scale(this.scale, this.scale);
         x *= invScale;
         y *= invScale;
+
+        // Vanilla does a z-translation call to draw the shadow,
+        // We need to work around that (it is useless and messes z coordinates).
+        PatchedFont patchedFont = (PatchedFont) this.vanillaFont;
+        patchedFont.smylib$setCancelShadowOffset(true);
         float result = this.vanillaGraphics.drawString(this.vanillaFont, text, (int) x, (int) y, color.asInt());
+        patchedFont.smylib$setCancelShadowOffset(false);
         gl.scale(invScale, invScale);
         return result;
     }
