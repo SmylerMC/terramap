@@ -19,6 +19,9 @@ import net.smyler.smylib.gui.sprites.Sprite;
 import org.joml.Matrix4f;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 
@@ -28,7 +31,9 @@ public class WrappedGuiGraphics implements UiDrawContext {
     private final Scissor scissor = new Gl20Scissor();
     private final GlContext glState = new Blaze3dGlContext();
     private final TextureManager textureManager;
-    private int dynamicTextureLocationCounter = 0;
+    private static final AtomicInteger dynamicTextureLocationCounter = new AtomicInteger(0);
+
+    private final Map<Identifier, DynamicTexture> dynamicTextureCache = new HashMap<>();
 
     public WrappedGuiGraphics(Minecraft minecraft, GuiGraphics vanillaGraphics) {
         this.vanillaGraphics = vanillaGraphics;
@@ -120,23 +125,27 @@ public class WrappedGuiGraphics implements UiDrawContext {
 
     @Override
     public Identifier loadDynamicTexture(BufferedImage image) {
-        try (NativeImage nativeImage = new NativeImage(image.getWidth(), image.getHeight(), false)) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                for (int y = 0; y < image.getHeight(); y++) {
-                    int pixel = image.getRGB(x, y);
-                    nativeImage.setPixelRGBA(x, y, pixel);
-                }
+        NativeImage nativeImage = new NativeImage(image.getWidth(), image.getHeight(), true);
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                int pixel = image.getRGB(x, y);
+                pixel = (pixel & 0xFF) << 16 | (pixel & 0xFF0000) >> 16 | (pixel & 0xFF00FF00);
+                nativeImage.setPixelRGBA(x, y, pixel);
             }
-            ResourceLocation location = new ResourceLocation("smylib", "dynamic_texture/" + this.dynamicTextureLocationCounter++);
-            DynamicTexture texture = new DynamicTexture(nativeImage);
-            this.textureManager.register(location, texture);
-            return new Identifier(location.getNamespace(), location.getPath());
         }
+        ResourceLocation location = new ResourceLocation("smylib", "dynamic_texture/" + dynamicTextureLocationCounter.getAndIncrement());
+        Identifier identifier = new Identifier(location.getNamespace(), location.getPath());
+        DynamicTexture texture = new DynamicTexture(nativeImage);
+        this.textureManager.register(location, texture);
+        this.dynamicTextureCache.put(identifier, texture);
+        return identifier;
     }
 
     @Override
     public void unloadDynamicTexture(Identifier texture) {
         this.textureManager.release(new ResourceLocation(texture.path, texture.namespace));
+        DynamicTexture removed = this.dynamicTextureCache.remove(texture);
+        removed.close();
     }
 
     private void drawMultiPointsGeometry(double z, Color color, double... points) {
