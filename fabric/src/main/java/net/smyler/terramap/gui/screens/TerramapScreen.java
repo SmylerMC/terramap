@@ -245,7 +245,7 @@ public class TerramapScreen extends Screen {
                         15f + buttonWidth*2, this.layerPanel.getHeight() - 25, 1,
                         buttonWidth,
                         translator.format("terramap.terramapscreen.layerscreen.new"),
-                        this::openInitialNewLayerSelector));
+                        this::openInitialNewLayerSelector).setEnabled(false));
         this.addWidget(this.layerPanel);
 
         // Style panel
