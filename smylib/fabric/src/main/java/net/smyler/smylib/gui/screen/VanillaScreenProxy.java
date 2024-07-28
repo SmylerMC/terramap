@@ -8,10 +8,14 @@ import net.smyler.smylib.gui.WrappedGuiGraphics;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.lang.Math.round;
+import static java.lang.System.currentTimeMillis;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen {
     private final Screen screen;
+    private final long[] lastClickTimesMs = new long[getGameClient().mouse().getButtonCount()];
+    private final float[] lastClickX = new float[getGameClient().mouse().getButtonCount()];
+    private final float[] lastClickY = new float[getGameClient().mouse().getButtonCount()];
 
     public VanillaScreenProxy(Screen screen) {
         super(Component.literal("SmyLib screen"));
@@ -21,7 +25,6 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
 
     @Override
     public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
-
         GameClient game = getGameClient();
         WrappedGuiGraphics uiDrawContext = (WrappedGuiGraphics) game.guiDrawContext();
         checkState(
@@ -57,25 +60,36 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
         return this.screen.shouldPauseGame();
     }
 
-    //FIXME mouse and keyboard support in screen proxy
-
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        //TODO implement double clicks
-        this.screen.onClick((float)x, (float)y, button, null);
+        float xf = (float) x;
+        float yf = (float) y;
+        boolean hasMoved = this.lastClickX[button] != xf || this.lastClickY[button] != yf;
+        long ct = currentTimeMillis();
+        long dt = ct - lastClickTimesMs[button];
+        if (dt < 500 && !hasMoved) {
+            this.screen.onDoubleClick(xf, yf, button, null);
+        } else {
+            this.screen.onClick(xf, yf, button, null);
+        }
+        this.lastClickTimesMs[button] = ct;
+        this.lastClickX[button] = xf;
+        this.lastClickY[button] = yf;
         return super.mouseClicked(x, y, button);
     }
 
     @Override
     public boolean mouseReleased(double x, double y, int button) {
-        this.screen.onMouseReleased((float)x, (float)y, button, null);  //FIXME track dragged widget
+        this.screen.onMouseReleased((float)x, (float)y, button, null);
         return super.mouseReleased(x, y, button);
     }
 
     @Override
     public boolean mouseDragged(double x, double y, int button, double dX, double dY) {
-        //TODO verify arguments are what they seem
-        this.screen.onMouseDragged((float)x, (float)y, (float)dX, (float) dY, button, null, 0);  //FIXME provide dt
+        long ct = currentTimeMillis();
+        long dt = ct - this.lastClickTimesMs[button];
+        this.lastClickTimesMs[button] = ct;
+        this.screen.onMouseDragged((float)x, (float)y, (float)dX, (float) dY, button, null, dt);
         return super.mouseDragged(x, y, button, dX, dY);
     }
 
@@ -103,7 +117,7 @@ public class VanillaScreenProxy extends net.minecraft.client.gui.screens.Screen 
     }
 
     public net.smyler.smylib.gui.screen.Screen getScreen() {
-        return screen;
+        return this.screen;
     }
 
     private void drawBackground(GuiGraphics guiGraphics) {
