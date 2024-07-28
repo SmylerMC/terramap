@@ -112,12 +112,6 @@ public class InputLayer extends MapLayer {
         if(this.map.isRightClickMenuEnabled() && mouseButton == 1 && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.mouseLocation)) {
             parent.showMenu(mouseX, mouseY, this.map.getRightClickMenu());
         }
-        if(this.map.isInteractive() && mouseButton == 2 && !isRotating) {
-            this.rotatePosition.set(mouseX, mouseY);
-            this.controller.setRotationStaticPosition(mouseX, mouseY);
-            this.isRotating = true;
-            this.rotationAngleOrigin = this.controller.getRotation();
-        }
         return false;
     }
 
