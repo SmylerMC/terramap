@@ -20,7 +20,7 @@ import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
  */
 public abstract class CachingRasterTileSet implements RasterTileSet {
 
-    public static final int CACHE_SIZE = 5120;
+    public static final int CACHE_SIZE = 512;
     public static final int LOW_ZOOM = 2;
 
     private final LinkedList<RasterTile> tileList; // Uses for ordered access when unloading

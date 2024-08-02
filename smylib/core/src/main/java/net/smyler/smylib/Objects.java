@@ -3,6 +3,8 @@ package net.smyler.smylib;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
@@ -47,6 +49,21 @@ public final class Objects {
             return requireNonNull(defaultObjectSupplier.get(), "Supplied default object cannot be null when requiring a non null object.");
         }
         return object;
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static <T, U, V> Optional<V> optionalBiMap(Optional<T> o1, Optional<U> o2, BiFunction<? super T, ? super U, ? extends V> biFunction) {
+        if (o1.isEmpty() || o2.isEmpty()) {
+            return Optional.empty();
+        }
+        T t = o1.get();
+        U u = o2.get();
+        return Optional.ofNullable(biFunction.apply(t, u));
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public static <T, U, V> Supplier<Optional<V>> optionalBiMapSupplier(Optional<T> o1, Optional<U> o2, BiFunction<? super T, ? super U, ? extends V> biFunction) {
+        return () -> optionalBiMap(o1, o2, biFunction);
     }
 
 }

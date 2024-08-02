@@ -2,6 +2,14 @@ package net.smyler.smylib;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
+import static java.lang.Double.parseDouble;
+import static java.lang.Float.parseFloat;
+import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
+
 /**
  * A string manipulation utility clas.
  *
@@ -49,6 +57,38 @@ public final class Strings {
             end--;
         }
         return string.substring(start, end);
+    }
+
+    public static Optional<Integer> parseOptionalInt(@NotNull String string) {
+        try {
+            return Optional.of(parseInt(string));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Long> parseOptionalLong(@NotNull String string) {
+        try {
+            return Optional.of(parseLong(string));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Float> parseOptionalFloat(@NotNull String string) {
+        try {
+            return Optional.of(parseFloat(string));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<Double> parseOptionalDouble(@NotNull String string) {
+        try {
+            return Optional.of(parseDouble(string));
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
     }
 
 }

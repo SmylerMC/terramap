@@ -9,6 +9,10 @@ base {
     archivesName = project.archives_base_name
 }
 
+loom {
+    log4jConfigs.from file("src/dev/resources/log4j.xml")
+}
+
 dependencies {
     // Terramap modules
     implementation project(":core")  // Shared implementation of Terramap

@@ -14,6 +14,7 @@ import net.smyler.smylib.game.WrappedMinecraft;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.http.HttpClient;
+import net.smyler.terramap.http.MemoryCache;
 import net.smyler.terramap.http.TerramapHttpClient;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +34,7 @@ public class TerramapFabricMod implements ModInitializer, Terramap {
             .registerTypeAdapter(Text.class, new TextJsonAdapter())
             .setPrettyPrinting()
             .create();
-    private final HttpClient httpClient = new TerramapHttpClient(this.logger);
+    private final HttpClient httpClient = new TerramapHttpClient(this.logger, new MemoryCache());
     private RasterTileSetManager rasterTileSetManager;
 
     @Override
