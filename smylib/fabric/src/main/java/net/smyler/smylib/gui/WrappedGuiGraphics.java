@@ -143,9 +143,11 @@ public class WrappedGuiGraphics implements UiDrawContext {
 
     @Override
     public void unloadDynamicTexture(Identifier texture) {
-        this.textureManager.release(new ResourceLocation(texture.path, texture.namespace));
+        this.textureManager.release(new ResourceLocation(texture.namespace, texture.path));
         DynamicTexture removed = this.dynamicTextureCache.remove(texture);
-        removed.close();
+        if (removed != null) {
+            removed.close();
+        }
     }
 
     private void drawMultiPointsGeometry(double z, Color color, double... points) {
