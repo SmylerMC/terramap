@@ -2,7 +2,6 @@ package net.smyler.smylib;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static java.lang.Double.parseDouble;
@@ -10,12 +9,15 @@ import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
+
 /**
  * A string manipulation utility clas.
  *
  * @author Smyler
  */
 public final class Strings {
+
+    public static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     private Strings() {
         throw new IllegalStateException();
@@ -89,6 +91,15 @@ public final class Strings {
         } catch (NumberFormatException e) {
             return Optional.empty();
         }
+    }
+
+    public static String hexString(byte @NotNull [] data) {
+        StringBuilder builder = new StringBuilder();
+        for (byte b : data) {
+            builder.append(HEX_DIGITS[(b >> 8) & 0X0f]);
+            builder.append(HEX_DIGITS[ b       & 0x0f]);
+        }
+        return builder.toString();
     }
 
 }
