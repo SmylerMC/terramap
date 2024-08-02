@@ -48,12 +48,11 @@ public class TerramapHttpClient implements HttpClient {
     private final Logger logger;
     private final HttpCache cache;
 
-    private float cacheHeuristic = 0.25f;
+    private static final float CACHE_HEURISTIC = 0.25f;
 
     public TerramapHttpClient(Logger logger, HttpCache cache) {
         this.logger = logger;
         this.cache = cache;
-        logger.warn("You are using an HTTP client that does not support caching. This is not suitable for production.");
     }
 
     @Override
@@ -188,7 +187,7 @@ public class TerramapHttpClient implements HttpClient {
         long age = response.headers().firstValue("Age")
                 .flatMap(Strings::parseOptionalLong)
                 .orElse(date - lastModified);
-        long maxAge = max(0, round(age * this.cacheHeuristic));
+        long maxAge = max(0, round(age * CACHE_HEURISTIC));
         this.logger.trace(
                 "Cache heuristic for {}: lastModified={} age={} maxAge={} etag={}",
                 response.uri(), lastModified, age, maxAge, etagHeader
@@ -223,14 +222,6 @@ public class TerramapHttpClient implements HttpClient {
                 host,
                 maxConcurrentRequests
         );
-    }
-
-    public float getCacheHeuristic() {
-        return this.cacheHeuristic;
-    }
-
-    public void setCacheHeuristic(float cacheHeuristic) {
-        this.cacheHeuristic = cacheHeuristic;
     }
 
     private void log(HttpRequest request) {
