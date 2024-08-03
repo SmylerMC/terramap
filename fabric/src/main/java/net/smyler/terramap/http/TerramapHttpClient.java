@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -25,10 +27,11 @@ import static java.lang.Math.max;
 import static java.lang.Math.round;
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.stream;
+import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Objects.optionalBiMapSupplier;
 
 
-public class TerramapHttpClient implements HttpClient {
+public class TerramapHttpClient implements CachingHttpClient {
 
     private final ForkJoinPool forkJoinPool = new ForkJoinPool(20, HttpWorkerThread::new, this::unhandledException, true);
     private final AtomicLong workerCounter = new AtomicLong(0);
@@ -50,8 +53,17 @@ public class TerramapHttpClient implements HttpClient {
 
     private static final float CACHE_HEURISTIC = 0.25f;
 
-    public TerramapHttpClient(Logger logger, HttpCache cache) {
-        this.logger = logger;
+    public TerramapHttpClient(Logger logger, Path cacheDirectory) {
+        this.logger = logger;HttpCache cache;
+        try {
+            requireNonNull(cacheDirectory);
+            Files.createDirectories(cacheDirectory);
+            cache = new DiskCache(cacheDirectory, this.logger, this.forkJoinPool);
+        } catch (Exception e) {
+            this.logger.warn("Failed to create cache directory, falling back to memory cache");
+            this.logger.catching(e);
+            cache = new MemoryCache(this.forkJoinPool);
+        }
         this.cache = cache;
     }
 
@@ -232,6 +244,21 @@ public class TerramapHttpClient implements HttpClient {
         );
     }
 
+    @Override
+    public CompletableFuture<CacheStatistics> cacheStatistics() {
+        return this.cache.statistics();
+    }
+
+    @Override
+    public CompletableFuture<CacheStatistics> cacheCleanup() {
+        return this.cache.cleanup(e -> !e.isFresh() && e.age() > e.maxAge() * 10);
+    }
+
+    @Override
+    public CompletableFuture<CacheStatistics> cacheClear() {
+        return this.cache.cleanup(e -> true);
+    }
+
     private class HttpWorkerThread extends ForkJoinWorkerThread {
         protected HttpWorkerThread(ForkJoinPool pool) {
             super(pool);
@@ -240,7 +267,7 @@ public class TerramapHttpClient implements HttpClient {
     }
 
     private void unhandledException(Thread thread, Throwable throwable) {
-        this.logger.error("Unhandled exception in HTTP client");
+        this.logger.error("Unhandled exception in HTTP client in thread {}", thread.getName());
         this.logger.catching(throwable);
     }
 

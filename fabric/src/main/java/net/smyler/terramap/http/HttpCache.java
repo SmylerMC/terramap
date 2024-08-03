@@ -4,11 +4,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.net.URI;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 public interface HttpCache {
 
     void put(@NotNull URI uri, long lastModified, long maxAge, @Nullable String etag, boolean immutable, boolean mustRevalidate, byte @NotNull [] body);
 
     @Nullable CacheEntry lookup(URI uri);
+
+    CompletableFuture<CacheStatistics> statistics();
+
+    CompletableFuture<CacheStatistics> cleanup(Predicate<CacheEntry> predicate);
 
 }
