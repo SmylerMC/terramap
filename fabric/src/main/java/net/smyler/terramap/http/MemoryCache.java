@@ -6,11 +6,24 @@ import org.jetbrains.annotations.Nullable;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
+
+import static net.smyler.terramap.http.CacheStatistics.CacheType.MEMORY;
 
 public class MemoryCache implements HttpCache {
 
-    ConcurrentHashMap<URI, CacheEntry> cache = new ConcurrentHashMap<>();
+    private final ExecutorService executorService;
+    private final ConcurrentHashMap<URI, MemoryCacheEntry> cache = new ConcurrentHashMap<>();
+
+    public MemoryCache(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
 
     @Override
     public void put(@NotNull URI uri, long lastModified, long maxAge, @Nullable String etag, boolean immutable, boolean mustRevalidate, byte @NotNull [] body) {
@@ -20,18 +33,56 @@ public class MemoryCache implements HttpCache {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        this.cache.put(uri, new CacheEntry(
+        this.cache.put(uri, new MemoryCacheEntry(new CacheEntry(
                 uri,
                 lastModified, maxAge, etag,
                 immutable,
                 mustRevalidate,
                 () -> new ByteArrayInputStream(copy)
-        ));
+        ), body.length));
     }
 
     @Override
     public @Nullable CacheEntry lookup(URI uri) {
-        return this.cache.get(uri);
+        MemoryCacheEntry entry = this.cache.get(uri);
+        if (entry == null) {
+            return null;
+        }
+        return entry.entry;
+    }
+
+    @Override
+    public CompletableFuture<CacheStatistics> statistics() {
+        return CompletableFuture.supplyAsync(() -> {
+            AtomicLong counter = new AtomicLong();
+            long size = this.cache.values().stream()
+                    .peek(e -> counter.getAndIncrement())
+                    .map(MemoryCacheEntry::size)
+                    .reduce(0L, Long::sum);
+            return new CacheStatistics(counter.get(), size, MEMORY);
+        }, this.executorService);
+    }
+
+    @Override
+    public CompletableFuture<CacheStatistics> cleanup(Predicate<CacheEntry> predicate) {
+        return CompletableFuture.supplyAsync(() -> {
+            Collection<MemoryCacheEntry> values = this.cache.values();
+            long removedCount = 0;
+            long removedSize = 0;
+            for (Iterator<MemoryCacheEntry> iterator = values.iterator(); iterator.hasNext(); ) {
+                MemoryCacheEntry entry = iterator.next();
+                if (predicate.test(entry.entry)) {
+                    iterator.remove();
+                    removedSize += entry.size();
+                    removedCount++;
+                }
+            }
+            return new CacheStatistics(removedCount, removedSize, MEMORY);
+        }, this.executorService);
+    }
+
+    private record MemoryCacheEntry(CacheEntry entry, long size) {
+
     }
 
 }
