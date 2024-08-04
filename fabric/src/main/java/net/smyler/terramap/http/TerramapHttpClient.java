@@ -75,8 +75,11 @@ public class TerramapHttpClient implements CachingHttpClient {
         // Lookup cache, use it if fresh
         CacheEntry cache = this.cache.lookup(uri);
         if (cache != null && cache.isFresh()) {
-            this.logger.debug("Fresh: {}", uri);
-            return CompletableFuture.supplyAsync(() -> this.readCache(cache), this.forkJoinPool);
+            return CompletableFuture.supplyAsync(() -> {
+                byte[] data =  this.readCache(cache);
+                this.logger.debug("[   ] {} {} (was fresh)", data.length, uri);
+                return data;
+            }, this.forkJoinPool);
         }
 
         // Send HTTP request
