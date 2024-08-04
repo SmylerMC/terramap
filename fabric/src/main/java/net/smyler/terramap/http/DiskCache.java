@@ -30,6 +30,8 @@ import static net.smyler.terramap.http.CacheStatistics.CacheType.DISK;
 
 public class DiskCache implements HttpCache {
 
+    private static final int FILE_FORMAT_VERSION = 1;
+
     private final ExecutorService executor;
     private final Logger logger;
     private final Path directory;
@@ -46,6 +48,7 @@ public class DiskCache implements HttpCache {
         Path tempFile = this.getTempFile();
         try(OutputStream stream = new GZIPOutputStream(new FileOutputStream(tempFile.toFile()))) {
             DataOutputStream data = new DataOutputStream(stream);
+            data.writeInt(FILE_FORMAT_VERSION);
             data.writeUTF(uri.toString());
             data.writeLong(lastModified);
             data.writeLong(maxAge);
@@ -127,6 +130,10 @@ public class DiskCache implements HttpCache {
         try (FileInputStream fis = new FileInputStream(file)) {
             CountingInputStream stream = new CountingInputStream(new GZIPInputStream(fis));
             DataInputStream data = new DataInputStream(stream);
+            int version = data.readInt();
+            if (version != FILE_FORMAT_VERSION) {
+                this.logger.warn("Unsupported disk cache format version {} in file {}", version, file);
+            }
             URI uri = new URI(data.readUTF());
             long lastModified = data.readLong();
             long maxAge = data.readLong();
