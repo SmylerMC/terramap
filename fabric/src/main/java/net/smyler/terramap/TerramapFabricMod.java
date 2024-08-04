@@ -62,6 +62,10 @@ public class TerramapFabricMod implements ModInitializer, Terramap {
         this.scheduler.scheduleAtFixedRate(() -> {
             this.httpClient.cacheCleanup().thenAccept(s -> {
                 this.logger.info("Cleaned up HTTP cache, removed {} entries ({}o)", s.entries(), s.size());
+            }).exceptionally(e -> {
+                this.logger.error("Failed to clean up HTTP cache");
+                this.logger.catching(e);
+                return null;
             });
         }, 10, 10, MINUTES);
 
