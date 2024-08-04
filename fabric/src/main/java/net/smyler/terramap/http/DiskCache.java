@@ -113,7 +113,7 @@ public class DiskCache implements HttpCache {
                 paths.parallel()
                         .map(Path::toFile)
                         .map(f -> new EntryCleanup(f, this.readEntry(f), f.length()))
-                        .filter(p -> predicate.test(p.entry()))
+                        .filter(p -> p.entry() == null || predicate.test(p.entry()))
                         .filter(EntryCleanup::delete)
                         .forEach(e -> {
                             entries.incrementAndGet();
