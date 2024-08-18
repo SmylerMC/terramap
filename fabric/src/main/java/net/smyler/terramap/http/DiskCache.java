@@ -13,9 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
@@ -32,12 +29,10 @@ public class DiskCache implements HttpCache {
 
     private static final int FILE_FORMAT_VERSION = 1;
 
-    private final ExecutorService executor;
     private final Logger logger;
     private final Path directory;
 
-    public DiskCache(Path directory, Logger logger, ExecutorService executor) {
-        this.executor = executor;
+    public DiskCache(Path directory, Logger logger) {
         this.logger = logger;
         this.directory = directory;
     }
@@ -86,44 +81,36 @@ public class DiskCache implements HttpCache {
     }
 
     @Override
-    public CompletableFuture<CacheStatistics> statistics() {
-        return CompletableFuture.supplyAsync(() -> {
-            try (Stream<Path> paths = Files.list(this.directory)) {
-                AtomicLong counter = new AtomicLong(0L);
-                long size = paths.parallel()
-                        .map(Path::toFile)
-                        .filter(File::isFile)
-                        .peek(f -> counter.incrementAndGet())
-                        .map(File::length)
-                        .reduce(Long::sum)
-                        .orElse(0L);
-                return new CacheStatistics(counter.get(), size, DISK);
-            } catch (IOException e) {
-                throw new CompletionException(e);
-            }
-        }, this.executor);
+    public CacheStatistics statistics() throws IOException {
+        try (Stream<Path> paths = Files.list(this.directory)) {
+            AtomicLong counter = new AtomicLong(0L);
+            long size = paths.parallel()
+                    .map(Path::toFile)
+                    .filter(File::isFile)
+                    .peek(f -> counter.incrementAndGet())
+                    .map(File::length)
+                    .reduce(Long::sum)
+                    .orElse(0L);
+            return new CacheStatistics(counter.get(), size, DISK);
+        }
     }
 
     @Override
-    public CompletableFuture<CacheStatistics> cleanup(Predicate<CacheEntry> predicate) {
-        return CompletableFuture.supplyAsync(() -> {
-            try (Stream<Path> paths = Files.list(this.directory)) {
-                AtomicLong entries = new AtomicLong(0L);
-                AtomicLong size = new AtomicLong(0L);
-                paths.parallel()
-                        .map(Path::toFile)
-                        .map(f -> new EntryCleanup(f, this.readEntry(f), f.length()))
-                        .filter(p -> p.entry() == null || predicate.test(p.entry()))
-                        .filter(EntryCleanup::delete)
-                        .forEach(e -> {
-                            entries.incrementAndGet();
-                            size.addAndGet(e.size());
-                        });
-                return new CacheStatistics(entries.get(), size.get(), DISK);
-            } catch (IOException e) {
-                throw new CompletionException(e);
-            }
-        }, this.executor);
+    public CacheStatistics cleanup(Predicate<CacheEntry> predicate) throws IOException {
+        try (Stream<Path> paths = Files.list(this.directory)) {
+            AtomicLong entries = new AtomicLong(0L);
+            AtomicLong size = new AtomicLong(0L);
+            paths.parallel()
+                    .map(Path::toFile)
+                    .map(f -> new EntryCleanup(f, this.readEntry(f), f.length()))
+                    .filter(p -> p.entry() == null || predicate.test(p.entry()))
+                    .filter(EntryCleanup::delete)
+                    .forEach(e -> {
+                        entries.incrementAndGet();
+                        size.addAndGet(e.size());
+                    });
+            return new CacheStatistics(entries.get(), size.get(), DISK);
+        }
     }
 
     private @Nullable CacheEntry readEntry(@NotNull File file) {

@@ -27,6 +27,11 @@ public record CacheStatistics(long entries, long size, CacheType type) {
          */
         HYBRID,
 
+        /**
+         * Cache error.
+         */
+        ERROR,
+
     }
 
 }

@@ -3,8 +3,8 @@ package net.smyler.terramap.http;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.net.URI;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 public interface HttpCache {
@@ -13,8 +13,8 @@ public interface HttpCache {
 
     @Nullable CacheEntry lookup(URI uri);
 
-    CompletableFuture<CacheStatistics> statistics();
+    CacheStatistics statistics() throws IOException;
 
-    CompletableFuture<CacheStatistics> cleanup(Predicate<CacheEntry> predicate);
+    CacheStatistics cleanup(Predicate<CacheEntry> predicate) throws IOException;
 
 }
