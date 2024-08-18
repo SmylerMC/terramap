@@ -26,6 +26,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Objects.optionalBiMapSupplier;
+import static net.smyler.terramap.http.CacheStatistics.CacheType.ERROR;
 import static net.smyler.terramap.http.HttpStatusCodes.*;
 
 
@@ -53,11 +54,11 @@ public class TerramapHttpClient implements CachingHttpClient {
         try {
             requireNonNull(cacheDirectory);
             Files.createDirectories(cacheDirectory);
-            cache = new DiskCache(cacheDirectory, this.logger, this.forkJoinPool);
+            cache = new DiskCache(cacheDirectory, this.logger);
         } catch (Exception e) {
             this.logger.warn("Failed to create cache directory, falling back to memory cache");
             this.logger.catching(e);
-            cache = new MemoryCache(this.forkJoinPool);
+            cache = new MemoryCache();
         }
         this.cache = cache;
     }
@@ -244,17 +245,41 @@ public class TerramapHttpClient implements CachingHttpClient {
 
     @Override
     public CompletableFuture<CacheStatistics> cacheStatistics() {
-        return this.cache.statistics();
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return this.cache.statistics();
+            } catch (IOException e) {
+                this.logger.warn("Computing cache statistics failed");
+                this.logger.catching(e);
+                return new CacheStatistics(0, 0, ERROR);
+            }
+        }, this.forkJoinPool);
     }
 
     @Override
     public CompletableFuture<CacheStatistics> cacheCleanup() {
-        return this.cache.cleanup(e -> !e.isFresh() && e.age() > e.maxAge() * 10);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return this.cache.cleanup(e -> !e.isFresh() && e.age() > e.maxAge() * 10);
+            } catch (IOException e) {
+                this.logger.warn("Cache cleanup failed");
+                this.logger.catching(e);
+                return new CacheStatistics(0, 0, ERROR);
+            }
+        }, this.forkJoinPool);
     }
 
     @Override
     public CompletableFuture<CacheStatistics> cacheClear() {
-        return this.cache.cleanup(e -> true);
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return this.cache.cleanup(e -> true);
+            } catch (IOException e) {
+                this.logger.warn("Cache clear failed");
+                this.logger.catching(e);
+                return new CacheStatistics(0, 0, ERROR);
+            }
+        }, this.forkJoinPool);
     }
 
     private class HttpWorkerThread extends ForkJoinWorkerThread {
