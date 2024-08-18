@@ -17,10 +17,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinWorkerThread;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.Math.max;
@@ -29,6 +26,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Objects.optionalBiMapSupplier;
+import static net.smyler.terramap.http.HttpStatusCodes.*;
 
 
 public class TerramapHttpClient implements CachingHttpClient {
@@ -40,9 +38,6 @@ public class TerramapHttpClient implements CachingHttpClient {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
             .ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.ENGLISH)
             .withZone(ZoneId.of("GMT"));
-    private static final int HTTP_OK = 200;
-    private static final int HTTP_NO_CONTENT = 204;
-    private static final int HTTP_NOT_MODIFIED = 304;
 
     private final java.net.http.HttpClient client = java.net.http.HttpClient.newBuilder()
             .followRedirects(java.net.http.HttpClient.Redirect.NORMAL)
