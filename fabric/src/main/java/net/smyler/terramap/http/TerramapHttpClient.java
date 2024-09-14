@@ -1,6 +1,7 @@
 package net.smyler.terramap.http;
 
 import net.smyler.smylib.Strings;
+import net.smyler.terramap.Terramap;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,7 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Objects.optionalBiMapSupplier;
+import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.terramap.http.CacheStatistics.CacheType.ERROR;
 import static net.smyler.terramap.http.HttpStatusCodes.*;
 import static net.smyler.smylib.Strings.isNullOrEmpty;
@@ -35,7 +37,8 @@ public class TerramapHttpClient implements CachingHttpClient {
     private final ForkJoinPool semaphoreAcquireExecutor = new ForkJoinPool(1, HttpWorkerThread::new, this::unhandledException, true);
     private final AtomicLong workerCounter = new AtomicLong(0);
 
-    private static final String USER_AGENT = "Experimental Terramap version https://github.com/SmylerMC/terramap";
+    private static final String USER_AGENT = UserAgent.buildUserAgent(getGameClient(), Terramap.instance());
+
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
             .ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.ENGLISH)
             .withZone(ZoneId.of("GMT"));

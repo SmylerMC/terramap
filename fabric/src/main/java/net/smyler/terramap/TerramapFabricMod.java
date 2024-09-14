@@ -69,8 +69,6 @@ public class TerramapFabricMod implements ModInitializer, Terramap {
             });
         }, 10, 10, MINUTES);
 
-        this.httpClient.get("https://smyler.net").thenApply(String::new).thenAccept(this.logger::info);
-
     }
 
     @Override
