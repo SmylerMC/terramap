@@ -31,7 +31,7 @@ import static net.smyler.smylib.Strings.isNullOrEmpty;
 
 public class TerramapHttpClient implements CachingHttpClient {
 
-    private final ForkJoinPool forkJoinPool = new ForkJoinPool(1, HttpWorkerThread::new, this::unhandledException, true);
+    private final ForkJoinPool forkJoinPool = new ForkJoinPool(20, HttpWorkerThread::new, this::unhandledException, true);
     private final ForkJoinPool semaphoreAcquireExecutor = new ForkJoinPool(1, HttpWorkerThread::new, this::unhandledException, true);
     private final AtomicLong workerCounter = new AtomicLong(0);
 
