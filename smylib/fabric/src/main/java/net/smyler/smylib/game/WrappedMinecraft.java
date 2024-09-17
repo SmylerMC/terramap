@@ -110,12 +110,16 @@ public class WrappedMinecraft implements GameClient {
         return this.translator;
     }
 
-    @Override
-    public Font defaultFont() {
+    private WrappedFont font() {
         if (this.font == null) {
             this.font = new WrappedFont(1f, 1f, this.client.font);
         }
         return this.font;
+    }
+
+    @Override
+    public Font defaultFont() {
+        return this.font();
     }
 
     @Override
@@ -125,7 +129,7 @@ public class WrappedMinecraft implements GameClient {
 
     public void setUidDrawContext(WrappedGuiGraphics uiDrawContext) {
         this.uiDrawContext = uiDrawContext;
-        this.font.setVanillaGraphics(uiDrawContext.vanillaGraphics);
+        this.font().setVanillaGraphics(uiDrawContext.vanillaGraphics);
     }
 
     @Override
