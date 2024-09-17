@@ -1,5 +1,8 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'com.gradleup.shadow'
 }
 
 version = project.mod_version
@@ -26,6 +29,21 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 }
 
+
+tasks.named('shadowJar', ShadowJar) {
+    archiveClassifier.set("unmapped")
+    dependencies {
+        include(project(':core'))
+        include(project(':smylib:core'))
+        include(project(path: ':smylib:fabric', configuration: "namedElements"))
+    }
+}
+
+remapJar {
+    inputFile = shadowJar.archiveFile
+    dependsOn(shadowJar)
+}
+
 processResources {
 
     def properties = [
@@ -41,6 +59,9 @@ processResources {
     inputs.properties properties
 
     filesMatching("fabric.mod.json") {
+        expand properties
+    }
+    filesMatching("terramap.fabric.mixins.json") {
         expand properties
     }
 }

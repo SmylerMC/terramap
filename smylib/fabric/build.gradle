@@ -10,3 +10,9 @@ dependencies {
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 }
+
+loom {
+    mixin {
+        defaultRefmapName = "smylib-refmap.json"
+    }
+}
