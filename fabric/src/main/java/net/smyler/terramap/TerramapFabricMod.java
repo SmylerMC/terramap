@@ -57,7 +57,7 @@ public class TerramapFabricMod implements ModInitializer, Terramap {
                 .map(ModMetadata::getVersion)
                 .orElse(new StringVersion("Unknown"));
         this.logger.info("Initializing Terramap version {}", this.version());
-        this.rasterTileSetManager = new RasterTileSetManager(fabric.getConfigDir().toFile());
+        this.rasterTileSetManager = new RasterTileSetManager(fabric.getConfigDir().resolve("terramap_user_styles.json").toFile());
         Terramap.InstanceHolder.setInstance(this);
         SmyLib.initializeGameClient(new WrappedMinecraft(Minecraft.getInstance()), this.logger);
         GameClient client = getGameClient();
