@@ -14,6 +14,9 @@ base {
 
 loom {
     log4jConfigs.from file("src/dev/resources/log4j.xml")
+    runConfigs.configureEach {
+        property("terramap.debug", "true")
+    }
 }
 
 dependencies {
