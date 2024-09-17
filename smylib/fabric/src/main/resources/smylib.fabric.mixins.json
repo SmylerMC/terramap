@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "net.smyler.smylib.mixins",
   "refmap": "smylib.refmap.json",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [],
   "client": [
     "FontMixinNoShadowOffset",

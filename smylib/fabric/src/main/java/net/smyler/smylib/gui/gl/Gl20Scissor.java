@@ -8,6 +8,7 @@ import java.util.List;
 
 import static java.lang.Math.*;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.math.Math.clamp;
 
 /**
  * A wrapper around OpenGL 2.0's scissor feature.
@@ -62,7 +63,7 @@ public class Gl20Scissor implements Scissor {
 
     @Override
     public void pop() {
-        this.restore(this.scissorPosStack.removeLast());
+        this.restore(this.scissorPosStack.remove(this.scissorPosStack.size() - 1));
         this.doScissor();
     }
 

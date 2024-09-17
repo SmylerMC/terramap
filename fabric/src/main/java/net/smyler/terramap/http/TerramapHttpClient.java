@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -238,13 +239,16 @@ public class TerramapHttpClient implements CachingHttpClient {
     }
 
     private Optional<Long> parseHttpDate(String date) {
-        return Optional.ofNullable(
-                switch(DATE_TIME_FORMATTER.parse(date)) {
-                    case LocalDateTime e -> e.toEpochSecond(ZoneOffset.UTC);
-                    case ZonedDateTime zt -> zt.toEpochSecond();
-                    default -> null;
-                }
-        );
+        Long value;
+        TemporalAccessor parsed = DATE_TIME_FORMATTER.parse(date);
+        if (parsed instanceof LocalDateTime time) {
+            value = time.toEpochSecond(ZoneOffset.UTC);
+        } else if (parsed instanceof ZonedDateTime time) {
+            value = time.toEpochSecond();
+        } else {
+            value = null;
+        }
+        return Optional.ofNullable(value);
     }
 
     private byte[] readCache(final CacheEntry cache) {
@@ -424,12 +428,6 @@ public class TerramapHttpClient implements CachingHttpClient {
             return null;
         }
 
-    }
-
-    private Thread createThread(Runnable task) {
-        return Thread.ofVirtual()
-                .name("Terramap HTTP " + this.workerCounter.incrementAndGet())
-                .unstarted(task);
     }
 
 }
