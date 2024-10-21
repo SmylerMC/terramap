@@ -11,6 +11,7 @@ public class SmyLib {
 
     private static GameClient gameClient;
     private static Logger logger;
+    private static boolean isDebug = false;
 
     @NotNull
     public static GameClient getGameClient() {
@@ -24,6 +25,10 @@ public class SmyLib {
         return logger;
     }
 
+    public static boolean isDebug() {
+        return SmyLib.isDebug;
+    }
+
     public static void initializeGameClient(GameClient game, Logger logger) {
         checkArgument(game != null, "Cannot initialize SmyLib with a null game");
         checkArgument(logger != null, "Cannot initialize SmyLib with a null logger");
@@ -32,6 +37,10 @@ public class SmyLib {
         }
         SmyLib.gameClient = game;
         SmyLib.logger = logger;
+        if ("true".equals(System.getProperty("smylib.debug"))) {
+            SmyLib.logger.info("Enabling debug mode");
+            SmyLib.isDebug = true;
+        }
     }
 
 }

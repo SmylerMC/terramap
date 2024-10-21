@@ -59,10 +59,6 @@ public class TerramapClientProxy extends TerramapProxy {
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(game);
         SmyLib.initializeGameClient(game, Terramap.instance().logger());
-        if ("true".equals(System.getProperty("terramap.showTestScreen"))) {
-            game.showTestScreen();
-        }
-
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
         KeyBindings.registerBindings();
         MarkerControllerManager.registerBuiltInControllers();

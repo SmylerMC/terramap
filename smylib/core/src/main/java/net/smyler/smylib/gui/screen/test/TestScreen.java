@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.ScrollableWidgetContainer;
@@ -78,6 +79,7 @@ public class TestScreen extends Screen {
         this.infoTexts.add(new InfoText("Native window size", () -> getGameClient().nativeWindowWidth() + "x" + getGameClient().nativeWindowHeight()));
         this.infoTexts.add(new InfoText("Scale factor", () -> "" + getGameClient().scaleFactor()));
         this.infoTexts.add(new InfoText("isMac", () -> "" + getGameClient().isMac()));
+        this.infoTexts.add(new InfoText("SmyLib debug mode", () -> "" + SmyLib.isDebug()));
 
     }
 

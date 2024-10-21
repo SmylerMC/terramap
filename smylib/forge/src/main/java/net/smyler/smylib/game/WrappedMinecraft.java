@@ -7,12 +7,14 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.PopupScreenImplementation;
 import net.smyler.smylib.gui.screen.*;
 import net.smyler.smylib.gui.screen.test.TestScreen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
@@ -27,7 +29,7 @@ public class WrappedMinecraft implements GameClient {
     private int nativeWidth = 1;
     private int nativeHeight = 1;
     private int scale = 1;
-    private boolean showTestScreen = false;
+    private boolean showTestScreen = true;
 
     private final Mouse mouse = new Lwjgl2Mouse();
     private final Keyboard keyboard = new Lwjgl2Keyboard();
@@ -173,7 +175,7 @@ public class WrappedMinecraft implements GameClient {
     }
 
     @Override
-    public void displayPopup(Popup popup) {
+    public void displayPopup(@NotNull Popup popup) {
         final PopupScreen screen = new PopupScreenImplementation(this.minecraft.currentScreen, popup);
         Object o = new Object() {
             @SubscribeEvent
@@ -237,17 +239,13 @@ public class WrappedMinecraft implements GameClient {
 
     @SubscribeEvent
     public void onGuiScreenInit(GuiScreenEvent.InitGuiEvent event) {
-        if (!this.showTestScreen) {
+        if (!SmyLib.isDebug()) {
             return;
         }
-        if(!(event.getGui() instanceof GuiScreenProxy)) {
+        if(!(event.getGui() instanceof GuiScreenProxy) && this.showTestScreen) {
             this.displayScreen(new TestScreen(new WrappedVanillaScreen(event.getGui())));
             this.showTestScreen = false;
         }
-    }
-
-    public void showTestScreen() {
-        this.showTestScreen = true;
     }
 
 }
