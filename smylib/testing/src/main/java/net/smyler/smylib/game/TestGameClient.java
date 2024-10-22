@@ -1,5 +1,6 @@
 package net.smyler.smylib.game;
 
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.DummyUiDrawContext;
 import net.smyler.smylib.gui.UiDrawContext;
@@ -8,6 +9,7 @@ import net.smyler.smylib.gui.screen.PopupScreen;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import net.smyler.smylib.gui.screen.TestPopupScreen;
+import net.smyler.smylib.resources.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -227,6 +230,11 @@ public class TestGameClient implements GameClient {
     @Override
     public int currentFPS() {
         return this.targetFps;
+    }
+
+    @Override
+    public Optional<Resource> getResource(Identifier resource) {
+        return Optional.empty();
     }
 
     public void setIsMac(boolean yesNo) {

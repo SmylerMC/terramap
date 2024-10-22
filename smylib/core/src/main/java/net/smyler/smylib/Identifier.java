@@ -32,6 +32,7 @@ public final class Identifier {
      *
      * @param identifier    an identifier in the "<namespace>:<path>" format
      * @return              the parsed identifier
+     * @throws IllegalArgumentException if the provided text cannot be parsed into a valid identifier
      */
     public static Identifier parse(String identifier) {
         checkArgument(identifier != null, "Cannot parse null identifier");

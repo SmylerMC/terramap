@@ -1,14 +1,17 @@
 package net.smyler.smylib.game;
 
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
+import net.smyler.smylib.resources.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 /**
  * A wrapper around the main game object.
@@ -136,5 +139,13 @@ public interface GameClient {
     int closeAllPopups();
 
     int currentFPS();
+
+    /**
+     * Exposes resources loaded from resource packs.
+     *
+     * @param resource  the resource identifier
+     * @return          the specified resource, if present
+     */
+    Optional<Resource> getResource(Identifier resource);
 
 }

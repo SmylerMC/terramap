@@ -4,26 +4,38 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.data.MetadataSerializer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.smyler.smylib.SmyLib;
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.PopupScreenImplementation;
 import net.smyler.smylib.gui.screen.*;
 import net.smyler.smylib.gui.screen.test.TestScreen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
+import net.smyler.smylib.resources.*;
+import net.smyler.smylib.resources.Resource;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
+import static net.minecraftforge.fml.common.ObfuscationReflectionHelper.getPrivateValue;
 import static net.smyler.smylib.Preconditions.checkState;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.SmyLib.getLogger;
 
 public class WrappedMinecraft implements GameClient {
 
     private final Minecraft minecraft;
+    private final MetadataSerializer metadataSerializer;
+    private static final String SRG_metadataSerializer = "field_110452_an";
     private float width = 1f;
     private float height = 1f;
     private int nativeWidth = 1;
@@ -44,6 +56,24 @@ public class WrappedMinecraft implements GameClient {
 
     public WrappedMinecraft(Minecraft minecraft) {
         this.minecraft = minecraft;
+        MetadataSerializer metadataSerializer;
+        try {
+            metadataSerializer = getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), SRG_metadataSerializer);
+        } catch (Exception e) {
+            SmyLib.getLogger().error("Encountered an error when accessing vanilla metadata serializer. Features that depend on custom resource metadata might get disabled");
+            SmyLib.getLogger().catching(e);
+            metadataSerializer = null;
+        }
+        this.metadataSerializer = metadataSerializer;
+    }
+
+    public void init() {
+        if (SmyLib.isDebug()) {
+            getLogger().info("Registering debug resource metadata");
+            this.metadataSerializer.registerMetadataSectionType(new DebugMetadataSerializer(), DebugMetadataSection.class);
+        }
+        this.metadataSerializer.registerMetadataSectionType(new GuiMetadataSerializer(), GuiMetadataSection.class);
+        this.metadataSerializer.registerMetadataSectionType(new VillagerMetadataSerializer(), VillagerMetadataSection.class);
     }
 
     @Override
@@ -225,6 +255,15 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public int currentFPS() {
         return Minecraft.getDebugFPS();
+    }
+
+    @Override
+    public Optional<Resource> getResource(Identifier resource) {
+        try {
+            IResource vanilla = this.minecraft.getResourceManager().getResource(new ResourceLocation(resource.namespace, resource.path));
+            return Optional.of(new WrappedResource(resource, vanilla));
+        } catch (IOException ignored) {}
+        return Optional.empty();
     }
 
     @SubscribeEvent

@@ -12,6 +12,7 @@ import net.smyler.smylib.gui.containers.TabbedContainer;
 import net.smyler.smylib.gui.screen.BackgroundOption;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.smylib.gui.widgets.ContentPreviewWidget;
 import net.smyler.smylib.gui.widgets.SpriteWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
@@ -22,22 +23,26 @@ import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import net.smyler.smylib.json.TextJsonAdapter;
+import net.smyler.smylib.resources.DebugMetadata;
+import net.smyler.smylib.resources.Resource;
 import net.smyler.smylib.text.Formatting;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import net.smyler.smylib.text.TextStyle;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.max;
 import static java.lang.Math.round;
 import static java.util.Comparator.comparing;
-import static net.smyler.smylib.Color.RED;
-import static net.smyler.smylib.Color.WHITE;
+import static net.smyler.smylib.Color.*;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
@@ -51,7 +56,8 @@ public class TestScreen extends Screen {
     private final TabbedContainer.TabContainer infoTab;
     private final TabbedContainer.TabContainer spritesTab;
     private final TabbedContainer.TabContainer widgetTab;
-    private final TabbedContainer.TabContainer jsonTextScreen;
+    private final TabbedContainer.TabContainer jsonTextTab;
+    private final TabbedContainer.TabContainer resourceTab;
     private final FlexibleWidgetContainer spritesContainer = new FlexibleWidgetContainer(0f, 0f, 0, 10f, 10f);
 
     private final List<InfoText> infoTexts = new ArrayList<>();
@@ -68,7 +74,8 @@ public class TestScreen extends Screen {
         this.infoTab = this.tabs.createTab(ofPlainText("About"));
         this.spritesTab = this.tabs.createTab(ofPlainText("Sprites"));
         this.widgetTab = this.tabs.createTab(ofPlainText("Widgets"));
-        this.jsonTextScreen = this.tabs.createTab(ofPlainText("JSON texts"));
+        this.jsonTextTab = this.tabs.createTab(ofPlainText("JSON texts"));
+        this.resourceTab = this.tabs.createTab(ofPlainText("Resources"));
 
         this.infoTexts.add(new InfoText("Game version", () -> getGameClient().gameVersion()));
         this.infoTexts.add(new InfoText("Loader", () -> getGameClient().modLoader()));
@@ -103,8 +110,10 @@ public class TestScreen extends Screen {
         this.spritesTab.removeAllWidgets();
         this.spritesContainer.removeAllWidgets();
         this.widgetTab.removeAllWidgets();
-        this.jsonTextScreen.removeAllWidgets();
-        this.jsonTextScreen.cancelAllScheduled();
+        this.jsonTextTab.removeAllWidgets();
+        this.jsonTextTab.cancelAllScheduled();
+        this.resourceTab.removeAllWidgets();
+        this.resourceTab.cancelAllScheduled();
 
         this.addWidget(this.tabs);
         this.tabs.setX(PADDING);
@@ -173,27 +182,77 @@ public class TestScreen extends Screen {
         this.widgetTab.addWidget(new TextFieldWidget(PADDING, 90f, 0, 150f, this.getFont()).setText("TextFieldWidget"));
 
         // JSON text
-        final TextFieldWidget inputField = new TextFieldWidget(PADDING, PADDING, 0, jsonTextScreen.getWidth() - 2*PADDING, getGameClient().defaultFont());
+        final TextFieldWidget inputField = new TextFieldWidget(PADDING, PADDING, 0, jsonTextTab.getWidth() - 2*PADDING, getGameClient().defaultFont());
         final TextWidget text = new TextWidget(
-                this.jsonTextScreen.getWidth() / 2,
-                (this.jsonTextScreen.getHeight() - inputField.getHeight()) / 2,
+                this.jsonTextTab.getWidth() / 2,
+                (this.jsonTextTab.getHeight() - inputField.getHeight()) / 2,
                 0,
                 ImmutableText.EMPTY,
                 TextAlignment.CENTER, getGameClient().defaultFont()
         );
-        this.jsonTextScreen.addWidget(inputField);
-        this.jsonTextScreen.addWidget(text);
-        this.jsonTextScreen.scheduleBeforeEachUpdate(() -> {
+        this.jsonTextTab.addWidget(inputField);
+        this.jsonTextTab.addWidget(text);
+        this.jsonTextTab.scheduleBeforeEachUpdate(() -> {
             try {
                 Text component = this.textJsonParser.fromJson(inputField.getText(), Text.class);
                 if (component == null) {
                     throw new JsonParseException("");
                 }
                 text.setText(component);
-                text.setAnchorY((this.jsonTextScreen.getHeight() - inputField.getHeight() - text.getHeight()) / 2 + inputField.getHeight());
+                text.setAnchorY((this.jsonTextTab.getHeight() - inputField.getHeight() - text.getHeight()) / 2 + inputField.getHeight());
                 inputField.setFocusedTextColor(WHITE);
             } catch (JsonParseException e) {
                 inputField.setFocusedTextColor(RED);
+            }
+        });
+
+        final TextFieldWidget resourceInputField = new TextFieldWidget(PADDING, PADDING, 0, this.resourceTab.getWidth() - 2*PADDING, getGameClient().defaultFont());
+        final TextWidget resourceParsingResult = new TextWidget(
+                this.resourceTab.getWidth() / 2, resourceInputField.getY() + resourceInputField.getHeight() + PADDING, 0,
+                ImmutableText.EMPTY, TextAlignment.CENTER, getGameClient().defaultFont()
+        );
+        final ContentPreviewWidget resourcePreview = new ContentPreviewWidget(
+                PADDING, resourceParsingResult.getY() + resourceParsingResult.getHeight() + PADDING,
+                0,
+                (this.resourceTab.getWidth() - PADDING * 3) / 2f, this.resourceTab.getHeight() - resourceParsingResult.getY() - resourceParsingResult.getHeight() - PADDING * 2
+        );
+        final TextWidget metadataText = new TextWidget(
+                PADDING * 2 + resourcePreview.getWidth(), resourcePreview.getHeight(), 0,
+                TextAlignment.RIGHT,
+                this.getFont()
+        ).setBackgroundColor(DARK_OVERLAY);
+        this.resourceTab.addWidget(resourceInputField);
+        this.resourceTab.addWidget(resourceParsingResult);
+        this.resourceTab.addWidget(resourcePreview);
+        this.resourceTab.addWidget(metadataText);
+        resourceInputField.setOnChangeCallback(t -> {
+            Identifier identifier;
+            try {
+                identifier = Identifier.parse(t);
+            } catch (IllegalArgumentException ignored) {
+                resourceParsingResult.setText(ImmutableText.ofPlainText("Invalid resource identifier").withStyle(new TextStyle(RED)));
+                resourcePreview.clearPreview();
+                metadataText.setText(ImmutableText.EMPTY);
+                return;
+            }
+            Optional<Resource> resourceOp = getGameClient().getResource(identifier);
+            if (!resourceOp.isPresent()) {
+                resourceParsingResult.setText(ImmutableText.ofPlainText("No such resource").withStyle(new TextStyle(YELLOW)));
+                resourcePreview.clearPreview();
+                metadataText.setText(ImmutableText.EMPTY);
+                return;
+            }
+            Resource resource = resourceOp.get();
+            resourceParsingResult.setText(ImmutableText.ofPlainText("Resource found").withStyle(new TextStyle(GREEN)));
+            try (InputStream in = resource.inputStream()) {
+                resourcePreview.previewFrom(in);
+                Text metadata = resource.metadata().debug()
+                        .map(DebugMetadata::value)
+                        .map(ImmutableText::ofPlainText)
+                        .orElse(ImmutableText.ofPlainText("No metadata found").withStyle(new TextStyle(Formatting.DARK_RED.color())));
+                metadataText.setText(metadata);
+            } catch (IOException ignored) {
+                resourceParsingResult.setText(ImmutableText.ofPlainText("Error reading resource").withStyle(new TextStyle(RED)));
             }
         });
     }

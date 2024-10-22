@@ -1,0 +1,35 @@
+{
+  "canParseStretch": {
+    "scaling": {
+      "type": "stretch"
+    }
+  },
+  "canParseTile": {
+    "scaling": {
+      "type": "tile",
+      "width": 1337,
+      "height": 42
+    }
+  },
+  "canParseNineSliceWithNumberBorder": {
+    "scaling": {
+      "type": "nine_slice",
+      "width": 1337,
+      "height": 42,
+      "border": 22
+    }
+  },
+  "canParseNineSliceWithObjectBorder": {
+    "scaling": {
+      "type": "nine_slice",
+      "width": 1337,
+      "height": 42,
+      "border": {
+        "left": 22,
+        "top": 23,
+        "right": 24,
+        "bottom": 25
+      }
+    }
+  }
+}
