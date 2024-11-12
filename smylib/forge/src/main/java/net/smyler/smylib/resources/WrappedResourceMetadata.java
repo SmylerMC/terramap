@@ -66,4 +66,10 @@ public class WrappedResourceMetadata implements ResourceMetadata {
         return Optional.ofNullable(section);
     }
 
+    @Override
+    public Optional<CursorResourceMetadata> cursor() {
+        CursorMetadataSection section = this.resource.getMetadata("cursor");
+        return Optional.ofNullable(section);
+    }
+
 }

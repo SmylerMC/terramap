@@ -150,6 +150,21 @@ public class TestGameClient implements GameClient {
     }
 
     @Override
+    public Optional<Cursor> cursor() {
+        return Optional.empty();
+    }
+
+    @Override
+    public void setCursor(@Nullable Identifier identifier) {
+
+    }
+
+    @Override
+    public Optional<Cursor> getCursor(Identifier identifier) {
+        return Optional.empty();
+    }
+
+    @Override
     public SoundSystem soundSystem() {
         return this.soundSystem;
     }

@@ -1,20 +1,21 @@
 package fr.thesmyler.smylibgui.container;
 
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import org.lwjgl.input.Cursor;
 
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.Cursors;
 import net.smyler.smylib.gui.widgets.Widget;
-import org.lwjgl.input.Mouse;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
- * A {@link FlexibleWidgetContainer} that takes the form of a window and can optionally moved or resized by the user,
+ * A {@link FlexibleWidgetContainer} that takes the form of a window and can optionally be moved or resized by the user,
  * the same way any desktop window would.
  *
  * @author SmylerMC
@@ -104,9 +105,9 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private abstract class BaseDecorationWidget implements Widget {
 
         private boolean lastHovered = false;
-        private final Cursor cursor;
+        private final Identifier cursor;
 
-        public BaseDecorationWidget(Cursor cursor) {
+        public BaseDecorationWidget(Identifier cursor) {
             this.cursor = cursor;
         }
 
@@ -123,8 +124,12 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             context.drawRectangle(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
             if(this.lastHovered != hovered && !getGameClient().mouse().isButtonPressed(0)) {
-                if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) Cursors.trySetCursor(this.cursor);
-                else if(Mouse.getNativeCursor() == this.cursor) Cursors.trySetCursor(null);
+                GameClient client = getGameClient();
+                if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) {
+                    client.setCursor(this.cursor);
+                } else if(client.cursor().map(Cursor::identifier).orElse(null) == this.cursor) {
+                    client.setCursor(null);
+                }
                 this.lastHovered = hovered;
             }
         }
@@ -132,7 +137,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
     private abstract class BorderWidget extends BaseDecorationWidget {
 
-        public BorderWidget(Cursor cursor) {
+        public BorderWidget(Identifier cursor) {
             super(cursor);
         }
 

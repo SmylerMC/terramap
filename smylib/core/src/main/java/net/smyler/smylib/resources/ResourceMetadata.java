@@ -21,4 +21,6 @@ public interface ResourceMetadata {
 
     Optional<DebugMetadata> debug();
 
+    Optional<CursorResourceMetadata> cursor();
+
 }

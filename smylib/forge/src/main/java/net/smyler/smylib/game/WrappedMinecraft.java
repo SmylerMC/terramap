@@ -4,7 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -21,6 +23,7 @@ import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import net.smyler.smylib.resources.*;
 import net.smyler.smylib.resources.Resource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,10 +55,13 @@ public class WrappedMinecraft implements GameClient {
     private final UiDrawContext uiDrawContext = new Lwjgl2UiDrawContext();
     private final SpriteLibrary sprites = new LegacyVanillaSprites();
 
+    private CursorManager<?> cursorManager;
+
     private WrappedVanillaScreen lastAccessedVanillaScreen = null;
 
     public WrappedMinecraft(Minecraft minecraft) {
         this.minecraft = minecraft;
+
         MetadataSerializer metadataSerializer;
         try {
             metadataSerializer = getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), SRG_metadataSerializer);
@@ -65,6 +71,31 @@ public class WrappedMinecraft implements GameClient {
             metadataSerializer = null;
         }
         this.metadataSerializer = metadataSerializer;
+
+        if (this.isMac()) {
+            SmyLib.getLogger().warn("Not enabling cursor support as we are running on macOS");
+        } else if (!this.isGlAvailabale()) {
+            SmyLib.getLogger().warn("Not enabling cursor support as GL is not available");
+        } else {
+            this.cursorManager = new Lwjgl2CursorManager();
+        }
+        if (this.cursorManager == null) {
+            this.cursorManager = new DummyCursorManager();
+        }
+        IResourceManager resourceManager = minecraft.getResourceManager();
+        if (resourceManager instanceof IReloadableResourceManager) {
+            IReloadableResourceManager reloadableResourceManager = (IReloadableResourceManager) resourceManager;
+            reloadableResourceManager.registerReloadListener(r -> {
+                try {
+                    this.cursorManager.reload();
+                } catch (Exception e) {
+                    SmyLib.getLogger().error("Failed to reload cursor manager");
+                    SmyLib.getLogger().catching(e);
+                }
+            });
+        } else {
+            SmyLib.getLogger().warn("Vanilla resource manager does not support reloading, will not reload cursors on resource reload");
+        }
     }
 
     public void init() {
@@ -74,6 +105,7 @@ public class WrappedMinecraft implements GameClient {
         }
         this.metadataSerializer.registerMetadataSectionType(new GuiMetadataSerializer(), GuiMetadataSection.class);
         this.metadataSerializer.registerMetadataSectionType(new VillagerMetadataSerializer(), VillagerMetadataSection.class);
+        this.metadataSerializer.registerMetadataSectionType(new CursorMetadataSectionSerializer(), CursorMetadataSection.class);
     }
 
     @Override
@@ -148,6 +180,41 @@ public class WrappedMinecraft implements GameClient {
     }
 
     @Override
+    public Optional<Cursor> cursor() {
+        try {
+            return Optional.ofNullable(this.cursorManager.getCurrent());
+        } catch (Exception e) {
+            SmyLib.getLogger().warn("Encountered an exception when getting current mouse cursor. Disabling support.");
+            SmyLib.getLogger().catching(e);
+            this.cursorManager = new DummyCursorManager();
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void setCursor(@Nullable Identifier identifier) {
+        try {
+            this.cursorManager.set(identifier);
+        } catch (Exception e) {
+            SmyLib.getLogger().warn("Encountered an exception when setting mouse cursor. Disabling support.");
+            SmyLib.getLogger().catching(e);
+            this.cursorManager = new DummyCursorManager();
+        }
+    }
+
+    @Override
+    public Optional<Cursor> getCursor(Identifier identifier) {
+        try {
+            return Optional.ofNullable(this.cursorManager.get(identifier));
+        } catch (Exception e) {
+            SmyLib.getLogger().warn("Encountered an exception when getting a mouse cursor: '{}'. Disabling support.", identifier);
+            SmyLib.getLogger().catching(e);
+            this.cursorManager = new DummyCursorManager();
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public SoundSystem soundSystem() {
         return this.soundSystem;
     }
@@ -180,7 +247,9 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public void displayScreen(Screen screen) {
         GuiScreen vanillaScreen;
-        if (screen instanceof WrappedVanillaScreen) {
+        if (screen == null) {
+            vanillaScreen = null;
+        } else if (screen instanceof WrappedVanillaScreen) {
             WrappedVanillaScreen wrapped = (WrappedVanillaScreen) screen;
             vanillaScreen = wrapped.getWrapped();
             this.lastAccessedVanillaScreen = wrapped;
@@ -193,6 +262,9 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public Screen getCurrentScreen() {
         GuiScreen currentGuiScreen = this.minecraft.currentScreen;
+        if (currentGuiScreen == null) {
+            return null;
+        }
         if (currentGuiScreen instanceof GuiScreenProxy) {
             return ((GuiScreenProxy)currentGuiScreen).getScreen();
         }

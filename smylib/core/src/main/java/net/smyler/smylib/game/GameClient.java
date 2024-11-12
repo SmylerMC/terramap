@@ -1,6 +1,7 @@
 package net.smyler.smylib.game;
 
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.popups.Popup;
@@ -82,6 +83,34 @@ public interface GameClient {
     Keyboard keyboard();
 
     Clipboard clipboard();
+
+    /**
+     * Accessor for the current custom cursor.
+     * {@link Cursor} objects returned by the method are short-lived:
+     * they become irrelevant and unreliable when resources are reloaded.
+     *
+     * @return  the current cursor,
+     *          or an empty {@link Optional} when using the default system cursor
+     *          or if the cursor was set by means other than SmyLib
+     */
+    Optional<Cursor> cursor();
+
+    /**
+     * Sets a custom cursor using its resource identifier.
+     *
+     * @param identifier    a namespaced identifier for the cursor to set
+     */
+    void setCursor(@Nullable Identifier identifier);
+
+    /**
+     * Gets a cursor object from its {@link Identifier identifier}.
+     * {@link Cursor} objects returned by the method are short-lived:
+     * they become irrelevant and unreliable when resources are reloaded.
+     *
+     * @param identifier    the identifier of the cursor
+     * @return              the cursor with the requested identifier
+     */
+    Optional<Cursor> getCursor(Identifier identifier);
 
     SoundSystem soundSystem();
 
