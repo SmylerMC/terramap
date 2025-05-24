@@ -93,7 +93,7 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
 
     private Text parseTextFromJsonArray(JsonElement json, Type type, JsonDeserializationContext context) {
         JsonArray array = json.getAsJsonArray();
-        if (array.isEmpty()) {
+        if (array.size() == 0) {
             throw new JsonParseException("Json texts represented as arrays need at least one element to be valid");
         }
         ImmutableText parent = null;
