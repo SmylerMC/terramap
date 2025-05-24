@@ -130,6 +130,7 @@ processResources {
 }
 
 shadowJar {
+    from project(":core").sourceSets.main.output
     dependencies {
         include(dependency(group: "com.twelvemonkeys.common", name: "common-lang", version: project.twelvemonkeys_version))
         include(dependency(group: "com.twelvemonkeys.common", name: "common-io", version: project.twelvemonkeys_version))
