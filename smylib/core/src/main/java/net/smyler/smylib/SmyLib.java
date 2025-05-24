@@ -9,6 +9,8 @@ import static net.smyler.smylib.Preconditions.checkState;
 
 public class SmyLib {
 
+    public static final String MODDING_NAMESPACE = "smylib";
+
     private static GameClient gameClient;
     private static Logger logger;
     private static boolean isDebug = false;

@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;
-import net.smyler.smylib.gui.sprites.WarningWidget;
+import net.smyler.smylib.gui.widgets.WarningWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
 import net.smyler.terramap.Terramap;

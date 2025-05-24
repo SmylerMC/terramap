@@ -95,8 +95,7 @@ public class SpriteButtonWidget extends AbstractButtonWidget {
         public static final ButtonSprites CENTER = new ButtonSprites(BUTTON_CENTER_15.sprite, BUTTON_CENTER_15_DISABLED.sprite, BUTTON_CENTER_15_HIGHLIGHTED.sprite);
         public static final ButtonSprites PAPER = new ButtonSprites(BUTTON_PAPER_15.sprite, BUTTON_PAPER_15_DISABLED.sprite, BUTTON_PAPER_15_HIGHLIGHTED.sprite);
         public static final ButtonSprites WRENCH = new ButtonSprites(BUTTON_WRENCH_15.sprite, BUTTON_WRENCH_15_DISABLED.sprite, BUTTON_WRENCH_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites BURGER_15_1 = new ButtonSprites(BUTTON_BURGER_15_1.sprite, BUTTON_BURGER_15_1_DISABLED.sprite, BUTTON_BURGER_15_1_HIGHLIGHTED.sprite);
-        public static final ButtonSprites BURGER_15_2 = new ButtonSprites(BUTTON_BURGER_15_2.sprite, BUTTON_BURGER_15_2_DISABLED.sprite, BUTTON_BURGER_15_2_HIGHLIGHTED.sprite);
+        public static final ButtonSprites BURGER_15 = new ButtonSprites(BUTTON_BURGER_15.sprite, BUTTON_BURGER_15_DISABLED.sprite, BUTTON_BURGER_15_HIGHLIGHTED.sprite);
         public static final ButtonSprites TRASH = new ButtonSprites(BUTTON_TRASH_15.sprite, BUTTON_TRASH_15_DISABLED.sprite, BUTTON_TRASH_15_HIGHLIGHTED.sprite);
         public static final ButtonSprites OFFSET = new ButtonSprites(BUTTON_OFFSET_15.sprite, BUTTON_OFFSET_15_DISABLED.sprite, BUTTON_OFFSET_15_HIGHLIGHTED.sprite);
         public static final ButtonSprites OFFSET_WARNING = new ButtonSprites(BUTTON_OFFSET_WARNING_15.sprite, BUTTON_OFFSET_WARNING_15_DISABLED.sprite, BUTTON_OFFSET_WARNING_15_HIGHLIGHTED.sprite);

@@ -5,7 +5,7 @@ import java.util.*;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.SlidingPanelWidget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.container.WindowedContainer;
+import net.smyler.smylib.gui.containers.WindowedContainer;
 import net.smyler.smylib.gui.containers.SlidingPanelWidget.PanelTarget;
 import net.smyler.smylib.gui.screen.BackgroundOption;
 import net.smyler.smylib.gui.screen.Screen;

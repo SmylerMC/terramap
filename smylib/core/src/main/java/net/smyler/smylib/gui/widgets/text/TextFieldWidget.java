@@ -3,11 +3,10 @@ package net.smyler.smylib.gui.widgets.text;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.gl.ColorLogic;
 import net.smyler.smylib.gui.gl.GlContext;
-import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.smylib.gui.sprites.SmyLibSprites;
 import org.jetbrains.annotations.Nullable;
 
 import net.smyler.smylib.game.Key;
@@ -57,9 +56,6 @@ public class TextFieldWidget implements Widget {
     private Consumer<String> onChangeCallback;
     private final MenuWidget rightClickMenu;
     private boolean isSearchBar;
-
-    private final Identifier WIDGET_TEXTURES = new Identifier("terramap", "textures/gui/widgets.png");
-    private final Sprite MAGNIFYING_GLASS = new Sprite(WIDGET_TEXTURES, 256, 256, 0, 54, 15, 69);
 
     public TextFieldWidget(float x, float y, int z, float width, String defaultText,
             Consumer<String> onChange, Predicate<String> onPressEnter, Predicate<String> textValidator,
@@ -145,7 +141,7 @@ public class TextFieldWidget implements Widget {
         }
 
         if(this.isSearchBar) {
-            context.drawSprite(x + this.width - 17, y + 2, MAGNIFYING_GLASS);
+            context.drawSprite(x + this.width - 17, y + 2, SmyLibSprites.MAGNIFYING_GLASS_15.sprite);
         }
 
 

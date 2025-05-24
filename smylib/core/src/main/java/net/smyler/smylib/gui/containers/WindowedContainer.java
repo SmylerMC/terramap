@@ -1,14 +1,12 @@
-package fr.thesmyler.smylibgui.container;
+package net.smyler.smylib.gui.containers;
 
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.containers.WidgetContainer;
 
 import net.smyler.smylib.Color;
-import fr.thesmyler.smylibgui.util.Cursors;
 import net.smyler.smylib.gui.widgets.Widget;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
@@ -18,9 +16,16 @@ import static net.smyler.smylib.SmyLib.getGameClient;
  * A {@link FlexibleWidgetContainer} that takes the form of a window and can optionally be moved or resized by the user,
  * the same way any desktop window would.
  *
- * @author SmylerMC
+ * @author Smyler
  */
 public class WindowedContainer extends FlexibleWidgetContainer {
+
+    // The cursors to show when hovering window borders
+    public static final Identifier CURSOR_MOVE = new Identifier(SmyLib.MODDING_NAMESPACE, "textures/gui/cursors/move.png");
+    public static final Identifier CURSOR_RESIZE_VERTICAL = new Identifier(SmyLib.MODDING_NAMESPACE, "textures/gui/cursors/resize_vertical.png");
+    public static final Identifier CURSOR_RESIZE_HORIZONTAL = new Identifier(SmyLib.MODDING_NAMESPACE, "textures/gui/cursors/resize_horizontal.png");
+    public static final Identifier CURSOR_RESIZE_DIAGONAL_1 = new Identifier(SmyLib.MODDING_NAMESPACE, "textures/gui/cursors/resize_diag1.png");
+    public static final Identifier CURSOR_RESIZE_DIAGONAL_2 = new Identifier(SmyLib.MODDING_NAMESPACE, "textures/gui/cursors/resize_diag2.png");
 
     private float borderWidth = 5;
     private float effectiveBorderSize = borderWidth;
@@ -157,7 +162,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class RightBorderBar extends BorderWidget {
 
         public RightBorderBar() {
-            super(Cursors.CURSOR_RESIZE_HORIZONTAL);
+            super(CURSOR_RESIZE_HORIZONTAL);
         }
 
         @Override
@@ -202,7 +207,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class LeftBorderBar extends BorderWidget {
 
         public LeftBorderBar() {
-            super(Cursors.CURSOR_RESIZE_HORIZONTAL);
+            super(CURSOR_RESIZE_HORIZONTAL);
         }
 
         @Override
@@ -244,7 +249,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class BottomBorderBar extends BorderWidget {
 
         public BottomBorderBar() {
-            super(Cursors.CURSOR_RESIZE_VERTICAL);
+            super(CURSOR_RESIZE_VERTICAL);
         }
 
         @Override
@@ -284,7 +289,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class TopBorderBar extends BorderWidget {
 
         public TopBorderBar() {
-            super(Cursors.CURSOR_RESIZE_VERTICAL);
+            super(CURSOR_RESIZE_VERTICAL);
         }
 
         @Override
@@ -326,7 +331,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class UpperLeftCorner extends BorderWidget {
 
         public UpperLeftCorner() {
-            super(Cursors.CURSOR_RESIZE_DIAGONAL_1);
+            super(CURSOR_RESIZE_DIAGONAL_1);
         }
 
         @Override
@@ -371,7 +376,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class LowerLeftCorner extends BorderWidget {
 
         public LowerLeftCorner() {
-            super(Cursors.CURSOR_RESIZE_DIAGONAL_2);
+            super(CURSOR_RESIZE_DIAGONAL_2);
         }
 
         @Override
@@ -414,7 +419,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class LowerRightCorner extends BorderWidget {
 
         public LowerRightCorner() {
-            super(Cursors.CURSOR_RESIZE_DIAGONAL_1);
+            super(CURSOR_RESIZE_DIAGONAL_1);
         }
 
         @Override
@@ -455,7 +460,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class UpperRightCorner extends BorderWidget {
 
         public UpperRightCorner() {
-            super(Cursors.CURSOR_RESIZE_DIAGONAL_2);
+            super(CURSOR_RESIZE_DIAGONAL_2);
         }
 
         @Override
@@ -498,7 +503,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class TopBar extends BaseDecorationWidget {
 
         public TopBar() {
-            super(Cursors.CURSOR_MOVE);
+            super(CURSOR_MOVE);
         }
 
         @Override
@@ -557,7 +562,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     private class CenterDragWidget extends BaseDecorationWidget {
 
         public CenterDragWidget() {
-            super(Cursors.CURSOR_MOVE);
+            super(CURSOR_MOVE);
         }
 
         @Override
