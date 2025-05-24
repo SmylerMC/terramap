@@ -11,6 +11,6 @@
   "credits": "The Terra121 and Terra++ teams, without whom Terramap would be irrelevant. Copyrights notices and links are displayed on the fullscreen map. The now many people helping with the translation. Drope for the logo. The TwelveMonkeys library is licensed under the BSD 3-Clause \"New\" or \"Revised\" License.",
   "logoFile": "assets/terramap/logo/1000.png",
   "screenshots": [],
-  "dependencies": ["terraplusplus"]
+  "dependencies": ["terraplusplus", "smylib"]
 }
 ]

@@ -1,0 +1,16 @@
+[
+{
+  "modid": "smylib",
+  "name": "SmyLib",
+  "description": "Smyler's mod library",
+  "version": "0.1.0",
+  "mcversion": "1.12.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Smyler"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

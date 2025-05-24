@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.proxy;
 
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.TerramapConfig;
-import net.smyler.smylib.gui.screen.test.TestScreen;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.command.OpenMapCommand;
 import fr.thesmyler.terramap.eventhandlers.ClientTerramapEventHandler;
@@ -24,8 +23,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smyler.smylib.SmyLib;
-import net.smyler.smylib.game.WrappedMinecraft;
 import net.smyler.terramap.Terramap;
 
 import javax.imageio.ImageIO;
@@ -55,17 +52,12 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         Terramap.instance().logger().debug("Terramap client init");
-        WrappedMinecraft game = new WrappedMinecraft(Minecraft.getMinecraft());
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
-        MinecraftForge.EVENT_BUS.register(game);
-        SmyLib.initializeGameClient(game, Terramap.instance().logger());
-        game.init();
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
         KeyBindings.registerBindings();
         MarkerControllerManager.registerBuiltInControllers();
         Terramap.instance().rasterTileSetManager().reload(TerramapConfig.enableDebugMaps);
         ClientCommandHandler.instance.registerCommand(new OpenMapCommand());
-        MinecraftForge.EVENT_BUS.register(TestScreen.class);
     }
 
     @Override
