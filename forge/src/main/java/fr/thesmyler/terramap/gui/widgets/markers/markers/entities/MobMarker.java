@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
@@ -29,7 +28,10 @@ import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.monster.EntityWitherSkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.EntityZombieVillager;
-import net.minecraft.util.ResourceLocation;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.sprites.Sprite;
+
+import static net.smyler.terramap.gui.sprites.TerramapSprites.*;
 
 /**
  * Map marker for any entity that implements IMob
@@ -41,191 +43,81 @@ import net.minecraft.util.ResourceLocation;
 public class MobMarker extends AbstractLivingMarker {
 
     public MobMarker(MarkerController<?> controller, Entity entity) {
-        super(controller, 10, 10, SmyLibGuiTextures.WIDGET_TEXTURES, 22, 69, 256, 256, entity);
-        if(entity instanceof EntityBlaze) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = BLAZE_TEXTURE;
-        } else if(entity instanceof EntityCreeper) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = CREEPER_TEXTURE;
-        } else if(entity instanceof EntityElderGuardian) {
-            this.width = this.height = 12;
-            this.u = 1;
-            this.v = 10;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        } else if(entity instanceof EntityEnderman) {
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-            this.width = 8;
-            this.height = 8;
-            this.u = 1;
-            this.v = 1;
-            this.textureHeight = this.textureWidth = 256;
-        } else if(entity instanceof EntityEndermite) {
-            this.width = 4;
-            this.height = 3;
-            this.u = this.v = 2;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = ENDERMITE_TEXTURE;
-        } else if(entity instanceof EntityEvoker) {
-            this.width = 8;
-            this.height = 10;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 64;
-            this.texture = EVOKER_TEXTURE;
-        } else if(entity instanceof EntityGhast) {
-            this.width = this.height = 16;
-            this.u = this.v = 16;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = GHAST_TEXTURE;
-        } else if(entity instanceof EntityGuardian) {
-            this.width = this.height = 12;
-            this.u = 14;
-            this.v = 10;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        } else if(entity instanceof EntityHusk) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = this.textureHeight = 64;
-            this.texture = HUSK_ZOMBIE_TEXTURE;
-        } else if(entity instanceof EntityMagmaCube) {
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-            this.width = this.height = 8;
-            this.u = 19;
-            this.v = 1;
-            this.textureHeight = this.textureWidth = 256;
-        } else if(entity instanceof EntityShulker) {
-            this.width = this.height = 6;
-            this.u = 6;
-            this.v = 58;
-            this.textureWidth = this.textureHeight = 64;
-            this.texture = SHULKER_TEXTURE;
-        } else if(entity instanceof EntitySilverfish) {
-            this.width = 6;
-            this.height = 4;
-            this.u = this.v = 4;
-            this.textureWidth = 128;
-            this.textureHeight = 64;
-            this.texture = SILVERFISH_TEXTURE;
-        } else if(entity instanceof EntitySkeleton) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = SKELETON_TEXTURE;
-        } else if(entity instanceof EntitySlime) {
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-            this.width = this.height = 8;
-            this.u = 10;
-            this.v = 1;
-            this.textureHeight = this.textureWidth = 256;
-        } else if(entity instanceof EntityCaveSpider) {
-            this.width = 8;
-            this.height = 8;
-            this.u = 40;
-            this.v = 12;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = CAVE_SPIDER_TEXTURE;
-        } else if(entity instanceof EntitySpider) {
-            this.width = 8;
-            this.height = 8;
-            this.u = 40;
-            this.v = 12;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = SPIDER_TEXTURE;
-        } else if(entity instanceof EntityStray) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = STRAY_SKELETON_TEXTURE;
-        } else if(entity instanceof EntityVex) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = this.textureHeight = 64;
-            this.texture = VEX_TEXTURE;
-        } else if(entity instanceof EntityVindicator) {
-            this.width = 8;
-            this.height = 10;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 64;
-            this.texture = VINDICATOR_TEXTURE;
-        } else if(entity instanceof EntityWitch) {
-            this.width = 10;
-            this.height = 21;
-            this.u = 1;
-            this.v = 23;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        } else if(entity instanceof EntityWitherSkeleton) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = WITHER_SKELETON_TEXTURE;
-        } else if(entity instanceof EntityZombieVillager) {
-            this.width = 8;
-            this.height = 11;
-            this.u = 49;
-            this.v = 10;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        } else if(entity instanceof EntityPigZombie) {
-            this.width = this.height = 8;
-            this.u = 37;
-            this.v = 1;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        } else if(entity instanceof EntityZombie) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = this.textureHeight = 64;
-            this.texture = ZOMBIE_TEXTURE;
-        } else if(entity instanceof EntityDragon) {
-            this.width = 16;
-            this.height = 20;
-            this.u = 12;
-            this.v = 23;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        } else if(entity instanceof EntityWither) {
-            this.width = 26;
-            this.height = 18;
-            this.u = 29;
-            this.v = 23;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }
+        super(controller, spriteFor(entity), entity);
     }
 
-    private static final ResourceLocation BLAZE_TEXTURE = new ResourceLocation("textures/entity/blaze.png");
-    private static final ResourceLocation CAVE_SPIDER_TEXTURE = new ResourceLocation("textures/entity/spider/cave_spider.png");
-    private static final ResourceLocation CREEPER_TEXTURE = new ResourceLocation("textures/entity/creeper/creeper.png");
-    private static final ResourceLocation ENDERMITE_TEXTURE = new ResourceLocation("textures/entity/endermite.png");
-    private static final ResourceLocation EVOKER_TEXTURE = new ResourceLocation("textures/entity/illager/evoker.png");
-    private static final ResourceLocation GHAST_TEXTURE = new ResourceLocation("textures/entity/ghast/ghast.png");
-    private static final ResourceLocation HUSK_ZOMBIE_TEXTURE = new ResourceLocation("textures/entity/zombie/husk.png");
-    private static final ResourceLocation SHULKER_TEXTURE = new ResourceLocation("textures/entity/shulker/shulker_purple.png");
-    private static final ResourceLocation SILVERFISH_TEXTURE = new ResourceLocation("textures/entity/silverfish.png");
-    private static final ResourceLocation SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeleton/skeleton.png");
-    private static final ResourceLocation SPIDER_TEXTURE = new ResourceLocation("textures/entity/spider/spider.png");
-    private static final ResourceLocation STRAY_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeleton/stray.png");
-    private static final ResourceLocation VEX_TEXTURE = new ResourceLocation("textures/entity/illager/vex.png");
-    private static final ResourceLocation VINDICATOR_TEXTURE = new ResourceLocation("textures/entity/illager/vindicator.png");
-    private static final ResourceLocation WITHER_SKELETON_TEXTURE = new ResourceLocation("textures/entity/skeleton/wither_skeleton.png");
-    private static final ResourceLocation ZOMBIE_TEXTURE = new ResourceLocation("textures/entity/zombie/zombie.png");
+    private static Sprite spriteFor(Entity entity) {
+        if (entity instanceof EntityBlaze) {
+            return new Sprite(BLAZE_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityCreeper) {
+            return new Sprite(CREEPER_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityElderGuardian) {
+            return MARKER_ELDER_GUARDIAN;
+        } else if (entity instanceof EntityEnderman) {
+            return MARKER_ENDERMAN;
+        } else if (entity instanceof EntityEndermite) {
+            return new Sprite(ENDERMITE_TEXTURE, 64d, 32d, 2d, 2d, 6d, 5d);
+        } else if (entity instanceof EntityEvoker) {
+            return new Sprite(EVOKER_TEXTURE, 64d, 64d, 8d, 8d, 16d, 18d);
+        } else if (entity instanceof EntityGhast) {
+            return new Sprite(GHAST_TEXTURE, 64d, 32d, 16d, 16d, 32d, 32d);
+        } else if (entity instanceof EntityGuardian) {
+            return MARKER_GUARDIAN;
+        } else if (entity instanceof EntityHusk) {
+            return new Sprite(HUSK_ZOMBIE_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityMagmaCube) {
+            return MARKER_MAGMA_CUBE;
+        } else if (entity instanceof EntityShulker) {
+            return new Sprite(SHULKER_TEXTURE, 64d, 64d, 6d, 58d, 12d, 64d);
+        } else if (entity instanceof EntitySilverfish) {
+            return new Sprite(SILVERFISH_TEXTURE, 128d, 64, 4d, 4d, 10d, 8d);
+        } else if (entity instanceof EntitySkeleton) {
+            return new Sprite(SKELETON_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntitySlime) {
+            return MARKER_SLIME;
+        } else if (entity instanceof EntityCaveSpider) {
+            return new Sprite(CAVE_SPIDER_TEXTURE, 64d, 32d, 40d, 12d, 48d, 52d);
+        } else if (entity instanceof EntitySpider) {
+            return new Sprite(SPIDER_TEXTURE, 64d, 32d, 40d, 12d, 48d, 52d);
+        } else if (entity instanceof EntityStray) {
+            return new Sprite(STRAY_SKELETON_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityVex) {
+            return new Sprite(VEX_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityVindicator) {
+            return new Sprite(VINDICATOR_TEXTURE, 64d, 64d, 8d, 8d, 16d, 18d);
+        } else if (entity instanceof EntityWitch) {
+            return MARKER_WITCH;
+        } else if (entity instanceof EntityWitherSkeleton) {
+            return new Sprite(WITHER_SKELETON_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityZombieVillager) {
+            return MARKER_ZOMBIE_VILLAGER;
+        } else if (entity instanceof EntityPigZombie) {
+            return MARKER_PIGLIN_ZOMBIFIED;
+        } else if (entity instanceof EntityZombie) {
+            return new Sprite(ZOMBIE_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityDragon) {
+            return MARKER_ENDER_DRAGON;
+        } else if (entity instanceof EntityWither) {
+            return MARKER_WITHER;
+        }
+        return MARKER_TOKEN_RED;
+    }
+
+    private static final Identifier BLAZE_TEXTURE = new Identifier("minecraft", "textures/entity/blaze.png");
+    private static final Identifier CAVE_SPIDER_TEXTURE = new Identifier("minecraft", "textures/entity/spider/cave_spider.png");
+    private static final Identifier CREEPER_TEXTURE = new Identifier("minecraft", "textures/entity/creeper/creeper.png");
+    private static final Identifier ENDERMITE_TEXTURE = new Identifier("minecraft", "textures/entity/endermite.png");
+    private static final Identifier EVOKER_TEXTURE = new Identifier("minecraft", "textures/entity/illager/evoker.png");
+    private static final Identifier GHAST_TEXTURE = new Identifier("minecraft", "textures/entity/ghast/ghast.png");
+    private static final Identifier HUSK_ZOMBIE_TEXTURE = new Identifier("minecraft", "textures/entity/zombie/husk.png");
+    private static final Identifier SHULKER_TEXTURE = new Identifier("minecraft", "textures/entity/shulker/shulker_purple.png");
+    private static final Identifier SILVERFISH_TEXTURE = new Identifier("minecraft", "textures/entity/silverfish.png");
+    private static final Identifier SKELETON_TEXTURE = new Identifier("minecraft", "textures/entity/skeleton/skeleton.png");
+    private static final Identifier SPIDER_TEXTURE = new Identifier("minecraft", "textures/entity/spider/spider.png");
+    private static final Identifier STRAY_SKELETON_TEXTURE = new Identifier("minecraft", "textures/entity/skeleton/stray.png");
+    private static final Identifier VEX_TEXTURE = new Identifier("minecraft", "textures/entity/illager/vex.png");
+    private static final Identifier VINDICATOR_TEXTURE = new Identifier("minecraft", "textures/entity/illager/vindicator.png");
+    private static final Identifier WITHER_SKELETON_TEXTURE = new Identifier("minecraft", "textures/entity/skeleton/wither_skeleton.png");
+    private static final Identifier ZOMBIE_TEXTURE = new Identifier("minecraft", "textures/entity/zombie/zombie.png");
 
 }

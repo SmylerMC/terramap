@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import fr.thesmyler.smylibgui.SmyLibGuiTextures;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityIronGolem;
@@ -24,7 +23,11 @@ import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.passive.EntityZombieHorse;
-import net.minecraft.util.ResourceLocation;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.terramap.gui.sprites.TerramapSprites;
+
+import static net.smyler.terramap.gui.sprites.TerramapSprites.*;
 
 /**
  * Map marker for any entity that implements IAnimals but not IMobs
@@ -36,157 +39,67 @@ import net.minecraft.util.ResourceLocation;
 public class AnimalMarker extends AbstractLivingMarker {
 
     public AnimalMarker(MarkerController<?> controller, Entity entity) {
-        super(controller, 10, 10, SmyLibGuiTextures.WIDGET_TEXTURES, 11, 69, 256, 256, entity);
-        if(entity instanceof EntitySkeletonHorse) {
-            this.width = 6;
-            this.height = 15;
-            this.u = 1;
-            this.v = 44;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        } else if(entity instanceof EntityZombieHorse) {
-            this.width = 6;
-            this.height = 15;
-            this.u = 8;
-            this.v = 44;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityDonkey) {
-            this.width = 6;
-            this.height = 21;
-            this.u = 1;
-            this.v = 60;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityMule) {
-            this.width = 6;
-            this.height = 21;
-            this.u = 8;
-            this.v = 60;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityLlama) {
-            this.width = 8;
-            this.height = 11;
-            this.u = 1;
-            this.v = 110;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityHorse) {
-            this.width = 6;
-            this.height = 15;
-            this.u = 15;
-            this.v = 44;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityVillager) {
-            this.width = 8;
-            this.height = 11;
-            this.u = 40;
-            this.v = 10;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityIronGolem) {
-            this.width = 8;
-            this.height = 11;
-            this.u = 1;
-            this.v = 98;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntitySnowman) {
-            this.width = this.height = 8;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 64;
-            this.texture = SNOW_MAN_TEXTURE;
-        }else if(entity instanceof EntityBat) {
-            this.width = this.height = 6;
-            this.u = this.v = 6;
-            this.textureWidth = 64;
-            this.textureHeight = 64;
-            this.texture = BAT_TEXTURE;
-        }else if(entity instanceof EntityPolarBear) {
-            this.width = this.height = 7;
-            this.u = this.v = 7;
-            this.textureWidth = 128;
-            this.textureHeight = 64;
-            this.texture = POLAR_BEAR_TEXTURE;
-        }else if(entity instanceof EntityChicken) {
-            this.width = 4;
-            this.height = 6;
-            this.u = 7;
-            this.v = 82;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityMooshroom) {
-            this.width = this.height = 8;
-            this.u = this.v = 6;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = MOOSHROOM_TEXTURE;
-        }else if(entity instanceof EntityCow) {
-            this.width = this.height = 8;
-            this.u = this.v = 6;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = COW_TEXTURE;
-        }else if(entity instanceof EntityPig) {
-            this.width = this.height = 8;
-            this.u = 28;
-            this.v = 1;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityRabbit) {
-            this.width = 5;
-            this.height = 9;
-            this.u = 1;
-            this.v = 82;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntitySheep) {
-            this.width = this.height = 6;
-            this.u = this.v = 8;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = SHEEP_TEXTURE;
-        }else if(entity instanceof EntitySquid) {
-            this.width = 12;
-            this.height = 16;
-            this.u = this.v = 12;
-            this.textureWidth = 64;
-            this.textureHeight = 32;
-            this.texture = SQUID_TEXTURE;
-        }else if(entity instanceof EntityOcelot) {
-            boolean tamed = ((EntityOcelot) entity).isTamed();
-            this.width = this.height = 5;
-            this.u = tamed ? 7: 1;
-            this.v = 92;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityParrot) {
-            this.width = 4;
-            this.height = 8;
-            this.u = 12;
-            this.v = 82;
-            this.textureWidth = this.textureHeight = 256;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }else if(entity instanceof EntityWolf) {
-            this.width = this.height = 6;
-            this.u = 13;
-            this.v = 5;
-            this.textureWidth = 128;
-            this.textureHeight = 128;
-            this.texture = AbstractLivingMarker.ENTITY_MARKERS_TEXTURE;
-        }
+        super(controller, spriteFor(entity), entity);
     }
 
-    private static final ResourceLocation SNOW_MAN_TEXTURE = new ResourceLocation("textures/entity/snowman.png");
-    private static final ResourceLocation BAT_TEXTURE = new ResourceLocation("textures/entity/bat.png");
-    private static final ResourceLocation POLAR_BEAR_TEXTURE = new ResourceLocation("textures/entity/bear/polarbear.png");
-    private static final ResourceLocation COW_TEXTURE = new ResourceLocation("textures/entity/cow/cow.png");
-    private static final ResourceLocation MOOSHROOM_TEXTURE = new ResourceLocation("textures/entity/cow/mooshroom.png");
-    private static final ResourceLocation SHEEP_TEXTURE = new ResourceLocation("textures/entity/sheep/sheep.png");
-    private static final ResourceLocation SQUID_TEXTURE = new ResourceLocation("textures/entity/squid.png");
+    private static Sprite spriteFor(Entity entity) {
+        if (entity instanceof EntitySkeletonHorse) {
+            return MARKER_SKELETON_HORSE;
+        } else if (entity instanceof EntityZombieHorse) {
+            return MARKER_ZOMBIE_HORSE;
+        } else if (entity instanceof EntityDonkey) {
+            return MARKER_DONKEY;
+        } else if (entity instanceof EntityMule) {
+            return MARKER_MULE;
+        } else if (entity instanceof EntityLlama) {
+            return MARKER_LLAMA;
+        } else if (entity instanceof EntityHorse) {
+            return MARKER_HORSE;
+        } else if (entity instanceof EntityVillager) {
+            return MARKER_VILLAGER;
+        } else if (entity instanceof EntityIronGolem) {
+            return MARKER_IRON_GOLEM;
+        } else if (entity instanceof EntitySnowman) {
+            return new Sprite(SNOW_MAN_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+        } else if (entity instanceof EntityBat) {
+            return new Sprite(BAT_TEXTURE, 64d, 64d, 6d, 6d, 12d, 12d);
+        } else if (entity instanceof EntityPolarBear) {
+            return new Sprite(POLAR_BEAR_TEXTURE, 128d, 64d, 7d, 7d, 14d, 14d);
+        } else if (entity instanceof EntityChicken) {
+            return MARKER_CHICKEN;
+        } else if (entity instanceof EntityMooshroom) {
+            return new Sprite(MOOSHROOM_TEXTURE, 64d, 32d, 6d, 6d, 14d, 14d);
+        } else if (entity instanceof EntityCow) {
+            return new Sprite(COW_TEXTURE, 64d, 32d, 6d, 6d, 14d, 14d);
+        } else if (entity instanceof EntityPig) {
+            return MARKER_PIG;
+        } else if (entity instanceof EntityRabbit) {
+            return MARKER_RABBIT;
+        } else if (entity instanceof EntitySheep) {
+            return new Sprite(SHEEP_TEXTURE, 64d, 32d, 6d, 6d, 14d, 14d);
+        } else if (entity instanceof EntitySquid) {
+            return new Sprite(SQUID_TEXTURE, 64d, 32d, 12d, 12d, 24d, 26d);
+        } else if (entity instanceof EntityOcelot) {
+            boolean isTamed = ((EntityOcelot) entity).isTamed();
+            if (isTamed) {
+                return MARKER_CAT;
+            } else {
+                return MARKER_OCELOT;
+            }
+        } else if (entity instanceof EntityParrot) {
+            return MARKER_PARROT;
+        } else if (entity instanceof EntityWolf) {
+            return MARKER_WOLF;
+        }
+        return TerramapSprites.MARKER_TOKEN_GREEN;
+    }
 
+    private static final Identifier SNOW_MAN_TEXTURE = new Identifier("minecraft", "textures/entity/snowman.png");
+    private static final Identifier BAT_TEXTURE = new Identifier("minecraft", "textures/entity/bat.png");
+    private static final Identifier POLAR_BEAR_TEXTURE = new Identifier("minecraft", "textures/entity/bear/polarbear.png");
+    private static final Identifier COW_TEXTURE = new Identifier("minecraft", "textures/entity/cow/cow.png");
+    private static final Identifier MOOSHROOM_TEXTURE = new Identifier("minecraft", "textures/entity/cow/mooshroom.png");
+    private static final Identifier SHEEP_TEXTURE = new Identifier("minecraft", "textures/entity/sheep/sheep.png");
+    private static final Identifier SQUID_TEXTURE = new Identifier("minecraft", "textures/entity/squid.png");
 
 }

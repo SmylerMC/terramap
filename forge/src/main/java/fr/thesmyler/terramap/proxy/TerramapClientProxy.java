@@ -27,6 +27,8 @@ import net.smyler.terramap.Terramap;
 
 import javax.imageio.ImageIO;
 
+import static net.smyler.terramap.gui.sprites.TerramapSprites.registerAllTerramapSprites;
+
 public class TerramapClientProxy extends TerramapProxy {
 
     @Override
@@ -52,6 +54,7 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public void init(FMLInitializationEvent event) {
         Terramap.instance().logger().debug("Terramap client init");
+        registerAllTerramapSprites();
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
         KeyBindings.registerBindings();
