@@ -48,53 +48,133 @@ public class MobMarker extends AbstractLivingMarker {
 
     private static Sprite spriteFor(Entity entity) {
         if (entity instanceof EntityBlaze) {
-            return new Sprite(BLAZE_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(BLAZE_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntityCreeper) {
-            return new Sprite(CREEPER_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(CREEPER_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntityElderGuardian) {
             return MARKER_ELDER_GUARDIAN;
         } else if (entity instanceof EntityEnderman) {
             return MARKER_ENDERMAN;
         } else if (entity instanceof EntityEndermite) {
-            return new Sprite(ENDERMITE_TEXTURE, 64d, 32d, 2d, 2d, 6d, 5d);
+            return Sprite.builder()
+                    .texture(ENDERMITE_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(2d).yTop(2d)
+                    .xRight(6d).yBottom(5d)
+                    .build();
         } else if (entity instanceof EntityEvoker) {
-            return new Sprite(EVOKER_TEXTURE, 64d, 64d, 8d, 8d, 16d, 18d);
+            return Sprite.builder()
+                    .texture(EVOKER_TEXTURE)
+                    .textureDimensions(64d, 64d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(18d)
+                    .build();
         } else if (entity instanceof EntityGhast) {
-            return new Sprite(GHAST_TEXTURE, 64d, 32d, 16d, 16d, 32d, 32d);
+            return Sprite.builder()
+                    .texture(GHAST_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(16d).yTop(16d)
+                    .xRight(32d).yBottom(32d)
+                    .build();
         } else if (entity instanceof EntityGuardian) {
             return MARKER_GUARDIAN;
         } else if (entity instanceof EntityHusk) {
-            return new Sprite(HUSK_ZOMBIE_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(HUSK_ZOMBIE_TEXTURE)
+                    .textureDimensions(64d, 64d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntityMagmaCube) {
             return MARKER_MAGMA_CUBE;
         } else if (entity instanceof EntityShulker) {
-            return new Sprite(SHULKER_TEXTURE, 64d, 64d, 6d, 58d, 12d, 64d);
+            return Sprite.builder()
+                    .texture(SHULKER_TEXTURE)
+                    .textureDimensions(64d, 64d)
+                    .xLeft(6d).yTop(58d)
+                    .xRight(12d).yBottom(64d)
+                    .build();
         } else if (entity instanceof EntitySilverfish) {
-            return new Sprite(SILVERFISH_TEXTURE, 128d, 64, 4d, 4d, 10d, 8d);
+            return Sprite.builder()
+                    .texture(SILVERFISH_TEXTURE)
+                    .textureDimensions(128d, 64)
+                    .xLeft(4d).yTop(4d)
+                    .xRight(10d).yBottom(8d)
+                    .build();
         } else if (entity instanceof EntitySkeleton) {
-            return new Sprite(SKELETON_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(SKELETON_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntitySlime) {
             return MARKER_SLIME;
         } else if (entity instanceof EntityCaveSpider) {
-            return new Sprite(CAVE_SPIDER_TEXTURE, 64d, 32d, 40d, 12d, 48d, 52d);
+            return Sprite.builder()
+                    .texture(CAVE_SPIDER_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(40d).yTop(12d)
+                    .xRight(48d).yBottom(52d)
+                    .build();
         } else if (entity instanceof EntitySpider) {
-            return new Sprite(SPIDER_TEXTURE, 64d, 32d, 40d, 12d, 48d, 52d);
+            return Sprite.builder()
+                    .texture(SPIDER_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(40d).yTop(12d)
+                    .xRight(48d).yBottom(52d)
+                    .build();
         } else if (entity instanceof EntityStray) {
-            return new Sprite(STRAY_SKELETON_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(STRAY_SKELETON_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntityVex) {
-            return new Sprite(VEX_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(VEX_TEXTURE)
+                    .textureDimensions(64d, 64d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntityVindicator) {
-            return new Sprite(VINDICATOR_TEXTURE, 64d, 64d, 8d, 8d, 16d, 18d);
+            return Sprite.builder()
+                    .texture(VINDICATOR_TEXTURE)
+                    .textureDimensions(64d, 64d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(18d)
+                    .build();
         } else if (entity instanceof EntityWitch) {
             return MARKER_WITCH;
         } else if (entity instanceof EntityWitherSkeleton) {
-            return new Sprite(WITHER_SKELETON_TEXTURE, 64d, 32d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(WITHER_SKELETON_TEXTURE)
+                    .textureDimensions(64d, 32d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntityZombieVillager) {
             return MARKER_ZOMBIE_VILLAGER;
         } else if (entity instanceof EntityPigZombie) {
             return MARKER_PIGLIN_ZOMBIFIED;
         } else if (entity instanceof EntityZombie) {
-            return new Sprite(ZOMBIE_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+            return Sprite.builder()
+                    .texture(ZOMBIE_TEXTURE)
+                    .textureDimensions(64d, 64d)
+                    .xLeft(8d).yTop(8d)
+                    .xRight(16d).yBottom(16d)
+                    .build();
         } else if (entity instanceof EntityDragon) {
             return MARKER_ENDER_DRAGON;
         } else if (entity instanceof EntityWither) {

@@ -44,9 +44,9 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     public ToggleButtonWidget(float x, float y, int z, boolean startValue, Consumer<Boolean> onChange) {
         this(
                 x, y, z,
-                BUTTON_TOGGLE_ON.sprite, BUTTON_TOGGLE_OFF.sprite,
-                BUTTON_TOGGLE_ON_DISABLED.sprite, BUTTON_TOGGLE_OFF_DISABLED.sprite,
-                BUTTON_TOGGLE_ON_HIGHLIGHTED.sprite, BUTTON_TOGGLE_OFF_HIGHLIGHTED.sprite,
+                BUTTON_TOGGLE_ON, BUTTON_TOGGLE_OFF,
+                BUTTON_TOGGLE_ON_DISABLED, BUTTON_TOGGLE_OFF_DISABLED,
+                BUTTON_TOGGLE_ON_HIGHLIGHTED, BUTTON_TOGGLE_OFF_HIGHLIGHTED,
                 startValue, onChange
         );
     }
@@ -54,9 +54,9 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     public ToggleButtonWidget(float x, float y, int z, boolean startValue) {
         this(
                 x, y, z,
-                BUTTON_TOGGLE_ON.sprite, BUTTON_TOGGLE_OFF.sprite,
-                BUTTON_TOGGLE_ON_DISABLED.sprite, BUTTON_TOGGLE_OFF_DISABLED.sprite,
-                BUTTON_TOGGLE_ON_HIGHLIGHTED.sprite, BUTTON_TOGGLE_OFF_HIGHLIGHTED.sprite,
+                BUTTON_TOGGLE_ON, BUTTON_TOGGLE_OFF,
+                BUTTON_TOGGLE_ON_DISABLED, BUTTON_TOGGLE_OFF_DISABLED,
+                BUTTON_TOGGLE_ON_HIGHLIGHTED, BUTTON_TOGGLE_OFF_HIGHLIGHTED,
                 startValue, null
         );
     }
@@ -82,9 +82,9 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     public ToggleButtonWidget(int z, boolean startValue, Consumer<Boolean> onChange) {
         this(
                 0f, 0f, z,
-                BUTTON_TOGGLE_ON.sprite, BUTTON_TOGGLE_OFF.sprite,
-                BUTTON_TOGGLE_ON_DISABLED.sprite, BUTTON_TOGGLE_OFF_DISABLED.sprite,
-                BUTTON_TOGGLE_ON_HIGHLIGHTED.sprite, BUTTON_TOGGLE_OFF_HIGHLIGHTED.sprite,
+                BUTTON_TOGGLE_ON, BUTTON_TOGGLE_OFF,
+                BUTTON_TOGGLE_ON_DISABLED, BUTTON_TOGGLE_OFF_DISABLED,
+                BUTTON_TOGGLE_ON_HIGHLIGHTED, BUTTON_TOGGLE_OFF_HIGHLIGHTED,
                 startValue, onChange
         );
     }
@@ -92,9 +92,9 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     public ToggleButtonWidget(int z, boolean startValue) {
         this(
                 0f, 0f, z,
-                BUTTON_TOGGLE_ON.sprite, BUTTON_TOGGLE_OFF.sprite,
-                BUTTON_TOGGLE_ON_DISABLED.sprite, BUTTON_TOGGLE_OFF_DISABLED.sprite,
-                BUTTON_TOGGLE_ON_HIGHLIGHTED.sprite, BUTTON_TOGGLE_OFF_HIGHLIGHTED.sprite,
+                BUTTON_TOGGLE_ON, BUTTON_TOGGLE_OFF,
+                BUTTON_TOGGLE_ON_DISABLED, BUTTON_TOGGLE_OFF_DISABLED,
+                BUTTON_TOGGLE_ON_HIGHLIGHTED, BUTTON_TOGGLE_OFF_HIGHLIGHTED,
                 startValue, null
         );
     }

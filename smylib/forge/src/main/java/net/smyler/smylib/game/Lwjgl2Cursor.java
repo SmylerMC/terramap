@@ -69,12 +69,10 @@ public final class Lwjgl2Cursor implements Cursor {
                 1,
                 buffer, BufferUtils.createIntBuffer(1)
         );
-        this.sprite = new Sprite(
-                this.identifier,
-                this.width, this.height,
-                0d, 0d,
-                this.width, this.height
-        );
+        this.sprite = Sprite.builder()
+                .texture(this.identifier, this.width, this.height)
+                .fullTexture()
+                .build();
 
     }
 

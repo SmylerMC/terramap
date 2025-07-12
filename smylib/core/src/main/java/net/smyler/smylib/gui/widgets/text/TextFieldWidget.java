@@ -141,7 +141,7 @@ public class TextFieldWidget implements Widget {
         }
 
         if(this.isSearchBar) {
-            context.drawSprite(x + this.width - 17, y + 2, SmyLibSprites.MAGNIFYING_GLASS_15.sprite);
+            context.drawSprite(x + this.width - 17, y + 2, SmyLibSprites.MAGNIFYING_GLASS_15);
         }
 
 

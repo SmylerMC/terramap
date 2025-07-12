@@ -203,9 +203,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
             this.addWidget(offsetButton);
             this.addWidget(new ToggleButtonWidget(
                     this.getWidth() - 86f, 3f, 0,
-                    BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
-                    BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
-                    BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
+                    BUTTON_VISIBILITY_ON_15, BUTTON_VISIBILITY_OFF_15,
+                    BUTTON_VISIBILITY_ON_15_DISABLED, BUTTON_VISIBILITY_OFF_15_DISABLED,
+                    BUTTON_VISIBILITY_ON_15_HIGHLIGHTED, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED,
                     layer.isVisible(),
                     this::toggleVisibility
             ));

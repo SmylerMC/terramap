@@ -22,9 +22,9 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
     public static final String ID = "creatures";
 
     protected final ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-            BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
-            BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
-            BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
+            BUTTON_VISIBILITY_ON_15, BUTTON_VISIBILITY_OFF_15,
+            BUTTON_VISIBILITY_ON_15_DISABLED, BUTTON_VISIBILITY_OFF_15_DISABLED,
+            BUTTON_VISIBILITY_ON_15_HIGHLIGHTED, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED,
             this.isVisible(), null);
 
     public AnimalMarkerController() {

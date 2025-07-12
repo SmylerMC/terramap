@@ -21,9 +21,9 @@ public class MobMarkerController extends MarkerController<MobMarker> {
     public static final String ID = "mobs";
 
     protected final ToggleButtonWidget button = new ToggleButtonWidget(10, 14, 14,
-            BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
-            BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
-            BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
+            BUTTON_VISIBILITY_ON_15, BUTTON_VISIBILITY_OFF_15,
+            BUTTON_VISIBILITY_ON_15_DISABLED, BUTTON_VISIBILITY_OFF_15_DISABLED,
+            BUTTON_VISIBILITY_ON_15_HIGHLIGHTED, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED,
             this.isVisible(), null);
 
     public MobMarkerController() {

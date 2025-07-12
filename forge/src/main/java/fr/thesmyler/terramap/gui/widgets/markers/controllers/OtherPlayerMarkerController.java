@@ -23,9 +23,9 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
     public OtherPlayerMarkerController() {
         super(ID, 800, OtherPlayerMarker.class, new ToggleButtonWidget(10, 14, 14,
-                BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
-                BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
-                BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
+                BUTTON_VISIBILITY_ON_15, BUTTON_VISIBILITY_OFF_15,
+                BUTTON_VISIBILITY_ON_15_DISABLED, BUTTON_VISIBILITY_OFF_15_DISABLED,
+                BUTTON_VISIBILITY_ON_15_HIGHLIGHTED, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED,
                 false, null));
         this.button.setTooltip(getGameClient().translator().format("terramap.terramapscreen.markercontrollers.buttons.otherplayer"));
     }

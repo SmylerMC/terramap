@@ -12,16 +12,18 @@ import net.minecraft.util.text.TextComponentString;
 
 public class RightClickMarker extends AbstractFixedMarker {
 
-    private static final Sprite SPRITE = new Sprite(
-            TerramapResources.SPRITES.resolve("map_marker.png"),
-            15d, 55d,
-            0d, 0d, 15d, 26d
-    );
-    private static final Sprite SPRITE_HOVERED = new Sprite(
-            SPRITE.texture,
-            15d, 55d,
-            0d, 28d, 15d, 55d
-    );
+    private static final Sprite SPRITE = Sprite.builder()
+            .texture(TerramapResources.SPRITES.resolve("map_marker.png"))
+            .textureDimensions(15d, 55d)
+            .xLeft(0d).yTop(0d)
+            .width(15d).height(26d)
+            .build();
+    private static final Sprite SPRITE_HOVERED = Sprite.builder()
+            .texture(SPRITE.texture)
+            .textureDimensions(15d, 55d)
+            .xLeft(0d).yTop(28d)
+            .width(15d).height(27d)
+            .build();
 
     public RightClickMarker(MarkerController<?> controller) {
         super(controller, 15, 23, GeoPointImmutable.ORIGIN);

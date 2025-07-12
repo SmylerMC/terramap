@@ -1,6 +1,7 @@
 package net.smyler.smylib;
 
 import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.gui.sprites.SmyLibSprites;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +44,7 @@ public class SmyLib {
             SmyLib.logger.info("Enabling debug mode");
             SmyLib.isDebug = true;
         }
+        SmyLibSprites.registerAllSmyLibSprites();
     }
 
 }

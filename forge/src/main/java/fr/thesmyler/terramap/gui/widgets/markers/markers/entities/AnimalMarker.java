@@ -60,25 +60,25 @@ public class AnimalMarker extends AbstractLivingMarker {
         } else if (entity instanceof EntityIronGolem) {
             return MARKER_IRON_GOLEM;
         } else if (entity instanceof EntitySnowman) {
-            return new Sprite(SNOW_MAN_TEXTURE, 64d, 64d, 8d, 8d, 16d, 16d);
+            return SNOW_MAN;
         } else if (entity instanceof EntityBat) {
-            return new Sprite(BAT_TEXTURE, 64d, 64d, 6d, 6d, 12d, 12d);
+            return BAT;
         } else if (entity instanceof EntityPolarBear) {
-            return new Sprite(POLAR_BEAR_TEXTURE, 128d, 64d, 7d, 7d, 14d, 14d);
+            return POLAR_BEAR;
         } else if (entity instanceof EntityChicken) {
             return MARKER_CHICKEN;
         } else if (entity instanceof EntityMooshroom) {
-            return new Sprite(MOOSHROOM_TEXTURE, 64d, 32d, 6d, 6d, 14d, 14d);
+            return MOOSHROOM;
         } else if (entity instanceof EntityCow) {
-            return new Sprite(COW_TEXTURE, 64d, 32d, 6d, 6d, 14d, 14d);
+            return COW;
         } else if (entity instanceof EntityPig) {
             return MARKER_PIG;
         } else if (entity instanceof EntityRabbit) {
             return MARKER_RABBIT;
         } else if (entity instanceof EntitySheep) {
-            return new Sprite(SHEEP_TEXTURE, 64d, 32d, 6d, 6d, 14d, 14d);
+            return SHEEP;
         } else if (entity instanceof EntitySquid) {
-            return new Sprite(SQUID_TEXTURE, 64d, 32d, 12d, 12d, 24d, 26d);
+            return SQUID;
         } else if (entity instanceof EntityOcelot) {
             boolean isTamed = ((EntityOcelot) entity).isTamed();
             if (isTamed) {
@@ -94,12 +94,55 @@ public class AnimalMarker extends AbstractLivingMarker {
         return TerramapSprites.MARKER_TOKEN_GREEN;
     }
 
-    private static final Identifier SNOW_MAN_TEXTURE = new Identifier("minecraft", "textures/entity/snowman.png");
-    private static final Identifier BAT_TEXTURE = new Identifier("minecraft", "textures/entity/bat.png");
-    private static final Identifier POLAR_BEAR_TEXTURE = new Identifier("minecraft", "textures/entity/bear/polarbear.png");
-    private static final Identifier COW_TEXTURE = new Identifier("minecraft", "textures/entity/cow/cow.png");
-    private static final Identifier MOOSHROOM_TEXTURE = new Identifier("minecraft", "textures/entity/cow/mooshroom.png");
-    private static final Identifier SHEEP_TEXTURE = new Identifier("minecraft", "textures/entity/sheep/sheep.png");
-    private static final Identifier SQUID_TEXTURE = new Identifier("minecraft", "textures/entity/squid.png");
+    private static final Identifier VANILLA_TEXTURE_ENTITY = new Identifier("minecraft", "textures/entity");
+
+    private static final Sprite SNOW_MAN = Sprite.builder()
+            .texture(VANILLA_TEXTURE_ENTITY.resolve("snowman.png"))
+            .textureDimensions(64d, 64d)
+            .xLeft(8d).yTop(8d)
+            .width(8d).height(8d)
+            .build();
+
+    private static final Sprite BAT = Sprite.builder()
+            .texture(VANILLA_TEXTURE_ENTITY.resolve("bat.png"))
+            .textureDimensions(64d, 64d)
+            .xLeft(6d).yTop(6d)
+            .width(6d).height(6d)
+            .build();
+
+    private static final Sprite POLAR_BEAR = Sprite.builder()
+            .texture(VANILLA_TEXTURE_ENTITY.resolve("bear/polarbear.png"))
+            .textureDimensions(128d, 64d)
+            .xLeft(7d).yTop(7d)
+            .width(7d).height(7d)
+            .build();
+
+    private static final Sprite COW = Sprite.builder()
+            .texture(VANILLA_TEXTURE_ENTITY.resolve("cow/cow.png"))
+            .textureDimensions(64d, 32d)
+            .xLeft(6d).yTop(6d)
+            .width(8d).height(8d)
+            .build();
+
+    private static final Sprite MOOSHROOM = Sprite.builder()
+            .texture(VANILLA_TEXTURE_ENTITY.resolve("cow/mooshroom.png"))
+            .textureDimensions(64d, 32d)
+            .xLeft(6d).yTop(6d)
+            .width(8d).height(8d)
+            .build();
+
+    private static final Sprite SHEEP = Sprite.builder()
+            .texture(VANILLA_TEXTURE_ENTITY.resolve("sheep/sheep.png"))
+            .textureDimensions(64d, 32d)
+            .xLeft(6d).yTop(6d)
+            .width(8d).height(8d)
+            .build();
+
+    private static final Sprite SQUID = Sprite.builder()
+            .texture(VANILLA_TEXTURE_ENTITY.resolve("squid.png"))
+            .textureDimensions(64d, 32d)
+            .xLeft(12d).yTop(12d)
+            .width(12d).height(14d)
+            .build();
 
 }

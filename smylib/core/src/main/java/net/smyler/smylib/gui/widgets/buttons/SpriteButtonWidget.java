@@ -84,29 +84,29 @@ public class SpriteButtonWidget extends AbstractButtonWidget {
     public static class ButtonSprites {
 
         // 15x15
-        public static final ButtonSprites BLANK_15 = new ButtonSprites(BUTTON_BLANK_15.sprite, BUTTON_BLANK_15_DISABLED.sprite, BUTTON_BLANK_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites PLUS = new ButtonSprites(BUTTON_PLUS_15.sprite, BUTTON_PLUS_15_DISABLED.sprite, BUTTON_PLUS_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites MINUS = new ButtonSprites(BUTTON_MINUS_15.sprite, BUTTON_MINUS_15_DISABLED.sprite, BUTTON_MINUS_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites LEFT = new ButtonSprites(BUTTON_LEFT_15.sprite, BUTTON_LEFT_15_DISABLED.sprite, BUTTON_LEFT_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites RIGHT = new ButtonSprites(BUTTON_RIGHT_15.sprite, BUTTON_RIGHT_15_DISABLED.sprite, BUTTON_RIGHT_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites UP = new ButtonSprites(BUTTON_UP_15.sprite, BUTTON_UP_15_DISABLED.sprite, BUTTON_UP_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites DOWN = new ButtonSprites(BUTTON_DOWN_15.sprite, BUTTON_DOWN_15_DISABLED.sprite, BUTTON_DOWN_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites CROSS = new ButtonSprites(BUTTON_CROSS_15.sprite, BUTTON_CROSS_15_DISABLED.sprite, BUTTON_CROSS_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites CENTER = new ButtonSprites(BUTTON_CENTER_15.sprite, BUTTON_CENTER_15_DISABLED.sprite, BUTTON_CENTER_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites PAPER = new ButtonSprites(BUTTON_PAPER_15.sprite, BUTTON_PAPER_15_DISABLED.sprite, BUTTON_PAPER_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites WRENCH = new ButtonSprites(BUTTON_WRENCH_15.sprite, BUTTON_WRENCH_15_DISABLED.sprite, BUTTON_WRENCH_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites BURGER_15 = new ButtonSprites(BUTTON_BURGER_15.sprite, BUTTON_BURGER_15_DISABLED.sprite, BUTTON_BURGER_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites TRASH = new ButtonSprites(BUTTON_TRASH_15.sprite, BUTTON_TRASH_15_DISABLED.sprite, BUTTON_TRASH_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites OFFSET = new ButtonSprites(BUTTON_OFFSET_15.sprite, BUTTON_OFFSET_15_DISABLED.sprite, BUTTON_OFFSET_15_HIGHLIGHTED.sprite);
-        public static final ButtonSprites OFFSET_WARNING = new ButtonSprites(BUTTON_OFFSET_WARNING_15.sprite, BUTTON_OFFSET_WARNING_15_DISABLED.sprite, BUTTON_OFFSET_WARNING_15_HIGHLIGHTED.sprite);
+        public static final ButtonSprites BLANK_15 = new ButtonSprites(BUTTON_BLANK_15, BUTTON_BLANK_15_DISABLED, BUTTON_BLANK_15_HIGHLIGHTED);
+        public static final ButtonSprites PLUS = new ButtonSprites(BUTTON_PLUS_15, BUTTON_PLUS_15_DISABLED, BUTTON_PLUS_15_HIGHLIGHTED);
+        public static final ButtonSprites MINUS = new ButtonSprites(BUTTON_MINUS_15, BUTTON_MINUS_15_DISABLED, BUTTON_MINUS_15_HIGHLIGHTED);
+        public static final ButtonSprites LEFT = new ButtonSprites(BUTTON_LEFT_15, BUTTON_LEFT_15_DISABLED, BUTTON_LEFT_15_HIGHLIGHTED);
+        public static final ButtonSprites RIGHT = new ButtonSprites(BUTTON_RIGHT_15, BUTTON_RIGHT_15_DISABLED, BUTTON_RIGHT_15_HIGHLIGHTED);
+        public static final ButtonSprites UP = new ButtonSprites(BUTTON_UP_15, BUTTON_UP_15_DISABLED, BUTTON_UP_15_HIGHLIGHTED);
+        public static final ButtonSprites DOWN = new ButtonSprites(BUTTON_DOWN_15, BUTTON_DOWN_15_DISABLED, BUTTON_DOWN_15_HIGHLIGHTED);
+        public static final ButtonSprites CROSS = new ButtonSprites(BUTTON_CROSS_15, BUTTON_CROSS_15_DISABLED, BUTTON_CROSS_15_HIGHLIGHTED);
+        public static final ButtonSprites CENTER = new ButtonSprites(BUTTON_CENTER_15, BUTTON_CENTER_15_DISABLED, BUTTON_CENTER_15_HIGHLIGHTED);
+        public static final ButtonSprites PAPER = new ButtonSprites(BUTTON_PAPER_15, BUTTON_PAPER_15_DISABLED, BUTTON_PAPER_15_HIGHLIGHTED);
+        public static final ButtonSprites WRENCH = new ButtonSprites(BUTTON_WRENCH_15, BUTTON_WRENCH_15_DISABLED, BUTTON_WRENCH_15_HIGHLIGHTED);
+        public static final ButtonSprites BURGER_15 = new ButtonSprites(BUTTON_BURGER_15, BUTTON_BURGER_15_DISABLED, BUTTON_BURGER_15_HIGHLIGHTED);
+        public static final ButtonSprites TRASH = new ButtonSprites(BUTTON_TRASH_15, BUTTON_TRASH_15_DISABLED, BUTTON_TRASH_15_HIGHLIGHTED);
+        public static final ButtonSprites OFFSET = new ButtonSprites(BUTTON_OFFSET_15, BUTTON_OFFSET_15_DISABLED, BUTTON_OFFSET_15_HIGHLIGHTED);
+        public static final ButtonSprites OFFSET_WARNING = new ButtonSprites(BUTTON_OFFSET_WARNING_15, BUTTON_OFFSET_WARNING_15_DISABLED, BUTTON_OFFSET_WARNING_15_HIGHLIGHTED);
 
         // 20x20
-        public static final ButtonSprites BLANK_20 = new ButtonSprites(BUTTON_BLANK_20.sprite, BUTTON_BLANK_20_DISABLED.sprite, BUTTON_BLANK_20_HIGHLIGHTED.sprite);
-        public static final ButtonSprites BURGER_20 = new ButtonSprites(BUTTON_BURGER_20.sprite, BUTTON_BURGER_20_DISABLED.sprite, BUTTON_BURGER_20_HIGHLIGHTED.sprite);
+        public static final ButtonSprites BLANK_20 = new ButtonSprites(BUTTON_BLANK_20, BUTTON_BLANK_20_DISABLED, BUTTON_BLANK_20_HIGHLIGHTED);
+        public static final ButtonSprites BURGER_20 = new ButtonSprites(BUTTON_BURGER_20, BUTTON_BURGER_20_DISABLED, BUTTON_BURGER_20_HIGHLIGHTED);
 
         // 21x21
-        public static final ButtonSprites BLANK_21 = new ButtonSprites(BUTTON_BLANK_20.sprite, BUTTON_BLANK_20_DISABLED.sprite, BUTTON_BLANK_20_HIGHLIGHTED.sprite);
-        public static final ButtonSprites SEARCH = new ButtonSprites(BUTTON_SEARCH_21.sprite, BUTTON_SEARCH_21_DISABLED.sprite, BUTTON_SEARCH_21_HIGHLIGHTED.sprite);
+        public static final ButtonSprites BLANK_21 = new ButtonSprites(BUTTON_BLANK_20, BUTTON_BLANK_20_DISABLED, BUTTON_BLANK_20_HIGHLIGHTED);
+        public static final ButtonSprites SEARCH = new ButtonSprites(BUTTON_SEARCH_21, BUTTON_SEARCH_21_DISABLED, BUTTON_SEARCH_21_HIGHLIGHTED);
 
         final Sprite sprite, spriteDisabled, spriteHighlighted;
 

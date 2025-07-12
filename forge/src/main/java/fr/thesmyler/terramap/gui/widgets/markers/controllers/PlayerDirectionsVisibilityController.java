@@ -19,9 +19,9 @@ public class PlayerDirectionsVisibilityController implements FeatureVisibilityCo
         this.main = main;
         this.other = other;
         this.button = new ToggleButtonWidget(10, 14, 14,
-                BUTTON_VISIBILITY_ON_15.sprite, BUTTON_VISIBILITY_OFF_15.sprite,
-                BUTTON_VISIBILITY_ON_15_DISABLED.sprite, BUTTON_VISIBILITY_OFF_15_DISABLED.sprite,
-                BUTTON_VISIBILITY_ON_15_HIGHLIGHTED.sprite, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED.sprite,
+                BUTTON_VISIBILITY_ON_15, BUTTON_VISIBILITY_OFF_15,
+                BUTTON_VISIBILITY_ON_15_DISABLED, BUTTON_VISIBILITY_OFF_15_DISABLED,
+                BUTTON_VISIBILITY_ON_15_HIGHLIGHTED, BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED,
                 this.main.doesShowDirection(),
                 b -> {
                     this.main.setShowDirection(b);
