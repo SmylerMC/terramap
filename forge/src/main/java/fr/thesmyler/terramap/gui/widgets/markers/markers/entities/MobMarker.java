@@ -30,6 +30,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.terramap.gui.widgets.markers.EntityMarkerStylingRuleset;
 
 import static net.smyler.terramap.gui.sprites.TerramapSprites.*;
 
@@ -38,69 +39,17 @@ import static net.smyler.terramap.gui.sprites.TerramapSprites.*;
  * The corresponding controller is MobMarkerController
  * 
  * @author Smyler
- *
  */
 public class MobMarker extends AbstractLivingMarker {
+
+    private static final EntityMarkerStylingRuleset rules = new EntityMarkerStylingRuleset(MARKER_TOKEN_GREY);
 
     public MobMarker(MarkerController<?> controller, Entity entity) {
         super(controller, spriteFor(entity), entity);
     }
 
     private static Sprite spriteFor(Entity entity) {
-        if (entity instanceof EntityBlaze) {
-            return BLAZE;
-        } else if (entity instanceof EntityCreeper) {
-            return CREEPER;
-        } else if (entity instanceof EntityElderGuardian) {
-            return MARKER_ELDER_GUARDIAN;
-        } else if (entity instanceof EntityEnderman) {
-            return MARKER_ENDERMAN;
-        } else if (entity instanceof EntityEndermite) {
-            return ENDERMITE;
-        } else if (entity instanceof EntityEvoker) {
-            return EVOKER;
-        } else if (entity instanceof EntityGhast) {
-            return GHAST;
-        } else if (entity instanceof EntityGuardian) {
-            return MARKER_GUARDIAN;
-        } else if (entity instanceof EntityHusk) {
-            return HUSK_ZOMBIE;
-        } else if (entity instanceof EntityMagmaCube) {
-            return MARKER_MAGMA_CUBE;
-        } else if (entity instanceof EntityShulker) {
-            return SHULKER;
-        } else if (entity instanceof EntitySilverfish) {
-            return SILVERFISH;
-        } else if (entity instanceof EntitySkeleton) {
-            return SKELETON;
-        } else if (entity instanceof EntitySlime) {
-            return MARKER_SLIME;
-        } else if (entity instanceof EntityCaveSpider) {
-            return CAVE_SPIDER;
-        } else if (entity instanceof EntitySpider) {
-            return SPIDER;
-        } else if (entity instanceof EntityStray) {
-            return STRAY_SKELETON;
-        } else if (entity instanceof EntityVex) {
-            return VEX;
-        } else if (entity instanceof EntityVindicator) {
-            return VINDICATOR;
-        } else if (entity instanceof EntityWitch) {
-            return MARKER_WITCH;
-        } else if (entity instanceof EntityWitherSkeleton) {
-            return WITHER_SKELETON;
-        } else if (entity instanceof EntityZombieVillager) {
-            return MARKER_ZOMBIE_VILLAGER;
-        } else if (entity instanceof EntityPigZombie) {
-            return MARKER_PIGLIN_ZOMBIFIED;
-        } else if (entity instanceof EntityZombie) {
-            return ZOMBIE;
-        } else if (entity instanceof EntityDragon) {
-            return MARKER_ENDER_DRAGON;
-        } else if (entity instanceof EntityWither) {
-            return MARKER_WITHER;
-        }
-        return MARKER_TOKEN_RED;
+        return rules.getStyleFor(entity).sprite();
     }
 
     private static final Identifier VANILLA_TEXTURE_ENTITY = new Identifier("minecraft", "textures/entity");
@@ -116,7 +65,7 @@ public class MobMarker extends AbstractLivingMarker {
             .texture(VANILLA_TEXTURE_ENTITY.resolve("spider/cave_spider.png"))
             .textureDimensions(64d, 32d)
             .xLeft(40d).yTop(12d)
-            .xRight(48d).yBottom(52d)
+            .xRight(48d).yBottom(20d)
             .build();
 
     private static final Sprite CREEPER = Sprite.builder()
@@ -179,7 +128,7 @@ public class MobMarker extends AbstractLivingMarker {
             .texture(VANILLA_TEXTURE_ENTITY.resolve("spider/spider.png"))
             .textureDimensions(64d, 32d)
             .xLeft(40d).yTop(12d)
-            .xRight(48d).yBottom(52d)
+            .xRight(48d).yBottom(20d)
             .build();
 
     private static final Sprite STRAY_SKELETON = Sprite.builder()
@@ -216,5 +165,47 @@ public class MobMarker extends AbstractLivingMarker {
             .xLeft(8d).yTop(8d)
             .xRight(16d).yBottom(16d)
             .build();
+
+    static {
+        // Common mobs
+        rules.add(EntityCreeper.class, CREEPER);
+        rules.add(EntityZombie.class, ZOMBIE);
+        rules.add(EntitySkeleton.class, SKELETON);
+        rules.add(EntitySpider.class, SPIDER);
+        rules.add(EntityWitch.class, MARKER_WITCH);
+
+        // Less common mobs (biome specific etc)
+        rules.add(EntityHusk.class, HUSK_ZOMBIE);
+        rules.add(EntityStray.class, STRAY_SKELETON);
+        rules.add(EntitySilverfish.class, SILVERFISH);
+        rules.add(EntityCaveSpider.class, CAVE_SPIDER);
+        rules.add(EntitySlime.class, MARKER_SLIME);
+        rules.add(EntityZombieVillager.class, MARKER_ZOMBIE_VILLAGER);
+
+        // Water mobs
+        rules.add(EntityElderGuardian.class, MARKER_ELDER_GUARDIAN);
+        rules.add(EntityGuardian.class, MARKER_GUARDIAN);
+
+        // Nether mobs
+        rules.add(EntityBlaze.class, BLAZE);
+        rules.add(EntityGhast.class, GHAST);
+        rules.add(EntityMagmaCube.class, MARKER_MAGMA_CUBE);
+        rules.add(EntityWitherSkeleton.class, WITHER_SKELETON);
+        rules.add(EntityPigZombie.class, MARKER_PIGLIN_ZOMBIFIED);
+
+        // Ender mobs
+        rules.add(EntityEnderman.class, MARKER_ENDERMAN);
+        rules.add(EntityEndermite.class, ENDERMITE);
+        rules.add(EntityShulker.class, SHULKER);
+
+        // Illagers
+        rules.add(EntityEvoker.class, EVOKER);
+        rules.add(EntityVex.class, VEX);
+        rules.add(EntityVindicator.class, VINDICATOR);
+
+        // Bosses
+        rules.add(EntityDragon.class, MARKER_ENDER_DRAGON);
+        rules.add(EntityWither.class, MARKER_WITHER);
+    }
 
 }
