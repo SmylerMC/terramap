@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.Preconditions.checkArgument;
@@ -30,28 +31,31 @@ import static net.smyler.smylib.Preconditions.checkState;
 public final class MarkerStyling {
 
     private static final OnceExecutor LOG_BIPED_ONCE = new OnceExecutor();
+    private static final OnceExecutor LOG_QUADRUPED_ONCE = new OnceExecutor();
 
-    public static boolean hasBipedModel(EntityLiving entity) {
+    public static boolean hasModel(EntityLiving entity, Class<? extends ModelBase> clazz) {
         Render<?> render = getMinecraft().getRenderManager().getEntityRenderObject(entity);
         if (!(render instanceof RenderLiving)) {
             return false;
         }
         RenderLiving<?> renderLiving = (RenderLiving<?>) render;
         ModelBase model = renderLiving.getMainModel();
-        return model instanceof ModelBiped;
+        return clazz.isAssignableFrom(model.getClass());
+    }
+
+    public static Predicate<EntityLiving> hasModelPredicate(final Class<? extends ModelBase> modelClass) {
+        return e -> hasModel(e, modelClass);
     }
 
     public static EntityMarkerStyle fromModelBiped(EntityLiving entity) {
         try {
-            Render<?> renderAbstract = getMinecraft().getRenderManager().getEntityRenderObject(entity);
-            checkArgument(renderAbstract instanceof RenderLiving, "Non-living entity given to " + MarkerStyling.class.getSimpleName() + ".fromBipedModel()");
-            RenderLiving<?> render = (RenderLiving<?>) renderAbstract;
+            RenderLiving<?> render = getEntityRender(entity);
             ModelBase modelBase = render.getMainModel();
             checkState(modelBase instanceof ModelBiped, "Entity has a non-biped model");
             ModelBiped model = (ModelBiped) modelBase;
-            checkState(!model.bipedHead.cubeList.isEmpty(), "Biped model has no head");
+            checkState(!model.bipedHead.cubeList.isEmpty(), "Biped model has no head " + model.getClass());
 
-            Identifier texture = getEntityTexture(renderAbstract, entity);
+            Identifier texture = getEntityTexture(render, entity);
             Sprite sprite = getSpriteForModelBoxFace(texture, model, model.bipedHead.cubeList.get(0));
 
             return new EntityMarkerStyle(sprite);
@@ -62,6 +66,34 @@ public final class MarkerStyling {
             });
             return new EntityMarkerStyle();
         }
+    }
+
+    public static EntityMarkerStyle fromModelQuadruped(EntityLiving entity) {
+        try {
+            RenderLiving<?> render = getEntityRender(entity);
+            ModelBase modelBase = render.getMainModel();
+            checkState(modelBase instanceof ModelQuadruped, "Entity has a non-quadruped model (entity " + entity.getClass() + ", model " + modelBase.getClass() + ")");
+            ModelQuadruped model = (ModelQuadruped) modelBase;
+            checkState(!model.head.cubeList.isEmpty(), "Quadruped model has no head " + model.getClass());
+
+            Identifier texture = getEntityTexture(render, entity);
+            Sprite sprite = getSpriteForModelBoxFace(texture, model, model.head.cubeList.get(0));
+
+            return new EntityMarkerStyle(sprite);
+        } catch (InvocationTargetException | IllegalAccessException | IllegalStateException e) {
+            LOG_QUADRUPED_ONCE.execute(() -> {
+                Terramap.instance().logger().error("Failed to get map marker style for a quadruped entity. This may indicate compatibility issues with other mods.");
+                Terramap.instance().logger().catching(e);
+            });
+            return new EntityMarkerStyle();
+        }
+    }
+
+    private static RenderLiving<?> getEntityRender(EntityLiving entity) {
+        Render<?> renderAbstract = getMinecraft().getRenderManager().getEntityRenderObject(entity);
+        checkState(renderAbstract != null, "No render for entity " + entity.getClass());
+        checkArgument(renderAbstract instanceof RenderLiving, "EntityLiving instance has un unexpected render (entity class: " + entity.getClass() + ", model class: " + renderAbstract.getClass() + ")");
+        return (RenderLiving<?>) renderAbstract;
     }
 
     private static Sprite getSpriteForModelBoxFace(Identifier texture, ModelBase model, ModelBox box) throws IllegalAccessException {

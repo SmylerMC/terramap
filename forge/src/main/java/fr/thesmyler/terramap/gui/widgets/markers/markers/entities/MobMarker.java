@@ -2,6 +2,8 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import net.smyler.terramap.gui.widgets.markers.MarkerStyling;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelQuadruped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.EntityDragon;
@@ -12,6 +14,7 @@ import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.terramap.gui.widgets.markers.EntityMarkerStylingRuleset;
 
 import static net.smyler.terramap.gui.sprites.TerramapSprites.*;
+import static net.smyler.terramap.gui.widgets.markers.MarkerStyling.hasModelPredicate;
 
 /**
  * Map marker for any entity that implements IMob
@@ -107,8 +110,9 @@ public class MobMarker extends AbstractLivingMarker {
         // Fallback to a red dot for anything that implements IMob
         rules.add(IMob.class, MARKER_TOKEN_RED);
 
-        // Grabs the face texture from biped models, often overridden below
-        rules.add(EntityLiving.class, MarkerStyling::hasBipedModel, MarkerStyling::fromModelBiped);
+        // Grabs the face texture from well-known models, often overridden below
+        rules.add(EntityLiving.class, hasModelPredicate(ModelBiped.class), MarkerStyling::fromModelBiped);
+        rules.add(EntityLiving.class, hasModelPredicate(ModelQuadruped.class), MarkerStyling::fromModelQuadruped);
 
         // Common mobs
         rules.add(EntityCreeper.class, CREEPER);

@@ -1,16 +1,20 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.model.ModelQuadruped;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityIronGolem;
-import net.minecraft.entity.monster.EntityPolarBear;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.entity.passive.*;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.terramap.gui.widgets.markers.EntityMarkerStylingRuleset;
+import net.smyler.terramap.gui.widgets.markers.MarkerStyling;
 
 import static net.smyler.terramap.gui.sprites.TerramapSprites.*;
+import static net.smyler.terramap.gui.widgets.markers.MarkerStyling.hasModelPredicate;
 
 /**
  * Map marker for any entity that implements IAnimals but not IMobs
@@ -48,34 +52,6 @@ public class AnimalMarker extends AbstractLivingMarker {
             .width(6d).height(6d)
             .build();
 
-    private static final Sprite POLAR_BEAR = Sprite.builder()
-            .texture(VANILLA_TEXTURE_ENTITY.resolve("bear/polarbear.png"))
-            .textureDimensions(128d, 64d)
-            .xLeft(7d).yTop(7d)
-            .width(7d).height(7d)
-            .build();
-
-    private static final Sprite COW = Sprite.builder()
-            .texture(VANILLA_TEXTURE_ENTITY.resolve("cow/cow.png"))
-            .textureDimensions(64d, 32d)
-            .xLeft(6d).yTop(6d)
-            .width(8d).height(8d)
-            .build();
-
-    private static final Sprite MOOSHROOM = Sprite.builder()
-            .texture(VANILLA_TEXTURE_ENTITY.resolve("cow/mooshroom.png"))
-            .textureDimensions(64d, 32d)
-            .xLeft(6d).yTop(6d)
-            .width(8d).height(8d)
-            .build();
-
-    private static final Sprite SHEEP = Sprite.builder()
-            .texture(VANILLA_TEXTURE_ENTITY.resolve("sheep/sheep.png"))
-            .textureDimensions(64d, 32d)
-            .xLeft(6d).yTop(6d)
-            .width(8d).height(8d)
-            .build();
-
     private static final Sprite SQUID = Sprite.builder()
             .texture(VANILLA_TEXTURE_ENTITY.resolve("squid.png"))
             .textureDimensions(64d, 32d)
@@ -86,6 +62,10 @@ public class AnimalMarker extends AbstractLivingMarker {
     static {
         // Top level classes
         rules.add(IAnimals.class, MARKER_TOKEN_GREEN);
+
+        // Grabs the face texture from well-known models, often overridden below
+        rules.add(EntityLiving.class, hasModelPredicate(ModelBiped.class), MarkerStyling::fromModelBiped);
+        rules.add(EntityLiving.class, hasModelPredicate(ModelQuadruped.class), MarkerStyling::fromModelQuadruped);
 
         // Horses
         rules.add(AbstractHorse.class, MARKER_HORSE);
@@ -99,17 +79,13 @@ public class AnimalMarker extends AbstractLivingMarker {
         // Neutral entities
         rules.add(EntityIronGolem.class, MARKER_IRON_GOLEM);
         rules.add(EntitySnowman.class, SNOW_MAN);
-        rules.add(EntityPolarBear.class, POLAR_BEAR);
         rules.add(EntityLlama.class, MARKER_LLAMA);  // So Llamas are horses according to the game, #poo
         rules.add(EntityWolf.class, MARKER_WOLF);
 
         // Farm animals
         rules.add(EntityChicken.class, MARKER_CHICKEN);
-        rules.add(EntityCow.class, COW);
-        rules.add(EntityMooshroom.class, MOOSHROOM);
         rules.add(EntityPig.class, MARKER_PIG);
         rules.add(EntityRabbit.class, MARKER_RABBIT);
-        rules.add(EntitySheep.class, SHEEP);
 
         // Cats and ocelot
         rules.add(EntityOcelot.class, MARKER_OCELOT);
