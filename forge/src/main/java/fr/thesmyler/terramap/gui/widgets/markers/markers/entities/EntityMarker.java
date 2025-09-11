@@ -18,14 +18,20 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.Color.WHITE;
 
-public abstract class AbstractLivingMarker extends AbstractMovingMarker {
+/**
+ * A marker for any type of entity.
+ * Used by multiple marker controllers.
+ *
+ * @author Smyler
+ */
+public class EntityMarker extends AbstractMovingMarker {
 
     private final @NotNull Sprite sprite;
     protected final @NotNull Entity entity;
     protected GeoPointImmutable actualLocation;
     protected float actualAzimuth;
 
-    public AbstractLivingMarker(MarkerController<?> controller, @NotNull Sprite sprite, @NotNull Entity entity) {
+    public EntityMarker(MarkerController<?> controller, @NotNull Sprite sprite, @NotNull Entity entity) {
         super(controller, (float) sprite.width(), (float) sprite.height() ,16, Integer.MAX_VALUE);  //FIXME should not cast size
         this.entity = entity;
         this.sprite = sprite;
@@ -112,11 +118,6 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     public float getActualAzimuth() throws OutOfProjectionBoundsException {
         if (Double.isNaN(this.actualAzimuth)) throw OutOfProjectionBoundsException.get();
         return this.actualAzimuth;
-    }
-
-    @NotNull
-    public final Sprite getSprite() {
-        return this.sprite;
     }
 
 }

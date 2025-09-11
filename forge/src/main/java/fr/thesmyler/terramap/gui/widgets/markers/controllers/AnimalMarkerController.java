@@ -4,20 +4,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.EntityMarker;
+import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.AnimalMarker;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.IAnimals;
+import net.smyler.terramap.gui.widgets.markers.EntityMarkerStyle;
+import net.smyler.terramap.gui.widgets.markers.ForgeEntityMarkerStylingRuleset;
 
+import static net.smyler.smylib.Objects.requireNonNullElse;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
+import static net.smyler.terramap.gui.sprites.TerramapSprites.MARKER_TOKEN_GREY;
 
-public class AnimalMarkerController extends MarkerController<AnimalMarker> {
+public class AnimalMarkerController extends MarkerController<EntityMarker> {
 
     public static final String ID = "creatures";
 
@@ -28,14 +33,14 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
             this.isVisible(), null);
 
     public AnimalMarkerController() {
-        super(ID, 700, AnimalMarker.class);
+        super(ID, 700, EntityMarker.class);
         this.button.setOnChange(this::setVisibility);
         this.button.setTooltip(getGameClient().translator().format("terramap.terramapscreen.markercontrollers.buttons.animals"));
     }
 
     @Override
-    public AnimalMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-        if(TerramapClientContext.getContext().getProjection() == null) return new AnimalMarker[0];
+    public EntityMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
+        if(TerramapClientContext.getContext().getProjection() == null) return new EntityMarker[0];
         Map<UUID, Entity> entities = new HashMap<>();
         for(Entity entity: TerramapClientContext.getContext().getEntities()) {
             if(entity instanceof IAnimals && !(entity instanceof IMob)) {
@@ -43,13 +48,15 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
             }
         }
         for(Marker rawMarker: existingMarkers) {
-            AnimalMarker marker = (AnimalMarker) rawMarker;
+            EntityMarker marker = (EntityMarker) rawMarker;
             entities.remove(marker.getEntity().getUniqueID());
         }
-        AnimalMarker[] newMarkers = new AnimalMarker[entities.size()];
+        EntityMarker[] newMarkers = new EntityMarker[entities.size()];
         int i = 0;
         for(Entity entity: entities.values()) {
-            newMarkers[i++] = new AnimalMarker(this, entity);
+            EntityMarkerStyle style = ForgeEntityMarkerStylingRuleset.INSTANCE.getStyleFor(entity);
+            Sprite sprite = requireNonNullElse(style.sprite(), MARKER_TOKEN_GREY);
+            newMarkers[i++] = new EntityMarker(this, sprite, entity);
         }
         return newMarkers;
     }

@@ -4,19 +4,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.EntityMarker;
+import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MobMarker;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
+import net.smyler.terramap.gui.widgets.markers.EntityMarkerStyle;
+import net.smyler.terramap.gui.widgets.markers.ForgeEntityMarkerStylingRuleset;
 
+import static net.smyler.smylib.Objects.requireNonNullElse;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
+import static net.smyler.terramap.gui.sprites.TerramapSprites.MARKER_TOKEN_GREY;
 
-public class MobMarkerController extends MarkerController<MobMarker> {
+public class MobMarkerController extends MarkerController<EntityMarker> {
 
     public static final String ID = "mobs";
 
@@ -27,14 +32,14 @@ public class MobMarkerController extends MarkerController<MobMarker> {
             this.isVisible(), null);
 
     public MobMarkerController() {
-        super(ID, 700, MobMarker.class);
+        super(ID, 700, EntityMarker.class);
         this.button.setOnChange(this::setVisibility);
         this.button.setTooltip(I18n.format("terramap.terramapscreen.markercontrollers.buttons.mobs"));
     }
 
     @Override
-    public MobMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-        if(TerramapClientContext.getContext().getProjection() == null) return new MobMarker[0];
+    public EntityMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
+        if(TerramapClientContext.getContext().getProjection() == null) return new EntityMarker[0];
         Map<UUID, Entity> entities = new HashMap<>();
         for(Entity entity: TerramapClientContext.getContext().getEntities()) {
             if(entity instanceof IMob) {
@@ -42,13 +47,15 @@ public class MobMarkerController extends MarkerController<MobMarker> {
             }
         }
         for(Marker rawMarker: existingMarkers) {
-            MobMarker marker = (MobMarker) rawMarker;
+            EntityMarker marker = (EntityMarker) rawMarker;
             entities.remove(marker.getEntity().getUniqueID());
         }
-        MobMarker[] newMarkers = new MobMarker[entities.size()];
+        EntityMarker[] newMarkers = new EntityMarker[entities.size()];
         int i = 0;
         for(Entity entity: entities.values()) {
-            newMarkers[i++] = new MobMarker(this, entity);
+            EntityMarkerStyle style = ForgeEntityMarkerStylingRuleset.INSTANCE.getStyleFor(entity);
+            Sprite sprite = requireNonNullElse(style.sprite(), MARKER_TOKEN_GREY);
+            newMarkers[i++] = new EntityMarker(this, sprite, entity);
         }
         return newMarkers;
     }
