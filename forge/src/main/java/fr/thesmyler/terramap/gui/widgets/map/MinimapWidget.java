@@ -14,8 +14,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.minecraft.client.Minecraft;
+import net.smyler.terramap.util.geo.GeoProjection;
 
 import java.util.Optional;
 
@@ -110,7 +110,7 @@ public class MinimapWidget extends MapWidget {
     }
 
     private void forceTracking() {
-        GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+        GeoProjection projection = TerramapClientContext.getContext().getProjection();
         Screen screen = getGameClient().getCurrentScreen();
         Popup popup = getGameClient().getTopPopup();
         if (projection == null) {
