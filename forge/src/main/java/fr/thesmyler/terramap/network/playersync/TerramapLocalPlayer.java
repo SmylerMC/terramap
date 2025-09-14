@@ -4,11 +4,9 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
-import fr.thesmyler.terramap.util.TerramapUtil;
-import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
+import net.smyler.terramap.content.Position;
+import net.smyler.terramap.content.PositionImmutable;
+import net.smyler.terramap.util.geo.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -16,6 +14,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
 
 public class TerramapLocalPlayer extends TerramapPlayer {
 
@@ -37,15 +37,18 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     }
 
     @Override
-    public GeoPointReadOnly getLocation() throws OutOfProjectionBoundsException {
-        GeographicProjection proj;
-        if(this.player.world.isRemote) {
-            proj = TerramapClientContext.getContext().getProjection();
+    public GeoPointReadOnly getLocation() throws OutOfGeoBoundsException {
+        GeoProjection projection;
+        if (this.player.world.isRemote) {
+            projection = TerramapClientContext.getContext().getProjection();
         } else {
-            proj = TerramapUtil.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
+            projection = getWorldProjection(this.player.world);
         }
-        if(proj == null) return null;
-        this.location.set(proj.toGeo(this.player.posX, this.player.posZ));
+        if (projection == null) {
+            return null;
+        }
+        Position position = new PositionImmutable(this.player.posX, this.player.posY, this.player.posZ);
+        projection.toGeo(this.location, position);
         return this.location.getReadOnly();
     }
 
@@ -66,17 +69,21 @@ public class TerramapLocalPlayer extends TerramapPlayer {
 
     @Override
     public float getAzimuth() {
-        GeographicProjection proj;
-        if(this.player.world.isRemote) {
-            proj = TerramapClientContext.getContext().getProjection();
+        GeoProjection projection;
+        if (this.player.world.isRemote) {
+            projection = TerramapClientContext.getContext().getProjection();
         } else {
-            proj = TerramapUtil.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
+            projection = getWorldProjection(this.player.world);
         }
-        if(proj == null) return Float.NaN;
-        try{
-            return proj.azimuth(this.player.posX, this.player.posZ, this.player.rotationYaw);
-        } catch(OutOfProjectionBoundsException e) {
+        if (projection == null) {
             return Float.NaN;
+        }
+        Position position = new PositionImmutable(this.player.posX, this.player.posY, this.player.posZ);
+        projection.toGeo(this.location, position);
+        try{
+            return projection.azimuth(position);
+        } catch(OutOfGeoBoundsException e) {
+            return 0f;
         }
     }
 

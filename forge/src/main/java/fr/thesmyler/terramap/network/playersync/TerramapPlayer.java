@@ -3,12 +3,12 @@ package fr.thesmyler.terramap.network.playersync;
 import java.util.UUID;
 
 import net.smyler.terramap.util.geo.GeoPoint;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 public abstract class TerramapPlayer {
 
@@ -16,7 +16,7 @@ public abstract class TerramapPlayer {
 
     public abstract ITextComponent getDisplayName();
 
-    public abstract GeoPoint<?> getLocation() throws OutOfProjectionBoundsException;
+    public abstract GeoPoint<?> getLocation() throws OutOfGeoBoundsException;
 
     public abstract float getAzimuth();
 

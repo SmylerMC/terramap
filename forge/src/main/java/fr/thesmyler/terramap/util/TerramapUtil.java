@@ -7,6 +7,9 @@ import net.buildtheearth.terraplusplus.generator.EarthGenerator;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.util.geo.TerraplusplusGeoProjection;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Misc stuff useful for Terramap
@@ -37,6 +40,14 @@ public final class TerramapUtil {
             EarthGenerator generator = (EarthGenerator)((CubeProviderServer) provider).getCubeGenerator();
             return generator.settings;
         } else return null;
+    }
+
+    public static GeoProjection getWorldProjection(@NotNull World world) {
+        EarthGeneratorSettings settings = getEarthGeneratorSettingsFromWorld(world);
+        if (settings == null) {
+            return null;
+        }
+        return new TerraplusplusGeoProjection(settings.projection());
     }
 
     public static boolean isBteCompatible(EarthGeneratorSettings gen) {

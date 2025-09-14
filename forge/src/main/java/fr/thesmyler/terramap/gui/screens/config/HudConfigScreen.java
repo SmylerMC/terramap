@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.screens.config;
 
 import java.util.*;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.SlidingPanelWidget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -22,6 +23,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen.TileScalingOption;
+import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
@@ -33,13 +35,13 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerDirectionsVis
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.PlayerNameVisibilityController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.minecraft.client.Minecraft;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
+import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 
@@ -81,7 +83,7 @@ public class HudConfigScreen extends Screen {
         this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
         this.minimap.restore(TerramapClientContext.getContext().getSavedState().minimap);
         this.minimap.scheduleBeforeEachUpdate(() -> {
-            GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+            GeoProjection projection = TerramapClientContext.getContext().getProjection();
             Marker marker = this.minimap.getMainPlayerMarker();
             if (projection != null && marker != null) {
                 controller.track(marker);
@@ -353,20 +355,20 @@ public class HudConfigScreen extends Screen {
     private static class CompassScreen extends FlexibleWidgetContainer {
 
         final RibbonCompassWidget compass = new RibbonCompassWidget(0, 0, 0, 30);
+        private final PositionMutable playerPosition = new PositionMutable();
 
         CompassScreen() {
             super(0, 0, 0, 30, 30);
             this.addWidget(this.compass);
             this.setSize(this.compass.getWidth(), this.compass.getHeight());
             this.scheduleBeforeEachUpdate(() -> {
-                GeographicProjection p = TerramapClientContext.getContext().getProjection();
-                if(p != null) {
-                    double x = Minecraft.getMinecraft().player.posX;
-                    double z = Minecraft.getMinecraft().player.posZ;
-                    float a = Minecraft.getMinecraft().player.rotationYaw;
+                GeoProjection p = TerramapClientContext.getContext().getProjection();
+                if (p != null) {
+                    EntityPlayerSP player = getMinecraft().player;
+                    this.playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                     try {
-                        compass.setAzimuth(p.azimuth(x, z, a));
-                    } catch (OutOfProjectionBoundsException ignored) {}
+                        this.compass.setAzimuth(p.azimuth(this.playerPosition));
+                    } catch (OutOfGeoBoundsException ignored) {}
                 }
             });
         }
@@ -387,7 +389,7 @@ public class HudConfigScreen extends Screen {
         }
         @Override
         public String toString() {
-            return this.map.getLocalizedName(Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode());
+            return this.map.getLocalizedName(getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode());
         }
     }
 

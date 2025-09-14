@@ -6,9 +6,9 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.smyler.terramap.util.geo.GeoPoint;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 public class OtherPlayerMarker extends AbstractPlayerMarker {
 
@@ -59,7 +59,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected GeoPoint<?> getActualLocation() throws OutOfProjectionBoundsException {
+    protected GeoPoint<?> getActualLocation() throws OutOfGeoBoundsException {
         return this.player.getLocation();
     }
 

@@ -6,11 +6,12 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.util.geo.GeoProjection;
 import net.smyler.terramap.util.geo.GeoServices;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -25,10 +26,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 import java.util.Objects;
 
+import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.util.geo.GeoServices.formatGeoPointForDisplay;
 
 /**
  * Event handler for the physical client
@@ -37,24 +41,24 @@ import static net.smyler.smylib.SmyLib.getGameClient;
 @SideOnly(Side.CLIENT)
 public class ClientTerramapEventHandler {
 
+    private final GeoPointMutable playerLocation = new GeoPointMutable();
+    private final PositionMutable playerPosition = new PositionMutable();
+
     @SubscribeEvent
     public void onRenderHUD(RenderGameOverlayEvent.Text event) {
-        if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
-            GeographicProjection proj = TerramapClientContext.getContext().getProjection();
-            if(proj != null) {
+        if (getMinecraft().gameSettings.showDebugInfo) {
+            GeoProjection proj = TerramapClientContext.getContext().getProjection();
+            if (proj != null) {
                 event.getLeft().add("");
-                double x = Minecraft.getMinecraft().player.posX;
-                double z = Minecraft.getMinecraft().player.posZ;
-                float yaw = Minecraft.getMinecraft().player.rotationYaw;
+                EntityPlayerSP player = getMinecraft().player;
+                this.playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationYaw);
                 try {
-                    double[] coords = proj.toGeo(x, z);
-                    float azimuth = proj.azimuth(x, z, yaw);
-                    String lon = GeoServices.formatGeoCoordForDisplay(coords[0]);
-                    String lat = GeoServices.formatGeoCoordForDisplay(coords[1]);
+                    proj.toGeo(this.playerLocation, this.playerPosition);
+                    float azimuth = proj.azimuth(this.playerPosition);
                     String azimuthStr = GeoServices.formatAzimuthForDisplay(azimuth);
                     String cardinal = CardinalDirection.azimuthToFacing(azimuth).realName();
-                    event.getLeft().add("Position: " + lat + "° " + lon + "° Looking at: " + azimuthStr + "° (" + cardinal + ")");
-                } catch(OutOfProjectionBoundsException e) {
+                    event.getLeft().add("Position: " + formatGeoPointForDisplay(this.playerLocation) + " Looking at: " + azimuthStr + "° (" + cardinal + ")");
+                } catch(OutOfGeoBoundsException ignored) {
                     event.getLeft().add("Out of projection bounds");
                 }
             }
@@ -70,12 +74,12 @@ public class ClientTerramapEventHandler {
 
     @SubscribeEvent
     public void onClientDisconnect(ClientDisconnectionFromServerEvent event) {
-        Minecraft.getMinecraft().addScheduledTask(TerramapClientContext::resetContext); // This event is called from the network thread
+        getMinecraft().addScheduledTask(TerramapClientContext::resetContext); // This event is called from the network thread
     }
 
     @SubscribeEvent
     public void onClientConnected(ClientConnectedToServerEvent event) {
-        Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().reloadState()); // This event is called from the network thread
+        getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().reloadState()); // This event is called from the network thread
     }
 
     @SubscribeEvent

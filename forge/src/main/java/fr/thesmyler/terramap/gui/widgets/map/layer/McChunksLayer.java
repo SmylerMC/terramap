@@ -20,15 +20,11 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
-import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
-import net.smyler.terramap.util.geo.WebMercatorUtil;
+import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.util.geo.*;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
@@ -47,7 +43,7 @@ public class McChunksLayer extends MapLayer {
     public static final String ID = "mcchunks";
     
     private final ProjectionCache cache = new ProjectionCache(4);
-    private final Vec2dMutable mcCenter = new Vec2dMutable();
+    private final PositionMutable mcCenter = new PositionMutable();
     private Vec2dReadOnly extendedDimensions;
     private GeoPointReadOnly geoCenter;
 
@@ -78,6 +74,7 @@ public class McChunksLayer extends MapLayer {
     private final Vec2dMutable centerTile = new Vec2dMutable();
     private final Vec2dMutable deltaCalculator = new Vec2dMutable();
     private final GeoPointMutable nearCenterLocation = new GeoPointMutable();
+    private final PositionMutable nearCenterPosition = new PositionMutable();
 
     @Override
     protected void initialize() {
@@ -134,7 +131,7 @@ public class McChunksLayer extends MapLayer {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget)parent;
-        GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+        GeoProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
         map.getProfiler().startSection("layer-" + ID);
         
@@ -150,14 +147,14 @@ public class McChunksLayer extends MapLayer {
         try {
             this.deltaCalculator.set(this.extendedDimensions).downscale(2d).add(10d, 10d);
             this.getLocationAtPositionInRenderSpace(this.nearCenterLocation, this.deltaCalculator);
-            this.mcCenter.set(projection.fromGeo(this.geoCenter.longitude(), this.geoCenter.latitude()));
-            this.deltaCalculator.set(projection.fromGeo(this.nearCenterLocation.longitude(), this.nearCenterLocation.latitude()));
-            double d = this.mcCenter.distanceTo(this.deltaCalculator);
+            projection.fromGeo(this.mcCenter, this.geoCenter);
+            projection.fromGeo(this.nearCenterPosition, this.nearCenterLocation);
+            double d = this.mcCenter.distanceTo(this.nearCenterPosition);
             if(d < renderThreshold) render2dr = this.render2dr;
             if(d < renderThreshold / 2) render3dr = this.render3dr;
             if(d < renderThreshold / 16) renderChunks = this.renderChunks;
             if(d < renderThreshold / 128) renderBlocks = this.renderBlocks;
-        } catch(OutOfProjectionBoundsException silenced) {
+        } catch(OutOfGeoBoundsException silenced) {
             // The center is out of bounds, let's not render anything
             return;
         }
@@ -192,7 +189,7 @@ public class McChunksLayer extends MapLayer {
         
         final int maxTiles = 100; // Maximum drawing iterations, for safety
 
-        this.centerTile.set(floorDiv((long) floor(this.mcCenter.x), tileSize), floorDiv((long)floor(this.mcCenter.y), tileSize));
+        this.centerTile.set(floorDiv((long) floor(this.mcCenter.x()), tileSize), floorDiv((long)floor(this.mcCenter.y()), tileSize));
         int dX = 0;
         int dY = 0;
         this.corners[0].set(this.centerTile).scale(tileSize);
@@ -246,7 +243,7 @@ public class McChunksLayer extends MapLayer {
             for(int i=0; i<this.projectedCorners.length; i++) {
                 this.cache.getRenderPos(this.projectedCorners[i], this.corners[i], discriminator);
             }
-        } catch(OutOfProjectionBoundsException silenced) {
+        } catch(OutOfGeoBoundsException silenced) {
             return; // Skip the tile
         }
         for(Vec2dMutable corner: this.projectedCorners) {
@@ -265,11 +262,13 @@ public class McChunksLayer extends MapLayer {
     
     private class ProjectionCache {
         
-        GeographicProjection projection;
+        GeoProjection projection;
+        private final GeoPointMutable location = new GeoPointMutable();
+        private final PositionMutable position = new PositionMutable();
         
         final Map<Vec2d<?>, GeoPointImmutable> mcToGeo = new HashMap<>();
         final Set<Vec2d<?>> accessedInCycle = new HashSet<>();
-        
+
         final int maxProjectionsPerCycle = 50;
         int[] projectionsThisCycle;
         
@@ -277,31 +276,41 @@ public class McChunksLayer extends MapLayer {
             this.projectionsThisCycle = new int[diffCount];
         }
         
-        void getRenderPos(Vec2dMutable destination, Vec2d<?> mcPos, int discriminator) throws OutOfProjectionBoundsException {
-            if (!this.accessedInCycle.contains(mcPos)) this.accessedInCycle.add(mcPos.getImmutable());
+        void getRenderPos(Vec2dMutable destination, Vec2d<?> mcPos, int discriminator) throws OutOfGeoBoundsException {
+            if (!this.accessedInCycle.contains(mcPos)) {
+                this.accessedInCycle.add(mcPos.getImmutable());
+            }
             
             // Not really out of bounds, but we don't need to differentiate the two
-            if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) throw OutOfProjectionBoundsException.get();
+            if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) {
+                throw new OutOfGeoBoundsException();
+            }
             
             GeoPointImmutable location;
             
             // Try getting a cached value
             if(this.mcToGeo.containsKey(mcPos)) {
                 location = this.mcToGeo.get(mcPos);
-                if(location == null) throw OutOfProjectionBoundsException.get();
+                if(location == null) {
+                    throw new OutOfGeoBoundsException();
+                }
             } else {
                 // Fallback to computing it
                 try {
                     this.projectionsThisCycle[discriminator]++;
-                    location = new GeoPointImmutable(this.projection.toGeo(mcPos.x(), mcPos.y()));
+                    this.position.withXZ(mcPos.x(), mcPos.y());
+                    this.projection.toGeo(this.location, this.position);
+                    location = this.location.getImmutable();
                     this.mcToGeo.put(mcPos.getImmutable(), location);
-                } catch(OutOfProjectionBoundsException e) {
+                } catch(OutOfGeoBoundsException e) {
                     this.mcToGeo.put(mcPos.getImmutable(), null);
                     throw e;
                 }
             }
             
-            if(! WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) throw OutOfProjectionBoundsException.get();
+            if (! WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) {
+                throw new OutOfGeoBoundsException();
+            }
             McChunksLayer.this.getLocationPositionInRenderSpace(destination, location);
         }
         

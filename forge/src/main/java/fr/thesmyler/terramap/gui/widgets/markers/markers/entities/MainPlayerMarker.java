@@ -3,9 +3,9 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
+import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.content.Position;
+import net.smyler.terramap.util.geo.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
@@ -20,8 +20,9 @@ import net.minecraft.util.text.TextComponentString;
  */
 public class MainPlayerMarker extends AbstractPlayerMarker {
 
-    private GeoPointImmutable playerLocation;
+    private final GeoPointMutable playerLocation = new GeoPointMutable();
     private float playerAzimuth;
+    private boolean isOutOfBounds = false;
 
     public MainPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
         super(controller, downscaleFactor);
@@ -35,16 +36,14 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
         }
         if(TerramapClientContext.getContext().getProjection() == null) return;
         EntityPlayerSP player = Minecraft.getMinecraft().player;
+        GeoProjection projection = TerramapClientContext.getContext().getProjection();
+        Position position = new PositionMutable(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);
         try {
-            GeographicProjection proj = TerramapClientContext.getContext().getProjection();
-            this.playerLocation =  new GeoPointImmutable(proj.toGeo(player.posX, player.posZ));
-        } catch(OutOfProjectionBoundsException e) {
-            this.playerLocation = null;
-        }
-        try {
-            this.playerAzimuth = TerramapClientContext.getContext().getProjection().azimuth(player.posX, player.posZ, player.rotationYaw);
-        } catch(OutOfProjectionBoundsException e) {
-            this.playerAzimuth = Float.NaN;
+            projection.toGeo(this.playerLocation, position);
+            this.playerAzimuth = projection.azimuth(position);
+            this.isOutOfBounds = false;
+        } catch(OutOfGeoBoundsException e) {
+            this.isOutOfBounds = true;
         }
         super.onUpdate(mouseX, mouseY, parent);
     }
@@ -55,9 +54,11 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected GeoPointImmutable getActualLocation() throws OutOfProjectionBoundsException {
-        if (this.playerLocation == null) throw OutOfProjectionBoundsException.get();
-        return this.playerLocation;
+    protected GeoPoint<?> getActualLocation() throws OutOfGeoBoundsException {
+        if (this.isOutOfBounds) {
+            throw new OutOfGeoBoundsException("Player is currently out of the projected area");
+        }
+        return this.playerLocation.getReadOnly();
     }
 
     @Override
@@ -84,8 +85,10 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected float getActualAzimuth() throws OutOfProjectionBoundsException {
-        if (Double.isNaN(playerAzimuth)) throw OutOfProjectionBoundsException.get();
+    protected float getActualAzimuth() throws OutOfGeoBoundsException {
+        if (this.isOutOfBounds) {
+            throw new OutOfGeoBoundsException("Player is currently out of the projected area");
+        }
         return this.playerAzimuth;
     }
 

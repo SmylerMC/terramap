@@ -11,7 +11,7 @@ import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
-import net.smyler.terramap.util.geo.GeoServices;
+import net.smyler.terramap.util.geo.*;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.*;
@@ -22,9 +22,6 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.Font;
-import net.smyler.terramap.util.geo.GeoPoint;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
-import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.ScrollableWidgetContainer;
@@ -58,8 +55,6 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
@@ -115,6 +110,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     // UI states
     private boolean f1Mode = false;
     private boolean debugMode = false;
+
+    // Stores the tissot indicatrix at the mouse cursor location
+    private final TissotsIndicatrix tissotAtMouse = new TissotsIndicatrix();
 
     public TerramapScreen(Screen parent, SavedMainScreenState state) {
         super(BackgroundOption.OVERLAY);
@@ -354,7 +352,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         super.onUpdate(mouseX, mouseY, parent);
 
-        GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+        GeoProjection projection = TerramapClientContext.getContext().getProjection();
 
         MapController controller = this.map.getController();
         this.setZoomRestrictions();
@@ -371,10 +369,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         } else {
             if(projection != null) {
                 try {
-                    double[] dist = projection.tissot(mouseLocation.longitude(), mouseLocation.latitude());
-                    formatScale = GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(dist[0])));
-                    formatOrientation = GeoServices.formatGeoCoordForDisplay(Math.toDegrees(dist[1]));
-                } catch (OutOfProjectionBoundsException ignored) {
+                    projection.tissot(this.tissotAtMouse, mouseLocation);
+                    formatScale = GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(this.tissotAtMouse.areaInflation())));
+                    formatOrientation = GeoServices.formatGeoCoordForDisplay(this.tissotAtMouse.maxAngularDistortionDegrees());
+                } catch (OutOfGeoBoundsException ignored) {
                 }
                 this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", formatScale, formatOrientation));
             } else {

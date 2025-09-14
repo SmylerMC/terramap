@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import fr.thesmyler.smylibgui.toast.TextureToast;
+import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.MinecraftServerInfo;
 import fr.thesmyler.terramap.saving.client.ClientSaveManager;
@@ -29,8 +30,6 @@ import fr.thesmyler.terramap.util.TerramapUtil;
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.buildtheearth.terraplusplus.projection.mercator.WebMercatorProjection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -40,6 +39,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.util.geo.TerraplusplusGeoProjection;
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -63,7 +65,7 @@ public class TerramapClientContext {
     private final PlayerSyncStatus proxySyncSpectators = PlayerSyncStatus.DISABLED;
     private TerramapVersion serverVersion = null;
     private String sledgehammerVersion = null;
-    private GeographicProjection projection = null;
+    private GeoProjection projection = null;
     private TerrainPreview terrainPreview = null;
     private boolean isRegisteredForUpdates = false;
     private String tpCommand = null;
@@ -137,10 +139,10 @@ public class TerramapClientContext {
         return savedClientState.generatorSettings;
     }
 
-    public GeographicProjection getProjection() {
+    public GeoProjection getProjection() {
         EarthGeneratorSettings gen = this.getGeneratorSettings();
         if(this.projection == null && gen != null) {
-            this.projection = gen.projection();
+            this.projection = new TerraplusplusGeoProjection(gen.projection());
         }
         return this.projection;
     }
@@ -174,7 +176,7 @@ public class TerramapClientContext {
                 savedPlayer.setDisplayName(player.getDisplayName());
                 try {
                     savedPlayer.setLocationAndAzimuth(player.getLocation(), player.getAzimuth());
-                } catch (OutOfProjectionBoundsException e) {
+                } catch (OutOfGeoBoundsException e) {
                     savedPlayer.setOutOfProjection();
                 }
                 savedPlayer.setGamemode(player.getGamemode());

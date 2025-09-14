@@ -6,7 +6,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 public abstract class AbstractMovingMarker extends Marker {
 
@@ -30,16 +30,15 @@ public abstract class AbstractMovingMarker extends Marker {
         //TODO Animate for smoother movements
         try {
             this.location.set(this.getActualLocation());
-            float realAzimuth = this.getActualAzimuth();
-            this.azimuth = realAzimuth;
+            this.azimuth = this.getActualAzimuth();
             this.isOutOfBounds = false;
-        } catch(OutOfProjectionBoundsException e) {
+        } catch(OutOfGeoBoundsException e) {
             this.isOutOfBounds = true;
         }
 
     }
 
-    protected abstract GeoPoint<?> getActualLocation() throws OutOfProjectionBoundsException;
+    protected abstract GeoPoint<?> getActualLocation() throws OutOfGeoBoundsException;
 
     @Override
     public GeoPointReadOnly getLocation() {
@@ -50,6 +49,6 @@ public abstract class AbstractMovingMarker extends Marker {
         return this.isOutOfBounds ? Float.NaN: this.azimuth;
     }
 
-    protected abstract float getActualAzimuth() throws OutOfProjectionBoundsException;
+    protected abstract float getActualAzimuth() throws OutOfGeoBoundsException;
 
 }

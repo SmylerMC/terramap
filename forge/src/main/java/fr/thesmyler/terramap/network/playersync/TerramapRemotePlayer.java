@@ -9,7 +9,6 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
@@ -17,6 +16,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 public class TerramapRemotePlayer extends TerramapPlayer {
 
@@ -49,8 +49,10 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     }
     
     @Override
-    public GeoPointReadOnly getLocation() throws OutOfProjectionBoundsException {
-        if (this.outOfProjection) throw OutOfProjectionBoundsException.get();
+    public GeoPointReadOnly getLocation() throws OutOfGeoBoundsException {
+        if (this.outOfProjection) {
+            throw new OutOfGeoBoundsException("Player out of projection");
+        }
         return this.location.getReadOnly();
     }
     

@@ -1,5 +1,9 @@
 package fr.thesmyler.terramap.input;
 
+import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 import org.lwjgl.input.Keyboard;
 
 import fr.thesmyler.terramap.MapContext;
@@ -7,8 +11,6 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
@@ -31,6 +33,9 @@ public abstract class KeyBindings {
     public static final KeyBinding ZOOM_IN = new KeyBinding("terramap.binding.zoom_in", Keyboard.KEY_B, KeyBindings.KEY_CATEGORY);
     public static final KeyBinding ZOOM_OUT = new KeyBinding("terramap.binding.zoom_out", Keyboard.KEY_V, KeyBindings.KEY_CATEGORY);
     public static final KeyBinding TOGGLE_MINIMAP = new KeyBinding("terramap.binding.toggle_minimap", Keyboard.KEY_N, KeyBindings.KEY_CATEGORY);
+
+    private static final PositionMutable playerPosition = new PositionMutable();
+    private static final GeoPointMutable playerLocation = new GeoPointMutable();
 
     private static final IKeyConflictContext TERRAMAP_SCREEN_CONTEXT = new IKeyConflictContext() {
         @Override
@@ -63,17 +68,17 @@ public abstract class KeyBindings {
         }
         if(COPY_GEO_COORDS.isPressed()) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
-            GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+            GeoProjection projection = TerramapClientContext.getContext().getProjection();
             if(player == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
             } else if(projection == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noproj"));
             } else {
                 try {
-                    double[] projectedCoords = projection.toGeo(player.posX, player.posZ);
-                    getGameClient().clipboard().setContent(projectedCoords[1] + " " + projectedCoords[0]);
+                    projection.toGeo(playerLocation, playerPosition);
+                    getGameClient().clipboard().setContent(playerLocation.latitude() + " " + playerLocation.longitude());
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.geo"));
-                } catch(OutOfProjectionBoundsException e) {
+                } catch(OutOfGeoBoundsException e) {
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.outproj"));
                 }
             }

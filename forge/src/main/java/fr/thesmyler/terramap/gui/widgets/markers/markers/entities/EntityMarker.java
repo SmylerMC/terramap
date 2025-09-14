@@ -9,9 +9,9 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import net.smyler.smylib.gui.sprites.Sprite;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
+import net.smyler.terramap.content.Position;
+import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.util.geo.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +27,10 @@ import static net.smyler.smylib.Color.WHITE;
 public class EntityMarker extends AbstractMovingMarker {
 
     private final @NotNull Sprite sprite;
-    protected final @NotNull Entity entity;
-    protected GeoPointImmutable actualLocation;
-    protected float actualAzimuth;
+    private final @NotNull Entity entity;
+    private final GeoPointMutable actualLocation = new GeoPointMutable();
+    private float actualAzimuth;
+    private boolean isOutOfBounds = false;
 
     public EntityMarker(MarkerController<?> controller, @NotNull Sprite sprite, @NotNull Entity entity) {
         super(controller, (float) sprite.width(), (float) sprite.height() ,16, Integer.MAX_VALUE);  //FIXME should not cast size
@@ -64,23 +65,24 @@ public class EntityMarker extends AbstractMovingMarker {
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         MapWidget map = (MapWidget) parent;
-        double x = this.entity.posX;
-        double z = this.entity.posZ;
-        GeographicProjection proj = TerramapClientContext.getContext().getProjection();
+        GeoProjection projection = TerramapClientContext.getContext().getProjection();
+        Position position = new PositionMutable(this.entity.posX, this.entity.posY, this.entity.posZ);
         try {
-            this.actualLocation = new GeoPointImmutable(proj.toGeo(x, z));
-            this.actualAzimuth = proj.azimuth(x, z, this.entity.rotationYaw);
-        } catch(OutOfProjectionBoundsException | NullPointerException e) {
-            this.actualLocation = null;
-            this.actualAzimuth = Float.NaN;
+            projection.toGeo(this.actualLocation, position);
+            this.actualAzimuth = projection.azimuth(position);
+            this.isOutOfBounds = false;
+        } catch(OutOfGeoBoundsException | NullPointerException e) {
+            this.isOutOfBounds = true;
         }
         super.onUpdate(mouseX, mouseY, parent);
         if(this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
     }
 
     @Override
-    protected GeoPointImmutable getActualLocation() throws OutOfProjectionBoundsException {
-        if (this.actualLocation == null) throw OutOfProjectionBoundsException.get();
+    protected GeoPoint<?> getActualLocation() throws OutOfGeoBoundsException {
+        if (this.isOutOfBounds) {
+            throw new OutOfGeoBoundsException("Entity is currently out of the projected area");
+        }
         return this.actualLocation;
     }
 
@@ -115,8 +117,10 @@ public class EntityMarker extends AbstractMovingMarker {
     }
 
     @Override
-    public float getActualAzimuth() throws OutOfProjectionBoundsException {
-        if (Double.isNaN(this.actualAzimuth)) throw OutOfProjectionBoundsException.get();
+    public float getActualAzimuth() throws OutOfGeoBoundsException {
+        if (this.isOutOfBounds) {
+            throw new OutOfGeoBoundsException("Entity is currently out of the projected area");
+        }
         return this.actualAzimuth;
     }
 

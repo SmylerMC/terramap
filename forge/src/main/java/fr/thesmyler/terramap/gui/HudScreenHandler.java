@@ -1,5 +1,6 @@
 package fr.thesmyler.terramap.gui;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import net.smyler.smylib.gui.widgets.WarningWidget;
@@ -9,13 +10,14 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
+import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MinimapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.minecraft.client.Minecraft;
+import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
+import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 public abstract class HudScreenHandler {
@@ -23,6 +25,8 @@ public abstract class HudScreenHandler {
     private static MinimapWidget map;
     private static RibbonCompassWidget compass;
     private final static SpriteWidget offsetWarning = new WarningWidget(0, 0, 50);
+
+    private static final PositionMutable playerPosition = new PositionMutable();
 
     public static void init(WidgetContainer screen) {
 
@@ -44,22 +48,23 @@ public abstract class HudScreenHandler {
 
             compass = new RibbonCompassWidget(compassX, compassY, 20, compassWidth);
             screen.addWidget(compass);
-            screen.scheduleBeforeEachUpdate(() -> {
-                GeographicProjection p = TerramapClientContext.getContext().getProjection();
-                if(p != null) {
-                    double x = Minecraft.getMinecraft().player.posX;
-                    double z = Minecraft.getMinecraft().player.posZ;
-                    float a = Minecraft.getMinecraft().player.rotationYaw;
-                    try {
-                        compass.setAzimuth(p.azimuth(x, z, a));
-                        compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
-                    } catch (OutOfProjectionBoundsException e) {
-                        compass.setVisibility(false);
-                    }
-                }
-            });
+            screen.scheduleBeforeEachUpdate(HudScreenHandler::tickCompass);
             compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
             screen.addWidget(compass);
+        }
+    }
+
+    private static void tickCompass() {
+        GeoProjection p = TerramapClientContext.getContext().getProjection();
+        if(p != null) {
+            EntityPlayerSP player = getMinecraft().player;
+            playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+            try {
+                p.azimuth(playerPosition);
+                compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
+            } catch (OutOfGeoBoundsException ignored) {
+                compass.setVisibility(false);
+            }
         }
     }
 

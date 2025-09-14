@@ -7,17 +7,14 @@ import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.WebMercatorUtil;
+import net.smyler.terramap.util.geo.*;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
-import net.buildtheearth.terraplusplus.projection.GeographicProjection;
-import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
 /**
- * Shows the area and angular distortion from the world's {@link GeographicProjection}.
+ * Shows the area and angular distortion from the world's {@link GeoProjection}.
  * <p>
  * A very interesting way to make a computer suffer.
  * 
@@ -29,6 +26,7 @@ public class DistortionLayer extends MapLayer {
     private final Vec2dMutable screenPositions = new Vec2dMutable();
     private final GeoPointMutable renderedLocations = new GeoPointMutable();
     private Vec2dReadOnly renderSpaceDimensions;
+    private final TissotsIndicatrix tissot = new TissotsIndicatrix();
 
     protected void initialize() {
         this.renderSpaceDimensions = this.getRenderSpaceDimensions();
@@ -37,7 +35,7 @@ public class DistortionLayer extends MapLayer {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget) parent;
-        GeographicProjection projection = TerramapClientContext.getContext().getProjection();
+        GeoProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
         map.getProfiler().startSection("layer-distortion");
         context.gl().pushViewMatrix();
@@ -52,12 +50,12 @@ public class DistortionLayer extends MapLayer {
                 if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(this.renderedLocations)) continue;
                 Color color = Color.TRANSPARENT;
                 try {
-                    double[] distortion = projection.tissot(this.renderedLocations.longitude(), this.renderedLocations.latitude());
-                    float red = (float) Math.min(distortion[0] / 4f, 1f);
-                    float green = (float) Math.min(distortion[1] / 2/Math.PI, 1f);
+                    projection.tissot(this.tissot, this.renderedLocations);
+                    float red = (float) Math.min(this.tissot.areaInflation() / 4f, 1f);
+                    float green = (float) Math.min(this.tissot.maxAngularDistortion() / 2/Math.PI, 1f);
                     float alpha = Math.min(red + green, 1f);
                     color = new Color(red, green, 0f, alpha);
-                } catch(OutOfProjectionBoundsException e) {
+                } catch(OutOfGeoBoundsException e) {
                     color = color.withRed(0f).withGreen(0).withAlpha(.1f);
                 }
                 context.drawRectangle(x + dx, y + dy, x + dx + res, y + dy + res, color);
