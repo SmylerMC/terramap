@@ -130,8 +130,8 @@ public class Vec2dTest {
 
     @Test
     public void testEqualsAndHashcode() {
-        Vec2d<?> imu = new Vec2dImmutable(4d, -6d);
-        Vec2d<?> mut = new Vec2dMutable(4d, -6d);
+        Vec2d imu = new Vec2dImmutable(4d, -6d);
+        Vec2d mut = new Vec2dMutable(4d, -6d);
         assertEquals(imu, mut);
         assertEquals(imu.hashCode(), mut.hashCode());
     }

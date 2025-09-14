@@ -9,10 +9,10 @@ import static net.smyler.smylib.Preconditions.checkArgument;
  *
  * @author SmylerMC
  */
-public final class Vec2dMutable extends Vec2dAbstract<Vec2dMutable> {
+public final class Vec2dMutable extends Vec2dAbstract {
 
     public double x, y;
-    private Vec2dReadOnly readOnly;
+    private Vec2dView readOnly;
 
     public Vec2dMutable(double x, double y) {
         this.x = x;
@@ -45,7 +45,7 @@ public final class Vec2dMutable extends Vec2dAbstract<Vec2dMutable> {
         return this;
     }
 
-    public Vec2dMutable set(Vec2d<?> vector) {
+    public Vec2dMutable set(Vec2d vector) {
         this.x = vector.x();
         this.y = vector.y();
         return this;
@@ -75,7 +75,7 @@ public final class Vec2dMutable extends Vec2dAbstract<Vec2dMutable> {
     }
 
     @Override
-    public Vec2dMutable add(Vec2d<?> vector) {
+    public Vec2dMutable add(Vec2d vector) {
         this.x += vector.x();
         this.y += vector.y();
         return this;
@@ -89,7 +89,7 @@ public final class Vec2dMutable extends Vec2dAbstract<Vec2dMutable> {
     }
 
     @Override
-    public Vec2dMutable subtract(Vec2d<?> vector) {
+    public Vec2dMutable subtract(Vec2d vector) {
         this.x -= vector.x();
         this.y -= vector.y();
         return this;
@@ -103,7 +103,7 @@ public final class Vec2dMutable extends Vec2dAbstract<Vec2dMutable> {
     }
 
     @Override
-    public Vec2dMutable hadamardProd(Vec2d<?> vector) {
+    public Vec2dMutable hadamardProd(Vec2d vector) {
         this.x *= vector.x();
         this.y *= vector.y();
         return this;
@@ -130,8 +130,8 @@ public final class Vec2dMutable extends Vec2dAbstract<Vec2dMutable> {
         return this.scale(1d / norm);
     }
 
-    public Vec2dReadOnly getReadOnly() {
-        if (this.readOnly == null) this.readOnly = new Vec2dReadOnly(this);
+    public Vec2dView getReadOnlyView() {
+        if (this.readOnly == null) this.readOnly = new Vec2dView(this);
         return this.readOnly;
     }
 

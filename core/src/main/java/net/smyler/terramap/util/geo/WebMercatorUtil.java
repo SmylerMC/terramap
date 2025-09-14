@@ -62,7 +62,7 @@ public final class WebMercatorUtil {
      *
      * @throws NullPointerException if destination or position is null
      */
-    public static GeoPointMutable toGeo(GeoPointMutable destination, Vec2d<?> position, double zoomLevel) {
+    public static GeoPointMutable toGeo(GeoPointMutable destination, Vec2d position, double zoomLevel) {
         return destination
                 .withLongitude(getLongitudeFromX(position.x(), zoomLevel))
                 .withLatitude(getLatitudeFromY(position.y(), zoomLevel));

@@ -7,10 +7,8 @@ import static java.lang.Math.*;
 
 /**
  * An interface representing a 2D vector of doubles.
- *
- * @param <T> the type returned by operation performed on this vector that should return another vector.
  */
-public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> {
+public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> {
 
     /**
      * @return the X component of this vector.
@@ -28,7 +26,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param factor a scalar by which to multiply this vector.
      * @return a vector scaled accordingly to the given scalar.
      */
-    T scale(double factor);
+    Vec2d scale(double factor);
 
     /**
      * Divides this vector by a given scalar.
@@ -36,7 +34,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param factor a scalar by which to divide this vector.
      * @return a vector scaled accordingly to the given scalar.
      */
-    T downscale(double factor);
+    Vec2d downscale(double factor);
 
     /**
      * Normalizes this vector so the result has a length of 1 according to the euclidean norm.
@@ -44,7 +42,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @return the normalized vector.
      * @throws ArithmeticException if this vector is the null vector.
      */
-    T normalize();
+    Vec2d normalize();
 
     /**
      * Adds another vector to this one.
@@ -52,7 +50,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param other a vector to add with this one.
      * @return the resulting vector.
      */
-    T add(Vec2d<?> other);
+    Vec2d add(Vec2d other);
 
     /**
      * Adds another vector to this one.
@@ -61,7 +59,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param y the Y coordinate of the vector to add with this one.
      * @return the resulting vector.
      */
-    T add(double x, double y);
+    Vec2d add(double x, double y);
 
     /**
      * Subtracts another vector from this one.
@@ -69,7 +67,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param other a vector to subtract from this one.
      * @return the resulting vector.
      */
-    T subtract(Vec2d<?> other);
+    Vec2d subtract(Vec2d other);
 
     /**
      * Subtracts another vector from this one.
@@ -78,7 +76,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param y the Y coordinate of the vector to subtract from this one.
      * @return the resulting vector.
      */
-    T subtract(double x, double y);
+    Vec2d subtract(double x, double y);
 
     /**
      * Computes the hadamard product of two vectors.
@@ -86,7 +84,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param other another to compute the product with this one.
      * @return the resulting vector.
      */
-    T hadamardProd(Vec2d<?> other);
+    Vec2d hadamardProd(Vec2d other);
 
     /**
      * Computes the hadamard product of two vectors.
@@ -95,7 +93,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param y the Y coordinate of the vector to compute the product with.
      * @return the resulting vector.
      */
-    T hadamardProd(double x, double y);
+    Vec2d hadamardProd(double x, double y);
 
     /**
      * Computes the dot product of a vector with this one.
@@ -103,7 +101,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param other another vector to compute the dot product with.
      * @return the resulting scalar.
      */
-    default double dotProd(Vec2d<?> other) {
+    default double dotProd(Vec2d other) {
         return this.x()*other.x() + this.y()*other.y();
     }
 
@@ -123,7 +121,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param other another vector to compute the cross product with.
      * @return the resulting scalar.
      */
-    default double crossProd(Vec2d<?> other) {
+    default double crossProd(Vec2d other) {
         return this.x()*other.y() - this.y()*other.x();
     }
 
@@ -173,7 +171,7 @@ public interface Vec2d<T extends Vec2d<?>> extends Mutable<Vec2dImmutable>, Immu
      * @param other another vector to compute the distance with.
      * @return the Euclidean between this vector and the other.
      */
-    default double distanceTo(Vec2d<?> other) {
+    default double distanceTo(Vec2d other) {
         double dx = this.x() - other.x();
         double dy = this.y() - other.y();
         return sqrt(dx * dx + dy * dy);

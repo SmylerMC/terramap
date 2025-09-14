@@ -10,14 +10,14 @@ import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.smylib.math.Vec2dReadOnly;
+import net.smyler.smylib.math.Vec2dView;
 import net.minecraft.profiler.Profiler;
 
 public class RenderingDeltaPreviewLayer extends MapLayer {
 
     private final GeoPointMutable realCenter = new GeoPointMutable();
     private final Vec2dMutable realCenterPosition = new Vec2dMutable();
-    private Vec2dReadOnly renderSpaceHalfDimensions;
+    private Vec2dView renderSpaceHalfDimensions;
 
     public void setRealCenter(GeoPoint realCenter) {
         this.realCenter.set(realCenter);

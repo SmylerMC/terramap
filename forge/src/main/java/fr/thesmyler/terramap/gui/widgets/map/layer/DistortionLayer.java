@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.terramap.util.geo.*;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.smylib.math.Vec2dReadOnly;
+import net.smyler.smylib.math.Vec2dView;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -25,7 +25,7 @@ public class DistortionLayer extends MapLayer {
 
     private final Vec2dMutable screenPositions = new Vec2dMutable();
     private final GeoPointMutable renderedLocations = new GeoPointMutable();
-    private Vec2dReadOnly renderSpaceDimensions;
+    private Vec2dView renderSpaceDimensions;
     private final TissotsIndicatrix tissot = new TissotsIndicatrix();
 
     protected void initialize() {

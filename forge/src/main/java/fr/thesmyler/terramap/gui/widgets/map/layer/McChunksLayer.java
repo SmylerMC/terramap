@@ -24,7 +24,7 @@ import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.util.geo.*;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.smylib.math.Vec2dReadOnly;
+import net.smyler.smylib.math.Vec2dView;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
@@ -44,7 +44,7 @@ public class McChunksLayer extends MapLayer {
     
     private final ProjectionCache cache = new ProjectionCache(4);
     private final PositionMutable mcCenter = new PositionMutable();
-    private Vec2dReadOnly extendedDimensions;
+    private Vec2dView extendedDimensions;
     private GeoPointView geoCenter;
 
     private boolean render2dr = true;
@@ -266,8 +266,8 @@ public class McChunksLayer extends MapLayer {
         private final GeoPointMutable location = new GeoPointMutable();
         private final PositionMutable position = new PositionMutable();
         
-        final Map<Vec2d<?>, GeoPointImmutable> mcToGeo = new HashMap<>();
-        final Set<Vec2d<?>> accessedInCycle = new HashSet<>();
+        final Map<Vec2d, GeoPointImmutable> mcToGeo = new HashMap<>();
+        final Set<Vec2d> accessedInCycle = new HashSet<>();
 
         final int maxProjectionsPerCycle = 50;
         int[] projectionsThisCycle;
@@ -276,7 +276,7 @@ public class McChunksLayer extends MapLayer {
             this.projectionsThisCycle = new int[diffCount];
         }
         
-        void getRenderPos(Vec2dMutable destination, Vec2d<?> mcPos, int discriminator) throws OutOfGeoBoundsException {
+        void getRenderPos(Vec2dMutable destination, Vec2d mcPos, int discriminator) throws OutOfGeoBoundsException {
             if (!this.accessedInCycle.contains(mcPos)) {
                 this.accessedInCycle.add(mcPos.getImmutable());
             }

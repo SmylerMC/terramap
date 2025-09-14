@@ -105,8 +105,8 @@ public abstract class MapLayer implements Widget {
     /**
      * @return the coordinates of the upper left corner of the rendering viewport in the web Mercator map
      */
-    protected Vec2dReadOnly getUpperLeftRenderCornerPositionInMercatorSpace() {
-        return this.upperLeftRenderCorner.getReadOnly();
+    protected Vec2dView getUpperLeftRenderCornerPositionInMercatorSpace() {
+        return this.upperLeftRenderCorner.getReadOnlyView();
     }
 
     /**
@@ -136,7 +136,7 @@ public abstract class MapLayer implements Widget {
      *
      * @throws NullPointerException if either destination or position is null
      */
-    public void getLocationAtPositionOnWidget(GeoPointMutable destination, Vec2d<?> position) {
+    public void getLocationAtPositionOnWidget(GeoPointMutable destination, Vec2d position) {
         this.getLocationAtPositionOnWidget(destination, position.x(), position.y());
     }
 
@@ -161,7 +161,7 @@ public abstract class MapLayer implements Widget {
      *
      * @throws NullPointerException if either destination or renderScreenPos is null
      */
-    protected void getLocationAtPositionInRenderSpace(GeoPointMutable destination, Vec2d<?> renderScreenPos) {
+    protected void getLocationAtPositionInRenderSpace(GeoPointMutable destination, Vec2d renderScreenPos) {
         renderScreenPos = this.calculationHelper.get().set(renderScreenPos)
                 .add(this.upperLeftRenderCorner)
                 .scale(this.map.tileScaling);
@@ -263,15 +263,15 @@ public abstract class MapLayer implements Widget {
     /**
      * @return the dimensions of the render space of this layer
      */
-    public Vec2dReadOnly getRenderSpaceDimensions() {
-        return this.renderSpaceDimensions.getReadOnly();
+    public Vec2dView getRenderSpaceDimensions() {
+        return this.renderSpaceDimensions.getReadOnlyView();
     }
 
     /**
      * @return half the dimensions of the render space of this layer
      */
-    public Vec2dReadOnly getRenderSpaceHalfDimensions() {
-        return this.renderSpaceDimensionsHalf.getReadOnly();
+    public Vec2dView getRenderSpaceHalfDimensions() {
+        return this.renderSpaceDimensionsHalf.getReadOnlyView();
     }
 
     /**
@@ -299,8 +299,8 @@ public abstract class MapLayer implements Widget {
     /**
      * @return the normalized rendering offset of this layer (normalized implies that an offset of 1 shifts by the entire map size)
      */
-    public Vec2dReadOnly getRenderingOffset() {
-        return this.renderingOffset.getReadOnly();
+    public Vec2dView getRenderingOffset() {
+        return this.renderingOffset.getReadOnlyView();
     }
 
     /**
@@ -319,7 +319,7 @@ public abstract class MapLayer implements Widget {
      * @throws NullPointerException if offset is null
      * @throws IllegalArgumentException if offset is not finite
      */
-    public void setRenderingOffset(Vec2d<?> offset) {
+    public void setRenderingOffset(Vec2d offset) {
         if (!offset.isFinite()) throw new IllegalArgumentException("Map offset has to be finite");
         this.renderingOffset.set(offset);
         this.updateViewPorts();
@@ -334,7 +334,7 @@ public abstract class MapLayer implements Widget {
      * @throws NullPointerException if offset is null
      * @throws IllegalArgumentException if offset is not finite
      */
-    public void setPixelRenderingOffset(Vec2d<?> offset) {
+    public void setPixelRenderingOffset(Vec2d offset) {
         if (!offset.isFinite()) throw new IllegalArgumentException("Layer offset has to be finite");
         this.renderingOffset.set(offset).downscale(pow(2d, this.controller.getZoom()) * 256);
         this.updateViewPorts();

@@ -5,11 +5,11 @@ package net.smyler.smylib.math;
  *
  * @author SmylerMC
  */
-public final class Vec2dReadOnly extends Vec2dAbstract<Vec2dImmutable> {
+public final class Vec2dView extends Vec2dAbstract {
 
-    private final Vec2d<?> delegate;
+    private final Vec2d delegate;
 
-    public Vec2dReadOnly(Vec2d<?> delegate) {
+    public Vec2dView(Vec2d delegate) {
         this.delegate = delegate;
     }
 
@@ -41,7 +41,7 @@ public final class Vec2dReadOnly extends Vec2dAbstract<Vec2dImmutable> {
     }
 
     @Override
-    public Vec2dImmutable add(Vec2d<?> other) {
+    public Vec2dImmutable add(Vec2d other) {
         return new Vec2dImmutable(this.delegate.x() + other.x(), this.delegate.y() + other.y());
     }
 
@@ -51,7 +51,7 @@ public final class Vec2dReadOnly extends Vec2dAbstract<Vec2dImmutable> {
     }
 
     @Override
-    public Vec2dImmutable subtract(Vec2d<?> other) {
+    public Vec2dImmutable subtract(Vec2d other) {
         return new Vec2dImmutable(this.delegate.x() - other.x(), this.delegate.y() - other.y());
     }
 
@@ -61,7 +61,7 @@ public final class Vec2dReadOnly extends Vec2dAbstract<Vec2dImmutable> {
     }
 
     @Override
-    public Vec2dImmutable hadamardProd(Vec2d<?> other) {
+    public Vec2dImmutable hadamardProd(Vec2d other) {
         return new Vec2dImmutable(this.delegate.x()*other.x(), this.delegate.y()*other.y());
     }
 

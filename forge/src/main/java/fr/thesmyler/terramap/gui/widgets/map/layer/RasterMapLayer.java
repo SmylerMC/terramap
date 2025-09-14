@@ -20,7 +20,7 @@ import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.smylib.math.Vec2dReadOnly;
+import net.smyler.smylib.math.Vec2dView;
 import net.minecraft.profiler.Profiler;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
@@ -41,8 +41,8 @@ abstract public class RasterMapLayer extends MapLayer {
     private final Vec2dMutable minusCenterPos = new Vec2dMutable();
     private final Vec2dMutable distanceToCenterCalculator = new Vec2dMutable();
     private GeoPointView focusedPoint;
-    private Vec2dReadOnly renderingSpaceDimensions;
-    private Vec2dReadOnly halfRenderingSpaceDimensions;
+    private Vec2dView renderingSpaceDimensions;
+    private Vec2dView halfRenderingSpaceDimensions;
 
     public abstract RasterTileSet getTiledMap();
 
@@ -85,7 +85,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
         this.applyRotationGl(context, x, y);
 
-        Vec2dReadOnly upperLeft = this.getUpperLeftRenderCornerPositionInMercatorSpace();
+        Vec2dView upperLeft = this.getUpperLeftRenderCornerPositionInMercatorSpace();
 
         int zoomLevel = (int) Math.round(zoom);
         double zoomSizeFactor = zoom - zoomLevel;
