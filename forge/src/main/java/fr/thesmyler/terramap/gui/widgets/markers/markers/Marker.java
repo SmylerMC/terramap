@@ -54,7 +54,7 @@ public abstract class Marker implements Widget {
         return this.height;
     }
 
-    public abstract GeoPoint<?> getLocation();
+    public abstract GeoPoint getLocation();
 
     public abstract float getDeltaX();
 
@@ -65,7 +65,7 @@ public abstract class Marker implements Widget {
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
             this.update(map);
-            GeoPoint<?> location = this.getLocation();
+            GeoPoint location = this.getLocation();
             if(location != null) {
                 map.getScreenPosition(this.position, location);
                 this.position.add(this.getDeltaX(), this.getDeltaY());
@@ -78,7 +78,7 @@ public abstract class Marker implements Widget {
     @Override
     public boolean isVisible(WidgetContainer parent) {
         if(!this.controller.isVisible()) return false;
-        GeoPoint<?> location = this.getLocation();
+        GeoPoint location = this.getLocation();
         if(location == null || !WebMercatorUtil.PROJECTION_BOUNDS.contains(this.getLocation())) return false;
         if(parent instanceof MapWidget) {
             MapWidget map = (MapWidget)parent;

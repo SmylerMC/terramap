@@ -1,13 +1,17 @@
 package net.smyler.terramap.util.geo;
 
-public final class GeoPointReadOnly extends GeoPointAbstract<GeoPointImmutable> {
+/**
+ * A read-only view on a mutable {@link GeoPoint}.
+ *
+ * @author Smyler
+ */
+public final class GeoPointView extends GeoPointAbstract {
 
-    private final GeoPoint<?> delegate;
+    private final GeoPoint delegate;
 
-    public GeoPointReadOnly(GeoPoint<?> delegate) {
+    public GeoPointView(GeoPoint delegate) {
         this.delegate = delegate;
     }
-
 
     @Override
     public double latitude() {

@@ -23,7 +23,7 @@ import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPoint;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
@@ -364,7 +364,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         this.compass.setAzimuth(controller.getRotation());
 
-        GeoPointReadOnly mouseLocation = this.map.getMouseLocation();
+        GeoPointView mouseLocation = this.map.getMouseLocation();
         String formatScale = "-";
         String formatOrientation = "-";
         if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
@@ -385,7 +385,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         if(controller.isTracking()) {
             Marker marker = controller.getTrackedMarker();
-            GeoPoint<?> markerLocation = marker.getLocation();
+            GeoPoint markerLocation = marker.getLocation();
             String markerName = marker.getDisplayName().getFormattedText();
             if(markerLocation == null) {
                 this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
@@ -396,7 +396,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             }
         } else if(this.map.getMainPlayerMarker() != null){
             Marker marker = this.map.getMainPlayerMarker();
-            GeoPoint<?> markerLocation = marker.getLocation();
+            GeoPoint markerLocation = marker.getLocation();
             if(markerLocation == null) {
                 this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.playerout"));
             } else {

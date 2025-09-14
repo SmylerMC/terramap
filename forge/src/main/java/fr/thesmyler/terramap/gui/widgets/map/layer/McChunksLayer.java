@@ -22,7 +22,7 @@ import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -49,7 +49,7 @@ public class McChunksLayer extends MapLayer {
     private final ProjectionCache cache = new ProjectionCache(4);
     private final Vec2dMutable mcCenter = new Vec2dMutable();
     private Vec2dReadOnly extendedDimensions;
-    private GeoPointReadOnly geoCenter;
+    private GeoPointView geoCenter;
 
     private boolean render2dr = true;
     private boolean render3dr = true;

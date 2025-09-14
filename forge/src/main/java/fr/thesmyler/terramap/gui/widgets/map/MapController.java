@@ -179,8 +179,8 @@ public final class MapController {
     /**
      * @return the location at the center of the map
      */
-    public GeoPointReadOnly getCenterLocation() {
-        return this.centerLocation.getReadOnly();
+    public GeoPointView getCenterLocation() {
+        return this.centerLocation.getReadOnlyView();
     }
 
     /**
@@ -266,7 +266,7 @@ public final class MapController {
      *
      * @throws NullPointerException if location is null
      */
-    public void moveLocationToCenter(GeoPoint<?> location, boolean animate) {
+    public void moveLocationToCenter(GeoPoint location, boolean animate) {
         this.moveLocationToPosition(location, this.map.getWidth() / 2d, this.map.getHeight() / 2d, animate);
     }
 
@@ -282,7 +282,7 @@ public final class MapController {
      * @throws IllegalArgumentException if either the x or y component of position is not a finite number
      * @throws NullPointerException     if either location or position is null
      */
-    public void moveLocationToPosition(GeoPoint<?> location, Vec2d<?> position, boolean animate) {
+    public void moveLocationToPosition(GeoPoint location, Vec2d<?> position, boolean animate) {
         this.moveLocationToPosition(location, position.x(), position.y(), animate);
     }
 
@@ -299,13 +299,13 @@ public final class MapController {
      * @throws IllegalArgumentException if either x or y is not a finite number
      * @throws NullPointerException if location is null
      */
-    public void moveLocationToPosition(GeoPoint<?> location, double x, double y, boolean animate) {
+    public void moveLocationToPosition(GeoPoint location, double x, double y, boolean animate) {
         this.inputLayer.getPositionOnWidget(this.positionCalculationResult, location);
         this.positionCalculationResult.subtract(x, y).scale(-1d);
         this.moveMap(this.positionCalculationResult.x, this.positionCalculationResult.y, animate);
     }
 
-    private void setStaticLocation(GeoPoint<?> point) {
+    private void setStaticLocation(GeoPoint point) {
         this.staticLocation.set(point);
         this.inputLayer.getPositionOnWidget(this.staticPosition, this.staticLocation);
     }
@@ -346,7 +346,7 @@ public final class MapController {
      *
      * @throws NullPointerException if location is null
      */
-    public void setZoomStaticLocation(GeoPoint<?> location) {
+    public void setZoomStaticLocation(GeoPoint location) {
         this.zoomLocation.set(location);
         this.inputLayer.updateViewPorts();
     }
@@ -382,8 +382,8 @@ public final class MapController {
     /**
      * @return the location that stays static when this map's zoom changes
      */
-    public GeoPointReadOnly getZoomStaticLocation() {
-        return this.zoomLocation.getReadOnly();
+    public GeoPointView getZoomStaticLocation() {
+        return this.zoomLocation.getReadOnlyView();
     }
 
     /**
@@ -411,7 +411,7 @@ public final class MapController {
      *
      * @throws NullPointerException if location is null
      */
-    public void setRotationStaticLocation(GeoPoint<?> location) {
+    public void setRotationStaticLocation(GeoPoint location) {
         this.rotateLocation.set(location);
         this.inputLayer.updateViewPorts();
     }
@@ -452,8 +452,8 @@ public final class MapController {
     /**
      * @return the location that stays static when the map rotates
      */
-    public GeoPointReadOnly getRotationStaticLocation() {
-        return this.rotateLocation.getReadOnly();
+    public GeoPointView getRotationStaticLocation() {
+        return this.rotateLocation.getReadOnlyView();
     }
 
     /**
@@ -600,8 +600,8 @@ public final class MapController {
     /**
      * @return the location the map is moving towards
      */
-    public GeoPointReadOnly getTargetLocation() {
-        return this.centerLocationTarget.getReadOnly();
+    public GeoPointView getTargetLocation() {
+        return this.centerLocationTarget.getReadOnlyView();
     }
 
     /**

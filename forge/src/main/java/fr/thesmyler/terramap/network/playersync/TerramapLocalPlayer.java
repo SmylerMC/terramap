@@ -6,7 +6,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.util.TerramapUtil;
 import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -37,7 +37,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     }
 
     @Override
-    public GeoPointReadOnly getLocation() throws OutOfProjectionBoundsException {
+    public GeoPointView getLocation() throws OutOfProjectionBoundsException {
         GeographicProjection proj;
         if(this.player.world.isRemote) {
             proj = TerramapClientContext.getContext().getProjection();
@@ -46,7 +46,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
         }
         if(proj == null) return null;
         this.location.set(proj.toGeo(this.player.posX, this.player.posZ));
-        return this.location.getReadOnly();
+        return this.location.getReadOnlyView();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
         } else {
             proj = TerramapUtil.getEarthGeneratorSettingsFromWorld(this.player.world).projection();
         }
-        if(proj == null) return Float.NaN;
+        if (proj == null) return Float.NaN;
         try{
             return proj.azimuth(this.player.posX, this.player.posZ, this.player.rotationYaw);
         } catch(OutOfProjectionBoundsException e) {

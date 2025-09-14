@@ -3,7 +3,7 @@ package net.smyler.terramap.util.geo;
 import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
 import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
 
-public class GeoPointImmutable extends GeoPointAbstract<GeoPointImmutable> {
+public class GeoPointImmutable extends GeoPointAbstract {
     
     public static final GeoPointImmutable ORIGIN = new GeoPointImmutable(0d, 0d);
     public static final GeoPointImmutable NORTH_POLE = new GeoPointImmutable(0d, 90d);

@@ -8,7 +8,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.util.geo.GeoPoint;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 import net.smyler.terramap.util.geo.GeoServices;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
@@ -32,7 +32,7 @@ public class MapMenuWidget extends MenuWidget {
 
     private final MapWidget map;
     private final MapController controller;
-    private final GeoPointReadOnly mouseLocation;
+    private final GeoPointView mouseLocation;
 
     private final MenuEntry centerHere;
     private final MenuEntry copyBlockMenuEntry;
@@ -155,7 +155,7 @@ public class MapMenuWidget extends MenuWidget {
         MainPlayerMarker playerMarker = this.map.getMainPlayerMarker();
         if(playerMarker != null) {
             if(playerMarker.isVisible(this.map)) {
-                GeoPoint<?> playerLocation = playerMarker.getLocation();
+                GeoPoint playerLocation = playerMarker.getLocation();
                 GeoServices.openPlaceInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), playerLocation.longitude(), playerLocation.latitude());
             } else {
                 GeoServices.openInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());

@@ -7,7 +7,7 @@ import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.smylib.gui.gl.GlContext;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -33,7 +33,7 @@ public class InputLayer extends MapLayer {
     final Vec2dMutable rotatePosition = new Vec2dMutable();
     boolean isRotating = false;
     private float rotationAngleOrigin = 0f;
-    private final GeoPointReadOnly mouseLocation;
+    private final GeoPointView mouseLocation;
 
     // Stuff that can be pre-computed and that's used later when drawing a polygon at the place the map rotates around.
     private static final int ROTATION_POLYGON_VERTEX_COUNT = 5;
