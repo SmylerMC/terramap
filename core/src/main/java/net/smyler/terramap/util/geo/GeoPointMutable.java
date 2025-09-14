@@ -3,10 +3,10 @@ package net.smyler.terramap.util.geo;
 import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
 import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
 
-public class GeoPointMutable extends GeoPointAbstract<GeoPointMutable> {
+public class GeoPointMutable extends GeoPointAbstract {
 
     private double longitude, latitude;
-    private GeoPointReadOnly readOnly;
+    private GeoPointView readOnly;
 
     /**
      * Constructs a new point from the given coordinates in degrees.
@@ -79,7 +79,7 @@ public class GeoPointMutable extends GeoPointAbstract<GeoPointMutable> {
      * @param point a point to copy the position from
      * @return this point
      */
-    public GeoPointMutable set(GeoPoint<?> point) {
+    public GeoPointMutable set(GeoPoint point) {
         return this.set(point.longitude(), point.latitude());
     }
 
@@ -104,8 +104,10 @@ public class GeoPointMutable extends GeoPointAbstract<GeoPointMutable> {
         return this;
     }
 
-    public GeoPointReadOnly getReadOnly() {
-        if (this.readOnly == null) this.readOnly = new GeoPointReadOnly(this);
+    public GeoPointView getReadOnlyView() {
+        if (this.readOnly == null) {
+            this.readOnly = new GeoPointView(this);
+        }
         return this.readOnly;
     }
 

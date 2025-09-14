@@ -59,7 +59,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected GeoPoint<?> getActualLocation() throws OutOfGeoBoundsException {
+    protected GeoPoint getActualLocation() throws OutOfGeoBoundsException {
         return this.player.getLocation();
     }
 

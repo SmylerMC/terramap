@@ -36,7 +36,7 @@ import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 
 import static java.util.Comparator.comparingInt;
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -428,8 +428,8 @@ public class MapWidget extends FlexibleWidgetContainer {
     /**
      * @return the location hovered by the mouse
      */
-    public GeoPointReadOnly getMouseLocation() {
-        return this.mouseLocation.getReadOnly();
+    public GeoPointView getMouseLocation() {
+        return this.mouseLocation.getReadOnlyView();
     }
 
     /**
@@ -506,7 +506,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      * @param destination   a vector to store the result in
      * @param location      the location to compute the position of
      */
-    public void getScreenPosition(Vec2dMutable destination, GeoPoint<?> location) {
+    public void getScreenPosition(Vec2dMutable destination, GeoPoint location) {
         this.inputLayer.getPositionOnWidget(destination, location);
     }
 

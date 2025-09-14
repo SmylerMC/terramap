@@ -11,11 +11,10 @@ import net.smyler.smylib.math.Vec2dImmutable;
  * Similarly, points at the same latitude on the antimeridian will be equal,
  * independently of whether their longitude is -180 or 180.
  *
- * @param <T> the type of the implementing subclass that any method returning a {@link GeoPoint} will return
  * @author SmylerMC
  *
  */
-public interface GeoPoint<T extends GeoPoint<?>> extends Mutable<GeoPointImmutable>, Immutable<GeoPointMutable> {
+public interface GeoPoint extends Mutable<GeoPointImmutable>, Immutable<GeoPointMutable> {
 
     /**
      * @return this point's latitude, in the appropriate [-90°, 90°] range
@@ -34,7 +33,7 @@ public interface GeoPoint<T extends GeoPoint<?>> extends Mutable<GeoPointImmutab
      *
      * @return the distance between this point and the other, in meters
      */
-    default double distanceTo(GeoPoint<?> other) {
+    default double distanceTo(GeoPoint other) {
         return GeoUtil.distanceHaversine(this.longitude(), this.latitude(), other.longitude(), other.latitude());
     }
 
@@ -59,7 +58,7 @@ public interface GeoPoint<T extends GeoPoint<?>> extends Mutable<GeoPointImmutab
      *
      * @throws IllegalArgumentException if the longitude is not a finite number
      */
-    T withLongitude(double longitude);
+    GeoPoint withLongitude(double longitude);
 
     /**
      * @param latitude a new latitude
@@ -67,7 +66,7 @@ public interface GeoPoint<T extends GeoPoint<?>> extends Mutable<GeoPointImmutab
      *
      * @throws IllegalArgumentException if the latitude is not a finite number in the [-90°, 90°] range
      */
-    T withLatitude(double latitude);
+    GeoPoint withLatitude(double latitude);
 
     @Override
     default GeoPointMutable getMutable() {

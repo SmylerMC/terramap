@@ -37,7 +37,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     }
 
     @Override
-    public GeoPointReadOnly getLocation() throws OutOfGeoBoundsException {
+    public GeoPointView getLocation() throws OutOfGeoBoundsException {
         GeoProjection projection;
         if (this.player.world.isRemote) {
             projection = TerramapClientContext.getContext().getProjection();
@@ -49,7 +49,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
         }
         Position position = new PositionImmutable(this.player.posX, this.player.posY, this.player.posZ);
         projection.toGeo(this.location, position);
-        return this.location.getReadOnly();
+        return this.location.getReadOnlyView();
     }
 
     @Override

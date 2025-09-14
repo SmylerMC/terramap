@@ -83,7 +83,7 @@ public abstract class MapLayer implements Widget {
      *
      * @throws NullPointerException if either destination or geoPos is null
      */
-    protected void getPositionInMercatorSpace(Vec2dMutable destination, GeoPoint<?> geoPos) {
+    protected void getPositionInMercatorSpace(Vec2dMutable destination, GeoPoint geoPos) {
         WebMercatorUtil.fromGeo(destination, geoPos, this.controller.getZoom()).scale(1d / this.map.getTileScaling());
     }
 
@@ -95,7 +95,7 @@ public abstract class MapLayer implements Widget {
      *
      * @throws NullPointerException if either destination or geoPos is null
      */
-    protected void getPositionOnWidget(Vec2dMutable destination, GeoPoint<?> geoPos) {
+    protected void getPositionOnWidget(Vec2dMutable destination, GeoPoint geoPos) {
         this.getPositionInMercatorSpace(destination, geoPos);
         destination.subtract(this.renderCenter)
                    .apply(this.directRotation)
@@ -148,7 +148,7 @@ public abstract class MapLayer implements Widget {
      *
      * @throws NullPointerException if either destination or geoPos is null
      */
-    protected void getLocationPositionInRenderSpace(Vec2dMutable destination, GeoPoint<?> geoPos) {
+    protected void getLocationPositionInRenderSpace(Vec2dMutable destination, GeoPoint geoPos) {
         this.getPositionInMercatorSpace(destination, geoPos);
         destination.subtract(this.upperLeftRenderCorner);
     }

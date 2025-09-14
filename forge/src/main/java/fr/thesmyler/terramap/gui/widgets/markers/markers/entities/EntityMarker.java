@@ -79,7 +79,7 @@ public class EntityMarker extends AbstractMovingMarker {
     }
 
     @Override
-    protected GeoPoint<?> getActualLocation() throws OutOfGeoBoundsException {
+    protected GeoPoint getActualLocation() throws OutOfGeoBoundsException {
         if (this.isOutOfBounds) {
             throw new OutOfGeoBoundsException("Entity is currently out of the projected area");
         }

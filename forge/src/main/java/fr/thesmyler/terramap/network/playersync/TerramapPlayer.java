@@ -16,7 +16,7 @@ public abstract class TerramapPlayer {
 
     public abstract ITextComponent getDisplayName();
 
-    public abstract GeoPoint<?> getLocation() throws OutOfGeoBoundsException;
+    public abstract GeoPoint getLocation() throws OutOfGeoBoundsException;
 
     public abstract float getAzimuth();
 

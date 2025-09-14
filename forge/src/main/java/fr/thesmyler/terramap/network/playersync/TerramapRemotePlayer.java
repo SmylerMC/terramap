@@ -8,7 +8,7 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
@@ -49,14 +49,14 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     }
     
     @Override
-    public GeoPointReadOnly getLocation() throws OutOfGeoBoundsException {
+    public GeoPointView getLocation() throws OutOfGeoBoundsException {
         if (this.outOfProjection) {
             throw new OutOfGeoBoundsException("Player out of projection");
         }
-        return this.location.getReadOnly();
+        return this.location.getReadOnlyView();
     }
     
-    public void setLocationAndAzimuth(GeoPoint<?> location, float azimuth) {
+    public void setLocationAndAzimuth(GeoPoint location, float azimuth) {
         this.location.set(location);
         this.azimuth = azimuth;
         this.outOfProjection = false;

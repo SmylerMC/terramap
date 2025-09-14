@@ -45,7 +45,7 @@ public final class WebMercatorUtil {
      *
      * @throws NullPointerException if either destination or geo is null
      */
-    public static Vec2dMutable fromGeo(Vec2dMutable destination, GeoPoint<?> geo, double zoomLevel) {
+    public static Vec2dMutable fromGeo(Vec2dMutable destination, GeoPoint geo, double zoomLevel) {
         double x = getXFromLongitude(geo.longitude(), zoomLevel);
         double y = getYFromLatitude(geo.latitude(), zoomLevel);
         return destination.set(x, y);

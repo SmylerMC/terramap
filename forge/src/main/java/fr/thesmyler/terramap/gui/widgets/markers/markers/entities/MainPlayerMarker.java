@@ -54,11 +54,11 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    protected GeoPoint<?> getActualLocation() throws OutOfGeoBoundsException {
+    protected GeoPoint getActualLocation() throws OutOfGeoBoundsException {
         if (this.isOutOfBounds) {
             throw new OutOfGeoBoundsException("Player is currently out of the projected area");
         }
-        return this.playerLocation.getReadOnly();
+        return this.playerLocation.getReadOnlyView();
     }
 
     @Override

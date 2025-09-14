@@ -45,7 +45,7 @@ public class McChunksLayer extends MapLayer {
     private final ProjectionCache cache = new ProjectionCache(4);
     private final PositionMutable mcCenter = new PositionMutable();
     private Vec2dReadOnly extendedDimensions;
-    private GeoPointReadOnly geoCenter;
+    private GeoPointView geoCenter;
 
     private boolean render2dr = true;
     private boolean render3dr = true;

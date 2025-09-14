@@ -33,7 +33,7 @@ public interface GeoProjection {
      * @param location the location to project
      * @throws OutOfGeoBoundsException when the given location is outside the bounds of the projection
      */
-    void fromGeo(@NotNull PositionMutable position, @NotNull GeoPoint<?> location) throws OutOfGeoBoundsException;
+    void fromGeo(@NotNull PositionMutable position, @NotNull GeoPoint location) throws OutOfGeoBoundsException;
 
     /**
      * Reads the {@link Position#yaw() yaw} component of a Minecraft position and projects it as an <a href="https://en.wikipedia.org/wiki/Azimuth">azimuth</a> in the real world.
@@ -59,6 +59,6 @@ public interface GeoProjection {
      * @param location   the geographic location to compute the indicatrix at
      * @throws OutOfGeoBoundsException if the location is outside the bounds of this projection and the indicatrix cannot be computed
      */
-    void tissot(@NotNull TissotsIndicatrix indicatrix, @NotNull GeoPoint<?> location) throws OutOfGeoBoundsException;
+    void tissot(@NotNull TissotsIndicatrix indicatrix, @NotNull GeoPoint location) throws OutOfGeoBoundsException;
 
 }

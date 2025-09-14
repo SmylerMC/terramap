@@ -25,7 +25,7 @@ public class TerraplusplusGeoProjection implements GeoProjection {
     }
 
     @Override
-    public void fromGeo(@NotNull PositionMutable position, @NotNull GeoPoint<?> location) {
+    public void fromGeo(@NotNull PositionMutable position, @NotNull GeoPoint location) {
         try {
             double[] result = this.wrapped.fromGeo(location.longitude(), location.latitude());
             position.withXZ(result[0], result[1]);
@@ -44,7 +44,7 @@ public class TerraplusplusGeoProjection implements GeoProjection {
     }
 
     @Override
-    public void tissot(@NotNull TissotsIndicatrix indicatrix, @NotNull GeoPoint<?> location) throws OutOfGeoBoundsException {
+    public void tissot(@NotNull TissotsIndicatrix indicatrix, @NotNull GeoPoint location) throws OutOfGeoBoundsException {
         try {
             double[] result = this.wrapped.tissot(location.longitude(), location.latitude());
             indicatrix.set(result[0], result[1], result[3], result[2]);

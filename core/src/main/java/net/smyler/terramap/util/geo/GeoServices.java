@@ -151,7 +151,7 @@ public final class GeoServices {
         return decFormat1.format(az);
     }
 
-    public static String formatGeoPointForDisplay(GeoPoint<?> location) {
+    public static String formatGeoPointForDisplay(GeoPoint location) {
         return formatGeoCoordForDisplay(location.latitude()) + "° " + formatGeoCoordForDisplay(location.longitude()) + "°";
     }
     public static String formatZoomLevelForDisplay(double zoomLevel) {

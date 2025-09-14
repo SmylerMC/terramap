@@ -54,7 +54,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
         for(TerramapPlayer player: this.localPlayers) {
             double[] coordinates;
             try {
-                GeoPoint<?> location = player.getLocation();
+                GeoPoint location = player.getLocation();
                 if(location == null) throw OutOfProjectionBoundsException.get();
                 coordinates = location.asArray();
             } catch(OutOfProjectionBoundsException e) {

@@ -46,7 +46,7 @@ public class GeoBounds {
      * 
      * @return whether these bounds contain the given point
      */
-    public boolean contains(GeoPoint<?> point) {
+    public boolean contains(GeoPoint point) {
         double pointLat = point.latitude();
         double pointLong = point.longitude();
         double lowerLong = this.lowerCorner.longitude();
@@ -281,11 +281,9 @@ public class GeoBounds {
      * even though it might be on the other side of the antimeridian.
      *
      * @param   point a point to clamp
-     * @return  the result of the clamping operation, applied on the input {@link GeoPoint}
-     *
-     * @param <T>   the type of {@link GeoPoint}
+     * @return  the result of the clamping operation, applied on the input {@link GeoPoint} using {@link GeoPoint#withLatitude(double)} and {@link GeoPoint#withLongitude(double)}
      */
-    public <T extends GeoPoint<T>> GeoPoint<T> clamp(GeoPoint<T> point) {
+    public  GeoPoint clamp(GeoPoint point) {
 
         if (this.isEmpty()) {
             throw new UnsupportedOperationException("Cannot clamp within empty bounds");

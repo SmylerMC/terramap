@@ -13,7 +13,7 @@ import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
-import net.smyler.terramap.util.geo.GeoPointReadOnly;
+import net.smyler.terramap.util.geo.GeoPointView;
 import net.smyler.terramap.util.geo.GeoServices;
 import net.smyler.terramap.util.geo.TilePos;
 import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
@@ -40,7 +40,7 @@ abstract public class RasterMapLayer extends MapLayer {
     private final Vec2dMutable right = new Vec2dMutable();
     private final Vec2dMutable minusCenterPos = new Vec2dMutable();
     private final Vec2dMutable distanceToCenterCalculator = new Vec2dMutable();
-    private GeoPointReadOnly focusedPoint;
+    private GeoPointView focusedPoint;
     private Vec2dReadOnly renderingSpaceDimensions;
     private Vec2dReadOnly halfRenderingSpaceDimensions;
 
