@@ -3,6 +3,8 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.content.Position;
 import net.smyler.terramap.util.geo.*;
@@ -67,12 +69,11 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        if(Minecraft.getMinecraft().player != null) {
-            return Minecraft.getMinecraft().player.getDisplayName();
-        } else {
-            return new TextComponentString("Missing main player");
-        }
+    public Text getDisplayName() {
+        EntityPlayerSP player = Minecraft.getMinecraft().player;
+        ITextComponent mcName = player == null ? new TextComponentString("Missing main player"): player.getDisplayName();
+        String nameJson = ITextComponent.Serializer.componentToJson(mcName);
+        return Terramap.instance().gson().fromJson(nameJson, Text.class);
     }
 
     @Override

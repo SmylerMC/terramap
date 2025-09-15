@@ -4,10 +4,10 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.minecraft.util.text.ITextComponent;
 
 public abstract class Marker implements Widget {
 
@@ -112,7 +112,7 @@ public abstract class Marker implements Widget {
         return this.controller;
     }
 
-    public abstract ITextComponent getDisplayName();
+    public abstract Text getDisplayName();
 
     /**
      * This identifier shall be used to resume tracking this marker is the map is saved and closed then opened again

@@ -2,9 +2,9 @@ package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
 
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -14,7 +14,7 @@ public abstract class TerramapPlayer {
 
     public abstract UUID getUUID();
 
-    public abstract ITextComponent getDisplayName();
+    public abstract Text getDisplayName();
 
     public abstract GeoPoint getLocation() throws OutOfGeoBoundsException;
 

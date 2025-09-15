@@ -4,13 +4,16 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.content.Position;
 import net.smyler.terramap.content.PositionImmutable;
 import net.smyler.terramap.util.geo.*;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,8 +35,10 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return this.player.getDisplayName();
+    public Text getDisplayName() {
+        ITextComponent mcName = this.player == null ? new TextComponentString("Missing main player"): player.getDisplayName();
+        String nameJson = ITextComponent.Serializer.componentToJson(mcName);
+        return Terramap.instance().gson().fromJson(nameJson, Text.class);
     }
 
     @Override

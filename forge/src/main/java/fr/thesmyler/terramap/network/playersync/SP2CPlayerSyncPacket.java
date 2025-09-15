@@ -4,12 +4,13 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.NetworkUtil;
+import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -33,7 +34,8 @@ public class SP2CPlayerSyncPacket implements IMessage {
         for(int i=0; i<this.remotePlayers.length; i++) {
             long leastUUID = buf.readLong();
             long mostUUID = buf.readLong();
-            ITextComponent name = ITextComponent.Serializer.jsonToComponent(NetworkUtil.decodeStringFromByteBuf(buf));
+            String nameJson = NetworkUtil.decodeStringFromByteBuf(buf);
+            Text name = Terramap.instance().gson().fromJson(nameJson, Text.class);
             double longitude = buf.readDouble();
             double latitude = buf.readDouble();
             float azimuth = buf.readFloat();
@@ -62,7 +64,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
             }
             buf.writeLong(player.getUUID().getLeastSignificantBits());
             buf.writeLong(player.getUUID().getMostSignificantBits());
-            String playerDisplayName = ITextComponent.Serializer.componentToJson(player.getDisplayName());
+            String playerDisplayName = Terramap.instance().gson().toJson(player.getDisplayName());
             NetworkUtil.encodeStringToByteBuf(playerDisplayName, buf);
             buf.writeDouble(coordinates[0]);
             buf.writeDouble(coordinates[1]);

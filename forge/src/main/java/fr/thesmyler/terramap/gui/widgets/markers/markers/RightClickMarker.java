@@ -5,10 +5,10 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.smylib.text.ImmutableText;
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.TerramapResources;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 public class RightClickMarker extends AbstractFixedMarker {
 
@@ -24,6 +24,7 @@ public class RightClickMarker extends AbstractFixedMarker {
             .xLeft(0d).yTop(28d)
             .width(15d).height(27d)
             .build();
+    private static final Text DISPLAY_NAME = ImmutableText.ofPlainText("Right click marker");
 
     public RightClickMarker(MarkerController<?> controller) {
         super(controller, 15, 23, GeoPointImmutable.ORIGIN);
@@ -55,8 +56,8 @@ public class RightClickMarker extends AbstractFixedMarker {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new TextComponentString("Right click marker");
+    public Text getDisplayName() {
+        return DISPLAY_NAME;
     }
 
     @Override

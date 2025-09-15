@@ -9,6 +9,8 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.smylib.text.Text;
+import net.smyler.terramap.Terramap;
 import net.smyler.terramap.content.Position;
 import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.util.geo.*;
@@ -107,8 +109,9 @@ public class EntityMarker extends AbstractMovingMarker {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return this.entity.getDisplayName();
+    public Text getDisplayName() {
+        String nameJson = ITextComponent.Serializer.componentToJson(this.entity.getDisplayName());
+        return Terramap.instance().gson().fromJson(nameJson, Text.class);
     }
 
     @Override

@@ -6,13 +6,13 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -21,7 +21,7 @@ import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 public class TerramapRemotePlayer extends TerramapPlayer {
 
     protected final UUID uuid;
-    protected ITextComponent displayName;
+    protected Text displayName;
     protected final GeoPointMutable location = new GeoPointMutable();
     protected float azimuth;
     protected boolean outOfProjection = true;
@@ -29,7 +29,7 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     protected ResourceLocation texture;
     protected boolean texureRequested = false;
 
-    public TerramapRemotePlayer(UUID uuid, ITextComponent name) {
+    public TerramapRemotePlayer(UUID uuid, Text name) {
         this.uuid = uuid;
         this.displayName = name;
     }
@@ -40,11 +40,11 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return displayName;
+    public Text getDisplayName() {
+        return this.displayName;
     }
 
-    public void setDisplayName(ITextComponent displayName) {
+    public void setDisplayName(Text displayName) {
         this.displayName = displayName;
     }
     

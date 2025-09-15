@@ -5,9 +5,9 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
+import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.geo.GeoPoint;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 public class OtherPlayerMarker extends AbstractPlayerMarker {
@@ -49,7 +49,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
     }
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Text getDisplayName() {
         return this.player.getDisplayName();
     }
 
