@@ -48,12 +48,12 @@ public class TerramapMod implements Terramap {
 
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
-            .registerTypeAdapter(Text.class, new TextJsonAdapter())
+            .registerTypeHierarchyAdapter(Text.class, new TextJsonAdapter())
             .create();
 
     private final Gson gsonPretty = new GsonBuilder()
             .registerTypeAdapter(EarthGeneratorSettings.class, new EarthGeneratorSettingsAdapter())
-            .registerTypeAdapter(Text.class, new TextJsonAdapter())
+            .registerTypeHierarchyAdapter(Text.class, new TextJsonAdapter())
             .setPrettyPrinting()
             .create();
 
