@@ -33,7 +33,6 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMark
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
@@ -43,6 +42,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.of;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * The core component of Terramap: the map widget itself.
@@ -386,7 +386,7 @@ public class MapWidget extends FlexibleWidgetContainer {
                     if(id != null && id.equals(this.restoreTrackingId)) {
                         this.controller.track(markerToAdd);
                         this.restoreTrackingId = null;
-                        Terramap.instance().logger().debug("Restored tracking with {}", id);
+                        getTerramap().logger().debug("Restored tracking with {}", id);
                     }
                 }
             }
@@ -751,8 +751,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             try {
                 layer = this.createLayer(layerState.type);
             } catch (IllegalArgumentException e) {
-                Terramap.instance().logger().warn("Could not restore a map layer. Did someone mess with the save file?");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().warn("Could not restore a map layer. Did someone mess with the save file?");
+                getTerramap().logger().catching(e);
                 continue;
             }
             this.setLayerZ(layer, layerState.z);
@@ -764,8 +764,8 @@ public class MapWidget extends FlexibleWidgetContainer {
             try {
                 layer.loadSettings(layerState.settings);
             } catch (Exception e) {
-                Terramap.instance().logger().error("Caught exception when loading layer settings. Did someone mess with the save file?");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Caught exception when loading layer settings. Did someone mess with the save file?");
+                getTerramap().logger().catching(e);
             }
         }
         Map<String, FeatureVisibilityController> controllers = this.getVisibilityControllers();

@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.command;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.smyler.terramap.Terramap;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.TerramapVersion;
@@ -21,6 +20,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 public class TilesetReloadCommand extends CommandBase {
 
@@ -43,7 +44,7 @@ public class TilesetReloadCommand extends CommandBase {
             throw ctx.commandException("terramap.commands.reloadmapstyles.forbidden");
         }
         ITextComponent msg = ctx.getComponent("terramap.commands.reloadmapstyles.done");
-        Terramap.instance().rasterTileSetManager().loadFromConfigFile();
+        getTerramap().rasterTileSetManager().loadFromConfigFile();
         if(RasterTileSetProvider.CUSTOM.getLastError() == null) {
             msg.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false));
         } else {

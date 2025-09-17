@@ -66,6 +66,7 @@ import net.minecraft.util.ITabCompleter;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static java.lang.Math.round;
 import static net.smyler.smylib.Strings.repeat;
+import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
@@ -419,7 +420,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             TerramapClientContext srv = TerramapClientContext.getContext();
             EarthGeneratorSettings generationSettings = srv.getGeneratorSettings();
             debugBuilder.append(String.format(locale, "FPS: %s", getGameClient().currentFPS()));
-            debugBuilder.append(String.format(locale, "\nClient: %s", Terramap.instance().version()));
+            debugBuilder.append(String.format(locale, "\nClient: %s", getTerramap().version()));
             debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
             debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
@@ -539,7 +540,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private boolean search(String text) {
-        Terramap.instance().logger().info("Geo search: {}", text);
+        getTerramap().logger().info("Geo search: {}", text);
         //TODO Search
         return true; // Let the search box loose focus
     }

@@ -12,7 +12,8 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
-import net.smyler.terramap.Terramap;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 public abstract class MarkerControllerManager {
 
@@ -31,9 +32,9 @@ public abstract class MarkerControllerManager {
             controller.newInstance();
             CONTROLLER_CLASSES.get(context).add(controller);
         } catch(Exception e) {
-            Terramap.instance().logger().error("Failed to create a test marker controller instance for {}", controller.getCanonicalName());
-            Terramap.instance().logger().error("This marker controller class will not be registered. See stack trace for details.");
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("Failed to create a test marker controller instance for {}", controller.getCanonicalName());
+            getTerramap().logger().error("This marker controller class will not be registered. See stack trace for details.");
+            getTerramap().logger().catching(e);
         }
     }
 
@@ -44,9 +45,9 @@ public abstract class MarkerControllerManager {
             try {
                 controllers[i++] = clazz.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                Terramap.instance().logger().error("Failed to create a marker controller, things will be unstable!");
-                Terramap.instance().logger().error("Failed to instantiate {}", clazz.getCanonicalName());
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to create a marker controller, things will be unstable!");
+                getTerramap().logger().error("Failed to instantiate {}", clazz.getCanonicalName());
+                getTerramap().logger().catching(e);
             }
         }
         return controllers;

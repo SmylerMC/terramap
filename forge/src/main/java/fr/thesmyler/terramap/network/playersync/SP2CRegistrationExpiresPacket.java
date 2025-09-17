@@ -5,7 +5,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.smyler.terramap.Terramap;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 public class SP2CRegistrationExpiresPacket implements IMessage {
 
@@ -24,7 +25,7 @@ public class SP2CRegistrationExpiresPacket implements IMessage {
         @Override
         public C2SPRegisterForUpdatesPacket onMessage(SP2CRegistrationExpiresPacket message, MessageContext ctx) {
             if(TerramapClientContext.getContext().needsUpdate()) {
-                Terramap.instance().logger().debug("Renewing registration for map update to server");
+                getTerramap().logger().debug("Renewing registration for map update to server");
                 return new C2SPRegisterForUpdatesPacket(true);
             }
             return null;

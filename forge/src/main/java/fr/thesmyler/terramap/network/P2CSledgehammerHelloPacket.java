@@ -3,14 +3,14 @@ package fr.thesmyler.terramap.network;
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.smyler.terramap.Terramap;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 public class P2CSledgehammerHelloPacket implements IMessage {
 
@@ -56,7 +56,7 @@ public class P2CSledgehammerHelloPacket implements IMessage {
         @Override
         public IMessage onMessage(P2CSledgehammerHelloPacket pkt, MessageContext ctx) {
             Minecraft.getMinecraft().addScheduledTask(() -> {
-                Terramap.instance().logger().info("Got Sledgehammer hello, remote version is {}", pkt.sledgehammerVersion);
+                getTerramap().logger().info("Got Sledgehammer hello, remote version is {}", pkt.sledgehammerVersion);
                 TerramapClientContext.getContext().setSledgehammerVersion(pkt.sledgehammerVersion);
                 TerramapClientContext.getContext().setPlayersSynchronizedByProxy(pkt.syncPlayers);
                 TerramapClientContext.getContext().setSpectatorsSynchronizedByProxy(pkt.syncSpectators);

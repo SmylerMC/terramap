@@ -20,7 +20,6 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.math.Vec2dImmutable;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.geo.*;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
@@ -37,6 +36,7 @@ import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * Renders Minecraft region (both 2dr and 3dr), chunks, and blocks outlines onto a map widget.
@@ -123,7 +123,7 @@ public class McChunksLayer extends MapLayer {
             this.setRenderBlocks(json.get("renderBlocks").getAsBoolean());
             this.loadColor(json.getAsJsonObject("colorBlocks"), this::setColorBlocks);
         } catch (NullPointerException | ClassCastException | IllegalStateException e) {
-            Terramap.instance().logger().warn("Failed to load mc boundaries layer settings: {}", json);
+            getTerramap().logger().warn("Failed to load mc boundaries layer settings: {}", json);
         }
     }
 
