@@ -11,6 +11,8 @@ import org.apache.logging.log4j.util.Strings;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 
+import static net.smyler.terramap.Terramap.getTerramap;
+
 /**
  * Represents a version of Terramap
  *
@@ -307,7 +309,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
             try {
                 version = new TerramapVersion(remoteVersion);
             } catch(InvalidVersionString e) {
-                Terramap.instance().logger().warn("Failed to parse a client's Terramap version: {} : {}", remoteVersion, e.getLocalizedMessage());
+                getTerramap().logger().warn("Failed to parse a client's Terramap version: {} : {}", remoteVersion, e.getLocalizedMessage());
             }
         }
         return version;

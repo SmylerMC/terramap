@@ -12,7 +12,8 @@ import com.google.gson.JsonSyntaxException;
 
 import fr.thesmyler.terramap.TerramapConfig;
 import net.minecraft.world.WorldServer;
-import net.smyler.terramap.Terramap;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * 
@@ -45,8 +46,8 @@ public class TerramapServerPreferences {
             }
         } catch(Exception e) {
             if(!loggedDebugError) {
-                Terramap.instance().logger().error("Failed to get player display preferences. This error will only be displayed once.");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to get player display preferences. This error will only be displayed once.");
+                getTerramap().logger().catching(e);
                 loggedDebugError = true;
             }
             return TerramapConfig.SERVER.playersDisplayDefault;
@@ -72,8 +73,8 @@ public class TerramapServerPreferences {
             }
             saveWorldPreferences(world);
         } catch(Exception e) {
-            Terramap.instance().logger().error("Failed to set player display preferences! See stack trace:");
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("Failed to set player display preferences! See stack trace:");
+            getTerramap().logger().catching(e);
         }
     }
 
@@ -91,12 +92,12 @@ public class TerramapServerPreferences {
                     uuid = UUID.randomUUID();
                     prefs.world_uuid = uuid;
                     saveWorldPreferences(world);
-                    Terramap.instance().logger().info("Generated uuid {} for world {}", uuid, world.getSaveHandler().getWorldDirectory().getName());
+                    getTerramap().logger().info("Generated uuid {} for world {}", uuid, world.getSaveHandler().getWorldDirectory().getName());
                 }
                 return uuid;
             }
         } catch(Exception e) {
-            Terramap.instance().logger().warn("Failed to get world UUID, using 0 instead!");
+            getTerramap().logger().warn("Failed to get world UUID, using 0 instead!");
         }
         return new UUID(0, 0);
     }
@@ -108,7 +109,7 @@ public class TerramapServerPreferences {
                 TerramapServerPreferences.preferences.remove(file.getAbsolutePath());
             }
         } catch(Exception e) {
-            Terramap.instance().logger().warn("Failed to unload a world server preferences");
+            getTerramap().logger().warn("Failed to unload a world server preferences");
         }
     }
 
@@ -128,8 +129,8 @@ public class TerramapServerPreferences {
         } catch(Exception e) {
             long t = System.currentTimeMillis();
             if(t > lastErrorLog + 10000) {
-                Terramap.instance().logger().error("Failed to save server preferences");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to save server preferences");
+                getTerramap().logger().catching(e);
                 lastErrorLog = t;
             }
         }
@@ -150,8 +151,8 @@ public class TerramapServerPreferences {
         } catch(Exception e) {
             long t = System.currentTimeMillis();
             if(t > lastErrorLog + 10000) {
-                Terramap.instance().logger().error("Failed to save server preferences");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to save server preferences");
+                getTerramap().logger().catching(e);
                 lastErrorLog = t;
             }
         }
@@ -168,14 +169,14 @@ public class TerramapServerPreferences {
         if(fileToLoad.exists()) {
             try {
                 String text = String.join("\n", Files.readAllLines(fileToLoad.toPath(), Charset.defaultCharset()));
-                preferences = Terramap.instance().gsonPretty().fromJson(text, WorldPreferences.class);
+                preferences = getTerramap().gsonPretty().fromJson(text, WorldPreferences.class);
             } catch (IOException | JsonSyntaxException e) {
-                Terramap.instance().logger().error("Failed to load server preference file, setting to default");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to load server preference file, setting to default");
+                getTerramap().logger().catching(e);
                 preferences = new WorldPreferences();
             }
         } else {
-            Terramap.instance().logger().info("Loaded new empty server preferences as file did not exist");
+            getTerramap().logger().info("Loaded new empty server preferences as file did not exist");
         }
         synchronized(TerramapServerPreferences.preferences) {
             TerramapServerPreferences.preferences.put(fileToLoad.getAbsolutePath(), preferences);
@@ -183,7 +184,7 @@ public class TerramapServerPreferences {
     }
 
     private static void save(File file, WorldPreferences preferences) throws IOException {
-        String str = Terramap.instance().gsonPretty().toJson(preferences);
+        String str = getTerramap().gsonPretty().toJson(preferences);
         Files.write(file.toPath(), str.getBytes(Charset.defaultCharset()));
     }
 

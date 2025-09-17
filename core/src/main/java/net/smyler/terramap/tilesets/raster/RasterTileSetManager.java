@@ -19,6 +19,7 @@ import net.smyler.terramap.util.geo.WebMercatorBounds;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.unmodifiableMap;
 import static net.smyler.smylib.Preconditions.checkState;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 
 public class RasterTileSetManager {
@@ -78,9 +79,9 @@ public class RasterTileSetManager {
                 this.baseMaps.putAll(loadFromJson(json.toString(), RasterTileSetProvider.BUILT_IN));
             }
         } catch(Exception e) {
-            Terramap.instance().logger().fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
-            Terramap.instance().logger().fatal("Path: {}", path);
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
+            getTerramap().logger().fatal("Path: {}", path);
+            getTerramap().logger().catching(e);
             RasterTileSetProvider.BUILT_IN.setLastError(e);
         }
 
@@ -103,15 +104,15 @@ public class RasterTileSetManager {
         try {
             url = this.resolveUpdateURL(hostname);
         } catch (UnknownHostException | NamingException e1) {
-            Terramap.instance().logger().error("Failed to resolve map styles urls!");
-            Terramap.instance().logger().catching(e1);
+            getTerramap().logger().error("Failed to resolve map styles urls!");
+            getTerramap().logger().catching(e1);
             return;
         }
 
-        Terramap.instance().http().get(url).whenComplete((b, e) -> {
+        getTerramap().http().get(url).whenComplete((b, e) -> {
             if(e != null) {
-                Terramap.instance().logger().error("Failed to download updated map style file!");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to download updated map style file!");
+                getTerramap().logger().catching(e);
                 RasterTileSetProvider.ONLINE.setLastError(e);
             }
             try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(b)))) {
@@ -123,8 +124,8 @@ public class RasterTileSetManager {
                 }
                 baseMaps.putAll(loadFromJson(json.toString(), RasterTileSetProvider.ONLINE));
             } catch(Exception f) {
-                Terramap.instance().logger().error("Failed to parse updated map style file!");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to parse updated map style file!");
+                getTerramap().logger().catching(e);
                 RasterTileSetProvider.ONLINE.setLastError(e);
             }
         });
@@ -135,18 +136,18 @@ public class RasterTileSetManager {
      */
     public void loadFromConfigFile() {
         if (this.configMapsFile == null) {
-            Terramap.instance().logger().info("No tile sets config file provided!");
+            getTerramap().logger().info("No tile sets config file provided!");
             return;
         }
         RasterTileSetProvider.CUSTOM.setLastError(null);
         if(!this.configMapsFile.exists()) {
             try {
-                Terramap.instance().logger().debug("Map config file did not exist, creating a blank one.");
+                getTerramap().logger().debug("Map config file did not exist, creating a blank one.");
                 TileSetFile mapFile = new TileSetFile(new TileSetFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
-                Files.write(this.configMapsFile.toPath(), Terramap.instance().gsonPretty().toJson(mapFile).getBytes(Charset.defaultCharset()));
+                Files.write(this.configMapsFile.toPath(), getTerramap().gsonPretty().toJson(mapFile).getBytes(Charset.defaultCharset()));
             } catch (IOException e) {
-                Terramap.instance().logger().error("Failed to create map style config file!");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to create map style config file!");
+                getTerramap().logger().catching(e);
                 RasterTileSetProvider.CUSTOM.setLastError(e);
 
             }
@@ -154,8 +155,8 @@ public class RasterTileSetManager {
             try {
                 this.userMaps.putAll(this.loadFromCustomFile(this.configMapsFile));
             } catch (Exception e) {
-                Terramap.instance().logger().error("Failed to read map style config file!");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to read map style config file!");
+                getTerramap().logger().catching(e);
                 RasterTileSetProvider.CUSTOM.setLastError(e);
             }
         }
@@ -205,7 +206,7 @@ public class RasterTileSetManager {
                     int zoomLevel = parseInt(i);
                     map.setBounds(zoomLevel, b);
                 } catch (NumberFormatException e) {
-                    Terramap.instance().logger().warn("Ignoring invalid zoom level: {}: {}", i, e.getMessage());
+                    getTerramap().logger().warn("Ignoring invalid zoom level: {}: {}", i, e.getMessage());
                 }
             });
         }
@@ -218,7 +219,7 @@ public class RasterTileSetManager {
     }
 
     private Map<String, UrlRasterTileSet> loadFromJson(String json, RasterTileSetProvider provider) {
-        TileSetFile savedStyles = Terramap.instance().gson().fromJson(json, TileSetFile.class);
+        TileSetFile savedStyles = getTerramap().gson().fromJson(json, TileSetFile.class);
         Map<String, UrlRasterTileSet> styles = new HashMap<>();
         for(String id: savedStyles.maps.keySet()) {
             UrlRasterTileSet style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
@@ -238,7 +239,7 @@ public class RasterTileSetManager {
             throw new UnknownHostException(String.format("No txt record was found at %s ?? Something is wrong, either with the name server or with your dns provider!", hostname));
         }
         try {
-            return attribute.split("\\|")[1].replace("${version}", Terramap.instance().version());
+            return attribute.split("\\|")[1].replace("${version}", getTerramap().version());
         } catch(IndexOutOfBoundsException e) {
             throw new UnknownHostException("TXT record was malformatted");
         }

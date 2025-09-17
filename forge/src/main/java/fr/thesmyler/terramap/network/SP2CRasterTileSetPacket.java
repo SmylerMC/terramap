@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.google.gson.JsonParseException;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import org.apache.logging.log4j.util.Strings;
 
@@ -18,6 +17,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 
 public class SP2CRasterTileSetPacket implements IMessage {
@@ -79,10 +80,10 @@ public class SP2CRasterTileSetPacket implements IMessage {
             String key = NetworkUtil.decodeStringFromByteBuf(buf);
             String copyrightJson = NetworkUtil.decodeStringFromByteBuf(buf);
             try {
-                Text copyright = Terramap.instance().gson().fromJson(copyrightJson, Text.class);
+                Text copyright = getTerramap().gson().fromJson(copyrightJson, Text.class);
                 copyrights.put(key, copyright);
             } catch (JsonParseException e) {
-                Terramap.instance().logger().warn("Received invalid map style copyright from server.");
+                getTerramap().logger().warn("Received invalid map style copyright from server.");
             }
         }
         this.copyrights = copyrights;
@@ -128,7 +129,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         buf.writeInt(this.copyrights.size());
         for(String key: this.copyrights.keySet()) {
             NetworkUtil.encodeStringToByteBuf(key, buf);
-            NetworkUtil.encodeStringToByteBuf(Terramap.instance().gson().toJson(this.copyrights.get(key)), buf);
+            NetworkUtil.encodeStringToByteBuf(getTerramap().gson().toJson(this.copyrights.get(key)), buf);
         }
         buf.writeInt(this.minZoom);
         buf.writeInt(this.maxZoom);
@@ -185,16 +186,16 @@ public class SP2CRasterTileSetPacket implements IMessage {
         public IMessage onMessage(SP2CRasterTileSetPacket message, MessageContext ctx) {
             try {
                 UrlRasterTileSet map = message.getTiledMap(RasterTileSetProvider.SERVER);
-                Terramap.instance().logger().debug("Got custom map style from server: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
+                getTerramap().logger().debug("Got custom map style from server: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
-                    Terramap.instance().logger().debug("Ignoring debug map from server: {}", map.getId());
+                    getTerramap().logger().debug("Ignoring debug map from server: {}", map.getId());
                     return null;
                 }
                 Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerRasterTileSet(map));
 
             } catch(Exception e) {
-                Terramap.instance().logger().error("Failed to unpack a map style sent by the server");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to unpack a map style sent by the server");
+                getTerramap().logger().catching(e);
                 RasterTileSetProvider.SERVER.setLastError(e);
             }
             return null;
@@ -210,15 +211,15 @@ public class SP2CRasterTileSetPacket implements IMessage {
         public IMessage onMessage(SP2CRasterTileSetPacket message, MessageContext ctx) {
             try {
                 UrlRasterTileSet map = message.getTiledMap(RasterTileSetProvider.PROXY);
-                Terramap.instance().logger().debug("Got custom map style from proxy: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
+                getTerramap().logger().debug("Got custom map style from proxy: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
-                    Terramap.instance().logger().debug("Ignoring debug map from proxy: {}", map.getId());
+                    getTerramap().logger().debug("Ignoring debug map from proxy: {}", map.getId());
                     return null;
                 }
                 Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyRasterTileSet(map));
             } catch(Exception e) {
-                Terramap.instance().logger().error("Failed to unpack a map style sent by the proxy");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to unpack a map style sent by the proxy");
+                getTerramap().logger().catching(e);
                 RasterTileSetProvider.PROXY.setLastError(e);
             }
             return null;

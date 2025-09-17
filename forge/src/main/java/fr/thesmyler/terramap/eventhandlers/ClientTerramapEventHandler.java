@@ -25,13 +25,13 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 import java.util.Objects;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.util.geo.GeoServices.formatGeoPointForDisplay;
 
 /**
@@ -85,7 +85,7 @@ public class ClientTerramapEventHandler {
     @SubscribeEvent
     public void onChangeDimension(PlayerChangedDimensionEvent event) {
         // Not called on client...
-        Terramap.instance().logger().info(event.player.world.isRemote);
+        getTerramap().logger().info(event.player.world.isRemote);
         if(event.player.world.isRemote) {
             TerramapClientContext.getContext().resetWorld();
         }

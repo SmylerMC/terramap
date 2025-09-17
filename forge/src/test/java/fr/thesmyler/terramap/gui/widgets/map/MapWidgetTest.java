@@ -9,13 +9,13 @@ import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.math.Vec2dImmutable;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
+import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
 import static fr.thesmyler.terramap.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +27,7 @@ class MapWidgetTest extends TerramapTest {
     @Test
     void canSaveMapWidgetToSavedMapState() throws InterruptedException {
         TestGameClient client = this.getTestGameClient();
-        RasterTileSetManager tileSetManager = Terramap.instance().rasterTileSetManager();
+        RasterTileSetManager tileSetManager = getTerramap().rasterTileSetManager();
         client.setWindowDimensions(500f, 500f);
         client.setTargetFps(60);
         MapWidget map = new MapWidget(0f, 0f, 0, 500f, 500f, FULLSCREEN, 1f);
@@ -78,7 +78,7 @@ class MapWidgetTest extends TerramapTest {
     public void canRestoreMapState() throws InterruptedException {
 
         TestGameClient client = this.getTestGameClient();
-        RasterTileSetManager tileSetManager = Terramap.instance().rasterTileSetManager();
+        RasterTileSetManager tileSetManager = getTerramap().rasterTileSetManager();
         client.setWindowDimensions(500f, 500f);
         client.setTargetFps(60);
         Screen screen = client.getCurrentScreen();

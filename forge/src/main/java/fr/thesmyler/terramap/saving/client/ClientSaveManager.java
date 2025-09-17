@@ -2,13 +2,13 @@ package fr.thesmyler.terramap.saving.client;
 
 import com.google.gson.Gson;
 import net.smyler.smylib.game.MinecraftServerInfo;
-import net.smyler.terramap.Terramap;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.util.UUID;
 
 import static java.nio.file.Files.*;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * Handles all data saved by the Terramap client.
@@ -82,14 +82,14 @@ public class ClientSaveManager {
     public SavedClientState getDefaultState() {
         InputStream stream = this.getClass().getResourceAsStream(DEFAULT_SAVE_PATH);
         if (stream == null) {
-            Terramap.instance().logger().error("Missing internal resource: default client state");
+            getTerramap().logger().error("Missing internal resource: default client state");
             return new SavedClientState();
         }
         try (InputStreamReader reader = new InputStreamReader(stream)) {
             return this.gson.fromJson(reader, SavedClientState.class);
         } catch (IOException e) {
-            Terramap.instance().logger().error("Failed to read internal default map state");
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("Failed to read internal default map state");
+            getTerramap().logger().catching(e);
             return new SavedClientState();
         }
     }
@@ -145,8 +145,8 @@ public class ClientSaveManager {
         } catch (FileNotFoundException ignored) {
             // Let's not spam the console when it's just a new save.
         } catch (IOException e) {
-            Terramap.instance().logger().error("Failed to read a saved client state, will fallback to a new one");
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("Failed to read a saved client state, will fallback to a new one");
+            getTerramap().logger().catching(e);
         }
         return this.getDefaultState();
     }
@@ -155,17 +155,17 @@ public class ClientSaveManager {
         try (FileWriter writer = new FileWriter(path.toFile())) {
             this.gson.toJson(state, writer);
         } catch (IOException e) {
-            Terramap.instance().logger().error("Failed to save a client state");
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("Failed to save a client state");
+            getTerramap().logger().catching(e);
         }
     }
 
     private Path prepareDirectory(Path directory) throws IOException {
         if (!exists(directory)) {
-            Terramap.instance().logger().debug("Created directory {}", directory);
+            getTerramap().logger().debug("Created directory {}", directory);
             createDirectories(directory);
         } else if (!isDirectory(directory) || ! isWritable(directory)) {
-            Terramap.instance().logger().error("{} exists and is not a directory, or is not writeable. Terramap will fallback to a temporary directory instead.", directory);
+            getTerramap().logger().error("{} exists and is not a directory, or is not writeable. Terramap will fallback to a temporary directory instead.", directory);
             directory = createTempDirectory(directory, "terramap");
             directory.toFile().deleteOnExit();
         }

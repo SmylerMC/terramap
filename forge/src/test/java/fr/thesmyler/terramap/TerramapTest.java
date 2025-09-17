@@ -9,48 +9,50 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 
-public class TerramapTest extends SmyLibTest implements Terramap {
-
-    private final Logger logger = LogManager.getLogger("Terramap unit test");
-    private final RasterTileSetManager rasterTileSetManager = new RasterTileSetManager(null);
+public class TerramapTest extends SmyLibTest {
 
     @BeforeEach
     public void initTerramap() {
-        Terramap.InstanceHolder.setInstance(this);
-        this.rasterTileSetManager.reload(true);
-        TerramapClientContext.resetContext();
+        Terramap.InstanceHolder.setInstance(new TestTerramapImplementation());
     }
 
-    @Override
-    public String version() {
-        return "0.0.0";
-    }
+    private static final class TestTerramapImplementation implements Terramap {
 
-    @Override
-    public Logger logger() {
-        return this.logger;
-    }
+        private final Logger logger = LogManager.getLogger("Terramap unit test");
+        private final RasterTileSetManager rasterTileSetManager = new RasterTileSetManager(null);
 
-    @Override
-    public HttpClient http() {
-        this.logger.warn("HTTP client not implemented in tests");
-        return null;
-    }
+        @Override
+        public String version() {
+            return "0.0.0";
+        }
 
-    @Override
-    public Gson gson() {
-        return this.gsonPretty();
-    }
+        @Override
+        public Logger logger() {
+            return this.logger;
+        }
 
-    @Override
-    public Gson gsonPretty() {
-        this.logger.warn("GSON not implemented in tests");
-        return null;
-    }
+        @Override
+        public HttpClient http() {
+            this.logger.warn("HTTP client not implemented in tests");
+            return null;
+        }
 
-    @Override
-    public RasterTileSetManager rasterTileSetManager() {
-        return null;
+        @Override
+        public Gson gson() {
+            return this.gsonPretty();
+        }
+
+        @Override
+        public Gson gsonPretty() {
+            this.logger.warn("GSON not implemented in tests");
+            return null;
+        }
+
+        @Override
+        public RasterTileSetManager rasterTileSetManager() {
+            return this.rasterTileSetManager;
+        }
+
     }
 
 }

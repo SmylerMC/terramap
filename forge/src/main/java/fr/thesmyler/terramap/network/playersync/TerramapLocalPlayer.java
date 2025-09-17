@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 public class TerramapLocalPlayer extends TerramapPlayer {
 
@@ -38,7 +39,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     public Text getDisplayName() {
         ITextComponent mcName = this.player == null ? new TextComponentString("Missing main player"): player.getDisplayName();
         String nameJson = ITextComponent.Serializer.componentToJson(mcName);
-        return Terramap.instance().gson().fromJson(nameJson, Text.class);
+        return getTerramap().gson().fromJson(nameJson, Text.class);
     }
 
     @Override

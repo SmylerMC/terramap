@@ -27,6 +27,7 @@ import net.smyler.terramap.Terramap;
 
 import javax.imageio.ImageIO;
 
+import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.gui.sprites.TerramapSprites.registerAllTerramapSprites;
 
 public class TerramapClientProxy extends TerramapProxy {
@@ -38,28 +39,28 @@ public class TerramapClientProxy extends TerramapProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        Terramap.instance().logger().debug("Terramap client pre-init");
+        getTerramap().logger().debug("Terramap client pre-init");
         TerramapNetworkManager.registerHandlers(Side.CLIENT);
         if (!ImageIO.getImageReadersBySuffix("webp").hasNext()) {
-            Terramap.instance().logger().warn("ImageIO does not have WebP support, triggering a plugin scan!");
+            getTerramap().logger().warn("ImageIO does not have WebP support, triggering a plugin scan!");
             ImageIO.scanForPlugins();
             if (ImageIO.getImageReadersBySuffix("webp").hasNext()) {
-                Terramap.instance().logger().info("Found a WebP ImageIO reader.");
+                getTerramap().logger().info("Found a WebP ImageIO reader.");
             } else {
-                Terramap.instance().logger().error("Could not find a WebP ImageIO reader! WebP will not be supported.");
+                getTerramap().logger().error("Could not find a WebP ImageIO reader! WebP will not be supported.");
             }
         }
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
-        Terramap.instance().logger().debug("Terramap client init");
+        getTerramap().logger().debug("Terramap client init");
         registerAllTerramapSprites();
         MinecraftForge.EVENT_BUS.register(HudScreen.class);
         MinecraftForge.EVENT_BUS.register(new ClientTerramapEventHandler());
         KeyBindings.registerBindings();
         MarkerControllerManager.registerBuiltInControllers();
-        Terramap.instance().rasterTileSetManager().reload(TerramapConfig.enableDebugMaps);
+        getTerramap().rasterTileSetManager().reload(TerramapConfig.enableDebugMaps);
         ClientCommandHandler.instance.registerCommand(new OpenMapCommand());
     }
 
@@ -82,7 +83,7 @@ public class TerramapClientProxy extends TerramapProxy {
             NetworkPlayerInfo i = connection.getPlayerInfo(e.getUniqueID());
             if(i != null) return i.getGameType();
         }
-        Terramap.instance().logger().error("Failed to determine player gamemode.");
+        getTerramap().logger().error("Failed to determine player gamemode.");
         return GameType.NOT_SET;
     }
 

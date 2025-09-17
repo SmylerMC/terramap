@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.TilePos;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * This class is in charge of keeping track of and loading the tiles used for rendering a specific map.
@@ -150,11 +151,11 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
                 try {
                     this.getTile(zoom, x, y).getTexture();
                 } catch (Throwable e) {
-                    Terramap.instance().logger().error(
+                    getTerramap().logger().error(
                             "Failed to load a low level texture for map: {}-{}v{} at {}/{}/{}",
                             this.getId(), this.getProvider(), this.getProviderVersion(), zoom, x, y
                     );
-                    Terramap.instance().logger().catching(e);
+                    getTerramap().logger().catching(e);
                 }
             }
         }

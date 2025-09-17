@@ -23,7 +23,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.smyler.terramap.Terramap;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 public abstract class RemoteSynchronizer {
 
@@ -45,7 +46,7 @@ public abstract class RemoteSynchronizer {
         }
         for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
             if(ctime - player.lastRegisterTime > TerramapConfig.SERVER.syncHeartbeatTimeout - 10000 && !player.noticeSent) {
-                Terramap.instance().logger().debug("Sending registration expires notice to {}", player.player.getName());
+                getTerramap().logger().debug("Sending registration expires notice to {}", player.player.getName());
                 TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
                 player.noticeSent = true;
             }
@@ -54,7 +55,7 @@ public abstract class RemoteSynchronizer {
         while (iterator.hasNext()) {
             RegisteredForUpdatePlayer player = iterator.next();
             if(ctime - player.lastRegisterTime > TerramapConfig.SERVER.syncHeartbeatTimeout) {
-                Terramap.instance().logger().debug("Unregistering {} from map update as it did not renew its registration", player.player.getName());
+                getTerramap().logger().debug("Unregistering {} from map update as it did not renew its registration", player.player.getName());
                 iterator.remove();
                 TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
             }
@@ -63,13 +64,13 @@ public abstract class RemoteSynchronizer {
 
     public static void registerPlayerForUpdates(EntityPlayerMP player) {
         if(PermissionManager.hasPermission(player, Permission.RADAR_PLAYERS)) {
-            Terramap.instance().logger().debug("Registering player for map updates: {}", player.getDisplayNameString());
+            getTerramap().logger().debug("Registering player for map updates: {}", player.getDisplayNameString());
             RemoteSynchronizer.playersToUpdate.put(player.getPersistentID(), new RegisteredForUpdatePlayer(player, System.currentTimeMillis()));
         }
     }
 
     public static void unregisterPlayerForUpdates(EntityPlayerMP player) {
-        Terramap.instance().logger().debug("Unregistering player for map updates: {}", player.getDisplayNameString());
+        getTerramap().logger().debug("Unregistering player for map updates: {}", player.getDisplayNameString());
         RemoteSynchronizer.playersToUpdate.remove(player.getPersistentID());
     }
 
@@ -113,7 +114,7 @@ public abstract class RemoteSynchronizer {
         if(clientVersion == null) return;
         boolean compat = clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS;
         if(TerramapConfig.SERVER.sendCusomMapsToClient) {
-            for(UrlRasterTileSet map: Terramap.instance().rasterTileSetManager().getUserMaps().values()) {
+            for(UrlRasterTileSet map: getTerramap().rasterTileSetManager().getUserMaps().values()) {
                 if(!TerramapConfig.enableDebugMaps && map.isDebug()) continue;
                 SP2CRasterTileSetPacket pkt = new SP2CRasterTileSetPacket(map);
                 if(compat) pkt.setBackwardCompat();
@@ -123,12 +124,12 @@ public abstract class RemoteSynchronizer {
     }
 
     public static void onServerHello(S2CTerramapHelloPacket pkt) {
-        Terramap.instance().logger().info("Got server hello, remote version is " + pkt.serverVersion);
+        getTerramap().logger().info("Got server hello, remote version is " + pkt.serverVersion);
         String jsonWorldSettings = null;
         if(pkt.worldSettings != null) {
             jsonWorldSettings = pkt.worldSettings.toString();
         }
-        Terramap.instance().logger().debug(
+        getTerramap().logger().debug(
                 "Server version: " + pkt.serverVersion + "\t" +
                         "Server worldSettings: " + jsonWorldSettings + "\t" +
                         "Server UUID: " + pkt.worldUUID + "\t" +
@@ -156,7 +157,7 @@ public abstract class RemoteSynchronizer {
             ctx.setAllowsDecoRadar(pkt.enableDecoRadar);
             ctx.setServerWarpSupport(pkt.hasWarpSupport);
         } catch (InvalidVersionString e) {
-            Terramap.instance().logger().warn("Failed to parse server version! will act as if the server did not have Terramap installed");
+            getTerramap().logger().warn("Failed to parse server version! will act as if the server did not have Terramap installed");
         }
         ctx.tryShowWelcomeToast();
     }

@@ -9,7 +9,6 @@ import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.widgets.WarningWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import net.smyler.terramap.util.geo.*;
 import org.jetbrains.annotations.Nullable;
@@ -60,6 +59,7 @@ import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
+import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
@@ -413,7 +413,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             TerramapClientContext srv = TerramapClientContext.getContext();
             EarthGeneratorSettings generationSettings = srv.getGeneratorSettings();
             debugBuilder.append(String.format(locale, "FPS: %s", getGameClient().currentFPS()));
-            debugBuilder.append(String.format(locale, "\nClient: %s", Terramap.instance().version()));
+            debugBuilder.append(String.format(locale, "\nClient: %s", getTerramap().version()));
             debugBuilder.append(String.format(locale, "\nServer: %s", srv.getServerVersion()));
             debugBuilder.append(String.format(locale, "\nSledgehammer: %s", srv.getSledgehammerVersion()));
             debugBuilder.append(String.format(locale, "\nProjection: %s", generationSettings != null ? generationSettings.projection() : null));
@@ -537,7 +537,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     }
 
     private boolean search(String text) {
-        Terramap.instance().logger().info("Geo search: {}", text);
+        getTerramap().logger().info("Geo search: {}", text);
         //TODO Search
         return true; // Let the search box loose focus
     }

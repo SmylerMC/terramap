@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 public interface Terramap {
 
-    static Terramap instance() {
+    static Terramap getTerramap() {
         return InstanceHolder.instance;
     }
 

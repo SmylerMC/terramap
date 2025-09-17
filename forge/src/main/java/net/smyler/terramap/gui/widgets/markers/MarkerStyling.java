@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.concurrent.OnceExecutor;
 import net.smyler.smylib.gui.sprites.Sprite;
-import net.smyler.terramap.Terramap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +21,7 @@ import java.util.function.Predicate;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.Preconditions.checkState;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * Marker styling utility functions.
@@ -61,8 +61,8 @@ public final class MarkerStyling {
             return new EntityMarkerStyle(sprite);
         } catch (InvocationTargetException | IllegalAccessException | IllegalStateException e) {
             LOG_BIPED_ONCE.execute(() -> {
-                Terramap.instance().logger().error("Failed to get map marker style for a biped entity. This may indicate compatibility issues with other mods.");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to get map marker style for a biped entity. This may indicate compatibility issues with other mods.");
+                getTerramap().logger().catching(e);
             });
             return new EntityMarkerStyle();
         }
@@ -82,8 +82,8 @@ public final class MarkerStyling {
             return new EntityMarkerStyle(sprite);
         } catch (InvocationTargetException | IllegalAccessException | IllegalStateException e) {
             LOG_QUADRUPED_ONCE.execute(() -> {
-                Terramap.instance().logger().error("Failed to get map marker style for a quadruped entity. This may indicate compatibility issues with other mods.");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to get map marker style for a quadruped entity. This may indicate compatibility issues with other mods.");
+                getTerramap().logger().catching(e);
             });
             return new EntityMarkerStyle();
         }
@@ -141,8 +141,8 @@ public final class MarkerStyling {
         try {
             return ObfuscationReflectionHelper.findField(clazz, srgName);
         } catch (Exception e) {
-            Terramap.instance().logger().error("failed to find obfuscated field {} in class {} using reflection", srgName, clazz.getName());
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("failed to find obfuscated field {} in class {} using reflection", srgName, clazz.getName());
+            getTerramap().logger().catching(e);
             return null;
         }
     }
@@ -151,8 +151,8 @@ public final class MarkerStyling {
         try {
             return ObfuscationReflectionHelper.findMethod(clazz, srgName, returnType, paramTypes);
         } catch (Exception e) {
-            Terramap.instance().logger().error("failed to find obfuscated method {} in class {} using reflection", srgName, clazz.getName());
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("failed to find obfuscated method {} in class {} using reflection", srgName, clazz.getName());
+            getTerramap().logger().catching(e);
             return null;
         }
     }

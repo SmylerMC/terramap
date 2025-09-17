@@ -16,6 +16,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+import static net.smyler.terramap.Terramap.getTerramap;
+
 public class SP2CPlayerSyncPacket implements IMessage {
 
     protected TerramapLocalPlayer[] localPlayers;
@@ -35,7 +37,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
             long leastUUID = buf.readLong();
             long mostUUID = buf.readLong();
             String nameJson = NetworkUtil.decodeStringFromByteBuf(buf);
-            Text name = Terramap.instance().gson().fromJson(nameJson, Text.class);
+            Text name = getTerramap().gson().fromJson(nameJson, Text.class);
             double longitude = buf.readDouble();
             double latitude = buf.readDouble();
             float azimuth = buf.readFloat();
@@ -64,7 +66,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
             }
             buf.writeLong(player.getUUID().getLeastSignificantBits());
             buf.writeLong(player.getUUID().getMostSignificantBits());
-            String playerDisplayName = Terramap.instance().gson().toJson(player.getDisplayName());
+            String playerDisplayName = getTerramap().gson().toJson(player.getDisplayName());
             NetworkUtil.encodeStringToByteBuf(playerDisplayName, buf);
             buf.writeDouble(coordinates[0]);
             buf.writeDouble(coordinates[1]);

@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.util.geo.TilePosImmutable;
 import net.smyler.terramap.util.geo.WebMercatorBounds;
@@ -23,6 +22,7 @@ import javax.imageio.ImageIO;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.Strings.isNullOrEmpty;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * Instances are usually created in {@link RasterTileSetManager} or packets.
@@ -301,11 +301,11 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
             try {
                 URL parsed = new URL(url);
                 if(parsed.getProtocol().startsWith("http")) {
-                    Terramap.instance().http().setMaxConcurrentRequests(url, this.getMaxConcurrentRequests());
+                    getTerramap().http().setMaxConcurrentRequests(url, this.getMaxConcurrentRequests());
                 }
             } catch(IllegalArgumentException | MalformedURLException e) {
-                Terramap.instance().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
+                getTerramap().logger().catching(e);
             }
         }
     }
@@ -353,7 +353,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
         public Identifier getTexture() throws Throwable {
             if(this.texture == null) {
                 if(this.textureTask == null) {
-                    this.textureTask = Terramap.instance().http().get(this.getURL());
+                    this.textureTask = getTerramap().http().get(this.getURL());
                 } else this.tryLoadingTexture();
             }
             return this.texture;

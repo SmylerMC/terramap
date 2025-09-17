@@ -8,7 +8,6 @@ import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Translator;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,6 +30,7 @@ import fr.thesmyler.terramap.TerramapConfig;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 public class TerramapConfigScreen extends Screen {
 
@@ -154,7 +154,7 @@ public class TerramapConfigScreen extends Screen {
         mapConfigScreen.addWidget(hudButton);
 
         // Tile sets
-        RasterTileSetManager tileSetManager = Terramap.instance().rasterTileSetManager();
+        RasterTileSetManager tileSetManager = getTerramap().rasterTileSetManager();
         TextWidget debugRasterTileSetsText = new TextWidget(10, ofTranslation("terramap.configmenu.debugmapstyles"), game.defaultFont());
         tileSetsConfigScreen.addWidget(debugRasterTileSetsText.setAnchorX((tileSetsConfigScreen.getWidth() - debugRasterTileSetsToggle.getWidth() - debugRasterTileSetsText.getWidth() - 3) / 2).setAnchorY(tileSetsConfigScreen.getHeight() / 4 - 30));
         debugRasterTileSetsToggle.setTooltip(translator.format("terramap.configmenu.debugmapstyles.tooltip"));
@@ -183,8 +183,8 @@ public class TerramapConfigScreen extends Screen {
             try {
                 Desktop.getDesktop().open(tileSetManager.getFile());
             } catch (IOException e) {
-                Terramap.instance().logger().error("Failed to open map style config file: ");
-                Terramap.instance().logger().catching(e);
+                getTerramap().logger().error("Failed to open map style config file: ");
+                getTerramap().logger().catching(e);
             }
         }));
 

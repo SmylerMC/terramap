@@ -4,7 +4,6 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.content.Position;
 import net.smyler.terramap.util.geo.*;
@@ -13,6 +12,8 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * This class represents a marker for the actual player corresponding to this client
@@ -73,7 +74,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         ITextComponent mcName = player == null ? new TextComponentString("Missing main player"): player.getDisplayName();
         String nameJson = ITextComponent.Serializer.componentToJson(mcName);
-        return Terramap.instance().gson().fromJson(nameJson, Text.class);
+        return getTerramap().gson().fromJson(nameJson, Text.class);
     }
 
     @Override

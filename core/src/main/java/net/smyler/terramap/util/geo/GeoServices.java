@@ -18,7 +18,8 @@ import net.smyler.terramap.files.kml.KmlDocument;
 import net.smyler.terramap.files.kml.KmlFile;
 import net.smyler.terramap.files.kml.KmlPlacemark;
 import net.smyler.terramap.files.kml.KmlPoint;
-import net.smyler.terramap.Terramap;
+
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * Utility class to open various geo services such as osm, Google Maps, Earth, etc...
@@ -64,8 +65,8 @@ public final class GeoServices {
                     .replace("{longitude}", dispLong)
                     .replace("{place}", dispPlace);
         } catch (UnsupportedEncodingException e) {
-            Terramap.instance().logger().error("Failed to format a string with coordinates: ");
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("Failed to format a string with coordinates: ");
+            getTerramap().logger().catching(e);
         }
         return str;
     }
@@ -123,8 +124,8 @@ public final class GeoServices {
             Desktop.getDesktop().open(file);
             file.deleteOnExit();
         } catch(Exception e) {
-            Terramap.instance().logger().error("There was an error when trying to open a place in Google Earth");
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("There was an error when trying to open a place in Google Earth");
+            getTerramap().logger().catching(e);
         }
     }
 
@@ -133,10 +134,10 @@ public final class GeoServices {
             URI uri = new URI(uriStr);
             Desktop.getDesktop().browse(uri);
         } catch (IOException | UnsupportedOperationException e) {
-            Terramap.instance().logger().error("Failed to open uri: {}", uriStr);
-            Terramap.instance().logger().catching(e);
+            getTerramap().logger().error("Failed to open uri: {}", uriStr);
+            getTerramap().logger().catching(e);
         } catch (URISyntaxException e) {
-            Terramap.instance().logger().error("Tried to open a malformed URI: {}", uriStr);
+            getTerramap().logger().error("Tried to open a malformed URI: {}", uriStr);
         }
 
     }

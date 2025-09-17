@@ -45,6 +45,7 @@ import net.smyler.terramap.util.geo.TerraplusplusGeoProjection;
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.Terramap.getTerramap;
 
 /**
  * Client side context that store important information about the current server, world, proxy, etc.
@@ -89,13 +90,13 @@ public class TerramapClientContext {
     public TerramapClientContext() {
         this.saveManager = new ClientSaveManager(
                 getGameClient().gameDirectory().resolve("terramap"),
-                Terramap.instance().gsonPretty()
+                getTerramap().gsonPretty()
         );
         try {
             this.saveManager.createDirectoryIfNecessary();
         } catch (IOException exception) {
-            Terramap.instance().logger().error("An error occurred when preparing Terramap's save directory");
-            Terramap.instance().logger().catching(exception);
+            getTerramap().logger().error("An error occurred when preparing Terramap's save directory");
+            getTerramap().logger().catching(exception);
         }
         this.reloadState();
     }
@@ -157,8 +158,8 @@ public class TerramapClientContext {
 
     public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
         if(genSettings != null && this.hasSledgehammer() && !TerramapUtil.isBteCompatible(genSettings)) {
-            Terramap.instance().logger().error("Terramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
-            Terramap.instance().logger().error("The proxy will be assuming a BTE projection, things will not work!");
+            getTerramap().logger().error("Terramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
+            getTerramap().logger().error("The proxy will be assuming a BTE projection, things will not work!");
             //TODO Warning on the GUI
         }
         this.getSavedState().generatorSettings = genSettings;
@@ -221,7 +222,7 @@ public class TerramapClientContext {
      */
     public Map<String, RasterTileSet> getRasterTileSets() {
         Map<String, RasterTileSet> maps = new HashMap<>();
-        RasterTileSetManager manager = Terramap.instance().rasterTileSetManager();
+        RasterTileSetManager manager = getTerramap().rasterTileSetManager();
         maps.putAll(manager.getBaseMaps());
         maps.putAll(this.proxyMaps);
         maps.putAll(this.serverMaps);
@@ -240,7 +241,7 @@ public class TerramapClientContext {
     }
 
     public void setTpCommand(String tpCmd) {
-        Terramap.instance().logger().info("Setting tp command defined by server");
+        getTerramap().logger().info("Setting tp command defined by server");
         this.tpCommand = tpCmd;
     }
 
@@ -252,19 +253,19 @@ public class TerramapClientContext {
         MinecraftServerInfo serverInfo = getGameClient().currentServerInfo();
         if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
-            Terramap.instance().logger().debug("Loaded proxy saved state for UUID {} (forced by proxy)", this.proxyUUID);
+            getTerramap().logger().debug("Loaded proxy saved state for UUID {} (forced by proxy)", this.proxyUUID);
         } else if(this.worldUUID != null) {
             this.state = this.saveManager.loadWorldState(this.worldUUID);
-            Terramap.instance().logger().debug("Loaded world saved state for UUID {}", this.worldUUID);
+            getTerramap().logger().debug("Loaded world saved state for UUID {}", this.worldUUID);
         } else if(this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
-            Terramap.instance().logger().debug("Loaded proxy saved state for UUID {} (world unknown)", this.proxyUUID);
+            getTerramap().logger().debug("Loaded proxy saved state for UUID {} (world unknown)", this.proxyUUID);
         } else if (serverInfo != null) {
             this.state = this.saveManager.loadServerState(serverInfo);
-            Terramap.instance().logger().debug("Loaded server saved state for server {} ({})",serverInfo.name, serverInfo.host);
+            getTerramap().logger().debug("Loaded server saved state for server {} ({})",serverInfo.name, serverInfo.host);
         } else {
             this.state = this.saveManager.getDefaultState();
-            Terramap.instance().logger().debug("Went back to default state");
+            getTerramap().logger().debug("Went back to default state");
         }
     }
 
@@ -272,18 +273,18 @@ public class TerramapClientContext {
         MinecraftServerInfo servData = getGameClient().currentServerInfo();
         if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
-            Terramap.instance().logger().debug("Saved proxy state for UUID {} (forced by proxy)", this.proxyUUID);
+            getTerramap().logger().debug("Saved proxy state for UUID {} (forced by proxy)", this.proxyUUID);
         } else if(this.worldUUID != null) {
             this.saveManager.saveWorldState(this.worldUUID, this.state);
-            Terramap.instance().logger().debug("Saved world state for UUID {}", this.worldUUID);
+            getTerramap().logger().debug("Saved world state for UUID {}", this.worldUUID);
         } else if(this.proxyUUID != null) {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
-            Terramap.instance().logger().debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
+            getTerramap().logger().debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
         } else if (servData != null) {
             this.saveManager.saveServerState(servData, this.state);
-            Terramap.instance().logger().debug("Saved server state for server {} ({})",servData.name, servData.host);
+            getTerramap().logger().debug("Saved server state for server {} ({})",servData.name, servData.host);
         } else {
-            Terramap.instance().logger().debug("Did not save state for unreliable context");
+            getTerramap().logger().debug("Did not save state for unreliable context");
         }
     }
 
@@ -523,7 +524,7 @@ public class TerramapClientContext {
     }
 
     public static void resetContext() {
-        Terramap.instance().logger().info("Reseting client context");
+        getTerramap().logger().info("Reseting client context");
         RasterTileSetProvider.SERVER.setLastError(null);
         RasterTileSetProvider.PROXY.setLastError(null);
         TerramapClientContext.instance = new TerramapClientContext();
