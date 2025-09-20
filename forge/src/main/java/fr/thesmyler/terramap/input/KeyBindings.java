@@ -19,6 +19,7 @@ import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public abstract class KeyBindings {
 
@@ -68,7 +69,7 @@ public abstract class KeyBindings {
         }
         if(COPY_GEO_COORDS.isPressed()) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
-            GeoProjection projection = TerramapClientContext.getContext().getProjection();
+            GeoProjection projection = getTerramapClient().projection().orElse(null);
             if(player == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
             } else if(projection == null) {

@@ -7,6 +7,7 @@ import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import net.smyler.smylib.gui.Font;
+import net.smyler.terramap.content.Position;
 import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.util.geo.*;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
@@ -16,9 +17,12 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.jetbrains.annotations.Nullable;
 
-import static java.lang.Math.floorDiv;
+import java.util.Optional;
+import java.util.function.Function;
+
 import static java.lang.Math.round;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 /**
  * The context menu which is opened when the map is right-clicked.
@@ -90,14 +94,14 @@ public class MapMenuWidget extends MenuWidget {
         String cmd = cmdFormat.replace("{longitude}", String.valueOf(this.mouseLocation.longitude()))
                               .replace("{latitude}", String.valueOf(this.mouseLocation.latitude()));
 
-        GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
+        Optional<GeoProjection> projection = getTerramapClient().projection();
+        if(!projection.isPresent() && (cmd.contains("{x}") || cmd.contains("{z}"))) {
             this.reportError("terramap.mapwidget.error.tp");
             return;
         }
-        if(projection != null) {
+        if(projection.isPresent()) {
             try {
-                projection.fromGeo(this.mousePosition, this.mouseLocation);
+                projection.get().fromGeo(this.mousePosition, this.mouseLocation);
                 cmd = cmd.replace("{x}", String.valueOf(this.mousePosition.x()))
                          .replace("{z}", String.valueOf(this.mousePosition.z()));
             } catch (OutOfGeoBoundsException e) {
@@ -111,7 +115,7 @@ public class MapMenuWidget extends MenuWidget {
     @Override
     public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
         super.onUpdate(mouseX, mouseY, parent);
-        boolean hasProjection = TerramapClientContext.getContext().getProjection() != null;
+        boolean hasProjection = getTerramapClient().projection().isPresent();
         this.centerHere.enabled = this.map.isInteractive();
         this.copyBlockMenuEntry.enabled = hasProjection;
         this.copyChunkMenuEntry.enabled = hasProjection;
@@ -171,59 +175,40 @@ public class MapMenuWidget extends MenuWidget {
         GeoServices.openInOSMWeb(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude());
     }
 
-    private void copy2drPosition() {
-        try {
-            TerramapClientContext.getContext().getProjection().fromGeo(this.mousePosition, this.mouseLocation);
-            String dispX = String.valueOf(floorDiv(round(this.mousePosition.x()), 512));
-            String dispY = String.valueOf(floorDiv(round(this.mousePosition.z()), 512));
-            getGameClient().clipboard().setContent(dispX + "." + dispY + ".2dr");
-        } catch (OutOfGeoBoundsException e) {
-            this.reportError("terramap.mapwidget.error.copy2dregion");
+    private void copyGamePosition(Function<Position, String> formatter) {
+        Optional<GeoProjection> projection = getTerramapClient().projection();
+        if (!projection.isPresent()) {
+            this.reportError("No projection"); //TODO translation key
+            return;
         }
+        try {
+            projection.get().fromGeo(this.mousePosition, this.mouseLocation);
+        } catch (OutOfGeoBoundsException e) {
+            this.reportError("terramap.mapwidget.error.copy2dregion");  //TODO generalize translation key
+            return;
+        }
+        String formatted = formatter.apply(this.mousePosition);
+        getGameClient().clipboard().setContent(formatted);
+    }
+
+    private void copy2drPosition() {
+        this.copyGamePosition(p -> p.regionX() + "." + p.regionZ() + ".2dr");
     }
 
     private void copy3drPosition() {
-        try {
-            TerramapClientContext.getContext().getProjection().fromGeo(this.mousePosition, this.mouseLocation);
-            String dispX = String.valueOf(floorDiv(round(this.mousePosition.x()), 256));
-            String dispY = String.valueOf(floorDiv(round(this.mousePosition.z()), 256));
-            getGameClient().clipboard().setContent(dispX + ".0." + dispY + ".3dr");
-        } catch (OutOfGeoBoundsException e) {
-            this.reportError("terramap.mapwidget.error.copy2dregion");
-        }
+        this.copyGamePosition(p -> p.region3dX() + ".0." + p.region3dZ() + ".3dr");
     }
 
     private void copyRegionPosition() {
-        try {
-            TerramapClientContext.getContext().getProjection().fromGeo(this.mousePosition, this.mouseLocation);
-            String dispX = String.valueOf(floorDiv(round(this.mousePosition.x()), 512));
-            String dispY = String.valueOf(floorDiv(round(this.mousePosition.z()), 512));
-            getGameClient().clipboard().setContent("r." + dispX + "." + dispY + ".mca");
-        } catch (OutOfGeoBoundsException e) {
-            this.reportError("terramap.mapwidget.error.copyregion");
-        }
+        this.copyGamePosition(p -> "r." + p.regionX() + "." + p.regionZ() + ".mca");
     }
 
     private void copyChunkPosition() {
-        try {
-            TerramapClientContext.getContext().getProjection().fromGeo(this.mousePosition, this.mouseLocation);
-            String dispX = String.valueOf(floorDiv(round(this.mousePosition.x()), 16));
-            String dispY = String.valueOf(floorDiv(round(this.mousePosition.z()), 16));
-            getGameClient().clipboard().setContent(dispX + " " + dispY);
-        } catch (OutOfGeoBoundsException e) {
-            this.reportError("terramap.mapwidget.error.copychunk");
-        }
+        this.copyGamePosition(p -> p.chunkX() + " " + p.chunkZ());
     }
 
     private void copyBlockPosition() {
-        try {
-            TerramapClientContext.getContext().getProjection().fromGeo(this.mousePosition, this.mouseLocation);
-            String dispX = String.valueOf(round(this.mousePosition.x()));
-            String dispY = String.valueOf(round(this.mousePosition.z()));
-            getGameClient().clipboard().setContent(dispX + " " + dispY);
-        } catch (OutOfGeoBoundsException e) {
-            this.reportError("terramap.mapwidget.error.copyblock");
-        }
+        this.copyGamePosition(p -> p.blockX() + " " + p.blockZ());
     }
 
 

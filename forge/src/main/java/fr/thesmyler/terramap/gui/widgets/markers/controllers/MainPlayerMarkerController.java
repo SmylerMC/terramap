@@ -1,9 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import net.smyler.smylib.gui.sprites.SmyLibSprites;
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
@@ -12,6 +10,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public class MainPlayerMarkerController extends AbstractPlayerMarkerController<MainPlayerMarker> {
 
@@ -30,7 +29,8 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
     public MainPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
         int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
         EntityPlayerSP self = Minecraft.getMinecraft().player;
-        if(existingMarkers.length < 1 && self != null && TerramapClientContext.getContext().getProjection() != null) {
+        boolean hasProjection = getTerramapClient().projection().isPresent();
+        if(existingMarkers.length < 1 && self != null && hasProjection) {
             return new MainPlayerMarker[] { new MainPlayerMarker(this, factor) };
         }
         return new MainPlayerMarker[0];
@@ -38,7 +38,7 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
 
     @Override
     public boolean showButton() {
-        return TerramapClientContext.getContext().getProjection() != null;
+        return getTerramapClient().projection().isPresent();
     }
 
     @Override

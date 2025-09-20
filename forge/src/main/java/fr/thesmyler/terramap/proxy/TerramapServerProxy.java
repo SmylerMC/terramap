@@ -13,9 +13,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smyler.terramap.TerramapForgeClient;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 
+@SuppressWarnings("unused")  // An instance of this is injected into the main mod by FML
 public class TerramapServerProxy extends TerramapProxy {
 
     @Override
@@ -45,6 +47,11 @@ public class TerramapServerProxy extends TerramapProxy {
     public GameType getGameMode(EntityPlayer e) {
         EntityPlayerMP player = (EntityPlayerMP)e;
         return player.interactionManager.getGameType();
+    }
+
+    @Override
+    public TerramapForgeClient getClient() {
+        throw new IllegalStateException("Trying to call client code from a dedicated server!!!");
     }
 
     @Override

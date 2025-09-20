@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.content.PositionMutable;
@@ -14,6 +13,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 import static net.smyler.terramap.Terramap.getTerramap;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 /**
  * This class represents a marker for the actual player corresponding to this client
@@ -37,17 +37,17 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
             parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
             return;
         }
-        if(TerramapClientContext.getContext().getProjection() == null) return;
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        Position position = new PositionMutable(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);
-        try {
-            projection.toGeo(this.playerLocation, position);
-            this.playerAzimuth = projection.azimuth(position);
-            this.isOutOfBounds = false;
-        } catch(OutOfGeoBoundsException e) {
-            this.isOutOfBounds = true;
-        }
+        getTerramapClient().projection().ifPresent(projection -> {
+            EntityPlayerSP player = Minecraft.getMinecraft().player;
+            Position position = new PositionMutable(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);
+            try {
+                projection.toGeo(this.playerLocation, position);
+                this.playerAzimuth = projection.azimuth(position);
+                this.isOutOfBounds = false;
+            } catch(OutOfGeoBoundsException e) {
+                this.isOutOfBounds = true;
+            }
+        });
         super.onUpdate(mouseX, mouseY, parent);
     }
 

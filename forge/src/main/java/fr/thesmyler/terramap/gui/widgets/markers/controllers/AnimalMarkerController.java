@@ -20,6 +20,7 @@ import static net.smyler.smylib.Objects.requireNonNullElse;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 import static net.smyler.terramap.gui.sprites.TerramapSprites.MARKER_TOKEN_GREY;
 
 public class AnimalMarkerController extends MarkerController<EntityMarker> {
@@ -40,7 +41,9 @@ public class AnimalMarkerController extends MarkerController<EntityMarker> {
 
     @Override
     public EntityMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-        if(TerramapClientContext.getContext().getProjection() == null) return new EntityMarker[0];
+        if (!getTerramapClient().projection().isPresent()) {
+            return new EntityMarker[0];
+        }
         Map<UUID, Entity> entities = new HashMap<>();
         for(Entity entity: TerramapClientContext.getContext().getEntities()) {
             if(entity instanceof IAnimals && !(entity instanceof IMob)) {
@@ -63,7 +66,7 @@ public class AnimalMarkerController extends MarkerController<EntityMarker> {
 
     @Override
     public boolean showButton() {
-        return TerramapClientContext.getContext().allowsAnimalRadar() && TerramapClientContext.getContext().getProjection() != null;
+        return TerramapClientContext.getContext().allowsAnimalRadar() && getTerramapClient().projection().isPresent();
     }
 
     @Override

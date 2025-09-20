@@ -10,6 +10,7 @@ import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.TerramapClient;
 import net.smyler.terramap.http.HttpClient;
 import net.smyler.terramap.http.TerraplusplusHttpClient;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid=Terramap.MOD_ID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
 public class TerramapMod implements Terramap {
 
+    @Deprecated
     private static TerramapVersion version; // Read from the metadata
 
     private final HttpClient http = new TerraplusplusHttpClient();
@@ -41,7 +43,9 @@ public class TerramapMod implements Terramap {
     private RasterTileSetManager rasterTileSetManager;
 
     // These are notable versions
+    @Deprecated
     public static final TerramapVersion OLDEST_COMPATIBLE_CLIENT = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 0);
+    @Deprecated
     public static final TerramapVersion OLDEST_TERRA121_TERRAMAP_VERSION = new TerramapVersion(1, 0, 0, ReleaseType.BETA, 6, 7);
 
     private Logger logger;
@@ -78,7 +82,7 @@ public class TerramapMod implements Terramap {
             this.logger.error("Failed to parse Terramap version number from string {}, will be assuming a 1.0.0 release.", versionStr);
             TerramapMod.version = new TerramapVersion(1, 0, 0);
         }
-        this.logger.info("Terramap version: {}", getVersion());
+        this.logger.info("Terramap version: {}", this.version());
         TerramapMod.proxy.preInit(event);
         File tileSetsConfigFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/terramap_user_styles.json");
         this.rasterTileSetManager = new RasterTileSetManager(tileSetsConfigFile);
@@ -92,6 +96,7 @@ public class TerramapMod implements Terramap {
         this.rasterTileSetManager().loadFromConfigFile();
     }
 
+    @Deprecated
     public static TerramapVersion getVersion() {
         try {
             return TerramapMod.version != null ? TerramapMod.version: new TerramapVersion("0.0.0");
@@ -100,6 +105,7 @@ public class TerramapMod implements Terramap {
         }
     }
 
+    @SuppressWarnings("unused")  // This is called by FML despite IDEs not seeing it
     @NetworkCheckHandler
     public boolean isRemoteCompatible(Map<String, String> remote, Side side) {
         return true; // Anything should be ok, the actual check is done in the server event handler
@@ -119,6 +125,11 @@ public class TerramapMod implements Terramap {
     @Override
     public Logger logger() {
         return this.logger;
+    }
+
+    @Override
+    public TerramapClient client() {
+        return proxy.getClient();
     }
 
     @Override

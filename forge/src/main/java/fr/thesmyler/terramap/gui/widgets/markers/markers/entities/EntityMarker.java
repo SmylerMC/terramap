@@ -4,7 +4,6 @@ import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
@@ -19,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.terramap.Terramap.getTerramap;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 /**
  * A marker for any type of entity.
@@ -65,19 +65,22 @@ public class EntityMarker extends AbstractMovingMarker {
     }
 
     @Override
-    public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
+    public void onUpdate(float mouseX, float mouseY, final WidgetContainer parent) {
         MapWidget map = (MapWidget) parent;
-        GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        Position position = new PositionMutable(this.entity.posX, this.entity.posY, this.entity.posZ);
-        try {
-            projection.toGeo(this.actualLocation, position);
-            this.actualAzimuth = projection.azimuth(position);
-            this.isOutOfBounds = false;
-        } catch(OutOfGeoBoundsException | NullPointerException e) {
-            this.isOutOfBounds = true;
-        }
+        getTerramapClient().projection().ifPresent(projection -> {
+            Position position = new PositionMutable(this.entity.posX, this.entity.posY, this.entity.posZ);
+            try {
+                projection.toGeo(this.actualLocation, position);
+                this.actualAzimuth = projection.azimuth(position);
+                this.isOutOfBounds = false;
+            } catch(OutOfGeoBoundsException | NullPointerException e) {
+                this.isOutOfBounds = true;
+            }
+        });
         super.onUpdate(mouseX, mouseY, parent);
-        if(this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
+        if (this.entity.isDead) {
+            parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
+        }
     }
 
     @Override

@@ -2,12 +2,10 @@ package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
 
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.Terramap;
 import net.smyler.terramap.content.Position;
 import net.smyler.terramap.content.PositionImmutable;
 import net.smyler.terramap.util.geo.*;
@@ -20,6 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
 import static net.smyler.terramap.Terramap.getTerramap;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public class TerramapLocalPlayer extends TerramapPlayer {
 
@@ -46,7 +45,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     public GeoPointView getLocation() throws OutOfGeoBoundsException {
         GeoProjection projection;
         if (this.player.world.isRemote) {
-            projection = TerramapClientContext.getContext().getProjection();
+            projection = getTerramapClient().projection().orElse(null);
         } else {
             projection = getWorldProjection(this.player.world);
         }
@@ -77,7 +76,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     public float getAzimuth() {
         GeoProjection projection;
         if (this.player.world.isRemote) {
-            projection = TerramapClientContext.getContext().getProjection();
+            projection = getTerramapClient().projection().orElse(null);
         } else {
             projection = getWorldProjection(this.player.world);
         }

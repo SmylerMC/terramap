@@ -19,6 +19,7 @@ import net.smyler.terramap.gui.widgets.markers.ForgeEntityMarkerStylingRuleset;
 import static net.smyler.smylib.Objects.requireNonNullElse;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 import static net.smyler.terramap.gui.sprites.TerramapSprites.MARKER_TOKEN_GREY;
 
 public class MobMarkerController extends MarkerController<EntityMarker> {
@@ -39,7 +40,9 @@ public class MobMarkerController extends MarkerController<EntityMarker> {
 
     @Override
     public EntityMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-        if(TerramapClientContext.getContext().getProjection() == null) return new EntityMarker[0];
+        if (!getTerramapClient().projection().isPresent()) {
+            return new EntityMarker[0];
+        }
         Map<UUID, Entity> entities = new HashMap<>();
         for(Entity entity: TerramapClientContext.getContext().getEntities()) {
             if(entity instanceof IMob) {
@@ -62,7 +65,8 @@ public class MobMarkerController extends MarkerController<EntityMarker> {
 
     @Override
     public boolean showButton() {
-        return TerramapClientContext.getContext().allowsMobRadar() && TerramapClientContext.getContext().getProjection() != null;
+        boolean hasProjection = getTerramapClient().projection().isPresent();
+        return TerramapClientContext.getContext().allowsMobRadar() && hasProjection;
     }
 
     @Override

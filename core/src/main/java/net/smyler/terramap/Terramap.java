@@ -5,14 +5,21 @@ import net.smyler.terramap.http.HttpClient;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import org.apache.logging.log4j.Logger;
 
+
 public interface Terramap {
 
     static Terramap getTerramap() {
         return InstanceHolder.instance;
     }
 
+    static TerramapClient getTerramapClient() {
+        return InstanceHolder.instance.client();
+    }
+
     String MOD_ID = "terramap";
     String STYLE_UPDATE_HOSTNAME = "styles.terramap.thesmyler.fr";  //TODO use smyler.net
+
+    TerramapClient client();
 
     String version();
 

@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.smyler.terramap.TerramapForgeClient;
 
 public abstract class TerramapProxy {
 
@@ -24,5 +25,7 @@ public abstract class TerramapProxy {
     public boolean isDedicatedServer() {
         return this.getSide().equals(Side.SERVER);
     }
+
+    public abstract TerramapForgeClient getClient();
 
 }

@@ -44,6 +44,7 @@ import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public class HudConfigScreen extends Screen {
 
@@ -83,9 +84,9 @@ public class HudConfigScreen extends Screen {
         this.minimap.getVisibilityControllers().get(PlayerNameVisibilityController.ID).setVisibility(false);
         this.minimap.restore(TerramapClientContext.getContext().getSavedState().minimap);
         this.minimap.scheduleBeforeEachUpdate(() -> {
-            GeoProjection projection = TerramapClientContext.getContext().getProjection();
+            Optional<GeoProjection> projection = getTerramapClient().projection();
             Marker marker = this.minimap.getMainPlayerMarker();
-            if (projection != null && marker != null) {
+            if (projection.isPresent() && marker != null) {
                 controller.track(marker);
             }
         });
@@ -361,16 +362,13 @@ public class HudConfigScreen extends Screen {
             super(0, 0, 0, 30, 30);
             this.addWidget(this.compass);
             this.setSize(this.compass.getWidth(), this.compass.getHeight());
-            this.scheduleBeforeEachUpdate(() -> {
-                GeoProjection p = TerramapClientContext.getContext().getProjection();
-                if (p != null) {
-                    EntityPlayerSP player = getMinecraft().player;
-                    this.playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-                    try {
-                        this.compass.setAzimuth(p.azimuth(this.playerPosition));
-                    } catch (OutOfGeoBoundsException ignored) {}
-                }
-            });
+            this.scheduleBeforeEachUpdate(() -> getTerramapClient().projection().ifPresent(projection -> {
+                EntityPlayerSP player = getMinecraft().player;
+                this.playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+                try {
+                    this.compass.setAzimuth(projection.azimuth(this.playerPosition));
+                } catch (OutOfGeoBoundsException ignored) {}
+            }));
         }
 
         @Override

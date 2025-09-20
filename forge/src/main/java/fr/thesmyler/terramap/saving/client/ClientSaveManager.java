@@ -144,6 +144,7 @@ public class ClientSaveManager {
             return this.gson.fromJson(reader, SavedClientState.class);
         } catch (FileNotFoundException ignored) {
             // Let's not spam the console when it's just a new save.
+            getTerramap().logger().debug("Client state file '{}' did not exist and will be created", path);
         } catch (IOException e) {
             getTerramap().logger().error("Failed to read a saved client state, will fallback to a new one");
             getTerramap().logger().catching(e);

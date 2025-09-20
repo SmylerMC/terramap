@@ -60,6 +60,7 @@ import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static net.smyler.terramap.Terramap.getTerramap;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 import static net.smyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
@@ -300,7 +301,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         if(TerramapConfig.CLIENT.chatOnMap) this.addWidget(this.chat);
 
-        if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
+        Optional<GeoProjection> projection = getTerramapClient().projection();
+        if(!TerramapClientContext.getContext().isInstalledOnServer() && !projection.isPresent() && TerramapClientContext.getContext().isOnEarthWorld()) {
             StringBuilder warningBuilder = new StringBuilder();
             for(int i=1; translator.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
                 if(warningBuilder.length() > 0) warningBuilder.append('\n');
@@ -352,7 +354,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
         super.onUpdate(mouseX, mouseY, parent);
 
-        GeoProjection projection = TerramapClientContext.getContext().getProjection();
+        GeoProjection projection = getTerramapClient().projection().orElse(null);
 
         MapController controller = this.map.getController();
         this.setZoomRestrictions();

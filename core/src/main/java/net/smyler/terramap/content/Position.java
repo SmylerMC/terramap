@@ -4,8 +4,8 @@ import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
 import org.jetbrains.annotations.NotNull;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
+import static java.lang.Math.round;
 
 
 /**
@@ -151,6 +151,81 @@ public interface Position extends Immutable<PositionMutable>, Mutable<PositionIm
      */
     default double verticalDistanceTo(@NotNull Position other) {
         return abs(this.y() - other.y());
+    }
+
+    /**
+     * @return the X coordinate of the block that contains this position
+     */
+    default long blockX() {
+        return round(this.x());
+    }
+
+    /**
+     * @return the Y coordinate of the block that contains this position
+     */
+    default long blockY() {
+        return round(this.y());
+    }
+
+    /**
+     * @return the Z coordinate of the block that contains this position
+     */
+    default long blockZ() {
+        return round(this.z());
+    }
+
+    /**
+     * @return the X coordinate of the chunk that contains this position
+     */
+    default long chunkX() {
+        return floorDiv(round(this.x()), 16);
+    }
+
+    /**
+     * @return the Z coordinate of the chunk that contains this position
+     */
+    default long chunkZ() {
+        return floorDiv(round(this.z()), 16);
+    }
+
+    /**
+     * @return the X coordinate of the region that contains this position.
+     * Regions are square sections of the world saved in individual files, with a side of 512 blocks.
+     */
+    default long regionX() {
+        return floorDiv(round(this.x()), 512);
+    }
+
+    /**
+     * @return the Z coordinate of the region that contains this position.
+     * Regions are square sections of the world saved in individual files, with a side of 512 blocks.
+     */
+    default long regionZ() {
+        return floorDiv(round(this.z()), 512);
+    }
+
+    /**
+     * @return the X coordinate of the CubicChunk 3D region that contains this position.
+     * 3D Regions are cubic sections of CubicChunks worlds world saved in individual files, with a side of 256 blocks.
+     */
+    default long region3dX() {
+        return floorDiv(round(this.x()), 256);
+    }
+
+    /**
+     * @return the Y coordinate of the CubicChunk 3D region that contains this position.
+     * 3D Regions are cubic sections of CubicChunks worlds world saved in individual files, with a side of 256 blocks.
+     */
+    default long region3dY() {
+        return floorDiv(round(this.y()), 256);
+    }
+
+    /**
+     * @return the Z coordinate of the CubicChunk 3D region that contains this position.
+     * 3D Regions are cubic sections of CubicChunks worlds world saved in individual files, with a side of 256 blocks.
+     */
+    default long region3dZ() {
+        return floorDiv(round(this.z()), 256);
     }
 
 }

@@ -7,7 +7,7 @@ import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 public class SavedClientState {
 
     public boolean hasShownWelcome = false;
-    public EarthGeneratorSettings generatorSettings = null;
+    public EarthGeneratorSettings generatorSettings = null;  //TODO store the projection in backend-agnostic way instead
     public SavedMapState minimap = new SavedMapState();
     public SavedMainScreenState mainScreen = new SavedMainScreenState();
 

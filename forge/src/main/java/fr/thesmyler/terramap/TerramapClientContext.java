@@ -19,6 +19,8 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
+import net.smyler.terramap.TerramapClient;
+import net.smyler.terramap.content.World;
 import net.smyler.terramap.tilesets.raster.*;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
@@ -46,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.terramap.Terramap.getTerramap;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 /**
  * Client side context that store important information about the current server, world, proxy, etc.
@@ -80,7 +83,6 @@ public class TerramapClientContext {
     private boolean allowDecoRadar = true;
     private boolean proxyForcesGlobalMap = false;
     private boolean proxyForceGlobalSettings = false;
-    private UUID worldUUID = null;
     private UUID proxyUUID = null;
 
     private SavedClientState state;
@@ -110,7 +112,7 @@ public class TerramapClientContext {
         if(this.arePlayersSynchronized()) {
             players.putAll(this.remotePlayers);
         }
-        if(this.getProjection() != null) {
+        if(getTerramapClient().projection().isPresent()) {
             players.putAll(this.getLocalPlayersMap());
         }
         return players;
@@ -140,6 +142,10 @@ public class TerramapClientContext {
         return savedClientState.generatorSettings;
     }
 
+    /**
+     * @deprecated use {@link Terramap#getTerramapClient()}, {@link TerramapClient#world()} and {@link World#projection()}
+     */
+    @Deprecated
     public GeoProjection getProjection() {
         EarthGeneratorSettings gen = this.getGeneratorSettings();
         if(this.projection == null && gen != null) {
@@ -251,12 +257,13 @@ public class TerramapClientContext {
 
     public void reloadState() {
         MinecraftServerInfo serverInfo = getGameClient().currentServerInfo();
-        if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
+        UUID worldUUID = getTerramapClient().world().flatMap(World::uuid).orElse(null);
+        if (this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
             getTerramap().logger().debug("Loaded proxy saved state for UUID {} (forced by proxy)", this.proxyUUID);
-        } else if(this.worldUUID != null) {
-            this.state = this.saveManager.loadWorldState(this.worldUUID);
-            getTerramap().logger().debug("Loaded world saved state for UUID {}", this.worldUUID);
+        } else if(worldUUID != null) {
+            this.state = this.saveManager.loadWorldState(worldUUID);
+            getTerramap().logger().debug("Loaded world saved state for UUID {}", worldUUID);
         } else if(this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
             getTerramap().logger().debug("Loaded proxy saved state for UUID {} (world unknown)", this.proxyUUID);
@@ -271,12 +278,13 @@ public class TerramapClientContext {
 
     public void saveState() {
         MinecraftServerInfo servData = getGameClient().currentServerInfo();
-        if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
+        UUID worldUUID = getTerramapClient().world().flatMap(World::uuid).orElse(null);
+        if (this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
             getTerramap().logger().debug("Saved proxy state for UUID {} (forced by proxy)", this.proxyUUID);
-        } else if(this.worldUUID != null) {
-            this.saveManager.saveWorldState(this.worldUUID, this.state);
-            getTerramap().logger().debug("Saved world state for UUID {}", this.worldUUID);
+        } else if(worldUUID != null) {
+            this.saveManager.saveWorldState(worldUUID, this.state);
+            getTerramap().logger().debug("Saved world state for UUID {}", worldUUID);
         } else if(this.proxyUUID != null) {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
             getTerramap().logger().debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
@@ -409,15 +417,6 @@ public class TerramapClientContext {
         this.reloadState();
     }
 
-    public UUID getWorldUUID() {
-        return worldUUID;
-    }
-
-    public void setWorldUUID(UUID worldUUID) {
-        this.worldUUID = worldUUID;
-        this.reloadState();
-    }
-
     public UUID getProxyUUID() {
         return proxyUUID;
     }
@@ -492,7 +491,7 @@ public class TerramapClientContext {
     }
 
     public void tryShowWelcomeToast() {
-        if(this.shouldShowWelcomeToast()) {
+        if (this.shouldShowWelcomeToast()) {
             String key = KeyBindings.OPEN_MAP.getDisplayName();
             Minecraft.getMinecraft().getToastGui().add(
                     new TextureToast(

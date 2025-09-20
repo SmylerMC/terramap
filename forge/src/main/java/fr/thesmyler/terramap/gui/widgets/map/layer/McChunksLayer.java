@@ -1,9 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 import com.google.gson.JsonObject;
@@ -15,7 +12,6 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.ColorPickerWidget;
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.smylib.gui.Font;
@@ -31,6 +27,7 @@ import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 import static net.smyler.terramap.Terramap.getTerramap;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 /**
  * Renders Minecraft region (both 2dr and 3dr), chunks, and blocks outlines onto a map widget.
@@ -131,10 +128,16 @@ public class McChunksLayer extends MapLayer {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget)parent;
-        GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        if(projection == null) return;
         map.getProfiler().startSection("layer-" + ID);
-        
+
+        // Get the current projection (or back-off)
+        Optional<GeoProjection> projectionOptional = getTerramapClient().projection();
+        if (!projectionOptional.isPresent()) {
+            return;
+        }
+        GeoProjection projection = projectionOptional.get();
+
+
         this.cache.projection = projection;
 
         boolean render2dr = false;

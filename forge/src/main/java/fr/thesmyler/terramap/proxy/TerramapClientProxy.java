@@ -24,13 +24,17 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smyler.terramap.Terramap;
+import net.smyler.terramap.TerramapForgeClient;
 
 import javax.imageio.ImageIO;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.gui.sprites.TerramapSprites.registerAllTerramapSprites;
 
+@SuppressWarnings("unused")  // An instance of this is injected into the main mod by FML
 public class TerramapClientProxy extends TerramapProxy {
+
+    private final TerramapForgeClient client = new TerramapForgeClient();
 
     @Override
     public Side getSide() {
@@ -85,6 +89,11 @@ public class TerramapClientProxy extends TerramapProxy {
         }
         getTerramap().logger().error("Failed to determine player gamemode.");
         return GameType.NOT_SET;
+    }
+
+    @Override
+    public TerramapForgeClient getClient() {
+        return this.client;
     }
 
     @Override

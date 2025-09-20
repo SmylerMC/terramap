@@ -1,8 +1,6 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -15,12 +13,12 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.minecraft.client.Minecraft;
-import net.smyler.terramap.util.geo.GeoProjection;
 
 import java.util.Optional;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public class MinimapWidget extends MapWidget {
 
@@ -110,27 +108,24 @@ public class MinimapWidget extends MapWidget {
     }
 
     private void forceTracking() {
-        GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        Screen screen = getGameClient().getCurrentScreen();
-        Popup popup = getGameClient().getTopPopup();
-        if (projection == null) {
-            return; // We can't track anyway if we can't calculate where the player is
-        }
-        /*if (screen instanceof GuiChat) { //FIXME Let users interact with the minimap when the chat is open
-            return; // We want to user to be free to interact with the map when the chat is open
-        }*/
-        if (popup instanceof LayerRenderingOffsetPopup) {
+        if (getGameClient().getTopPopup() instanceof LayerRenderingOffsetPopup) {
             /*
              * The layer rendering offset screen holds a reference to the layer it is working with and uses it for calculations,
              * we don't want to screw that up by moving the center or rotating.
              */
             return;
         }
-
-        Marker player = this.getMainPlayerMarker();
-        if (player != null) {
-            this.getController().track(player);
+        /*
+        if (getGameClient().getCurrentScreen() instanceof GuiChat) { //FIXME Let users interact with the minimap when the chat is open
+            return; // We want to user to be free to interact with the map when the chat is open
         }
+        */
+        getTerramapClient().projection().ifPresent(projection -> {
+            Marker player = this.getMainPlayerMarker();
+            if (player != null) {
+                this.getController().track(player);
+            }
+        });
     }
 
 }

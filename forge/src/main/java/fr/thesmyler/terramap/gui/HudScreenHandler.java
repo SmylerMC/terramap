@@ -14,11 +14,11 @@ import net.smyler.terramap.content.PositionMutable;
 import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MinimapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import net.smyler.terramap.util.geo.GeoProjection;
 import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public abstract class HudScreenHandler {
 
@@ -55,17 +55,16 @@ public abstract class HudScreenHandler {
     }
 
     private static void tickCompass() {
-        GeoProjection p = TerramapClientContext.getContext().getProjection();
-        if(p != null) {
+        getTerramapClient().projection().ifPresent(projection -> {
             EntityPlayerSP player = getMinecraft().player;
             playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
             try {
-                p.azimuth(playerPosition);
+                projection.azimuth(playerPosition);
                 compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
             } catch (OutOfGeoBoundsException ignored) {
                 compass.setVisibility(false);
             }
-        }
+        });
     }
 
     public static void updateMinimap() {

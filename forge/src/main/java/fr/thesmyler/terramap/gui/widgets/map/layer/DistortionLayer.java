@@ -4,14 +4,16 @@ import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
-import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.terramap.util.geo.*;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dView;
 
+import java.util.Optional;
+
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 /**
  * Shows the area and angular distortion from the world's {@link GeoProjection}.
@@ -35,8 +37,14 @@ public class DistortionLayer extends MapLayer {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget) parent;
-        GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        if(projection == null) return;
+
+        // Get the current projection (or back-off)
+        Optional<GeoProjection> projectionOptional = getTerramapClient().projection();
+        if (!projectionOptional.isPresent()) {
+            return;
+        }
+        GeoProjection projection = projectionOptional.get();
+
         map.getProfiler().startSection("layer-distortion");
         context.gl().pushViewMatrix();
         this.applyRotationGl(context, x, y);

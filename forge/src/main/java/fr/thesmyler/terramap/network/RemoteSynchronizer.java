@@ -23,8 +23,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.util.geo.TerraplusplusGeoProjection;
 
 import static net.smyler.terramap.Terramap.getTerramap;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public abstract class RemoteSynchronizer {
 
@@ -141,12 +144,17 @@ public abstract class RemoteSynchronizer {
                         "Enable deco radar: " + pkt.enableDecoRadar + "\t" +
                         "Warp support: " + pkt.hasWarpSupport + "\t"
                 );
-        TerramapClientContext ctx = TerramapClientContext.getContext();
+        final TerramapClientContext ctx = TerramapClientContext.getContext();
 
         try {
             ctx.setServerVersion(new TerramapVersion(pkt.serverVersion));
             if(pkt.worldUUID.getLeastSignificantBits() != 0 || pkt.worldUUID.getMostSignificantBits() != 0) {
-                ctx.setWorldUUID(pkt.worldUUID);
+                getTerramapClient().world().ifPresent(world -> {
+                    GeoProjection projection = new TerraplusplusGeoProjection(pkt.worldSettings.projection());
+                    world.setUuidFromServer(pkt.worldUUID);
+                    world.setProjectionFromServer(projection);
+                    ctx.reloadState();  // Immediately reload the state so ctx.setGeneratorSettings() does not overwrite it
+                });
             }
             ctx.setGeneratorSettings(pkt.worldSettings);
             ctx.setPlayersSynchronizedByServer(pkt.syncPlayers);
