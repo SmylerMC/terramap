@@ -1,7 +1,7 @@
 package net.smyler.terramap;
 
-import net.smyler.terramap.content.World;
-import net.smyler.terramap.content.WorldClient;
+import net.smyler.terramap.world.World;
+import net.smyler.terramap.world.WorldClient;
 import net.smyler.terramap.util.geo.GeoProjection;
 
 import java.util.Optional;

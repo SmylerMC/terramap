@@ -15,7 +15,7 @@ import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.smylib.gui.Font;
-import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.world.PositionMutable;
 import net.smyler.terramap.util.geo.*;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
@@ -301,7 +301,7 @@ public class McChunksLayer extends MapLayer {
                 // Fallback to computing it
                 try {
                     this.projectionsThisCycle[discriminator]++;
-                    this.position.withXZ(mcPos.x(), mcPos.y());
+                    this.position.setXZ(mcPos.x(), mcPos.y());
                     this.projection.toGeo(this.location, this.position);
                     location = this.location.getImmutable();
                     this.mcToGeo.put(mcPos.getImmutable(), location);

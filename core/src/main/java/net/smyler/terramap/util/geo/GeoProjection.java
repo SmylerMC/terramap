@@ -1,7 +1,7 @@
 package net.smyler.terramap.util.geo;
 
-import net.smyler.terramap.content.Position;
-import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.world.Position;
+import net.smyler.terramap.world.PositionMutable;
 import org.jetbrains.annotations.NotNull;
 
 /**

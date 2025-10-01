@@ -1,4 +1,4 @@
-package net.smyler.terramap.content;
+package net.smyler.terramap.world;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,46 +48,39 @@ public class PositionMutable extends PositionAbstract {
         return this.pitch;
     }
 
-    @Override
-    public PositionMutable withX(double x) {
+    public PositionMutable setX(double x) {
         this.x = x;
         return this;
     }
 
-    @Override
-    public PositionMutable withY(double y) {
+    public PositionMutable setY(double y) {
         this.y = y;
         return this;
     }
 
-    @Override
-    public PositionMutable withZ(double z) {
+    public PositionMutable setZ(double z) {
         this.z = z;
         return this;
     }
 
-    @Override
-    public PositionMutable withYaw(float yaw) {
+    public PositionMutable setYaw(float yaw) {
         this.yaw = yaw;
         return this;
     }
 
-    @Override
-    public PositionMutable withPitch(float pitch) {
+    public PositionMutable setPitch(float pitch) {
         this.pitch = pitch;
         return this;
     }
 
-    @Override
-    public PositionMutable withXYZ(double x, double y, double z) {
+    public PositionMutable setXYZ(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
         return this;
     }
 
-    @Override
-    public PositionMutable withXZ(double x, double z) {
+    public PositionMutable setXZ(double x, double z) {
         this.x = x;
         this.z = z;
         return this;
@@ -116,9 +109,5 @@ public class PositionMutable extends PositionAbstract {
         return this;
     }
 
-    @Override
-    public PositionImmutable getImmutable() {
-        return new PositionImmutable(this.x(), this.y(), this.z(), this.yaw, this.pitch);
-    }
 
 }

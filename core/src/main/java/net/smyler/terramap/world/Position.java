@@ -1,4 +1,4 @@
-package net.smyler.terramap.content;
+package net.smyler.terramap.world;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
@@ -39,79 +39,6 @@ public interface Position extends Immutable<PositionMutable>, Mutable<PositionIm
      * @return the pitch rotational component of this position
      */
     float pitch();
-
-    /**
-     * Returns a position with its X component set to the given value.
-     * If this position is mutable, it may change its own X component and return itself.
-     *
-     * @param x the new value for X
-     *
-     * @return a {@link Position} with its X component sets to the given value, possibly this
-     */
-    Position withX(double x);
-
-    /**
-     * Returns a position with its Y component set to the given value.
-     * If this position is mutable, it may change its own Y component and return itself.
-     *
-     * @param y the new value for Y
-     *
-     * @return a {@link Position} with its Y component sets to the given value, possibly this
-     */
-    Position withY(double y);
-
-    /**
-     * Returns a position with its Z component set to the given value.
-     * If this position is mutable, it may change its own Z component and return itself.
-     *
-     * @param z the new value for Z
-     *
-     * @return a {@link Position} with its Z component sets to the given value, possibly this
-     */
-    Position withZ(double z);
-
-    /**
-     * Returns a position with its yaw component set to the given value.
-     * If this position is mutable, it may change its own yaw component and return itself.
-     *
-     * @param yaw the new value for yaw
-     *
-     * @return a {@link Position} with its yaw component sets to the given value, possibly this
-     */
-    Position withYaw(float yaw);
-
-    /**
-     * Returns a position with its pitch component set to the given value.
-     * If this position is mutable, it may change its own pitch component and return itself.
-     *
-     * @param pitch the new value for pitch
-     *
-     * @return a {@link Position} with its pitch component sets to the given value, possibly this
-     */
-    Position withPitch(float pitch);
-
-    /**
-     * Returns a position with its X, Y and Z component set to the given values.
-     * If this position is mutable, it may change its own components and return itself.
-     *
-     * @param x the new value for X
-     * @param y the new value for Y
-     * @param z the new value for Z
-     *
-     * @return a {@link Position} with its X, Y and Z component sets to the given value, possibly this
-     */
-    Position withXYZ(double x, double y, double z);
-
-    /**
-     * Returns a position with its X and Z component set to the given value.
-     * If this position is mutable, it may change its own components and return itself.
-     *
-     * @param x the new value for X
-     * @param z the new value for z
-     *
-     * @return a {@link Position} with its X and Z components sets to the given value, possibly this
-     */
-    Position withXZ(double x, double z);
 
     /**
      * Computes the distance between this position and another one.
@@ -226,6 +153,16 @@ public interface Position extends Immutable<PositionMutable>, Mutable<PositionIm
      */
     default long region3dZ() {
         return floorDiv(round(this.z()), 256);
+    }
+
+    @Override
+    default PositionMutable getMutable() {
+        return new PositionMutable(this.x(), this.y(), this.z(), this.yaw(), this.pitch());
+    }
+
+    @Override
+    default PositionImmutable getImmutable() {
+        return new PositionImmutable(this.x(), this.y(), this.z(), this.yaw(), this.pitch());
     }
 
 }

@@ -1,4 +1,4 @@
-package net.smyler.terramap.content;
+package net.smyler.terramap.world;
 
 import net.smyler.terramap.util.geo.GeoProjection;
 

@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.input;
 
-import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.world.PositionMutable;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoProjection;
 import net.smyler.terramap.util.geo.OutOfGeoBoundsException;

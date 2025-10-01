@@ -2,8 +2,8 @@ package net.smyler.terramap.util.geo;
 
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.smyler.terramap.content.Position;
-import net.smyler.terramap.content.PositionMutable;
+import net.smyler.terramap.world.Position;
+import net.smyler.terramap.world.PositionMutable;
 import org.jetbrains.annotations.NotNull;
 
 public class TerraplusplusGeoProjection implements GeoProjection {
@@ -28,7 +28,7 @@ public class TerraplusplusGeoProjection implements GeoProjection {
     public void fromGeo(@NotNull PositionMutable position, @NotNull GeoPoint location) {
         try {
             double[] result = this.wrapped.fromGeo(location.longitude(), location.latitude());
-            position.withXZ(result[0], result[1]);
+            position.setXZ(result[0], result[1]);
         } catch (OutOfProjectionBoundsException e) {
             throw new OutOfGeoBoundsException("Location " + position + " is out of bounds for the current projection", e);
         }
