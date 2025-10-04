@@ -1,5 +1,7 @@
 package net.smyler.terramap.util.geo;
 
+import net.smyler.smylib.math.Math;
+
 import java.util.Locale;
 
 import static java.lang.Math.max;
@@ -275,52 +277,85 @@ public class GeoBounds {
     }
 
     /**
-     * Clamps the latitude and longitude to make sure they are in the given bounds.
-     * Both are clamped independently.
-     * The longitude is clamped to the nearest side of the bounding box,
-     * even though it might be on the other side of the antimeridian.
+     * Clamps a given latitude value so it lies withing these bounds.
      *
-     * @param   point a point to clamp
-     * @return  the result of the clamping operation, applied on the input {@link GeoPoint} using {@link GeoPoint#withLatitude(double)} and {@link GeoPoint#withLongitude(double)}
+     * @param latitude the latitude to clamp
+     * @return the clamped latitude
      */
-    public  GeoPoint clamp(GeoPoint point) {
-
+    public double clampLatitude(double latitude) {
         if (this.isEmpty()) {
             throw new UnsupportedOperationException("Cannot clamp within empty bounds");
         }
+        return Math.clamp(latitude, this.lowerCorner.latitude(), this.upperCorner.latitude());
+    }
 
-        double longitude = point.longitude();
-        double latitude = point.latitude();
-
-        if (latitude < this.lowerCorner.latitude()) {
-            point = point.withLatitude(this.lowerCorner.latitude());
-        } else if (latitude > this.upperCorner.latitude()) {
-            point = point.withLatitude(this.upperCorner.latitude());
+    /**
+     * Clamps a given longitude value so it lies within these bounds.
+     * It is clamped to the nearest side of the bounding box,
+     * even though it might be on the other side of the antimeridian.
+     *
+     * @param longitude the longitude to clamp
+     * @return the clamped longitude
+     */
+    public double clampLongitude(double longitude) {
+        if (this.isEmpty()) {
+            throw new UnsupportedOperationException("Cannot clamp within empty bounds");
         }
-
+        final double up = this.upperCorner.longitude();
+        final double low = this.lowerCorner.longitude();
         if (this.crossesAntimeridian) {
-            if (longitude > this.upperCorner.longitude() && longitude < this.lowerCorner.longitude()) {
-                if (longitude - this.upperCorner.longitude() < this.lowerCorner.longitude() - longitude) {
-                    point = point.withLongitude(this.upperCorner.longitude());
+            if (longitude > up && longitude < low) {
+                if (longitude - up < low - longitude) {
+                    longitude = up;
                 } else {
-                    point = point.withLongitude(this.lowerCorner.longitude());
+                    longitude = low;
                 }
             }
-        } else if (longitude < this.lowerCorner.longitude() ) {
-            if (this.lowerCorner.longitude() - longitude < longitude + 360d - this.upperCorner.longitude()) {
-                point = point.withLongitude(this.lowerCorner.longitude());
+        } else if (longitude < low) {
+            if (low - longitude < longitude + 360d - up) {
+                longitude = low;
             } else {
-                point = point.withLongitude(this.upperCorner.longitude());
+                longitude = up;
             }
-        } else if (longitude > this.upperCorner.longitude()) {
-            if (longitude - this.upperCorner.longitude() < this.lowerCorner.longitude() - longitude + 360d) {
-                point = point.withLongitude(this.upperCorner.longitude());
+        } else if (longitude > up) {
+            if (longitude - up < low - longitude + 360d) {
+                longitude = up;
             } else {
-                point = point.withLongitude(this.lowerCorner.longitude());
+                longitude = low;
             }
         }
+        return longitude;
+    }
 
-        return point;
+    /**
+     * Clamps the latitude and longitude of a given {@link GeoPoint} so they lie withing these bounds.
+     * Returns the result as a {@link GeoPointImmutable} without modifying the original {@link GeoPoint}.
+     *
+     * @param   point a point to clamp
+     * @return  the result of the clamping operation, as a {@link GeoPointImmutable}
+     */
+    public GeoPointImmutable clamp(GeoPoint point) {
+        if (this.isEmpty()) {
+            throw new UnsupportedOperationException("Cannot clamp within empty bounds");
+        }
+        return point.getImmutable()
+                .withLatitude(this.clampLatitude(point.latitude()))
+                .withLongitude(this.clampLongitude(point.longitude()));
+    }
+
+    /**
+     * Clamps the latitude and longitude of a given {@link GeoPointMutable} so they lie withing these bounds.
+     * The {@link GeoPointMutable} is modified in place.
+     *
+     * @param   point a point to clamp
+     */
+    public void clamp(GeoPointMutable point) {
+        if (this.isEmpty()) {
+            throw new UnsupportedOperationException("Cannot clamp within empty bounds");
+        }
+        point
+                .setLatitude(this.clampLatitude(point.latitude()))
+                .setLongitude(this.clampLongitude(point.longitude()));
     }
 
     @Override

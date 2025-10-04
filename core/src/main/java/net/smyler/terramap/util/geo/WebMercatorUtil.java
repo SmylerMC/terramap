@@ -64,8 +64,8 @@ public final class WebMercatorUtil {
      */
     public static GeoPointMutable toGeo(GeoPointMutable destination, Vec2d position, double zoomLevel) {
         return destination
-                .withLongitude(getLongitudeFromX(position.x(), zoomLevel))
-                .withLatitude(getLatitudeFromY(position.y(), zoomLevel));
+                .setLongitude(getLongitudeFromX(position.x(), zoomLevel))
+                .setLatitude(getLatitudeFromY(position.y(), zoomLevel));
     }
 
     /**

@@ -52,22 +52,6 @@ public interface GeoPoint extends Mutable<GeoPointImmutable>, Immutable<GeoPoint
         return new Vec2dImmutable(this.longitude(), this.latitude());
     }
 
-    /**
-     * @param longitude a new longitude, that will be converted to the [-180°, 180°] range id needed
-     * @return a new GeoPoint with the same latitude as this one but a different longitude
-     *
-     * @throws IllegalArgumentException if the longitude is not a finite number
-     */
-    GeoPoint withLongitude(double longitude);
-
-    /**
-     * @param latitude a new latitude
-     * @return a new GeoPoint with the same longitude as this one but a different latitude
-     *
-     * @throws IllegalArgumentException if the latitude is not a finite number in the [-90°, 90°] range
-     */
-    GeoPoint withLatitude(double latitude);
-
     @Override
     default GeoPointMutable getMutable() {
         return new GeoPointMutable(this.longitude(), this.latitude());
