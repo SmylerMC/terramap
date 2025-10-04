@@ -47,13 +47,17 @@ public class GeoPointImmutable extends GeoPointAbstract {
         return this.latitude;
     }
 
-    @Override
     public GeoPointImmutable withLongitude(double longitude) {
+        if (longitude == this.longitude) {
+            return this;
+        }
         return new GeoPointImmutable(longitude, this.latitude);
     }
 
-    @Override
     public GeoPointImmutable withLatitude(double latitude) {
+        if (latitude == this.latitude) {
+            return this;
+        }
         return new GeoPointImmutable(this.longitude, latitude);
     }
 

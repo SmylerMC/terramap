@@ -51,8 +51,7 @@ public class GeoPointMutable extends GeoPointAbstract {
         return this.longitude;
     }
 
-    @Override
-    public GeoPointMutable withLongitude(double longitude) {
+    public GeoPointMutable setLongitude(double longitude) {
         this.longitude = getLongitudeInRange(longitude);
         return this;
     }
@@ -93,8 +92,7 @@ public class GeoPointMutable extends GeoPointAbstract {
         return this.set(location[0], location[1]);
     }
 
-    @Override
-    public GeoPointMutable withLatitude(double latitude) {
+    public GeoPointMutable setLatitude(double latitude) {
         this.latitude = getLatitudeInRange(latitude);
         return this;
     }

@@ -3,8 +3,6 @@ package net.smyler.terramap.util.geo;
 import java.util.Map;
 
 import net.smyler.terramap.util.collections.HashMapBuilder;
-import net.smyler.terramap.util.geo.GeoBounds;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
 import static net.smyler.terramap.util.geo.GeoBounds.*;
@@ -294,7 +292,7 @@ public class GeoBoundsTest {
     }
     
     @Test
-    public void intesectionTest() {
+    public void intersectionTest() {
         GeoPointImmutable rightPosMid = new GeoPointImmutable(35d, 45d);
         GeoPointImmutable rightUp = new GeoPointImmutable(35d, 85d);
         GeoPointImmutable rightNegMid = new GeoPointImmutable(35d, -50d);

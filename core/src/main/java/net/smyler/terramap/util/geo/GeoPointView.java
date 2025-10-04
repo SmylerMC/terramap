@@ -23,14 +23,4 @@ public final class GeoPointView extends GeoPointAbstract {
         return this.delegate.longitude();
     }
 
-    @Override
-    public GeoPointImmutable withLongitude(double longitude) {
-        return new GeoPointImmutable(longitude, this.delegate.latitude());
-    }
-
-    @Override
-    public GeoPointImmutable withLatitude(double latitude) {
-        return new GeoPointImmutable(this.delegate.longitude(), latitude);
-    }
-
 }
