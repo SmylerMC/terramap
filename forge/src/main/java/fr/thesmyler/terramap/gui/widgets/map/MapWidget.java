@@ -33,9 +33,9 @@ import net.smyler.terramap.util.CopyrightHolder;
 import net.minecraft.profiler.Profiler;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.util.geo.GeoPoint;
-import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointView;
+import net.smyler.terramap.geo.GeoPoint;
+import net.smyler.terramap.geo.GeoPointMutable;
+import net.smyler.terramap.geo.GeoPointView;
 
 import static java.util.Comparator.comparingInt;
 import static net.smyler.smylib.SmyLib.getGameClient;

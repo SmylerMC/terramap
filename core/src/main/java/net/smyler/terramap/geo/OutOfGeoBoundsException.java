@@ -1,4 +1,4 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 /**
  * Thrown when attempting an operation that cannot be completed because

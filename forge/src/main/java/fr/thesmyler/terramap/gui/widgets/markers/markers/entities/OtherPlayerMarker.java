@@ -6,9 +6,9 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.geo.GeoPoint;
 import net.minecraft.util.ResourceLocation;
-import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
 
 public class OtherPlayerMarker extends AbstractPlayerMarker {
 

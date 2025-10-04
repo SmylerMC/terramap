@@ -10,13 +10,13 @@ import fr.thesmyler.terramap.maps.SavedMapState;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
+import net.smyler.terramap.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
 import static net.smyler.terramap.Terramap.getTerramap;
-import static net.smyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
+import static net.smyler.terramap.geo.GeoPointImmutable.ORIGIN;
 import static fr.thesmyler.terramap.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.maps;
 
-import net.smyler.terramap.util.geo.GeoPointMutable;
+import net.smyler.terramap.geo.GeoPointMutable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

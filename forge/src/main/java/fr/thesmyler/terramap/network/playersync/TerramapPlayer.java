@@ -3,12 +3,12 @@ package fr.thesmyler.terramap.network.playersync;
 import java.util.UUID;
 
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.geo.GeoPoint;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
 
 public abstract class TerramapPlayer {
 

@@ -7,16 +7,16 @@ import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.util.geo.GeoPoint;
-import net.smyler.terramap.util.geo.GeoPointMutable;
-import net.smyler.terramap.util.geo.GeoPointView;
+import net.smyler.terramap.geo.GeoPoint;
+import net.smyler.terramap.geo.GeoPointMutable;
+import net.smyler.terramap.geo.GeoPointView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.GameType;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
 
 public class TerramapRemotePlayer extends TerramapPlayer {
 

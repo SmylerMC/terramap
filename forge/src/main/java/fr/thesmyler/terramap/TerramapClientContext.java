@@ -41,9 +41,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.util.geo.GeoProjection;
-import net.smyler.terramap.util.geo.OutOfGeoBoundsException;
-import net.smyler.terramap.util.geo.TerraplusplusGeoProjection;
+import net.smyler.terramap.geo.GeoProjection;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.TerraplusplusGeoProjection;
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

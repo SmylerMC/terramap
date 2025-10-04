@@ -1,4 +1,4 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 /**
  * An exception thrown when errors occurs in geographic related operations.

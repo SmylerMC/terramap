@@ -9,8 +9,8 @@ import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.widgets.WarningWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
+import net.smyler.terramap.geo.*;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
-import net.smyler.terramap.util.geo.*;
 import org.jetbrains.annotations.Nullable;
 
 import fr.thesmyler.terramap.gui.widgets.map.*;
@@ -61,7 +61,7 @@ import net.minecraft.util.ITabCompleter;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
 import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.Terramap.getTerramapClient;
-import static net.smyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
+import static net.smyler.terramap.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
 import static net.smyler.smylib.SmyLib.getGameClient;

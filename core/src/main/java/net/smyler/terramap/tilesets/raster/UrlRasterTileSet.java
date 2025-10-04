@@ -14,8 +14,8 @@ import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.util.ImageUtil;
-import net.smyler.terramap.util.geo.TilePosImmutable;
-import net.smyler.terramap.util.geo.WebMercatorBounds;
+import net.smyler.terramap.geo.TilePosImmutable;
+import net.smyler.terramap.geo.WebMercatorBounds;
 
 import javax.imageio.ImageIO;
 

@@ -5,11 +5,11 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapTest;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
+import net.smyler.terramap.geo.GeoPointImmutable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static net.smyler.terramap.util.geo.GeoPointImmutable.ORIGIN;
+import static net.smyler.terramap.geo.GeoPointImmutable.ORIGIN;
 import static fr.thesmyler.terramap.Assertions.assertEquals;
 
 public class MapControllerTest extends TerramapTest {

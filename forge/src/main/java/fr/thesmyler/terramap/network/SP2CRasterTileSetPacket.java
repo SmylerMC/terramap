@@ -11,7 +11,7 @@ import org.apache.logging.log4j.util.Strings;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
-import net.smyler.terramap.util.geo.WebMercatorBounds;
+import net.smyler.terramap.geo.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

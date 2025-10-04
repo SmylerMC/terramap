@@ -1,6 +1,6 @@
 package net.smyler.terramap.world;
 
-import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.geo.GeoProjection;
 
 import java.util.Optional;
 import java.util.UUID;

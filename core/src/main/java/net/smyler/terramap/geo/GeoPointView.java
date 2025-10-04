@@ -1,4 +1,4 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 /**
  * A read-only view on a mutable {@link GeoPoint}.

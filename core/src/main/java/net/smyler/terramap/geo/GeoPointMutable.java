@@ -1,7 +1,7 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
-import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
-import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
+import static net.smyler.terramap.geo.GeoUtil.getLatitudeInRange;
+import static net.smyler.terramap.geo.GeoUtil.getLongitudeInRange;
 
 public class GeoPointMutable extends GeoPointAbstract {
 

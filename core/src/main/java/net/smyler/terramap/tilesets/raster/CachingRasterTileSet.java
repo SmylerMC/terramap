@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import net.smyler.terramap.util.geo.TilePos;
-import net.smyler.terramap.util.geo.TilePosImmutable;
-import net.smyler.terramap.util.geo.WebMercatorBounds;
-import net.smyler.terramap.util.geo.WebMercatorUtil;
-import net.smyler.terramap.util.geo.TilePos.InvalidTilePositionException;
+import net.smyler.terramap.geo.TilePos;
+import net.smyler.terramap.geo.TilePosImmutable;
+import net.smyler.terramap.geo.WebMercatorBounds;
+import net.smyler.terramap.geo.WebMercatorUtil;
+import net.smyler.terramap.geo.TilePos.InvalidTilePositionException;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

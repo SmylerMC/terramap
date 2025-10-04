@@ -14,7 +14,7 @@ import javax.naming.directory.InitialDirContext;
 
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.util.geo.WebMercatorBounds;
+import net.smyler.terramap.geo.WebMercatorBounds;
 
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.unmodifiableMap;

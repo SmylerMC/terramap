@@ -1,7 +1,7 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 import net.smyler.smylib.math.Vec2dImmutable;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
+import net.smyler.terramap.geo.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

@@ -1,7 +1,8 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
+import net.smyler.terramap.geo.*;
 import net.smyler.terramap.world.Position;
 import net.smyler.terramap.world.PositionMutable;
 import org.jetbrains.annotations.NotNull;

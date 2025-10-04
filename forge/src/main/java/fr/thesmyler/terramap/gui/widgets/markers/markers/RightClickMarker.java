@@ -8,7 +8,7 @@ import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.TerramapResources;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
+import net.smyler.terramap.geo.GeoPointImmutable;
 
 public class RightClickMarker extends AbstractFixedMarker {
 

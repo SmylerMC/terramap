@@ -5,8 +5,8 @@ import net.smyler.smylib.gui.widgets.Widget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.util.geo.GeoPoint;
-import net.smyler.terramap.util.geo.WebMercatorUtil;
+import net.smyler.terramap.geo.GeoPoint;
+import net.smyler.terramap.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2dMutable;
 
 public abstract class Marker implements Widget {
