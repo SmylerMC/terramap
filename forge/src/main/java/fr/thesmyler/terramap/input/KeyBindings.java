@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap.input;
 
-import net.smyler.terramap.world.PositionMutable;
+import net.smyler.terramap.minecraft.world.PositionMutable;
 import net.smyler.terramap.geo.GeoPointMutable;
 import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;

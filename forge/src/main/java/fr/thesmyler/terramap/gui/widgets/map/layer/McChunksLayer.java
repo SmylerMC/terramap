@@ -16,7 +16,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.geo.*;
-import net.smyler.terramap.world.PositionMutable;
+import net.smyler.terramap.minecraft.world.PositionMutable;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dView;

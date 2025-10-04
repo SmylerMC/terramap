@@ -1,4 +1,4 @@
-package net.smyler.terramap.world;
+package net.smyler.terramap.minecraft.world;
 
 public class PositionImmutable extends PositionAbstract {
 

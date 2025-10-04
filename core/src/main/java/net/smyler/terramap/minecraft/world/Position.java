@@ -1,4 +1,4 @@
-package net.smyler.terramap.world;
+package net.smyler.terramap.minecraft.world;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;

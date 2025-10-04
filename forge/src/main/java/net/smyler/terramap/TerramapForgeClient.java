@@ -1,7 +1,7 @@
 package net.smyler.terramap;
 
-import net.smyler.terramap.world.ForgeWorldClient;
-import net.smyler.terramap.world.WorldClient;
+import net.smyler.terramap.minecraft.world.ForgeWorldClient;
+import net.smyler.terramap.minecraft.world.WorldClient;
 
 import java.util.Optional;
 

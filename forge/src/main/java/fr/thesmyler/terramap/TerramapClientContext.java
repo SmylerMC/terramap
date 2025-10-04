@@ -20,7 +20,7 @@ import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.terramap.TerramapClient;
-import net.smyler.terramap.world.World;
+import net.smyler.terramap.minecraft.world.World;
 import net.smyler.terramap.tilesets.raster.*;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
 import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
