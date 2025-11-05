@@ -5,7 +5,7 @@ import net.smyler.terramap.geo.GeoProjection;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class WorldClient implements World {
+public abstract class WorldClientside implements World {
 
     private UUID uuid;
     private GeoProjection projection;

@@ -1,20 +1,20 @@
 package net.smyler.terramap;
 
-import net.smyler.terramap.world.ForgeWorldClient;
-import net.smyler.terramap.world.WorldClient;
+import net.smyler.terramap.world.ForgeWorldClientside;
+import net.smyler.terramap.world.WorldClientside;
 
 import java.util.Optional;
 
 public class TerramapForgeClient implements TerramapClient {
 
-    private ForgeWorldClient world;
+    private ForgeWorldClientside world;
 
     @Override
-    public Optional<WorldClient> world() {
+    public Optional<WorldClientside> world() {
         return Optional.ofNullable(this.world);
     }
 
-    public void setWorld(ForgeWorldClient world) {
+    public void setWorld(ForgeWorldClientside world) {
         this.world = world;
     }
 

@@ -9,8 +9,8 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.terramap.world.PositionMutable;
-import net.smyler.terramap.world.ForgeWorldClient;
-import net.smyler.terramap.world.WorldClient;
+import net.smyler.terramap.world.ForgeWorldClientside;
+import net.smyler.terramap.world.WorldClientside;
 import net.smyler.terramap.geo.GeoPointMutable;
 import net.smyler.terramap.geo.GeoServices;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;
@@ -65,7 +65,7 @@ public class ClientTerramapEventHandler {
                     event.getLeft().add("Out of projection bounds");
                 }
             });
-            event.getLeft().add("Terramap world UUID: " + getTerramapClient().world().flatMap(WorldClient::uuid).map(UUID::toString).orElse("missing"));
+            event.getLeft().add("Terramap world UUID: " + getTerramapClient().world().flatMap(WorldClientside::uuid).map(UUID::toString).orElse("missing"));
             event.getLeft().add("Terramap proxy UUID: " + TerramapClientContext.getContext().getProxyUUID());
         }
     }
@@ -111,7 +111,7 @@ public class ClientTerramapEventHandler {
     @SubscribeEvent
     public void onGuiScreenInit(InitGuiEvent event) {
         if(event.getGui() instanceof GuiDownloadTerrain) {
-            TerramapMod.proxy.getClient().setWorld(new ForgeWorldClient());
+            TerramapMod.proxy.getClient().setWorld(new ForgeWorldClientside());
             TerramapClientContext.getContext().resetWorld();
         }
     }
