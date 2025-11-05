@@ -2,8 +2,8 @@ package net.smyler.terramap.geo;
 
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
-import net.smyler.terramap.minecraft.world.Position;
-import net.smyler.terramap.minecraft.world.PositionMutable;
+import net.smyler.terramap.world.Position;
+import net.smyler.terramap.world.PositionMutable;
 import org.jetbrains.annotations.NotNull;
 
 public class TerraplusplusGeoProjection implements GeoProjection {

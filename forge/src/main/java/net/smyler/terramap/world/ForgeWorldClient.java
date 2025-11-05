@@ -1,6 +1,4 @@
-package net.smyler.terramap.minecraft.world;
-
-import net.smyler.terramap.minecraft.world.WorldClient;
+package net.smyler.terramap.world;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

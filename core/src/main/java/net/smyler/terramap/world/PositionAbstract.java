@@ -1,4 +1,4 @@
-package net.smyler.terramap.minecraft.world;
+package net.smyler.terramap.world;
 
 import java.util.Objects;
 

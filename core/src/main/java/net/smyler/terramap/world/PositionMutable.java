@@ -1,4 +1,4 @@
-package net.smyler.terramap.minecraft.world;
+package net.smyler.terramap.world;
 
 import org.jetbrains.annotations.NotNull;
 
