@@ -30,10 +30,6 @@ public final class TerramapUtil {
         return ((CubeProviderServer) provider).getCubeGenerator() instanceof EarthGenerator; // Is it the overworld ?
     }
 
-    public static boolean isOnEarthWorld(EntityPlayer player) {
-        return player.getEntityWorld().getWorldType() instanceof EarthWorldType && player.dimension == 0;
-    }
-
     public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
         if(TerramapUtil.isServerEarthWorld(world)) {
             ICubeProvider provider = (ICubeProvider) world.getChunkProvider();

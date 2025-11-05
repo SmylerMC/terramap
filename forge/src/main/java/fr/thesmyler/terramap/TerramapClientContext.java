@@ -19,7 +19,6 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
-import net.smyler.terramap.TerramapClient;
 import net.smyler.terramap.minecraft.world.World;
 import net.smyler.terramap.tilesets.raster.*;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
@@ -41,9 +40,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import net.smyler.terramap.geo.TerraplusplusGeoProjection;
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -64,23 +61,17 @@ public class TerramapClientContext {
 
     private final Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<>();
     private PlayerSyncStatus serverSyncPlayers = PlayerSyncStatus.DISABLED;
-    private PlayerSyncStatus serverSyncSpectators = PlayerSyncStatus.DISABLED;
     private PlayerSyncStatus proxySyncPlayers = PlayerSyncStatus.DISABLED;
-    private final PlayerSyncStatus proxySyncSpectators = PlayerSyncStatus.DISABLED;
     private TerramapVersion serverVersion = null;
     private String sledgehammerVersion = null;
-    private GeoProjection projection = null;
     private TerrainPreview terrainPreview = null;
     private boolean isRegisteredForUpdates = false;
     private String tpCommand = null;
     private final Map<String, RasterTileSet> serverMaps = new HashMap<>();
     private final Map<String, RasterTileSet> proxyMaps = new HashMap<>();
-    private boolean proxyHasWarpSupport = false;
-    private boolean serverHasWarpSupport = false;
     private boolean allowPlayerRadar = true;
     private boolean allowAnimalRadar = true;
     private boolean allowMobRadar = true;
-    private boolean allowDecoRadar = true;
     private boolean proxyForcesGlobalMap = false;
     private boolean proxyForceGlobalSettings = false;
     private UUID proxyUUID = null;
@@ -142,18 +133,6 @@ public class TerramapClientContext {
         return savedClientState.generatorSettings;
     }
 
-    /**
-     * @deprecated use {@link Terramap#getTerramapClient()}, {@link TerramapClient#world()} and {@link World#projection()}
-     */
-    @Deprecated
-    public GeoProjection getProjection() {
-        EarthGeneratorSettings gen = this.getGeneratorSettings();
-        if(this.projection == null && gen != null) {
-            this.projection = new TerraplusplusGeoProjection(gen.projection());
-        }
-        return this.projection;
-    }
-
     public TerrainPreview getTerrainPreview() {
         EarthGeneratorSettings gen = this.getGeneratorSettings();
         if(this.terrainPreview == null && gen != null) {
@@ -169,7 +148,6 @@ public class TerramapClientContext {
             //TODO Warning on the GUI
         }
         this.getSavedState().generatorSettings = genSettings;
-        this.projection = null;
         this.terrainPreview = null;
         this.saveState();
     }
@@ -300,32 +278,8 @@ public class TerramapClientContext {
         return this.proxySyncPlayers.equals(PlayerSyncStatus.ENABLED) || this.serverSyncPlayers.equals(PlayerSyncStatus.ENABLED);
     }
 
-    public boolean areSpectatorsSynchronized() {
-        return this.proxySyncSpectators.equals(PlayerSyncStatus.ENABLED) || this.proxySyncPlayers.equals(PlayerSyncStatus.ENABLED);
-    }
-
-    public PlayerSyncStatus doesServerSyncPlayers() {
-        return this.serverSyncPlayers;
-    }
-
-    public PlayerSyncStatus doesServerSyncSpectators() {
-        return this.serverSyncSpectators;
-    }
-
-    public PlayerSyncStatus doesProxySyncPlayers() {
-        return this.proxySyncPlayers;
-    }
-
-    public PlayerSyncStatus doesProxySyncSpectators() {
-        return this.proxySyncSpectators;
-    }
-
     public void setPlayersSynchronizedByServer(PlayerSyncStatus status) {
         this.serverSyncPlayers = status;
-    }
-
-    public void setSpectatorsSynchronizedByServer(PlayerSyncStatus status) {
-        this.serverSyncSpectators = status;
     }
 
     public void setPlayersSynchronizedByProxy(PlayerSyncStatus status) {
@@ -356,22 +310,6 @@ public class TerramapClientContext {
         return this.sledgehammerVersion;
     }
 
-    public boolean doesProxyHaveWarpSupport() {
-        return proxyHasWarpSupport;
-    }
-
-    public void setProxyWarpSupport(boolean proxyHasWarpSupport) {
-        this.proxyHasWarpSupport = proxyHasWarpSupport;
-    }
-
-    public boolean doesServerHaveWarpSupport() {
-        return serverHasWarpSupport;
-    }
-
-    public void setServerWarpSupport(boolean serverHasWarpSupport) {
-        this.serverHasWarpSupport = serverHasWarpSupport;
-    }
-
     public boolean allowsPlayerRadar() {
         return allowPlayerRadar;
     }
@@ -394,18 +332,6 @@ public class TerramapClientContext {
 
     public void setAllowsMobRadar(boolean allowMobRadar) {
         this.allowMobRadar = allowMobRadar;
-    }
-
-    public boolean allowsDecoRadar() {
-        return allowDecoRadar;
-    }
-
-    public void setAllowsDecoRadar(boolean allowDecoRadar) {
-        this.allowDecoRadar = allowDecoRadar;
-    }
-
-    public boolean doesProxyForceMinimap() {
-        return this.proxyForcesGlobalMap;
     }
 
     public void setProxyForceMinimap(boolean yesNo) {

@@ -158,12 +158,9 @@ public abstract class RemoteSynchronizer {
             }
             ctx.setGeneratorSettings(pkt.worldSettings);
             ctx.setPlayersSynchronizedByServer(pkt.syncPlayers);
-            ctx.setSpectatorsSynchronizedByServer(pkt.syncSpectators);
             ctx.setAllowsPlayerRadar(pkt.enablePlayerRadar);
             ctx.setAllowsAnimalRadar(pkt.enableAnimalRadar);
             ctx.setAllowsMobRadar(pkt.enableMobRadar);
-            ctx.setAllowsDecoRadar(pkt.enableDecoRadar);
-            ctx.setServerWarpSupport(pkt.hasWarpSupport);
         } catch (InvalidVersionString e) {
             getTerramap().logger().warn("Failed to parse server version! will act as if the server did not have Terramap installed");
         }

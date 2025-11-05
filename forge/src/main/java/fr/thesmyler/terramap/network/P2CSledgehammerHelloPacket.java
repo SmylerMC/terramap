@@ -62,7 +62,6 @@ public class P2CSledgehammerHelloPacket implements IMessage {
                 TerramapClientContext.getContext().setSpectatorsSynchronizedByProxy(pkt.syncSpectators);
                 TerramapClientContext.getContext().setProxyForceMinimap(pkt.globalMap);
                 TerramapClientContext.getContext().setProxyForceGlobalSettings(pkt.globalSettings);
-                TerramapClientContext.getContext().setProxyWarpSupport(pkt.hasWarpSupport);
                 TerramapClientContext.getContext().setProxyUUID(pkt.proxyUUID);
             });
             return null;
