@@ -10,7 +10,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import fr.thesmyler.smylibgui.toast.TextureToast;
+import fr.thesmyler.terramap.network.playersync.*;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.MinecraftServerInfo;
 import fr.thesmyler.terramap.saving.client.ClientSaveManager;
@@ -19,14 +21,13 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
+import net.smyler.terramap.entity.player.ForgePlayerClientsideSynchronized;
+import net.smyler.terramap.entity.player.PlayerClientside;
+import net.smyler.terramap.entity.player.ForgePlayerClientside;
+import net.smyler.terramap.entity.player.PlayerSynchronized;
 import net.smyler.terramap.world.World;
 import net.smyler.terramap.tilesets.raster.*;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
-import fr.thesmyler.terramap.network.playersync.C2SPRegisterForUpdatesPacket;
-import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
-import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
-import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
-import fr.thesmyler.terramap.network.playersync.TerramapRemotePlayer;
 import fr.thesmyler.terramap.util.TerramapUtil;
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
@@ -40,7 +41,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -59,7 +59,7 @@ public class TerramapClientContext {
 
     private static final GeographicProjection TERRAIN_PREVIEW_PROJECTION = new WebMercatorProjection(TerrainPreviewTileSet.BASE_ZOOM_LEVEL);
 
-    private final Map<UUID, TerramapRemotePlayer> remotePlayers = new HashMap<>();
+    private final Map<UUID, ForgePlayerClientsideSynchronized> remotePlayers = new HashMap<>();
     private PlayerSyncStatus serverSyncPlayers = PlayerSyncStatus.DISABLED;
     private PlayerSyncStatus proxySyncPlayers = PlayerSyncStatus.DISABLED;
     private TerramapVersion serverVersion = null;
@@ -98,8 +98,8 @@ public class TerramapClientContext {
         return this.serverVersion != null; 
     }
 
-    public Map<UUID, TerramapPlayer> getPlayerMap() {
-        Map<UUID, TerramapPlayer> players = new HashMap<>();
+    public Map<UUID, PlayerClientside> getPlayerMap() {
+        Map<UUID, PlayerClientside> players = new HashMap<>();
         if(this.arePlayersSynchronized()) {
             players.putAll(this.remotePlayers);
         }
@@ -109,7 +109,7 @@ public class TerramapClientContext {
         return players;
     }
 
-    public Collection<TerramapPlayer> getPlayers() {
+    public Collection<PlayerClientside> getPlayers() {
         return this.getPlayerMap().values();
     }
 
@@ -117,10 +117,14 @@ public class TerramapClientContext {
         return this.remotePlayers.containsKey(uuid) || this.getLocalPlayersMap().containsKey(uuid);
     }
 
-    public Map<UUID, TerramapPlayer> getLocalPlayersMap() {
-        Map<UUID, TerramapPlayer> players = new HashMap<>();
-        for(EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) {
-            players.put(player.getPersistentID(), new TerramapLocalPlayer(player));
+    public Map<UUID, PlayerClientside> getLocalPlayersMap() {
+        Map<UUID, PlayerClientside> players = new HashMap<>();
+        for (EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) {
+            if (!(player instanceof AbstractClientPlayer)) {
+                getTerramap().logger().warn("Client-side player is not an instance of AbstractClientPlayer");
+                continue;
+            }
+            players.put(player.getPersistentID(), new ForgePlayerClientside((AbstractClientPlayer) player));
         }
         return players;
     }
@@ -152,23 +156,22 @@ public class TerramapClientContext {
         this.saveState();
     }
 
-    public void syncPlayers(TerramapRemotePlayer[] players) {
-        Set<TerramapRemotePlayer> toAdd = new HashSet<>();
+    public void syncPlayers(PlayerSynchronized[] players) {
+        HashMap<UUID, ForgePlayerClientsideSynchronized> toAdd = new HashMap<>();
         Set<UUID> toRemove = new HashSet<>(this.remotePlayers.keySet());
-        for(TerramapRemotePlayer player: players) {
-            if(toRemove.remove(player.getUUID())) {
-                TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
-                savedPlayer.setDisplayName(player.getDisplayName());
-                try {
-                    savedPlayer.setLocationAndAzimuth(player.getLocation(), player.getAzimuth());
-                } catch (OutOfGeoBoundsException e) {
-                    savedPlayer.setOutOfProjection();
-                }
-                savedPlayer.setGamemode(player.getGamemode());
-            } else toAdd.add(player);
+        for (PlayerSynchronized player: players) {
+            UUID uuid = player.uuid();
+            ForgePlayerClientsideSynchronized savedPlayer;
+            if (toRemove.remove(uuid)) {
+                savedPlayer = this.remotePlayers.get(uuid);
+            } else {
+                savedPlayer = new ForgePlayerClientsideSynchronized(uuid, player.displayName());
+                toAdd.put(uuid, savedPlayer);
+            }
+            savedPlayer.syncWith(player);
         }
-        for(UUID uid: toRemove) this.remotePlayers.remove(uid);
-        for(TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
+        this.remotePlayers.keySet().removeAll(toRemove);
+        this.remotePlayers.putAll(toAdd);
     }
 
 

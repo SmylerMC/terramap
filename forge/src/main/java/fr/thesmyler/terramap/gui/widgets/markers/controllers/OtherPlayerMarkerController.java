@@ -3,13 +3,14 @@ package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 import java.util.Map;
 import java.util.UUID;
 
+import net.smyler.terramap.entity.player.PlayerClientside;
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.OtherPlayerMarker;
-import fr.thesmyler.terramap.network.playersync.TerramapPlayer;
+import net.smyler.terramap.entity.player.Player;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 
@@ -37,10 +38,10 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
         int factor = minimap? 2: 1;
 
-        Map<UUID, TerramapPlayer> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap(): TerramapClientContext.getContext().getPlayerMap();
+        Map<UUID, PlayerClientside> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap(): TerramapClientContext.getContext().getPlayerMap();
         for(Marker marker: existingMarkers) {
-            TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
-            players.remove(player.getUUID());
+            Player player = ((OtherPlayerMarker) marker).getPlayer();
+            players.remove(player.uuid());
         }
 
         // The main player has its own controller
@@ -49,7 +50,7 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
         OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
         int i = 0;
-        for(TerramapPlayer player: players.values()) {
+        for(PlayerClientside player: players.values()) {
             newMarkers[i++] = new OtherPlayerMarker(this, player, factor);
         }
 

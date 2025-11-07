@@ -1,10 +1,11 @@
-package fr.thesmyler.terramap.network.playersync;
+package net.smyler.terramap.entity.player;
 
 import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.GameType;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.geo.GeoPointMutable;
 import net.smyler.terramap.geo.GeoPointView;
@@ -12,40 +13,36 @@ import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.world.Position;
 import net.smyler.terramap.world.PositionImmutable;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.GameType;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
 
 import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
 import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.Terramap.getTerramapClient;
 
-public class TerramapLocalPlayer extends TerramapPlayer {
+public class PlayerServersideForge implements Player {
 
-    protected final EntityPlayer player;
+    private final EntityPlayer player;
     private final GeoPointMutable location = new GeoPointMutable();
 
-    public TerramapLocalPlayer(EntityPlayer player) {
+    public PlayerServersideForge(EntityPlayer player) {
         this.player = player;
     }
 
     @Override
-    public UUID getUUID() {
+    public @NotNull UUID uuid() {
         return this.player.getPersistentID();
     }
 
     @Override
-    public Text getDisplayName() {
+    public @NotNull Text displayName() {
         ITextComponent mcName = this.player == null ? new TextComponentString("Missing main player"): player.getDisplayName();
         String nameJson = ITextComponent.Serializer.componentToJson(mcName);
         return getTerramap().gson().fromJson(nameJson, Text.class);
     }
 
     @Override
-    public GeoPointView getLocation() throws OutOfGeoBoundsException {
+    public @NotNull GeoPointView location() throws OutOfGeoBoundsException {
         GeoProjection projection;
         if (this.player.world.isRemote) {
             projection = getTerramapClient().projection().orElse(null);
@@ -60,23 +57,17 @@ public class TerramapLocalPlayer extends TerramapPlayer {
         return this.location.getReadOnlyView();
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public ResourceLocation getSkin() {
-        return ((AbstractClientPlayer)this.player).getLocationSkin();
-    }
-
     public EntityPlayer getPlayer() {
         return this.player;
     }
 
     @Override
-    public GameType getGamemode() {
-        return TerramapMod.proxy.getGameMode(this.player);
+    public @NotNull GameMode gameMode() {
+        return fromForgeGameType(TerramapMod.proxy.getGameMode(this.player));
     }
 
     @Override
-    public float getAzimuth() {
+    public float azimuth() {
         GeoProjection projection;
         if (this.player.world.isRemote) {
             projection = getTerramapClient().projection().orElse(null);
@@ -92,6 +83,21 @@ public class TerramapLocalPlayer extends TerramapPlayer {
             return projection.azimuth(position);
         } catch(OutOfGeoBoundsException e) {
             return 0f;
+        }
+    }
+
+    public static GameMode fromForgeGameType(GameType gameType) {
+        switch (gameType) {
+            case SURVIVAL:
+                return GameMode.SURVIVAL;
+            case CREATIVE:
+                return GameMode.CREATIVE;
+            case ADVENTURE:
+                return GameMode.ADVENTURE;
+            case SPECTATOR:
+                return GameMode.SPECTATOR;
+            default:
+                return GameMode.UNSUPPORTED;
         }
     }
 
