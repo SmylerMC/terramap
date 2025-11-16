@@ -5,8 +5,6 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
@@ -28,9 +26,9 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
     @Override
     public MainPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
         int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
-        EntityPlayerSP self = Minecraft.getMinecraft().player;
+        boolean hasPlayer = getTerramapClient().mainPlayer().isPresent();
         boolean hasProjection = getTerramapClient().projection().isPresent();
-        if(existingMarkers.length < 1 && self != null && hasProjection) {
+        if(existingMarkers.length < 1 && hasPlayer && hasProjection) {
             return new MainPlayerMarker[] { new MainPlayerMarker(this, factor) };
         }
         return new MainPlayerMarker[0];

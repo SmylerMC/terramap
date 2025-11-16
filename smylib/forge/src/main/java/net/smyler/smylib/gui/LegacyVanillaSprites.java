@@ -20,6 +20,7 @@ public class LegacyVanillaSprites extends SpriteLibrary {
         this.registerSprite("minecraft:unlocked_button_highlighted", button().xLeft(20d).yTop(166d).width(20d).height(20d).build());
         this.registerSprite("minecraft:slider", button().xLeft(0d).yTop(46d).width(200d).height(20d).build());
         this.registerSprite("minecraft:slider_handle", button().xLeft(0d).yTop(66d).width(200d).height(20d).build());
+        this.registerSprite("minecraft:player_skin_wide_steve", Sprite.builder().texture(new Identifier("minecraft", "textures/entity/steve.png")).fullTexture().build());
     }
 
     private Sprite.Builder button() {

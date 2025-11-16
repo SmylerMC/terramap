@@ -1,6 +1,5 @@
 package fr.thesmyler.terramap.gui;
 
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import net.smyler.smylib.gui.widgets.WarningWidget;
@@ -10,13 +9,11 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
-import net.smyler.terramap.world.PositionMutable;
 import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MinimapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 
-import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.terramap.Terramap.getTerramapClient;
 
@@ -25,8 +22,6 @@ public abstract class HudScreenHandler {
     private static MinimapWidget map;
     private static RibbonCompassWidget compass;
     private final static SpriteWidget offsetWarning = new WarningWidget(0, 0, 50);
-
-    private static final PositionMutable playerPosition = new PositionMutable();
 
     public static void init(WidgetContainer screen) {
 
@@ -55,11 +50,11 @@ public abstract class HudScreenHandler {
     }
 
     private static void tickCompass() {
-        getTerramapClient().projection().ifPresent(projection -> {
-            EntityPlayerSP player = getMinecraft().player;
-            playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+        getTerramapClient().mainPlayer().ifPresent(player -> {
             try {
-                projection.azimuth(playerPosition);
+                player.location();
+                float azimuth = player.azimuth();
+                compass.setAzimuth(azimuth);
                 compass.setVisibility(TerramapConfig.CLIENT.compass.enable);
             } catch (OutOfGeoBoundsException ignored) {
                 compass.setVisibility(false);

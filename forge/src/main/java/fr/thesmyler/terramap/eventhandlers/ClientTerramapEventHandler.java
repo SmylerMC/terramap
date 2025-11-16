@@ -7,11 +7,9 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.smyler.terramap.world.PositionMutable;
+import net.smyler.terramap.geo.GeoPoint;
 import net.smyler.terramap.world.ForgeWorldClientside;
 import net.smyler.terramap.world.WorldClientside;
-import net.smyler.terramap.geo.GeoPointMutable;
 import net.smyler.terramap.geo.GeoServices;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;
 import net.minecraft.client.gui.GuiChat;
@@ -45,22 +43,17 @@ import static net.smyler.terramap.geo.GeoServices.formatGeoPointForDisplay;
 @SideOnly(Side.CLIENT)
 public class ClientTerramapEventHandler {
 
-    private final GeoPointMutable playerLocation = new GeoPointMutable();
-    private final PositionMutable playerPosition = new PositionMutable();
-
     @SubscribeEvent
     public void onRenderHUD(final RenderGameOverlayEvent.Text event) {
         if (getMinecraft().gameSettings.showDebugInfo) {
-            getTerramapClient().projection().ifPresent(projection -> {
+            getTerramapClient().mainPlayer().ifPresent(player -> {
                 event.getLeft().add("");
-                EntityPlayerSP player = getMinecraft().player;
-                this.playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationYaw);
                 try {
-                    projection.toGeo(this.playerLocation, this.playerPosition);
-                    float azimuth = projection.azimuth(this.playerPosition);
-                    String azimuthStr = GeoServices.formatAzimuthForDisplay(azimuth);
+                    GeoPoint location = player.location();
+                    float azimuth = player.azimuth();
+                    String azimuthStr = GeoServices.formatAzimuthForDisplay(player.azimuth());
                     String cardinal = CardinalDirection.azimuthToFacing(azimuth).realName();
-                    event.getLeft().add("Position: " + formatGeoPointForDisplay(this.playerLocation) + " Looking at: " + azimuthStr + "° (" + cardinal + ")");
+                    event.getLeft().add("Position: " + formatGeoPointForDisplay(location) + " Looking at: " + azimuthStr + "° (" + cardinal + ")");
                 } catch(OutOfGeoBoundsException ignored) {
                     event.getLeft().add("Out of projection bounds");
                 }

@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.screens.config;
 
 import java.util.*;
 
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.SlidingPanelWidget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -362,11 +361,10 @@ public class HudConfigScreen extends Screen {
             super(0, 0, 0, 30, 30);
             this.addWidget(this.compass);
             this.setSize(this.compass.getWidth(), this.compass.getHeight());
-            this.scheduleBeforeEachUpdate(() -> getTerramapClient().projection().ifPresent(projection -> {
-                EntityPlayerSP player = getMinecraft().player;
-                this.playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+            this.scheduleBeforeEachUpdate(() -> getTerramapClient().mainPlayer().ifPresent(player -> {
                 try {
-                    this.compass.setAzimuth(projection.azimuth(this.playerPosition));
+                    player.location();
+                    this.compass.setAzimuth(player.azimuth());
                 } catch (OutOfGeoBoundsException ignored) {}
             }));
         }
@@ -376,7 +374,6 @@ public class HudConfigScreen extends Screen {
             this.compass.setWidth(this.getWidth());
             super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
         }
-
 
     }
 

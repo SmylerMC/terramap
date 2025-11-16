@@ -11,12 +11,11 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.OtherPlayerMarker;
 import net.smyler.terramap.entity.player.Player;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
+import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<OtherPlayerMarker> {
 
@@ -45,8 +44,9 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
         }
 
         // The main player has its own controller
-        EntityPlayerSP self = Minecraft.getMinecraft().player;
-        if(self != null) players.remove(self.getUniqueID());
+        getTerramapClient().mainPlayer()
+                .map(PlayerClientside::uuid)
+                .ifPresent(players::remove);
 
         OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
         int i = 0;

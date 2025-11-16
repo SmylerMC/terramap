@@ -1,33 +1,32 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
+import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.TerramapClient;
+import net.smyler.terramap.entity.player.Player;
+import net.smyler.terramap.entity.player.PlayerClientside;
 import net.smyler.terramap.geo.GeoPoint;
-import net.smyler.terramap.geo.GeoPointMutable;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import net.smyler.terramap.world.PositionMutable;
-import net.smyler.terramap.world.Position;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
-import static net.smyler.terramap.Terramap.getTerramap;
+import java.util.Optional;
+
+import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.terramap.Terramap.getTerramapClient;
 
 /**
- * This class represents a marker for the actual player corresponding to this client
+ * A marker for the "main" player of this game client
+ * (i.e. the player currently playing the game on this client).
+ * <br>
+ * Does not hold any internal state and uses {@link TerramapClient#mainPlayer()},
+ * so what gets displayed is always accurate.
  * 
- * @author SmylerMC
- *
+ * @author Smyler
  */
 public class MainPlayerMarker extends AbstractPlayerMarker {
-
-    private final GeoPointMutable playerLocation = new GeoPointMutable();
-    private float playerAzimuth;
-    private boolean isOutOfBounds = false;
 
     public MainPlayerMarker(MarkerController<?> controller, int downscaleFactor) {
         super(controller, downscaleFactor);
@@ -35,35 +34,25 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-        if(Minecraft.getMinecraft().player == null) {
+        Optional<PlayerClientside> playerOptional = getTerramapClient().mainPlayer();
+        if (!playerOptional.isPresent()) {
             parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
             return;
         }
-        getTerramapClient().projection().ifPresent(projection -> {
-            EntityPlayerSP player = Minecraft.getMinecraft().player;
-            Position position = new PositionMutable(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);
-            try {
-                projection.toGeo(this.playerLocation, position);
-                this.playerAzimuth = projection.azimuth(position);
-                this.isOutOfBounds = false;
-            } catch(OutOfGeoBoundsException e) {
-                this.isOutOfBounds = true;
-            }
-        });
         super.onUpdate(mouseX, mouseY, parent);
     }
 
     @Override
     protected ResourceLocation getSkin() {
-        return Minecraft.getMinecraft().player.getLocationSkin();
+        Identifier id = getTerramapClient().mainPlayer()
+                .map(PlayerClientside::skin)
+                .orElse(getGameClient().sprites().getSprite("minecraft:player_skin_wide_steve").texture);
+        return new ResourceLocation(id.namespace, id.path);
     }
 
     @Override
     protected GeoPoint getActualLocation() throws OutOfGeoBoundsException {
-        if (this.isOutOfBounds) {
-            throw new OutOfGeoBoundsException("Player is currently out of the projected area");
-        }
-        return this.playerLocation.getReadOnlyView();
+        return getTerramapClient().mainPlayer().map(Player::location).orElseThrow(OutOfGeoBoundsException::new);
     }
 
     @Override
@@ -73,27 +62,22 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 
     @Override
     public Text getDisplayName() {
-        EntityPlayerSP player = Minecraft.getMinecraft().player;
-        ITextComponent mcName = player == null ? new TextComponentString("Missing main player"): player.getDisplayName();
-        String nameJson = ITextComponent.Serializer.componentToJson(mcName);
-        return getTerramap().gson().fromJson(nameJson, Text.class);
+        return getTerramapClient().mainPlayer()
+                .map(Player::displayName)
+                .orElseGet(() -> ImmutableText.ofPlainText("Missing main player"));
     }
 
     @Override
     public String getIdentifier() {
-        String uuid = null;
-        if(Minecraft.getMinecraft().player != null) {
-            uuid = Minecraft.getMinecraft().player.getUniqueID().toString();
-        }
-        return this.getControllerId() + ":" + uuid;
+        return this.getControllerId() + ":" + getTerramapClient().mainPlayer()
+                .map(Player::uuid)
+                .map(Object::toString)
+                .orElse("mainPlayer");
     }
 
     @Override
     protected float getActualAzimuth() throws OutOfGeoBoundsException {
-        if (this.isOutOfBounds) {
-            throw new OutOfGeoBoundsException("Player is currently out of the projected area");
-        }
-        return this.playerAzimuth;
+        return getTerramapClient().mainPlayer().map(Player::azimuth).orElseThrow(OutOfGeoBoundsException::new);
     }
 
 }
