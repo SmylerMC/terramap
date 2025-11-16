@@ -13,7 +13,7 @@ import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
-import net.smyler.terramap.entity.player.PlayerLocalForge;
+import net.smyler.terramap.entity.player.ForgePlayerLocal;
 import fr.thesmyler.terramap.permissions.Permission;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import fr.thesmyler.terramap.util.TerramapUtil;
@@ -36,14 +36,14 @@ public abstract class RemoteSynchronizer {
     public static void syncPlayers(WorldServer world) {
         if(playersToUpdate.isEmpty()) return;
         long ctime = System.currentTimeMillis();
-        List<PlayerLocalForge> players = new ArrayList<>();
+        List<ForgePlayerLocal> players = new ArrayList<>();
         for(EntityPlayer player: world.playerEntities) {
             if(!TerramapServerPreferences.shouldDisplayPlayer(world, player.getPersistentID())) continue;
-            PlayerLocalForge terraPlayer = new PlayerLocalForge(player);
+            ForgePlayerLocal terraPlayer = new ForgePlayerLocal(player);
             if(terraPlayer.isSpectator() && !TerramapConfig.SERVER.synchronizeSpectators) continue;
             players.add(terraPlayer);
         }
-        IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new PlayerLocalForge[0]));
+        IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new ForgePlayerLocal[0]));
         for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
             TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(pkt, player.player);
         }

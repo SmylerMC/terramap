@@ -3,7 +3,7 @@ package net.smyler.terramap.entity.player;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.smyler.smylib.Identifier;
 
-public class ForgePlayerClientsideLocal extends PlayerLocalForge implements PlayerClientside {
+public class ForgePlayerClientsideLocal extends ForgePlayerLocal implements PlayerClientsideLocal {
 
     private final AbstractClientPlayer player;
 

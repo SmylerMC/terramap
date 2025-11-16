@@ -21,13 +21,13 @@ import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
 import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.Terramap.getTerramapClient;
 
-public class PlayerLocalForge implements PlayerLocal {
+public class ForgePlayerLocal implements PlayerLocal {
 
     private final EntityPlayer player;
     private final Position position;
     private final GeoPointMutable location = new GeoPointMutable();
 
-    public PlayerLocalForge(@NotNull EntityPlayer player) {
+    public ForgePlayerLocal(@NotNull EntityPlayer player) {
         this.player = player;
         this.position = new EntityPosition(player);
     }
@@ -108,4 +108,9 @@ public class PlayerLocalForge implements PlayerLocal {
     public Position position() {
         return this.position;
     }
+
+    public EntityPlayer backingObject() {
+        return this.player;
+    }
+
 }
