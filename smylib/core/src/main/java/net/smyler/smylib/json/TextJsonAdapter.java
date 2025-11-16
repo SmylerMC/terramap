@@ -52,6 +52,7 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
     private void writeContentToObject(JsonObject object, TextContent content) {
         if (content instanceof PlainTextContent) {
             object.add("text", new JsonPrimitive(content.toString()));
+            return;
         }
         SmyLib.getLogger().warn("SmyLib is serializing text to json and encountered an unsupported content: {}", content);
     }
