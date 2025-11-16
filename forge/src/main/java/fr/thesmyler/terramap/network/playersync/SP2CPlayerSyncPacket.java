@@ -40,7 +40,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
             double longitude = buf.readDouble();
             double latitude = buf.readDouble();
             float azimuth = buf.readFloat();
-            GameMode gamemode = GameMode.valueOf(NetworkUtil.decodeStringFromByteBuf(buf));
+            GameMode gamemode = GameMode.fromName(NetworkUtil.decodeStringFromByteBuf(buf));
             PlayerSynchronized player = new PlayerSynchronized(new UUID(mostUUID, leastUUID), name);
             player.setGameMode(gamemode);
             if(Double.isFinite(longitude) && Double.isFinite(latitude)) {
