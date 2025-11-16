@@ -105,7 +105,7 @@ public class ForgePlayerLocal implements PlayerLocal {
     }
 
     @Override
-    public Position position() {
+    public @NotNull Position position() {
         return this.position;
     }
 

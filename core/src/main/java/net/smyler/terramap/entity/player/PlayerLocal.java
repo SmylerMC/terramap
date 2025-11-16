@@ -1,6 +1,7 @@
 package net.smyler.terramap.entity.player;
 
 import net.smyler.terramap.world.Position;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A player that exists in the current Minecraft side (server or client),
@@ -17,6 +18,6 @@ public interface PlayerLocal extends Player {
      *
      * @return the player's position
      */
-    Position position();
+    @NotNull Position position();
 
 }
