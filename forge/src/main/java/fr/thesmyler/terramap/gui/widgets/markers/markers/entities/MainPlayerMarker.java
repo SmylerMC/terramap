@@ -8,6 +8,7 @@ import net.smyler.smylib.text.Text;
 import net.smyler.terramap.TerramapClient;
 import net.smyler.terramap.entity.player.Player;
 import net.smyler.terramap.entity.player.PlayerClientside;
+import net.smyler.terramap.entity.player.PlayerClientsideLocal;
 import net.smyler.terramap.geo.GeoPoint;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +35,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-        Optional<PlayerClientside> playerOptional = getTerramapClient().mainPlayer();
+        Optional<PlayerClientsideLocal> playerOptional = getTerramapClient().mainPlayer();
         if (!playerOptional.isPresent()) {
             parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
             return;

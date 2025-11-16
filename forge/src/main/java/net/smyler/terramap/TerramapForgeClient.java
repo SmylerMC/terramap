@@ -1,5 +1,7 @@
 package net.smyler.terramap;
 
+import net.smyler.terramap.entity.player.PlayerClientside;
+import net.smyler.terramap.entity.player.PlayerClientsideLocal;
 import net.smyler.terramap.world.ForgeWorldClientside;
 import net.smyler.terramap.world.WorldClientside;
 
@@ -12,6 +14,11 @@ public class TerramapForgeClient implements TerramapClient {
     @Override
     public Optional<WorldClientside> world() {
         return Optional.ofNullable(this.world);
+    }
+
+    @Override
+    public Optional<PlayerClientsideLocal> mainPlayer() {
+        return Optional.empty();
     }
 
     public void setWorld(ForgeWorldClientside world) {

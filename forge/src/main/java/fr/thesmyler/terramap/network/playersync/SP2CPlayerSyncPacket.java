@@ -19,12 +19,12 @@ import static net.smyler.terramap.Terramap.getTerramap;
 
 public class SP2CPlayerSyncPacket implements IMessage {
 
-    protected PlayerServersideForge[] localPlayers;
+    protected PlayerLocalForge[] localPlayers;
     protected PlayerSynchronized[] remotePlayers;
 
     public SP2CPlayerSyncPacket() {} // Required by forge
 
-    public SP2CPlayerSyncPacket(PlayerServersideForge[] players) {
+    public SP2CPlayerSyncPacket(PlayerLocalForge[] players) {
         this.localPlayers = players;
     }
 

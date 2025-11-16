@@ -23,7 +23,7 @@ import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.terramap.entity.player.ForgePlayerClientsideSynchronized;
 import net.smyler.terramap.entity.player.PlayerClientside;
-import net.smyler.terramap.entity.player.ForgePlayerClientside;
+import net.smyler.terramap.entity.player.ForgePlayerClientsideLocal;
 import net.smyler.terramap.entity.player.PlayerSynchronized;
 import net.smyler.terramap.world.World;
 import net.smyler.terramap.tilesets.raster.*;
@@ -124,7 +124,7 @@ public class TerramapClientContext {
                 getTerramap().logger().warn("Client-side player is not an instance of AbstractClientPlayer");
                 continue;
             }
-            players.put(player.getPersistentID(), new ForgePlayerClientside((AbstractClientPlayer) player));
+            players.put(player.getPersistentID(), new ForgePlayerClientsideLocal((AbstractClientPlayer) player));
         }
         return players;
     }

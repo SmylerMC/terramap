@@ -7,6 +7,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.GameType;
 import net.smyler.smylib.text.Text;
+import net.smyler.terramap.entity.EntityPosition;
 import net.smyler.terramap.geo.GeoPointMutable;
 import net.smyler.terramap.geo.GeoPointView;
 import net.smyler.terramap.geo.GeoProjection;
@@ -20,13 +21,15 @@ import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
 import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.Terramap.getTerramapClient;
 
-public class PlayerServersideForge implements Player {
+public class PlayerLocalForge implements PlayerLocal {
 
     private final EntityPlayer player;
+    private final Position position;
     private final GeoPointMutable location = new GeoPointMutable();
 
-    public PlayerServersideForge(EntityPlayer player) {
+    public PlayerLocalForge(@NotNull EntityPlayer player) {
         this.player = player;
+        this.position = new EntityPosition(player);
     }
 
     @Override
@@ -101,4 +104,8 @@ public class PlayerServersideForge implements Player {
         }
     }
 
+    @Override
+    public Position position() {
+        return this.position;
+    }
 }

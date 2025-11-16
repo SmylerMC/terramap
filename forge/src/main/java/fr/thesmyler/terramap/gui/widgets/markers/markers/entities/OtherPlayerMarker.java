@@ -5,7 +5,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.entity.player.PlayerClientside;
-import net.smyler.terramap.entity.player.PlayerServersideForge;
+import net.smyler.terramap.entity.player.PlayerLocalForge;
 import net.smyler.terramap.entity.player.Player;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.geo.GeoPoint;
@@ -26,7 +26,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
         super.update(map);
         if(
                 !TerramapClientContext.getContext().hasPlayer(this.player.uuid())
-                || (this.player instanceof PlayerServersideForge && ((PlayerServersideForge) this.player).getPlayer().isDead)) {
+                || (this.player instanceof PlayerLocalForge && ((PlayerLocalForge) this.player).getPlayer().isDead)) {
             map.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
         }
     }
