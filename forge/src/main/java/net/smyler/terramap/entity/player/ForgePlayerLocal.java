@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapMod;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.GameType;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.entity.EntityPosition;
@@ -13,13 +12,11 @@ import net.smyler.terramap.geo.GeoPointView;
 import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.world.Position;
-import net.smyler.terramap.world.PositionImmutable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.smyler.terramap.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
 import static net.smyler.terramap.Terramap.getTerramap;
-import static net.smyler.terramap.Terramap.getTerramapClient;
 
 public class ForgePlayerLocal implements PlayerLocal {
 
@@ -39,24 +36,15 @@ public class ForgePlayerLocal implements PlayerLocal {
 
     @Override
     public @NotNull Text displayName() {
-        ITextComponent mcName = this.player == null ? new TextComponentString("Missing main player"): player.getDisplayName();
+        ITextComponent mcName = this.player.getDisplayName();
         String nameJson = ITextComponent.Serializer.componentToJson(mcName);
         return getTerramap().gson().fromJson(nameJson, Text.class);
     }
 
     @Override
     public @NotNull GeoPointView location() throws OutOfGeoBoundsException {
-        GeoProjection projection;
-        if (this.player.world.isRemote) {
-            projection = getTerramapClient().projection().orElse(null);
-        } else {
-            projection = getWorldProjection(this.player.world);
-        }
-        if (projection == null) {
-            return null;
-        }
-        Position position = new PositionImmutable(this.player.posX, this.player.posY, this.player.posZ);
-        projection.toGeo(this.location, position);
+        GeoProjection projection = this.world().projection().orElseThrow(OutOfGeoBoundsException::new);
+        projection.toGeo(this.location, this.position);
         return this.location.getReadOnlyView();
     }
 
@@ -71,19 +59,9 @@ public class ForgePlayerLocal implements PlayerLocal {
 
     @Override
     public float azimuth() {
-        GeoProjection projection;
-        if (this.player.world.isRemote) {
-            projection = getTerramapClient().projection().orElse(null);
-        } else {
-            projection = getWorldProjection(this.player.world);
-        }
-        if (projection == null) {
-            return Float.NaN;
-        }
-        Position position = new PositionImmutable(this.player.posX, this.player.posY, this.player.posZ);
-        projection.toGeo(this.location, position);
         try{
-            return projection.azimuth(position);
+            GeoProjection projection = this.world().projection().orElseThrow(OutOfGeoBoundsException::new);
+            return projection.azimuth(this.position);
         } catch(OutOfGeoBoundsException e) {
             return 0f;
         }
@@ -107,6 +85,11 @@ public class ForgePlayerLocal implements PlayerLocal {
     @Override
     public @NotNull Position position() {
         return this.position;
+    }
+
+    @Override
+    public @NotNull World world() {
+        return TerramapMod.proxy.worldCache().getTerraWorld(this.player.world);
     }
 
     public EntityPlayer backingObject() {

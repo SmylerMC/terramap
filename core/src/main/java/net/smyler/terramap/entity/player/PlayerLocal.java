@@ -1,6 +1,7 @@
 package net.smyler.terramap.entity.player;
 
 import net.smyler.terramap.world.Position;
+import net.smyler.terramap.world.World;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,5 +20,12 @@ public interface PlayerLocal extends Player {
      * @return the player's position
      */
     @NotNull Position position();
+
+    /**
+     * The world this player is currently in.
+     *
+     * @return the world this player is in
+     */
+    @NotNull World world();
 
 }

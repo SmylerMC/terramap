@@ -3,6 +3,7 @@ package net.smyler.terramap;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.terramap.entity.player.ForgePlayerClientsideLocal;
 import net.smyler.terramap.entity.player.PlayerClientsideLocal;
+import net.smyler.terramap.world.ForgeWorldCacheClientside;
 import net.smyler.terramap.world.ForgeWorldClientside;
 import net.smyler.terramap.world.WorldClientside;
 
@@ -16,6 +17,7 @@ public class TerramapForgeClient implements TerramapClient {
 
     private ForgeWorldClientside world;
     private WeakReference<ForgePlayerClientsideLocal> mainPlayerRef = new WeakReference<>(null);
+    private final ForgeWorldCacheClientside worldCache = new ForgeWorldCacheClientside();
 
     @Override
     public Optional<WorldClientside> world() {
@@ -51,6 +53,10 @@ public class TerramapForgeClient implements TerramapClient {
 
     public void setWorld(ForgeWorldClientside world) {
         this.world = world;
+    }
+
+    public ForgeWorldCacheClientside worldCache() {
+        return this.worldCache;
     }
 
 }

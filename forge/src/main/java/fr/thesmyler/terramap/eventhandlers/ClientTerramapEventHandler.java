@@ -30,6 +30,8 @@ import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import java.util.Objects;
 import java.util.UUID;
 
+import static java.util.Map.Entry.comparingByKey;
+import static java.util.stream.Collectors.joining;
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.terramap.Terramap.getTerramap;
@@ -60,6 +62,14 @@ public class ClientTerramapEventHandler {
             });
             event.getLeft().add("Terramap world UUID: " + getTerramapClient().world().flatMap(WorldClientside::uuid).map(UUID::toString).orElse("missing"));
             event.getLeft().add("Terramap proxy UUID: " + TerramapClientContext.getContext().getProxyUUID());
+            event.getLeft().add("Terramap world caches: " + TerramapMod.proxy.getClient()
+                    .worldCache()
+                    .stats()
+                    .entrySet()
+                    .stream()
+                    .sorted(comparingByKey())
+                    .map(e -> e.getKey() + ": " + e.getValue())
+                    .collect(joining(", ")));
         }
     }
 
@@ -104,7 +114,8 @@ public class ClientTerramapEventHandler {
     @SubscribeEvent
     public void onGuiScreenInit(InitGuiEvent event) {
         if(event.getGui() instanceof GuiDownloadTerrain) {
-            TerramapMod.proxy.getClient().setWorld(new ForgeWorldClientside());
+            ForgeWorldClientside world = TerramapMod.proxy.getClient().worldCache().getTerraWorld(getMinecraft().world);
+            TerramapMod.proxy.getClient().setWorld(world);
             TerramapClientContext.getContext().resetWorld();
         }
     }

@@ -14,11 +14,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smyler.terramap.TerramapForgeClient;
+import net.smyler.terramap.world.ForgeWorldCache;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 
 @SuppressWarnings("unused")  // An instance of this is injected into the main mod by FML
 public class TerramapServerProxy extends TerramapProxy {
+
+    private final ForgeWorldCache worldCache = new ForgeWorldCache();
 
     @Override
     public Side getSide() {
@@ -52,6 +55,11 @@ public class TerramapServerProxy extends TerramapProxy {
     @Override
     public TerramapForgeClient getClient() {
         throw new IllegalStateException("Trying to call client code from a dedicated server!!!");
+    }
+
+    @Override
+    public ForgeWorldCache worldCache() {
+        return this.worldCache;
     }
 
     @Override

@@ -4,7 +4,10 @@ import static net.smyler.terramap.Terramap.getTerramap;
 
 public class ForgeWorldClientside extends WorldClientside {
 
-    public ForgeWorldClientside() {
+    private final net.minecraft.world.World world;
+
+    ForgeWorldClientside(net.minecraft.world.World world) {
+        this.world = world;
         getTerramap().logger().debug("New forge world client");
     }
 

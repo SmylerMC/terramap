@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smyler.terramap.TerramapForgeClient;
+import net.smyler.terramap.world.ForgeWorldCache;
 
 public abstract class TerramapProxy {
 
@@ -27,5 +28,7 @@ public abstract class TerramapProxy {
     }
 
     public abstract TerramapForgeClient getClient();
+
+    public abstract ForgeWorldCache worldCache();
 
 }

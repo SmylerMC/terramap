@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.TerramapForgeClient;
+import net.smyler.terramap.world.ForgeWorldCache;
 
 import javax.imageio.ImageIO;
 
@@ -94,6 +95,11 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public TerramapForgeClient getClient() {
         return this.client;
+    }
+
+    @Override
+    public ForgeWorldCache worldCache() {
+        return this.client.worldCache();
     }
 
     @Override
