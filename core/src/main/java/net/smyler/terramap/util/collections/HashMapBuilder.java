@@ -1,6 +1,7 @@
 package net.smyler.terramap.util.collections;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class HashMapBuilder<K, V> implements MapBuilder<HashMap<K, V>, K, V>{
     
@@ -22,6 +23,12 @@ public class HashMapBuilder<K, V> implements MapBuilder<HashMap<K, V>, K, V>{
     @Override
     public HashMapBuilder<K, V> put(K key, V value) {
         this.map.put(key, value);
+        return this;
+    }
+
+    @Override
+    public HashMapBuilder<K, V> putAll(Map<K, V> map) {
+        this.map.putAll(map);
         return this;
     }
 

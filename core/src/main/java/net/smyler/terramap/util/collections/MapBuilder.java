@@ -38,7 +38,17 @@ public interface MapBuilder<T extends Map<K, V>, K, V> {
      * @return this builder for chaining
      */
     MapBuilder<T, K, V> put(K key, V value);
-    
+
+    /**
+     * Puts all entries from a map into the map being built.
+     * Behaves as if {@link Map#putAll(Map)} was called.
+     *
+     * @param map - the map to insert entries from
+     *
+     * @return this builder for chaining
+     */
+    MapBuilder<T, K, V> putAll(Map<K, V> map);
+
     /**
      * Counts how many entries will be in the map according to the current state of this builder.
      * This may not be equal to the number of previous calls to {@link #put(Object, Object)} as the same key could have been used multiple times.
