@@ -161,6 +161,8 @@ terramap.mapwidget.layers.distortion.name=Distortion
 terramap.mapwidget.layers.distortion.desc=Distortion preview
 terramap.mapwidget.layers.preview.name=Generation preview
 terramap.mapwidget.layers.preview.description=Powered by Terra++
+terramap.mapwidget.layers.tpp_dtsms.name=Terra++ DTSMs
+terramap.mapwidget.layers.tpp_dtsms.desc=Local height datasets
 
 #### Full-screen map ####
 
@@ -220,6 +222,7 @@ terramap.terramapscreen.layerscreen.newlayer=Choose a type for the new  layer
 terramap.terramapscreen.newlayer.raster=Raster tiled map
 terramap.terramapscreen.newlayer.mcchunks=Minecraft regions and chunks
 terramap.terramapscreen.newlayer.generation_preview=Generation preview
+terramap.terramapscreen.newlayer.tpp_dtsms=Terra++ DTSMs
 
 ## Region outlines configuration
 terramap.terramapscreen.outlines_config.mca=Vanilla mca regions

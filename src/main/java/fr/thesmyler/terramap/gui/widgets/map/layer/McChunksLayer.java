@@ -407,7 +407,6 @@ public class McChunksLayer extends MapLayer {
 
     @Override
     public FlexibleWidgetContainer createConfigurationContainer() {
-        //TODO localize
         float width = 200f;
         float height = 180f;
         FlexibleWidgetContainer container = new FlexibleWidgetContainer(0, 0, 0, width, height);
