@@ -90,10 +90,10 @@ dependencies {
 
     implementation group: "com.twelvemonkeys.imageio", name: "imageio-webp", version: project.twelvemonkeys_version
 
-    implementation fg.deobf(group: "com.github.OpenCubicChunks.CubicChunks", name: "cubicchunks", version: project.cc_version) {
+    implementation fg.deobf(group: "io.github.opencubicchunks", name: "cubicchunks", version: project.cc_version) {
         transitive = false
     }
-    implementation fg.deobf(group: "com.github.OpenCubicChunks", name: "CubicWorldGen", version: project.cwg_version) {
+    implementation fg.deobf(group: "io.github.opencubicchunks", name: "cubicworldgen", version: project.cwg_version) {
         transitive = false
     }
     implementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version) {
