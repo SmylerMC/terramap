@@ -155,13 +155,29 @@ public class GeoPointTest {
         assertEquals(39d, arr[1], 0d);
         assertEquals(point.asVec2d(), new Vec2dImmutable(18d, 39d));
     }
-    
+
     @Test
-    public void toStringTest() {
+    void geoPointImmutableToStringIsAccurate() {
         assertEquals(
-                "GeoPoint{lon=78.0°, lat=-45.0°}",
+                "GeoPointImmutable[lon=78.0°, lat=-45.0°]",
                 new GeoPointImmutable(78d, -45).toString()
-            );
+        );
+    }
+
+    @Test
+    void geoPointMutableToStringIsAccurate() {
+        assertEquals(
+                "GeoPointMutable[lon=78.0°, lat=-45.0°]",
+                new GeoPointMutable(78d, -45).toString()
+        );
+    }
+
+    @Test
+    void geoPointViewToStringIsAccurate() {
+        assertEquals(
+                "GeoPointView[GeoPointMutable[lon=78.0°, lat=-45.0°]]",
+                new GeoPointView(new GeoPointMutable(78d, -45)).toString()
+        );
     }
 
 }

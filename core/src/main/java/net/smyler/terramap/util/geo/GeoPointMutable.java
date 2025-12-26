@@ -1,9 +1,11 @@
 package net.smyler.terramap.util.geo;
 
+import java.util.Locale;
+
 import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
 import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
 
-public class GeoPointMutable extends GeoPointAbstract {
+public class GeoPointMutable implements GeoPoint {
 
     private double longitude, latitude;
     private GeoPointView readOnly;
@@ -107,6 +109,11 @@ public class GeoPointMutable extends GeoPointAbstract {
             this.readOnly = new GeoPointView(this);
         }
         return this.readOnly;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "GeoPointMutable[lon=%s°, lat=%s°]", this.longitude(), this.latitude());
     }
 
 }

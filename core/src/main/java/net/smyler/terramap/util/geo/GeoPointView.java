@@ -5,7 +5,7 @@ package net.smyler.terramap.util.geo;
  *
  * @author Smyler
  */
-public final class GeoPointView extends GeoPointAbstract {
+public final class GeoPointView implements GeoPoint {
 
     private final GeoPoint delegate;
 
@@ -21,6 +21,11 @@ public final class GeoPointView extends GeoPointAbstract {
     @Override
     public double longitude() {
         return this.delegate.longitude();
+    }
+
+    @Override
+    public String toString() {
+        return "GeoPointView[" + this.delegate + ']';
     }
 
 }

@@ -1,9 +1,12 @@
 package net.smyler.terramap.util.geo;
 
+import java.util.Locale;
+
+import static java.lang.Math.abs;
 import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
 import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
 
-public class GeoPointImmutable extends GeoPointAbstract {
+public class GeoPointImmutable implements GeoPoint {
     
     public static final GeoPointImmutable ORIGIN = new GeoPointImmutable(0d, 0d);
     public static final GeoPointImmutable NORTH_POLE = new GeoPointImmutable(0d, 90d);
@@ -65,4 +68,49 @@ public class GeoPointImmutable extends GeoPointAbstract {
     public GeoPointImmutable getImmutable() {
         return this;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        double latitude = this.latitude();
+        double longitude = abs(latitude) == 90d ? 0d: this.longitude();
+        if (longitude == -180d) {
+            longitude = 180d;
+        }
+        result = prime * result + Double.hashCode(longitude);
+        result = prime * result + Double.hashCode(latitude);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !obj.getClass().equals(GeoPointImmutable.class)) {
+            return false;
+        }
+        GeoPointImmutable other = (GeoPointImmutable) obj;
+        double thisLat = this.latitude();
+        double otherLat = other.latitude();
+        if (thisLat != otherLat) {
+            return false;
+        }
+        if (abs(thisLat) == 90d) {
+            return true; // We don't care about longitude at the poles
+        }
+        double thisLong = this.longitude();
+        double otherLong = other.longitude();
+        if ((thisLong == -180d || thisLong == 180d) && thisLong + otherLong == 0d) {
+            return true; // Antimeridian can be both 180 or -180
+        }
+        return thisLong == otherLong;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "GeoPointImmutable[lon=%s°, lat=%s°]", this.longitude(), this.latitude());
+    }
+
 }

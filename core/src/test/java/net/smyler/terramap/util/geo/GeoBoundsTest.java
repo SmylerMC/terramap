@@ -478,7 +478,7 @@ public class GeoBoundsTest {
     @Test
     public void toStringTest() {
         GeoBounds square = new GeoBounds(new GeoPointImmutable(45d, -16d), new GeoPointImmutable(-64d, 18d));
-        assertEquals("GeoBoundsSquare{lower=GeoPoint{lon=45.0°, lat=-16.0°}, upper=GeoPoint{lon=-64.0°, lat=18.0°}}", square.toString());
+        assertEquals("GeoBoundsSquare{lower=GeoPointImmutable[lon=45.0°, lat=-16.0°], upper=GeoPointImmutable[lon=-64.0°, lat=18.0°]}", square.toString());
     }
 
 }
