@@ -373,7 +373,63 @@ public class GeoPointTest {
                 new double[][]{
                         new double[]{-45d, 45d},
                         new double[]{45d, 45d}
+                },
+                new double[][]{
+                        new double[]{180d, 0d},
+                        new double[]{-180d, 0d}
+                },
+                new double[][]{
+                        new double[]{0d, 90d},
+                        new double[]{-180d, 90d}
+                },
+                new double[][]{
+                        new double[]{-180d, 0d},
+                        new double[]{180d, 0d}
+                },
+                new double[][]{
+                        new double[]{180d, 0d},
+                        new double[]{-180d, 0d}
+                },
+                new double[][]{
+                        new double[]{180d, 90d},
+                        new double[]{-180d, 90d}
+                },
+                new double[][]{
+                        new double[]{180d, -90d},
+                        new double[]{-180d, -90d}
+                },
+                new double[][]{
+                        new double[]{180d, -45d},
+                        new double[]{-180d, -45d}
                 }
+        );
+    }
+
+    static Stream<double[][]> equivalentCoordinatesSource() {
+        return Stream.concat(
+                equalCoordinatesSource(),
+                Stream.of(
+                        new double[][]{
+                                new double[]{0d, 90d},
+                                new double[]{-54.4d, 90d}
+                        },
+                        new double[][]{
+                                new double[]{78.73d, -90d},
+                                new double[]{-65.44d, -90d}
+                        },
+                        new double[][]{
+                                new double[]{180d, 47d},
+                                new double[]{-180, 47d}
+                        },
+                        new double[][]{
+                                new double[]{180d, 90d},
+                                new double[]{-180, 90d}
+                        },
+                        new double[][]{
+                                new double[]{180d, -90d},
+                                new double[]{-180, -90}
+                        }
+                )
         );
     }
 

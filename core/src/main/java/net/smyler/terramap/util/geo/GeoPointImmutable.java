@@ -73,13 +73,8 @@ public class GeoPointImmutable implements GeoPoint {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        double latitude = this.latitude();
-        double longitude = abs(latitude) == 90d ? 0d: this.longitude();
-        if (longitude == -180d) {
-            longitude = 180d;
-        }
-        result = prime * result + Double.hashCode(longitude);
-        result = prime * result + Double.hashCode(latitude);
+        result = prime * result + Double.hashCode(this.longitude);
+        result = prime * result + Double.hashCode(this.latitude);
         return result;
     }
 
@@ -91,21 +86,8 @@ public class GeoPointImmutable implements GeoPoint {
         if (obj == null || !obj.getClass().equals(GeoPointImmutable.class)) {
             return false;
         }
-        GeoPointImmutable other = (GeoPointImmutable) obj;
-        double thisLat = this.latitude();
-        double otherLat = other.latitude();
-        if (thisLat != otherLat) {
-            return false;
-        }
-        if (abs(thisLat) == 90d) {
-            return true; // We don't care about longitude at the poles
-        }
-        double thisLong = this.longitude();
-        double otherLong = other.longitude();
-        if ((thisLong == -180d || thisLong == 180d) && thisLong + otherLong == 0d) {
-            return true; // Antimeridian can be both 180 or -180
-        }
-        return thisLong == otherLong;
+        GeoPoint other = (GeoPoint) obj;
+        return this.latitude == other.latitude() && this.longitude == other.longitude();
     }
 
     @Override
