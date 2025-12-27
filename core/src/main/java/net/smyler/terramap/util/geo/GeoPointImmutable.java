@@ -60,6 +60,18 @@ public class GeoPointImmutable implements GeoPoint {
         this.latitude = getLatitudeInRange(lola[1]);
     }
 
+    /**
+     * Constructs a new point by extracting coordinates from another point.
+     *
+     * @param point a point to copy
+     * @throws NullPointerException if the point is null
+     */
+    public GeoPointImmutable(@NotNull GeoPoint point) {
+        requireNonNull(point);
+        this.longitude = getLongitudeInRange(point.longitude());
+        this.latitude = getLatitudeInRange(point.latitude());
+    }
+
     @Override
     public double longitude() {
         return this.longitude;

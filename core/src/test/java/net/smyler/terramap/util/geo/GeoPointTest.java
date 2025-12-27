@@ -26,6 +26,10 @@ public class GeoPointTest {
         assertEquals(longitude, point.longitude(), 0d);
         assertEquals(latitude, point.latitude(), 0d);
 
+        point = new GeoPointImmutable(point);
+        assertEquals(longitude, point.longitude(), 0d);
+        assertEquals(latitude, point.latitude(), 0d);
+
         point = GeoPointImmutable.ORIGIN
                 .withLongitude(longitude)
                 .withLatitude(latitude);
@@ -44,6 +48,10 @@ public class GeoPointTest {
         assertEquals(latitude, point.latitude(), 0d);
 
         point = new GeoPointMutable(coordinates);
+        assertEquals(longitude, point.longitude(), 0d);
+        assertEquals(latitude, point.latitude(), 0d);
+
+        point = new GeoPointMutable(point);
         assertEquals(longitude, point.longitude(), 0d);
         assertEquals(latitude, point.latitude(), 0d);
 

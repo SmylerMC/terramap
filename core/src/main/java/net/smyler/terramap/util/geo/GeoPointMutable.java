@@ -59,6 +59,18 @@ public class GeoPointMutable implements GeoPoint {
     }
 
     /**
+     * Constructs a new point by extracting coordinates from another point.
+     *
+     * @param point a point to copy
+     * @throws NullPointerException if the point is null
+     */
+    public GeoPointMutable(@NotNull GeoPoint point) {
+        requireNonNull(point);
+        this.longitude = getLongitudeInRange(point.longitude());
+        this.latitude = getLatitudeInRange(point.latitude());
+    }
+
+    /**
      * Initializes a new point with coordinates 0°N 0°W.
      */
     public GeoPointMutable() {
