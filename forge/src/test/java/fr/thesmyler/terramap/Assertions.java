@@ -17,7 +17,7 @@ public final class Assertions {
      * @param actual    actual point
      * @param distance  acceptable distance between the points, in meters
      */
-    public static void assertEquals(Vec2d<?> expected, Vec2d<?> actual, double distance) {
+    public static void assertEquals(Vec2d expected, Vec2d actual, double distance) {
         org.junit.jupiter.api.Assertions.assertEquals(0d, expected.distanceTo(actual), distance,
                 "Vectors are different. Expected: " + expected + " Actual: " + actual);
     }

@@ -189,7 +189,7 @@ public class LayerRenderingOffsetPopup extends Popup {
         this.setRenderedOffset(this.layer.getRenderingOffset());
     }
     
-    private void setRenderedOffset(Vec2d<?> offset) {
+    private void setRenderedOffset(Vec2d offset) {
         WebMercatorUtil.fromGeo(this.offsetCalculator, this.layer.getMap().getController().getCenterLocation(), 0d);
         this.offsetCalculator.downscale(256d).add(offset).scale(256d);
         WebMercatorUtil.toGeo(this.layerCenterLocation, this.offsetCalculator, 0d);

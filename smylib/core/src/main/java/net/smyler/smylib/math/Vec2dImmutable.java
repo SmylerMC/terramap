@@ -7,7 +7,7 @@ import static net.smyler.smylib.Preconditions.checkArgument;
  *
  * @author SmylerMC
  */
-public final class Vec2dImmutable extends Vec2dAbstract<Vec2dImmutable> {
+public final class Vec2dImmutable extends Vec2dAbstract {
     
     public static final Vec2dImmutable NULL = new Vec2dImmutable(0d, 0d);
     public static final Vec2dImmutable UNIT_X = new Vec2dImmutable(1d, 0d);
@@ -55,7 +55,7 @@ public final class Vec2dImmutable extends Vec2dAbstract<Vec2dImmutable> {
     }
 
     @Override
-    public Vec2dImmutable add(Vec2d<?> other) {
+    public Vec2dImmutable add(Vec2d other) {
         return new Vec2dImmutable(this.x + other.x(), this.y + other.y());
     }
 
@@ -65,7 +65,7 @@ public final class Vec2dImmutable extends Vec2dAbstract<Vec2dImmutable> {
     }
 
     @Override
-    public Vec2dImmutable subtract(Vec2d<?> other) {
+    public Vec2dImmutable subtract(Vec2d other) {
         return new Vec2dImmutable(this.x - other.x(), this.y - other.y());
     }
 
@@ -75,7 +75,7 @@ public final class Vec2dImmutable extends Vec2dAbstract<Vec2dImmutable> {
     }
 
     @Override
-    public Vec2dImmutable hadamardProd(Vec2d<?> other) {
+    public Vec2dImmutable hadamardProd(Vec2d other) {
         return new Vec2dImmutable(this.x*other.x(), this.y*other.y());
     }
 

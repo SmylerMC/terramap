@@ -267,9 +267,9 @@ public class McChunksLayer extends MapLayer {
         
         GeographicProjection projection;
         
-        final Map<Vec2d<?>, GeoPointImmutable> mcToGeo = new HashMap<>();
-        final Set<Vec2d<?>> accessedInCycle = new HashSet<>();
-        
+        final Map<Vec2d, GeoPointImmutable> mcToGeo = new HashMap<>();
+        final Set<Vec2d> accessedInCycle = new HashSet<>();
+
         final int maxProjectionsPerCycle = 50;
         int[] projectionsThisCycle;
         
@@ -277,7 +277,7 @@ public class McChunksLayer extends MapLayer {
             this.projectionsThisCycle = new int[diffCount];
         }
         
-        void getRenderPos(Vec2dMutable destination, Vec2d<?> mcPos, int discriminator) throws OutOfProjectionBoundsException {
+        void getRenderPos(Vec2dMutable destination, Vec2d mcPos, int discriminator) throws OutOfProjectionBoundsException {
             if (!this.accessedInCycle.contains(mcPos)) this.accessedInCycle.add(mcPos.getImmutable());
             
             // Not really out of bounds, but we don't need to differentiate the two

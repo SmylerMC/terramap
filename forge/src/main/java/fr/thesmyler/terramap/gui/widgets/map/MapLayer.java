@@ -136,7 +136,7 @@ public abstract class MapLayer implements Widget {
      *
      * @throws NullPointerException if either destination or position is null
      */
-    public void getLocationAtPositionOnWidget(GeoPointMutable destination, Vec2d<?> position) {
+    public void getLocationAtPositionOnWidget(GeoPointMutable destination, Vec2d position) {
         this.getLocationAtPositionOnWidget(destination, position.x(), position.y());
     }
 
@@ -161,7 +161,7 @@ public abstract class MapLayer implements Widget {
      *
      * @throws NullPointerException if either destination or renderScreenPos is null
      */
-    protected void getLocationAtPositionInRenderSpace(GeoPointMutable destination, Vec2d<?> renderScreenPos) {
+    protected void getLocationAtPositionInRenderSpace(GeoPointMutable destination, Vec2d renderScreenPos) {
         renderScreenPos = this.calculationHelper.get().set(renderScreenPos)
                 .add(this.upperLeftRenderCorner)
                 .scale(this.map.tileScaling);
@@ -319,7 +319,7 @@ public abstract class MapLayer implements Widget {
      * @throws NullPointerException if offset is null
      * @throws IllegalArgumentException if offset is not finite
      */
-    public void setRenderingOffset(Vec2d<?> offset) {
+    public void setRenderingOffset(Vec2d offset) {
         if (!offset.isFinite()) throw new IllegalArgumentException("Map offset has to be finite");
         this.renderingOffset.set(offset);
         this.updateViewPorts();
@@ -334,7 +334,7 @@ public abstract class MapLayer implements Widget {
      * @throws NullPointerException if offset is null
      * @throws IllegalArgumentException if offset is not finite
      */
-    public void setPixelRenderingOffset(Vec2d<?> offset) {
+    public void setPixelRenderingOffset(Vec2d offset) {
         if (!offset.isFinite()) throw new IllegalArgumentException("Layer offset has to be finite");
         this.renderingOffset.set(offset).downscale(pow(2d, this.controller.getZoom()) * 256);
         this.updateViewPorts();

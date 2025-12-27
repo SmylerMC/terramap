@@ -282,7 +282,7 @@ public final class MapController {
      * @throws IllegalArgumentException if either the x or y component of position is not a finite number
      * @throws NullPointerException     if either location or position is null
      */
-    public void moveLocationToPosition(GeoPoint location, Vec2d<?> position, boolean animate) {
+    public void moveLocationToPosition(GeoPoint location, Vec2d position, boolean animate) {
         this.moveLocationToPosition(location, position.x(), position.y(), animate);
     }
 
@@ -361,7 +361,7 @@ public final class MapController {
      * @throws NullPointerException if position is null
      * @throws IllegalArgumentException if position is not finite
      */
-    public void setZoomStaticPosition(Vec2d<?> position) {
+    public void setZoomStaticPosition(Vec2d position) {
         if (!position.isFinite()) throw new IllegalArgumentException("Zoom static position needs to be finite");
         this.inputLayer.getLocationAtPositionOnWidget(this.zoomLocation, position);
     }
@@ -426,7 +426,7 @@ public final class MapController {
      * @throws NullPointerException if position is null
      * @throws IllegalArgumentException if position is not finite
      */
-    public void setRotationStaticPosition(Vec2d<?> position) {
+    public void setRotationStaticPosition(Vec2d position) {
         if (!position.isFinite()) throw new IllegalArgumentException("Static rotation position has to be finite");
         this.inputLayer.getLocationAtPositionOnWidget(this.rotateLocation, position);
     }
