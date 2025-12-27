@@ -3,8 +3,11 @@ package net.smyler.terramap.util.geo;
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
 import net.smyler.smylib.math.Vec2dImmutable;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.toRadians;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.terramap.util.geo.GeoUtil.distanceHaversine;
@@ -62,7 +65,77 @@ public interface GeoPoint extends Mutable<GeoPointImmutable>, Immutable<GeoPoint
      */
     default double distanceTo(@NotNull GeoPoint other) {
         requireNonNull(other);
+        if (this.isEquivalentTo(other)) {
+            return 0d;
+        }
         return distanceHaversine(this, other);
+    }
+
+    /**
+     * Checks whether this {@link GeoPoint} represents the exact same place as another {@link GeoPoint}.
+     * Except for some edge cases, this simply checks that both point's latitude and longitude are equal.
+     * <br><br>
+     * Edge cases:
+     * <ul>
+     *     <li>
+     *         The longitude is irrelevant when comparing two points lying on the same geographic pole,
+     *         and therefore ignored (latitude of 90° at the North Pole, -90° at the South Pole).
+     *     </li>
+     *     <li>
+     *         Points on the antiméridian may have longitude -180° or 180° and will be equivalent regardless of the sign.
+     *     </li>
+     * </ul>
+     * <br><br>
+     * Specifying <code>null</code> as the other point always returns false.
+     * <br><br>
+     * Differences from {@link Object#equals(Object)}:
+     * <ul>
+     *     <li>this method only compares {@link GeoPoint GeoPoints}</li>
+     *     <li>the edge cases presented above are not equal according to {@link Object#equals(Object)}</li>
+     * </ul>
+     *
+     * @param other the other point to compare to
+     * @return whether both point represent to same place on Earth
+     *
+     * @see Object#equals(Object)
+     * @see GeoPoint#isWithinRange(GeoPoint, double)
+     */
+    @Contract("null -> false")
+    default boolean isEquivalentTo(@Nullable GeoPoint other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
+            return false;
+        }
+        double thisLat = this.latitude();
+        double otherLat = other.latitude();
+        if (thisLat != otherLat) {
+            return false;
+        }
+        if (abs(thisLat) == 90d) {
+            return true; // We don't care about longitude at the poles
+        }
+        double thisLong = this.longitude();
+        double otherLong = other.longitude();
+        if ((thisLong == -180d || thisLong == 180d) && thisLong + otherLong == 0d) {
+            return true; // Antimeridian can be both 180 or -180
+        }
+        return thisLong == otherLong;
+    }
+
+    /**
+     * Checks that this point and another point are within a given range of each others.
+     *
+     * @param other the other point
+     * @param rangeMeters the range (in meters)
+     * @return whether the distance between this point and the other is less than the given range
+     */
+    default boolean isWithinRange(@Nullable GeoPoint other, double rangeMeters) {
+        if (other == null) {
+            return false;
+        }
+        return this.distanceTo(other) <= rangeMeters;
     }
 
     /**

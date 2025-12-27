@@ -183,7 +183,7 @@ public class GeoPointTest {
         double distance = distanceFixture.point1.distanceTo(distanceFixture.point2);
         assertEquals(distanceFixture.expectedDistance, distance, distanceFixture.maximumAcceptableDelta, friendlyName);
     }
-   
+
     @ParameterizedTest
     @MethodSource("equalCoordinatesSource")
     void canCompareEqualGeoPointImmutables(double[][] coordinates) {
@@ -195,6 +195,14 @@ public class GeoPointTest {
         assertEquals(point1.hashCode(), point2.hashCode());
         assertEquals(point1, point1);
         assertEquals(point2, point2);
+        assertTrue(point1.isEquivalentTo(point2));
+        assertTrue(point2.isEquivalentTo(point1));
+        assertTrue(point1.isEquivalentTo(point1));
+        assertTrue(point2.isEquivalentTo(point2));
+        assertTrue(point1.isWithinRange(point2, 0d));
+        assertTrue(point2.isWithinRange(point1, 0d));
+        assertTrue(point1.isWithinRange(point1, 0d));
+        assertTrue(point2.isWithinRange(point2, 0d));
     }
 
     @ParameterizedTest
@@ -214,6 +222,39 @@ public class GeoPointTest {
         assertFalse(point2.equals(null));
         assertFalse(point2.equals(new Object()));
         assertFalse(point2.equals(new Object()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("equivalentCoordinatesSource")
+    void canCompareEquivalentGeoPoints(double[][] coordinates) {
+        GeoPointImmutable imu = new GeoPointImmutable(coordinates[0]);
+        GeoPointMutable mut = new GeoPointMutable(coordinates[1]);
+
+        assertTrue(imu.isEquivalentTo(mut));
+        assertTrue(mut.isEquivalentTo(imu));
+
+        assertFalse(imu.isEquivalentTo(null));
+        assertFalse(mut.isEquivalentTo(null));
+    }
+
+    @ParameterizedTest
+    @MethodSource("distanceFixtureSource")
+    void canCheckThatGeoPointsAreInRangeOfEachOther(DistanceFixture fixture) {
+        assertTrue(fixture.point1.isWithinRange(fixture.point1, 0d));
+        assertTrue(fixture.point2.isWithinRange(fixture.point2, 0d));
+
+        assertTrue(fixture.point1.isWithinRange(fixture.point2, fixture.expectedDistance + fixture.maximumAcceptableDelta));
+        assertTrue(fixture.point2.isWithinRange(fixture.point1, fixture.expectedDistance + fixture.maximumAcceptableDelta));
+
+        assertFalse(fixture.point1.isWithinRange(null, 0d));
+        assertFalse(fixture.point2.isWithinRange(null, 0d));
+
+        if (fixture.expectedDistance <= 0) {
+            return;
+        }
+
+        assertFalse(fixture.point1.isWithinRange(fixture.point2, fixture.expectedDistance - fixture.maximumAcceptableDelta));
+        assertFalse(fixture.point2.isWithinRange(fixture.point1, fixture.expectedDistance - fixture.maximumAcceptableDelta));
     }
 
     @ParameterizedTest
@@ -422,6 +463,34 @@ public class GeoPointTest {
                         new double[]{180d, -45d},
                         new double[]{-180d, -45d}
                 }
+        );
+    }
+
+    static Stream<double[][]> equivalentCoordinatesSource() {
+        return Stream.concat(
+                equalCoordinatesSource(),
+                Stream.of(
+                        new double[][]{
+                                new double[]{0d, 90d},
+                                new double[]{-54.4d, 90d}
+                        },
+                        new double[][]{
+                                new double[]{78.73d, -90d},
+                                new double[]{-65.44d, -90d}
+                        },
+                        new double[][]{
+                                new double[]{180d, 47d},
+                                new double[]{-180, 47d}
+                        },
+                        new double[][]{
+                                new double[]{180d, 90d},
+                                new double[]{-180, 90d}
+                        },
+                        new double[][]{
+                                new double[]{180d, -90d},
+                                new double[]{-180, -90}
+                        }
+                )
         );
     }
 
