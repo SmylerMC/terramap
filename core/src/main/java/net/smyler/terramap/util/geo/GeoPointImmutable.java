@@ -1,11 +1,19 @@
 package net.smyler.terramap.util.geo;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Locale;
 
-import static java.lang.Math.abs;
+import static java.util.Objects.requireNonNull;
+import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
 import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
 
+/**
+ * An immutable implementation of {@link GeoPoint}.
+ *
+ * @author Smyler
+ */
 public class GeoPointImmutable implements GeoPoint {
     
     public static final GeoPointImmutable ORIGIN = new GeoPointImmutable(0d, 0d);
@@ -32,14 +40,26 @@ public class GeoPointImmutable implements GeoPoint {
     }
     
     /**
-     * Delegate constructor to {@link #GeoPointImmutable(double, double)}
-     * 
+     * Constructs a new point by extracting coordinates from an array of length two.
+     * The first array item provides the longitude, the second the latitude.
+     * Both are expected to be expressed in degrees.
+     * The longitude get adjusted to be in the [-180°, 180°] range.
+     * Latitude needs to be within the [-90°, 90°] range.
+     * The coordinates do not change if they already are in the appropriate ranges.
+     *
      * @param lola a double array of the form {longitude, latitude}
+     *
+     * @throws NullPointerException if the array is null
+     * @throws IllegalArgumentException if either the latitude or the longitude is not a finite number,
+     *  or if latitude is not within the appropriate range.
      */
-    public GeoPointImmutable(double[] lola) {
-        this(lola[0], lola[1]);
+    public GeoPointImmutable(double @NotNull [] lola) {
+        requireNonNull(lola);
+        checkArgument(lola.length == 2, "Expected 2 values for latitude and longitude");
+        this.longitude = getLongitudeInRange(lola[0]);
+        this.latitude = getLatitudeInRange(lola[1]);
     }
-    
+
     @Override
     public double longitude() {
         return this.longitude;
@@ -50,14 +70,28 @@ public class GeoPointImmutable implements GeoPoint {
         return this.latitude;
     }
 
-    public GeoPointImmutable withLongitude(double longitude) {
+    /**
+     * Creates a copy of this point with a different longitude.
+     *
+     * @param longitude the new longitude, expressed in degrees
+     *
+     * @return the new point
+     */
+    public @NotNull GeoPointImmutable withLongitude(double longitude) {
         if (longitude == this.longitude) {
             return this;
         }
         return new GeoPointImmutable(longitude, this.latitude);
     }
 
-    public GeoPointImmutable withLatitude(double latitude) {
+    /**
+     * Creates a copy of this point with a different latitude.
+     *
+     * @param latitude the new latitude, expressed in degrees
+     *
+     * @return the new point
+     */
+    public @NotNull GeoPointImmutable withLatitude(double latitude) {
         if (latitude == this.latitude) {
             return this;
         }
@@ -65,7 +99,7 @@ public class GeoPointImmutable implements GeoPoint {
     }
 
     @Override
-    public GeoPointImmutable getImmutable() {
+    public @NotNull GeoPointImmutable getImmutable() {
         return this;
     }
 

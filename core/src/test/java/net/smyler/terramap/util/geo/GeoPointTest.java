@@ -96,6 +96,12 @@ public class GeoPointTest {
         assertThrows(IllegalArgumentException.class,
                 () ->  new GeoPointMutable(coordinates)
         );
+        assertThrows(IllegalArgumentException.class,
+                () ->  new GeoPointMutable(new double[] {0d, longitude, latitude})
+        );
+        assertThrows(IllegalArgumentException.class,
+                () ->  new GeoPointMutable(new double[] {longitude})
+        );
     }
 
     @ParameterizedTest
@@ -135,6 +141,12 @@ public class GeoPointTest {
         );
         assertThrows(IllegalArgumentException.class,
                 () ->  point.set(coordinates)
+        );
+        assertThrows(IllegalArgumentException.class,
+                () ->  point.set(new double[] {0d, longitude, latitude})
+        );
+        assertThrows(IllegalArgumentException.class,
+                () ->  point.set(new double[] {longitude})
         );
     }
 
@@ -402,34 +414,6 @@ public class GeoPointTest {
                         new double[]{180d, -45d},
                         new double[]{-180d, -45d}
                 }
-        );
-    }
-
-    static Stream<double[][]> equivalentCoordinatesSource() {
-        return Stream.concat(
-                equalCoordinatesSource(),
-                Stream.of(
-                        new double[][]{
-                                new double[]{0d, 90d},
-                                new double[]{-54.4d, 90d}
-                        },
-                        new double[][]{
-                                new double[]{78.73d, -90d},
-                                new double[]{-65.44d, -90d}
-                        },
-                        new double[][]{
-                                new double[]{180d, 47d},
-                                new double[]{-180, 47d}
-                        },
-                        new double[][]{
-                                new double[]{180d, 90d},
-                                new double[]{-180, 90d}
-                        },
-                        new double[][]{
-                                new double[]{180d, -90d},
-                                new double[]{-180, -90}
-                        }
-                )
         );
     }
 

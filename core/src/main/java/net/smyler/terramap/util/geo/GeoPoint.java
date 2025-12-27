@@ -3,25 +3,35 @@ package net.smyler.terramap.util.geo;
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
 import net.smyler.smylib.math.Vec2dImmutable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.toRadians;
+import static java.util.Objects.requireNonNull;
+import static net.smyler.terramap.util.geo.GeoUtil.distanceHaversine;
 
 /**
  * A point in the WGS:84 coordinate system.
- * Two points are considered equal when they represent the same place,
- * which means that points corresponding to the North Pole will be equal even if they have different longitudes.
- * Similarly, points at the same latitude on the antimeridian will be equal,
- * independently of whether their longitude is -180 or 180.
+ * Latitude is within the [-90°, 90°] range.
+ * Longitude is within the [-180°, 180°] range.
  *
- * @author SmylerMC
+ * @author Smyler
  *
  */
 public interface GeoPoint extends Mutable<GeoPointImmutable>, Immutable<GeoPointMutable> {
 
     /**
+     * This point's latitude, expressed in degrees.
+     *
      * @return this point's latitude, in the appropriate [-90°, 90°] range
      */
     double latitude();
 
     /**
+     * This point's longitude, expressed in degrees.
+     *
      * @return this point's longitude, in the appropriate [-180°, 180°] range
      */
     double longitude();
@@ -32,33 +42,41 @@ public interface GeoPoint extends Mutable<GeoPointImmutable>, Immutable<GeoPoint
      * @param other another point
      *
      * @return the distance between this point and the other, in meters
+     *
+     * @throws NullPointerException if the other point is null
      */
-    default double distanceTo(GeoPoint other) {
-        return GeoUtil.distanceHaversine(this.longitude(), this.latitude(), other.longitude(), other.latitude());
+    default double distanceTo(@NotNull GeoPoint other) {
+        requireNonNull(other);
+        return distanceHaversine(this, other);
     }
 
     /**
+     * Converts this point to an array of length two,
+     * containing the longitude and latitude in degrees (in that order).
+     *
      * @return this point as a {longitude, latitude} double array
      */
-    default double[] asArray() {
+    default double @NotNull [] asArray() {
         return new double[] { this.longitude(), this.latitude() };
     }
 
     /**
+     * Converts this point to an {@link Vec2dImmutable immutable vector}.
+     *
      * @return a {@link Vec2dImmutable} of which the X component is the longitude of this point
-     * and the Y component its latitude
+     * and the Y component its latitude, both expressed in degrees
      */
-    default Vec2dImmutable asVec2d() {
+    default @NotNull Vec2dImmutable asVec2d() {
         return new Vec2dImmutable(this.longitude(), this.latitude());
     }
 
     @Override
-    default GeoPointMutable getMutable() {
+    default @NotNull GeoPointMutable getMutable() {
         return new GeoPointMutable(this.longitude(), this.latitude());
     }
 
     @Override
-    default GeoPointImmutable getImmutable() {
+    default @NotNull GeoPointImmutable getImmutable() {
         return new GeoPointImmutable(this.longitude(), this.latitude());
     }
 

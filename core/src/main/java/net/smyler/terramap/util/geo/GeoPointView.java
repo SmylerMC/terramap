@@ -1,15 +1,20 @@
 package net.smyler.terramap.util.geo;
 
+import org.jetbrains.annotations.NotNull;
+
+import static java.util.Objects.requireNonNull;
+
 /**
- * A read-only view on a mutable {@link GeoPoint}.
+ * A read-only view on another {@link GeoPoint}.
  *
  * @author Smyler
  */
 public final class GeoPointView implements GeoPoint {
 
-    private final GeoPoint delegate;
+    private final @NotNull GeoPoint delegate;
 
-    public GeoPointView(GeoPoint delegate) {
+    public GeoPointView(@NotNull GeoPoint delegate) {
+        requireNonNull(delegate);
         this.delegate = delegate;
     }
 
