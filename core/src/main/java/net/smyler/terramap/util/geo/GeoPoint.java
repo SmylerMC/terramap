@@ -3,11 +3,8 @@ package net.smyler.terramap.util.geo;
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
 import net.smyler.smylib.math.Vec2dImmutable;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.toRadians;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.terramap.util.geo.GeoUtil.distanceHaversine;
@@ -35,6 +32,24 @@ public interface GeoPoint extends Mutable<GeoPointImmutable>, Immutable<GeoPoint
      * @return this point's longitude, in the appropriate [-180°, 180°] range
      */
     double longitude();
+
+    /**
+     * This point's longitude, expressed in radians.
+     *
+     * @return this point's longitude, in the appropriate [-pi, pi] range
+     */
+    default double longitudeRad() {
+        return toRadians(this.longitude());
+    }
+
+    /**
+     * This point's latitude, expressed in radians.
+     *
+     * @return this point's latitude, in the appropriate [-pi/2, pi/2] range
+     */
+    default double latitudeRad() {
+        return toRadians(this.latitude());
+    }
 
     /**
      * Estimates the distance between this point and another one as best as possible, ignoring altitude.

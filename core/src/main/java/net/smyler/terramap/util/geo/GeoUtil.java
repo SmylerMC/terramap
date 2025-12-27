@@ -78,12 +78,14 @@ public final class GeoUtil {
      * @return an approximation of the distance between the two points, in meters
      */
     public static double distanceHaversine(@NotNull GeoPoint point1, @NotNull GeoPoint point2) {
-        double latitude1 = point1.latitude();
-        double latitude2 = point2.latitude();
-        double dLon = toRadians(point1.longitude() - point2.longitude()) / 2d;
-        double dLat = toRadians(latitude1 - latitude2) / 2d;
-        double cosLat1 = cos(toRadians(latitude1));
-        double cosLat2 = cos(toRadians(latitude2));
+        double longitude1 = point1.longitudeRad();
+        double latitude1 = point1.latitudeRad();
+        double longitude2 = point2.longitudeRad();
+        double latitude2 = point2.latitudeRad();
+        double dLon = (longitude1 - longitude2) / 2d;
+        double dLat = (latitude1 - latitude2) / 2d;
+        double cosLat1 = cos(latitude1);
+        double cosLat2 = cos(latitude2);
         double sinDLon = sin(dLon);
         double sinDLat = sin(dLat);
         double arc = sinDLat*sinDLat + cosLat1*cosLat2 * sinDLon*sinDLon;
