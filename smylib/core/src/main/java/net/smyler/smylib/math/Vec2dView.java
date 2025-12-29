@@ -12,20 +12,20 @@ import org.jetbrains.annotations.NotNull;
  * Any operation on this vector that results in a vector will therefore leave the
  * delegate vector untouched and return a new {@link Vec2dImmutable} instance.
  *
- * @see Vec2dMutable#getReadOnly()
+ * @see Vec2dMutable#getReadOnlyView()
  *
  * @author Smyler
  */
-public final class Vec2dReadOnly extends Vec2dAbstract {
+public final class Vec2dView extends Vec2dAbstract {
 
     private final @NotNull Vec2d delegate;
 
     /**
-     * Creates a new {@link Vec2dReadOnly} backed by a given delegate {@link Vec2d}.
+     * Creates a new {@link Vec2dView} backed by a given delegate {@link Vec2d}.
      *
      * @param delegate the delegate {@link Vec2d}
      */
-    public Vec2dReadOnly(@NotNull Vec2d delegate) {
+    public Vec2dView(@NotNull Vec2d delegate) {
         this.delegate = delegate;
     }
 

@@ -105,8 +105,8 @@ public abstract class MapLayer implements Widget {
     /**
      * @return the coordinates of the upper left corner of the rendering viewport in the web Mercator map
      */
-    protected Vec2dReadOnly getUpperLeftRenderCornerPositionInMercatorSpace() {
-        return this.upperLeftRenderCorner.getReadOnly();
+    protected Vec2dView getUpperLeftRenderCornerPositionInMercatorSpace() {
+        return this.upperLeftRenderCorner.getReadOnlyView();
     }
 
     /**
@@ -263,15 +263,15 @@ public abstract class MapLayer implements Widget {
     /**
      * @return the dimensions of the render space of this layer
      */
-    public Vec2dReadOnly getRenderSpaceDimensions() {
-        return this.renderSpaceDimensions.getReadOnly();
+    public Vec2dView getRenderSpaceDimensions() {
+        return this.renderSpaceDimensions.getReadOnlyView();
     }
 
     /**
      * @return half the dimensions of the render space of this layer
      */
-    public Vec2dReadOnly getRenderSpaceHalfDimensions() {
-        return this.renderSpaceDimensionsHalf.getReadOnly();
+    public Vec2dView getRenderSpaceHalfDimensions() {
+        return this.renderSpaceDimensionsHalf.getReadOnlyView();
     }
 
     /**
@@ -299,8 +299,8 @@ public abstract class MapLayer implements Widget {
     /**
      * @return the normalized rendering offset of this layer (normalized implies that an offset of 1 shifts by the entire map size)
      */
-    public Vec2dReadOnly getRenderingOffset() {
-        return this.renderingOffset.getReadOnly();
+    public Vec2dView getRenderingOffset() {
+        return this.renderingOffset.getReadOnlyView();
     }
 
     /**

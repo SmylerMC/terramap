@@ -16,7 +16,7 @@ import static net.smyler.smylib.Preconditions.checkArgument;
 public final class Vec2dMutable extends Vec2dAbstract {
 
     public double x, y;
-    private Vec2dReadOnly readOnly;
+    private Vec2dView readOnly;
 
     /**
      * Creates a new vector with the given coordinates.
@@ -220,14 +220,14 @@ public final class Vec2dMutable extends Vec2dAbstract {
      * vectors and let this vector untouched.
      * <br>
      * The view is unique and cached for each object:
-     * multiple calls to this method on one object will return the same {@link Vec2dReadOnly} object.
+     * multiple calls to this method on one object will return the same {@link Vec2dView} object.
      *
      * @return the view over this vector
      */
     @Contract(pure = true)
-    public Vec2dReadOnly getReadOnly() {
+    public Vec2dView getReadOnlyView() {
         if (this.readOnly == null) {
-            this.readOnly = new Vec2dReadOnly(this);
+            this.readOnly = new Vec2dView(this);
         }
         return this.readOnly;
     }

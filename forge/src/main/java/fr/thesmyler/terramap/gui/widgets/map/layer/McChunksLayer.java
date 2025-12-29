@@ -26,7 +26,7 @@ import net.smyler.terramap.util.geo.GeoPointView;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.smylib.math.Vec2dReadOnly;
+import net.smyler.smylib.math.Vec2dView;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 
@@ -48,7 +48,7 @@ public class McChunksLayer extends MapLayer {
     
     private final ProjectionCache cache = new ProjectionCache(4);
     private final Vec2dMutable mcCenter = new Vec2dMutable();
-    private Vec2dReadOnly extendedDimensions;
+    private Vec2dView extendedDimensions;
     private GeoPointView geoCenter;
 
     private boolean render2dr = true;

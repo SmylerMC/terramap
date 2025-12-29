@@ -82,7 +82,7 @@ public class Vec2dTest {
     @Test
     public void canAddToVec2dView() {
         Vec2dMutable mutable = new Vec2dMutable(-5d, 8.5d);
-        Vec2dReadOnly vec = mutable.getReadOnly();
+        Vec2dView vec = mutable.getReadOnlyView();
 
         assertVec2d(2d, 2.5d, vec.add(7d, -6d));
 
@@ -115,7 +115,7 @@ public class Vec2dTest {
     @Test
     public void canSubtractFromVec2dView() {
         Vec2dMutable mutable = new Vec2dMutable(-5d, 8.5d);
-        Vec2dReadOnly vec = mutable.getReadOnly();
+        Vec2dView vec = mutable.getReadOnlyView();
 
         assertVec2d(-12d, 14.5d, vec.subtract(7d, -6d));
 
@@ -137,7 +137,7 @@ public class Vec2dTest {
     @Test
     public void canScaleVec2dView() {
         Vec2dMutable mutable = new Vec2dMutable(1d, -1d);
-        Vec2dReadOnly vec = mutable.getReadOnly();
+        Vec2dView vec = mutable.getReadOnlyView();
 
         assertVec2d(7d, -7d, vec.scale(7d));
 
@@ -195,7 +195,7 @@ public class Vec2dTest {
     @Test
     public void canComputeHadamardProductOfVec2dView() {
         Vec2dMutable mutable = new Vec2dMutable(8d, -6d);
-        Vec2dReadOnly vec = mutable.getReadOnly();
+        Vec2dView vec = mutable.getReadOnlyView();
 
         assertVec2d(40d, 18d, vec.hadamardProd(5d, -3d));
 
@@ -230,7 +230,7 @@ public class Vec2dTest {
     @Test
     public void canNormalizeVec2dView() {
         Vec2dMutable mutable = new Vec2dMutable(-1d, 1d);
-        Vec2dReadOnly vec = mutable.getReadOnly();
+        Vec2dView vec = mutable.getReadOnlyView();
 
         Vec2dImmutable normalized = vec.normalize();
 
@@ -293,9 +293,9 @@ public class Vec2dTest {
     @Test
     public void vec2dMutableCachesItsReadOnlyView() {
         Vec2dMutable mutable = new Vec2dMutable(-2d, 3d);
-        Vec2dReadOnly view1 = mutable.getReadOnly();
+        Vec2dView view1 = mutable.getReadOnlyView();
         mutable.set(8d, 3d);
-        Vec2dReadOnly view2 = mutable.getReadOnly();
+        Vec2dView view2 = mutable.getReadOnlyView();
 
         assertSame(view1, view2);
     }
@@ -311,7 +311,7 @@ public class Vec2dTest {
     public void toStringReturnsExpectedString() {
         assertEquals("Vec2dMutable[0.0; 0.0]", new Vec2dMutable(0d, 0d).toString());
         assertEquals("Vec2dImmutable[0.0; 0.0]", new Vec2dImmutable(0d, 0d).toString());
-        assertEquals("View[Vec2dMutable[0.0; 0.0]]", new Vec2dMutable(0d, 0d).getReadOnly().toString());
+        assertEquals("View[Vec2dMutable[0.0; 0.0]]", new Vec2dMutable(0d, 0d).getReadOnlyView().toString());
     }
 
     @Test
@@ -320,7 +320,7 @@ public class Vec2dTest {
         Vec2dMutable vec2 = vec1.copy();
         vec1.set(0d, 0d);
 
-        assertVec2d(-2d, 3d, vec2.getReadOnly());
+        assertVec2d(-2d, 3d, vec2.getReadOnlyView());
     }
 
     private static void assertVec2d(double expectedX, double expectedY, Vec2d actual) {
