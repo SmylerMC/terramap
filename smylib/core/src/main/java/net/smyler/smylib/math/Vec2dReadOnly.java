@@ -1,15 +1,31 @@
 package net.smyler.smylib.math;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 /**
- * A vector that provides read only access to a delegate vector.
+ * An unmodifiable two-dimensional double-precision floating point vector providing
+ * a view onto a potentially-mutable delegate vector.
+ * <br>
+ * This lets classes that use mutable vectors internally expose their state without
+ * risking the caller modifying it by calling a potentially stateful method.
+ * Any operation on this vector that results in a vector will therefore leave the
+ * delegate vector untouched and return a new {@link Vec2dImmutable} instance.
  *
- * @author SmylerMC
+ * @see Vec2dMutable#getReadOnly()
+ *
+ * @author Smyler
  */
 public final class Vec2dReadOnly extends Vec2dAbstract {
 
-    private final Vec2d delegate;
+    private final @NotNull Vec2d delegate;
 
-    public Vec2dReadOnly(Vec2d delegate) {
+    /**
+     * Creates a new {@link Vec2dReadOnly} backed by a given delegate {@link Vec2d}.
+     *
+     * @param delegate the delegate {@link Vec2d}
+     */
+    public Vec2dReadOnly(@NotNull Vec2d delegate) {
         this.delegate = delegate;
     }
 
@@ -24,50 +40,66 @@ public final class Vec2dReadOnly extends Vec2dAbstract {
     }
 
     @Override
-    public Vec2dImmutable scale(double factor) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull Vec2dImmutable scale(double factor) {
         return new Vec2dImmutable(this.delegate.x() * factor, this.delegate.y() * factor);
     }
 
     @Override
-    public Vec2dImmutable downscale(double factor) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull Vec2dImmutable downscale(double factor) {
         return new Vec2dImmutable(this.delegate.x() / factor, this.delegate.y() / factor);
     }
 
     @Override
-    public Vec2dImmutable normalize() {
+    @Contract(value = "-> new", pure = true)
+    public @NotNull Vec2dImmutable normalize() {
         double norm = this.norm();
-        if(norm == 0d) throw new ArithmeticException("Cannot normalize null vector");
+        if (norm == 0d) {
+            throw new ArithmeticException("Cannot normalize null vector");
+        }
         return this.scale(1d / norm);
     }
 
     @Override
-    public Vec2dImmutable add(Vec2d other) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull Vec2dImmutable add(@NotNull Vec2d other) {
         return new Vec2dImmutable(this.delegate.x() + other.x(), this.delegate.y() + other.y());
     }
 
     @Override
-    public Vec2dImmutable add(double x, double y) {
+    @Contract(value = "_, _ -> new", pure = true)
+    public @NotNull Vec2dImmutable add(double x, double y) {
         return new Vec2dImmutable(this.delegate.x() + x, this.delegate.y() + y);
     }
 
     @Override
-    public Vec2dImmutable subtract(Vec2d other) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull Vec2dImmutable subtract(@NotNull Vec2d other) {
         return new Vec2dImmutable(this.delegate.x() - other.x(), this.delegate.y() - other.y());
     }
 
     @Override
-    public Vec2dImmutable subtract(double x, double y) {
+    @Contract(value = "_, _ -> new", pure = true)
+    public @NotNull Vec2dImmutable subtract(double x, double y) {
         return new Vec2dImmutable(this.delegate.x() - x, this.delegate.y() - y);
     }
 
     @Override
-    public Vec2dImmutable hadamardProd(Vec2d other) {
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull Vec2dImmutable hadamardProd(@NotNull Vec2d other) {
         return new Vec2dImmutable(this.delegate.x()*other.x(), this.delegate.y()*other.y());
     }
 
     @Override
-    public Vec2dImmutable hadamardProd(double x, double y) {
+    @Contract(value = "_, _ -> new", pure = true)
+    public @NotNull Vec2dImmutable hadamardProd(double x, double y) {
         return new Vec2dImmutable(this.delegate.x()*x, this.delegate.y()*y);
+    }
+
+    @Override
+    public String toString() {
+        return "View[" + this.delegate + "]";
     }
 
 }

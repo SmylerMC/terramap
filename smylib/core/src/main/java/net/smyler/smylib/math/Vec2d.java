@@ -2,22 +2,36 @@ package net.smyler.smylib.math;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.*;
 
 /**
- * An interface representing a 2D vector of doubles.
+ * An interface representing a 2-dimensional vector of double precision floating-point numbers.
+ * <br>
+ * Supports most common vector and scalar operations on vectors.
+ * <br>
+ * {@link Vec2d} has two well known implementations:
+ * <ul>
+ *     <li>{@link Vec2dImmutable} provides an immutable implementation ; any operation resulting in a vector returns a new instance</li>
+ *     <li>{@link Vec2dMutable} provides a mutable implementation ; any operation resulting in a vector mutates the object and returns it</li>
+ * </ul>
+ *
+ * @author Smyler
  */
 public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> {
 
     /**
      * @return the X component of this vector.
      */
+    @Contract(pure = true)
     double x();
 
     /**
      * @return the Y component of this vector.
      */
+    @Contract(pure = true)
     double y();
 
     /**
@@ -26,7 +40,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param factor a scalar by which to multiply this vector.
      * @return a vector scaled accordingly to the given scalar.
      */
-    Vec2d scale(double factor);
+    @NotNull Vec2d scale(double factor);
 
     /**
      * Divides this vector by a given scalar.
@@ -34,15 +48,15 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param factor a scalar by which to divide this vector.
      * @return a vector scaled accordingly to the given scalar.
      */
-    Vec2d downscale(double factor);
+    @NotNull Vec2d downscale(double factor);
 
     /**
-     * Normalizes this vector so the result has a length of 1 according to the euclidean norm.
+     * Normalizes this vector so the result has a length of 1 according to the Euclidean norm.
      *
      * @return the normalized vector.
      * @throws ArithmeticException if this vector is the null vector.
      */
-    Vec2d normalize();
+    @NotNull Vec2d normalize();
 
     /**
      * Adds another vector to this one.
@@ -50,7 +64,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param other a vector to add with this one.
      * @return the resulting vector.
      */
-    Vec2d add(Vec2d other);
+    @NotNull Vec2d add(@NotNull Vec2d other);
 
     /**
      * Adds another vector to this one.
@@ -59,7 +73,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param y the Y coordinate of the vector to add with this one.
      * @return the resulting vector.
      */
-    Vec2d add(double x, double y);
+    @NotNull Vec2d add(double x, double y);
 
     /**
      * Subtracts another vector from this one.
@@ -67,7 +81,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param other a vector to subtract from this one.
      * @return the resulting vector.
      */
-    Vec2d subtract(Vec2d other);
+    @NotNull Vec2d subtract(@NotNull Vec2d other);
 
     /**
      * Subtracts another vector from this one.
@@ -76,7 +90,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param y the Y coordinate of the vector to subtract from this one.
      * @return the resulting vector.
      */
-    Vec2d subtract(double x, double y);
+    @NotNull Vec2d subtract(double x, double y);
 
     /**
      * Computes the hadamard product of two vectors.
@@ -84,7 +98,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param other another to compute the product with this one.
      * @return the resulting vector.
      */
-    Vec2d hadamardProd(Vec2d other);
+    @NotNull Vec2d hadamardProd(@NotNull Vec2d other);
 
     /**
      * Computes the hadamard product of two vectors.
@@ -93,7 +107,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param y the Y coordinate of the vector to compute the product with.
      * @return the resulting vector.
      */
-    Vec2d hadamardProd(double x, double y);
+    @NotNull Vec2d hadamardProd(double x, double y);
 
     /**
      * Computes the dot product of a vector with this one.
@@ -101,7 +115,8 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param other another vector to compute the dot product with.
      * @return the resulting scalar.
      */
-    default double dotProd(Vec2d other) {
+    @Contract(pure = true)
+    default double dotProd(@NotNull Vec2d other) {
         return this.x()*other.x() + this.y()*other.y();
     }
 
@@ -112,6 +127,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param y the Y coordinates of the  vector to compute the dot product with.
      * @return the resulting scalar.
      */
+    @Contract(pure = true)
     default double dotProd(double x, double y) {
         return this.x()*x + this.y()*y;
     }
@@ -121,7 +137,8 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param other another vector to compute the cross product with.
      * @return the resulting scalar.
      */
-    default double crossProd(Vec2d other) {
+    @Contract(pure = true)
+    default double crossProd(@NotNull Vec2d other) {
         return this.x()*other.y() - this.y()*other.x();
     }
 
@@ -131,13 +148,15 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param y the Y coordinates of the  vector to compute the dot product with.
      * @return the resulting scalar.
      */
+    @Contract(pure = true)
     default double crossProd(double x, double y) {
         return this.x()*y - this.y()*x;
     }
 
     /**
-     * @return the square of the euclidean norm of this vector.
+     * @return the square of the Euclidean norm of this vector.
      */
+    @Contract(pure = true)
     default double normSquared() {
         double x = this.x();
         double y = this.y();
@@ -147,6 +166,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
     /**
      * @return the Euclidean norm of this vector.
      */
+    @Contract(pure = true)
     default double norm() {
         double x = this.x();
         double y = this.y();
@@ -156,6 +176,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
     /**
      * @return the taxicab norm of this vector.
      */
+    @Contract(pure = true)
     default double taxicabNorm() {
         return abs(this.x()) + abs(this.y());
     }
@@ -163,6 +184,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
     /**
      * @return the maximum norm of this vector.
      */
+    @Contract(pure = true)
     default double maximumNorm() {
         return max(abs(this.x()), abs(this.y()));
     }
@@ -171,7 +193,8 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param other another vector to compute the distance with.
      * @return the Euclidean between this vector and the other.
      */
-    default double distanceTo(Vec2d other) {
+    @Contract(pure = true)
+    default double distanceTo(@NotNull Vec2d other) {
         double dx = this.x() - other.x();
         double dy = this.y() - other.y();
         return sqrt(dx * dx + dy * dy);
@@ -182,6 +205,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      * @param y the Y coordinate of the vector to compute the distance with.
      * @return the Euclidean between this vector and the other.
      */
+    @Contract(pure = true)
     default double distanceTo(double x, double y) {
         double dx = this.x() - x;
         double dy = this.y() - y;
@@ -191,6 +215,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
     /**
      * @return a double array with this vector coordinates.
      */
+    @Contract(pure = true)
     default double[] asArray() {
         return new double[] {this.x(), this.y()};
     }
@@ -198,22 +223,23 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
     /**
      * @return a mutable version of this vector.
      */
-    @Override
-    default Vec2dMutable getMutable() {
+    @Override @Contract(pure = true)
+    default @NotNull Vec2dMutable getMutable() {
         return new Vec2dMutable(this.x(), this.y());
     }
 
     /**
      * @return an immutable version of this vector.
      */
-    @Override
-    default Vec2dImmutable getImmutable() {
+    @Override @Contract(pure = true)
+    default @NotNull Vec2dImmutable getImmutable() {
         return new Vec2dImmutable(this.x(), this.y());
     }
 
     /**
      * @return whether both components of this vector are finite
      */
+    @Contract(pure = true)
     default boolean isFinite() {
         return Double.isFinite(this.x()) && Double.isFinite(this.y());
     }
