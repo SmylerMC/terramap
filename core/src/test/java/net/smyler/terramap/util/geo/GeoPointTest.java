@@ -328,6 +328,20 @@ public class GeoPointTest {
         );
     }
 
+    @Test
+    void canCloneGeoPointMutable() {
+        GeoPointMutable original = new GeoPointMutable(67d, -15d);
+        GeoPointView originalView = original.getReadOnlyView();
+
+        GeoPointMutable clone = original.clone();
+        GeoPointView cloneView = clone.getReadOnlyView();
+
+        assertNotSame(original, clone);
+        assertNotSame(originalView, cloneView);
+        assertEquals(original.longitude(), clone.longitude());
+        assertEquals(original.latitude(), clone.latitude());
+    }
+
     public static GeoPointImmutable PARIS = new GeoPointImmutable(2.350987d, 48.856667d);
     public static GeoPointImmutable NEW_YORK = new GeoPointImmutable(-74.005974d, 40.714268d);
     public static GeoPointImmutable LONDON = new GeoPointImmutable(-0.166670d, 51.500000d);

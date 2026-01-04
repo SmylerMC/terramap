@@ -15,7 +15,7 @@ import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
  *
  * @author Smyler
  */
-public class GeoPointMutable implements GeoPoint {
+public class GeoPointMutable implements GeoPoint, Cloneable {
 
     private double longitude, latitude;
     private GeoPointView readOnly;
@@ -178,6 +178,17 @@ public class GeoPointMutable implements GeoPoint {
     @Override
     public String toString() {
         return String.format(Locale.US, "GeoPointMutable[lon=%s°, lat=%s°]", this.longitude(), this.latitude());
+    }
+
+    @Override
+    public GeoPointMutable clone() {
+        try {
+            GeoPointMutable clone = (GeoPointMutable) super.clone();
+            clone.readOnly = null;  // Set this back to null so the clone can create its own view when requested
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
 }
