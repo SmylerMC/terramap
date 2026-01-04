@@ -19,6 +19,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.util.geo.GeoPointImmutable;
 import net.smyler.terramap.util.geo.GeoPointMutable;
@@ -267,8 +268,8 @@ public class McChunksLayer extends MapLayer {
         
         GeographicProjection projection;
         
-        final Map<Vec2d, GeoPointImmutable> mcToGeo = new HashMap<>();
-        final Set<Vec2d> accessedInCycle = new HashSet<>();
+        final Map<Vec2dImmutable, GeoPointImmutable> mcToGeo = new HashMap<>();
+        final Set<Vec2dImmutable> accessedInCycle = new HashSet<>();
 
         final int maxProjectionsPerCycle = 50;
         int[] projectionsThisCycle;
@@ -278,7 +279,8 @@ public class McChunksLayer extends MapLayer {
         }
         
         void getRenderPos(Vec2dMutable destination, Vec2d mcPos, int discriminator) throws OutOfProjectionBoundsException {
-            if (!this.accessedInCycle.contains(mcPos)) this.accessedInCycle.add(mcPos.getImmutable());
+            Vec2dImmutable imuMcPos = mcPos.getImmutable();
+            if (!this.accessedInCycle.contains(imuMcPos)) this.accessedInCycle.add(mcPos.getImmutable());
             
             // Not really out of bounds, but we don't need to differentiate the two
             if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) throw OutOfProjectionBoundsException.get();
@@ -286,8 +288,8 @@ public class McChunksLayer extends MapLayer {
             GeoPointImmutable location;
             
             // Try getting a cached value
-            if(this.mcToGeo.containsKey(mcPos)) {
-                location = this.mcToGeo.get(mcPos);
+            if(this.mcToGeo.containsKey(imuMcPos)) {
+                location = this.mcToGeo.get(imuMcPos);
                 if(location == null) throw OutOfProjectionBoundsException.get();
             } else {
                 // Fallback to computing it
