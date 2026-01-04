@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Smyler
  */
-public final class Vec2dView extends Vec2dAbstract {
+public final class Vec2dView implements Vec2d {
 
     private final @NotNull Vec2d delegate;
 

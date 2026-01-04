@@ -13,7 +13,7 @@ import static net.smyler.smylib.Preconditions.checkArgument;
  *
  * @author Smyler
  */
-public final class Vec2dMutable extends Vec2dAbstract {
+public final class Vec2dMutable implements Vec2d {
 
     public double x, y;
     private Vec2dView readOnly;

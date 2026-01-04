@@ -14,7 +14,7 @@ import static net.smyler.smylib.Preconditions.checkArgument;
  *
  * @author Smyler
  */
-public final class Vec2dImmutable extends Vec2dAbstract {
+public final class Vec2dImmutable implements Vec2d {
 
     /**
      * The null vector
@@ -162,6 +162,33 @@ public final class Vec2dImmutable extends Vec2dAbstract {
     @Override
     public String toString() {
         return "Vec2dImmutable[" + this.x + "; " + this.y + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Double.hashCode(this.x());
+        result = prime * result + Double.hashCode(this.y());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!obj.getClass().equals(Vec2dImmutable.class)) {
+            return false;
+        }
+        Vec2dImmutable other = (Vec2dImmutable) obj;
+        if (Double.doubleToLongBits(this.x()) != Double.doubleToLongBits(other.x())) {
+            return false;
+        }
+        return Double.doubleToLongBits(this.y()) == Double.doubleToLongBits(other.y());
     }
 
 }
