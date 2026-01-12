@@ -3,6 +3,7 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.*;
 import java.util.function.Consumer;
 
+import net.smyler.smylib.Profiler;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;
@@ -61,10 +62,11 @@ import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;
-import net.minecraft.profiler.Profiler.Result;
 import net.minecraft.util.ITabCompleter;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;
+import static java.lang.Math.round;
+import static net.smyler.smylib.Strings.repeat;
 import static net.smyler.terramap.util.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.Color.YELLOW;
@@ -443,7 +445,12 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     .append(GOLD).append("rotation target ")
                     .append(RESET);
             debugBuilder.append('\n');
-            this.buildProfilingResult(debugBuilder, "", "");
+            this.map.getProfiler().walkSections(c -> {
+                debugBuilder
+                        .append('\n')
+                        .append(repeat("  ", c.depth()))
+                        .append(String.format(Locale.US, "%1$s: %2$d%%", c.name(), round(c.shareOfParent() * 100)));
+            });
             this.debugText.setText(ofPlainText(debugBuilder.toString()));
             this.debugText.setAnchorY(this.getHeight() - this.debugText.getHeight());
         }
@@ -469,18 +476,6 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         }
         this.zoomInButton.setEnabled(controller.getZoom() < controller.getMaxZoom());
         this.zoomOutButton.setEnabled(controller.getZoom() > controller.getMinZoom());
-    }
-
-    private void buildProfilingResult(StringBuilder builder, String sectionName, String padding) {
-        List<Result> results = this.map.getProfiler().getProfilingData(sectionName);
-        for(Result result: results) {
-            String name = result.profilerName;
-            if("".equals(name) || name.equals(sectionName) || (sectionName + ".").equals(name)) continue;
-            long use = Math.round(result.usePercentage);
-            if("unspecified".equals(name) && use >= 100) continue;
-            builder.append('\n').append(padding).append(String.format(Locale.US, "%1$s: %2$d%%", name, use));
-            this.buildProfilingResult(builder, name, padding + "  ");
-        }
     }
 
     private void toggleInfoPanel() {

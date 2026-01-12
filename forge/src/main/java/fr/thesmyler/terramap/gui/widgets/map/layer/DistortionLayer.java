@@ -39,7 +39,7 @@ public class DistortionLayer extends MapLayer {
         MapWidget map = (MapWidget) parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
-        map.getProfiler().startSection("layer-distortion");
+        map.getProfiler().enterSection("layer-distortion");
         context.gl().pushViewMatrix();
         this.applyRotationGl(context, x, y);
 
@@ -65,7 +65,7 @@ public class DistortionLayer extends MapLayer {
         }
 
         context.gl().popViewMatrix();
-        map.getProfiler().endSection();
+        map.getProfiler().leaveSection();
     }
 
     @Override

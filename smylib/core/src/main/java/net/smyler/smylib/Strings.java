@@ -51,4 +51,12 @@ public final class Strings {
         return string.substring(start, end);
     }
 
+    public static String repeat(String string, int count) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            builder.append(string);
+        }
+        return builder.toString();
+    }
+
 }

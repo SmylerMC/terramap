@@ -136,7 +136,7 @@ public class McChunksLayer extends MapLayer {
         MapWidget map = (MapWidget)parent;
         GeographicProjection projection = TerramapClientContext.getContext().getProjection();
         if(projection == null) return;
-        map.getProfiler().startSection("layer-" + ID);
+        map.getProfiler().enterSection("layer-" + ID);
         
         this.cache.projection = projection;
 
@@ -185,7 +185,7 @@ public class McChunksLayer extends MapLayer {
 
         this.cache.cycle();
         context.gl().popViewMatrix();
-        map.getProfiler().endSection();
+        map.getProfiler().leaveSection();
     }
     
     private void renderGrid(UiDrawContext context, float x, float y, int discriminator, long tileSize, Color color, float lineWidth) {

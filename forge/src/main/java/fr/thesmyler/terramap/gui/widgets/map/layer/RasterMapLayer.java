@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.Profiler;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
@@ -21,7 +22,6 @@ import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
-import net.minecraft.profiler.Profiler;
 import net.smyler.terramap.util.geo.WebMercatorUtil;
 
 import static net.smyler.smylib.Color.WHITE;
@@ -71,7 +71,7 @@ abstract public class RasterMapLayer extends MapLayer {
         boolean debug = parentMap.isDebugMode();
         Profiler profiler = parentMap.getProfiler();
 
-        profiler.startSection("render-raster-layer_" + tiledMap.getId());
+        profiler.enterSection("render-raster-layer_" + tiledMap.getId());
 
         context.gl().pushViewMatrix();
         float widthViewPort = this.getWidth();
@@ -284,7 +284,7 @@ abstract public class RasterMapLayer extends MapLayer {
         this.lastNeededTiles = neededTiles;
 
         context.gl().popViewMatrix();
-        profiler.endSection();
+        profiler.leaveSection();
 
     }
 

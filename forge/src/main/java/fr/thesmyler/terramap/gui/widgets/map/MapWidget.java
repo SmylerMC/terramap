@@ -7,6 +7,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
+import net.smyler.smylib.Profiler;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.math.DoubleRange;
@@ -30,7 +31,6 @@ import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerCon
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
 import net.smyler.terramap.util.CopyrightHolder;
-import net.minecraft.profiler.Profiler;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
@@ -284,16 +284,16 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        this.profiler.endSection(); // End rest of the screen section
-        this.profiler.startSection("draw");
+        this.profiler.leaveSection(); // End rest of the screen section
+        this.profiler.enterSection("draw");
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
-        this.profiler.endSection();
+        this.profiler.leaveSection();
     }
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
 
-        this.profiler.startSection("update-movement");
+        this.profiler.enterSection("update-movement");
         long currentTime = System.currentTimeMillis();
         long dt = currentTime - this.lastUpdateTime;
 
@@ -309,7 +309,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.controller.update(dt);
 
-        this.profiler.endStartSection("update-all");
+        this.profiler.nextSection("update-all");
         super.onUpdate(mouseX, mouseY, parent);
 
         this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
@@ -321,10 +321,10 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.errorText.setText(ofPlainText(errorText));
         }
 
-        this.profiler.endStartSection("update-markers");
+        this.profiler.nextSection("update-markers");
         this.updateMarkers(mouseX, mouseY);
 
-        this.profiler.endStartSection("rest-of-screen");
+        this.profiler.nextSection("rest-of-screen");
 
         this.lastUpdateTime = currentTime;
     }
@@ -628,8 +628,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
-        this.profiler.profilingEnabled = debugMode;
-        if(!debugMode) this.profiler.clearProfiling();
+        this.profiler.setEnabled(debugMode);
     }
 
     /**

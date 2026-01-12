@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import com.google.gson.JsonObject;
+import net.smyler.smylib.Profiler;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
@@ -11,7 +12,6 @@ import net.smyler.terramap.util.geo.GeoPoint;
 import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dReadOnly;
-import net.minecraft.profiler.Profiler;
 
 public class RenderingDeltaPreviewLayer extends MapLayer {
 
@@ -33,7 +33,7 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
 
         MapWidget parentMap = (MapWidget) parent;
         Profiler profiler = parentMap.getProfiler();
-        profiler.startSection("render-delta-preview-layer");
+        profiler.enterSection("render-delta-preview-layer");
 
         float width = this.getWidth();
         float height = this.getHeight();
@@ -62,7 +62,7 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
                 x + width / 2 + centerHole, y + height / 2,
                 x + width, y + height / 2);
 
-        profiler.endSection();
+        profiler.leaveSection();
     }
 
     @Override
