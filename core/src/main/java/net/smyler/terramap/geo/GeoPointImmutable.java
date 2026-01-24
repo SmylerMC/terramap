@@ -1,4 +1,4 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -6,8 +6,8 @@ import java.util.Locale;
 
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Preconditions.checkArgument;
-import static net.smyler.terramap.util.geo.GeoUtil.getLatitudeInRange;
-import static net.smyler.terramap.util.geo.GeoUtil.getLongitudeInRange;
+import static net.smyler.terramap.geo.GeoUtil.getLatitudeInRange;
+import static net.smyler.terramap.geo.GeoUtil.getLongitudeInRange;
 
 /**
  * An immutable implementation of {@link GeoPoint}.

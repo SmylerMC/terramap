@@ -1,4 +1,4 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 public class TilePosImmutable extends TilePos {
 

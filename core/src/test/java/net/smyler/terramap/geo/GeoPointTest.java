@@ -1,6 +1,10 @@
 package net.smyler.terramap.util.geo;
 
 import net.smyler.smylib.math.Vec2dImmutable;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointImmutable;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointView;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

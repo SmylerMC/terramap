@@ -1,6 +1,6 @@
 package fr.thesmyler.terramap;
 
-import net.smyler.terramap.util.geo.GeoPoint;
+import net.smyler.terramap.geo.GeoPoint;
 import net.smyler.smylib.math.Vec2d;
 
 /**

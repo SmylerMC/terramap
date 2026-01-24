@@ -6,7 +6,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.terramap.TerramapResources;
-import net.smyler.terramap.util.geo.GeoPointImmutable;
+import net.smyler.terramap.geo.GeoPointImmutable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 

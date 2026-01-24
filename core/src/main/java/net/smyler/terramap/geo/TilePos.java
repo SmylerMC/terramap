@@ -1,4 +1,4 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;

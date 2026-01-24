@@ -3,7 +3,7 @@ package net.smyler.terramap.tilesets.raster;
 import fr.thesmyler.terramap.TerramapClientContext;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.smyler.smylib.Identifier;
-import net.smyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.geo.TilePosImmutable;
 
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;

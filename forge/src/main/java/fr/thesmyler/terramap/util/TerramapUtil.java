@@ -7,7 +7,7 @@ import net.buildtheearth.terraplusplus.generator.EarthGenerator;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.smyler.terramap.util.geo.GeoProjection;
+import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.util.geo.TerraplusplusGeoProjection;
 import org.jetbrains.annotations.NotNull;
 

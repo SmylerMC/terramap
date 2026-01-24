@@ -3,7 +3,7 @@ package net.smyler.terramap.tilesets.raster;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.util.ImageUtil;
-import net.smyler.terramap.util.geo.TilePosImmutable;
+import net.smyler.terramap.geo.TilePosImmutable;
 
 import java.awt.image.BufferedImage;
 

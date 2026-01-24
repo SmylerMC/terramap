@@ -1,12 +1,13 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 import java.util.Map;
 
+import net.smyler.terramap.geo.point.GeoPointImmutable;
 import net.smyler.terramap.util.collections.HashMapBuilder;
 import org.junit.jupiter.api.Test;
 
-import static net.smyler.terramap.util.geo.GeoBounds.*;
-import static net.smyler.terramap.util.geo.GeoPointImmutable.NORTH_POLE;
+import static net.smyler.terramap.geo.GeoBounds.*;
+import static net.smyler.terramap.geo.point.GeoPointImmutable.NORTH_POLE;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GeoBoundsTest {

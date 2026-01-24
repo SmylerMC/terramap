@@ -1,4 +1,4 @@
-package net.smyler.terramap.util.geo;
+package net.smyler.terramap.geo;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import static java.lang.Math.abs;
 import static java.lang.Math.toRadians;
 import static java.util.Objects.requireNonNull;
-import static net.smyler.terramap.util.geo.GeoUtil.distanceHaversine;
+import static net.smyler.terramap.geo.GeoUtil.distanceHaversine;
 
 /**
  * A point in the WGS:84 coordinate system.
