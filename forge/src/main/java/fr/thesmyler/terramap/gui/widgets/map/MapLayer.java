@@ -11,8 +11,8 @@ import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.*;
 import net.smyler.smylib.threading.DefaultThreadLocal;
 import net.minecraft.client.renderer.GlStateManager;
-import net.smyler.terramap.geo.GeoPoint;
-import net.smyler.terramap.geo.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.WebMercatorUtil;
 
 import org.jetbrains.annotations.Nullable;

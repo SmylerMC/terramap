@@ -34,9 +34,9 @@ import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.geo.GeoPoint;
-import net.smyler.terramap.geo.GeoPointMutable;
-import net.smyler.terramap.geo.GeoPointView;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointView;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.concurrent.TimeUnit.SECONDS;

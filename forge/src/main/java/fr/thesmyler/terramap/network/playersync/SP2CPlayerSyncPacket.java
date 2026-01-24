@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.NetworkUtil;
-import net.smyler.terramap.geo.GeoPoint;
-import net.smyler.terramap.geo.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.minecraft.client.Minecraft;

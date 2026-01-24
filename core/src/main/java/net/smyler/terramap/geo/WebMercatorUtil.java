@@ -2,6 +2,9 @@ package net.smyler.terramap.geo;
 
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointImmutable;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 
 import static java.lang.Math.*;
 

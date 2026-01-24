@@ -20,7 +20,7 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
-import net.smyler.terramap.geo.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.WebMercatorUtil;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;

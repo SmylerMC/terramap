@@ -1,5 +1,6 @@
 package net.smyler.terramap.geo;
 
+import net.smyler.terramap.geo.point.GeoPoint;
 import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.*;

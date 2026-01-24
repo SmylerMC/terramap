@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
-import net.smyler.terramap.geo.GeoPointMutable;
-import net.smyler.terramap.geo.GeoPointView;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.world.Position;

@@ -6,9 +6,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
-import net.smyler.terramap.geo.GeoPoint;
-import net.smyler.terramap.geo.GeoPointMutable;
-import net.smyler.terramap.geo.GeoPointView;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointView;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;

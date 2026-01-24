@@ -14,7 +14,7 @@ import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
-import net.smyler.terramap.geo.GeoPointView;
+import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.geo.GeoServices;
 import net.smyler.terramap.geo.TilePos;
 import net.smyler.terramap.geo.TilePos.InvalidTilePositionException;

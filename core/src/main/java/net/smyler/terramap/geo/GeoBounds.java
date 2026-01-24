@@ -1,6 +1,9 @@
 package net.smyler.terramap.geo;
 
 import net.smyler.smylib.math.Math;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointImmutable;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 
 import java.util.Locale;
 

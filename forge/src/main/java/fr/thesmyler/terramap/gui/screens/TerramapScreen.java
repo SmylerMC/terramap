@@ -11,6 +11,8 @@ import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.geo.*;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import org.jetbrains.annotations.Nullable;
 

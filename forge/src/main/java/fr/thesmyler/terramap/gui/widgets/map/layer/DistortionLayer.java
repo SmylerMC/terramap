@@ -10,6 +10,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import net.smyler.terramap.geo.*;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dView;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

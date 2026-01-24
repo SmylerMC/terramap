@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.input;
 
 import net.smyler.terramap.world.PositionMutable;
-import net.smyler.terramap.geo.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import org.lwjgl.input.Keyboard;

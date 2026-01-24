@@ -6,6 +6,10 @@ import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.terramap.geo.*;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointImmutable;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.util.math.Snapper;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;

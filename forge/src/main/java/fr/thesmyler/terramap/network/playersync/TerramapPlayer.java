@@ -2,7 +2,7 @@ package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
 
-import net.smyler.terramap.geo.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPoint;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;

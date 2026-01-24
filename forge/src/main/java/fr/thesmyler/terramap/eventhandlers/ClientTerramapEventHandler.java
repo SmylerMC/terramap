@@ -8,7 +8,7 @@ import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.terramap.world.PositionMutable;
-import net.smyler.terramap.geo.GeoPointMutable;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.GeoProjection;
 import net.smyler.terramap.geo.GeoServices;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;

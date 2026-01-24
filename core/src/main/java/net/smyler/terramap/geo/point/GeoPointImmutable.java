@@ -1,4 +1,4 @@
-package net.smyler.terramap.geo;
+package net.smyler.terramap.geo.point;
 
 import org.jetbrains.annotations.NotNull;
 
