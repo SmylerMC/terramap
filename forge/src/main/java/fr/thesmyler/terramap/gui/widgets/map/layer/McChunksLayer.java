@@ -22,6 +22,7 @@ import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.geo.*;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;

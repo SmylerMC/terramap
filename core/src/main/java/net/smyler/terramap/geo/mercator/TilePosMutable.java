@@ -1,4 +1,4 @@
-package net.smyler.terramap.geo;
+package net.smyler.terramap.geo.mercator;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 

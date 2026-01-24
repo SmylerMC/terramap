@@ -5,11 +5,11 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import net.smyler.terramap.Terramap;
-import net.smyler.terramap.geo.TilePos;
-import net.smyler.terramap.geo.TilePosImmutable;
-import net.smyler.terramap.geo.WebMercatorBounds;
-import net.smyler.terramap.geo.WebMercatorUtil;
-import net.smyler.terramap.geo.TilePos.InvalidTilePositionException;
+import net.smyler.terramap.geo.mercator.TilePos;
+import net.smyler.terramap.geo.mercator.TilePosImmutable;
+import net.smyler.terramap.geo.mercator.WebMercatorBounds;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
+import net.smyler.terramap.geo.mercator.TilePos.InvalidTilePositionException;
 
 /**
  * This class is in charge of keeping track of and loading the tiles used for rendering a specific map.

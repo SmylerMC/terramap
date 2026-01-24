@@ -8,7 +8,7 @@ import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.terramap.geo.point.GeoPointView;
-import net.smyler.terramap.geo.WebMercatorUtil;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dMutable;
 

@@ -1,4 +1,4 @@
-package net.smyler.terramap.geo;
+package net.smyler.terramap.geo.mercator;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;

@@ -5,7 +5,7 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.WebMercatorUtil;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 
 //TODO Make this even more accurate
 public class ScaleIndicatorWidget implements Widget {

@@ -16,13 +16,13 @@ import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.geo.GeoServices;
-import net.smyler.terramap.geo.TilePos;
-import net.smyler.terramap.geo.TilePos.InvalidTilePositionException;
+import net.smyler.terramap.geo.mercator.TilePos;
+import net.smyler.terramap.geo.mercator.TilePos.InvalidTilePositionException;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dView;
-import net.smyler.terramap.geo.WebMercatorUtil;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;

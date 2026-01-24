@@ -1,9 +1,9 @@
 package net.smyler.terramap.tilesets.raster;
 
 import net.smyler.smylib.Identifier;
-import net.smyler.terramap.geo.TilePos;
-import net.smyler.terramap.geo.TilePosImmutable;
-import net.smyler.terramap.geo.WebMercatorBounds;
+import net.smyler.terramap.geo.mercator.TilePos;
+import net.smyler.terramap.geo.mercator.TilePosImmutable;
+import net.smyler.terramap.geo.mercator.WebMercatorBounds;
 
 /**
  * A set of raster tiles that make up a map.
