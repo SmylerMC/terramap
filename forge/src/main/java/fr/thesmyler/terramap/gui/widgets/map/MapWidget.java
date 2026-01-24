@@ -285,17 +285,18 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        this.profiler.leaveSection(); // End rest of the screen section
-        this.profiler.tick();
-
         this.profiler.enterSection("draw");
+
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
         this.profiler.leaveSection();
     }
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-        this.profiler.enterSection("update-movement");
+        this.profiler.tick();
+        this.profiler.enterSection("update");
+
+        this.profiler.enterSection("movement");
         long currentTime = System.currentTimeMillis();
         long dt = currentTime - this.lastUpdateTime;
 
@@ -311,7 +312,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.controller.update(dt);
 
-        this.profiler.nextSection("update-all");
+        this.profiler.nextSection("widget");
         super.onUpdate(mouseX, mouseY, parent);
 
         this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
@@ -323,12 +324,12 @@ public class MapWidget extends FlexibleWidgetContainer {
             this.errorText.setText(ofPlainText(errorText));
         }
 
-        this.profiler.nextSection("update-markers");
+        this.profiler.nextSection("markers");
         this.updateMarkers(mouseX, mouseY);
-
-        this.profiler.nextSection("rest-of-screen");
+        this.profiler.leaveSection();
 
         this.lastUpdateTime = currentTime;
+        this.profiler.leaveSection();
     }
 
     /**
