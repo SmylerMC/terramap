@@ -10,6 +10,7 @@ import net.smyler.smylib.gui.Font;
 import net.smyler.terramap.geo.*;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointView;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.world.PositionMutable;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;

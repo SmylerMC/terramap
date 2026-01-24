@@ -13,6 +13,7 @@ import net.smyler.smylib.math.Vec2dView;
 import net.smyler.terramap.geo.TissotsIndicatrix;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.projection.GeoProjection;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

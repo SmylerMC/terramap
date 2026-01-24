@@ -38,7 +38,7 @@ import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.terramap.geo.GeoProjection;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 
 import static net.minecraft.client.Minecraft.getMinecraft;

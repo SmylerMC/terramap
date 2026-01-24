@@ -15,7 +15,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.SavedMapState;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.minecraft.client.Minecraft;
-import net.smyler.terramap.geo.GeoProjection;
+import net.smyler.terramap.geo.projection.GeoProjection;
 
 import java.util.Optional;
 

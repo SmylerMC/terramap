@@ -9,7 +9,7 @@ import fr.thesmyler.terramap.input.KeyBindings;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.terramap.world.PositionMutable;
 import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.GeoProjection;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.geo.GeoServices;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;
 import net.minecraft.client.gui.GuiChat;

@@ -6,7 +6,7 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
-import net.smyler.terramap.geo.GeoProjection;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.world.Position;
 import net.smyler.terramap.world.PositionImmutable;

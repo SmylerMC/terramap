@@ -15,6 +15,7 @@ import net.smyler.terramap.geo.TissotsIndicatrix;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointView;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import org.jetbrains.annotations.Nullable;
 

@@ -14,7 +14,7 @@ import net.smyler.terramap.world.PositionMutable;
 import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MinimapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import net.smyler.terramap.geo.GeoProjection;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 
 import static net.minecraft.client.Minecraft.getMinecraft;

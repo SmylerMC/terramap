@@ -1,5 +1,7 @@
-package net.smyler.terramap.geo;
+package net.smyler.terramap.geo.projection;
 
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.TissotsIndicatrix;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.world.Position;

@@ -26,6 +26,7 @@ import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.world.PositionMutable;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;

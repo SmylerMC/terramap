@@ -11,7 +11,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.GeoProjection;
+import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.world.Position;
 import net.smyler.terramap.world.PositionMutable;
