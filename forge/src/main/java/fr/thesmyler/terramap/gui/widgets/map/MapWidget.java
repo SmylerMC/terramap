@@ -39,6 +39,7 @@ import net.smyler.terramap.util.geo.GeoPointMutable;
 import net.smyler.terramap.util.geo.GeoPointReadOnly;
 
 import static java.util.Comparator.comparingInt;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.of;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
@@ -285,6 +286,8 @@ public class MapWidget extends FlexibleWidgetContainer {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         this.profiler.leaveSection(); // End rest of the screen section
+        this.profiler.tick();
+
         this.profiler.enterSection("draw");
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
         this.profiler.leaveSection();
@@ -292,7 +295,6 @@ public class MapWidget extends FlexibleWidgetContainer {
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-
         this.profiler.enterSection("update-movement");
         long currentTime = System.currentTimeMillis();
         long dt = currentTime - this.lastUpdateTime;
@@ -628,6 +630,10 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void setDebugMode(boolean debugMode) {
         this.debugMode = debugMode;
+        if (this.debugMode != this.profiler.isEnabled()) {
+            this.profiler.setTickRetentionAge(5, SECONDS);
+            this.profiler.setTickRetentionCount(1000);
+        }
         this.profiler.setEnabled(debugMode);
     }
 

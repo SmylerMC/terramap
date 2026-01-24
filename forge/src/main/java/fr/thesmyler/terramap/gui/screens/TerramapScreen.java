@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.gui.screens;
 import java.util.*;
 import java.util.function.Consumer;
 
-import net.smyler.smylib.Profiler;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;
@@ -445,11 +444,14 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                     .append(GOLD).append("rotation target ")
                     .append(RESET);
             debugBuilder.append('\n');
-            this.map.getProfiler().walkSections(c -> {
+            this.map.getProfiler().walkData(c -> {
                 debugBuilder
                         .append('\n')
                         .append(repeat("  ", c.depth()))
-                        .append(String.format(Locale.US, "%1$s: %2$d%%", c.name(), round(c.shareOfParent() * 100)));
+                        .append(String.format(Locale.US, "%1$s: %2$d%% (%3$d ticks, min/avg/max %4$d/%5$d/%6$d ms/frame)",
+                                c.name(), round(c.shareOfParent() * 100), c.getTickCount(),
+                                round(c.minTimeNanos() / 1e6), round(c.averageTimeNanos() / 1e6), round(c.maxTimeNanos() / 1e6)
+                        ));
             });
             this.debugText.setText(ofPlainText(debugBuilder.toString()));
             this.debugText.setAnchorY(this.getHeight() - this.debugText.getHeight());

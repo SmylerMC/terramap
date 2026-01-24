@@ -3,24 +3,34 @@ package net.smyler.smylib;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static java.lang.Math.max;
+import static java.lang.Math.round;
 import static java.lang.System.nanoTime;
 import static java.util.Comparator.comparing;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
+import static net.smyler.smylib.Preconditions.checkState;
 
 /**
  * A utility class to help collect simple time-based performance data within a thread.
  * <br>
  * Data is collected in the form of a tree of named <i>sections</i>,
- * with the total time spent executing each one.
+ * with the total time spent executing each one,
+ * aggregated across multiple <i>ticks</i>.
  *
  * @author Smyler
  */
 public class Profiler {
 
+    private int tickRetentionCount = 1000;
+    private long tickRetentionMaxAgeNanos = 5_000_000_000L;
+
     private @Nullable Section currentSection = null;
+    private final List<@NotNull Section> previousTicks = new LinkedList<>();
 
     /**
      * Creates a new disabled profiler. Call {@link #enable()} to start profiling.
@@ -45,7 +55,7 @@ public class Profiler {
     }
 
     /**
-     * Leaves the current subsection and enter another one.
+     * Leaves the current subsection and enters another one.
      * If the current parent section does not have a subsection with the given name,
      * it gets created.
      *
@@ -74,18 +84,45 @@ public class Profiler {
     }
 
     /**
-     * Execute a consumer for all recorded sections.
+     * Executes a consumer for all recorded sections.
      * Graph traversal happens in a similar fashion than DFS,
      * except parents are visited before their children.
      *
      * @param consumer the consumer to call
      */
-    public void walkSections(@NotNull Consumer<Section> consumer) {
-        if (this.currentSection == null) {
+    public void walkData(@NotNull Consumer<Section> consumer) {
+        Section aggregated = this.getData();
+        if (aggregated == null) {
             return;
         }
-        this.currentSection.update();
-        this.rootSection().walk(consumer);
+        this.getData().walk(consumer);
+    }
+
+    /**
+     * Gets the aggregated profiling data from all completed ticks.
+     *
+     * @return the merged root section containing all aggregated data, or null if no ticks have been completed
+     */
+    public @Nullable Section getData() {
+        if (this.previousTicks.isEmpty()) {
+            return null;
+        }
+        return Section.merge(null, this.previousTicks);
+    }
+
+    /**
+     * Completes the current profiling tick and starts a new one.
+     * The current section tree is saved and a new root section is created.
+     */
+    public void tick() {
+        if (this.currentSection == null) {
+            return; // Nothing to do when disabled
+        }
+        this.previousTicks.add(this.currentSection);
+        this.currentSection.leave();
+        this.currentSection = null;
+        this.enable();  // Will re-create the root section and enter it
+        this.pruneOldTicks();
     }
 
     /**
@@ -130,19 +167,50 @@ public class Profiler {
         return this.currentSection != null;
     }
 
-    private Section rootSection() {
-        Section section = this.currentSection;
-        if (section == null) {
-            throw new IllegalStateException("Cannot get root section of disabled profiler");
-        }
-        while (section.parent != null) {
-            section = section.parent;
-        }
-        return section;
+    /**
+     * Sets the maximum number of ticks to retain in memory.
+     * Older ticks will be discarded when this limit is exceeded.
+     *
+     * @param count the maximum number of ticks to retain
+     */
+    public void setTickRetentionCount(int count) {
+        this.tickRetentionCount = count;
+        this.pruneOldTicks();
     }
 
     /**
-     * Represents a single section in the profiling tree.
+     * Sets the maximum age of ticks to retain in memory.
+     * Ticks older than this age will be discarded.
+     *
+     * @param age the maximum age of ticks to retain
+     * @param unit the time unit of the age parameter
+     */
+    public void setTickRetentionAge(long age, @NotNull TimeUnit unit) {
+        this.tickRetentionMaxAgeNanos = unit.toNanos(age);
+        this.pruneOldTicks();
+    }
+
+    private void pruneOldTicks() {
+        // Count based
+        int toDiscard = max(0, this.previousTicks.size() - this.tickRetentionCount);
+        if (toDiscard > 0) {
+            this.previousTicks.subList(0, toDiscard).clear();
+        }
+
+        // Time based
+        Iterator<Section> iterator = this.previousTicks.iterator();
+        long pruneTime = nanoTime() - this.tickRetentionMaxAgeNanos;
+        while (iterator.hasNext()) {
+            Section section = iterator.next();
+            if (section.lastLeaveTimeNanos > pruneTime) {
+                break; // We found the first section within the temporal retention time window, stop there
+            }
+            iterator.remove();
+        }
+    }
+
+    /**
+     * Represents a single time section in the profiling tree.
      */
     public static final class Section {
         private final String name;
@@ -150,9 +218,16 @@ public class Profiler {
         private final @Nullable Section parent;
         private final Map<@NotNull String, @NotNull Section> children = new HashMap<>();
         private long enterTimeNanos = Long.MIN_VALUE;
+        private long lastLeaveTimeNanos = Long.MIN_VALUE;  // This is only valid for the root section
+
+        private long averageTimeNanos = 0L;
+        private int tickCount = 1;
         private long totalTimeNanos = 0L;
+        private long minTimeNanos = 0L;
+        private long maxTimeNanos = 0L;
 
         private Section(@NotNull String name, @Nullable Section parent, int depth) {
+            checkSectionName(name);
             this.name = name;
             this.parent = parent;
             this.depth = depth;
@@ -197,9 +272,26 @@ public class Profiler {
             return this.depth;
         }
 
-        private void walk(@NotNull Consumer<Section> consumer) {
+        /**
+         * Gets the number of ticks that contributed to this section's data.
+         *
+         * @return the tick count
+         */
+        public int getTickCount() {
+            return this.tickCount;
+        }
+
+        /**
+         * Executes a consumer for this section and all its children recursively.
+         * Children are visited in order of decreasing elapsed time.
+         *
+         * @param consumer the consumer to call for each section
+         */
+        public void walk(@NotNull Consumer<Section> consumer) {
             consumer.accept(this);
-            this.children.values().stream().sorted(comparing(Section::elapsedTimeNanos).reversed()).forEachOrdered(c -> c.walk(consumer));
+            this.children.values().stream()
+                    .sorted(comparing(Section::elapsedTimeNanos).reversed())
+                    .forEachOrdered(c -> c.walk(consumer));
         }
 
         private void enter() {
@@ -207,22 +299,40 @@ public class Profiler {
         }
 
         private void leave() {
-            this.totalTimeNanos += (nanoTime() - this.enterTimeNanos);
+            long now = nanoTime();
+            this.totalTimeNanos += (now - this.enterTimeNanos);
+            this.lastLeaveTimeNanos = now;
+            this.minTimeNanos = totalTimeNanos;
+            this.maxTimeNanos = totalTimeNanos;
+            this.averageTimeNanos = totalTimeNanos;
             this.enterTimeNanos = Long.MIN_VALUE;
         }
 
-        private void update() {
-            long now = nanoTime();
-            Section section = this;
-            while (section != null) {
-                section.totalTimeNanos += (now - section.enterTimeNanos);
-                section.enterTimeNanos = now;
-                section = section.parent;
-            }
+        private Set<String> getChildrenNames() {
+            return this.children.keySet();
         }
 
         private Section getChild(@NotNull String name) {
             return this.children.computeIfAbsent(name, n -> new Section(n, this, this.depth + 1));
+        }
+
+        /**
+         * Gets a subsection by its path from this section.
+         * The path is specified as a dot-separated string of section names.
+         *
+         * @param path the dot-separated path to the subsection
+         * @return the subsection, or null if not found
+         */
+        public @Nullable Section getSubsectionByPath(@NotNull String path) {
+            String[] names = path.split("\\.");
+            Section section = this;
+            for (String s : names) {
+                section = section.children.get(s);
+                if (section == null) {
+                    return null;
+                }
+            }
+            return section;
         }
 
         /**
@@ -233,6 +343,68 @@ public class Profiler {
         public @Nullable Section parent() {
             return parent;
         }
+
+        private static @NotNull Section merge(@Nullable Section parent, final List<@NotNull Section> sections) {
+            checkState(!sections.isEmpty(), "cannot merge 0 sections");
+
+            Section firstSection = sections.get(0);
+            String name = firstSection.name;
+            int depth = firstSection.depth;
+            checkState(sections.stream().allMatch(s -> s.name.equals(name)), "merging sections with different names");
+            checkState(sections.stream().allMatch(s -> s.depth == depth), "merging sections with different depths");
+
+            Section merged = new Section(name, parent, depth);
+            LongSummaryStatistics timeStats = sections.stream().mapToLong(Section::elapsedTimeNanos).summaryStatistics();
+            merged.tickCount = sections.stream().mapToInt(Section::getTickCount).sum();
+            merged.totalTimeNanos = timeStats.getSum();
+            merged.minTimeNanos = timeStats.getMin();
+            merged.maxTimeNanos = timeStats.getMax();
+            merged.averageTimeNanos = round(timeStats.getAverage());
+
+            Set<String> childrenNames = new HashSet<>();
+            sections.stream().map(Section::getChildrenNames).forEach(childrenNames::addAll);
+
+            childrenNames.stream()
+                    .map(childName -> sections.stream().map(s -> s.getChild(childName)).collect(toList()))
+                    .map(childSectionsAcrossTime -> merge(merged, childSectionsAcrossTime))
+                    .forEach(s -> merged.children.put(s.name, s));
+            return merged;
+        }
+
+        private static void checkSectionName(@NotNull String section) {
+            requireNonNull(section, "section names shall not be null");
+            if (section.contains(".")) {
+                throw new IllegalArgumentException("section names shall not contain '.'");
+            }
+        }
+
+        /**
+         * Gets the minimum time spent in this section across all ticks.
+         *
+         * @return the minimum time in nanoseconds
+         */
+        public long minTimeNanos() {
+            return this.minTimeNanos;
+        }
+
+        /**
+         * Gets the maximum time spent in this section across all ticks.
+         *
+         * @return the maximum time in nanoseconds
+         */
+        public long maxTimeNanos() {
+            return this.maxTimeNanos;
+        }
+
+        /**
+         * Gets the average time spent in this section across all ticks.
+         *
+         * @return the average time in nanoseconds
+         */
+        public long averageTimeNanos() {
+            return this.averageTimeNanos;
+        }
+
     }
 
 }
