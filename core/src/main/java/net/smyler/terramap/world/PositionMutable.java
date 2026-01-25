@@ -188,7 +188,7 @@ public class PositionMutable implements Position {
 
     @Override
     public String toString() {
-        return "PositionMutable[x=" + this.x() + ";y=" + this.y() + ";yaw=" + this.yaw() + ";pitch=" + this.pitch() + "]";
+        return "PositionMutable[x=" + this.x() + ";y=" + this.y() + ";z=" + this.z() + ";yaw=" + this.yaw() + ";pitch=" + this.pitch() + "]";
     }
 
 }
