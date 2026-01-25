@@ -195,7 +195,7 @@ public class McChunksLayer extends MapLayer {
         
         final int maxTiles = 100; // Maximum drawing iterations, for safety
 
-        this.centerTile.set(floorDiv((long) floor(this.mcCenter.x()), tileSize), floorDiv((long)floor(this.mcCenter.y()), tileSize));
+        this.centerTile.set(floorDiv((long) floor(this.mcCenter.x()), tileSize), floorDiv((long)floor(this.mcCenter.z()), tileSize));
         int dX = 0;
         int dY = 0;
         this.corners[0].set(this.centerTile).scale(tileSize);
@@ -283,9 +283,7 @@ public class McChunksLayer extends MapLayer {
         
         void getRenderPos(Vec2dMutable destination, Vec2d mcPos, int discriminator) throws OutOfGeoBoundsException {
             Vec2dImmutable imuMcPos = mcPos.getImmutable();
-            if (!this.accessedInCycle.contains(imuMcPos)) {
-                this.accessedInCycle.add(mcPos.getImmutable());
-            }
+            this.accessedInCycle.add(imuMcPos);
             
             // Not really out of bounds, but we don't need to differentiate the two
             if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) {
@@ -304,12 +302,12 @@ public class McChunksLayer extends MapLayer {
                 // Fallback to computing it
                 try {
                     this.projectionsThisCycle[discriminator]++;
-                    this.position.setXZ(mcPos.x(), mcPos.y());
+                    this.position.setXZ(imuMcPos.x(), imuMcPos.y());
                     this.projection.toGeo(this.location, this.position);
                     location = this.location.getImmutable();
-                    this.mcToGeo.put(mcPos.getImmutable(), location);
+                    this.mcToGeo.put(imuMcPos, location);
                 } catch(OutOfGeoBoundsException e) {
-                    this.mcToGeo.put(mcPos.getImmutable(), null);
+                    this.mcToGeo.put(imuMcPos, null);
                     throw e;
                 }
             }
