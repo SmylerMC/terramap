@@ -1,4 +1,4 @@
-package net.smyler.terramap.files.kml;
+package net.smyler.terramap.geo.formats.kml;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;

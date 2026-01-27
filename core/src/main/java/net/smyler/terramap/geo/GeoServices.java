@@ -14,10 +14,10 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import net.smyler.terramap.files.kml.KmlDocument;
-import net.smyler.terramap.files.kml.KmlFile;
-import net.smyler.terramap.files.kml.KmlPlacemark;
-import net.smyler.terramap.files.kml.KmlPoint;
+import net.smyler.terramap.geo.formats.kml.KmlDocument;
+import net.smyler.terramap.geo.formats.kml.KmlFile;
+import net.smyler.terramap.geo.formats.kml.KmlPlacemark;
+import net.smyler.terramap.geo.formats.kml.KmlPoint;
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.geo.point.GeoPoint;
 
