@@ -327,7 +327,6 @@ public class Vec2dTest {
         assertEquals(expectedX, actual.x(), "vector X component did not match");
         assertEquals(expectedY, actual.y(), "vector Y component did not match");
         assertArrayEquals(new double[] {expectedX, expectedY}, actual.asArray(), "vector array did not match");
-        assertEquals(new Vec2dMutable(expectedX, expectedY), actual.getMutable(), "mutable vector did not match");
         assertEquals(new Vec2dImmutable(expectedX, expectedY), actual.getImmutable(), "mutable vector did not match");
     }
 

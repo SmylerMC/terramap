@@ -15,12 +15,15 @@ public class TextButtonWidgetTest extends SmyLibTest {
 
     @Test
     public void testActivation() throws InterruptedException {
-        AtomicInteger clickCounter = new AtomicInteger();
         TestGameClient client = this.getTestGameClient();
         Screen screen = this.getTestGameClient().getCurrentScreen();
+
+        // A button that increases a counter when pressed
+        AtomicInteger clickCounter = new AtomicInteger();
         TextButtonWidget button = new TextButtonWidget(10, 10, 0, 200, "Test button", clickCounter::incrementAndGet);
         screen.addWidget(button);
 
+        // There shouldn't be anything focused at first
         assertNull(screen.getFocusedWidget());
 
         client.moveMouse(30, 30, 500);
