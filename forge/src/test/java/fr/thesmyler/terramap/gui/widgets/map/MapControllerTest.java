@@ -9,8 +9,8 @@ import net.smyler.terramap.geo.point.GeoPointImmutable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static fr.thesmyler.terramap.Assertions.assertCloseEnough;
 import static net.smyler.terramap.geo.point.GeoPointImmutable.ORIGIN;
-import static fr.thesmyler.terramap.Assertions.assertEquals;
 
 public class MapControllerTest extends TerramapTest {
 
@@ -40,7 +40,7 @@ public class MapControllerTest extends TerramapTest {
         this.controller.moveLocationToCenter(ORIGIN, false);
         this.controller.setZoomStaticLocation(ORIGIN);
         this.controller.zoom(5, false);
-        assertEquals(ORIGIN, this.controller.getCenterLocation(), 1e-3);
+        assertCloseEnough(ORIGIN, this.controller.getCenterLocation(), 1e-3);
 
         // Close enough points, zoom in
         this.controller.setZoom(0, false);
@@ -52,7 +52,7 @@ public class MapControllerTest extends TerramapTest {
         this.controller.setZoom(18, false);
         Vec2dMutable newPosition = new Vec2dMutable();
         this.map.getInputLayer().getPositionOnWidget(newPosition, PARIS);
-        assertEquals(originalPosition, newPosition, 1e-3);
+        assertCloseEnough(originalPosition, newPosition, 1e-3);
 
         // Close enough points, zoom out
         this.controller.setZoom(25, false);
@@ -64,7 +64,7 @@ public class MapControllerTest extends TerramapTest {
         this.controller.setZoom(0, false);
         newPosition = new Vec2dMutable();
         this.map.getInputLayer().getPositionOnWidget(newPosition, PARIS);
-        assertEquals(originalPosition, newPosition, 1e-3);
+        assertCloseEnough(originalPosition, newPosition, 1e-3);
 
     }
 

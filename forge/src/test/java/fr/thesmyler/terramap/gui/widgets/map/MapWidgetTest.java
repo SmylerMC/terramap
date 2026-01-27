@@ -13,6 +13,7 @@ import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
 import org.junit.jupiter.api.Test;
 
+import static fr.thesmyler.terramap.Assertions.assertCloseEnough;
 import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
 import static net.smyler.terramap.Terramap.getTerramap;
@@ -150,13 +151,13 @@ class MapWidgetTest extends TerramapTest {
     @Test
     public void layersViewportsAreProperlyUpdatedWhenMapResizes() {
         MapWidget map = new MapWidget(0f, 0f, 0, 100f, 100F, FULLSCREEN, 1d);
-        assertEquals(new Vec2dImmutable(100d, 100d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
+        assertCloseEnough(new Vec2dImmutable(100d, 100d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
         map.setSize(500f, 500f);
-        assertEquals(new Vec2dImmutable(500d, 500d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
+        assertCloseEnough(new Vec2dImmutable(500d, 500d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
         map.setWidth(100f);
-        assertEquals(new Vec2dImmutable(100d, 500d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
+        assertCloseEnough(new Vec2dImmutable(100d, 500d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
         map.setHeight(100f);
-        assertEquals(new Vec2dImmutable(100d, 100d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
+        assertCloseEnough(new Vec2dImmutable(100d, 100d), map.getInputLayer().getRenderSpaceDimensions(), 1e-3);
     }
 
 }
