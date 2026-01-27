@@ -15,7 +15,6 @@ import net.minecraft.client.entity.EntityPlayerSP;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
-import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
 
 public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<OtherPlayerMarker> {
 

@@ -2,8 +2,6 @@ package net.smyler.smylib.game;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.*;
-import net.smyler.smylib.gui.DummyUiDrawContext;
-import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.PopupScreen;
 import net.smyler.smylib.gui.screen.Screen;

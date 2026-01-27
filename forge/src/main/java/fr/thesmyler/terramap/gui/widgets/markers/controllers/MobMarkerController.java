@@ -14,7 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
-import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
 
 public class MobMarkerController extends MarkerController<MobMarker> {
 

@@ -16,12 +16,10 @@ import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.smylib.gui.screen.PopupScreenImplementation;
 import net.smyler.smylib.gui.screen.*;
 import net.smyler.smylib.gui.screen.test.TestScreen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import net.smyler.smylib.resources.*;
-import net.smyler.smylib.resources.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

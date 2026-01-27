@@ -15,7 +15,6 @@ import net.minecraft.entity.passive.IAnimals;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
-import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
 
 public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 

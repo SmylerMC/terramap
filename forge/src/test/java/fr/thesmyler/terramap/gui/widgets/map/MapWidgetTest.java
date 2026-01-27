@@ -17,7 +17,6 @@ import static fr.thesmyler.terramap.MapContext.FULLSCREEN;
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.RASTER_LAYER_ID;
 import static net.smyler.terramap.Terramap.getTerramap;
 import static net.smyler.terramap.geo.point.GeoPointImmutable.ORIGIN;
-import static fr.thesmyler.terramap.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MapWidgetTest extends TerramapTest {

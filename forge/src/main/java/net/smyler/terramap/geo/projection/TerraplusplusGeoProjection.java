@@ -3,7 +3,6 @@ package net.smyler.terramap.geo.projection;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
 import net.smyler.terramap.geo.*;
-import net.smyler.terramap.geo.TissotsIndicatrix;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.world.Position;

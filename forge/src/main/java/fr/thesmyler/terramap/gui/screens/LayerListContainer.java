@@ -22,7 +22,6 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
-import static net.smyler.smylib.gui.sprites.SmyLibSprites.BUTTON_VISIBILITY_OFF_15_HIGHLIGHTED;
 import static net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites.*;
 import static java.util.Comparator.comparing;
 import static net.smyler.smylib.SmyLib.getGameClient;
