@@ -97,7 +97,7 @@ public class ReflectedFontRenderer extends BaseFont {
             GlStateManager.scale(this.scale, this.scale, 1);
             this.renderStringAtPos(actualText, shadow);
             GlStateManager.popMatrix();
-            this.setPosX(x + this.getPosX()*this.scale);
+            this.setPosX(x + this.getPosX() * this.scale);
             this.setPosY(y);
             return this.getPosX();
         }

@@ -43,20 +43,20 @@ public class Mat2d {
 
     public Mat2d prod(Mat2d other) {
         return new Mat2d(
-                this.lig1.x*other.lig1.x + this.lig1.y*other.lig2.x, this.lig1.x*other.lig1.y + this.lig1.y*other.lig2.y,
-                this.lig2.x*other.lig1.x + this.lig2.y*other.lig2.x, this.lig2.x*other.lig1.y + this.lig2.y*other.lig2.y
+                this.lig1.x * other.lig1.x + this.lig1.y * other.lig2.x, this.lig1.x * other.lig1.y + this.lig1.y * other.lig2.y,
+                this.lig2.x * other.lig1.x + this.lig2.y * other.lig2.x, this.lig2.x * other.lig1.y + this.lig2.y * other.lig2.y
                 );
     }
 
     public Vec2dImmutable prod(Vec2dImmutable vec) {
         return new Vec2dImmutable(
-                this.lig1.x*vec.x + this.lig1.y*vec.y,
-                this.lig2.x*vec.x + this.lig2.y*vec.y
+                this.lig1.x * vec.x + this.lig1.y * vec.y,
+                this.lig2.x * vec.x + this.lig2.y * vec.y
                 );
     }
 
     public double determinant() {
-        return this.lig1.x*this.lig2.y - this.lig1.y*this.lig2.x;
+        return this.lig1.x * this.lig2.y - this.lig1.y * this.lig2.x;
     }
 
     public Mat2d inverse() {

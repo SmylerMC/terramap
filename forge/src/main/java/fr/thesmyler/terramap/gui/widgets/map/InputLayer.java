@@ -48,7 +48,7 @@ public class InputLayer extends MapLayer {
     static {
         Vec2dMutable outer = new Vec2dMutable(0, -ROTATION_POLYGON_RADIUS_OUTER);
         Vec2dMutable inner = new Vec2dMutable(0, -ROTATION_POLYGON_RADIUS_INNER);
-        Mat2d rot = Mat2d.forRotation(-PI*2 / ROTATION_POLYGON_VERTEX_COUNT);
+        Mat2d rot = Mat2d.forRotation(-PI * 2 / ROTATION_POLYGON_VERTEX_COUNT);
         for (int i = 0; i < ROTATION_POLYGON_VERTEX_COUNT; i++) {
             ROTATION_POLYGON_VERTICES_OUTER[i] = new double[] {
                     outer.x,

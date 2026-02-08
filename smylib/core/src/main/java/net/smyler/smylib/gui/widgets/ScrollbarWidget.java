@@ -269,7 +269,7 @@ public class ScrollbarWidget extends WidgetContainer {
             @Override
             float dragX(float length, float progress, float viewPort) {
                 float h = length - 30 - this.dragWidth(length, viewPort);
-                return 15 + h*progress;
+                return 15 + h * progress;
             }
 
             @Override
@@ -325,7 +325,7 @@ public class ScrollbarWidget extends WidgetContainer {
             @Override
             float dragY(float length, float progress, float viewPort) {
                 float h = length - 30 - this.dragHeight(length, viewPort);
-                return 15 + h*progress;
+                return 15 + h * progress;
             }
 
             @Override

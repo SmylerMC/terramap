@@ -99,7 +99,7 @@ public final class Vec2dImmutable implements Vec2d {
     @Override
     @Contract(value = "_ -> new", pure = true)
     public @NotNull Vec2dImmutable scale(double factor) {
-        return new Vec2dImmutable(this.x*factor, this.y*factor);
+        return new Vec2dImmutable(this.x * factor, this.y * factor);
     }
 
     @Override
@@ -145,13 +145,13 @@ public final class Vec2dImmutable implements Vec2d {
     @Override
     @Contract(value = "_ -> new", pure = true)
     public @NotNull Vec2dImmutable hadamardProd(@NotNull Vec2d other) {
-        return new Vec2dImmutable(this.x*other.x(), this.y*other.y());
+        return new Vec2dImmutable(this.x * other.x(), this.y * other.y());
     }
 
     @Override
     @Contract(value = "_, _ -> new", pure = true)
     public @NotNull Vec2dImmutable hadamardProd(double x, double y) {
-        return new Vec2dImmutable(this.x*x, this.y*y);
+        return new Vec2dImmutable(this.x * x, this.y * y);
     }
 
     @Override

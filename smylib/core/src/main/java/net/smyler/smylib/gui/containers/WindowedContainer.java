@@ -633,11 +633,11 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public float getInnerWidth() {
-        return this.getWidth() - 2*this.effectiveBorderSize;
+        return this.getWidth() - 2 * this.effectiveBorderSize;
     }
 
     public float getInnerHeight() {
-        return this.getHeight() - 2*this.effectiveBorderSize - this.effectiveTopBarHeight;
+        return this.getHeight() - 2 * this.effectiveBorderSize - this.effectiveTopBarHeight;
     }
 
     private boolean trySetInnerWidth(float width) {

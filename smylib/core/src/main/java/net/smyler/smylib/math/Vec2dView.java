@@ -88,13 +88,13 @@ public final class Vec2dView implements Vec2d {
     @Override
     @Contract(value = "_ -> new", pure = true)
     public @NotNull Vec2dImmutable hadamardProd(@NotNull Vec2d other) {
-        return new Vec2dImmutable(this.delegate.x()*other.x(), this.delegate.y()*other.y());
+        return new Vec2dImmutable(this.delegate.x() * other.x(), this.delegate.y() * other.y());
     }
 
     @Override
     @Contract(value = "_, _ -> new", pure = true)
     public @NotNull Vec2dImmutable hadamardProd(double x, double y) {
-        return new Vec2dImmutable(this.delegate.x()*x, this.delegate.y()*y);
+        return new Vec2dImmutable(this.delegate.x() * x, this.delegate.y() * y);
     }
 
     @Override

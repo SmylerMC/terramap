@@ -89,7 +89,7 @@ public class MenuWidget implements Widget {
                     }
                     tx += 3 * this.hoverAnimation.getProgress();
                     c = hoveredTextColor;
-                    context.drawRectangle(x+1, ty+1, x + width, ty + fh + padding*2 -1, hoveredColor);
+                    context.drawRectangle(x+1, ty+1, x + width, ty + fh + padding * 2 -1, hoveredColor);
                 }
                 MenuWidget subMenu = entry.getSubMenu();
                 if (this.displayedSubMenu != null && mouseHoverMenu && this.displayedSubMenu.equals(subMenu) && !hovered) {
@@ -108,7 +108,7 @@ public class MenuWidget implements Widget {
                     subMenu.isSubMenu = true;
                     subMenu.show(subX, subY);
                 }
-                this.font.draw(x + padding*2 + tx, ty + padding, entry.getText(), c, false);
+                this.font.draw(x + padding * 2 + tx, ty + padding, entry.getText(), c, false);
                 if (subMenu != null) this.font.draw(x + width - dw - padding, ty + padding, " >", c, false);
                 ty += lh;
             } else {

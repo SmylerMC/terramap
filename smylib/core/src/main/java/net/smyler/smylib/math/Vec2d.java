@@ -118,7 +118,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      */
     @Contract(pure = true)
     default double dotProd(@NotNull Vec2d other) {
-        return this.x()*other.x() + this.y()*other.y();
+        return this.x() * other.x() + this.y() * other.y();
     }
 
     /**
@@ -130,7 +130,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      */
     @Contract(pure = true)
     default double dotProd(double x, double y) {
-        return this.x()*x + this.y()*y;
+        return this.x() * x + this.y() * y;
     }
 
     /**
@@ -140,7 +140,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      */
     @Contract(pure = true)
     default double crossProd(@NotNull Vec2d other) {
-        return this.x()*other.y() - this.y()*other.x();
+        return this.x() * other.y() - this.y() * other.x();
     }
 
     /**
@@ -151,7 +151,7 @@ public interface Vec2d extends Mutable<Vec2dImmutable>, Immutable<Vec2dMutable> 
      */
     @Contract(pure = true)
     default double crossProd(double x, double y) {
-        return this.x()*y - this.y()*x;
+        return this.x() * y - this.y() * x;
     }
 
     /**

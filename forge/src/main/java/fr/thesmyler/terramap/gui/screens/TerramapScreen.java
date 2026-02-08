@@ -285,7 +285,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         int buttonWidth = (int) ((this.layerList.getWidth() - 10) / 3);
         this.layerPanel.addWidget(
                 new TextButtonWidget(
-                        15f + buttonWidth*2, this.layerPanel.getHeight() - 25, 1,
+                        15f + buttonWidth * 2, this.layerPanel.getHeight() - 25, 1,
                         buttonWidth,
                         translator.format("terramap.terramapscreen.layerscreen.new"),
                         this::openInitialNewLayerSelector));

@@ -67,7 +67,7 @@ public final class GeoUtil {
         if (!Float.isFinite(azimuth)) {
             throw new IllegalArgumentException("azimuth cannot be infinite or NaN");
         }
-        return (float) (azimuth - floor(azimuth / 360)*360);
+        return (float) (azimuth - floor(azimuth / 360) * 360);
     }
 
     /**
@@ -90,7 +90,7 @@ public final class GeoUtil {
         double cosLat2 = cos(latitude2);
         double sinDLon = sin(dLon);
         double sinDLat = sin(dLat);
-        double arc = sinDLat*sinDLat + cosLat1*cosLat2 * sinDLon*sinDLon;
+        double arc = sinDLat * sinDLat + cosLat1 * cosLat2 * sinDLon * sinDLon;
         return 2 * EARTH_RADIUS * asin(sqrt(arc));
     }
 

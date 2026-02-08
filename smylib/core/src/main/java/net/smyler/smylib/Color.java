@@ -34,7 +34,7 @@ public class Color {
     }
 
     public Color(float red, float green, float blue, float alpha) {
-        this(Math.round(red*255), Math.round(green*255), Math.round(blue*255), Math.round(alpha*255));
+        this(Math.round(red * 255), Math.round(green * 255), Math.round(blue * 255), Math.round(alpha * 255));
     }
 
     public Color(float red, float green, float blue) {

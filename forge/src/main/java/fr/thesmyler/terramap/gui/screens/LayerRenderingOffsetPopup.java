@@ -128,7 +128,7 @@ public class LayerRenderingOffsetPopup extends Popup {
         content.addWidget(this.map);
         content.scheduleBeforeEachUpdate(() -> this.map.setTileScaling(layer.getMap().getTileScaling()));
         content.scheduleAfterEachUpdate(this::updateMap);
-        float midWidth = content.getWidth() - this.map.getWidth() - margin*3;
+        float midWidth = content.getWidth() - this.map.getWidth() - margin * 3;
         TextButtonWidget resetButton = new TextButtonWidget(
                 margin, this.yInput.getY() + this.xInput.getHeight() + interline, 0,
                 (midWidth - spacing) / 2,
@@ -174,7 +174,7 @@ public class LayerRenderingOffsetPopup extends Popup {
         }
         try {
             dY = Double.parseDouble(this.yInput.getText());
-            if (!Double.isFinite(dY) || dY > 256*Math.pow(2d, mapZoom))
+            if (!Double.isFinite(dY) || dY > 256 * Math.pow(2d, mapZoom))
                 throw new NumberFormatException();
             okY = true;
             this.yInput.setEnabledTextColor(Color.WHITE);

@@ -116,7 +116,7 @@ public class CircularCompassWidget implements Widget {
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         float dX = mouseX - this.size / 2;
         float dY = mouseY - this.size / 2;
-        if (dX*dX + dY*dY < this.size*this.size / 4) {
+        if (dX * dX + dY * dY < this.size * this.size / 4) {
             if (this.onClick != null) this.onClick.run();
             return false;
         }
@@ -167,11 +167,11 @@ public class CircularCompassWidget implements Widget {
 
     public void setSize(float size) {
         this.size = size;
-        int vertexCount = (int) (2*Math.PI*this.size);
+        int vertexCount = (int) (2 * Math.PI * this.size);
         float radius = this.size / 2;
         this.vertices = new double[vertexCount][2];
         this.vertexCalculationHelper.set(0, -radius);
-        Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
+        Mat2d rot = Mat2d.forRotation(-Math.PI * 2 / vertexCount);
         for (int i = 0; i < vertexCount; i++) {
             this.vertices[i] = new double[] {
                     this.vertexCalculationHelper.x(),

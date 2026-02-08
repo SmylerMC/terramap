@@ -50,7 +50,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 
     @Override
     protected void setValueFromPos(float sliderPosition) {
-        this.option = Math.round((this.options.length - 1)* sliderPosition);
+        this.option = Math.round((this.options.length - 1) * sliderPosition);
         this.onCycle();
     }
 

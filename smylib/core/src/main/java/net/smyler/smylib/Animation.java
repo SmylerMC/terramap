@@ -97,7 +97,7 @@ public class Animation {
     }
 
     public Color fadeColor(Color color) {
-        return color.withAlpha(saturate(color.alphaf()*this.progress));
+        return color.withAlpha(saturate(color.alphaf() * this.progress));
     }
 
     public Color rainbowColor() {

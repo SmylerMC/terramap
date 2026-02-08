@@ -122,7 +122,7 @@ public abstract class AbstractSliderWidget implements Widget {
         double yCrop = SLIDER.height() - min(10d, this.height / 2);
         context.drawSpriteCropped(x, y, SLIDER, 0d, 0d, xCrop, yCrop);
         context.drawSpriteCropped(x + leftWidth, y, SLIDER, xCrop, 0, 0, yCrop);
-        for (int i = 0; i*18 < this.height - 20; i++) {
+        for (int i = 0; i * 18 < this.height - 20; i++) {
             context.drawSpriteCropped(x, y + splitHeight + 16d * i, SLIDER, 0d, 2d, xCrop, 2d);
             context.drawSpriteCropped(x + leftWidth, y + splitHeight + 16d * i, SLIDER, xCrop, 2d, 0d, 2d);
         }
@@ -134,9 +134,9 @@ public abstract class AbstractSliderWidget implements Widget {
         float sliderX = x + sliderPosition * (this.width - 8);
         context.drawSpriteCropped(sliderX, y, SLIDER_HANDLE, 0, 0, SLIDER_HANDLE.width() - 4d, SLIDER_HANDLE.height() - splitHeight);
         context.drawSpriteCropped(sliderX + 4, y, SLIDER_HANDLE, SLIDER_HANDLE.width() - 4d, 0d, 0d, SLIDER_HANDLE.height() - splitHeight);
-        for (int i = 0; i*18 < this.height - 20; i++) {
-            context.drawSpriteCropped(sliderX, y + splitHeight + 16*i, SLIDER_HANDLE, 0d, 2d, SLIDER_HANDLE.width() - 4d, 2d);
-            context.drawSpriteCropped(sliderX + 4d, y + splitHeight + 16*i, SLIDER_HANDLE, SLIDER_HANDLE.width() - 4d, 2d, 0d, 2d);
+        for (int i = 0; i * 18 < this.height - 20; i++) {
+            context.drawSpriteCropped(sliderX, y + splitHeight + 16 * i, SLIDER_HANDLE, 0d, 2d, SLIDER_HANDLE.width() - 4d, 2d);
+            context.drawSpriteCropped(sliderX + 4d, y + splitHeight + 16 * i, SLIDER_HANDLE, SLIDER_HANDLE.width() - 4d, 2d, 0d, 2d);
         }
         context.drawSpriteCropped(sliderX, y + this.height - splitHeight, SLIDER_HANDLE, 0d, SLIDER_HANDLE.height() - splitHeight, SLIDER_HANDLE.width() - 4d, 0d);
         context.drawSpriteCropped(sliderX + 4d, y + this.height - splitHeight, SLIDER_HANDLE, SLIDER_HANDLE.width() - 4d, SLIDER_HANDLE.height() - splitHeight, 0d, 0d);

@@ -25,7 +25,7 @@ public class TextPopup extends Popup {
                 text.getWidth() / 2 + padding - 20,
                 text.getY() + text.getHeight() + padding,
                 1, 40, getGameClient().translator().format("smylibgui.popup.info.ok"));
-        this.resize(text.getWidth() + padding*2, button.getY() + padding + button.getHeight());
+        this.resize(text.getWidth() + padding * 2, button.getY() + padding + button.getHeight());
         button.setOnClick(this::close);
         button.enable();
         this.addWidget(text);

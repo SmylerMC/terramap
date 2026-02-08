@@ -147,7 +147,7 @@ public class TestScreen extends Screen {
                     font
             ));
             SpriteWidget spriteWidget = new SpriteWidget(
-                    font.computeWidth(id) + 2*PADDING, (float) (y + (entryHeight - sprite.height()) / 2), 0,
+                    font.computeWidth(id) + 2 * PADDING, (float) (y + (entryHeight - sprite.height()) / 2), 0,
                     sprite
             );
             this.spritesContainer.addWidget(spriteWidget);
@@ -183,7 +183,7 @@ public class TestScreen extends Screen {
         this.widgetTab.addWidget(new TextFieldWidget(PADDING, 90f, 0, 150f, this.getFont()).setText("TextFieldWidget"));
 
         // JSON text
-        final TextFieldWidget inputField = new TextFieldWidget(PADDING, PADDING, 0, jsonTextTab.getWidth() - 2*PADDING, getGameClient().defaultFont());
+        final TextFieldWidget inputField = new TextFieldWidget(PADDING, PADDING, 0, jsonTextTab.getWidth() - 2 * PADDING, getGameClient().defaultFont());
         final TextWidget text = new TextWidget(
                 this.jsonTextTab.getWidth() / 2,
                 (this.jsonTextTab.getHeight() - inputField.getHeight()) / 2,
@@ -207,7 +207,7 @@ public class TestScreen extends Screen {
             }
         });
 
-        final TextFieldWidget resourceInputField = new TextFieldWidget(PADDING, PADDING, 0, this.resourceTab.getWidth() - 2*PADDING, getGameClient().defaultFont());
+        final TextFieldWidget resourceInputField = new TextFieldWidget(PADDING, PADDING, 0, this.resourceTab.getWidth() - 2 * PADDING, getGameClient().defaultFont());
         final TextWidget resourceParsingResult = new TextWidget(
                 this.resourceTab.getWidth() / 2, resourceInputField.getY() + resourceInputField.getHeight() + PADDING, 0,
                 ImmutableText.EMPTY, TextAlignment.CENTER, getGameClient().defaultFont()
