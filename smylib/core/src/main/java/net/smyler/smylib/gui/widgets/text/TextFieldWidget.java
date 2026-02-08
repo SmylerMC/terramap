@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.Color.BLUE;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.function.TrivialFunctions.*;
 import static net.smyler.smylib.game.Key.*;
 import static net.smyler.smylib.math.Math.clamp;
 
@@ -94,7 +95,7 @@ public class TextFieldWidget implements Widget {
     }
 
     public TextFieldWidget(float x, float y, int z, float width, Font font) {
-        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, font);
+        this(x, y, z, width, "", noOpConsumer(), falsePredicate(), truePredicate(), Integer.MAX_VALUE, font);
     }
 
     public TextFieldWidget(int z, String defaultText, Font font) {
@@ -106,7 +107,7 @@ public class TextFieldWidget implements Widget {
     }
 
     public TextFieldWidget(float x, float y, int z, float width) {
-        this(x, y, z, width, "", str -> {}, (str) -> false, (str) -> true, Integer.MAX_VALUE, getGameClient().defaultFont());
+        this(x, y, z, width, "", noOpConsumer(), falsePredicate(), truePredicate(), Integer.MAX_VALUE, getGameClient().defaultFont());
     }
 
     public TextFieldWidget(int z, String defaultText) {

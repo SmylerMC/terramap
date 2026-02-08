@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import static net.smyler.smylib.Color.*;
+import static net.smyler.smylib.function.TrivialFunctions.*;
 
 /**
  * A simple widgets that allows the user to input a color.
@@ -21,7 +22,7 @@ public class ColorPickerWidget extends TextFieldWidget {
 
     private Color color;
     private boolean hasValidColor = true;
-    private Consumer<Optional<Color>> onColorChange = c -> {};
+    private Consumer<Optional<Color>> onColorChange = noOpConsumer();
 
     /**
      * Constructs a new {@link ColorPickerWidget color picker widget}.
@@ -33,8 +34,8 @@ public class ColorPickerWidget extends TextFieldWidget {
      * @param font          the font to render the text of the widget
      */
     public ColorPickerWidget(float x, float y, int z, Color defaultColor, Font font) {
-        super(x, y, z, font.height() * 0.5f * 16 + font.height(), defaultColor.asHtmlHexString(), s -> {}, s -> false, s -> true, 9, font);
-        this.setOnChangeCallback(s -> {});
+        super(x, y, z, font.height() * 0.5f * 16 + font.height(), defaultColor.asHtmlHexString(), noOpConsumer(), falsePredicate(), truePredicate(), 9, font);
+        this.setOnChangeCallback(noOpConsumer());
         this.color = defaultColor;
     }
 
