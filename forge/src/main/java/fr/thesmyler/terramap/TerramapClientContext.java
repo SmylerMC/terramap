@@ -1,5 +1,14 @@
 package fr.thesmyler.terramap;
 
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.MinecraftServerInfo;
+
+import net.smyler.terramap.Terramap;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.geo.projection.TerraplusplusGeoProjection;
+import net.smyler.terramap.tilesets.raster.*;
+
 import fr.thesmyler.smylibgui.toast.TextureToast;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
@@ -10,26 +19,23 @@ import fr.thesmyler.terramap.network.playersync.*;
 import fr.thesmyler.terramap.saving.client.ClientSaveManager;
 import fr.thesmyler.terramap.saving.client.SavedClientState;
 import fr.thesmyler.terramap.util.TerramapUtil;
-import java.io.IOException;
-import java.util.*;
+
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.buildtheearth.terraplusplus.projection.mercator.WebMercatorProjection;
+
+import java.io.IOException;
+import java.util.*;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.smyler.smylib.game.GameClient;
-import net.smyler.smylib.game.MinecraftServerInfo;
-import net.smyler.terramap.Terramap;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.geo.projection.TerraplusplusGeoProjection;
-import net.smyler.terramap.tilesets.raster.*;
+
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

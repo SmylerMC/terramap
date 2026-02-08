@@ -1,7 +1,8 @@
 package fr.thesmyler.smylibgui;
 
-import net.minecraft.util.ResourceLocation;
 import net.smyler.terramap.Terramap;
+
+import net.minecraft.util.ResourceLocation;
 
 public final class SmyLibGuiTextures {
 

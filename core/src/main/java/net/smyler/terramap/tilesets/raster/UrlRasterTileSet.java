@@ -1,5 +1,13 @@
 package net.smyler.terramap.tilesets.raster;
 
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.text.Text;
+
+import net.smyler.terramap.geo.mercator.TilePosImmutable;
+import net.smyler.terramap.geo.mercator.WebMercatorBounds;
+import net.smyler.terramap.util.CopyrightHolder;
+import net.smyler.terramap.util.ImageUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -9,13 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+
 import javax.imageio.ImageIO;
-import net.smyler.smylib.Identifier;
-import net.smyler.smylib.text.Text;
-import net.smyler.terramap.geo.mercator.TilePosImmutable;
-import net.smyler.terramap.geo.mercator.WebMercatorBounds;
-import net.smyler.terramap.util.CopyrightHolder;
-import net.smyler.terramap.util.ImageUtil;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;

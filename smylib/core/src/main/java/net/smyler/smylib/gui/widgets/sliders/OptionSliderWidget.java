@@ -1,11 +1,12 @@
 package net.smyler.smylib.gui.widgets.sliders;
 
+import net.smyler.smylib.gui.Font;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

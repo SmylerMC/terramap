@@ -1,6 +1,7 @@
 package net.smyler.smylib.text;
 
 import net.smyler.smylib.Color;
+
 import org.jetbrains.annotations.NotNull;
 
 import static java.util.Arrays.stream;

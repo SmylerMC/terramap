@@ -1,5 +1,13 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.popups.Popup;
+import net.smyler.smylib.gui.screen.Screen;
+import net.smyler.smylib.gui.widgets.MenuWidget;
+
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.tilesets.raster.RasterTileSet;
+
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
@@ -9,14 +17,10 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.maps.SavedMapState;
+
 import java.util.Optional;
+
 import net.minecraft.client.Minecraft;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.smylib.gui.screen.Screen;
-import net.smyler.smylib.gui.widgets.MenuWidget;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.tilesets.raster.RasterTileSet;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;

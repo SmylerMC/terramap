@@ -4,6 +4,7 @@ import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.geo.TissotsIndicatrix;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.world.PositionMutable;
+
 import org.jetbrains.annotations.NotNull;
 
 /**

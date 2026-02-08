@@ -1,12 +1,14 @@
 package net.smyler.smylib.proxy;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.SmyLibForgeMod;
 import net.smyler.smylib.game.WrappedMinecraft;
 import net.smyler.smylib.gui.screen.test.TestScreen;
+
+import net.minecraft.client.Minecraft;
+
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 
 @SuppressWarnings("unused")  // Injected by FML into SmyLibForgeMod

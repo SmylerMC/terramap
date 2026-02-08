@@ -1,6 +1,7 @@
 package net.smyler.terramap.tilesets.raster;
 
 import net.smyler.smylib.Identifier;
+
 import net.smyler.terramap.geo.mercator.TilePos;
 import net.smyler.terramap.geo.mercator.TilePosImmutable;
 import net.smyler.terramap.geo.mercator.WebMercatorBounds;

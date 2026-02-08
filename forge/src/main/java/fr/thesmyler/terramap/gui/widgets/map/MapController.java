@@ -1,16 +1,18 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
+
 import net.smyler.terramap.geo.GeoBounds;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.util.math.Snapper;
+
+import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
 import static java.lang.Math.*;
@@ -97,16 +99,16 @@ public final class MapController {
             }
         }
         //TODO move the Mouse.isButtonDown(0) out of here
-        if(this.movingSpeed.normSquared() > 0d && dt < 1000 && !getGameClient().mouse().isButtonPressed(0)) {
+        if (this.movingSpeed.normSquared() > 0d && dt < 1000 && !getGameClient().mouse().isButtonPressed(0)) {
             double dX = this.movingSpeed.x * dt;
             double dY = this.movingSpeed.y * dt;
-            this.movingSpeed.scale(max(0d, 1d - this.movementDrag*dt));
+            this.movingSpeed.scale(max(0d, 1d - this.movementDrag * dt));
             double maxNorm = this.movingSpeed.maximumNorm();
             if (maxNorm < 0.1d) {
                 this.movingSpeed.set(Vec2dImmutable.NULL);
             }
             this.stopTracking();
-            this.inputLayer.getLocationAtPositionOnWidget(this.centerLocation, this.map.getWidth()/2 - dX, this.map.getHeight()/2 - dY);
+            this.inputLayer.getLocationAtPositionOnWidget(this.centerLocation, this.map.getWidth() / 2 - dX, this.map.getHeight() / 2 - dY);
             this.inputLayer.updateViewPorts();
         }
     }
@@ -117,7 +119,7 @@ public final class MapController {
         if (deltaZoom <= 0d) return;
 
         this.setStaticLocation(this.zoomLocation);
-        if(deltaZoom < 0.01d) {
+        if (deltaZoom < 0.01d) {
             // If we are close enough of the desired zoom level, just finish reaching it
             this.zoom = this.zoomTarget;
         } else {
@@ -130,8 +132,8 @@ public final class MapController {
         }
         this.inputLayer.updateViewPorts();
         this.ensureStaticLocationHasNotMoved();
-            //TODO Re-implement elsewhere
-            //MapWidget.this.rightClickMenu.hide(null);
+        //TODO Re-implement elsewhere
+        //MapWidget.this.rightClickMenu.hide(null);
     }
 
     private void processRotation(long dt) {
@@ -145,13 +147,13 @@ public final class MapController {
         float d0 = abs(this.rotationTarget - this.rotation);
         float d1 = abs(this.rotationTarget - this.rotation - 360f);
         float d2 = abs(this.rotationTarget - this.rotation + 360f);
-        if(d1 < d0) {
+        if (d1 < d0) {
             actualRotationTarget -= 360f;
-        } else if(d2 < d0) {
+        } else if (d2 < d0) {
             actualRotationTarget += 360f;
         }
 
-        if(abs(this.rotation - actualRotationTarget) < 0.1f) {
+        if (abs(this.rotation - actualRotationTarget) < 0.1f) {
             this.rotation = this.rotationTarget;
         } else {
             float maxDRot = actualRotationTarget - this.rotation;
@@ -168,8 +170,8 @@ public final class MapController {
             this.centerLocation.set(this.trackedMarker.getLocation());
             this.centerLocationTarget.set(this.centerLocation);
             this.movingSpeed.set(Vec2dImmutable.NULL);
-            if(this.tracksRotation && this.trackedMarker instanceof AbstractMovingMarker) {
-                float azimuth = ((AbstractMovingMarker)this.trackedMarker).getAzimuth();
+            if (this.tracksRotation && this.trackedMarker instanceof AbstractMovingMarker) {
+                float azimuth = ((AbstractMovingMarker) this.trackedMarker).getAzimuth();
                 azimuth = getAzimuthInRange(-azimuth);
                 this.rotation = this.rotationTarget = azimuth;
             }
@@ -208,9 +210,8 @@ public final class MapController {
      * <br>
      * This method does not interrupt tracking.
      *
-     * @param amount    a delta to add to this map zoom's
-     * @param animate   whether to transition smoothly to the new value with an animation or to set it immediately
-     *
+     * @param amount  a delta to add to this map zoom's
+     * @param animate whether to transition smoothly to the new value with an animation or to set it immediately
      * @throws IllegalArgumentException if amount is not a finite number
      */
     public void zoom(double amount, boolean animate) {
@@ -226,14 +227,14 @@ public final class MapController {
     /**
      * Moves the map the given amount of pixels.
      *
-     * @param dX        how far to move the map along the X axis
-     * @param dY        how far to move the map along the Y axis
-     * @param animate   whether to transition smoothly to the new position or to set it immediately
-     *
+     * @param dX      how far to move the map along the X axis
+     * @param dY      how far to move the map along the Y axis
+     * @param animate whether to transition smoothly to the new position or to set it immediately
      * @throws IllegalArgumentException if either dX or dY is not a finite double
      */
     public void moveMap(double dX, double dY, boolean animate) {
-        if (!Double.isFinite(dX) || !Double.isFinite(dY)) throw new IllegalArgumentException("Cannot move the map of a non finite number");
+        if (!Double.isFinite(dX) || !Double.isFinite(dY))
+            throw new IllegalArgumentException("Cannot move the map of a non finite number");
         this.stopTracking();
         this.inputLayer.getPositionOnWidget(this.positionCalculationResult, this.centerLocationTarget);
         this.inputLayer.getLocationAtPositionOnWidget(this.centerLocationTarget, this.positionCalculationResult.subtract(dX, dY));
@@ -251,8 +252,8 @@ public final class MapController {
         );
         this.inputLayer.getLocationAtPositionOnWidget(
                 this.centerLocation,
-                this.map.getWidth()/2 - dX,
-                this.map.getHeight()/2 - dY);
+                this.map.getWidth() / 2 - dX,
+                this.map.getHeight() / 2 - dY);
         // We might end-up reaching the poles if supplied very large numbers because of floating point inaccuracies,
         // which would screw things up because pole get projected to infinities.
         SAFE_BOUNDS.clamp(this.centerLocationTarget);
@@ -265,9 +266,8 @@ public final class MapController {
      * <br>
      * This method interrupts tracking.
      *
-     * @param location  a location to move to the center of the map widget
-     * @param animate   whether to transition smoothly to the new center with an animation or to set it immediately
-     *
+     * @param location a location to move to the center of the map widget
+     * @param animate  whether to transition smoothly to the new center with an animation or to set it immediately
      * @throws NullPointerException if location is null
      */
     public void moveLocationToCenter(GeoPoint location, boolean animate) {
@@ -279,10 +279,9 @@ public final class MapController {
      * <br>
      * This method interrupts tracking.
      *
-     * @param location  a location to move to the center of the map widget
-     * @param position  a position on the map widget to move the location to
-     * @param animate   whether to transition smoothly to the new center with an animation or to set it immediately
-     *
+     * @param location a location to move to the center of the map widget
+     * @param position a position on the map widget to move the location to
+     * @param animate  whether to transition smoothly to the new center with an animation or to set it immediately
      * @throws IllegalArgumentException if either the x or y component of position is not a finite number
      * @throws NullPointerException     if either location or position is null
      */
@@ -295,13 +294,12 @@ public final class MapController {
      * <br>
      * This method interrupts tracking.
      *
-     * @param location  a location to move to the center of the map widget
-     * @param x         an X coordinate on the map widget to move the location to
-     * @param y         a Y coordinate on the map widget to move the location to
-     * @param animate   whether to transition smoothly to the new center with an animation or to set it immediately
-     *
+     * @param location a location to move to the center of the map widget
+     * @param x        an X coordinate on the map widget to move the location to
+     * @param y        a Y coordinate on the map widget to move the location to
+     * @param animate  whether to transition smoothly to the new center with an animation or to set it immediately
      * @throws IllegalArgumentException if either x or y is not a finite number
-     * @throws NullPointerException if location is null
+     * @throws NullPointerException     if location is null
      */
     public void moveLocationToPosition(GeoPoint location, double x, double y, boolean animate) {
         this.inputLayer.getPositionOnWidget(this.positionCalculationResult, location);
@@ -327,9 +325,8 @@ public final class MapController {
      * <br>
      * This method does not interrupt tracking.
      *
-     * @param zoom      a new zoom value
-     * @param animate   whether to transition smoothly to the new value with an animation or to set it immediately
-     *
+     * @param zoom    a new zoom value
+     * @param animate whether to transition smoothly to the new value with an animation or to set it immediately
      * @throws IllegalArgumentException if zoom is not a finite number
      */
     public void setZoom(double zoom, boolean animate) {
@@ -347,7 +344,6 @@ public final class MapController {
      * Sets a location that should stay static when this map's zoom changes.
      *
      * @param location a location to keep static on the map widget when zooming
-     *
      * @throws NullPointerException if location is null
      */
     public void setZoomStaticLocation(GeoPoint location) {
@@ -361,8 +357,7 @@ public final class MapController {
      *
      * @param position a position on the map widget,
      *                 under which the corresponding location should stay static on the map widget when zooming
-     *
-     * @throws NullPointerException if position is null
+     * @throws NullPointerException     if position is null
      * @throws IllegalArgumentException if position is not finite
      */
     public void setZoomStaticPosition(Vec2d position) {
@@ -394,8 +389,8 @@ public final class MapController {
      * Changes this map's rotation to a new value.
      * The new value will be converted to be in the [0°, 360°] range.
      *
-     * @param rotation  a new rotation value
-     * @param animate   whether to transition smoothly to the new value with an animation or to set it immediately
+     * @param rotation a new rotation value
+     * @param animate  whether to transition smoothly to the new value with an animation or to set it immediately
      */
     public void setRotation(float rotation, boolean animate) {
         if (!Float.isFinite(rotation)) throw new IllegalArgumentException("Layer rotation has to be a finite number");
@@ -412,7 +407,6 @@ public final class MapController {
      * Sets a location that should stay static when this map rotates.
      *
      * @param location a location to keep static on the map widget when rotating
-     *
      * @throws NullPointerException if location is null
      */
     public void setRotationStaticLocation(GeoPoint location) {
@@ -426,8 +420,7 @@ public final class MapController {
      *
      * @param position a position on the map widget,
      *                 under which the corresponding location should stay static on the map widget when rotating
-     *
-     * @throws NullPointerException if position is null
+     * @throws NullPointerException     if position is null
      * @throws IllegalArgumentException if position is not finite
      */
     public void setRotationStaticPosition(Vec2d position) {
@@ -443,7 +436,6 @@ public final class MapController {
      *          under which the corresponding location should stay static on the map widget when rotating
      * @param y a position Y coordinate on the map widget,
      *          under which the corresponding location should stay static on the map widget when rotating
-     *
      * @throws IllegalArgumentException if either X or Y is not finite
      */
     public void setRotationStaticPosition(double x, double y) {
@@ -496,8 +488,7 @@ public final class MapController {
     /**
      * Start tracking a marker.
      *
-     * @param marker    the marker to track
-     *
+     * @param marker the marker to track
      * @throws NullPointerException if marker is null
      */
     public void track(Marker marker) {
@@ -552,8 +543,7 @@ public final class MapController {
     /**
      * Sets the minimum value this controller will allow the zoom to take.
      *
-     * @param minZoom   the value
-     *
+     * @param minZoom the value
      * @throws IllegalArgumentException if minZoom is not in the [0, 25] range
      */
     public void setMinZoom(double minZoom) {
@@ -573,8 +563,7 @@ public final class MapController {
     /**
      * Sets the maximum value this controller will allow the zoom to take.
      *
-     * @param maxZoom   the value
-     *
+     * @param maxZoom the value
      * @throws IllegalArgumentException if maxZoom is not in the [0, 25] range
      */
     public void setMaxZoom(double maxZoom) {
@@ -587,7 +576,7 @@ public final class MapController {
     /**
      * Sets the value the zoom level should be a multiple of.
      *
-     * @param snapping  the value
+     * @param snapping the value
      * @throws IllegalArgumentException if the given value is strictly negative
      */
     public void setZoomSnapping(double snapping) {
@@ -633,7 +622,6 @@ public final class MapController {
      * Sets the drag coefficient that should be applied to slow down the map when it is sliding free.
      *
      * @param drag the coefficient, 0 means no drag and 1 sliding
-     *
      * @throws IllegalArgumentException is drag is not a positive number
      */
     public void setMovementDrag(float drag) {
@@ -654,7 +642,6 @@ public final class MapController {
      * Sets the responsiveness coefficient when zooming on the map. Higher means faster
      *
      * @param zoomResponsiveness the new coefficient
-     *
      * @throws IllegalArgumentException if zoomResponsiveness is not a finite number
      */
     public void setZoomResponsiveness(float zoomResponsiveness) {
@@ -675,7 +662,6 @@ public final class MapController {
      * Sets the responsiveness coefficient when rotating the map. Higher means faster
      *
      * @param rotationResponsiveness the new coefficient
-     *
      * @throws IllegalArgumentException if rotationResponsiveness is not a finite number
      */
     public void setRotationResponsiveness(float rotationResponsiveness) {

@@ -2,6 +2,7 @@ package net.smyler.terramap.geo.mercator;
 
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dMutable;
+
 import net.smyler.terramap.geo.GeoBounds;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointImmutable;

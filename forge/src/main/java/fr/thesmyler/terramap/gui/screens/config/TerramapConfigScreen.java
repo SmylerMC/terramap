@@ -1,10 +1,5 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapConfig;
-import java.awt.*;
-import java.io.IOException;
-import java.util.Set;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Translator;
@@ -21,8 +16,17 @@ import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
+
 import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
+
+import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapConfig;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.Set;
+
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

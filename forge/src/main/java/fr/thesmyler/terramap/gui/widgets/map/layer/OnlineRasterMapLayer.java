@@ -1,13 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.gui.widgets.map.MapController;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import java.util.List;
-import java.util.function.Consumer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
@@ -18,9 +10,22 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
+
 import net.smyler.terramap.tilesets.raster.ColorTileSet;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.terramap.util.CopyrightHolder;
+
+import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapConfig;
+import fr.thesmyler.terramap.gui.widgets.map.MapController;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+
+import java.util.List;
+import java.util.function.Consumer;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 import org.jetbrains.annotations.Nullable;
 
 import static fr.thesmyler.terramap.MapContext.PREVIEW;

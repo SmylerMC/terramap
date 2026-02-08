@@ -4,8 +4,10 @@ import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.network.RemoteSynchronizer;
 import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
 import fr.thesmyler.terramap.util.TerramapUtil;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldServer;
+
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;

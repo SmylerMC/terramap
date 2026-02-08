@@ -1,7 +1,9 @@
 package net.smyler.smylib.text;
 
-import java.util.List;
 import net.smyler.smylib.game.Translator;
+
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import static java.util.Arrays.asList;

@@ -1,12 +1,5 @@
 package fr.thesmyler.terramap.gui.screens;
 
-import fr.thesmyler.terramap.gui.screens.config.LayerConfigurationPopup;
-import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
-import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-import java.util.ArrayList;
-import java.util.List;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.UiDrawContext;
@@ -17,6 +10,16 @@ import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
+
+import fr.thesmyler.terramap.gui.screens.config.LayerConfigurationPopup;
+import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.Nullable;
 
 import static java.util.Comparator.comparing;

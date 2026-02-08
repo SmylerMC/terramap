@@ -1,6 +1,7 @@
 package net.smyler.terramap.geo.point;
 
 import java.util.Locale;
+
 import org.jetbrains.annotations.NotNull;
 
 import static java.util.Objects.requireNonNull;

@@ -1,20 +1,24 @@
 package fr.thesmyler.terramap.input;
 
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.world.PositionMutable;
+
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.TerramapScreen;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextComponentTranslation;
+
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.world.PositionMutable;
+
 import org.lwjgl.input.Keyboard;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -41,6 +45,7 @@ public abstract class KeyBindings {
         public boolean isActive() {
             return getGameClient().getCurrentScreen() instanceof TerramapScreen;
         }
+
         @Override
         public boolean conflicts(IKeyConflictContext other) {
             return other.equals(this);
@@ -62,30 +67,30 @@ public abstract class KeyBindings {
     }
 
     public static void checkBindings() {
-        if(OPEN_MAP.isPressed() && TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
+        if (OPEN_MAP.isPressed() && TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
             TerramapClientContext.getContext().openMap();
         }
-        if(COPY_GEO_COORDS.isPressed()) {
+        if (COPY_GEO_COORDS.isPressed()) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
             GeoProjection projection = TerramapClientContext.getContext().getProjection();
-            if(player == null) {
+            if (player == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
-            } else if(projection == null) {
+            } else if (projection == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noproj"));
             } else {
                 try {
                     projection.toGeo(playerLocation, playerPosition);
                     getGameClient().clipboard().setContent(playerLocation.latitude() + " " + playerLocation.longitude());
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.geo"));
-                } catch(OutOfGeoBoundsException e) {
+                } catch (OutOfGeoBoundsException e) {
                     Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.outproj"));
                 }
             }
         }
         //There is already a vanilla feature for that in 1.13+
-        if(COPY_MC_COORDS.isPressed()) {
+        if (COPY_MC_COORDS.isPressed()) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;
-            if(player == null) {
+            if (player == null) {
                 Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new TextComponentTranslation("terramap.ingameactions.copy.noplayer"));
             } else {
                 getGameClient().clipboard().setContent(player.posX + " " + player.posY + " " + player.posZ);
@@ -93,13 +98,13 @@ public abstract class KeyBindings {
             }
         }
 
-        if(ZOOM_IN.isPressed()) HudScreenHandler.zoomInMinimap();
+        if (ZOOM_IN.isPressed()) HudScreenHandler.zoomInMinimap();
 
-        if(ZOOM_OUT.isPressed()) HudScreenHandler.zoomOutMinimap();
+        if (ZOOM_OUT.isPressed()) HudScreenHandler.zoomOutMinimap();
 
-        if(TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleWidgets();
+        if (TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleWidgets();
 
-        if(OPEN_HUD_CONFIG.isPressed()) getGameClient().displayScreen(new HudConfigScreen());
+        if (OPEN_HUD_CONFIG.isPressed()) getGameClient().displayScreen(new HudConfigScreen());
     }
 
 }

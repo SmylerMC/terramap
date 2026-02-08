@@ -1,12 +1,16 @@
 package net.smyler.terramap.tilesets.raster;
 
+import net.smyler.smylib.Identifier;
+
+import net.smyler.terramap.geo.mercator.TilePosImmutable;
+
 import fr.thesmyler.terramap.TerramapClientContext;
+
+import net.buildtheearth.terraplusplus.generator.TerrainPreview;
+
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import net.buildtheearth.terraplusplus.generator.TerrainPreview;
-import net.smyler.smylib.Identifier;
-import net.smyler.terramap.geo.mercator.TilePosImmutable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

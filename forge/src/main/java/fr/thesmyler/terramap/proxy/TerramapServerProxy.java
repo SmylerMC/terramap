@@ -4,9 +4,11 @@ import fr.thesmyler.terramap.command.TerrashowCommand;
 import fr.thesmyler.terramap.command.TilesetReloadCommand;
 import fr.thesmyler.terramap.eventhandlers.ServerTerramapEventHandler;
 import fr.thesmyler.terramap.network.TerramapNetworkManager;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.GameType;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

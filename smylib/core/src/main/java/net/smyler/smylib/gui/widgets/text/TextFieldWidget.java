@@ -1,7 +1,5 @@
 package net.smyler.smylib.gui.widgets.text;
 
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
@@ -15,6 +13,10 @@ import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.sprites.SmyLibSprites;
 import net.smyler.smylib.gui.widgets.MenuWidget;
 import net.smyler.smylib.gui.widgets.Widget;
+
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.Color.BLUE;

@@ -4,6 +4,7 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
+
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

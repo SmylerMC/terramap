@@ -1,10 +1,12 @@
 package fr.thesmyler.terramap.network.playersync;
 
 import fr.thesmyler.terramap.TerramapClientContext;
-import io.netty.buffer.ByteBuf;
+
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import io.netty.buffer.ByteBuf;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

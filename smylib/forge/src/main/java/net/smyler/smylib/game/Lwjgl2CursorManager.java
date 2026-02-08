@@ -1,12 +1,15 @@
 package net.smyler.smylib.game;
 
-import java.util.IdentityHashMap;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.resources.CursorResourceMetadata;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.IdentityHashMap;
+
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Lwjgl2CursorManager extends CursorManager<Lwjgl2Cursor> {
 

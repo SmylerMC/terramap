@@ -1,13 +1,15 @@
 package net.smyler.smylib.gui.gl;
 
+import net.smyler.smylib.Color;
+import net.smyler.smylib.Identifier;
+
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
-import net.smyler.smylib.Color;
-import net.smyler.smylib.Identifier;
+
 import org.lwjgl.opengl.GL11;
 
 import static net.minecraft.client.Minecraft.getMinecraft;

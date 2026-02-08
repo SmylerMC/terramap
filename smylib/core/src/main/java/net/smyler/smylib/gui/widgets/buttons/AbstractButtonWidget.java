@@ -3,6 +3,7 @@ package net.smyler.smylib.gui.widgets.buttons;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
+
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

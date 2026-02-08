@@ -1,13 +1,17 @@
 package net.smyler.smylib.gui;
 
+import net.smyler.smylib.Color;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
+
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.smyler.smylib.Color;
+
 import org.jetbrains.annotations.NotNull;
 
 

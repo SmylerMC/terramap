@@ -1,6 +1,7 @@
 package net.smyler.smylib.gui.widgets;
 
 import net.smyler.smylib.gui.containers.WidgetContainer;
+
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractSolidWidget implements Widget {

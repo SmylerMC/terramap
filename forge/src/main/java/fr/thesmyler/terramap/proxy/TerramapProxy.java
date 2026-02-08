@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.proxy;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.GameType;
+
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;

@@ -1,7 +1,5 @@
 package net.smyler.smylib.game;
 
-import java.nio.file.Path;
-import java.util.Optional;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.gui.Font;
@@ -10,6 +8,10 @@ import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import net.smyler.smylib.resources.Resource;
+
+import java.nio.file.Path;
+import java.util.Optional;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

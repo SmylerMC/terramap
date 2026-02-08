@@ -1,8 +1,9 @@
 package net.smyler.smylib.gui.widgets.buttons;
 
+import net.smyler.smylib.gui.Font;
+
 import java.util.Arrays;
 import java.util.function.Consumer;
-import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

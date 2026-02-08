@@ -1,15 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Consumer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.UiDrawContext;
@@ -22,6 +12,7 @@ import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dView;
+
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
@@ -29,6 +20,19 @@ import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.world.PositionMutable;
+
+import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import static java.lang.Math.floor;
 import static java.lang.Math.floorDiv;

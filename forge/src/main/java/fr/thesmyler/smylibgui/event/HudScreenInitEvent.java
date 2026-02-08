@@ -1,8 +1,9 @@
 package fr.thesmyler.smylibgui.event;
 
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.screen.Screen;
+
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
  * An event fired when the HUD {@link Screen} initializes.

@@ -1,16 +1,19 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
+
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MobMarker;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
-import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 

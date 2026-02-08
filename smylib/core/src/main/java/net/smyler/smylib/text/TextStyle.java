@@ -1,7 +1,9 @@
 package net.smyler.smylib.text;
 
-import java.util.Objects;
 import net.smyler.smylib.Color;
+
+import java.util.Objects;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

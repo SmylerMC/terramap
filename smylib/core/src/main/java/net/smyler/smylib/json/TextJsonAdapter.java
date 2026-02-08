@@ -1,10 +1,13 @@
 package net.smyler.smylib.json;
 
-import com.google.gson.*;
-import java.lang.reflect.Type;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.text.*;
+
+import java.lang.reflect.Type;
+
+import com.google.gson.*;
+
 import org.jetbrains.annotations.Nullable;
 
 import static java.util.Objects.requireNonNull;

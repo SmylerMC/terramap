@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.saving.server;
 
-import com.google.gson.JsonSyntaxException;
 import fr.thesmyler.terramap.TerramapConfig;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -9,7 +9,10 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 import net.minecraft.world.WorldServer;
+
+import com.google.gson.JsonSyntaxException;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

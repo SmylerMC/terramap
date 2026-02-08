@@ -1,9 +1,11 @@
 package fr.thesmyler.terramap.network;
 
-import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.network.PacketBuffer;
+
+import io.netty.buffer.ByteBuf;
 
 public final class NetworkUtil {
     

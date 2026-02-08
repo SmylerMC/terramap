@@ -1,9 +1,11 @@
 package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
+
 import org.jetbrains.annotations.NotNull;
 
-import static java.lang.Math.*;
+import static java.lang.Math.floor;
+import static java.lang.Math.min;
 
 /**
  * A font that does nothing, which can be used in unit tests when no rendering context is available.

@@ -1,12 +1,13 @@
 package net.smyler.smylib.gui.widgets;
 
-import java.util.Optional;
-import java.util.function.Consumer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
+
+import java.util.Optional;
+import java.util.function.Consumer;
 
 import static net.smyler.smylib.Color.*;
 

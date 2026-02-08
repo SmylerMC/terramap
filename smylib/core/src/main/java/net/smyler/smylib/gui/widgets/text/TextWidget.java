@@ -7,6 +7,7 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
+
 import org.jetbrains.annotations.Nullable;
 
 public class TextWidget implements Widget {

@@ -1,11 +1,16 @@
 package fr.thesmyler.terramap;
 
+import net.smyler.terramap.Terramap;
+
 import java.util.Arrays;
 import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayerMP;
+
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
-import net.smyler.terramap.Terramap;
+
 import org.apache.logging.log4j.util.Strings;
+
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.terramap.Terramap.getTerramap;

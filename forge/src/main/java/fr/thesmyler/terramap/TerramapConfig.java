@@ -1,11 +1,12 @@
 package fr.thesmyler.terramap;
 
+import net.smyler.terramap.Terramap;
+
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.smyler.terramap.Terramap;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

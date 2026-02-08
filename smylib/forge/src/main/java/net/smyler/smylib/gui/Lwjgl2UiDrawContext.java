@@ -1,14 +1,5 @@
 package net.smyler.smylib.gui;
 
-import java.awt.image.BufferedImage;
-import java.util.concurrent.atomic.AtomicInteger;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.gl.Gl11Scissor;
@@ -16,6 +7,18 @@ import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.gl.Lwjgl2GlContext;
 import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.Sprite;
+
+import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
 import static java.lang.Math.floor;

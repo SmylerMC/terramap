@@ -1,12 +1,14 @@
 package net.smyler.smylib.gui.screen;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Mouse;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

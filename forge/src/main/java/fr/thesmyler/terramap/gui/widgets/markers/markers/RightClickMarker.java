@@ -1,14 +1,17 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.sprites.Sprite;
+
 import net.smyler.terramap.TerramapResources;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
+
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 public class RightClickMarker extends AbstractFixedMarker {
 

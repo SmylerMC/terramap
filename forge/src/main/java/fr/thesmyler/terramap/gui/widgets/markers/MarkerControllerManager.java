@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.gui.widgets.markers;
 
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

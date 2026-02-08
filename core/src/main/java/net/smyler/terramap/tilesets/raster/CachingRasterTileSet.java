@@ -1,13 +1,14 @@
 package net.smyler.terramap.tilesets.raster;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
 import net.smyler.terramap.geo.mercator.TilePos;
 import net.smyler.terramap.geo.mercator.TilePos.InvalidTilePositionException;
 import net.smyler.terramap.geo.mercator.TilePosImmutable;
 import net.smyler.terramap.geo.mercator.WebMercatorBounds;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

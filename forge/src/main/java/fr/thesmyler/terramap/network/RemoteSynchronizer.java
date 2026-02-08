@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.network;
 
+import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
+
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.TerramapMod;
@@ -14,14 +16,17 @@ import fr.thesmyler.terramap.permissions.Permission;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
 import fr.thesmyler.terramap.util.TerramapUtil;
-import java.util.*;
+
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
+import java.util.*;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

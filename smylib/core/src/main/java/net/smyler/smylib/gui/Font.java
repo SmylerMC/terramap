@@ -2,6 +2,7 @@ package net.smyler.smylib.gui;
 
 import net.smyler.smylib.Color;
 import net.smyler.smylib.text.Text;
+
 import org.jetbrains.annotations.NotNull;
 
 /**

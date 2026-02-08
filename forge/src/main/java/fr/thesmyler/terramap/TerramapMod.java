@@ -1,16 +1,25 @@
 package fr.thesmyler.terramap;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import net.smyler.smylib.json.TextJsonAdapter;
+import net.smyler.smylib.text.Text;
+
+import net.smyler.terramap.Terramap;
+import net.smyler.terramap.http.HttpClient;
+import net.smyler.terramap.http.TerraplusplusHttpClient;
+import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
+
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;
 import fr.thesmyler.terramap.permissions.PermissionManager;
 import fr.thesmyler.terramap.proxy.TerramapProxy;
 import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
+
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
 import java.io.File;
 import java.util.Map;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -20,13 +29,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smyler.smylib.json.TextJsonAdapter;
-import net.smyler.smylib.text.Text;
-import net.smyler.terramap.Terramap;
-import net.smyler.terramap.http.HttpClient;
-import net.smyler.terramap.http.TerraplusplusHttpClient;
-import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
+
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 //TODO Credit TwelveMonkeys in the readme
 @Mod(modid=Terramap.MOD_ID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")

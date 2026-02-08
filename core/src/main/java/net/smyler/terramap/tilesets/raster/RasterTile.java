@@ -1,6 +1,7 @@
 package net.smyler.terramap.tilesets.raster;
 
 import net.smyler.smylib.Identifier;
+
 import net.smyler.terramap.geo.mercator.TilePosImmutable;
 
 public interface RasterTile {

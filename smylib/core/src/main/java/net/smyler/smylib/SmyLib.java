@@ -2,7 +2,9 @@ package net.smyler.smylib;
 
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.sprites.SmyLibSprites;
+
 import org.apache.logging.log4j.Logger;
+
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.Preconditions.checkArgument;

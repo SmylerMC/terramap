@@ -3,6 +3,7 @@ package net.smyler.smylib.game;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.resources.CursorResourceMetadata;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

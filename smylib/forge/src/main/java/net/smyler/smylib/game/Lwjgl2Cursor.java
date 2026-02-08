@@ -1,16 +1,20 @@
 package net.smyler.smylib.game;
 
-import java.nio.IntBuffer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.resources.CursorResourceMetadata;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+import java.nio.IntBuffer;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class Lwjgl2Cursor implements Cursor {
 

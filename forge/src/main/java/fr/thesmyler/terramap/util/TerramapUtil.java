@@ -1,15 +1,19 @@
 package fr.thesmyler.terramap.util;
 
-import io.github.opencubicchunks.cubicchunks.api.world.ICubeProvider;
-import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.geo.projection.TerraplusplusGeoProjection;
+
 import net.buildtheearth.terraplusplus.EarthWorldType;
 import net.buildtheearth.terraplusplus.generator.EarthGenerator;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.geo.projection.TerraplusplusGeoProjection;
+
 import org.jetbrains.annotations.NotNull;
+
+import io.github.opencubicchunks.cubicchunks.api.world.ICubeProvider;
+import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
 
 /**
  * Misc stuff useful for Terramap

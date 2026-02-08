@@ -2,6 +2,7 @@ package net.smyler.terramap.http;
 
 import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.game.GameClient;
+
 import net.smyler.terramap.Terramap;
 
 import static java.lang.System.getProperty;

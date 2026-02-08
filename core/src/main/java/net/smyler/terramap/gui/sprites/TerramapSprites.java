@@ -1,11 +1,12 @@
 package net.smyler.terramap.gui.sprites;
 
-import java.util.HashMap;
-import java.util.Map;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static net.smyler.smylib.gui.sprites.Sprite.builder;
 import static net.smyler.terramap.TerramapResources.SPRITES_MAP_MARKERS;

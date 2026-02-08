@@ -1,8 +1,10 @@
 package net.smyler.smylib.gui.gl;
 
+import net.smyler.smylib.game.GameClient;
+
 import java.util.LinkedList;
 import java.util.List;
-import net.smyler.smylib.game.GameClient;
+
 import org.lwjgl.opengl.GL11;
 
 import static java.lang.Math.*;

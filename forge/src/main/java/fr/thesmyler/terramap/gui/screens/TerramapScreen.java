@@ -1,21 +1,5 @@
 package fr.thesmyler.terramap.gui.screens;
 
-import fr.thesmyler.smylibgui.widgets.ChatWidget;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
-import fr.thesmyler.terramap.gui.widgets.map.*;
-import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.input.KeyBindings;
-import java.util.*;
-import java.util.function.Consumer;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ITabCompleter;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
@@ -42,6 +26,7 @@ import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.TextStyle;
+
 import net.smyler.terramap.geo.GeoServices;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.geo.TissotsIndicatrix;
@@ -54,6 +39,27 @@ import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
+
+import fr.thesmyler.smylibgui.widgets.ChatWidget;
+import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapConfig;
+import fr.thesmyler.terramap.gui.screens.config.TerramapConfigScreen;
+import fr.thesmyler.terramap.gui.widgets.map.*;
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.FeatureVisibilityController;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
+import fr.thesmyler.terramap.input.KeyBindings;
+
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
+import java.util.*;
+import java.util.function.Consumer;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ITabCompleter;
+
 import org.jetbrains.annotations.Nullable;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.LayerRegistration;

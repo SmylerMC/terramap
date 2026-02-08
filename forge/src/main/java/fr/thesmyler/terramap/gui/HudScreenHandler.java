@@ -1,5 +1,14 @@
 package fr.thesmyler.terramap.gui;
 
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.widgets.SpriteWidget;
+import net.smyler.smylib.gui.widgets.WarningWidget;
+
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
+import net.smyler.terramap.world.PositionMutable;
+
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
@@ -8,14 +17,8 @@ import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.screens.config.HudConfigScreen;
 import fr.thesmyler.terramap.gui.widgets.map.MinimapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
+
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.gui.widgets.SpriteWidget;
-import net.smyler.smylib.gui.widgets.WarningWidget;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.gui.widgets.RibbonCompassWidget;
-import net.smyler.terramap.world.PositionMutable;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;

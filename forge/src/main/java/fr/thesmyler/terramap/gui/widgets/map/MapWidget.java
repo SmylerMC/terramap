@@ -1,16 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
-import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import fr.thesmyler.terramap.maps.SavedLayerState;
-import fr.thesmyler.terramap.maps.SavedMapState;
-import java.util.*;
-import java.util.function.Supplier;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Profiler;
 import net.smyler.smylib.gui.Font;
@@ -24,10 +13,24 @@ import net.smyler.smylib.math.DoubleRange;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
+
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.util.CopyrightHolder;
+
+import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import fr.thesmyler.terramap.gui.widgets.markers.MarkerControllerManager;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
+import fr.thesmyler.terramap.maps.SavedLayerState;
+import fr.thesmyler.terramap.maps.SavedMapState;
+
+import java.util.*;
+import java.util.function.Supplier;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.concurrent.TimeUnit.SECONDS;

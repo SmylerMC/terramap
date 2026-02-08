@@ -2,6 +2,7 @@ package fr.thesmyler.terramap.saving.client;
 
 import fr.thesmyler.terramap.gui.screens.SavedMainScreenState;
 import fr.thesmyler.terramap.maps.SavedMapState;
+
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 
 public class SavedClientState {

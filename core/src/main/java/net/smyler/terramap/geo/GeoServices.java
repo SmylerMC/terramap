@@ -1,6 +1,12 @@
 package net.smyler.terramap.geo;
 
-import java.awt.Desktop;
+import net.smyler.terramap.geo.formats.kml.KmlDocument;
+import net.smyler.terramap.geo.formats.kml.KmlFile;
+import net.smyler.terramap.geo.formats.kml.KmlPlacemark;
+import net.smyler.terramap.geo.formats.kml.KmlPoint;
+import net.smyler.terramap.geo.point.GeoPoint;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -13,11 +19,6 @@ import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-import net.smyler.terramap.geo.formats.kml.KmlDocument;
-import net.smyler.terramap.geo.formats.kml.KmlFile;
-import net.smyler.terramap.geo.formats.kml.KmlPlacemark;
-import net.smyler.terramap.geo.formats.kml.KmlPoint;
-import net.smyler.terramap.geo.point.GeoPoint;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

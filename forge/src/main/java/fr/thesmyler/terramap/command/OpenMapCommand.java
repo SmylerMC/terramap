@@ -3,14 +3,17 @@ package fr.thesmyler.terramap.command;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+
 import net.minecraftforge.client.IClientCommand;
 
 public class OpenMapCommand implements IClientCommand {

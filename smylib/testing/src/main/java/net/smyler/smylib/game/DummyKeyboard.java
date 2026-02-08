@@ -1,7 +1,8 @@
 package net.smyler.smylib.game;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import net.smyler.smylib.threading.DefaultThreadLocal;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DummyKeyboard implements Keyboard {
 

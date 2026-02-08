@@ -1,9 +1,12 @@
 package net.smyler.smylib.resources;
 
+import net.smyler.smylib.Identifier;
+
 import java.io.IOException;
 import java.io.InputStream;
+
 import net.minecraft.client.resources.IResource;
-import net.smyler.smylib.Identifier;
+
 import org.jetbrains.annotations.NotNull;
 
 public class WrappedResource implements Resource {

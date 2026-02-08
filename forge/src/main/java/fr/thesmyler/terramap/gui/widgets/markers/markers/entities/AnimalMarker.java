@@ -1,31 +1,17 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.sprites.Sprite;
+
+import net.smyler.terramap.gui.sprites.TerramapSprites;
+
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityPolarBear;
 import net.minecraft.entity.monster.EntitySnowman;
-import net.minecraft.entity.passive.EntityBat;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityDonkey;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntityLlama;
-import net.minecraft.entity.passive.EntityMooshroom;
-import net.minecraft.entity.passive.EntityMule;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityParrot;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntityRabbit;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.passive.EntitySkeletonHorse;
-import net.minecraft.entity.passive.EntitySquid;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.passive.EntityZombieHorse;
-import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.sprites.Sprite;
-import net.smyler.terramap.gui.sprites.TerramapSprites;
+import net.minecraft.entity.passive.*;
 
 import static net.smyler.terramap.gui.sprites.TerramapSprites.*;
 

@@ -1,12 +1,14 @@
 package net.smyler.smylib.game;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.resources.CursorResourceMetadata;
 import net.smyler.smylib.resources.Resource;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

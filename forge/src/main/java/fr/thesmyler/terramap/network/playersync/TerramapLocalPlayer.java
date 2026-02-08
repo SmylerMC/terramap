@@ -1,21 +1,25 @@
 package fr.thesmyler.terramap.network.playersync;
 
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapMod;
-import java.util.UUID;
-import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.GameType;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.world.Position;
 import net.smyler.terramap.world.PositionImmutable;
+
+import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapMod;
+
+import java.util.UUID;
+
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.GameType;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static fr.thesmyler.terramap.util.TerramapUtil.getWorldProjection;
 

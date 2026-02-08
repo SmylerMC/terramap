@@ -1,9 +1,10 @@
 package net.smyler.smylib.gui.sprites;
 
-import java.util.HashMap;
-import java.util.Map;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.SmyLib;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static net.smyler.smylib.gui.sprites.Sprite.builder;
 

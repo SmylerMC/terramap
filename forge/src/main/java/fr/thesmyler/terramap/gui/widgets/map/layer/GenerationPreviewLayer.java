@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.smyler.terramap.tilesets.raster.TerrainPreviewTileSet;
 

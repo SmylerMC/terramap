@@ -1,6 +1,7 @@
 package net.smyler.smylib;
 
 import java.util.function.Supplier;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

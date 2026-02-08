@@ -3,6 +3,7 @@ package net.smyler.terramap.geo.point;
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
 import net.smyler.smylib.math.Vec2dImmutable;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,9 +1,11 @@
 package net.smyler.terramap;
 
-import com.google.gson.Gson;
 import net.smyler.terramap.http.HttpClient;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
+
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 
 public interface Terramap {
 

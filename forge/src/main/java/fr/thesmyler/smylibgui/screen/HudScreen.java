@@ -1,18 +1,5 @@
 package fr.thesmyler.smylibgui.screen;
 
-import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
-import java.lang.reflect.Field;
-import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.*;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Mouse;
@@ -22,6 +9,24 @@ import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.screen.InputProcessor;
+
+import fr.thesmyler.smylibgui.event.HudScreenInitEvent;
+
+import java.lang.reflect.Field;
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.*;
+
+import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

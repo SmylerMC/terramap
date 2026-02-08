@@ -1,18 +1,24 @@
 package fr.thesmyler.terramap.network.playersync;
 
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.network.NetworkUtil;
-import io.netty.buffer.ByteBuf;
-import java.util.UUID;
+
 import net.buildtheearth.terraplusplus.projection.OutOfProjectionBoundsException;
+
+import java.util.UUID;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.GameType;
+
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.smyler.terramap.geo.point.GeoPoint;
-import net.smyler.terramap.geo.point.GeoPointMutable;
+
+import io.netty.buffer.ByteBuf;
 
 public class SP2CPlayerSyncPacket implements IMessage {
 

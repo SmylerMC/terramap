@@ -1,7 +1,8 @@
 package net.smyler.terramap.http;
 
-import java.util.concurrent.CompletableFuture;
 import net.smyler.terramap.Terramap;
+
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Asynchronous HTTP client abstraction.

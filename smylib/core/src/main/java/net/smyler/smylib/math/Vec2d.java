@@ -2,6 +2,7 @@ package net.smyler.smylib.math;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 

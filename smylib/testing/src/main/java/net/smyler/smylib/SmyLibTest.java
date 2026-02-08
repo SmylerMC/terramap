@@ -1,7 +1,10 @@
 package net.smyler.smylib;
 
-import net.smyler.smylib.game.*;
+import net.smyler.smylib.game.DummyKeyboard;
+import net.smyler.smylib.game.DummyMouse;
+import net.smyler.smylib.game.TestGameClient;
 import net.smyler.smylib.gui.screen.Screen;
+
 import org.junit.jupiter.api.BeforeEach;
 
 import static net.smyler.smylib.gui.screen.BackgroundOption.DEFAULT;

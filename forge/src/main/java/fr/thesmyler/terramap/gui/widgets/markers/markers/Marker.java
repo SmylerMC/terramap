@@ -1,13 +1,16 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import net.minecraft.util.text.ITextComponent;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.Vec2dMutable;
+
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPoint;
+
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class Marker implements Widget {
 

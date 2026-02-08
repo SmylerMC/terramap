@@ -1,5 +1,7 @@
 package fr.thesmyler.terramap.network;
 
+import net.smyler.terramap.Terramap;
+
 import fr.thesmyler.terramap.network.P2CSledgehammerHelloPacket.P2CSledgehammerHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTerramapHelloPacket.S2CTerramapHelloPacketHandler;
 import fr.thesmyler.terramap.network.S2CTpCommandPacket.S2CTpCommandPacketHandler;
@@ -11,12 +13,12 @@ import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket.S2CPlayerSyncPacketHandler;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket.S2CRegistrationExpiresPacketHandler;
+
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
-import net.smyler.terramap.Terramap;
 
 public abstract class TerramapNetworkManager {
 

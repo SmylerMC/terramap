@@ -1,9 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
-import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
-import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import java.util.HashSet;
-import java.util.Set;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.Profiler;
@@ -15,6 +11,7 @@ import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dView;
+
 import net.smyler.terramap.geo.GeoServices;
 import net.smyler.terramap.geo.mercator.TilePos;
 import net.smyler.terramap.geo.mercator.TilePos.InvalidTilePositionException;
@@ -22,6 +19,12 @@ import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.tilesets.raster.RasterTile;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
+
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
+import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.SmyLib.getGameClient;

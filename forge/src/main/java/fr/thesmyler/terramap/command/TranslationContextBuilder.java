@@ -1,6 +1,7 @@
 package fr.thesmyler.terramap.command;
 
 import fr.thesmyler.terramap.TerramapVersion;
+
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;

@@ -2,6 +2,7 @@ package net.smyler.terramap.world;
 
 import net.smyler.smylib.Immutable;
 import net.smyler.smylib.Mutable;
+
 import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.*;

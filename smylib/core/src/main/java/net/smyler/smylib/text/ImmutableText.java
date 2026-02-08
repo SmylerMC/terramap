@@ -3,6 +3,7 @@ package net.smyler.smylib.text;
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

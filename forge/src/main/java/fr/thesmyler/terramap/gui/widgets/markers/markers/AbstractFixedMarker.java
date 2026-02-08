@@ -1,9 +1,10 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
+
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 
 public abstract class AbstractFixedMarker extends Marker {
 

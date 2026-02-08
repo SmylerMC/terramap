@@ -1,20 +1,28 @@
 package fr.thesmyler.terramap.network;
 
-import com.google.gson.JsonParseException;
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapConfig;
-import io.netty.buffer.ByteBuf;
-import java.util.HashMap;
-import java.util.Map;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.smyler.smylib.text.Text;
+
 import net.smyler.terramap.geo.mercator.WebMercatorBounds;
 import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
+
+import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapConfig;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.client.Minecraft;
+
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import io.netty.buffer.ByteBuf;
+
 import org.apache.logging.log4j.util.Strings;
+
+import com.google.gson.JsonParseException;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

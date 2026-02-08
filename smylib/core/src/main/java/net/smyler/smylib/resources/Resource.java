@@ -1,8 +1,10 @@
 package net.smyler.smylib.resources;
 
+import net.smyler.smylib.Identifier;
+
 import java.io.Closeable;
 import java.io.InputStream;
-import net.smyler.smylib.Identifier;
+
 import org.jetbrains.annotations.NotNull;
 
 /**

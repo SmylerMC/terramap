@@ -4,6 +4,7 @@ import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.UiDrawContext;
+
 import org.jetbrains.annotations.Nullable;
 
 public class SlidingPanelWidget extends FlexibleWidgetContainer {
