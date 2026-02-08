@@ -24,7 +24,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
     @Override
     public void update(MapWidget map) {
         super.update(map);
-        if(
+        if (
                 !TerramapClientContext.getContext().hasPlayer(this.player.getUUID())
                 || (this.player instanceof TerramapLocalPlayer && ((TerramapLocalPlayer) this.player).getPlayer().isDead)) {
             map.scheduleBeforeNextUpdate(() -> map.removeMarker(this));

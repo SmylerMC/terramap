@@ -30,11 +30,11 @@ public class InputProcessor {
         int mouseButton = Mouse.getEventButton();
         long ctime = System.currentTimeMillis();
 
-        if(Mouse.getEventButtonState()) {
+        if (Mouse.getEventButtonState()) {
             if (this.mc.gameSettings.touchscreen && this.touchContactsCount++ > 0) return;
             this.mouseButtonsPressed[mouseButton] = true;
             //TODO read double click delay from config (or even better, system config)
-            if(ctime - this.lastClickTime[mouseButton] <= 500 && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
+            if (ctime - this.lastClickTime[mouseButton] <= 500 && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
                 this.container.onDoubleClick(mouseX, mouseY, mouseButton, null);
             } else {
                 this.container.onClick(mouseX, mouseY, mouseButton, null);
@@ -43,12 +43,12 @@ public class InputProcessor {
             this.lastClickTime[mouseButton] = ctime;
             this.lastClickX[mouseButton] = mouseX;
             this.lastClickY[mouseButton] = mouseY;
-        } else if(mouseButton >= 0) {
-            if(this.mc.gameSettings.touchscreen && --this.touchContactsCount > 0) return;
+        } else if (mouseButton >= 0) {
+            if (this.mc.gameSettings.touchscreen && --this.touchContactsCount > 0) return;
             this.mouseButtonsPressed[mouseButton] = false;
             this.lastClickedButton = -1;
             this.container.onMouseReleased(mouseX, mouseY, mouseButton, null);
-        } else if(this.lastClickedButton >= 0 && this.mouseButtonsPressed[this.lastClickedButton]) {
+        } else if (this.lastClickedButton >= 0 && this.mouseButtonsPressed[this.lastClickedButton]) {
             float dX = mouseX - this.lastClickX[this.lastClickedButton];
             float dY = mouseY - this.lastClickY[this.lastClickedButton];
             long dt = ctime - this.lastClickTime[this.lastClickedButton];
@@ -59,7 +59,7 @@ public class InputProcessor {
         }
 
         int scroll = Mouse.getDWheel();
-        if(scroll != 0) this.container.onMouseWheeled(mouseX, mouseY, scroll, null);
+        if (scroll != 0) this.container.onMouseWheeled(mouseX, mouseY, scroll, null);
     }
 
 }

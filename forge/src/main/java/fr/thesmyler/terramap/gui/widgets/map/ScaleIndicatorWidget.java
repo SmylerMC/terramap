@@ -84,20 +84,20 @@ public class ScaleIndicatorWidget implements Widget {
         float barY = y + 5;
         String lengthstr = "-";
         float barwidth = this.getWidth();
-        if(parent instanceof MapWidget) {
+        if (parent instanceof MapWidget) {
 
             MapWidget map = (MapWidget) parent;
 
             map.getScreenLocation(this.point1, this.getX(), this.getY() + 5);
             map.getScreenLocation(this.point2, this.getX() + this.getWidth(), this.getY() + 5);
 
-            if(WebMercatorUtil.PROJECTION_BOUNDS.contains(this.point1) && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.point2)) {
+            if (WebMercatorUtil.PROJECTION_BOUNDS.contains(this.point1) && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.point2)) {
 
                 double scale = this.point1.distanceTo(point2);
                 String[] units = {"cm", "m", "km"};
                 int j=1;
                 for(; scale >= 1000 && j<units.length-1; j++) scale /= 1000;
-                if(scale < 1) {
+                if (scale < 1) {
                     scale *= 100;
                     j = 0;
                 }

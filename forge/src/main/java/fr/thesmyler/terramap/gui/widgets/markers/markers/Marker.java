@@ -65,11 +65,11 @@ public abstract class Marker implements Widget {
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-        if(parent instanceof MapWidget) {
+        if (parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
             this.update(map);
             GeoPoint location = this.getLocation();
-            if(location != null) {
+            if (location != null) {
                 map.getScreenPosition(this.position, location);
                 this.position.add(this.getDeltaX(), this.getDeltaY());
             }
@@ -80,10 +80,10 @@ public abstract class Marker implements Widget {
 
     @Override
     public boolean isVisible(WidgetContainer parent) {
-        if(!this.controller.isVisible()) return false;
+        if (!this.controller.isVisible()) return false;
         GeoPoint location = this.getLocation();
-        if(location == null || !WebMercatorUtil.PROJECTION_BOUNDS.contains(this.getLocation())) return false;
-        if(parent instanceof MapWidget) {
+        if (location == null || !WebMercatorUtil.PROJECTION_BOUNDS.contains(this.getLocation())) return false;
+        if (parent instanceof MapWidget) {
             MapWidget map = (MapWidget)parent;
             double zoom = map.getController().getZoom();
             return this.minZoom <= zoom && zoom <= this.maxZoom;
@@ -104,7 +104,7 @@ public abstract class Marker implements Widget {
 
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if(this.canBeTracked() && parent instanceof MapWidget) {
+        if (this.canBeTracked() && parent instanceof MapWidget) {
             MapWidget map = (MapWidget) parent;
             map.getController().track(this);
         }

@@ -45,27 +45,27 @@ public class TerrashowCommand extends CommandBase {
 
         EntityPlayerMP player = null;
         EntityPlayer senderPlayer = sender instanceof EntityPlayer? (EntityPlayer) sender: null;
-        if(args.length == 0) {
+        if (args.length == 0) {
             throw transCtx.syntaxException("terramap.commands.terrashow.too_few_parameters");
-        } else if(args.length > 2) {
+        } else if (args.length > 2) {
             throw transCtx.syntaxException("terramap.commands.terrashow.too_many_parameters");
-        } else if(args.length == 2) {
+        } else if (args.length == 2) {
             player = server.getPlayerList().getPlayerByUsername(args[1]);
-        } else if(sender instanceof EntityPlayerMP) {
+        } else if (sender instanceof EntityPlayerMP) {
             player = (EntityPlayerMP)sender;
         } else {
             throw transCtx.playerNotFoundException("terramap.commands.terrashow.console_player_name");
         }
 
         if (player != null && player.equals(senderPlayer)) {
-            if(senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
+            if (senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
                 throw transCtx.commandException("terramap.commands.terrashow.cannot_change_own_visibility");
         } else {
-            if(senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
+            if (senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
                 throw transCtx.commandException("terramap.commands.terrashow.cannot_change_others_visibility");
         }
 
-        if(player == null) {
+        if (player == null) {
             throw transCtx.playerNotFoundException("terramap.commands.terrashow.noplayer");
         }
         UUID uuid = player.getPersistentID();

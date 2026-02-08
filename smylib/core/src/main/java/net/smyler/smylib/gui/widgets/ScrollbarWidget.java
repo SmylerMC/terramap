@@ -60,9 +60,9 @@ public class ScrollbarWidget extends WidgetContainer {
         getGameClient().soundSystem().playClickSound();
         float i = 4;
         float y = this.drag.getY();
-        if(mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.forwardButton.getHeight()) {
+        if (mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.forwardButton.getHeight()) {
             for(; i>0; i--) this.scrollForward();
-        } else if(mouseY < y && mouseY > this.backwardButton.getHeight()){
+        } else if (mouseY < y && mouseY > this.backwardButton.getHeight()){
             for(; i>0; i--) this.scrollBackward();
         }
         super.onClick(mouseX, mouseY, mouseButton, parent);
@@ -74,9 +74,9 @@ public class ScrollbarWidget extends WidgetContainer {
         long ctime = System.currentTimeMillis();
         long dt = ctime - this.lastUpdateTime;
         super.onUpdate(mouseX, mouseY, parent);
-        if(Math.abs(this.targetProgress - this.progress) < 0.00001f * this.viewPort) {
+        if (Math.abs(this.targetProgress - this.progress) < 0.00001f * this.viewPort) {
             this.progress = this.targetProgress;
-        } else if(dt < 10000) {
+        } else if (dt < 10000) {
             double maxDprog = this.targetProgress - this.progress;
             double dprog = this.scrollResponsiveness * maxDprog * dt;
             dprog = maxDprog > 0 ? Math.min(dprog, maxDprog) : Math.max(dprog, maxDprog);

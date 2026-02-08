@@ -164,7 +164,7 @@ public class LayerRenderingOffsetPopup extends Popup {
         double mapZoom = this.map.getController().getZoom();
         try {
             dX = Double.parseDouble(this.xInput.getText());
-            if(!Double.isFinite(dX)) throw new NumberFormatException();
+            if (!Double.isFinite(dX)) throw new NumberFormatException();
             okX = true;
             this.xInput.setEnabledTextColor(Color.WHITE);
             this.xInput.setFocusedTextColor(Color.WHITE);
@@ -174,7 +174,7 @@ public class LayerRenderingOffsetPopup extends Popup {
         }
         try {
             dY = Double.parseDouble(this.yInput.getText());
-            if(!Double.isFinite(dY) || dY > 256*Math.pow(2d, mapZoom))
+            if (!Double.isFinite(dY) || dY > 256*Math.pow(2d, mapZoom))
                 throw new NumberFormatException();
             okY = true;
             this.yInput.setEnabledTextColor(Color.WHITE);
@@ -183,7 +183,7 @@ public class LayerRenderingOffsetPopup extends Popup {
             this.yInput.setEnabledTextColor(Color.RED);
             this.yInput.setFocusedTextColor(Color.RED);
         }
-        if(okX && okY) this.setRenderedOffset(new Vec2dImmutable(dX, dY).downscale(256 * Math.pow(2d, mapZoom)));
+        if (okX && okY) this.setRenderedOffset(new Vec2dImmutable(dX, dY).downscale(256 * Math.pow(2d, mapZoom)));
         this.doneButton.setEnabled(okY && okX);
     }
     
@@ -204,7 +204,7 @@ public class LayerRenderingOffsetPopup extends Popup {
         WebMercatorUtil.fromGeo(this.updateMapLayerCenter, this.layer.getMap().getController().getCenterLocation(), zoom);
         WebMercatorUtil.fromGeo(this.updateMapDelta, this.mapController.getCenterLocation(), zoom);
         this.updateMapDelta.subtract(this.updateMapLayerCenter);
-        if(focused != this.yInput && focused != this.xInput) {
+        if (focused != this.yInput && focused != this.xInput) {
             this.xInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.x()));
             this.yInput.setText(OFFSET_FORMATTER.format(this.updateMapDelta.y()));
         }

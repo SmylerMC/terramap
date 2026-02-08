@@ -74,7 +74,7 @@ public class TerramapClientProxy extends TerramapProxy {
 
     @Override
     public GameType getGameMode(EntityPlayer e) {
-        if(e instanceof EntityPlayerMP) {
+        if (e instanceof EntityPlayerMP) {
             EntityPlayerMP player = (EntityPlayerMP)e;
             return player.interactionManager.getGameType();
         }
@@ -82,9 +82,9 @@ public class TerramapClientProxy extends TerramapProxy {
         if (connection == null) {
             return GameType.NOT_SET;
         }
-        if(e instanceof AbstractClientPlayer) {
+        if (e instanceof AbstractClientPlayer) {
             NetworkPlayerInfo i = connection.getPlayerInfo(e.getUniqueID());
-            if(i != null) return i.getGameType();
+            if (i != null) return i.getGameType();
         }
         getTerramap().logger().error("Failed to determine player gamemode.");
         return GameType.NOT_SET;
@@ -93,7 +93,7 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public void onConfigChanged(OnConfigChangedEvent event) {
         if (event.getModID().equals(Terramap.MOD_ID)) {
-            if(TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
+            if (TerramapMod.proxy.isClient() && HudScreen.getContent() != null) {
                 HudScreenHandler.updateMinimap();
             }
         }

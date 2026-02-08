@@ -37,7 +37,7 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
     @Override
     public void setup() {
         this.unloadToMaxLoad();
-        if(this.baseLoad <= 0){
+        if (this.baseLoad <= 0){
             this.prepareLowTiles();
         }
     }
@@ -54,9 +54,9 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
     public RasterTile getTile(TilePos position) {
         TilePosImmutable pos = position.getImmutable();
         WebMercatorBounds b = this.getBounds(pos.getZoom());
-        if(b != null && !b.contains(pos)) throw new InvalidTilePositionException();
+        if (b != null && !b.contains(pos)) throw new InvalidTilePositionException();
         RasterTile tile = this.tileMap.get(pos);
-        if(tile != null) {
+        if (tile != null) {
             this.needTile(tile);
             return tile;
         }
@@ -120,18 +120,18 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
     private void unloadTile(RasterTile tile) {
         tile.unloadTexture();
         tile = this.tileMap.remove(tile.getPosition());
-        if(tile != null) {
+        if (tile != null) {
             tile.unloadTexture();
             this.tileList.remove(tile);
         }
     }
 
     private void needTile(RasterTile tile) {
-        if(tile.getPosition().getZoom() <= LOW_ZOOM) {
+        if (tile.getPosition().getZoom() <= LOW_ZOOM) {
             return; // Those should stay where they are
         }
         this.tileList.remove(tile);
-        if(this.tileList.size() >= this.baseLoad) {
+        if (this.tileList.size() >= this.baseLoad) {
             this.tileList.add(this.baseLoad, tile);
         } else {
             this.tileList.add(tile);

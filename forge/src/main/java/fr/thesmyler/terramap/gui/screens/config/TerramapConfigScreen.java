@@ -219,9 +219,9 @@ public class TerramapConfigScreen extends Screen {
     }
 
     private void updateButtons() {
-        if(this.currentSubScreen <= 0) this.previous.disable();
+        if (this.currentSubScreen <= 0) this.previous.disable();
         else this.previous.enable();
-        if(this.currentSubScreen >= this.pages.length - 1) this.next.disable();
+        if (this.currentSubScreen >= this.pages.length - 1) this.next.disable();
         else this.next.enable();
         this.pageText.setText(ofTranslation("terramap.configmenu.pagenumber", this.currentSubScreen + 1, this.pages.length));
     }
@@ -308,14 +308,14 @@ public class TerramapConfigScreen extends Screen {
 
         static TileScalingOption getFromValue(double val) {
             for(TileScalingOption o: TileScalingOption.values()) {
-                if(o.value == val) return o;
+                if (o.value == val) return o;
             }
             return AUTO;
         }
 
         @Override
         public String toString() {
-            if(this == AUTO) {
+            if (this == AUTO) {
                 return getGameClient().translator().format("terramap.configmenu.tilescaling.auto");
             }
             return String.valueOf(this.value);

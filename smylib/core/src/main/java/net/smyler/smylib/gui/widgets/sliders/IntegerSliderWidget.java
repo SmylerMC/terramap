@@ -83,7 +83,7 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
     }
 
     protected void onChange() {
-        if(this.onChange != null) this.onChange.accept(this.getValue());
+        if (this.onChange != null) this.onChange.accept(this.getValue());
     }
 
     public void setOnChange(Consumer<Long> onChange) {

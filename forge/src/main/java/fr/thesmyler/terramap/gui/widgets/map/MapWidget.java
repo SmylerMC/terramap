@@ -161,17 +161,17 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
 
         for (MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
-            if(controller instanceof RightClickMarkerController) {
+            if (controller instanceof RightClickMarkerController) {
                 this.rcmMarkerController = (RightClickMarkerController) controller;
-            } else if(controller instanceof MainPlayerMarkerController) {
+            } else if (controller instanceof MainPlayerMarkerController) {
                 this.mainPlayerMarkerController = (MainPlayerMarkerController) controller;
-            } else if(controller instanceof OtherPlayerMarkerController) {
+            } else if (controller instanceof OtherPlayerMarkerController) {
                 this.otherPlayerMarkerController = (OtherPlayerMarkerController) controller;
             }
             this.markerControllers.put(controller.getId(), controller);
         }
 
-        if(this.mainPlayerMarkerController != null && this.otherPlayerMarkerController != null) {
+        if (this.mainPlayerMarkerController != null && this.otherPlayerMarkerController != null) {
             this.directionVisibility = new PlayerDirectionsVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
             this.nameVisibility = new PlayerNameVisibilityController(this.mainPlayerMarkerController, this.otherPlayerMarkerController);
         }
@@ -292,9 +292,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         long currentTime = System.currentTimeMillis();
         long dt = currentTime - this.lastUpdateTime;
 
-        if(this.controller.isTracking()) {
+        if (this.controller.isTracking()) {
             Marker tracked = this.controller.getTrackedMarker();
-            if(this.widgets.contains(tracked)) {
+            if (this.widgets.contains(tracked)) {
                 // Force update, so we don't lag behind, this one needs to be updated twice
                 tracked.onUpdate(mouseX - tracked.getX(), mouseY - tracked.getY(), this);
             } else {
@@ -310,8 +310,8 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
         this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
         this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
-        if(!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
-        if(!this.reportedErrors.isEmpty()) {
+        if (!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
+        if (!this.reportedErrors.isEmpty()) {
             String errorText = getGameClient().translator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
             this.errorText.setText(ofPlainText(errorText));
         }
@@ -356,7 +356,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         // Sort the markers by class
         for(Marker marker: this.markers) {
             for(Class<?> clazz: markers.keySet()) {
-                if(clazz.isInstance(marker)) {
+                if (clazz.isInstance(marker)) {
                     markers.get(clazz).add(marker);
                 }
             }
@@ -369,13 +369,13 @@ public class MapWidget extends FlexibleWidgetContainer {
             for(Marker markerToAdd: newMarkers) {
                 this.addMarker(markerToAdd);
             }
-            if(controller.getMarkerType().equals(MainPlayerMarker.class) && newMarkers.length > 0) {
+            if (controller.getMarkerType().equals(MainPlayerMarker.class) && newMarkers.length > 0) {
                 this.mainPlayerMarker = (MainPlayerMarker) newMarkers[0];
             }
-            if(this.restoreTrackingId != null) {
+            if (this.restoreTrackingId != null) {
                 for(Marker markerToAdd: newMarkers) {
                     String id = markerToAdd.getIdentifier();
-                    if(id != null && id.equals(this.restoreTrackingId)) {
+                    if (id != null && id.equals(this.restoreTrackingId)) {
                         this.controller.track(markerToAdd);
                         this.restoreTrackingId = null;
                         getTerramap().logger().debug("Restored tracking with {}", id);
@@ -385,7 +385,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
 
         // Update right click marker visibility
-        if(this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
+        if (this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
 
         for(Marker marker: this.markers) marker.onUpdate(mouseX, mouseY, this);
 
@@ -395,8 +395,8 @@ public class MapWidget extends FlexibleWidgetContainer {
         ImmutableText component = ImmutableText.EMPTY;
         ImmutableText separator = ofPlainText(" | ");
         for(Widget widget: this.widgets)
-            if(widget instanceof CopyrightHolder){
-                if(!component.getFormattedText().isEmpty()) {
+            if (widget instanceof CopyrightHolder){
+                if (!component.getFormattedText().isEmpty()) {
                     component = component.withNewSiblings(separator);
                 }
                 Text copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().translator().language());
@@ -597,7 +597,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void trySetFeatureVisibility(String controllerId, boolean value) {
         FeatureVisibilityController c = this.getVisibilityControllers().get(controllerId);
-        if(c != null) c.setVisibility(value);
+        if (c != null) c.setVisibility(value);
     }
 
     /**
@@ -674,9 +674,9 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void reportError(Object source, String errorMessage) {
         ReportedError error = new ReportedError(source, errorMessage);
-        if(this.reportedErrors.contains(error)) return;
+        if (this.reportedErrors.contains(error)) return;
         this.reportedErrors.add(error);
-        if(this.reportedErrors.size() > MAX_ERRORS_KEPT) {
+        if (this.reportedErrors.size() > MAX_ERRORS_KEPT) {
             this.reportedErrors.remove(0);
         }
     }
@@ -689,7 +689,7 @@ public class MapWidget extends FlexibleWidgetContainer {
     public void discardPreviousErrors(Object source) {
         List<ReportedError> errsToRm = new ArrayList<>();
         for(ReportedError e: this.reportedErrors) {
-            if(e.source.equals(source)) errsToRm.add(e);
+            if (e.source.equals(source)) errsToRm.add(e);
         }
         this.reportedErrors.removeAll(errsToRm);
     }

@@ -27,10 +27,10 @@ public abstract class RootContainer extends WidgetContainer {
         super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, null);
         Widget hoveredWidget = this.getHoveredWidget();
         boolean mouseMoved = mouseX != this.lastRenderMouseX && mouseY != this.lastRenderMouseY;
-        if(mouseMoved || (hoveredWidget != null && !hoveredWidget.equals(this.lastHoveredWidget))) {
+        if (mouseMoved || (hoveredWidget != null && !hoveredWidget.equals(this.lastHoveredWidget))) {
             this.startHoverTime = System.currentTimeMillis();
         }
-        if(
+        if (
                 hoveredWidget != null
                         && hoveredWidget.getTooltipText() != null
                         && !hoveredWidget.getTooltipText().isEmpty()

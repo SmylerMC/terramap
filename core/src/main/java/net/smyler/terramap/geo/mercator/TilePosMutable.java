@@ -72,7 +72,7 @@ public class TilePosMutable extends TilePos {
         synchronized(this) {
             int delta = zoom - this.zoom;
             this.zoom = zoom;
-            if(delta > 0) {
+            if (delta > 0) {
                 int fact = 1<<delta;
                 this.xPosition *= fact;
                 this.yPosition *= fact;
@@ -93,7 +93,7 @@ public class TilePosMutable extends TilePos {
             int newZoom = Math.max(0, Math.min(WebMercatorUtil.MAX_ZOOM, zoom));
             int delta = newZoom - this.zoom;
             this.zoom = newZoom;
-            if(delta > 0) {
+            if (delta > 0) {
                 int fact = 1<<delta;
                 this.xPosition *= fact;
                 this.yPosition *= fact;

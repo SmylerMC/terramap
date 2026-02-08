@@ -60,7 +60,7 @@ public class S2CTerramapHelloPacket implements IMessage {
     public void fromBytes(ByteBuf buf) {
         this.serverVersion = NetworkUtil.decodeStringFromByteBuf(buf);
         String jsonWorldSettings = NetworkUtil.decodeStringFromByteBuf(buf);
-        if(jsonWorldSettings.length() > 0) {
+        if (jsonWorldSettings.length() > 0) {
             this.worldSettings = EarthGeneratorSettings.parse(jsonWorldSettings);
         } else {
             this.worldSettings = null;
@@ -81,7 +81,7 @@ public class S2CTerramapHelloPacket implements IMessage {
     public void toBytes(ByteBuf buf) {
         NetworkUtil.encodeStringToByteBuf(this.serverVersion, buf);
         String stgs = this.isLegacyTerraClient ? this.worldSettings.getLegacyGeneratorString(): this.worldSettings.toString();
-        if(stgs == null) stgs = "";
+        if (stgs == null) stgs = "";
         NetworkUtil.encodeStringToByteBuf(stgs, buf);
         buf.writeLong(this.worldUUID.getLeastSignificantBits());
         buf.writeLong(this.worldUUID.getMostSignificantBits());

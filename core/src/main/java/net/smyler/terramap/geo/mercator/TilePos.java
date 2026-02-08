@@ -27,10 +27,10 @@ public abstract class TilePos implements Mutable<TilePosImmutable>, Immutable<Ti
      * @throws InvalidTilePositionException if the given argument do not meet their respective criteria
      */
     public TilePos(int zoom, int x, int y) {
-        if(zoom < 0 || zoom > WebMercatorUtil.MAX_ZOOM) throw new InvalidTilePositionException("Invalid zoom level: " + zoom);
+        if (zoom < 0 || zoom > WebMercatorUtil.MAX_ZOOM) throw new InvalidTilePositionException("Invalid zoom level: " + zoom);
         int mapSize = WebMercatorUtil.getDimensionsInTile(zoom);
-        if(x < 0 || x >= mapSize) throw new InvalidTilePositionException("Invalid coordinate: " + x + " for zoom level " + zoom);
-        if(y < 0 || y >= mapSize) throw new InvalidTilePositionException("Invalid coordinate: " + y + " for zoom level " + zoom);
+        if (x < 0 || x >= mapSize) throw new InvalidTilePositionException("Invalid coordinate: " + x + " for zoom level " + zoom);
+        if (y < 0 || y >= mapSize) throw new InvalidTilePositionException("Invalid coordinate: " + y + " for zoom level " + zoom);
         this.zoom = zoom;
         this.xPosition = x;
         this.yPosition = y;
@@ -110,8 +110,8 @@ public abstract class TilePos implements Mutable<TilePosImmutable>, Immutable<Ti
 
     @Override
     public boolean equals(Object obj) {
-        if(this == obj) return true;
-        if(obj instanceof TilePos) {
+        if (this == obj) return true;
+        if (obj instanceof TilePos) {
             TilePos o = (TilePos) obj;
             return this.zoom == o.zoom && this.xPosition == o.xPosition && this.yPosition == o.yPosition;
         }

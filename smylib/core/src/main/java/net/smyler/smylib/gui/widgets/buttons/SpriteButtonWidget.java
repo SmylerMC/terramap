@@ -73,9 +73,9 @@ public class SpriteButtonWidget extends AbstractButtonWidget {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Sprite sprite = this.sprite;
-        if(!this.isEnabled()) {
+        if (!this.isEnabled()) {
             sprite = this.spriteDisabled;
-        } else if(hovered || hasFocus) {
+        } else if (hovered || hasFocus) {
             sprite = this.spriteHighlighted;
         }
         context.drawSprite(x, y, sprite);

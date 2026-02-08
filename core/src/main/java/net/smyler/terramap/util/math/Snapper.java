@@ -24,7 +24,7 @@ public class Snapper {
 
     public double snap(double value) {
         double closetsPeriod = round(value / this.period) * this.period;
-        if(abs(closetsPeriod - value) < this.distance) value = closetsPeriod;
+        if (abs(closetsPeriod - value) < this.distance) value = closetsPeriod;
         return value;
     }
 

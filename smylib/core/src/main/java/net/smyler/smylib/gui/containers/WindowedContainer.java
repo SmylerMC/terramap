@@ -127,11 +127,11 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         @Override
         public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             context.drawRectangle(x, y, x + this.getWidth(), y + this.getHeight(), this.getBackgroundColor());
-            if(this.lastHovered != hovered && !getGameClient().mouse().isButtonPressed(0)) {
+            if (this.lastHovered != hovered && !getGameClient().mouse().isButtonPressed(0)) {
                 GameClient client = getGameClient();
-                if(hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) {
+                if (hovered && this.isCursorEnabled() && WindowedContainer.this.enableCustomCursors) {
                     client.setCursor(this.cursor);
-                } else if(client.cursor().map(Cursor::identifier).orElse(null) == this.cursor) {
+                } else if (client.cursor().map(Cursor::identifier).orElse(null) == this.cursor) {
                     client.setCursor(null);
                 }
                 this.lastHovered = hovered;
@@ -191,7 +191,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0 || !WindowedContainer.this.allowHorizontalResize) return;
+            if (mouseButton != 0 || !WindowedContainer.this.allowHorizontalResize) return;
             WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
             WindowedContainer.this.updateSubScreen();
         }
@@ -231,8 +231,8 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0 || !WindowedContainer.this.allowHorizontalResize) return;
-            if(WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
+            if (mouseButton != 0 || !WindowedContainer.this.allowHorizontalResize) return;
+            if (WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
                 WindowedContainer.this.setX(WindowedContainer.this.getX() + dX);
             }
             WindowedContainer.this.updateSubScreen();
@@ -273,7 +273,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0 || !WindowedContainer.this.allowVerticalResize) return;
+            if (mouseButton != 0 || !WindowedContainer.this.allowVerticalResize) return;
             WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
             WindowedContainer.this.updateSubScreen();
         }
@@ -313,8 +313,8 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0 || !WindowedContainer.this.allowVerticalResize) return;
-            if(WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
+            if (mouseButton != 0 || !WindowedContainer.this.allowVerticalResize) return;
+            if (WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
                 WindowedContainer.this.setY(WindowedContainer.this.getY() + dY);
             }
             WindowedContainer.this.updateSubScreen();
@@ -355,11 +355,11 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0) return;
-            if(WindowedContainer.this.allowHorizontalResize && WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
+            if (mouseButton != 0) return;
+            if (WindowedContainer.this.allowHorizontalResize && WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
                 WindowedContainer.this.setX(WindowedContainer.this.getX() + dX);
             }
-            if(WindowedContainer.this.allowVerticalResize && WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
+            if (WindowedContainer.this.allowVerticalResize && WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
                 WindowedContainer.this.setY(WindowedContainer.this.getY() + dY);
             }
             WindowedContainer.this.updateSubScreen();
@@ -400,9 +400,9 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0) return;
-            if(WindowedContainer.this.allowVerticalResize) WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
-            if(WindowedContainer.this.allowHorizontalResize && WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
+            if (mouseButton != 0) return;
+            if (WindowedContainer.this.allowVerticalResize) WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
+            if (WindowedContainer.this.allowHorizontalResize && WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() - dX)) {
                 WindowedContainer.this.setX(WindowedContainer.this.getX() + dX);
             }
             WindowedContainer.this.updateSubScreen();
@@ -443,9 +443,9 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0) return;
-            if(WindowedContainer.this.allowHorizontalResize) WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
-            if(WindowedContainer.this.allowVerticalResize) WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
+            if (mouseButton != 0) return;
+            if (WindowedContainer.this.allowHorizontalResize) WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
+            if (WindowedContainer.this.allowVerticalResize) WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() + dY);
             WindowedContainer.this.updateSubScreen();
         }
 
@@ -484,9 +484,9 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0) return;
-            if(WindowedContainer.this.allowHorizontalResize) WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
-            if(WindowedContainer.this.allowVerticalResize && WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
+            if (mouseButton != 0) return;
+            if (WindowedContainer.this.allowHorizontalResize) WindowedContainer.this.trySetInnerWidth(WindowedContainer.this.getInnerWidth() + dX);
+            if (WindowedContainer.this.allowVerticalResize && WindowedContainer.this.trySetInnerHeight(WindowedContainer.this.getInnerHeight() - dY)) {
                 WindowedContainer.this.setY(WindowedContainer.this.getY() + dY);
             }
             WindowedContainer.this.updateSubScreen();
@@ -536,7 +536,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0) return;
+            if (mouseButton != 0) return;
 
             WindowedContainer.this.setPosition(WindowedContainer.this.getX() + dX, WindowedContainer.this.getY() + dY);
         }
@@ -591,7 +591,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
         @Override
         public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, WidgetContainer parent, long dt) {
-            if(mouseButton != 0) return;
+            if (mouseButton != 0) return;
             WindowedContainer.this.setPosition(WindowedContainer.this.getX() + dX, WindowedContainer.this.getY() + dY);
         }
 
@@ -641,7 +641,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     private boolean trySetInnerWidth(float width) {
-        if(width >= this.minInnerWidth && width <= this.maxInnerWidth) {
+        if (width >= this.minInnerWidth && width <= this.maxInnerWidth) {
             this.setWidth(width + this.effectiveBorderSize * 2);
             return true;
         }
@@ -649,7 +649,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     private boolean trySetInnerHeight(float height) {
-        if(height >= this.minInnerHeight && height <= this.maxInnerHeight) {
+        if (height >= this.minInnerHeight && height <= this.maxInnerHeight) {
             this.setHeight(height + this.effectiveBorderSize * 2 + this.effectiveTopBarHeight);
             return true;
         }
@@ -662,14 +662,14 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         float newWidth = width + this.effectiveBorderSize * 2;
         float newHeight = height + this.effectiveBorderSize * 2 + this.effectiveTopBarHeight;
 
-        if(validWidth && validHeight) {
+        if (validWidth && validHeight) {
             this.setSize(newWidth, newHeight);
-        } else if(validHeight) {
+        } else if (validHeight) {
             this.setHeight(newHeight);
-        } else if(validWidth) {
+        } else if (validWidth) {
             this.setWidth(newWidth);
         }
-        if(validWidth || validHeight) this.updateSubScreen();
+        if (validWidth || validHeight) this.updateSubScreen();
         return this;
     }
 
@@ -717,7 +717,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
     public WindowedContainer setBorderWidth(float width) {
         checkArgument(width > 0, "border width needs to be strictly positive");
-        if(this.borderWidth == this.effectiveBorderSize)
+        if (this.borderWidth == this.effectiveBorderSize)
             this.effectiveBorderSize = width;
         this.borderWidth = width;
         this.updateSubScreen();
@@ -729,7 +729,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public WindowedContainer setBorderless(boolean yesNo) {
-        if(yesNo) this.effectiveBorderSize = 0;
+        if (yesNo) this.effectiveBorderSize = 0;
         else this.effectiveBorderSize = this.borderWidth;
         this.updateSubScreen();
         return this;
@@ -758,7 +758,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
     }
 
     public WindowedContainer setEnableTopBar(boolean yesNo) {
-        if(yesNo) this.effectiveTopBarHeight = this.topBarHeight;
+        if (yesNo) this.effectiveTopBarHeight = this.topBarHeight;
         else this.effectiveTopBarHeight = 0;
         this.updateSubScreen();
         return this;
@@ -766,7 +766,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
 
     public WindowedContainer setTopBarHeight(float height) {
         checkArgument(height > 0, "title bar height must be strictly positive");
-        if(this.effectiveTopBarHeight == this.topBarHeight) this.effectiveTopBarHeight = height;
+        if (this.effectiveTopBarHeight == this.topBarHeight) this.effectiveTopBarHeight = height;
         this.topBarHeight = height;
         return this;
     }

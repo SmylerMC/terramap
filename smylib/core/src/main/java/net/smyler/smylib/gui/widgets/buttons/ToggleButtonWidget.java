@@ -102,20 +102,20 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean hasFocus, WidgetContainer parent) {
         Sprite sprite;
-        if(!this.isEnabled()) {
-            if(this.getState()) {
+        if (!this.isEnabled()) {
+            if (this.getState()) {
                 sprite = this.onDisabledSprite;
             } else {
                 sprite = this.offDisabledSprite;
             }
-        } else if(hovered || hasFocus) {
-            if(this.getState()) {
+        } else if (hovered || hasFocus) {
+            if (this.getState()) {
                 sprite = this.onFocusedSprite;
             } else {
                 sprite = this.offFocusedSprite;
             }
         } else {
-            if(this.getState()) {
+            if (this.getState()) {
                 sprite = this.onEnabledSprite;
             } else {
                 sprite = this.offEnabledSprite;
@@ -126,7 +126,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 
     public void toggle() {
         this.value = !this.value;
-        if(this.onChange != null) this.onChange.accept(this.value);
+        if (this.onChange != null) this.onChange.accept(this.value);
     }
 
     public boolean getState() {

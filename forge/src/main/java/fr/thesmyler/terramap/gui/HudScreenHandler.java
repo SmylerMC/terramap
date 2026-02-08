@@ -36,7 +36,7 @@ public abstract class HudScreenHandler {
         screen.removeAllWidgets();
         screen.cancelAllScheduled();
 
-        if(TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(getGameClient().getCurrentScreen() instanceof HudConfigScreen)) {
+        if (TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP) && !(getGameClient().getCurrentScreen() instanceof HudConfigScreen)) {
             if (map == null) {
                 map = new MinimapWidget(10);
             }
@@ -59,7 +59,7 @@ public abstract class HudScreenHandler {
 
     private static void tickCompass() {
         GeoProjection p = TerramapClientContext.getContext().getProjection();
-        if(p != null) {
+        if (p != null) {
             EntityPlayerSP player = getMinecraft().player;
             playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
             try {
@@ -73,7 +73,7 @@ public abstract class HudScreenHandler {
 
     public static void updateMinimap() {
         WidgetContainer screen = HudScreen.getContent();
-        if(map == null) {
+        if (map == null) {
             init(screen);
             return;
         }
@@ -99,7 +99,7 @@ public abstract class HudScreenHandler {
     }
 
     public static void zoomInMinimap() {
-        if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
+        if (map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
         map.getController().setZoomStaticLocation(map.getController().getCenterLocation());
         map.getController().zoom(1, true);
         TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getController().getTargetZoom();
@@ -107,7 +107,7 @@ public abstract class HudScreenHandler {
     }
 
     public static void zoomOutMinimap() {
-        if(map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
+        if (map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
         map.getController().setZoomStaticLocation(map.getController().getCenterLocation());
         map.getController().zoom(-1, true);
         TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getController().getTargetZoom();

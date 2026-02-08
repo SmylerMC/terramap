@@ -91,7 +91,7 @@ public class ClientTerramapEventHandler {
     public void onChangeDimension(PlayerChangedDimensionEvent event) {
         // Not called on client...
         getTerramap().logger().info(event.player.world.isRemote);
-        if(event.player.world.isRemote) {
+        if (event.player.world.isRemote) {
             TerramapClientContext.getContext().resetWorld();
         }
     }
@@ -105,7 +105,7 @@ public class ClientTerramapEventHandler {
 
     @SubscribeEvent
     public void onGuiScreenInit(InitGuiEvent event) {
-        if(event.getGui() instanceof GuiDownloadTerrain) {
+        if (event.getGui() instanceof GuiDownloadTerrain) {
             TerramapClientContext.getContext().resetWorld();
         }
     }
@@ -113,7 +113,7 @@ public class ClientTerramapEventHandler {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         Popup popup = getGameClient().getTopPopup();
-        if(event.getGui() instanceof GuiChat && popup instanceof LayerRenderingOffsetPopup) {
+        if (event.getGui() instanceof GuiChat && popup instanceof LayerRenderingOffsetPopup) {
             /*
              * Take care of propagating offset changes once the popup is closed
              * when the minimap background offset was changed from a popup opened from the chat,

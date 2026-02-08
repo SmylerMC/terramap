@@ -88,7 +88,7 @@ public abstract class WidgetContainer implements Widget {
     }
 
     public WidgetContainer removeWidget(Widget widget) {
-        if(this.widgets.contains(widget)) {
+        if (this.widgets.contains(widget)) {
             widget.onRemoved();
         }
         this.widgets.remove(widget);
@@ -111,7 +111,7 @@ public abstract class WidgetContainer implements Widget {
             boolean processed = false;
             for(Widget widget: this.widgets) {
                 boolean propagate = true;
-                if(!this.isOverWidget(event.mouseX, event.mouseY, widget)) {
+                if (!this.isOverWidget(event.mouseX, event.mouseY, widget)) {
                     switch(event.type) {
                         case CLICK:
                             propagate = widget.onParentClick(event.mouseX, event.mouseY, event.button, this);
@@ -121,7 +121,7 @@ public abstract class WidgetContainer implements Widget {
                             break;
                         case RELEASE:
                             widget.onMouseReleased(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this.draggedWidget[event.button]);
-                            if(widget.equals(this.draggedWidget[event.button])) {
+                            if (widget.equals(this.draggedWidget[event.button])) {
                                 this.draggedWidget[event.button] = null;
                             }
                             break;
@@ -129,7 +129,7 @@ public abstract class WidgetContainer implements Widget {
                             break;
                     }
                 } else {
-                    if(!(widget.takesInputs() && widget.isVisible(this))) {
+                    if (!(widget.takesInputs() && widget.isVisible(this))) {
                         if (!widget.onInteractWhenNotTakingInputs(event.mouseX, event.mouseY, event.button, this)) {
                             processed = true;
                             break;
@@ -154,17 +154,17 @@ public abstract class WidgetContainer implements Widget {
                         }
                     }
                 }
-                if(!propagate) {
+                if (!propagate) {
                     processed = true;
                     break;
                 }
             }
-            if(!processed && (event.type.equals(MouseActionType.CLICK) || event.type.equals(MouseActionType.DOUBLE_CLICK))) {
+            if (!processed && (event.type.equals(MouseActionType.CLICK) || event.type.equals(MouseActionType.DOUBLE_CLICK))) {
                 this.focusedWidget = null;
             }
         }
         for(int i=0; i < this.draggedWidget.length; i++) {
-            if(this.draggedWidget[i] != null) {
+            if (this.draggedWidget[i] != null) {
                 this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this, this.dClickT[i]);
                 this.dClickX[i] = 0;
                 this.dClickY[i] = 0;
@@ -176,14 +176,14 @@ public abstract class WidgetContainer implements Widget {
         float thisy = this.getY();
         for(Widget w: this.widgets) w.onUpdate(mouseX - thisx, mouseY - thisy, this);
 
-        if(this.menuToShow != null) {
-            if(parent != null) parent.showMenu(thisx + this.menuToShowX, thisy + this.menuToShowY, this.menuToShow);
+        if (this.menuToShow != null) {
+            if (parent != null) parent.showMenu(thisx + this.menuToShowX, thisy + this.menuToShowY, this.menuToShow);
             else {
                 this.addWidget(this.menuToShow);
                 float w = this.menuToShow.getWidth();
                 float h = this.menuToShow.getHeight();
-                if(this.menuToShowX + w > this.getWidth()) this.menuToShowX -= w;
-                if(this.menuToShowY + h > this.getHeight()) this.menuToShowY -= h;
+                if (this.menuToShowX + w > this.getWidth()) this.menuToShowX -= w;
+                if (this.menuToShowY + h > this.getHeight()) this.menuToShowY -= h;
                 this.menuToShow.show(this.menuToShowX, this.menuToShowY);
             }
             this.menuToShow = null;
@@ -198,7 +198,7 @@ public abstract class WidgetContainer implements Widget {
         int j = tasks.size();
         while(--j >= 0) {
             ScheduledTask task = tasks.get(j);
-            if(currentTime > task.getWhen()) {
+            if (currentTime > task.getWhen()) {
                 task.execute();
                 tasks.remove(j);
             }
@@ -207,7 +207,7 @@ public abstract class WidgetContainer implements Widget {
 
     @Override
     public void onKeyTyped(char typedChar, Key key, @Nullable WidgetContainer parent) {
-        if(this.focusedWidget != null) {
+        if (this.focusedWidget != null) {
             this.focusedWidget.onKeyTyped(typedChar, key, this);
         }
     }
@@ -239,7 +239,7 @@ public abstract class WidgetContainer implements Widget {
 
     @Override
     public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int button, @Nullable WidgetContainer parent, long dt) {
-        if(this.draggedWidget[button] == null) {
+        if (this.draggedWidget[button] == null) {
             this.dClickX[button] = 0;
             this.dClickY[button] = 0;
             Widget widget = this.getWidgetUnder(mouseX, mouseY);
@@ -262,7 +262,7 @@ public abstract class WidgetContainer implements Widget {
      */
     @Nullable 
     protected Widget getWidgetUnder(float x, float y) {
-        for(Widget widget: this.widgets) if(this.isOverWidget(x, y, widget)) return widget;
+        for(Widget widget: this.widgets) if (this.isOverWidget(x, y, widget)) return widget;
         return null;
     }
 
@@ -317,7 +317,7 @@ public abstract class WidgetContainer implements Widget {
      * 
      */
     public Widget getFocusedWidget() {
-        if(this.focusedWidget instanceof WidgetContainer)
+        if (this.focusedWidget instanceof WidgetContainer)
             return ((WidgetContainer) this.focusedWidget).getFocusedWidget();
         return this.focusedWidget;
     }
@@ -349,16 +349,16 @@ public abstract class WidgetContainer implements Widget {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean screenHovered, boolean screenFocused, @Nullable WidgetContainer parent) {
         Scissor scissor = context.scissor();
-        if(this.doScissor) {
+        if (this.doScissor) {
             scissor.push();
             scissor.setEnabled(true);
             scissor.cropSection(x, y, this.getWidth(), this.getHeight());
         }
         Widget wf = null;
-        if(screenHovered) {
+        if (screenHovered) {
             for(Widget widget: this.widgets) {
-                if(!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) continue;
-                if(this.isOverWidget(mouseX - x, mouseY - y, widget)) {
+                if (!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) continue;
+                if (this.isOverWidget(mouseX - x, mouseY - y, widget)) {
                     wf = widget;
                     break;
                 }
@@ -366,7 +366,7 @@ public abstract class WidgetContainer implements Widget {
         }
         this.hoveredWidget = wf;
         this.widgets.descendingIterator().forEachRemaining((widget) -> {
-            if(
+            if (
                     !widget.isVisible(this) ||
                     this.isOutsideScreen(widget) ||
                     !doBoxesCollide(
@@ -381,7 +381,7 @@ public abstract class WidgetContainer implements Widget {
                 return;
             widget.draw(context, x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
         });
-        if(this.doScissor) {
+        if (this.doScissor) {
             scissor.pop();
         }
     }
@@ -520,7 +520,7 @@ public abstract class WidgetContainer implements Widget {
     }
 
     @Nullable public Widget getHoveredWidget() {
-        if(this.hoveredWidget instanceof WidgetContainer)
+        if (this.hoveredWidget instanceof WidgetContainer)
             return ((WidgetContainer) this.hoveredWidget).getHoveredWidget();
         return this.hoveredWidget;
     }

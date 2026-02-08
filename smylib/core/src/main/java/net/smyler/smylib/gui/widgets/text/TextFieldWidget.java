@@ -127,12 +127,12 @@ public class TextFieldWidget implements Widget {
         Color borderColor = this.borderColorNormal;
         Color textColor = this.disabledTextColor;
 
-        if(this.isEnabled()) {
-            if(hovered) borderColor = this.borderColorHovered;
+        if (this.isEnabled()) {
+            if (hovered) borderColor = this.borderColorHovered;
             textColor = focused ? this.focusedTextColor: this.enabledTextColor;
         }
 
-        if(this.hasBackground) {
+        if (this.hasBackground) {
             context.drawRectangle(x, y, x + this.width, y + this.height, this.backgroundColor);
             context.drawRectangle(x - 1, y - 1, x + this.width + 1, y, borderColor);
             context.drawRectangle(x - 1, y + this.height, x + this.width + 1, y + this.height + 1, borderColor);
@@ -140,7 +140,7 @@ public class TextFieldWidget implements Widget {
             context.drawRectangle(x + this.width, y - 1, x + this.width + 1, y + this.height + 1, borderColor);
         }
 
-        if(this.isSearchBar) {
+        if (this.isSearchBar) {
             context.drawSprite(x + this.width - 17, y + 2, SmyLibSprites.MAGNIFYING_GLASS_15);
         }
 
@@ -154,24 +154,24 @@ public class TextFieldWidget implements Widget {
         float startDrawAfterCursorX = textRenderX;
         displaySelectionEnd = Math.min(displaySelectionEnd, string.length());
 
-        if(!string.isEmpty()) {
+        if (!string.isEmpty()) {
             String textBeforeCursor = displayCursor ? string.substring(0, displaySelectionStart) : string;
             startDrawAfterCursorX = this.font.draw(textRenderX, textRenderY, textBeforeCursor, textColor, true);
         }
 
         boolean isCursorAtEndOfText = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxTextLength();
         float cursorX = startDrawAfterCursorX;
-        if(!displayCursor) {
+        if (!displayCursor) {
             cursorX = displaySelectionStart > 0 ? textRenderX + this.getEffectiveWidth() : textRenderX;
-        } else if(isCursorAtEndOfText) {
+        } else if (isCursorAtEndOfText) {
             cursorX = --startDrawAfterCursorX;
         }
 
-        if(!string.isEmpty() && displayCursor && displaySelectionStart < string.length()) {
+        if (!string.isEmpty() && displayCursor && displaySelectionStart < string.length()) {
             this.font.draw(startDrawAfterCursorX, textRenderY, string.substring(displaySelectionStart), textColor, true);
         }
 
-        if(focused && this.isEnabled()) {
+        if (focused && this.isEnabled()) {
             if (isCursorAtEndOfText) {
                 context.drawRectangle(cursorX, textRenderY - 1, cursorX+1, textRenderY+1 + 9, cursorColor);
             } else {
@@ -205,13 +205,13 @@ public class TextFieldWidget implements Widget {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if(!this.isEnabled()) return false;
+        if (!this.isEnabled()) return false;
         if (mouseButton == 0) {
             float mPos = mouseX;
             if (this.hasBackground) mPos -= 4;
             String string = this.getVisibleText();
             this.setCursor(this.font.trimRight(string, mPos).length() + this.firstCharacterIndex);
-        } else if(mouseButton == 1 && this.menuEnabled) {
+        } else if (mouseButton == 1 && this.menuEnabled) {
             parent.showMenu(mouseX + this.x, mouseY + this.y, this.rightClickMenu);
         }
         return false;
@@ -219,8 +219,8 @@ public class TextFieldWidget implements Widget {
 
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if(!this.isEnabled()) return false;
-        if(mouseButton == 0) {
+        if (!this.isEnabled()) return false;
+        if (mouseButton == 0) {
             this.setSelectionStart(this.getWordSkipPosition(-1, this.getCursor(), false));
             this.setSelectionEnd(this.getWordSkipPosition(1, this.getCursor(), false));
         }
@@ -229,7 +229,7 @@ public class TextFieldWidget implements Widget {
 
     @Override
     public void onKeyTyped(char typedChar, @Nullable Key key, WidgetContainer parent) {
-        if(!this.isEnabled()) {
+        if (!this.isEnabled()) {
             return;
         }
 
@@ -286,7 +286,7 @@ public class TextFieldWidget implements Widget {
                     return;
                 case KEY_RETURN: // This is the enter key
                 case KEY_NUMPADENTER:
-                    if(this.onPressEnterCallback.test(this.text)) {
+                    if (this.onPressEnterCallback.test(this.text)) {
                         parent.setFocus(null);
                     }
                     return;
@@ -299,7 +299,7 @@ public class TextFieldWidget implements Widget {
 
     @Override
     public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
-        if(!this.isEnabled()) return;
+        if (!this.isEnabled()) return;
         if (mouseButton == 0) {
             float mPos = mouseX;
             if (this.hasBackground) mPos -= 4;
@@ -408,7 +408,7 @@ public class TextFieldWidget implements Widget {
                 int textLength = this.text.length();
                 pos = this.text.indexOf(' ', pos);
                 if (pos == -1) pos = textLength;
-                else if(includeSpaces) {
+                else if (includeSpaces) {
                     while(pos < textLength && this.text.charAt(pos) == ' ') {
                         ++pos;
                     }

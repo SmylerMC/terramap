@@ -141,7 +141,7 @@ public class McChunksLayer extends MapLayer {
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget)parent;
         GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        if(projection == null) return;
+        if (projection == null) return;
         map.getProfiler().enterSection("layer-" + ID);
         
         this.cache.projection = projection;
@@ -159,10 +159,10 @@ public class McChunksLayer extends MapLayer {
             projection.fromGeo(this.mcCenter, this.geoCenter);
             projection.fromGeo(this.nearCenterPosition, this.nearCenterLocation);
             double d = this.mcCenter.distanceTo(this.nearCenterPosition);
-            if(d < renderThreshold) render2dr = this.render2dr;
-            if(d < renderThreshold / 2) render3dr = this.render3dr;
-            if(d < renderThreshold / 16) renderChunks = this.renderChunks;
-            if(d < renderThreshold / 128) renderBlocks = this.renderBlocks;
+            if (d < renderThreshold) render2dr = this.render2dr;
+            if (d < renderThreshold / 2) render3dr = this.render3dr;
+            if (d < renderThreshold / 16) renderChunks = this.renderChunks;
+            if (d < renderThreshold / 128) renderBlocks = this.renderBlocks;
         } catch(OutOfGeoBoundsException silenced) {
             // The center is out of bounds, let's not render anything
             return;
@@ -172,19 +172,19 @@ public class McChunksLayer extends MapLayer {
         this.applyRotationGl(context, x, y);
 
         float size = 1f;
-        if(renderBlocks) {
+        if (renderBlocks) {
             this.renderGrid(context, x, y, 0, 1, this.colorBlocks.withAlpha(this.getAlpha()), size);
             size += 1f;
         }
-        if(renderChunks) {
+        if (renderChunks) {
             this.renderGrid(context, x, y, 1, 16, this.colorChunks.withAlpha(this.getAlpha()), size);
             size += 1f;
         }
-        if(render3dr) {
+        if (render3dr) {
             this.renderGrid(context, x, y, 2, 256, this.color3dr.withAlpha(this.getAlpha()), size);
             size += 1f;
         }
-        if(render2dr) {
+        if (render2dr) {
             this.renderGrid(context, x, y, 3, 512, this.color2dr.withAlpha(this.getAlpha()), size);
         }
 
@@ -215,31 +215,31 @@ public class McChunksLayer extends MapLayer {
             
             boolean[] linesInlineIn = new boolean[4];
             while(2*dX*direction < size) {
-                if((direction < 0 && inBottom) || (direction > 0 && inTop))
+                if ((direction < 0 && inBottom) || (direction > 0 && inTop))
                     this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
                 dX += direction;
                 long step = tileSize*direction;
                 for (Vec2dMutable corner : this.corners) corner.add(step, 0);
             }
             
-            if(!linesInlineIn[0]) inLeft = false;
-            if(!linesInlineIn[1]) inRight = false;
-            if(!linesInlineIn[2]) inTop = false;
-            if(!linesInlineIn[3]) inBottom = false;
+            if (!linesInlineIn[0]) inLeft = false;
+            if (!linesInlineIn[1]) inRight = false;
+            if (!linesInlineIn[2]) inTop = false;
+            if (!linesInlineIn[3]) inBottom = false;
             linesInlineIn = new boolean[4];
 
             while(2*dY*direction < size) {
-                if((direction < 0 && inLeft) || (direction > 0 && inRight))
+                if ((direction < 0 && inLeft) || (direction > 0 && inRight))
                     this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
                 dY += direction;
                 long step = tileSize*direction;
                 for (Vec2dMutable corner : this.corners) corner.add(0, step);
             }
             
-            if(!linesInlineIn[0]) inLeft = false;
-            if(!linesInlineIn[1]) inRight = false;
-            if(!linesInlineIn[2]) inTop = false;
-            if(!linesInlineIn[3]) inBottom = false;
+            if (!linesInlineIn[0]) inLeft = false;
+            if (!linesInlineIn[1]) inRight = false;
+            if (!linesInlineIn[2]) inTop = false;
+            if (!linesInlineIn[3]) inBottom = false;
 
             direction *= -1;
             size++;
@@ -288,16 +288,16 @@ public class McChunksLayer extends MapLayer {
             this.accessedInCycle.add(imuMcPos);
             
             // Not really out of bounds, but we don't need to differentiate the two
-            if(this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) {
+            if (this.projectionsThisCycle[discriminator] >= this.maxProjectionsPerCycle) {
                 throw new OutOfGeoBoundsException();
             }
             
             GeoPointImmutable location;
             
             // Try getting a cached value
-            if(this.mcToGeo.containsKey(imuMcPos)) {
+            if (this.mcToGeo.containsKey(imuMcPos)) {
                 location = this.mcToGeo.get(imuMcPos);
-                if(location == null) {
+                if (location == null) {
                     throw new OutOfGeoBoundsException();
                 }
             } else {

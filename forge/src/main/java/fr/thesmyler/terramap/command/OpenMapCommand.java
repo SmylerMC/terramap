@@ -35,13 +35,13 @@ public class OpenMapCommand implements IClientCommand {
 
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        if(!(args.length == 3)) {
+        if (!(args.length == 3)) {
             throw new CommandException("terramap.commands.opentmap.numberargs");
         }
         int zoom = CommandBase.parseInt(args[0], 0, 25);
         double lat = CommandBase.parseDouble(args[1], -90, 90);
         double lon = CommandBase.parseDouble(args[2], -180, 180);
-        if(TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
+        if (TerramapClientContext.getContext().allowsMap(MapContext.FULLSCREEN)) {
             // The current screen is the chat, if we change screen now Minecraft will close it immediately, thinking it is closing the chat
             HudScreen.getContent().scheduleBeforeNextUpdate(() -> TerramapClientContext.getContext().openMapAt(zoom, lon, lat));
         } else {

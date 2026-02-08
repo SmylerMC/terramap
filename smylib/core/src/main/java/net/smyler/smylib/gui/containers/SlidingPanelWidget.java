@@ -56,7 +56,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
 
     @Override
     public boolean onParentClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-        if(this.closeOnClickOther && !this.getTarget().equals(PanelTarget.CLOSED)) {
+        if (this.closeOnClickOther && !this.getTarget().equals(PanelTarget.CLOSED)) {
             this.close();
             return false;
         }

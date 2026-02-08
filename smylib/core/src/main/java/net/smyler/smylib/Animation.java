@@ -28,19 +28,19 @@ public class Animation {
         this.updated = System.currentTimeMillis();
         long age = this.getAge();
         long halfDuration = this.duration/2;
-        if(this.duration == 0) {
+        if (this.duration == 0) {
             this.progress = 1f;
         } else {
             switch(this.state) {
                 case ENTER:
                     float f = (float)age/(float)this.duration;
                     this.progress = saturate(f);
-                    if(this.progress == 1f) this.state = AnimationState.STOPPED;
+                    if (this.progress == 1f) this.state = AnimationState.STOPPED;
                     break;
                 case LEAVE:
                     float g = (float)age/(float)this.duration;
                     this.progress = 1 - saturate(g);
-                    if(this.progress == 0f) this.state = AnimationState.STOPPED;
+                    if (this.progress == 0f) this.state = AnimationState.STOPPED;
                     break;
                 case FLASH:
                     float k = 2 * saturate(abs(((float)(age % this.duration) - halfDuration)/halfDuration));

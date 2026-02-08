@@ -35,12 +35,12 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         boolean drawName = this.showName(hovered);
         float textureSize = 128f / this.downScaleFactor;
         glState.enableAlpha();
-        if(hovered) context.drawRectangle(x +1, y +1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.DARK_OVERLAY);
+        if (hovered) context.drawRectangle(x + 1, y + 1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.DARK_OVERLAY);
 
         // Draw the direction arrow
-        if(this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
+        if (this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
             float azimuth = this.azimuth;
-            if(parent instanceof MapWidget) {
+            if (parent instanceof MapWidget) {
                 azimuth += ((MapWidget)parent).getController().getRotation();
             }
 
@@ -53,10 +53,10 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
             gl.disableAlpha();
             gl.enableSmoothShading();
             gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
-            gl.vertex().position(0, -this.height*1.2, 0).color(1f, 0, 0, 0.7f).end();
-            gl.vertex().position(-this.width/2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).end();
+            gl.vertex().position(0, -this.height * 1.2, 0).color(1f, 0, 0, 0.7f).end();
+            gl.vertex().position(-this.width / 2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).end();
             gl.vertex().position(0, -this.height * 0.8, 0).color(0.5f, 0, 0, 1f).end();
-            gl.vertex().position(this.width/2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).end();
+            gl.vertex().position(this.width / 2, -this.height * 0.7, 0).color(0.8f, 0, 0, 0.9f).end();
             gl.draw();
 
             GlStateManager.popMatrix();
@@ -67,7 +67,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
         RenderUtil.drawModalRectWithCustomSizedTexture(x, y, 80f / this.downScaleFactor, this.getHeight(), this.getWidth(), this.getHeight(), textureSize, textureSize);
 
-        if(drawName) {
+        if (drawName) {
             float halfSize = this.width / 2;
             String name = this.getDisplayName().getFormattedText();
             float strWidth = parent.getFont().computeWidth(name);
@@ -84,7 +84,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
     protected abstract float getTransparency();
 
     protected boolean showName(boolean hovered) {
-        if(this.getController() instanceof AbstractPlayerMarkerController) {
+        if (this.getController() instanceof AbstractPlayerMarkerController) {
             AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
             return controller.doesShowNames() || hovered;
         }
@@ -92,7 +92,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
     }
 
     protected boolean showDirection(boolean hovered) {
-        if(this.getController() instanceof AbstractPlayerMarkerController) {
+        if (this.getController() instanceof AbstractPlayerMarkerController) {
             AbstractPlayerMarkerController<?> controller = (AbstractPlayerMarkerController<?>) this.getController();
             return controller.doesShowDirection();
         }

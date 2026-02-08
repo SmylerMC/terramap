@@ -90,7 +90,7 @@ public abstract class AbstractSliderWidget implements Widget {
 
     @Override
     public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
-        if(amount > 0) this.goToNext();
+        if (amount > 0) this.goToNext();
         else this.goToPrevious();
         return false;
     }

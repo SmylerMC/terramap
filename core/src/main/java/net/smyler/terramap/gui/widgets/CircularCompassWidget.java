@@ -52,7 +52,7 @@ public class CircularCompassWidget implements Widget {
         Color south = this.southColor;
         Color southColor = this.southColorDark;
 
-        if(this.fadeAwayOnZero) {
+        if (this.fadeAwayOnZero) {
             background = this.fader.fadeColor(background);
             north = this.fader.fadeColor(north);
             northDark = this.fader.fadeColor(northDark);
@@ -101,11 +101,11 @@ public class CircularCompassWidget implements Widget {
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-        if(this.fadeAwayOnZero) {
-            if(this.fader.getState() == AnimationState.STOPPED) {
-                if(this.fader.getProgress() <= 0f && this.azimuth != 0f)
+        if (this.fadeAwayOnZero) {
+            if (this.fader.getState() == AnimationState.STOPPED) {
+                if (this.fader.getProgress() <= 0f && this.azimuth != 0f)
                     this.fader.start(AnimationState.ENTER);
-                if(this.fader.getProgress() >= 1f && this.azimuth == 0f) 
+                if (this.fader.getProgress() >= 1f && this.azimuth == 0f)
                     this.fader.start(AnimationState.LEAVE);
             }
             this.fader.update();
@@ -116,8 +116,8 @@ public class CircularCompassWidget implements Widget {
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         float dX = mouseX - this.size / 2;
         float dY = mouseY - this.size / 2;
-        if(dX*dX + dY*dY < this.size*this.size / 4) {
-            if(this.onClick != null) this.onClick.run();
+        if (dX*dX + dY*dY < this.size*this.size / 4) {
+            if (this.onClick != null) this.onClick.run();
             return false;
         }
         return true;
@@ -207,7 +207,7 @@ public class CircularCompassWidget implements Widget {
 
     @Override
     public boolean isVisible(WidgetContainer parent) {
-        if(this.fadeAwayOnZero && this.fader.getProgress() <= 0f) return false;
+        if (this.fadeAwayOnZero && this.fader.getProgress() <= 0f) return false;
         return this.visible;
     }
 

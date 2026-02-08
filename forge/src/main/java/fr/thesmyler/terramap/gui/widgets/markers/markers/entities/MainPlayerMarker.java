@@ -36,11 +36,11 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 
     @Override
     public void onUpdate(float mouseX, float mouseY, WidgetContainer parent) {
-        if(Minecraft.getMinecraft().player == null) {
+        if (Minecraft.getMinecraft().player == null) {
             parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
             return;
         }
-        if(TerramapClientContext.getContext().getProjection() == null) return;
+        if (TerramapClientContext.getContext().getProjection() == null) return;
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         GeoProjection projection = TerramapClientContext.getContext().getProjection();
         Position position = new PositionMutable(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);
@@ -74,7 +74,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
 
     @Override
     public ITextComponent getDisplayName() {
-        if(Minecraft.getMinecraft().player != null) {
+        if (Minecraft.getMinecraft().player != null) {
             return Minecraft.getMinecraft().player.getDisplayName();
         } else {
             return new TextComponentString("Missing main player");
@@ -84,7 +84,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
     @Override
     public String getIdentifier() {
         String uuid = null;
-        if(Minecraft.getMinecraft().player != null) {
+        if (Minecraft.getMinecraft().player != null) {
             uuid = Minecraft.getMinecraft().player.getUniqueID().toString();
         }
         return this.getControllerId() + ":" + uuid;

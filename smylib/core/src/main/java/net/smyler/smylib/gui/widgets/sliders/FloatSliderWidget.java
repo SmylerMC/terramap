@@ -88,7 +88,7 @@ public class FloatSliderWidget extends AbstractSliderWidget {
 
     protected void onChange() {
         this.updateResolution();
-        if(this.onChange != null) this.onChange.accept(this.getValue());
+        if (this.onChange != null) this.onChange.accept(this.getValue());
     }
 
     private void updateResolution() {

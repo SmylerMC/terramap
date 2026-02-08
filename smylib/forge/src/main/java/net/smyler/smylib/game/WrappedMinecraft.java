@@ -354,7 +354,7 @@ public class WrappedMinecraft implements GameClient {
         if (!SmyLib.isDebug()) {
             return;
         }
-        if(!(event.getGui() instanceof GuiScreenProxy) && this.showTestScreen) {
+        if (!(event.getGui() instanceof GuiScreenProxy) && this.showTestScreen) {
             this.displayScreen(new TestScreen(new WrappedVanillaScreen(event.getGui())));
             this.showTestScreen = false;
         }

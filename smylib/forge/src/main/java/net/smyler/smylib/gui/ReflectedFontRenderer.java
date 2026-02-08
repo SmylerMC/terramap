@@ -131,55 +131,55 @@ public class ReflectedFontRenderer extends BaseFont {
     /* Only delegated calls to FontRenderer and reflection stuff from this point */
 
     protected void renderStringAtPos(String text, boolean shadow) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if(renderStringAtPos == null) 
+        if (renderStringAtPos == null)
             renderStringAtPos = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_renderStringAtPos, Void.TYPE, String.class, Boolean.TYPE);
         renderStringAtPos.invoke(this.getFont(), text, shadow);
     }
 
     protected void resetStyles() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if(resetStyles == null)
+        if (resetStyles == null)
             resetStyles = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_resetStyles, Void.TYPE);
         resetStyles.invoke(this.getFont());
     }
 
     protected String bidiReorder(String text) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        if(bidiReorder == null)
+        if (bidiReorder == null)
             bidiReorder = ObfuscationReflectionHelper.findMethod(FontRenderer.class, SRG_bidiReorder, String.class, String.class);
         return (String) bidiReorder.invoke(this.getFont(), text);
     }
 
     protected void setRed(float value) throws IllegalArgumentException, IllegalAccessException {
-        if(red == null) red = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_red);
+        if (red == null) red = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_red);
         red.setFloat(this.getFont(), value);
     }
 
     protected void setGreen(float value) throws IllegalArgumentException, IllegalAccessException {
-        if(green == null) green = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_green);
+        if (green == null) green = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_green);
         green.setFloat(this.getFont(), value);
     }
 
     protected void setBlue(float value) throws IllegalArgumentException, IllegalAccessException {
-        if(blue == null) blue = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_blue);
+        if (blue == null) blue = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_blue);
         blue.setFloat(this.getFont(), value);
     }
 
     protected void setAlpha(float value) throws IllegalArgumentException, IllegalAccessException {
-        if(alpha == null) alpha = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_alpha);
+        if (alpha == null) alpha = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_alpha);
         alpha.setFloat(this.getFont(), value);
     }
 
     protected float getPosX() throws IllegalArgumentException, IllegalAccessException {
-        if(posX == null) posX = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posX);
+        if (posX == null) posX = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posX);
         return posX.getFloat(this.getFont());
     }
 
     protected void setPosX(float value) throws IllegalArgumentException, IllegalAccessException {
-        if(posX == null) posX = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posX);
+        if (posX == null) posX = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posX);
         posX.set(this.getFont(), value);
     }
 
     protected void setPosY(float value) throws IllegalArgumentException, IllegalAccessException {
-        if(posY == null) posY = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posY);
+        if (posY == null) posY = ObfuscationReflectionHelper.findField(FontRenderer.class, SRG_posY);
         posY.set(this.getFont(), value);
     }
 

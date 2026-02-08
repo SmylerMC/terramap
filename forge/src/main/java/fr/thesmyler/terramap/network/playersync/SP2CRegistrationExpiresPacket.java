@@ -26,7 +26,7 @@ public class SP2CRegistrationExpiresPacket implements IMessage {
 
         @Override
         public C2SPRegisterForUpdatesPacket onMessage(SP2CRegistrationExpiresPacket message, MessageContext ctx) {
-            if(TerramapClientContext.getContext().needsUpdate()) {
+            if (TerramapClientContext.getContext().needsUpdate()) {
                 getTerramap().logger().debug("Renewing registration for map update to server");
                 return new C2SPRegisterForUpdatesPacket(true);
             }

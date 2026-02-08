@@ -98,7 +98,7 @@ public class TerramapConfig {
         public boolean chunksRender = false;
 
         public double getEffectiveTileScaling() {
-            if(this.tileScaling == 0) {
+            if (this.tileScaling == 0) {
                 return getGameClient().scaleFactor();
             } else {
                 return CLIENT.minimap.tileScaling;
@@ -199,7 +199,7 @@ public class TerramapConfig {
         public boolean forceTerraWorld = false;
 
         public double getEffectiveTileScaling() {
-            if(this.tileScaling == 0) {
+            if (this.tileScaling == 0) {
                 return getGameClient().scaleFactor();
             } else {
                 return CLIENT.tileScaling;

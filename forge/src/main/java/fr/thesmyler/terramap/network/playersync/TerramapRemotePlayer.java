@@ -80,7 +80,7 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     @Override
     @SideOnly(Side.CLIENT)
     public ResourceLocation getSkin() {
-        if(this.texture == null && !this.texureRequested) {
+        if (this.texture == null && !this.texureRequested) {
             GameProfile profile = new GameProfile(this.getUUID(), null);
             new Thread(() -> {
                 Minecraft.getMinecraft().getSessionService().fillProfileProperties(profile, true);
@@ -101,7 +101,7 @@ public class TerramapRemotePlayer extends TerramapPlayer {
     }
 
     private void skinAvailable(Type type, ResourceLocation location, MinecraftProfileTexture profileTexture) {
-        if(type.equals(Type.SKIN)) {
+        if (type.equals(Type.SKIN)) {
             this.texture = location;
         }
     }

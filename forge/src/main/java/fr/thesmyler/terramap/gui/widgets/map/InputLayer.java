@@ -77,7 +77,7 @@ public class InputLayer extends MapLayer {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
 
-        if(this.isRotating) {
+        if (this.isRotating) {
             // If we are processing rotation input, draw pentagons at the corresponding spot
             this.drawRotationSpot(context, x + this.rotatePosition.x, y + this.rotatePosition.y);
         }
@@ -117,16 +117,16 @@ public class InputLayer extends MapLayer {
         this.controller.stopRotating();
         this.controller.stopTracking();
         this.isRotating = false;
-        if(this.isShortcutEnabled()) {
+        if (this.isShortcutEnabled()) {
             this.map.getRightClickMenu().teleport();
-            if(this.map.getContext().equals(MapContext.FULLSCREEN)) {
+            if (this.map.getContext().equals(MapContext.FULLSCREEN)) {
                 getGameClient().displayScreen(null); //TODO change this so it can work from any menu
             }
         }
-        if(this.map.isRightClickMenuEnabled() && mouseButton == 1 && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.mouseLocation)) {
+        if (this.map.isRightClickMenuEnabled() && mouseButton == 1 && WebMercatorUtil.PROJECTION_BOUNDS.contains(this.mouseLocation)) {
             parent.showMenu(mouseX, mouseY, this.map.getRightClickMenu());
         }
-        if(this.map.isInteractive() && mouseButton == 2 && !isRotating) {
+        if (this.map.isInteractive() && mouseButton == 2 && !isRotating) {
             this.rotatePosition.set(mouseX, mouseY);
             this.controller.setRotationStaticPosition(mouseX, mouseY);
             this.isRotating = true;
@@ -145,7 +145,7 @@ public class InputLayer extends MapLayer {
             // We don't care about double right and middle clicks
             this.onClick(mouseX, mouseY, mouseButton, parent);
         } else if (this.map.isInteractive()) {
-            if(this.map.isFocusedZoom()) this.controller.setZoomStaticPosition(mouseX, mouseY);
+            if (this.map.isFocusedZoom()) this.controller.setZoomStaticPosition(mouseX, mouseY);
             this.controller.zoom(this.controller.getZoomSnapping(), true);
             this.updateViewPorts();
         }
@@ -167,7 +167,7 @@ public class InputLayer extends MapLayer {
     @Override
     public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
         this.isRotating = false;
-        if(this.map.isInteractive() && mouseButton == 0) {
+        if (this.map.isInteractive() && mouseButton == 0) {
             this.controller.dragMap(dX, dY, dt);
         }
     }
@@ -176,13 +176,13 @@ public class InputLayer extends MapLayer {
     public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
         super.onUpdate(mouseX, mouseY, parent);
         // If we are currently taking rotation inputs, rotate the map
-        if(this.map.isInteractive() && this.isRotating) {
+        if (this.map.isInteractive() && this.isRotating) {
             this.getPositionOnWidget(this.rotatePosition, this.controller.getRotationStaticLocation());
-            if(abs(mouseX - this.rotatePosition.x) > 5f || abs(mouseY - this.rotatePosition.y) > 5f) {
+            if (abs(mouseX - this.rotatePosition.x) > 5f || abs(mouseY - this.rotatePosition.y) > 5f) {
                 float angle = (float) toDegrees(
                         atan2(mouseY - this.rotatePosition.y, mouseX - this.rotatePosition.x)
                 ) + 90f + this.rotationAngleOrigin;
-                if(Float.isFinite(angle)) {
+                if (Float.isFinite(angle)) {
                     this.controller.setRotation(angle, false);
                 }
             }
@@ -191,9 +191,9 @@ public class InputLayer extends MapLayer {
 
     @Override
     public boolean onMouseWheeled(float mouseX, float mouseY, int amount, @Nullable WidgetContainer parent) {
-        if(this.map.isInteractive()) {
+        if (this.map.isInteractive()) {
             this.isRotating = false;
-            if(this.map.isFocusedZoom()) {
+            if (this.map.isFocusedZoom()) {
                 this.controller.setZoomStaticPosition(mouseX, mouseY);
             } else {
                 this.controller.setZoomStaticLocation(this.controller.getCenterLocation());

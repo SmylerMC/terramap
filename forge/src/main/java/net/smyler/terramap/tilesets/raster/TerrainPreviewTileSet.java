@@ -105,15 +105,15 @@ public class TerrainPreviewTileSet extends CachingRasterTileSet {
         @Override
         public Identifier getTexture() throws Throwable {
 
-            if(this.getPosition().getZoom() < TerrainPreviewTileSet.BASE_ZOOM_LEVEL)
+            if (this.getPosition().getZoom() < TerrainPreviewTileSet.BASE_ZOOM_LEVEL)
                 throw new IllegalArgumentException("Trying to request a terrain preview with a zoom that's too low (" + this.position.getZoom() + ")");
 
-            if(this.getPosition().getZoom() != TerrainPreviewTileSet.BASE_ZOOM_LEVEL) return null;
+            if (this.getPosition().getZoom() != TerrainPreviewTileSet.BASE_ZOOM_LEVEL) return null;
 
-            if(this.texture == null) {
-                if(this.textureTask == null) {
+            if (this.texture == null) {
+                if (this.textureTask == null) {
                     TerrainPreview preview = TerramapClientContext.getContext().getTerrainPreview();
-                    if(preview != null) {
+                    if (preview != null) {
                         this.textureTask = preview.tile(this.position.getX(), this.position.getY(), TerrainPreviewTileSet.BASE_ZOOM_LEVEL - this.position.getZoom());
                     }
                 } else this.tryLoadingTexture();
@@ -128,7 +128,7 @@ public class TerrainPreviewTileSet extends CachingRasterTileSet {
         @Override
         public void unloadTexture() {
             this.cancelTextureLoading();
-            if(this.texture != null) {
+            if (this.texture != null) {
                 getGameClient().guiDrawContext().unloadDynamicTexture(this.texture);
                 this.texture = null;
             }
@@ -140,9 +140,9 @@ public class TerrainPreviewTileSet extends CachingRasterTileSet {
         }
 
         private void tryLoadingTexture() throws Throwable {
-            if(this.textureTask != null && this.textureTask.isDone()){
-                if(this.textureTask.isCompletedExceptionally()) {
-                    if(!this.textureTask.isCancelled()) {
+            if (this.textureTask != null && this.textureTask.isDone()){
+                if (this.textureTask.isCompletedExceptionally()) {
+                    if (!this.textureTask.isCancelled()) {
                         try {
                             this.textureTask.get(); // That will throw an exception
                         } catch(ExecutionException e) {

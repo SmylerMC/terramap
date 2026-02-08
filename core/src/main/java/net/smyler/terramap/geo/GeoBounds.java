@@ -57,14 +57,14 @@ public class GeoBounds {
         double pointLong = point.longitude();
         double lowerLong = this.lowerCorner.longitude();
         double upperLong = this.upperCorner.longitude();
-        if(this.lowerCorner.latitude() > pointLat || pointLat > this.upperCorner.latitude()) return false;
-        if(this.crossesAntimeridian) {
+        if (this.lowerCorner.latitude() > pointLat || pointLat > this.upperCorner.latitude()) return false;
+        if (this.crossesAntimeridian) {
             return pointLong >= lowerLong || pointLong <= upperLong;
         } else {
             // Deal with -180 / 180
-            if(pointLong == -180d && lowerLong > -180d) {
+            if (pointLong == -180d && lowerLong > -180d) {
                 pointLong = 180d;
-            } else if(pointLong == 180d && upperLong < 180d) {
+            } else if (pointLong == 180d && upperLong < 180d) {
                 pointLong = -180d;
             }
             return lowerLong <= pointLong && pointLong <= upperLong;
@@ -77,7 +77,7 @@ public class GeoBounds {
      * @return whether this box contains the other
      */
     public boolean contains(GeoBounds other) {
-        if(this.crossesAntimeridian) {
+        if (this.crossesAntimeridian) {
             this.splitAtAntimeridian(); // Ensure this#lowerPart and this#upperPart are not null
             return (this.lowerPart.contains(other.lowerCorner) && this.lowerPart.contains(other.upperCorner))
                     ||
@@ -116,13 +116,13 @@ public class GeoBounds {
      * but there is a specific case where two intersections can exist if only one of the bounds crosses the antimeridian.
      */
     public GeoBounds[] intersections(GeoBounds other) {
-        if(!this.intersects(other)) {
+        if (!this.intersects(other)) {
             return new GeoBounds[0];
         }
-        if(this.crossesAntimeridian ^ other.crossesAntimeridian) {
+        if (this.crossesAntimeridian ^ other.crossesAntimeridian) {
             GeoBounds crossing;
             GeoBounds notCrossing;
-            if(this.crossesAntimeridian) {
+            if (this.crossesAntimeridian) {
                 crossing = this;
                 notCrossing = other;
             } else {
@@ -134,11 +134,11 @@ public class GeoBounds {
             GeoBounds[] part2 = crossing.upperPart.intersections(notCrossing);
             boolean p1empty = part1.length == 0;
             boolean p2empty = part2.length == 0;
-            if(!p1empty && !p2empty) {
+            if (!p1empty && !p2empty) {
                 return new GeoBounds[] { part1[0], part2[0] };
-            } else if(!p1empty) {
+            } else if (!p1empty) {
                 return new GeoBounds[] { part1[0] };
-            } else if(!p2empty) {
+            } else if (!p2empty) {
                 return new GeoBounds[] { part2[0] };
             } else {
                 throw new IllegalStateException("Bounds intersect but cannot find intersection!");
@@ -159,9 +159,9 @@ public class GeoBounds {
      */
     public GeoBounds encompassingIntersection(GeoBounds other) {
         GeoBounds[] parts = this.intersections(other);
-        if(parts.length == 0) return GeoBounds.EMPTY;
-        if(parts.length == 1) return parts[0];
-        if(parts.length == 2) return parts[0].smallestEncompassingSquare(parts[1]);
+        if (parts.length == 0) return GeoBounds.EMPTY;
+        if (parts.length == 1) return parts[0];
+        if (parts.length == 2) return parts[0].smallestEncompassingSquare(parts[1]);
         throw new IllegalStateException(String.format("GeoBounds#intersections(GeoBounds) returned an array of %s objects (max is 2)", parts.length));
     }
 
@@ -178,8 +178,8 @@ public class GeoBounds {
      * @return an array of {@link GeoBounds} that does not cross the antimeridian
      */
     public GeoBounds[] splitAtAntimeridian() {
-        if(!this.crossesAntimeridian) return new GeoBounds[] { this };
-        if(this.lowerPart == null || this.upperPart == null) {
+        if (!this.crossesAntimeridian) return new GeoBounds[] { this };
+        if (this.lowerPart == null || this.upperPart == null) {
             this.lowerPart = new GeoBounds(this.lowerCorner.withLongitude(-180d), this.upperCorner.withLongitude(this.upperCorner.longitude()));
             this.upperPart = new GeoBounds(this.lowerCorner, this.upperCorner.withLongitude(180d));
 
@@ -193,15 +193,15 @@ public class GeoBounds {
      * @return the smallest {@link GeoBounds} that contains both this bounds and the other
      */
     public GeoBounds smallestEncompassingSquare(GeoBounds other) {
-        if(this.isEmpty()) return other;
-        if(other.isEmpty()) return this;
+        if (this.isEmpty()) return other;
+        if (other.isEmpty()) return this;
         double lowerLat = min(this.lowerCorner.latitude(), other.lowerCorner.latitude());
         double upperLat = max(this.upperCorner.latitude(), other.upperCorner.latitude());
         double lowerLong, upperLong;
-        if(this.crossesAntimeridian ^ other.crossesAntimeridian) { // Exactly one crosses
+        if (this.crossesAntimeridian ^ other.crossesAntimeridian) { // Exactly one crosses
             GeoBounds crossing;
             GeoBounds notCrossing;
-            if(this.crossesAntimeridian) {
+            if (this.crossesAntimeridian) {
                 crossing = this;
                 notCrossing = other;
             } else {
@@ -209,19 +209,19 @@ public class GeoBounds {
                 notCrossing = this;
             }
             GeoBounds[] parts = crossing.splitAtAntimeridian(); // Ensure #lowerPart and #upperPart are not null
-            if(parts[0].upperCorner.longitude() >= notCrossing.lowerCorner.longitude()) { // Intersects with lower part
-                if(parts[0].upperCorner.longitude() >= notCrossing.upperCorner.longitude()) { // In lower part
+            if (parts[0].upperCorner.longitude() >= notCrossing.lowerCorner.longitude()) { // Intersects with lower part
+                if (parts[0].upperCorner.longitude() >= notCrossing.upperCorner.longitude()) { // In lower part
                     lowerLong = crossing.lowerCorner.longitude();
                     upperLong = crossing.upperCorner.longitude();
-                } else if(parts[1].lowerCorner.longitude() <= notCrossing.upperCorner.longitude()) { // In both lower and upper part
+                } else if (parts[1].lowerCorner.longitude() <= notCrossing.upperCorner.longitude()) { // In both lower and upper part
                     lowerLong = -180d;
                     upperLong = 180d;
                 } else {
                     lowerLong = crossing.lowerCorner.longitude();
                     upperLong = notCrossing.upperCorner.longitude();
                 }
-            } else if(parts[1].lowerCorner.longitude() <= notCrossing.upperCorner.longitude()) { // Crosses with upper part
-                if(parts[1].lowerCorner.longitude() <= notCrossing.lowerCorner.longitude()) { // In upper part
+            } else if (parts[1].lowerCorner.longitude() <= notCrossing.upperCorner.longitude()) { // Crosses with upper part
+                if (parts[1].lowerCorner.longitude() <= notCrossing.lowerCorner.longitude()) { // In upper part
                     lowerLong = crossing.lowerCorner.longitude();
                     upperLong = crossing.upperCorner.longitude();
                 } else { // Intersects with upper part
@@ -231,7 +231,7 @@ public class GeoBounds {
             } else { // Does not intersect, will be choosing the smallest square
                 double deltaLeft = notCrossing.lowerCorner.longitude() - parts[0].upperCorner.longitude();
                 double deltaRight = parts[1].lowerCorner.longitude() - notCrossing.upperCorner.longitude();
-                if(deltaLeft < deltaRight) {
+                if (deltaLeft < deltaRight) {
                     lowerLong = crossing.lowerCorner.longitude();
                     upperLong = notCrossing.upperCorner.longitude();
                 } else {
@@ -239,26 +239,26 @@ public class GeoBounds {
                     upperLong = crossing.upperCorner.longitude();
                 }
             }
-        } else if(this.crossesAntimeridian) { // Both cross
+        } else if (this.crossesAntimeridian) { // Both cross
             lowerLong = min(this.lowerCorner.longitude(), other.lowerCorner.longitude());
             upperLong = max(this.upperCorner.longitude(), other.upperCorner.longitude());
         } else { // None cross
             GeoBounds lowest;
             GeoBounds highest;
-            if(this.lowerCorner.longitude() <= other.lowerCorner.longitude()) {
+            if (this.lowerCorner.longitude() <= other.lowerCorner.longitude()) {
                 lowest = this;
             } else {
                 lowest = other;
             }
-            if(this.upperCorner.longitude() >= other.upperCorner.longitude()) {
+            if (this.upperCorner.longitude() >= other.upperCorner.longitude()) {
                 highest = this;
             } else {
                 highest = other;
             }
-            if(highest == lowest) { // Contains the other
+            if (highest == lowest) { // Contains the other
                 lowerLong = highest.lowerCorner.longitude();
                 upperLong = highest.upperCorner.longitude();
-            } else if(highest.upperCorner.longitude() - lowest.lowerCorner.longitude() <= 360d - (highest.lowerCorner.longitude() - lowest.upperCorner.longitude())){
+            } else if (highest.upperCorner.longitude() - lowest.lowerCorner.longitude() <= 360d - (highest.lowerCorner.longitude() - lowest.upperCorner.longitude())){
                 // Smallest does not cross
                 lowerLong = lowest.lowerCorner.longitude();
                 upperLong = highest.upperCorner.longitude();
@@ -364,16 +364,16 @@ public class GeoBounds {
 
     @Override
     public boolean equals(Object other) {
-        if(other == this) return true;
-        if(!(other instanceof GeoBounds)) return false;
+        if (other == this) return true;
+        if (!(other instanceof GeoBounds)) return false;
         GeoBounds otherSquare = (GeoBounds) other;
-        if(this.isEmpty() && otherSquare.isEmpty()) return true;
+        if (this.isEmpty() && otherSquare.isEmpty()) return true;
         return otherSquare.lowerCorner.equals(this.lowerCorner) && otherSquare.upperCorner.equals(this.upperCorner);
     }
 
     @Override
     public int hashCode() {
-        if(this.isEmpty() && this != GeoBounds.EMPTY) return GeoBounds.EMPTY.hashCode();
+        if (this.isEmpty() && this != GeoBounds.EMPTY) return GeoBounds.EMPTY.hashCode();
         return this.lowerCorner.hashCode() ^ this.upperCorner.hashCode();
     }
     

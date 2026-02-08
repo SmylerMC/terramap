@@ -46,7 +46,7 @@ public class TerramapServerPreferences {
                 return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.SERVER.playersDisplayDefault;
             }
         } catch(Exception e) {
-            if(!loggedDebugError) {
+            if (!loggedDebugError) {
                 getTerramap().logger().error("Failed to get player display preferences. This error will only be displayed once.");
                 getTerramap().logger().catching(e);
                 loggedDebugError = true;
@@ -89,7 +89,7 @@ public class TerramapServerPreferences {
             WorldPreferences prefs = TerramapServerPreferences.getWorldPreferences(world);
             synchronized(prefs) {
                 UUID uuid = prefs.world_uuid;
-                if(uuid.getLeastSignificantBits() == 0 && uuid.getMostSignificantBits() == 0) {
+                if (uuid.getLeastSignificantBits() == 0 && uuid.getMostSignificantBits() == 0) {
                     uuid = UUID.randomUUID();
                     prefs.world_uuid = uuid;
                     saveWorldPreferences(world);
@@ -129,7 +129,7 @@ public class TerramapServerPreferences {
             }
         } catch(Exception e) {
             long t = System.currentTimeMillis();
-            if(t > lastErrorLog + 10000) {
+            if (t > lastErrorLog + 10000) {
                 getTerramap().logger().error("Failed to save server preferences");
                 getTerramap().logger().catching(e);
                 lastErrorLog = t;
@@ -151,7 +151,7 @@ public class TerramapServerPreferences {
             }
         } catch(Exception e) {
             long t = System.currentTimeMillis();
-            if(t > lastErrorLog + 10000) {
+            if (t > lastErrorLog + 10000) {
                 getTerramap().logger().error("Failed to save server preferences");
                 getTerramap().logger().catching(e);
                 lastErrorLog = t;
@@ -167,7 +167,7 @@ public class TerramapServerPreferences {
     public static void loadWorldPreferences(WorldServer world) {
         File fileToLoad = TerramapServerPreferences.getFileForWorld(world);
         WorldPreferences preferences = new WorldPreferences();
-        if(fileToLoad.exists()) {
+        if (fileToLoad.exists()) {
             try {
                 String text = String.join("\n", Files.readAllLines(fileToLoad.toPath(), Charset.defaultCharset()));
                 preferences = getTerramap().gsonPretty().fromJson(text, WorldPreferences.class);

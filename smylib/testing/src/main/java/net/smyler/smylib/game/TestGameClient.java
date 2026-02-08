@@ -331,10 +331,10 @@ public class TestGameClient implements GameClient {
     private void processMouseEvent(MouseEvent event) {
         long ctime = this.screenTime;
         int mouseButton = event.button;
-        if(event.buttonState) {
+        if (event.buttonState) {
             this.mouse.setButtonPressed(mouseButton, true);
             boolean mouseDidNotMove = this.lastClickX[mouseButton] == this.mouse.x() && this.lastClickY[mouseButton] == this.mouse.y();
-            if(ctime - this.lastClickTime[mouseButton] <= 500 && mouseDidNotMove) {  //TODO de-hardcode double click delay in tests
+            if (ctime - this.lastClickTime[mouseButton] <= 500 && mouseDidNotMove) {  //TODO de-hardcode double click delay in tests
                 this.currentScreen.onDoubleClick(this.mouse.x(), this.mouse.y(), mouseButton, null);
             } else {
                 this.currentScreen.onClick(this.mouse.x(), this.mouse.y(), mouseButton, null);
@@ -343,11 +343,11 @@ public class TestGameClient implements GameClient {
             this.lastClickTime[mouseButton] = ctime;
             this.lastClickX[mouseButton] = this.mouse.x();
             this.lastClickY[mouseButton] = this.mouse.y();
-        } else if(mouseButton >= 0) {
+        } else if (mouseButton >= 0) {
             this.mouse.setButtonPressed(mouseButton, false);
             this.lastClickedButton = -1;
             this.currentScreen.onMouseReleased(this.mouse.x(), this.mouse.y(), mouseButton, null);
-        } else if(this.lastClickedButton >= 0 && this.mouse.isButtonPressed(this.lastClickedButton)) {
+        } else if (this.lastClickedButton >= 0 && this.mouse.isButtonPressed(this.lastClickedButton)) {
             float dX = this.mouse.x() - this.lastClickX[this.lastClickedButton];
             float dY = this.mouse.y() - this.lastClickY[this.lastClickedButton];
             long dt = ctime - this.lastClickTime[this.lastClickedButton];
@@ -361,7 +361,7 @@ public class TestGameClient implements GameClient {
         while (iterator.hasNext()) {
             MouseWheelEvent wheelEvent = iterator.next();
             if (wheelEvent.time > this.screenTime) break;
-            if(wheelEvent.scroll != 0) this.currentScreen.onMouseWheeled(this.mouse.x(), this.mouse.y(), wheelEvent.scroll, null);
+            if (wheelEvent.scroll != 0) this.currentScreen.onMouseWheeled(this.mouse.x(), this.mouse.y(), wheelEvent.scroll, null);
             iterator.remove();
         }
     }

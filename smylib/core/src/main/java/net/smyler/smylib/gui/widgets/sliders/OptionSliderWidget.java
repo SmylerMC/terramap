@@ -76,7 +76,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
     @SuppressWarnings("unchecked")
     public void setCurrentOption(T option) {
         for(int i=0; i<this.options.length; i++) {
-            if(option.equals(this.options[i])) {
+            if (option.equals(this.options[i])) {
                 this.option = i;
             }
         }
@@ -99,7 +99,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
     }
 
     protected void onCycle() {
-        if(this.onCycle != null) this.onCycle.accept(this.getCurrentOption());
+        if (this.onCycle != null) this.onCycle.accept(this.getCurrentOption());
     }
 
     public OptionSliderWidget<T> setOnChange(Consumer<T> onChange) {

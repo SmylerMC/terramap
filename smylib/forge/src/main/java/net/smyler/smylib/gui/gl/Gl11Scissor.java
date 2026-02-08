@@ -27,9 +27,9 @@ public class Gl11Scissor implements Scissor {
 
     @Override
     public void setEnabled(boolean yesNo) {
-        if(yesNo && !isScissorEnabled) {
+        if (yesNo && !isScissorEnabled) {
             GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        } else if(!yesNo && isScissorEnabled) {
+        } else if (!yesNo && isScissorEnabled) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
         }
         isScissorEnabled = yesNo;

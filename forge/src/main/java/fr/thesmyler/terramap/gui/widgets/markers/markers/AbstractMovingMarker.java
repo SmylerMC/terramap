@@ -34,7 +34,7 @@ public abstract class AbstractMovingMarker extends Marker {
             this.location.set(this.getActualLocation());
             this.azimuth = this.getActualAzimuth();
             this.isOutOfBounds = false;
-        } catch(OutOfGeoBoundsException e) {
+        } catch (OutOfGeoBoundsException e) {
             this.isOutOfBounds = true;
         }
 
@@ -44,11 +44,11 @@ public abstract class AbstractMovingMarker extends Marker {
 
     @Override
     public GeoPointView getLocation() {
-        return this.isOutOfBounds ? null: this.location.getReadOnlyView();
+        return this.isOutOfBounds ? null : this.location.getReadOnlyView();
     }
 
     public float getAzimuth() {
-        return this.isOutOfBounds ? Float.NaN: this.azimuth;
+        return this.isOutOfBounds ? Float.NaN : this.azimuth;
     }
 
     protected abstract float getActualAzimuth() throws OutOfGeoBoundsException;

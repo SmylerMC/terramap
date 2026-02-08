@@ -60,7 +60,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         this.bounds = new HashMap<>();
         for(int i=map.getMinZoom(); i <= map.getMaxZoom(); i++) {
             WebMercatorBounds bound = map.getBounds(i);
-            if(bound != null) this.bounds.put(i, bound);
+            if (bound != null) this.bounds.put(i, bound);
         }
     }
 
@@ -98,7 +98,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         this.displayPriority = buf.readInt();
         this.isAllowedOnMinimap = buf.readBoolean();
         this.comment = NetworkUtil.decodeStringFromByteBuf(buf);
-        if(!Strings.isBlank(urlPattern)) { // Pre 1.0.0-beta7 packet
+        if (!Strings.isBlank(urlPattern)) { // Pre 1.0.0-beta7 packet
             this.maxConcurrentConnections = 2;
             this.urlPatterns = new String[] {urlPattern};
             this.debug = false;
@@ -108,7 +108,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         this.urlPatterns = NetworkUtil.decodeStringArrayFromByteBuf(buf);
         this.debug = buf.readBoolean();
         
-        if(buf.isReadable()) {
+        if (buf.isReadable()) {
             int length = buf.readInt();
             for(int i=0; i<length; i++) {
                 int zoom = buf.readInt();
@@ -193,7 +193,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
             try {
                 UrlRasterTileSet map = message.getTiledMap(RasterTileSetProvider.SERVER);
                 getTerramap().logger().debug("Got custom map style from server: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
-                if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
+                if (!TerramapConfig.enableDebugMaps && map.isDebug()) {
                     getTerramap().logger().debug("Ignoring debug map from server: {}", map.getId());
                     return null;
                 }
@@ -218,7 +218,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
             try {
                 UrlRasterTileSet map = message.getTiledMap(RasterTileSetProvider.PROXY);
                 getTerramap().logger().debug("Got custom map style from proxy: {} / {}", map.getId(), String.join(";", map.getUrlPatterns()));
-                if(!TerramapConfig.enableDebugMaps && map.isDebug()) {
+                if (!TerramapConfig.enableDebugMaps && map.isDebug()) {
                     getTerramap().logger().debug("Ignoring debug map from proxy: {}", map.getId());
                     return null;
                 }

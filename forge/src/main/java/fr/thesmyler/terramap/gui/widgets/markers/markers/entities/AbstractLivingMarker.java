@@ -48,13 +48,13 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
         }
         gl.enableAlpha();
         if (hovered) {
-            context.drawRectangle(x +1, y +1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
+            context.drawRectangle(x + 1, y + 1, x + 1 + this.width, y + 1 + this.height, Color.LIGHT_OVERLAY);
         }
         gl.setColor(WHITE);
 
         context.drawSprite(x, y, this.sprite);
 
-        if(drawName && parent != null) {
+        if (drawName && parent != null) {
             String name = this.entity.getDisplayName().getFormattedText();
             float strWidth = parent.getFont().computeWidth(name);
             float nameY = y - parent.getFont().height() - 2;
@@ -72,11 +72,11 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             projection.toGeo(this.actualLocation, position);
             this.actualAzimuth = projection.azimuth(position);
             this.isOutOfBounds = false;
-        } catch(OutOfGeoBoundsException | NullPointerException e) {
+        } catch (OutOfGeoBoundsException | NullPointerException e) {
             this.isOutOfBounds = true;
         }
         super.onUpdate(mouseX, mouseY, parent);
-        if(this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
+        if (this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
     }
 
     @Override

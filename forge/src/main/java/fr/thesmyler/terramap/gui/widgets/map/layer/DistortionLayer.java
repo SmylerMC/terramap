@@ -42,7 +42,7 @@ public class DistortionLayer extends MapLayer {
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget) parent;
         GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        if(projection == null) return;
+        if (projection == null) return;
         map.getProfiler().enterSection("layer-distortion");
         context.gl().pushViewMatrix();
         this.applyRotationGl(context, x, y);
@@ -53,7 +53,7 @@ public class DistortionLayer extends MapLayer {
         for(double dx = -1; dx < maxX; dx += res) {
             for(double dy = -1; dy < maxY; dy += res) {
                 this.getLocationAtPositionInRenderSpace(this.renderedLocations, this.screenPositions.set(dx + res / 2, dy + res / 2));
-                if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(this.renderedLocations)) continue;
+                if (!WebMercatorUtil.PROJECTION_BOUNDS.contains(this.renderedLocations)) continue;
                 Color color = Color.TRANSPARENT;
                 try {
                     projection.tissot(this.tissot, this.renderedLocations);

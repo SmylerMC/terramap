@@ -38,7 +38,7 @@ public class KmlFile {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             try(OutputStream stream = Files.newOutputStream(file.toPath())) {
-                if(compressed) {
+                if (compressed) {
                     try(ZipOutputStream compressedStream = new ZipOutputStream(stream)) {
                         ZipEntry entry = new ZipEntry("terramap.kml");
                         compressedStream.putNextEntry(entry);

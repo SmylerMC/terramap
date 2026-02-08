@@ -52,7 +52,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
 
     @Override
     public Text getCopyright(String localeKey) {
-        if(this.tiledMap instanceof CopyrightHolder) {
+        if (this.tiledMap instanceof CopyrightHolder) {
             return ((CopyrightHolder)this.tiledMap).getCopyright(localeKey);
         }
         return ImmutableText.EMPTY;

@@ -100,11 +100,11 @@ public class MapMenuWidget extends MenuWidget {
                               .replace("{latitude}", String.valueOf(this.mouseLocation.latitude()));
 
         GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        if(projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
+        if (projection == null && (cmd.contains("{x}") || cmd.contains("{z}"))) {
             this.reportError("terramap.mapwidget.error.tp");
             return;
         }
-        if(projection != null) {
+        if (projection != null) {
             try {
                 projection.fromGeo(this.mousePosition, this.mouseLocation);
                 cmd = cmd.replace("{x}", String.valueOf(this.mousePosition.x()))
@@ -160,8 +160,8 @@ public class MapMenuWidget extends MenuWidget {
 
     private void openInGoogleMaps() {
         MainPlayerMarker playerMarker = this.map.getMainPlayerMarker();
-        if(playerMarker != null) {
-            if(playerMarker.isVisible(this.map)) {
+        if (playerMarker != null) {
+            if (playerMarker.isVisible(this.map)) {
                 GeoPoint playerLocation = playerMarker.getLocation();
                 GeoServices.openPlaceInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), playerLocation.longitude(), playerLocation.latitude());
             } else {

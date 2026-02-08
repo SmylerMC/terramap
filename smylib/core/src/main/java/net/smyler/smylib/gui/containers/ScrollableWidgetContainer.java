@@ -54,7 +54,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
                 horzVisible ? (thisWidth - contWidth - 15) * this.horizontalScrollbar.getProgress(): 0f,
                 vertVisible ? (thisHeight - contHeight - 15) * this.verticalScrollbar.getProgress(): 0f
             );
-        if(this.verticalWasVisibleLastUpdate != vertVisible || this.horizontalWasVisibleLastUpdate != horzVisible) this.updateScrollbars();
+        if (this.verticalWasVisibleLastUpdate != vertVisible || this.horizontalWasVisibleLastUpdate != horzVisible) this.updateScrollbars();
         this.verticalWasVisibleLastUpdate = vertVisible;
         this.horizontalWasVisibleLastUpdate = horzVisible;
     }
@@ -63,11 +63,11 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
     public boolean onMouseWheeled(float mouseX, float mouseY, int amount, WidgetContainer parent) {
         boolean vertVis = this.verticalScrollbar.isVisible(this);
         boolean horzVis = this.horizontalScrollbar.isVisible(this);
-        if(horzVis && !vertVis) {
-            if(amount > 0) this.horizontalScrollbar.scrollBackward();
+        if (horzVis && !vertVis) {
+            if (amount > 0) this.horizontalScrollbar.scrollBackward();
             else this.horizontalScrollbar.scrollForward();
-        } else if(vertVis) {
-            if(amount > 0) this.verticalScrollbar.scrollBackward();
+        } else if (vertVis) {
+            if (amount > 0) this.verticalScrollbar.scrollBackward();
             else this.verticalScrollbar.scrollForward();
         }
         return super.onMouseWheeled(mouseX, mouseY, amount, parent);
@@ -84,8 +84,8 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
             .setLength(height - this.horizontalScrollbar.getHeight());
         this.horizontalScrollbar.setPosition(0f, height - this.horizontalScrollbar.getHeight())
             .setLength(width - this.verticalScrollbar.getWidth());
-        if(!this.verticalScrollbar.isVisible(this)) this.horizontalScrollbar.setLength(this.getWidth());
-        if(!this.horizontalScrollbar.isVisible(this)) this.verticalScrollbar.setLength(this.getHeight());
+        if (!this.verticalScrollbar.isVisible(this)) this.horizontalScrollbar.setLength(this.getWidth());
+        if (!this.horizontalScrollbar.isVisible(this)) this.verticalScrollbar.setLength(this.getHeight());
         this.verticalWasVisibleLastUpdate = this.verticalScrollbar.isVisible(this);
         this.horizontalWasVisibleLastUpdate = this.horizontalScrollbar.isVisible(this);
         this.button.setX(width - 15).setY(height - 15).setVisibility(this.horizontalWasVisibleLastUpdate && this.verticalWasVisibleLastUpdate);

@@ -101,10 +101,10 @@ public class TerramapClientContext {
 
     public Map<UUID, TerramapPlayer> getPlayerMap() {
         Map<UUID, TerramapPlayer> players = new HashMap<>();
-        if(this.arePlayersSynchronized()) {
+        if (this.arePlayersSynchronized()) {
             players.putAll(this.remotePlayers);
         }
-        if(this.getProjection() != null) {
+        if (this.getProjection() != null) {
             players.putAll(this.getLocalPlayersMap());
         }
         return players;
@@ -128,7 +128,7 @@ public class TerramapClientContext {
 
     public EarthGeneratorSettings getGeneratorSettings() {
         SavedClientState savedClientState = this.getSavedState();
-        if(savedClientState.generatorSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
+        if (savedClientState.generatorSettings == null && this.hasSledgehammer() && this.isOnEarthWorld()) {
             return TerramapUtil.BTE_GENERATOR_SETTINGS; // Sledgehammer is installed and this is an Earth world, it should be safe to assume a BTE world
         }
         return savedClientState.generatorSettings;
@@ -136,7 +136,7 @@ public class TerramapClientContext {
 
     public GeoProjection getProjection() {
         EarthGeneratorSettings gen = this.getGeneratorSettings();
-        if(this.projection == null && gen != null) {
+        if (this.projection == null && gen != null) {
             this.projection = new TerraplusplusGeoProjection(gen.projection());
         }
         return this.projection;
@@ -144,14 +144,14 @@ public class TerramapClientContext {
 
     public TerrainPreview getTerrainPreview() {
         EarthGeneratorSettings gen = this.getGeneratorSettings();
-        if(this.terrainPreview == null && gen != null) {
+        if (this.terrainPreview == null && gen != null) {
             this.terrainPreview = new TerrainPreview(gen.withProjection(TERRAIN_PREVIEW_PROJECTION));
         }
         return this.terrainPreview;
     }
 
     public void setGeneratorSettings(EarthGeneratorSettings genSettings) {
-        if(genSettings != null && this.hasSledgehammer() && !TerramapUtil.isBteCompatible(genSettings)) {
+        if (genSettings != null && this.hasSledgehammer() && !TerramapUtil.isBteCompatible(genSettings)) {
             getTerramap().logger().error("Terramap server is reporting a projection which is not compatible with BTE, yet Sledgehammer is installer on the proxy!!");
             getTerramap().logger().error("The proxy will be assuming a BTE projection, things will not work!");
             //TODO Warning on the GUI
@@ -166,7 +166,7 @@ public class TerramapClientContext {
         Set<TerramapRemotePlayer> toAdd = new HashSet<>();
         Set<UUID> toRemove = new HashSet<>(this.remotePlayers.keySet());
         for(TerramapRemotePlayer player: players) {
-            if(toRemove.remove(player.getUUID())) {
+            if (toRemove.remove(player.getUUID())) {
                 TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
                 savedPlayer.setDisplayName(player.getDisplayName());
                 try {
@@ -226,11 +226,11 @@ public class TerramapClientContext {
 
     public void registerForUpdates(boolean yesNo) {
         this.isRegisteredForUpdates = yesNo;
-        if(this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+        if (this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
     }
 
     public String getTpCommand() {
-        if(this.tpCommand == null) return TerramapConfig.tpllcmd;
+        if (this.tpCommand == null) return TerramapConfig.tpllcmd;
         else return this.tpCommand;
     }
 
@@ -245,13 +245,13 @@ public class TerramapClientContext {
 
     public void reloadState() {
         MinecraftServerInfo serverInfo = getGameClient().currentServerInfo();
-        if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
+        if (this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
             getTerramap().logger().debug("Loaded proxy saved state for UUID {} (forced by proxy)", this.proxyUUID);
-        } else if(this.worldUUID != null) {
+        } else if (this.worldUUID != null) {
             this.state = this.saveManager.loadWorldState(this.worldUUID);
             getTerramap().logger().debug("Loaded world saved state for UUID {}", this.worldUUID);
-        } else if(this.proxyUUID != null) {
+        } else if (this.proxyUUID != null) {
             this.state = this.saveManager.loadProxyState(this.proxyUUID);
             getTerramap().logger().debug("Loaded proxy saved state for UUID {} (world unknown)", this.proxyUUID);
         } else if (serverInfo != null) {
@@ -265,13 +265,13 @@ public class TerramapClientContext {
 
     public void saveState() {
         MinecraftServerInfo servData = getGameClient().currentServerInfo();
-        if(this.proxyForceGlobalSettings && this.proxyUUID != null) {
+        if (this.proxyForceGlobalSettings && this.proxyUUID != null) {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
             getTerramap().logger().debug("Saved proxy state for UUID {} (forced by proxy)", this.proxyUUID);
-        } else if(this.worldUUID != null) {
+        } else if (this.worldUUID != null) {
             this.saveManager.saveWorldState(this.worldUUID, this.state);
             getTerramap().logger().debug("Saved world state for UUID {}", this.worldUUID);
-        } else if(this.proxyUUID != null) {
+        } else if (this.proxyUUID != null) {
             this.saveManager.saveProxyState(this.proxyUUID, this.state);
             getTerramap().logger().debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
         } else if (servData != null) {
@@ -471,8 +471,8 @@ public class TerramapClientContext {
     }
 
     public boolean shouldShowWelcomeToast() {
-        if(!this.allowsMap(MapContext.FULLSCREEN)) return false;
-        if(!(Minecraft.getMinecraft().currentScreen == null)) return false;
+        if (!this.allowsMap(MapContext.FULLSCREEN)) return false;
+        if (!(Minecraft.getMinecraft().currentScreen == null)) return false;
         return !this.getSavedState().hasShownWelcome;
     }
 
@@ -486,7 +486,7 @@ public class TerramapClientContext {
     }
 
     public void tryShowWelcomeToast() {
-        if(this.shouldShowWelcomeToast()) {
+        if (this.shouldShowWelcomeToast()) {
             String key = KeyBindings.OPEN_MAP.getDisplayName();
             Minecraft.getMinecraft().getToastGui().add(
                     new TextureToast(
@@ -513,7 +513,7 @@ public class TerramapClientContext {
 
     @NotNull
     public static TerramapClientContext getContext() {
-        if(TerramapClientContext.instance == null) TerramapClientContext.resetContext();
+        if (TerramapClientContext.instance == null) TerramapClientContext.resetContext();
         return TerramapClientContext.instance;
     }
 

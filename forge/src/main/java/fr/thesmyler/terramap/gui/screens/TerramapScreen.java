@@ -217,9 +217,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         SpriteButtonWidget openLayerListButton = new SpriteButtonWidget(
                 openConfigButton.getX(), openConfigButton.getY() + openConfigButton.getHeight() + 3, 100,
                 ButtonSprites.PAPER, () -> {
-                    if(this.layerPanel.getTarget() == PanelTarget.CLOSED) {
+                    if (this.layerPanel.getTarget() == PanelTarget.CLOSED) {
                         this.layerPanel.open();
-                        if(this.infoPanel.getTarget() == PanelTarget.CLOSED) this.toggleInfoPanel();
+                        if (this.infoPanel.getTarget() == PanelTarget.CLOSED) this.toggleInfoPanel();
                     }
                 });
         this.infoPanel.addWidget(openLayerListButton);
@@ -234,10 +234,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         float lineHeight = 0;
         float x = 5;
         for(FeatureVisibilityController provider: this.getButtonProviders()) {
-            if(!provider.showButton()) continue;
+            if (!provider.showButton()) continue;
             AbstractButtonWidget button = provider.getButton();
-            if(button == null) continue;
-            if(x + button.getWidth() > this.infoPanel.getWidth() - 20) {
+            if (button == null) continue;
+            if (x + button.getWidth() > this.infoPanel.getWidth() - 20) {
                 x = 5;
                 y += lineHeight + 3;
                 lineHeight = 0;
@@ -300,16 +300,16 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.styleScrollbar.setLength(height);
         this.stylePanel.addWidget(this.styleScrollbar);
         this.styleScrollbar.setViewPort(height / (this.backgroundStylePanelListContainer.getHeight() - 10f));
-        if(this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
+        if (this.styleScrollbar.getViewPort() >= 1) this.styleScrollbar.setProgress(0);
         this.stylePanel.addWidget(this.backgroundStylePanelListContainer);
         this.addWidget(this.stylePanel);
 
-        if(TerramapConfig.CLIENT.chatOnMap) this.addWidget(this.chat);
+        if (TerramapConfig.CLIENT.chatOnMap) this.addWidget(this.chat);
 
-        if(!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
+        if (!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
             StringBuilder warningBuilder = new StringBuilder();
             for(int i=1; translator.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
-                if(warningBuilder.length() > 0) warningBuilder.append('\n');
+                if (warningBuilder.length() > 0) warningBuilder.append('\n');
                 warningBuilder.append(translator.format("terramap.terramapscreen.projection_warning.line" + i));
             }
             ImmutableText c = ofPlainText(warningBuilder.toString());
@@ -339,7 +339,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             this.map.setDebugMode(this.debugMode);
         }
         this.infoPanel.setStateNoAnimation(state.infoPanel);
-        if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
+        if (this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
             float x = this.panelButton.getX();
             float y = this.panelButton.getY();
             int z = this.panelButton.getZ();
@@ -370,10 +370,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         GeoPointView mouseLocation = this.map.getMouseLocation();
         String formatScale = "-";
         String formatOrientation = "-";
-        if(!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
+        if (!WebMercatorUtil.PROJECTION_BOUNDS.contains(mouseLocation)) {
             this.distortionText.setText(ofTranslation("terramap.terramapscreen.information.distortion", "-", "-"));
         } else {
-            if(projection != null) {
+            if (projection != null) {
                 try {
                     projection.tissot(this.tissotAtMouse, mouseLocation);
                     formatScale = GeoServices.formatGeoCoordForDisplay(Math.sqrt(Math.abs(this.tissotAtMouse.areaInflation())));
@@ -386,21 +386,21 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             }
         }
 
-        if(controller.isTracking()) {
+        if (controller.isTracking()) {
             Marker marker = controller.getTrackedMarker();
             GeoPoint markerLocation = marker.getLocation();
             String markerName = marker.getDisplayName().getFormattedText();
-            if(markerLocation == null) {
+            if (markerLocation == null) {
                 this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.trackedoutsidemap", markerName));
             } else {
                 String trackFormatLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
                 String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
                 this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
             }
-        } else if(this.map.getMainPlayerMarker() != null){
+        } else if (this.map.getMainPlayerMarker() != null){
             Marker marker = this.map.getMainPlayerMarker();
             GeoPoint markerLocation = marker.getLocation();
-            if(markerLocation == null) {
+            if (markerLocation == null) {
                 this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.playerout"));
             } else {
                 String formatedLon = GeoServices.formatGeoCoordForDisplay(markerLocation.longitude());
@@ -413,7 +413,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         this.offsetWarning.setVisibility(this.map.getRasterBackgroundLayer().map(MapLayer::hasRenderingOffset).orElse(false));
 
-        if(this.debugMode) {
+        if (this.debugMode) {
             StringBuilder debugBuilder = new StringBuilder();
             Locale locale = Locale.US;
             TerramapClientContext srv = TerramapClientContext.getContext();
@@ -488,9 +488,9 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         float y = this.panelButton.getY();
         int z = this.panelButton.getZ();
         SpriteButtonWidget newButton;
-        if(this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
+        if (this.infoPanel.getTarget().equals(PanelTarget.OPENED)) {
             this.infoPanel.close();
-            if(this.layerPanel.getTarget() == PanelTarget.OPENED) this.layerPanel.close();
+            if (this.layerPanel.getTarget() == PanelTarget.OPENED) this.layerPanel.close();
             newButton = new SpriteButtonWidget(x, y, z, ButtonSprites.RIGHT, this::toggleInfoPanel);
         } else {
             this.infoPanel.open();
@@ -504,18 +504,18 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
     @Override
     public void onKeyTyped(char typedChar, Key key, WidgetContainer parent) {
-        if(this.getFocusedWidget() == null || (!this.getFocusedWidget().equals(this.searchBox) && !this.chat.isOpen())) {
+        if (this.getFocusedWidget() == null || (!this.getFocusedWidget().equals(this.searchBox) && !this.chat.isOpen())) {
             MapController controller = this.map.getController();
-            if(key.code == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
-            if(key == KEY_F1) this.setF1Mode(!this.f1Mode);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || key == KEY_UP) controller.moveMap(0, 30, true);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || key == KEY_DOWN) controller.moveMap(0, -30, true);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || key == KEY_RIGHT) controller.moveMap(-30, 0, true);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || key == KEY_LEFT) controller.moveMap(30, 0, true);
-            if(key.code == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
-            if(key.code == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
-            if(key.code == KeyBindings.OPEN_MAP.getKeyCode() || key == KEY_ESCAPE) getGameClient().displayScreen(this.parent);
-            if(key.code == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) {
+            if (key.code == KeyBindings.TOGGLE_DEBUG.getKeyCode()) this.setDebugMode(!this.debugMode);
+            if (key == KEY_F1) this.setF1Mode(!this.f1Mode);
+            if (key.code == Minecraft.getMinecraft().gameSettings.keyBindForward.getKeyCode() || key == KEY_UP) controller.moveMap(0, 30, true);
+            if (key.code == Minecraft.getMinecraft().gameSettings.keyBindBack.getKeyCode() || key == KEY_DOWN) controller.moveMap(0, -30, true);
+            if (key.code == Minecraft.getMinecraft().gameSettings.keyBindRight.getKeyCode() || key == KEY_RIGHT) controller.moveMap(-30, 0, true);
+            if (key.code == Minecraft.getMinecraft().gameSettings.keyBindLeft.getKeyCode() || key == KEY_LEFT) controller.moveMap(30, 0, true);
+            if (key.code == KeyBindings.ZOOM_IN.getKeyCode()) this.zoomInButton.getOnClick().run();
+            if (key.code == KeyBindings.ZOOM_OUT.getKeyCode()) this.zoomOutButton.getOnClick().run();
+            if (key.code == KeyBindings.OPEN_MAP.getKeyCode() || key == KEY_ESCAPE) getGameClient().displayScreen(this.parent);
+            if (key.code == Minecraft.getMinecraft().gameSettings.keyBindChat.getKeyCode()) {
                 this.map.stopPassiveInputs();
                 this.chat.setOpen(!this.chat.isOpen());
             }
@@ -578,10 +578,10 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             Widget lw = null;
             for(RasterTileSetProvider provider: RasterTileSetProvider.values()) {
                 Throwable e = provider.getLastError();
-                if(e == null) continue;
+                if (e == null) continue;
                 float x = 0;
                 float y = 0;
-                if(lw != null) {
+                if (lw != null) {
                     y = lw.getY() + lw.getHeight() + 5;
                 }
                 FailedMapLoadingNotice w = new FailedMapLoadingNotice(x, y, 50, mapWidth, mapHeight, provider, e);
@@ -601,7 +601,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 });
                 w.setWidth(mapWidth);
                 w.setHeight(mapHeight);
-                if(lw == null) {
+                if (lw == null) {
                     w.setPosition(0, 0);
                 } else {
                     w.setPosition(0, lw.getY() + lw.getHeight() + 5);
@@ -633,8 +633,8 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public boolean onMouseWheeled(float mouseX, float mouseY, int amount, WidgetContainer parent) {
-            if(TerramapScreen.this.styleScrollbar.getViewPort() < 1) {
-                if(amount > 0) TerramapScreen.this.styleScrollbar.scrollBackward();
+            if (TerramapScreen.this.styleScrollbar.getViewPort() < 1) {
+                if (amount > 0) TerramapScreen.this.styleScrollbar.scrollBackward();
                 else TerramapScreen.this.styleScrollbar.scrollForward();
             }
             return super.onMouseWheeled(mouseX, mouseY, amount, parent);
@@ -703,13 +703,13 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.zoomOutButton.setVisibility(!yesNo);
         this.styleButton.setVisibility(!yesNo);
         this.centerButton.setVisibility(!yesNo);
-        if(this.zoomText != null) this.zoomText.setVisibility(!yesNo);
+        if (this.zoomText != null) this.zoomText.setVisibility(!yesNo);
         this.map.setScaleVisibility(!yesNo);
     }
 
     public void setDebugMode(boolean yesNo) {
         this.debugMode = yesNo;
-        if(this.debugText != null) this.debugText.setVisibility(yesNo);
+        if (this.debugText != null) this.debugText.setVisibility(yesNo);
         this.map.setDebugMode(yesNo);
     }
 
@@ -754,7 +754,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         @Override
         public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
-            if(mouseButton == 0) {
+            if (mouseButton == 0) {
                 this.onClick.accept(this);
             }
             return false;

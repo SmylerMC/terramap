@@ -45,7 +45,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
             GameType gamemode = GameType.getByName(NetworkUtil.decodeStringFromByteBuf(buf));
             TerramapRemotePlayer player = new TerramapRemotePlayer(new UUID(mostUUID, leastUUID), name);
             player.setGamemode(gamemode);
-            if(Double.isFinite(longitude) && Double.isFinite(latitude)) {
+            if (Double.isFinite(longitude) && Double.isFinite(latitude)) {
                 playerLocation.set(longitude, latitude);
                 player.setLocationAndAzimuth(playerLocation, azimuth);
             }
@@ -60,7 +60,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
             double[] coordinates;
             try {
                 GeoPoint location = player.getLocation();
-                if(location == null) throw OutOfProjectionBoundsException.get();
+                if (location == null) throw OutOfProjectionBoundsException.get();
                 coordinates = location.asArray();
             } catch(OutOfProjectionBoundsException e) {
                 coordinates = new double[] {Double.NaN, Double.NaN};

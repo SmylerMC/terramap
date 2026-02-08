@@ -42,12 +42,12 @@ public class TilesetReloadCommand extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
         TranslationContext ctx = this.translationContextBuilder.createNewContext(sender);
-        if(sender instanceof EntityPlayer && !this.checkPermission(server, sender)) {
+        if (sender instanceof EntityPlayer && !this.checkPermission(server, sender)) {
             throw ctx.commandException("terramap.commands.reloadmapstyles.forbidden");
         }
         ITextComponent msg = ctx.getComponent("terramap.commands.reloadmapstyles.done");
         getTerramap().rasterTileSetManager().loadFromConfigFile();
-        if(RasterTileSetProvider.CUSTOM.getLastError() == null) {
+        if (RasterTileSetProvider.CUSTOM.getLastError() == null) {
             msg.setStyle(new Style().setColor(TextFormatting.GREEN).setBold(false));
         } else {
             msg = ctx.getComponent("terramap.commands.reloadmapstyles.error");
@@ -64,7 +64,7 @@ public class TilesetReloadCommand extends CommandBase {
 
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        if(!(sender instanceof EntityPlayer)) return true;
+        if (!(sender instanceof EntityPlayer)) return true;
         return PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES);
     }
 

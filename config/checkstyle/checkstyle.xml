@@ -13,13 +13,13 @@
   </module>
 
   <module name="TreeWalker">
+
     <module name="UnusedImports"/>
     <module name="RedundantImport"/>
     <module name="ImportOrder">
       <property name="option" value="bottom"/>
       <property name="separated" value="true"/>
       <property name="useContainerOrderingForStatic" value="true"/>
-
       <property name="groups" value="net.smyler.smylib,net.smyler.terramap,net.smyler,fr.thesmyler,net.buildtheearth.terraplusplus,java,javax,net.minecraft,net.minecraftforge,org.lwjgl,io.netty,org.apache.logging.log4j,com.google.gson,org.jetbrains.annotations,org.junit"/>
     </module>
 
@@ -28,6 +28,10 @@
       <property name="allowNoEmptyLineBetweenFields" value="true"/>
       <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
     </module>
+    <module name="WhitespaceAround">
+      <property name="tokens" value="LITERAL_IF"/>
+    </module>
+
   </module>
 
 </module>

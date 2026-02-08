@@ -54,7 +54,7 @@ public class OptionButtonWidget<T> extends TextButtonWidget {
 
     public void cycle() {
         this.option = Math.floorMod(this.option + 1, this.options.length);
-        if(this.onCycle != null) this.onCycle.accept(this.getCurrentOption());
+        if (this.onCycle != null) this.onCycle.accept(this.getCurrentOption());
     }
 
     @Override

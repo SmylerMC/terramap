@@ -162,7 +162,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
     @Override
     public String getLocalizedName(String localeKey) {
         String result = this.names.getOrDefault(localeKey, this.names.get("en_us"));
-        if(result != null) {
+        if (result != null) {
             return result;
         } else {
             return this.id;
@@ -301,7 +301,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
             String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
             try {
                 URL parsed = new URL(url);
-                if(parsed.getProtocol().startsWith("http")) {
+                if (parsed.getProtocol().startsWith("http")) {
                     getTerramap().http().setMaxConcurrentRequests(url, this.getMaxConcurrentRequests());
                 }
             } catch(IllegalArgumentException | MalformedURLException e) {
@@ -341,7 +341,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         @Override
         public boolean isTextureAvailable() {
-            if(texture != null) return true; // Don't try loading the texture if it has already been loaded
+            if (texture != null) return true; // Don't try loading the texture if it has already been loaded
             try {
                 this.tryLoadingTexture();
             } catch (Throwable e) {
@@ -352,8 +352,8 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         @Override
         public Identifier getTexture() throws Throwable {
-            if(this.texture == null) {
-                if(this.textureTask == null) {
+            if (this.texture == null) {
+                if (this.textureTask == null) {
                     this.textureTask = getTerramap().http().get(this.getURL());
                 } else this.tryLoadingTexture();
             }
@@ -362,9 +362,9 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         private void tryLoadingTexture() throws Throwable {
             //TODO Do that fully async, DynamicTexture::new is expensive
-            if(this.textureTask != null && this.textureTask.isDone()){
-                if(this.textureTask.isCompletedExceptionally()) {
-                    if(this.textureTask.isCancelled()) {
+            if (this.textureTask != null && this.textureTask.isDone()){
+                if (this.textureTask.isCompletedExceptionally()) {
+                    if (this.textureTask.isCancelled()) {
                         this.textureTask = null;
                     } else {
                         try {
@@ -376,10 +376,10 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
                     return;
                 }
                 byte[] buf = this.textureTask.get();
-                if(buf == null) throw new IOException("404 response");
+                if (buf == null) throw new IOException("404 response");
                 try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
                     BufferedImage image = ImageIO.read(is);
-                    if(image == null) throw new IOException("Failed to read image! url: " + this.getURL());
+                    if (image == null) throw new IOException("Failed to read image! url: " + this.getURL());
                     this.texture = getGameClient().guiDrawContext().loadDynamicTexture(image);
                 }
             }
@@ -387,7 +387,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         @Override
         public void cancelTextureLoading() {
-            if(this.textureTask != null) {
+            if (this.textureTask != null) {
                 this.textureTask.cancel(true);
                 this.textureTask = null;
             }
@@ -396,7 +396,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
         @Override
         public void unloadTexture() {
             this.cancelTextureLoading();
-            if(this.texture != null) {
+            if (this.texture != null) {
                 getGameClient().guiDrawContext().unloadDynamicTexture(this.texture);
                 this.texture = null;
             }
@@ -404,9 +404,9 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         @Override
         public boolean equals(Object obj) {
-            if(obj == this) return true;
-            if(obj == null) return false;
-            if(!(obj instanceof UrlRasterTile)) return false;
+            if (obj == this) return true;
+            if (obj == null) return false;
+            if (!(obj instanceof UrlRasterTile)) return false;
             UrlRasterTile other = (UrlRasterTile) obj;
             return other.url.equals(this.url);
         }

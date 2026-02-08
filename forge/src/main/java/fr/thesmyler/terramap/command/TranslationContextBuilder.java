@@ -36,12 +36,12 @@ public class TranslationContextBuilder {
         public final boolean senderSupportsTranslation;
 
         private TranslationContext(ICommandSender sender) {
-            if(sender instanceof EntityPlayerMP) {
+            if (sender instanceof EntityPlayerMP) {
                 this.senderVersion = TerramapVersion.getClientVersion((EntityPlayerMP) sender);
             } else {
                 this.senderVersion = null;
             }
-            if(TranslationContextBuilder.this.translationVersion != null) {
+            if (TranslationContextBuilder.this.translationVersion != null) {
                 this.senderSupportsTranslation = TranslationContextBuilder.this.translationVersion.isOlderOrSame(this.senderVersion);
             } else {
                 this.senderSupportsTranslation = false;
@@ -50,7 +50,7 @@ public class TranslationContextBuilder {
 
         public ITextComponent getComponent(String key, Object... objects) {
             TextComponentTranslation translationComponent = new TextComponentTranslation(key, objects);
-            if(this.senderSupportsTranslation) {
+            if (this.senderSupportsTranslation) {
                 return translationComponent;
             } else {
                 return new TextComponentString(translationComponent.getFormattedText());
@@ -58,7 +58,7 @@ public class TranslationContextBuilder {
         }
 
         public String getText(String key) {
-            if(this.senderSupportsTranslation) {
+            if (this.senderSupportsTranslation) {
                 return key;
             } else {
                 return I18n.translateToLocal(key);

@@ -116,10 +116,10 @@ public class TextWidget implements Widget {
     }
 
     protected Text getComponentUnder(float x, float y) {
-        if(x < this.padding || x > this.width - this.padding) return null;
+        if (x < this.padding || x > this.width - this.padding) return null;
         int lineIndex = (int) Math.floor((y - this.padding) / (this.font.height() + this.padding));
-        if(lineIndex < 0 || lineIndex >= this.lines.length) return null;
-        if(y - this.padding - lineIndex*(this.font.height() + this.padding) > this.font.height()) return null;
+        if (lineIndex < 0 || lineIndex >= this.lines.length) return null;
+        if (y - this.padding - lineIndex*(this.font.height() + this.padding) > this.font.height()) return null;
         Text line = this.lines[lineIndex];
         float pos = this.padding;
         float lineWidth = this.font.computeWidth(line.getFormattedText());
@@ -135,7 +135,7 @@ public class TextWidget implements Widget {
         }
         for(Text child: line) {
             pos += this.font.computeWidth(child.getFormattedText());
-            if(pos >= x) return child;
+            if (pos >= x) return child;
         }
         return null;
     }
@@ -143,7 +143,7 @@ public class TextWidget implements Widget {
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, @Nullable WidgetContainer parent) {
         Text clicked = this.getComponentUnder(mouseX, mouseY);
-        if(clicked != null) {
+        if (clicked != null) {
             //FIXME TextWidget click
             //Minecraft.getMinecraft().currentScreen.handleComponentClick(clicked);
         }

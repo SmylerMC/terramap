@@ -61,11 +61,11 @@ public class ChatWidget implements Widget, ITabCompleter {
         WidgetContainer hud = HudScreen.getContent();
         int width = (int) hud.getWidth();
         int height = (int) hud.getHeight();
-        if(this.guiChat.mc == null || this.guiChat.width != width || this.guiChat.height != height) {
+        if (this.guiChat.mc == null || this.guiChat.width != width || this.guiChat.height != height) {
             this.guiChat.setWorldAndResolution(Minecraft.getMinecraft(), (int)hud.getWidth(), (int)hud.getHeight());
         }
-        if(parent != null && this.open) parent.setFocus(this);
-        if(parent != null && this.equals(parent.getFocusedWidget()) && !this.open) parent.setFocus(null);
+        if (parent != null && this.open) parent.setFocus(this);
+        if (parent != null && this.equals(parent.getFocusedWidget()) && !this.open) parent.setFocus(null);
         this.guiChat.updateScreen();
     }
 
@@ -101,7 +101,7 @@ public class ChatWidget implements Widget, ITabCompleter {
         }
         Minecraft mc = Minecraft.getMinecraft();
         GuiScreen previousScreen =  mc.currentScreen;
-        if(this.open) {
+        if (this.open) {
             mc.currentScreen = this.guiChat;
             this.guiChat.drawScreen(Math.round(mouseX), Math.round(mouseY), 0);
         }
@@ -115,7 +115,7 @@ public class ChatWidget implements Widget, ITabCompleter {
         GlStateManager.translate(0f, HudScreen.getContent().getHeight() - 48f, 0f);
         mc.ingameGUI.getChatGUI().drawChat(updateCounter);
         GlStateManager.popMatrix();
-        if(this.open) {
+        if (this.open) {
             mc.currentScreen = previousScreen;
         }
     }
@@ -157,12 +157,12 @@ public class ChatWidget implements Widget, ITabCompleter {
 
     @Override
     public void onKeyTyped(char typedChar, @Nullable Key key, WidgetContainer parent) {
-        if(key == KEY_ESCAPE) {
+        if (key == KEY_ESCAPE) {
             this.setOpen(false);
             return;
         }
         try {
-            if(key == KEY_RETURN) {
+            if (key == KEY_RETURN) {
                 // We have to do it this way or this.guiChat would close the parent screen
                 GuiTextField textField = (GuiTextField) GUI_CHAT_INPUTFIELD_FIELD.get(this.guiChat);
                 this.guiChat.sendChatMessage(textField.getText().trim());
@@ -186,7 +186,7 @@ public class ChatWidget implements Widget, ITabCompleter {
     }
 
     public void setOpen(boolean open) {
-        if(open) this.guiChat.initGui(); // Reset chat content
+        if (open) this.guiChat.initGui(); // Reset chat content
         this.open = open;
     }
 

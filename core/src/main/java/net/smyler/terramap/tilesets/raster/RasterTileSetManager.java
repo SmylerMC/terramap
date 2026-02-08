@@ -111,7 +111,7 @@ public class RasterTileSetManager {
         }
 
         getTerramap().http().get(url).whenComplete((b, e) -> {
-            if(e != null) {
+            if (e != null) {
                 getTerramap().logger().error("Failed to download updated map style file!");
                 getTerramap().logger().catching(e);
                 RasterTileSetProvider.ONLINE.setLastError(e);
@@ -141,7 +141,7 @@ public class RasterTileSetManager {
             return;
         }
         RasterTileSetProvider.CUSTOM.setLastError(null);
-        if(!this.configMapsFile.exists()) {
+        if (!this.configMapsFile.exists()) {
             try {
                 getTerramap().logger().debug("Map config file did not exist, creating a blank one.");
                 TileSetFile mapFile = new TileSetFile(new TileSetFileMetadata(0, "Add custom map styles here. See an example at styles.terramap.thesmyler.fr (open in your browser, do not add http or https prefix)"));
@@ -180,8 +180,8 @@ public class RasterTileSetManager {
 
     private UrlRasterTileSet readFromSaved(String id, TileSetDefinition saved, RasterTileSetProvider provider, long version, String comment) {
         String[] patterns = saved.urls;
-        if(patterns == null || patterns.length == 0) {
-            if(saved.url != null) {
+        if (patterns == null || patterns.length == 0) {
+            if (saved.url != null) {
                 // This is a legacy source, it only has one url
                 patterns = new String[] {saved.url};
             } else throw new IllegalArgumentException("Could not find any valid url for map style " + id + "-" + provider + "v" + version);

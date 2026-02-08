@@ -43,7 +43,7 @@ class LayerListContainer extends FlexibleWidgetContainer {
 
     @Override
     public void init() {
-        if(this.cancelNextInit) {
+        if (this.cancelNextInit) {
             this.cancelNextInit = false;
             return;
         }

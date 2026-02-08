@@ -24,16 +24,16 @@ public class ServerTerramapEventHandler {
         RemoteSynchronizer.sendRasterTileSetsToClient(player);
         TerramapVersion remoteVersion = TerramapVersion.getClientVersion(player);
 
-        if(remoteVersion == null) { // Not installed on client
+        if (remoteVersion == null) { // Not installed on client
             try {
-                if(TerramapConfig.SERVER.joinWithoutModMessage.length() > 0)
+                if (TerramapConfig.SERVER.joinWithoutModMessage.length() > 0)
                     player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithoutModMessage));
             } catch(Exception e) {
                 getTerramap().logger().error("Failed to send custom join message to client, make sure your json text is valid");
             }
-        } else if(remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
+        } else if (remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
             try {
-                if(TerramapConfig.SERVER.joinWithOutdatedModMessage.length() > 0)
+                if (TerramapConfig.SERVER.joinWithOutdatedModMessage.length() > 0)
                     player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithOutdatedModMessage));
             } catch(Exception e) {
                 getTerramap().logger().error("Failed to send custom join message to client, make sure your json text is valid");

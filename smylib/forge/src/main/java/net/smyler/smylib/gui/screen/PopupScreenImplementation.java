@@ -21,13 +21,13 @@ public class PopupScreenImplementation extends PopupScreen {
 
     @Override
     public void init() {
-        if(this.other != null) this.other.setWorldAndResolution(Minecraft.getMinecraft(), (int)this.getWidth(), (int)this.getHeight());
+        if (this.other != null) this.other.setWorldAndResolution(Minecraft.getMinecraft(), (int)this.getWidth(), (int)this.getHeight());
         super.init();
     }
 
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        if(this.other != null) this.other.drawScreen((int) mouseX, (int) mouseY, 0);
+        if (this.other != null) this.other.drawScreen((int) mouseX, (int) mouseY, 0);
         context.drawRectangle(0, 0, this.getWidth(), this.getHeight(), this.getPopup().getShadingColor());
         super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
     }

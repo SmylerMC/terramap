@@ -126,17 +126,17 @@ abstract public class RasterMapLayer extends MapLayer {
                  * and if the result of the projection is further than the limit, we skip the tile.
                  */
                 //FIXME often crops out the corners, probably a floating point precision problem
-                if(rotation < 90) {
+                if (rotation < 90) {
                     this.top.set(dispX, dispY);
                     this.right.set(dispX + displayWidth, dispY);
                     this.bottom.set(dispX + displayWidth, dispY + displayHeight);
                     this.left.set(dispX, dispY + displayHeight);
-                } else if(rotation < 180){
+                } else if (rotation < 180){
                     this.right.set(dispX, dispY);
                     this.bottom.set(dispX + displayWidth, dispY);
                     this.left.set(dispX + displayWidth, dispY + displayHeight);
                     this.top.set(dispX, dispY + displayHeight);
-                } else if(rotation < 270){
+                } else if (rotation < 270){
                     this.bottom.set(dispX, dispY);
                     this.left.set(dispX + displayWidth, dispY);
                     this.top.set(dispX + displayWidth, dispY + displayHeight);
@@ -152,18 +152,18 @@ abstract public class RasterMapLayer extends MapLayer {
                 this.bottom.subtract(this.halfRenderingSpaceDimensions);
                 this.left.subtract(this.halfRenderingSpaceDimensions);
 
-                if(this.bottom.dotProd(yvec) < -heightViewPort / 2) continue;
-                if(this.top.dotProd(yvec) > heightViewPort / 2) continue;
-                if(this.right.dotProd(xvec) < -widthViewPort / 2) continue;
-                if(this.left.dotProd(xvec) > widthViewPort / 2) continue;
+                if (this.bottom.dotProd(yvec) < -heightViewPort / 2) continue;
+                if (this.top.dotProd(yvec) > heightViewPort / 2) continue;
+                if (this.right.dotProd(xvec) < -widthViewPort / 2) continue;
+                if (this.left.dotProd(xvec) > widthViewPort / 2) continue;
 
                 neededTiles.add(bestTile);
                 boolean lowerResRender = false;
                 boolean unlockedZoomRender = false;
-                if(!bestTile.isTextureAvailable()) {
+                if (!bestTile.isTextureAvailable()) {
                     lowerResRender = true;
                     perfectDraw = false;
-                    if(zoomLevel > tiledMap.getMaxZoom()) {
+                    if (zoomLevel > tiledMap.getMaxZoom()) {
                         unlockedZoomRender = true;
                     }
 
@@ -173,7 +173,7 @@ abstract public class RasterMapLayer extends MapLayer {
                         } catch(InvalidTilePositionException silenced) {
                             break;
                         }
-                        if(tile.getPosition().getZoom() == tiledMap.getMaxZoom()) {
+                        if (tile.getPosition().getZoom() == tiledMap.getMaxZoom()) {
                             try {
                                 tile.getTexture();
                                 neededTiles.add(tile);
@@ -191,18 +191,18 @@ abstract public class RasterMapLayer extends MapLayer {
                 double dX = 0;
                 double dY = 0;
 
-                if(tileX == lowerTileX) {
+                if (tileX == lowerTileX) {
                     dX -= dispX;
                     dispX = 0;
                     displayWidth -= dX;
                 }
-                if(tileY == lowerTileY) {
+                if (tileY == lowerTileY) {
                     dY -= dispY;
                     dispY = 0;
                     displayHeight -= dY;
                 }
 
-                if(lowerResRender) {
+                if (lowerResRender) {
                     int sizeFactor = (1 <<(bestTile.getPosition().getZoom() - tile.getPosition().getZoom()));
 
                     int xInBiggerTile = bestTile.getPosition().getX() - sizeFactor * tile.getPosition().getX();
@@ -217,7 +217,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
                 Identifier texture = defaultTexture;
                 try {
-                    if(tile.isTextureAvailable()) texture = tile.getTexture();
+                    if (tile.isTextureAvailable()) texture = tile.getTexture();
                     else perfectDraw = false;
                 } catch (Throwable e) {
                     perfectDraw = false;
@@ -238,7 +238,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     gl.vertex().position(dispX, dispY, 0d).texture(uLeft, uTop).end();
                     gl.draw();
                 }
-                if(debug) {
+                if (debug) {
                     Color lineColor = texture == null? Color.GREEN: lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : WHITE;
                     context.drawClosedStrokeLine(lineColor, 1f,
                             dispX, dispY,
@@ -255,12 +255,12 @@ abstract public class RasterMapLayer extends MapLayer {
 
         WebMercatorUtil.fromGeo(this.minusCenterPos, this.focusedPoint, 0d).scale(- 1 / 256d);
         // Filter out tiles that are not needed and order the needed ones for loading.
-        if(zoomLevel <= this.getTiledMap().getMaxZoom()) {
+        if (zoomLevel <= this.getTiledMap().getMaxZoom()) {
             neededTiles.stream().filter(t -> !t.isTextureAvailable()).sorted((t1, t2) -> {
                 TilePos pos1 = t1.getPosition();
                 TilePos pos2 = t2.getPosition();
                 int dz = Integer.compare(pos1.getZoom(), pos2.getZoom());
-                if(dz != 0) return dz;
+                if (dz != 0) return dz;
                 double factor = 1d / (1 << pos1.getZoom());
                 double dis1 = this.distanceToCenterCalculator.set(pos1.getX() + 0.5d, pos1.getY() + 0.5d)
                         .scale(factor)
@@ -279,7 +279,7 @@ abstract public class RasterMapLayer extends MapLayer {
                 }
             });
         }
-        if(perfectDraw) parentMap.discardPreviousErrors(this);
+        if (perfectDraw) parentMap.discardPreviousErrors(this);
         this.lastNeededTiles.removeAll(neededTiles);
         this.lastNeededTiles.forEach(RasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;
