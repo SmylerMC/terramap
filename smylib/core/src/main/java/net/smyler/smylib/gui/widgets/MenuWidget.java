@@ -360,6 +360,7 @@ public class MenuWidget implements Widget {
             this.subMenu = menu;
             this.enabled = enabled;
         }
+
         public void exec() {
             if(this.action != null && this.enabled) this.action.run();
         }

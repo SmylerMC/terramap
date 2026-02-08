@@ -281,6 +281,7 @@ public class TestScreen extends Screen {
         final String name;
         final Supplier<String> value;
         final TextWidget widget = new TextWidget(PADDING, 0f, 0, getGameClient().defaultFont());
+
         public InfoText(String name, Supplier<String> value) {
             this.name = name;
             this.value = value;

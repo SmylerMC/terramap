@@ -253,7 +253,6 @@ abstract public class RasterMapLayer extends MapLayer {
             }
         }
 
-
         WebMercatorUtil.fromGeo(this.minusCenterPos, this.focusedPoint, 0d).scale(- 1 / 256d);
         // Filter out tiles that are not needed and order the needed ones for loading.
         if(zoomLevel <= this.getTiledMap().getMaxZoom()) {

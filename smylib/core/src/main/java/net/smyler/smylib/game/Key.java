@@ -189,6 +189,7 @@ public enum Key {
     public final int code;
 
     private static final Key[] keys = new Key[256];
+
     static {
         for (Key key: Key.values()) {
             keys[key.code] = key;

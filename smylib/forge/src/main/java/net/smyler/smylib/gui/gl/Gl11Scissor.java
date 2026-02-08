@@ -101,8 +101,10 @@ public class Gl11Scissor implements Scissor {
     }
 
     private class ScissorStackFrame {
+
         final boolean enabled;
         final float x, y, width, height;
+
         ScissorStackFrame(boolean enabled, float x, float y, float width, float height) {
             this.enabled = enabled;
             this.x = x;
@@ -110,6 +112,7 @@ public class Gl11Scissor implements Scissor {
             this.width = width;
             this.height = height;
         }
+
         void restore() {
             Gl11Scissor.this.setEnabled(this.enabled);
             Gl11Scissor.this.x = this.x;

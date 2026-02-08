@@ -375,6 +375,7 @@ public class TestGameClient implements GameClient {
             iterator.remove();
         }
     }
+
     private void processKeyboardEvents() {
         Iterator<KeyboardEvent> iterator = this.keyboardEvents.iterator();
         while (iterator.hasNext()) {
@@ -386,46 +387,58 @@ public class TestGameClient implements GameClient {
     }
 
     private final static class MouseEvent implements Comparable<MouseEvent> {
+
         final int button;
         final boolean buttonState;
         final long time;
+
         public MouseEvent(int button, boolean buttonState, long time) {
             this.button = button;
             this.buttonState = buttonState;
             this.time = time;
         }
+
         @Override
         public int compareTo(MouseEvent other) {
             return Long.compare(this.time, other.time);
         }
+
     }
 
     private final static class MouseWheelEvent implements Comparable<MouseWheelEvent> {
+
         final int scroll;
         final long time;
+
         public MouseWheelEvent(int scroll, long time) {
             this.scroll = scroll;
             this.time = time;
         }
+
         @Override
         public int compareTo(MouseWheelEvent other) {
             return Long.compare(this.time, other.time);
         }
+
     }
 
     private final static class KeyboardEvent implements Comparable<KeyboardEvent> {
+
         final char character;
         final Key eventKey;
         final long time;
+
         public KeyboardEvent(char character, Key eventKey, long time) {
             this.character = character;
             this.eventKey = eventKey;
             this.time = time;
         }
+
         @Override
         public int compareTo(KeyboardEvent other) {
             return Long.compare(this.time, other.time);
         }
+
     }
 
 }

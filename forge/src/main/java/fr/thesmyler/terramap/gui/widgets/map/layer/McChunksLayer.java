@@ -170,7 +170,6 @@ public class McChunksLayer extends MapLayer {
 
         context.gl().pushViewMatrix();
         this.applyRotationGl(context, x, y);
-        
 
         float size = 1f;
         if(renderBlocks) {

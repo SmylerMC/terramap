@@ -141,8 +141,11 @@ public class ContentPreviewWidget implements Widget {
     }
 
     private interface Preview {
+
         void draw(UiDrawContext context, float x, float y, float width, float height);
+
         void dispose();
+
     }
 
     private class UnsupportedPreview implements Preview {

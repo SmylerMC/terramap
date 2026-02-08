@@ -152,6 +152,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
             throw new IllegalStateException("Cannot remove the content container from a scrollable content container!");
         return super.removeWidget(widget);
     }
+
     /**
      * @deprecated Content should be added to a {@link ScrollableWidgetContainer} using its content container,
      * retrievable via {@link ScrollableWidgetContainer#getContent()}. Removing content from it should therefore be avoided.

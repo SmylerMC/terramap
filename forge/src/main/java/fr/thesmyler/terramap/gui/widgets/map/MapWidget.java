@@ -150,16 +150,13 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.scale.setX(15).setY(this.getHeight() - 30);
         super.addWidget(this.scale);
 
-
         InputLayer layer = new InputLayer(this);
         layer.setZ(0);
         super.addWidget(layer);
         this.inputLayer = layer;
         this.controller.inputLayer = this.inputLayer;
 
-
         this.setDoScissor(true);
-
 
         this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
 

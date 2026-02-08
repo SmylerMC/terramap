@@ -44,6 +44,7 @@ public class InputLayer extends MapLayer {
     private static final double[][] ROTATION_POLYGON_VERTICES_INNER = new double[ROTATION_POLYGON_VERTEX_COUNT][2];
     private static final float ROTATION_POLYGON_RADIUS_OUTER = 5;
     private static final float ROTATION_POLYGON_RADIUS_INNER = 2;
+
     static {
         Vec2dMutable outer = new Vec2dMutable(0, -ROTATION_POLYGON_RADIUS_OUTER);
         Vec2dMutable inner = new Vec2dMutable(0, -ROTATION_POLYGON_RADIUS_INNER);

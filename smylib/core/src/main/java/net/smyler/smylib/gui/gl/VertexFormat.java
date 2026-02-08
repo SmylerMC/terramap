@@ -9,6 +9,7 @@ public enum VertexFormat {
     final boolean position;
     final boolean texture;
     final boolean color;
+
     VertexFormat(boolean position, boolean texture, boolean color) {
         this.position = position;
         this.color = color;

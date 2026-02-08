@@ -364,6 +364,7 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
     }
 
     private static final ImmutableText[] EMPTY_EXTRA = new ImmutableText[0];
+
     private ImmutableText[] parseSiblingsFromObject(JsonObject object, Type type, JsonDeserializationContext context) {
         JsonElement extraElement = object.get("extra");
         if (extraElement == null) {

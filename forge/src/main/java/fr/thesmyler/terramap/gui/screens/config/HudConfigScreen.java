@@ -385,14 +385,18 @@ public class HudConfigScreen extends Screen {
     }
 
     private static class RasterTileSetSliderEntry {
+
         private final RasterTileSet map;
+
         private RasterTileSetSliderEntry(RasterTileSet map) {
             this.map = map;
         }
+
         @Override
         public String toString() {
             return this.map.getLocalizedName(getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode());
         }
+
     }
 
 }

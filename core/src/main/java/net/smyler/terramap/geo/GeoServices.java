@@ -156,6 +156,7 @@ public final class GeoServices {
     public static String formatGeoPointForDisplay(GeoPoint location) {
         return formatGeoCoordForDisplay(location.latitude()) + "° " + formatGeoCoordForDisplay(location.longitude()) + "°";
     }
+
     public static String formatZoomLevelForDisplay(double zoomLevel) {
         if(Double.isNaN(zoomLevel)) return "-";
         return decFormat1.format(zoomLevel);

@@ -144,7 +144,6 @@ public class TextFieldWidget implements Widget {
             context.drawSprite(x + this.width - 17, y + 2, SmyLibSprites.MAGNIFYING_GLASS_15);
         }
 
-
         Color cursorColor = this.cursorAnimation.fadeColor(textColor);
         int displaySelectionStart = this.selectionStart - this.firstCharacterIndex;
         int displaySelectionEnd = this.selectionEnd - this.firstCharacterIndex;
@@ -180,12 +179,10 @@ public class TextFieldWidget implements Widget {
             }
         }
 
-
         if (displaySelectionEnd != displaySelectionStart) {
             float selectionBoxRenderRight = textRenderX + this.font.computeWidth(string.substring(0, displaySelectionEnd));
             this.drawSelectionHighlight(context, x, y, cursorX, textRenderY - 1, selectionBoxRenderRight - 1, textRenderY + 1 + 9);
         }
-
 
     }
 

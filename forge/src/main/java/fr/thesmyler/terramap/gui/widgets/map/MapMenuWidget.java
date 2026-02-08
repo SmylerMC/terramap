@@ -50,6 +50,7 @@ public class MapMenuWidget extends MenuWidget {
 
     // This only exists is so we can use it to send chat messages
     private static final GuiScreen CHAT_SENDER_GUI = new GuiScreen() {};
+
     static { CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
 
     public MapMenuWidget(MapWidget map) {

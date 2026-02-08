@@ -22,6 +22,12 @@
 
       <property name="groups" value="net.smyler.smylib,net.smyler.terramap,net.smyler,fr.thesmyler,net.buildtheearth.terraplusplus,java,javax,net.minecraft,net.minecraftforge,org.lwjgl,io.netty,org.apache.logging.log4j,com.google.gson,org.jetbrains.annotations,org.junit"/>
     </module>
+
+    <module name="EmptyLineSeparator">
+      <property name="tokens" value="PACKAGE_DEF, IMPORT, STATIC_IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF, VARIABLE_DEF, RECORD_DEF, COMPACT_CTOR_DEF"/>
+      <property name="allowNoEmptyLineBetweenFields" value="true"/>
+      <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
+    </module>
   </module>
 
 </module>
