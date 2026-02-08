@@ -226,7 +226,7 @@ public class Color {
 
         if (s == 0){
             r = g = b = l; // Achromatic
-        }else{
+        } else {
             float q = l < 0.5 ? l * (1 + s) : l + s - l * s;
             float p = 2 * l - q;
             r = hue2rgb(p, q, h + 1f/3f);
