@@ -237,11 +237,11 @@ public class HudConfigScreen extends Screen {
                 this.settingsPanel.addWidget(text);
                 this.settingsPanel.addWidget(button);
             }
-            lineY = lastButton != null ? lastButton.getY() + lastButton.getHeight() + lineSpace: lineSpace;
+            lineY = lastButton != null ? lastButton.getY() + lastButton.getHeight() + lineSpace : lineSpace;
         }
         // Second line
         this.settingsPanel.addWidget(this.tileScalingSlider
-                .setX(width / 2f - 153).setY(lastButton != null ? lastButton.getY() + lastButton.getHeight() + lineSpace: lineSpace)
+                .setX(width / 2f - 153).setY(lastButton != null ? lastButton.getY() + lastButton.getHeight() + lineSpace : lineSpace)
                 .setWidth(100)
                 .setDisplayPrefix(translator.format("terramap.hudconfig.scaling"))
                 .setTooltip(translator.format("terramap.hudconfig.scaling.tooltip")));

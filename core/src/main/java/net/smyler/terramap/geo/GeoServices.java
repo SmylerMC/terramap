@@ -165,7 +165,7 @@ public final class GeoServices {
     public static String numeric2NSEW(double longitude, double latitude) {
         double fixedLon = GeoUtil.getLongitudeInRange(longitude);
         double fixedLat = GeoUtil.getLatitudeInRange(latitude);
-        String eo = fixedLon < 0 ? "W": "E";
+        String eo = fixedLon < 0 ? "W" : "E";
         String ns = fixedLat < 0 ? "S" : "N";
         double absLon = Math.abs(fixedLon);
         double absLat = Math.abs(fixedLat);

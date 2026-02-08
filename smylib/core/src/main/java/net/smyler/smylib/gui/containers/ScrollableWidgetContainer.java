@@ -51,8 +51,8 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
         boolean vertVisible = this.verticalScrollbar.isVisible(this);
         boolean horzVisible = this.horizontalScrollbar.isVisible(this);
         this.content.setPosition(
-                horzVisible ? (thisWidth - contWidth - 15) * this.horizontalScrollbar.getProgress(): 0f,
-                vertVisible ? (thisHeight - contHeight - 15) * this.verticalScrollbar.getProgress(): 0f
+                horzVisible ? (thisWidth - contWidth - 15) * this.horizontalScrollbar.getProgress() : 0f,
+                vertVisible ? (thisHeight - contHeight - 15) * this.verticalScrollbar.getProgress() : 0f
             );
         if (this.verticalWasVisibleLastUpdate != vertVisible || this.horizontalWasVisibleLastUpdate != horzVisible) this.updateScrollbars();
         this.verticalWasVisibleLastUpdate = vertVisible;

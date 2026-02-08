@@ -50,7 +50,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
             case ENTER:
                 return PanelTarget.OPENED;
             default:
-                return this.mainAnimation.getProgress() < 0.5 ? PanelTarget.CLOSED: PanelTarget.OPENED;
+                return this.mainAnimation.getProgress() < 0.5 ? PanelTarget.CLOSED : PanelTarget.OPENED;
         }
     }
 
@@ -72,7 +72,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
     }
 
     public SlidingPanelWidget setStateNoAnimation(boolean opened) {
-        this.mainAnimation.start(opened? AnimationState.LEAVE: AnimationState.ENTER);
+        this.mainAnimation.start(opened ? AnimationState.LEAVE : AnimationState.ENTER);
         this.mainAnimation.stop();
         return this;
     }

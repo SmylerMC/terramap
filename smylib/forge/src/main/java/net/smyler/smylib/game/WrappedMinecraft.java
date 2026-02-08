@@ -157,7 +157,7 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public MinecraftServerInfo currentServerInfo() {
         ServerData data = this.minecraft.getCurrentServerData();
-        return data == null ? null: new MinecraftServerInfo(
+        return data == null ? null : new MinecraftServerInfo(
                 data.serverName,
                 data.serverIP,
                 data.serverMOTD,

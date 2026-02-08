@@ -239,7 +239,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     gl.draw();
                 }
                 if (debug) {
-                    Color lineColor = texture == null? Color.GREEN: lowerResRender? unlockedZoomRender? Color.BLUE: Color.RED : WHITE;
+                    Color lineColor = texture == null ? Color.GREEN : lowerResRender ? unlockedZoomRender ? Color.BLUE : Color.RED : WHITE;
                     context.drawClosedStrokeLine(lineColor, 1f,
                             dispX, dispY,
                             dispX, dispY + displayHeight - 1,

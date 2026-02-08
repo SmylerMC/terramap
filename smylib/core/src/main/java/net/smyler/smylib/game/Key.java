@@ -202,7 +202,7 @@ public enum Key {
 
     @Nullable
     public static Key fromCode(int code) {
-        return code >= 0 && code < 256 ? keys[code]: null;
+        return code >= 0 && code < 256 ? keys[code] : null;
     }
 
 }

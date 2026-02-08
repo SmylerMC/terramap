@@ -740,7 +740,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         @Override
         public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
             super.draw(context, x, y, mouseX, mouseY, hovered, focused, parent);
-            Color textColor = hovered? Color.SELECTION: Color.WHITE;
+            Color textColor = hovered ? Color.SELECTION : Color.WHITE;
             String text = this.previewLayer.getTiledMap().getLocalizedName(getGameClient().translator().language());
             float width = this.getWidth();
             float height = this.getHeight();

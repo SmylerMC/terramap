@@ -125,7 +125,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
     public void toBytes(ByteBuf buf) {
         NetworkUtil.encodeStringToByteBuf(this.id, buf);
         buf.writeLong(this.providerVersion);
-        String singleUrl = this.backwardCompat ? this.urlPatterns[0]: "";
+        String singleUrl = this.backwardCompat ? this.urlPatterns[0] : "";
         NetworkUtil.encodeStringToByteBuf(singleUrl, buf);
         buf.writeInt(this.names.size());
         for (String key: this.names.keySet()) {

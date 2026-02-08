@@ -128,7 +128,7 @@ public class MenuWidget implements Widget {
             float lh = fh + padding * 2;
             float sh = 3;
             for (MenuEntry entry: this.entries) {
-                float h = entry.text == null ? sh: lh;
+                float h = entry.text == null ? sh : lh;
                 boolean hovered = mouseX >= 0 && mouseX < width && mouseY >= ty && mouseY <= ty + h - 1;
                 if (hovered) {
                     if (entry.text != null && entry.enabled && entry.action != null ) {

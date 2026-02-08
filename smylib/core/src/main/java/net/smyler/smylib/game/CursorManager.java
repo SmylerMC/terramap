@@ -43,7 +43,7 @@ abstract class CursorManager<CursorImplementation extends Cursor> {
 
     public void reload() throws Exception {
         CursorImplementation currentCursor = this.getCurrent();
-        Identifier currentIdentifier = currentCursor != null ? currentCursor.identifier(): null;
+        Identifier currentIdentifier = currentCursor != null ? currentCursor.identifier() : null;
         this.set((CursorImplementation) null);
         this.cursors.values().forEach(this::unload);
         this.cursors.clear();

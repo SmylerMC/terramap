@@ -36,9 +36,9 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
         boolean minimap = map.getContext() == MapContext.MINIMAP;
 
-        int factor = minimap? 2: 1;
+        int factor = minimap ? 2 : 1;
 
-        Map<UUID, TerramapPlayer> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap(): TerramapClientContext.getContext().getPlayerMap();
+        Map<UUID, TerramapPlayer> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap() : TerramapClientContext.getContext().getPlayerMap();
         for (Marker marker: existingMarkers) {
             TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
             players.remove(player.getUUID());

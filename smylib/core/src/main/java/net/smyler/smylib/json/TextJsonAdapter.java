@@ -166,7 +166,7 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
         if (!primitive.isBoolean()) {
             return INHERIT;
         }
-        return primitive.getAsBoolean() ? TRUE: FALSE;
+        return primitive.getAsBoolean() ? TRUE : FALSE;
     }
 
     private TextContent parseContentFromObject(JsonObject object, Type type, JsonDeserializationContext context) {

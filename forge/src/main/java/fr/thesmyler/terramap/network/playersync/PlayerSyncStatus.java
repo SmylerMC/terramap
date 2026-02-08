@@ -13,13 +13,13 @@ public enum PlayerSyncStatus {
     }
 
     public static PlayerSyncStatus getFromNetworkCode(byte code) {
-        for (PlayerSyncStatus s: PlayerSyncStatus.values()) {
+        for (PlayerSyncStatus s : PlayerSyncStatus.values()) {
             if (s.VALUE == code) return s;
         }
         return UNKNOWN;
     }
 
     public static PlayerSyncStatus getFromBoolean(boolean bool) {
-        return bool? ENABLED: DISABLED;
+        return bool ? ENABLED : DISABLED;
     }
 }

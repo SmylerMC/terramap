@@ -129,7 +129,7 @@ public class TextFieldWidget implements Widget {
 
         if (this.isEnabled()) {
             if (hovered) borderColor = this.borderColorHovered;
-            textColor = focused ? this.focusedTextColor: this.enabledTextColor;
+            textColor = focused ? this.focusedTextColor : this.enabledTextColor;
         }
 
         if (this.hasBackground) {
@@ -200,7 +200,7 @@ public class TextFieldWidget implements Widget {
     }
 
     private float getEffectiveWidth() {
-        return this.hasBackground? this.getWidth() - 8: this.getWidth();
+        return this.hasBackground ? this.getWidth() - 8 : this.getWidth();
     }
 
     @Override

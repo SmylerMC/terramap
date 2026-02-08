@@ -42,7 +42,7 @@ public class OtherPlayerMarker extends AbstractPlayerMarker {
 
     @Override
     protected float getTransparency() {
-        return this.player.isSpectator() ? 0.6f: 1f;
+        return this.player.isSpectator() ? 0.6f : 1f;
     }
 
     @Override

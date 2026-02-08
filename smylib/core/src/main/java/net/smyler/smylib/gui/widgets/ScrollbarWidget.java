@@ -219,7 +219,7 @@ public class ScrollbarWidget extends WidgetContainer {
 
         @Override
         public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-            Color bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER: DRAG_BG_COLOR;
+            Color bgcolor = hovered || focused ? DRAG_BG_COLOR_HOVER : DRAG_BG_COLOR;
             float height = this.getHeight();
             context.drawRectangle(x, y, x + this.getWidth(), y + height, bgcolor);
 

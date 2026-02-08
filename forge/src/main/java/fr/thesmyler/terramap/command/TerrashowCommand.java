@@ -44,7 +44,7 @@ public class TerrashowCommand extends CommandBase {
         TranslationContext transCtx = this.contextBuilder.createNewContext(sender);
 
         EntityPlayerMP player = null;
-        EntityPlayer senderPlayer = sender instanceof EntityPlayer? (EntityPlayer) sender: null;
+        EntityPlayer senderPlayer = sender instanceof EntityPlayer ? (EntityPlayer) sender : null;
         if (args.length == 0) {
             throw transCtx.syntaxException("terramap.commands.terrashow.too_few_parameters");
         } else if (args.length > 2) {
@@ -73,7 +73,7 @@ public class TerrashowCommand extends CommandBase {
         ITextComponent message = transCtx.getComponent("terramap.commands.terrashow.invalid_action");
         switch (args[0]) {
             case "status":
-                String key = TerramapServerPreferences.shouldDisplayPlayer(world, uuid) ? "terramap.commands.terrashow.getvisible": "terramap.commands.terrashow.gethidden";
+                String key = TerramapServerPreferences.shouldDisplayPlayer(world, uuid) ? "terramap.commands.terrashow.getvisible" : "terramap.commands.terrashow.gethidden";
                 message = transCtx.getComponent(key, player.getDisplayName().getFormattedText());
                 break;
             case "show":

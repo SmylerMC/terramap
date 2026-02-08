@@ -32,7 +32,7 @@ public enum BooleanTextStyle {
      * @return      a new value resulting of the application
      */
     public BooleanTextStyle applyParent(BooleanTextStyle other) {
-        return this == INHERIT ? other: this;
+        return this == INHERIT ? other : this;
     }
 
 }

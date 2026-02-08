@@ -150,12 +150,12 @@ class LayerListContainer extends FlexibleWidgetContainer {
             }
             this.addWidget(settingsButton);
             SpriteButtonWidget offsetButton = new SpriteButtonWidget(this.getWidth() - 37, 3, 0,
-                    layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
+                    layer.hasRenderingOffset() ? OFFSET_WARNING : OFFSET,
                     () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(layer)))
             );
             offsetButton.setTooltip(getGameClient().translator().format(
                     layer.hasRenderingOffset() ?
-                    "terramap.terramapscreen.layerscreen.raster_background.offset":
+                    "terramap.terramapscreen.layerscreen.raster_background.offset" :
                     "terramap.terramapscreen.layerscreen.raster_background.no_offset"
             ));
             this.addWidget(offsetButton);
@@ -191,14 +191,14 @@ class LayerListContainer extends FlexibleWidgetContainer {
             }
             this.addWidget(settingsButton);
             SpriteButtonWidget offsetButton = new SpriteButtonWidget(this.getWidth() - 70, 3, 0,
-                layer.hasRenderingOffset() ? OFFSET_WARNING: OFFSET,
+                layer.hasRenderingOffset() ? OFFSET_WARNING : OFFSET,
                 () -> {
                     MapLayer lowestLayer = LayerListContainer.this.map.getLayers().stream().min(comparing(MapLayer::getZ)).orElse(layer);
                     LayerListContainer.this.scheduleBeforeNextUpdate(() -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(lowestLayer, layer)));
                 }
             );
             offsetButton.setTooltip(getGameClient().translator().format(
-                    layer.hasRenderingOffset() ? "terramap.terramapscreen.layerscreen.generic.offset": "terramap.terramapscreen.layerscreen.generic.no_offset"
+                    layer.hasRenderingOffset() ? "terramap.terramapscreen.layerscreen.generic.offset" : "terramap.terramapscreen.layerscreen.generic.no_offset"
             ));
             this.addWidget(offsetButton);
             this.addWidget(new ToggleButtonWidget(

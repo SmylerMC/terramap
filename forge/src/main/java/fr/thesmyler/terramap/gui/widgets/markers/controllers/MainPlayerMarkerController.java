@@ -29,7 +29,7 @@ public class MainPlayerMarkerController extends AbstractPlayerMarkerController<M
 
     @Override
     public MainPlayerMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-        int factor = map.getContext().equals(MapContext.MINIMAP)? 2: 1;
+        int factor = map.getContext().equals(MapContext.MINIMAP) ? 2 : 1;
         EntityPlayerSP self = Minecraft.getMinecraft().player;
         if (existingMarkers.length < 1 && self != null && TerramapClientContext.getContext().getProjection() != null) {
             return new MainPlayerMarker[] { new MainPlayerMarker(this, factor) };

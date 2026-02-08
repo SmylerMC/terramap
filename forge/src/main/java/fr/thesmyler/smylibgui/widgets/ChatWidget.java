@@ -71,12 +71,12 @@ public class ChatWidget implements Widget, ITabCompleter {
 
     @Override
     public float getX() {
-        return this.open ? 0: this.lineSectionX;
+        return this.open ? 0 : this.lineSectionX;
     }
 
     @Override
     public float getY() {
-        return this.open ? 0: this.lineSectionY;
+        return this.open ? 0 : this.lineSectionY;
     }
 
     @Override
@@ -86,12 +86,12 @@ public class ChatWidget implements Widget, ITabCompleter {
 
     @Override
     public float getWidth() {
-        return this.open ? HudScreen.getContent().getWidth(): this.lineSectionWidth;
+        return this.open ? HudScreen.getContent().getWidth() : this.lineSectionWidth;
     }
 
     @Override
     public float getHeight() {
-        return this.open ? HudScreen.getContent().getHeight(): this.lineSectionHeight;
+        return this.open ? HudScreen.getContent().getHeight() : this.lineSectionHeight;
     }
 
     @Override
@@ -171,7 +171,7 @@ public class ChatWidget implements Widget, ITabCompleter {
                 // We need to swap the current screen temporarily so Forge client commands are tab completable
                 GuiScreen screen = Minecraft.getMinecraft().currentScreen;
                 Minecraft.getMinecraft().currentScreen = this.guiChat;
-                int keyCode = key != null ? key.code: 0;
+                int keyCode = key != null ? key.code : 0;
                 GUI_CHAT_KEYPRESSED_METHOD.invoke(this.guiChat, typedChar, keyCode);
                 Minecraft.getMinecraft().currentScreen = screen;
             }

@@ -711,7 +711,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         state.zoom = this.controller.getTargetZoom();
         state.rotation = this.controller.getTargetRotation();
         Marker tracked = this.controller.getTrackedMarker();
-        state.trackedMarker = tracked != null ? tracked.getIdentifier(): null;
+        state.trackedMarker = tracked != null ? tracked.getIdentifier() : null;
         for (MapLayer layer: this.layers) {
             SavedLayerState layerState = new SavedLayerState();
             layerState.type = layer.getType();
@@ -789,7 +789,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      *         or an empty {@link Optional} if no {@link MapLayer layers} fulfilled the definition of a raster background.
      */
     public Optional<OnlineRasterMapLayer> getRasterBackgroundLayer() {
-        return this.getBackgroundLayer().map(l -> l instanceof RasterMapLayer ? (OnlineRasterMapLayer) l: null);
+        return this.getBackgroundLayer().map(l -> l instanceof RasterMapLayer ? (OnlineRasterMapLayer) l : null);
     }
 
     /**
