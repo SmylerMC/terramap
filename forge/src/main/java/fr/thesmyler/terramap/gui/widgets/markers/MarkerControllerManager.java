@@ -26,7 +26,7 @@ public abstract class MarkerControllerManager {
         try {
             controller.newInstance();
             CONTROLLER_CLASSES.get(context).add(controller);
-        } catch(Exception e) {
+        } catch (Exception e) {
             getTerramap().logger().error("Failed to create a test marker controller instance for {}", controller.getCanonicalName());
             getTerramap().logger().error("This marker controller class will not be registered. See stack trace for details.");
             getTerramap().logger().catching(e);

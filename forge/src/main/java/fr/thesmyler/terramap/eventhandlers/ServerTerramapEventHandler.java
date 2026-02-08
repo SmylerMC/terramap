@@ -28,14 +28,14 @@ public class ServerTerramapEventHandler {
             try {
                 if (TerramapConfig.SERVER.joinWithoutModMessage.length() > 0)
                     player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithoutModMessage));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 getTerramap().logger().error("Failed to send custom join message to client, make sure your json text is valid");
             }
         } else if (remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
             try {
                 if (TerramapConfig.SERVER.joinWithOutdatedModMessage.length() > 0)
                     player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithOutdatedModMessage));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 getTerramap().logger().error("Failed to send custom join message to client, make sure your json text is valid");
             }
         }

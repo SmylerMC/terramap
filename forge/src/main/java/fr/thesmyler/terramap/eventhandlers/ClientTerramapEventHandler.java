@@ -63,7 +63,7 @@ public class ClientTerramapEventHandler {
                     String azimuthStr = GeoServices.formatAzimuthForDisplay(azimuth);
                     String cardinal = CardinalDirection.azimuthToFacing(azimuth).realName();
                     event.getLeft().add("Position: " + formatGeoPointForDisplay(this.playerLocation) + " Looking at: " + azimuthStr + "° (" + cardinal + ")");
-                } catch(OutOfGeoBoundsException ignored) {
+                } catch (OutOfGeoBoundsException ignored) {
                     event.getLeft().add("Out of projection bounds");
                 }
             }

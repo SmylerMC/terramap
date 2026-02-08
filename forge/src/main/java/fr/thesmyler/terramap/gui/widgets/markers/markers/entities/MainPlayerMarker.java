@@ -48,7 +48,7 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
             projection.toGeo(this.playerLocation, position);
             this.playerAzimuth = projection.azimuth(position);
             this.isOutOfBounds = false;
-        } catch(OutOfGeoBoundsException e) {
+        } catch (OutOfGeoBoundsException e) {
             this.isOutOfBounds = true;
         }
         super.onUpdate(mouseX, mouseY, parent);

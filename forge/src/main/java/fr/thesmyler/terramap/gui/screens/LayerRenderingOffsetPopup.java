@@ -168,7 +168,7 @@ public class LayerRenderingOffsetPopup extends Popup {
             okX = true;
             this.xInput.setEnabledTextColor(Color.WHITE);
             this.xInput.setFocusedTextColor(Color.WHITE);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             this.xInput.setEnabledTextColor(Color.RED);
             this.xInput.setFocusedTextColor(Color.RED);
         }
@@ -179,7 +179,7 @@ public class LayerRenderingOffsetPopup extends Popup {
             okY = true;
             this.yInput.setEnabledTextColor(Color.WHITE);
             this.yInput.setFocusedTextColor(Color.WHITE);
-        } catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             this.yInput.setEnabledTextColor(Color.RED);
             this.yInput.setFocusedTextColor(Color.RED);
         }

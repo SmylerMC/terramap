@@ -304,7 +304,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
                 if (parsed.getProtocol().startsWith("http")) {
                     getTerramap().http().setMaxConcurrentRequests(url, this.getMaxConcurrentRequests());
                 }
-            } catch(IllegalArgumentException | MalformedURLException e) {
+            } catch (IllegalArgumentException | MalformedURLException e) {
                 getTerramap().logger().error("Failed to set max concurrent requests for host. Url :{}", url);
                 getTerramap().logger().catching(e);
             }
@@ -369,7 +369,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
                     } else {
                         try {
                             this.textureTask.get(); // That will throw an exception
-                        } catch(ExecutionException e) {
+                        } catch (ExecutionException e) {
                             throw e.getCause();
                         }
                     }

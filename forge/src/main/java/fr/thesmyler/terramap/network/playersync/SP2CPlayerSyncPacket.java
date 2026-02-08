@@ -62,7 +62,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
                 GeoPoint location = player.getLocation();
                 if (location == null) throw OutOfProjectionBoundsException.get();
                 coordinates = location.asArray();
-            } catch(OutOfProjectionBoundsException e) {
+            } catch (OutOfProjectionBoundsException e) {
                 coordinates = new double[] {Double.NaN, Double.NaN};
             }
             buf.writeLong(player.getUUID().getLeastSignificantBits());

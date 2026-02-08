@@ -61,7 +61,7 @@ public class DistortionLayer extends MapLayer {
                     float green = (float) Math.min(this.tissot.maxAngularDistortion() / 2/Math.PI, 1f);
                     float alpha = Math.min(red + green, 1f);
                     color = new Color(red, green, 0f, alpha);
-                } catch(OutOfGeoBoundsException e) {
+                } catch (OutOfGeoBoundsException e) {
                     color = color.withRed(0f).withGreen(0).withAlpha(.1f);
                 }
                 context.drawRectangle(x + dx, y + dy, x + dx + res, y + dy + res, color);

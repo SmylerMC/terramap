@@ -124,7 +124,7 @@ public final class GeoServices {
             kml.save(file, true);
             Desktop.getDesktop().open(file);
             file.deleteOnExit();
-        } catch(Exception e) {
+        } catch (Exception e) {
             getTerramap().logger().error("There was an error when trying to open a place in Google Earth");
             getTerramap().logger().catching(e);
         }

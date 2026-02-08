@@ -163,7 +163,7 @@ public class McChunksLayer extends MapLayer {
             if (d < renderThreshold / 2) render3dr = this.render3dr;
             if (d < renderThreshold / 16) renderChunks = this.renderChunks;
             if (d < renderThreshold / 128) renderBlocks = this.renderBlocks;
-        } catch(OutOfGeoBoundsException silenced) {
+        } catch (OutOfGeoBoundsException silenced) {
             // The center is out of bounds, let's not render anything
             return;
         }
@@ -251,7 +251,7 @@ public class McChunksLayer extends MapLayer {
             for (int i=0; i<this.projectedCorners.length; i++) {
                 this.cache.getRenderPos(this.projectedCorners[i], this.corners[i], discriminator);
             }
-        } catch(OutOfGeoBoundsException silenced) {
+        } catch (OutOfGeoBoundsException silenced) {
             return; // Skip the tile
         }
         for (Vec2dMutable corner: this.projectedCorners) {
@@ -308,7 +308,7 @@ public class McChunksLayer extends MapLayer {
                     this.projection.toGeo(this.location, this.position);
                     location = this.location.getImmutable();
                     this.mcToGeo.put(imuMcPos, location);
-                } catch(OutOfGeoBoundsException e) {
+                } catch (OutOfGeoBoundsException e) {
                     this.mcToGeo.put(imuMcPos, null);
                     throw e;
                 }

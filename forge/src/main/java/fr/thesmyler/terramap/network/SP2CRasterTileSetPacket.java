@@ -199,7 +199,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
                 }
                 Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addServerRasterTileSet(map));
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 getTerramap().logger().error("Failed to unpack a map style sent by the server");
                 getTerramap().logger().catching(e);
                 RasterTileSetProvider.SERVER.setLastError(e);
@@ -223,7 +223,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
                     return null;
                 }
                 Minecraft.getMinecraft().addScheduledTask(() -> TerramapClientContext.getContext().addProxyRasterTileSet(map));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 getTerramap().logger().error("Failed to unpack a map style sent by the proxy");
                 getTerramap().logger().catching(e);
                 RasterTileSetProvider.PROXY.setLastError(e);

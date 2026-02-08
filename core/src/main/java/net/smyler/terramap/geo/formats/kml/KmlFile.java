@@ -37,9 +37,9 @@ public class KmlFile {
             JAXBContext context = JAXBContext.newInstance(KmlFile.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            try(OutputStream stream = Files.newOutputStream(file.toPath())) {
+            try (OutputStream stream = Files.newOutputStream(file.toPath())) {
                 if (compressed) {
-                    try(ZipOutputStream compressedStream = new ZipOutputStream(stream)) {
+                    try (ZipOutputStream compressedStream = new ZipOutputStream(stream)) {
                         ZipEntry entry = new ZipEntry("terramap.kml");
                         compressedStream.putNextEntry(entry);
                         marshaller.marshal(this, compressedStream);
@@ -48,7 +48,7 @@ public class KmlFile {
                     marshaller.marshal(this, stream);
                 }
             }
-        } catch(JAXBException e) {
+        } catch (JAXBException e) {
             getTerramap().logger().error("Something went seriously wrong when saving a kml file. Save aborted.");
             getTerramap().logger().catching(e);
         }

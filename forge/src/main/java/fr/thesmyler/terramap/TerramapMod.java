@@ -79,7 +79,7 @@ public class TerramapMod implements Terramap {
         }
         try {
             TerramapMod.version = new TerramapVersion(versionStr);
-        } catch(InvalidVersionString e) {
+        } catch (InvalidVersionString e) {
             this.logger.error("Failed to parse Terramap version number from string {}, will be assuming a 1.0.0 release.", versionStr);
             TerramapMod.version = new TerramapVersion(1, 0, 0);
         }

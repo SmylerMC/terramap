@@ -111,7 +111,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
                 try {
                     tile = tiledMap.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
-                } catch(InvalidTilePositionException silenced) { continue ;}
+                } catch (InvalidTilePositionException silenced) { continue ;}
 
                 // This is the tile we would like to render, but it is not possible if it hasn't been cached yet
                 RasterTile bestTile = tile;
@@ -170,7 +170,7 @@ abstract public class RasterMapLayer extends MapLayer {
                     while (tile.getPosition().getZoom() > 0 && !tile.isTextureAvailable()) {
                         try {
                             tile = tiledMap.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
-                        } catch(InvalidTilePositionException silenced) {
+                        } catch (InvalidTilePositionException silenced) {
                             break;
                         }
                         if (tile.getPosition().getZoom() == tiledMap.getMaxZoom()) {

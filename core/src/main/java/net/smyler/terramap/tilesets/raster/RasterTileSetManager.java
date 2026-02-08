@@ -70,7 +70,7 @@ public class RasterTileSetManager {
             // https://github.com/MinecraftForge/MinecraftForge/issues/5713
             InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
             checkState(in != null, "Resource not found: " + path);
-            try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(in))) {
+            try (BufferedReader txtReader = new BufferedReader(new InputStreamReader(in))) {
                 StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
                 while (line != null) {
@@ -79,7 +79,7 @@ public class RasterTileSetManager {
                 }
                 this.baseMaps.putAll(loadFromJson(json.toString(), RasterTileSetProvider.BUILT_IN));
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             getTerramap().logger().fatal("Failed to read built-in map styles, Terramap is likely to not work properly!");
             getTerramap().logger().fatal("Path: {}", path);
             getTerramap().logger().catching(e);
@@ -116,7 +116,7 @@ public class RasterTileSetManager {
                 getTerramap().logger().catching(e);
                 RasterTileSetProvider.ONLINE.setLastError(e);
             }
-            try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(b)))) {
+            try (BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(b)))) {
                 StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
                 while (line != null) {
@@ -124,7 +124,7 @@ public class RasterTileSetManager {
                     line = txtReader.readLine();
                 }
                 baseMaps.putAll(loadFromJson(json.toString(), RasterTileSetProvider.ONLINE));
-            } catch(Exception f) {
+            } catch (Exception f) {
                 getTerramap().logger().error("Failed to parse updated map style file!");
                 getTerramap().logger().catching(e);
                 RasterTileSetProvider.ONLINE.setLastError(e);
@@ -236,12 +236,12 @@ public class RasterTileSetManager {
         String attribute;
         try {
             attribute =  attributes.get("TXT").get().toString();
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new UnknownHostException(String.format("No txt record was found at %s ?? Something is wrong, either with the name server or with your dns provider!", hostname));
         }
         try {
             return attribute.split("\\|")[1].replace("${version}", getTerramap().version());
-        } catch(IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new UnknownHostException("TXT record was malformatted");
         }
     }

@@ -86,9 +86,9 @@ public class TerramapLocalPlayer extends TerramapPlayer {
         }
         Position position = new PositionImmutable(this.player.posX, this.player.posY, this.player.posZ);
         projection.toGeo(this.location, position);
-        try{
+        try {
             return projection.azimuth(position);
-        } catch(OutOfGeoBoundsException e) {
+        } catch (OutOfGeoBoundsException e) {
             return 0f;
         }
     }

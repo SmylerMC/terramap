@@ -145,7 +145,7 @@ public class TerrainPreviewTileSet extends CachingRasterTileSet {
                     if (!this.textureTask.isCancelled()) {
                         try {
                             this.textureTask.get(); // That will throw an exception
-                        } catch(ExecutionException e) {
+                        } catch (ExecutionException e) {
                             this.textureTask = null;
                             throw e.getCause();
                         }

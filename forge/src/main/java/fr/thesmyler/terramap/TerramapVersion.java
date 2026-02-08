@@ -103,17 +103,17 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
                 devRun = false;
                 try {
                     this.majorTarget = Integer.parseInt(target[0]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     throw new InvalidVersionString("Invalid target major version: " + target[0]);
                 }
                 try {
                     this.minorTarget = Integer.parseInt(target[1]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     throw new InvalidVersionString("Invalid target minor version: " + target[1]);
                 }
                 try {
                     this.buildTarget = Integer.parseInt(target[2]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     throw new InvalidVersionString("Invalid target build version: " + target[2]);
                 }
                 if (parts.length > 1) {
@@ -126,13 +126,13 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
                             if (build.length > 0) {
                                 try {
                                     this.build = Integer.parseInt(build[0]);
-                                } catch(NumberFormatException e) {
+                                } catch (NumberFormatException e) {
                                     throw new InvalidVersionString("Invalid build version: " + build[0]);
                                 }
                                 if (build.length > 1) {
                                     try {
                                         this.revision = Integer.parseInt(build[1]);
-                                    } catch(NumberFormatException e) {
+                                    } catch (NumberFormatException e) {
                                         throw new InvalidVersionString("Invalid revision version: " + build[1]);
                                     }
                                 } else {
@@ -310,7 +310,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
         if (remoteVersion != null) {
             try {
                 version = new TerramapVersion(remoteVersion);
-            } catch(InvalidVersionString e) {
+            } catch (InvalidVersionString e) {
                 getTerramap().logger().warn("Failed to parse a client's Terramap version: {} : {}", remoteVersion, e.getLocalizedMessage());
             }
         }

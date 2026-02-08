@@ -256,7 +256,7 @@ public class TextWidget implements Widget {
             //FIXME TextWidget hover tooltip
             return "";
             //return this.hovered.getStyle().getHoverEvent().getValue().getFormattedText();
-        } catch(NullPointerException e) {
+        } catch (NullPointerException e) {
             return null;
         }
     }

@@ -45,7 +45,7 @@ public class TerramapServerPreferences {
             synchronized(preferences) {
                 return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.SERVER.playersDisplayDefault;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             if (!loggedDebugError) {
                 getTerramap().logger().error("Failed to get player display preferences. This error will only be displayed once.");
                 getTerramap().logger().catching(e);
@@ -73,7 +73,7 @@ public class TerramapServerPreferences {
                 }
             }
             saveWorldPreferences(world);
-        } catch(Exception e) {
+        } catch (Exception e) {
             getTerramap().logger().error("Failed to set player display preferences! See stack trace:");
             getTerramap().logger().catching(e);
         }
@@ -97,7 +97,7 @@ public class TerramapServerPreferences {
                 }
                 return uuid;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             getTerramap().logger().warn("Failed to get world UUID, using 0 instead!");
         }
         return new UUID(0, 0);
@@ -109,7 +109,7 @@ public class TerramapServerPreferences {
             synchronized(preferences) {
                 TerramapServerPreferences.preferences.remove(file.getAbsolutePath());
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             getTerramap().logger().warn("Failed to unload a world server preferences");
         }
     }
@@ -127,7 +127,7 @@ public class TerramapServerPreferences {
             synchronized(prefs) {
                 save(file, prefs);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             long t = System.currentTimeMillis();
             if (t > lastErrorLog + 10000) {
                 getTerramap().logger().error("Failed to save server preferences");
@@ -149,7 +149,7 @@ public class TerramapServerPreferences {
                     TerramapServerPreferences.save(file, preferences);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             long t = System.currentTimeMillis();
             if (t > lastErrorLog + 10000) {
                 getTerramap().logger().error("Failed to save server preferences");
