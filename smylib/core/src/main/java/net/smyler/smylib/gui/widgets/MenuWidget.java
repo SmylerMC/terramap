@@ -71,7 +71,7 @@ public class MenuWidget implements Widget {
         context.drawRectangle(x, y, x + width, y + height, backgroundColor);
         context.drawRectangle(x, y, x + 1, y + height, borderColor);
         context.drawRectangle(x + width, y, x + width + 1, y + height, borderColor);
-        context.drawRectangle(x, y, x + width, y+1, borderColor);
+        context.drawRectangle(x, y, x + width, y + 1, borderColor);
         context.drawRectangle(x, y + height, x + width + 1, y + height + 1, borderColor);
         float ty = y;
         for (MenuEntry entry: this.entries) {
@@ -89,7 +89,7 @@ public class MenuWidget implements Widget {
                     }
                     tx += 3 * this.hoverAnimation.getProgress();
                     c = hoveredTextColor;
-                    context.drawRectangle(x+1, ty+1, x + width, ty + fh + padding * 2 -1, hoveredColor);
+                    context.drawRectangle(x + 1, ty + 1, x + width, ty + fh + padding * 2 - 1, hoveredColor);
                 }
                 MenuWidget subMenu = entry.getSubMenu();
                 if (this.displayedSubMenu != null && mouseHoverMenu && this.displayedSubMenu.equals(subMenu) && !hovered) {
@@ -226,7 +226,7 @@ public class MenuWidget implements Widget {
                 h += sh;
             }
         }
-        return h-1;
+        return h - 1;
     }
 
     @Override

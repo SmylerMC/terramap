@@ -220,7 +220,7 @@ public class HudConfigScreen extends Screen {
             for (; lineCount < buttonsTexts.size(); lineCount++) {
                 TextWidget text = buttonsTexts.get(lineCount);
                 ToggleButtonWidget button = buttons.get(lineCount);
-                float newWidth = lineWidth + text.getWidth() + textButtonSpace +button.getWidth();
+                float newWidth = lineWidth + text.getWidth() + textButtonSpace + button.getWidth();
                 if (lineCount > 0 && newWidth > 0.75 * width) break;
                 lineWidth = newWidth;
             }

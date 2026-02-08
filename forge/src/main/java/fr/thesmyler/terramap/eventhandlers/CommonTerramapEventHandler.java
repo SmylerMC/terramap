@@ -48,7 +48,7 @@ public class CommonTerramapEventHandler {
         if (TerramapConfig.SERVER.synchronizePlayers && TerramapUtil.isServerEarthWorld(world) && this.tickCounter == 0) {
             RemoteSynchronizer.syncPlayers(world);
         }
-        this.tickCounter = (this.tickCounter+1) % TerramapConfig.SERVER.syncInterval;
+        this.tickCounter = (this.tickCounter + 1) % TerramapConfig.SERVER.syncInterval;
     }
 
     @SubscribeEvent

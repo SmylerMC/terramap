@@ -169,7 +169,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
                     while (tile.getPosition().getZoom() > 0 && !tile.isTextureAvailable()) {
                         try {
-                            tile = tiledMap.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() / 2, tile.getPosition().getY() / 2);
+                            tile = tiledMap.getTile(tile.getPosition().getZoom() - 1, tile.getPosition().getX() / 2, tile.getPosition().getY() / 2);
                         } catch (InvalidTilePositionException silenced) {
                             break;
                         }

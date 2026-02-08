@@ -173,7 +173,7 @@ public class TextFieldWidget implements Widget {
 
         if (focused && this.isEnabled()) {
             if (isCursorAtEndOfText) {
-                context.drawRectangle(cursorX, textRenderY - 1, cursorX+1, textRenderY+1 + 9, cursorColor);
+                context.drawRectangle(cursorX, textRenderY - 1, cursorX + 1, textRenderY + 1 + 9, cursorColor);
             } else {
                 this.font.draw(cursorX, textRenderY, "_", cursorColor, true);
             }
