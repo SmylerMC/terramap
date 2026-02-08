@@ -97,7 +97,7 @@ public class S2CTerramapHelloPacket implements IMessage {
     public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {
 
         //Required by forge
-        public S2CTerramapHelloPacketHandler(){}
+        public S2CTerramapHelloPacketHandler() {}
 
         @Override
         public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {

@@ -2,7 +2,7 @@ package net.smyler.terramap.util.collections;
 
 import java.util.HashMap;
 
-public class HashMapBuilder<K, V> implements MapBuilder<HashMap<K, V>, K, V>{
+public class HashMapBuilder<K, V> implements MapBuilder<HashMap<K, V>, K, V> {
     
     private HashMap<K, V> map = new HashMap<>();
 

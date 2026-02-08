@@ -258,7 +258,7 @@ public class GeoBounds {
             if (highest == lowest) { // Contains the other
                 lowerLong = highest.lowerCorner.longitude();
                 upperLong = highest.upperCorner.longitude();
-            } else if (highest.upperCorner.longitude() - lowest.lowerCorner.longitude() <= 360d - (highest.lowerCorner.longitude() - lowest.upperCorner.longitude())){
+            } else if (highest.upperCorner.longitude() - lowest.lowerCorner.longitude() <= 360d - (highest.lowerCorner.longitude() - lowest.upperCorner.longitude())) {
                 // Smallest does not cross
                 lowerLong = lowest.lowerCorner.longitude();
                 upperLong = highest.upperCorner.longitude();

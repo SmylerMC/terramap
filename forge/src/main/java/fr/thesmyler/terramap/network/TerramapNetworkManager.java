@@ -32,7 +32,7 @@ public abstract class TerramapNetworkManager {
      * 
      * @param side
      */
-    public static void registerHandlers(Side side){
+    public static void registerHandlers(Side side) {
         registerTerramapS2C(S2C_TERRAMAP_HELLO_DISCRIMINATOR, S2CTerramapHelloPacketHandler.class, S2CTerramapHelloPacket.class);
         registerTerramapS2C(S2C_TERRAMAP_TPCMD_DISCRIMINATOR, S2CTpCommandPacketHandler.class, S2CTpCommandPacket.class);
         registerTerramapS2C(S2C_TERRAMAP_RASTER_TILE_SET_DISCRIMINATOR, SP2CRasterTileSetPacketTerramapHandler.class, SP2CRasterTileSetPacket.class);

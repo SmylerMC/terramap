@@ -128,7 +128,7 @@ public abstract class TilePos implements Mutable<TilePosImmutable>, Immutable<Ti
         return result;
     }
 
-    public static class InvalidTilePositionException extends RuntimeException{
+    public static class InvalidTilePositionException extends RuntimeException {
 
         public InvalidTilePositionException(String msg) {
             super(msg);

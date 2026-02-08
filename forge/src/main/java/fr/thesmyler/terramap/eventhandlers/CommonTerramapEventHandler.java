@@ -21,7 +21,7 @@ public class CommonTerramapEventHandler {
     private long tickCounter = 0;
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerLoggedInEvent event){
+    public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         if (!event.player.world.isRemote) {
             EntityPlayerMP player = (EntityPlayerMP) event.player;
             RemoteSynchronizer.sendHelloToClient(player);

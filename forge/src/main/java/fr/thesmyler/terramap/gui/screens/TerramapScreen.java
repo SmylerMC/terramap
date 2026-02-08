@@ -397,7 +397,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
                 String trackFormatLat = GeoServices.formatGeoCoordForDisplay(markerLocation.latitude());
                 this.playerGeoLocationText.setText(ofTranslation("terramap.terramapscreen.information.tracked", markerName, trackFormatLat, trackFormatLon));
             }
-        } else if (this.map.getMainPlayerMarker() != null){
+        } else if (this.map.getMainPlayerMarker() != null) {
             Marker marker = this.map.getMainPlayerMarker();
             GeoPoint markerLocation = marker.getLocation();
             if (markerLocation == null) {

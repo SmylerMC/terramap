@@ -79,7 +79,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
     public static class S2CPlayerSyncPacketHandler implements IMessageHandler<SP2CPlayerSyncPacket, IMessage> {
 
         //Required by forge
-        public S2CPlayerSyncPacketHandler(){}
+        public S2CPlayerSyncPacketHandler() {}
 
         @Override
         public IMessage onMessage(SP2CPlayerSyncPacket message, MessageContext ctx) {

@@ -140,7 +140,7 @@ public class TerrainPreviewTileSet extends CachingRasterTileSet {
         }
 
         private void tryLoadingTexture() throws Throwable {
-            if (this.textureTask != null && this.textureTask.isDone()){
+            if (this.textureTask != null && this.textureTask.isDone()) {
                 if (this.textureTask.isCompletedExceptionally()) {
                     if (!this.textureTask.isCancelled()) {
                         try {

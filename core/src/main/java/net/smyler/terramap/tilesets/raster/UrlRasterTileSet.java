@@ -362,7 +362,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         private void tryLoadingTexture() throws Throwable {
             //TODO Do that fully async, DynamicTexture::new is expensive
-            if (this.textureTask != null && this.textureTask.isDone()){
+            if (this.textureTask != null && this.textureTask.isDone()) {
                 if (this.textureTask.isCompletedExceptionally()) {
                     if (this.textureTask.isCancelled()) {
                         this.textureTask = null;

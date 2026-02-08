@@ -111,7 +111,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
                 try {
                     tile = tiledMap.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
-                } catch (InvalidTilePositionException silenced) { continue ;}
+                } catch (InvalidTilePositionException silenced) { continue ; }
 
                 // This is the tile we would like to render, but it is not possible if it hasn't been cached yet
                 RasterTile bestTile = tile;
@@ -131,12 +131,12 @@ abstract public class RasterMapLayer extends MapLayer {
                     this.right.set(dispX + displayWidth, dispY);
                     this.bottom.set(dispX + displayWidth, dispY + displayHeight);
                     this.left.set(dispX, dispY + displayHeight);
-                } else if (rotation < 180){
+                } else if (rotation < 180) {
                     this.right.set(dispX, dispY);
                     this.bottom.set(dispX + displayWidth, dispY);
                     this.left.set(dispX + displayWidth, dispY + displayHeight);
                     this.top.set(dispX, dispY + displayHeight);
-                } else if (rotation < 270){
+                } else if (rotation < 270) {
                     this.bottom.set(dispX, dispY);
                     this.left.set(dispX + displayWidth, dispY);
                     this.top.set(dispX + displayWidth, dispY + displayHeight);

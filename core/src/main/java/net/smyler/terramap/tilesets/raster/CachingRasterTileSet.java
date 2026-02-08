@@ -37,7 +37,7 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
     @Override
     public void setup() {
         this.unloadToMaxLoad();
-        if (this.baseLoad <= 0){
+        if (this.baseLoad <= 0) {
             this.prepareLowTiles();
         }
     }

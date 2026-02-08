@@ -312,7 +312,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
         if (!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
         if (!this.reportedErrors.isEmpty()) {
-            String errorText = getGameClient().translator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000)%this.reportedErrors.size())).message;
+            String errorText = getGameClient().translator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000) % this.reportedErrors.size())).message;
             this.errorText.setText(ofPlainText(errorText));
         }
 
@@ -395,7 +395,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         ImmutableText component = ImmutableText.EMPTY;
         ImmutableText separator = ofPlainText(" | ");
         for (Widget widget: this.widgets)
-            if (widget instanceof CopyrightHolder){
+            if (widget instanceof CopyrightHolder) {
                 if (!component.getFormattedText().isEmpty()) {
                     component = component.withNewSiblings(separator);
                 }

@@ -54,7 +54,7 @@ public class P2CSledgehammerHelloPacket implements IMessage {
     public static class P2CSledgehammerHelloPacketHandler implements IMessageHandler<P2CSledgehammerHelloPacket, IMessage> {
 
         //Required by forge
-        public P2CSledgehammerHelloPacketHandler(){}
+        public P2CSledgehammerHelloPacketHandler() {}
 
         @Override
         public IMessage onMessage(P2CSledgehammerHelloPacket pkt, MessageContext ctx) {

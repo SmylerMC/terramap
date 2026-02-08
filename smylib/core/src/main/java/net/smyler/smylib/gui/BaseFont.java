@@ -121,7 +121,7 @@ abstract class BaseFont implements Font {
                     lines.add(styleAtLastBlank + text.substring(processed, lastBlank));
                     processed = lastBlank + 1;
                     width -= widthAtLastBlank;
-                } else if (processed != i){
+                } else if (processed != i) {
                     lines.add(this.styleState + text.substring(processed, i));
                     processed = i;
                     width = 0;
@@ -431,7 +431,7 @@ abstract class BaseFont implements Font {
             StringBuilder builder = new StringBuilder();
             if (this.colorRgb != null) {
                 builder.append(this.colorRgb.asHtmlHexString());
-            } else if (this.colorFormat != null){
+            } else if (this.colorFormat != null) {
                 builder.append(this.colorFormat);
             }
             if (this.bold) {

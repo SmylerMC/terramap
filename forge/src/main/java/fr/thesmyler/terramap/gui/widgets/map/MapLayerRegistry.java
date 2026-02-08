@@ -43,7 +43,7 @@ public final class MapLayerRegistry {
         return new LayerRegistrationBuilder<>(id, layerFactory);
     }
 
-    public LayerRegistration<? extends MapLayer> getRegistrations(String id){
+    public LayerRegistration<? extends MapLayer> getRegistrations(String id) {
         return this.layers.get(id);
     }
 

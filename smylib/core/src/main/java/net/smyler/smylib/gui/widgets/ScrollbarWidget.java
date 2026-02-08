@@ -62,7 +62,7 @@ public class ScrollbarWidget extends WidgetContainer {
         float y = this.drag.getY();
         if (mouseY > y + this.drag.getHeight() && mouseY < this.getHeight() - this.forwardButton.getHeight()) {
             for (; i > 0; i--) this.scrollForward();
-        } else if (mouseY < y && mouseY > this.backwardButton.getHeight()){
+        } else if (mouseY < y && mouseY > this.backwardButton.getHeight()) {
             for (; i > 0; i--) this.scrollBackward();
         }
         super.onClick(mouseX, mouseY, mouseButton, parent);

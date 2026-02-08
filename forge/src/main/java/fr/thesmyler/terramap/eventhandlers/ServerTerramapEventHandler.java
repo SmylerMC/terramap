@@ -19,7 +19,7 @@ import static net.smyler.terramap.Terramap.getTerramap;
 public class ServerTerramapEventHandler {
 
     @SubscribeEvent
-    public void onPlayerLoggedIn(PlayerLoggedInEvent event){
+    public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
         EntityPlayerMP player = (EntityPlayerMP) event.player;
         RemoteSynchronizer.sendRasterTileSetsToClient(player);
         TerramapVersion remoteVersion = TerramapVersion.getClientVersion(player);
@@ -31,7 +31,7 @@ public class ServerTerramapEventHandler {
             } catch (Exception e) {
                 getTerramap().logger().error("Failed to send custom join message to client, make sure your json text is valid");
             }
-        } else if (remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)){
+        } else if (remoteVersion.isOlder(TerramapMod.OLDEST_COMPATIBLE_CLIENT)) {
             try {
                 if (TerramapConfig.SERVER.joinWithOutdatedModMessage.length() > 0)
                     player.sendMessage(ITextComponent.Serializer.fromJsonLenient(TerramapConfig.SERVER.joinWithOutdatedModMessage));

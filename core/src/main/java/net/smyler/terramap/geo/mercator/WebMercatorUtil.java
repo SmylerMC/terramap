@@ -81,7 +81,7 @@ public final class WebMercatorUtil {
      * @return The X pixel position corresponding to the given longitude
      * on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
      */
-    public static double getXFromLongitude(double longitude, double zoomLevel){
+    public static double getXFromLongitude(double longitude, double zoomLevel) {
         return getXFromLongitudeRads(toRadians(longitude), zoomLevel);
     }
 
@@ -93,7 +93,7 @@ public final class WebMercatorUtil {
      * @return The Y pixel position corresponding to the given latitude
      * on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
      */
-    public static double getYFromLatitude(double latitude, double zoomLevel){
+    public static double getYFromLatitude(double latitude, double zoomLevel) {
         return getYFromLatitudeRads(Math.toRadians(latitude), zoomLevel);
     }
 
@@ -105,7 +105,7 @@ public final class WebMercatorUtil {
      * @return The X position corresponding to the given longitude
      *         on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
      */
-    public static double getXFromLongitudeRads(double longitude, double zoom){
+    public static double getXFromLongitudeRads(double longitude, double zoom) {
         return pow(2d, zoom + 7d) * (longitude + PI) / PI;
     }
 
@@ -117,7 +117,7 @@ public final class WebMercatorUtil {
      * @return The Y position corresponding to the given latitude
      *         on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
      */
-    public static double getYFromLatitudeRads(double latitude, double zoom){
+    public static double getYFromLatitudeRads(double latitude, double zoom) {
         return 128d / PI * pow(2d, zoom) * (PI - log(Math.tan( PI / 4d  + latitude / 2d)));
     }
 
@@ -127,7 +127,7 @@ public final class WebMercatorUtil {
      * 
      * @return The corresponding latitude in degrees, between -180.0 and 180.0
      */
-    public static double getLatitudeFromY(double y, double zoom){
+    public static double getLatitudeFromY(double y, double zoom) {
         return toDegrees(getLatitudeFromYRads(y, zoom));
     }
 
@@ -137,7 +137,7 @@ public final class WebMercatorUtil {
      * 
      * @return The corresponding longitude in degrees, between -90.0 and 90.0
      */
-    public static double getLongitudeFromX(double x, double zoom){
+    public static double getLongitudeFromX(double x, double zoom) {
         return toDegrees(getLongitudeFromXRads(x, zoom));
     }
 
@@ -147,7 +147,7 @@ public final class WebMercatorUtil {
      * 
      * @return The corresponding latitude in radians, between -pi and pi
      */
-    public static double getLatitudeFromYRads(double y, double zoom){
+    public static double getLatitudeFromYRads(double y, double zoom) {
         return 2 * atan(exp(-(y * PI / pow(2d, zoom + 7d) - PI))) - PI / 2;
     }
 
@@ -157,7 +157,7 @@ public final class WebMercatorUtil {
      * 
      * @return The corresponding longitude in radians, between -pi/2 and pi/2
      */
-    public static double getLongitudeFromXRads(double x, double zoom){
+    public static double getLongitudeFromXRads(double x, double zoom) {
         return PI * x / pow(2d, 7d + zoom) - PI;
     }
 
@@ -167,7 +167,7 @@ public final class WebMercatorUtil {
      * @param zoom  a zoom level for the map
      * @return true if (zoom, x, y) is a valid tile position
      */
-    public static boolean isValidTilePosition(int zoom, int tX, int tY){
+    public static boolean isValidTilePosition(int zoom, int tX, int tY) {
         int mS = 1 << zoom;
         return zoom >= 0 && zoom < MAX_ZOOM && tX >= 0 && tX < mS && tY >= 0 && tY < mS;
     }
