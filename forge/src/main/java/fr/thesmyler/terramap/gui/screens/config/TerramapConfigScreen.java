@@ -1,29 +1,29 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
-import java.awt.Desktop;
+import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapConfig;
+import java.awt.*;
 import java.io.IOException;
 import java.util.Set;
-import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Translator;
-import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
-import org.jetbrains.annotations.Nullable;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.screen.BackgroundOption;
 import net.smyler.smylib.gui.screen.Screen;
-import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
+import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import net.smyler.smylib.gui.widgets.sliders.IntegerSliderWidget;
 import net.smyler.smylib.gui.widgets.sliders.OptionSliderWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.TerramapClientContext;
-import fr.thesmyler.terramap.TerramapConfig;
+import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
+import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
+import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;

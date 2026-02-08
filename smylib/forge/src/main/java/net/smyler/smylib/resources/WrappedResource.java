@@ -1,10 +1,10 @@
 package net.smyler.smylib.resources;
 
+import java.io.IOException;
+import java.io.InputStream;
 import net.minecraft.client.resources.IResource;
 import net.smyler.smylib.Identifier;
 import org.jetbrains.annotations.NotNull;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class WrappedResource implements Resource {
 

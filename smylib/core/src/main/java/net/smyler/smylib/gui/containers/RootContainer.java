@@ -1,7 +1,7 @@
 package net.smyler.smylib.gui.containers;
 
-import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.widgets.Widget;
 import org.jetbrains.annotations.Nullable;
 
 

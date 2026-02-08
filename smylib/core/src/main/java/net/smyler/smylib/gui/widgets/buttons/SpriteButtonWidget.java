@@ -1,9 +1,9 @@
 package net.smyler.smylib.gui.widgets.buttons;
 
 import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.jetbrains.annotations.Nullable;
-import net.smyler.smylib.gui.containers.WidgetContainer;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
 

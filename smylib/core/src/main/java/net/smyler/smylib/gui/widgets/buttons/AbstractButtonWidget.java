@@ -1,9 +1,9 @@
 package net.smyler.smylib.gui.widgets.buttons;
 
 import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.AbstractSolidWidget;
 import org.jetbrains.annotations.Nullable;
-import net.smyler.smylib.gui.containers.WidgetContainer;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 
@@ -35,7 +35,7 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         getGameClient().soundSystem().playClickSound();
         parent.setFocus(null); // We don't want to keep the focus
-        if(this.onClick != null && mouseButton == 0) {
+        if (this.onClick != null && mouseButton == 0) {
             this.onClick.run();
         }
         return false;
@@ -45,10 +45,10 @@ public abstract class AbstractButtonWidget extends AbstractSolidWidget {
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         getGameClient().soundSystem().playClickSound();
         parent.setFocus(null);
-        if(mouseButton == 0) {
-            if(this.onDoubleClick != null) {
+        if (mouseButton == 0) {
+            if (this.onDoubleClick != null) {
                 this.onDoubleClick.run();
-            } else if(this.onClick != null){
+            } else if (this.onClick != null) {
                 this.onClick.run();
             }
         }

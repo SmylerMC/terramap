@@ -1,10 +1,10 @@
 package net.smyler.terramap.geo;
 
+import java.util.Locale;
 import net.smyler.smylib.math.Math;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
 import net.smyler.terramap.geo.point.GeoPointMutable;
-import java.util.Locale;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

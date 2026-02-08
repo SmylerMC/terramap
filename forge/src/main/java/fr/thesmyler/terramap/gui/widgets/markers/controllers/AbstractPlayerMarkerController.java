@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.AbstractPlayerMarker;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 
 public abstract class AbstractPlayerMarkerController<T extends AbstractPlayerMarker> extends MarkerController<T> {
 

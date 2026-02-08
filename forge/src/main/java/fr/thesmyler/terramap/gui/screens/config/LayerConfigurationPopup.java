@@ -1,19 +1,19 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
+import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
+import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.containers.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.text.TextAlignment;
 import net.smyler.smylib.gui.widgets.text.TextWidget;
-import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 
-import static net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites.CROSS;
 import static java.lang.Math.min;
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites.CROSS;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 
 public class LayerConfigurationPopup extends Popup {

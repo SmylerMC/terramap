@@ -1,18 +1,20 @@
 package net.smyler.terramap.gui.widgets;
 
-import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.gl.GlContext;
-import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.Mat2d;
+import net.smyler.smylib.math.Vec2dMutable;
 
-import static net.smyler.smylib.Color.*;
-import static net.smyler.smylib.gui.gl.DrawMode.*;
-import static net.smyler.smylib.gui.gl.VertexFormat.*;
+import static net.smyler.smylib.Color.RED;
+import static net.smyler.smylib.Color.WHITE;
+import static net.smyler.smylib.gui.gl.DrawMode.TRIANGLE_FAN;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION;
+import static net.smyler.smylib.gui.gl.VertexFormat.POSITION_COLOR;
 
 public class CircularCompassWidget implements Widget {
 

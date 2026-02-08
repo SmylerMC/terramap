@@ -1,14 +1,12 @@
 package fr.thesmyler.terramap.command;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.jetbrains.annotations.Nullable;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
-import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
 import fr.thesmyler.terramap.permissions.Permission;
 import fr.thesmyler.terramap.permissions.PermissionManager;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -18,6 +16,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
+import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
+import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

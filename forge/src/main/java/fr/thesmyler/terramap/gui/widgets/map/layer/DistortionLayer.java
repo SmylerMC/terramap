@@ -1,15 +1,16 @@
 package fr.thesmyler.terramap.gui.widgets.map.layer;
 
-import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
-import net.smyler.terramap.geo.*;
+import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.math.Vec2dMutable;
 import net.smyler.smylib.math.Vec2dView;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.TissotsIndicatrix;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.projection.GeoProjection;

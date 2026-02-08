@@ -1,10 +1,5 @@
 package fr.thesmyler.terramap.input;
 
-import net.smyler.terramap.world.PositionMutable;
-import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import org.lwjgl.input.Keyboard;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.HudScreenHandler;
@@ -16,6 +11,11 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.settings.IKeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.world.PositionMutable;
+import org.lwjgl.input.Keyboard;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

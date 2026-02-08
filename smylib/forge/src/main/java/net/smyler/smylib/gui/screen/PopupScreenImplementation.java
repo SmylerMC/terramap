@@ -1,10 +1,10 @@
 package net.smyler.smylib.gui.screen;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.popups.Popup;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 
 import static net.smyler.smylib.gui.popups.PopupImplementationProxy.setPopupPosition;
 

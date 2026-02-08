@@ -1,22 +1,22 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.gl.GlContext;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.Color;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.text.ITextComponent;
+import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.sprites.Sprite;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.world.Position;
 import net.smyler.terramap.world.PositionMutable;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.text.ITextComponent;
 import org.jetbrains.annotations.NotNull;
 
 import static net.smyler.smylib.Color.WHITE;

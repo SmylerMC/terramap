@@ -1,27 +1,27 @@
 package fr.thesmyler.terramap.network;
 
-import java.util.*;
 import fr.thesmyler.terramap.TerramapClientContext;
+import fr.thesmyler.terramap.TerramapConfig;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.TerraDependency;
-import fr.thesmyler.terramap.TerramapConfig;
-import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
-import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import fr.thesmyler.terramap.network.playersync.SP2CPlayerSyncPacket;
 import fr.thesmyler.terramap.network.playersync.SP2CRegistrationExpiresPacket;
 import fr.thesmyler.terramap.network.playersync.TerramapLocalPlayer;
 import fr.thesmyler.terramap.permissions.Permission;
 import fr.thesmyler.terramap.permissions.PermissionManager;
+import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
 import fr.thesmyler.terramap.util.TerramapUtil;
+import java.util.*;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

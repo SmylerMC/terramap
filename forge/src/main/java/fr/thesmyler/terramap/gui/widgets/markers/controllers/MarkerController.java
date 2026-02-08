@@ -1,8 +1,8 @@
 package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
-import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 
 public abstract class MarkerController<T extends Marker> implements FeatureVisibilityController {
 

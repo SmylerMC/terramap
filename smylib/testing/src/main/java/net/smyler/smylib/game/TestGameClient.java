@@ -1,15 +1,5 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.Identifier;
-import net.smyler.smylib.gui.*;
-import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.smylib.gui.screen.PopupScreen;
-import net.smyler.smylib.gui.screen.Screen;
-import net.smyler.smylib.gui.sprites.SpriteLibrary;
-import net.smyler.smylib.gui.screen.TestPopupScreen;
-import net.smyler.smylib.resources.Resource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +7,16 @@ import java.util.Iterator;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.*;
+import net.smyler.smylib.gui.popups.Popup;
+import net.smyler.smylib.gui.screen.PopupScreen;
+import net.smyler.smylib.gui.screen.Screen;
+import net.smyler.smylib.gui.screen.TestPopupScreen;
+import net.smyler.smylib.gui.sprites.SpriteLibrary;
+import net.smyler.smylib.resources.Resource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static java.lang.Math.*;
 import static java.lang.System.currentTimeMillis;

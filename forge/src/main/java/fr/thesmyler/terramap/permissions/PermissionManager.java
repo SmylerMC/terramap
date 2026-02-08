@@ -1,7 +1,7 @@
 package fr.thesmyler.terramap.permissions;
 
-import java.util.UUID;
 import com.mojang.authlib.GameProfile;
+import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.server.permission.PermissionAPI;
 

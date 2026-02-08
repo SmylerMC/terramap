@@ -1,5 +1,8 @@
 package net.smyler.smylib.game;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Optional;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -12,8 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.*;
@@ -22,9 +25,6 @@ import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import net.smyler.smylib.resources.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Optional;
 
 import static net.minecraftforge.fml.common.ObfuscationReflectionHelper.getPrivateValue;
 import static net.smyler.smylib.Preconditions.checkState;

@@ -2,10 +2,10 @@ package net.smyler.terramap.gui.widgets;
 
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.gl.GlContext;
-import net.smyler.terramap.Terramap;
 import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.widgets.Widget;
+import net.smyler.terramap.Terramap;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.gui.gl.DrawMode.QUADS;

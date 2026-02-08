@@ -1,5 +1,7 @@
 package net.smyler.smylib.gui.containers;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.UiDrawContext;
@@ -7,8 +9,6 @@ import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.lang.Math.min;
 import static net.smyler.smylib.Color.WHITE;

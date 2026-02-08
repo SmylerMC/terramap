@@ -1,10 +1,10 @@
 package fr.thesmyler.terramap.command;
 
-import java.util.ArrayList;
-import java.util.List;
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;

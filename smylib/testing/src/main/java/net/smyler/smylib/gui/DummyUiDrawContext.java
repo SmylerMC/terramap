@@ -1,13 +1,13 @@
 package net.smyler.smylib.gui;
 
+import java.awt.image.BufferedImage;
+import java.util.HashSet;
+import java.util.Set;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.Sprite;
-import java.awt.image.BufferedImage;
-import java.util.HashSet;
-import java.util.Set;
 
 public class DummyUiDrawContext implements UiDrawContext {
 

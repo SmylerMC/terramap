@@ -4,10 +4,10 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import java.lang.reflect.Type;
 import net.minecraft.client.resources.data.BaseMetadataSectionSerializer;
 import net.minecraft.util.JsonUtils;
 import org.jetbrains.annotations.NotNull;
-import java.lang.reflect.Type;
 
 public class GuiMetadataSerializer extends BaseMetadataSectionSerializer<GuiMetadataSection> {
 

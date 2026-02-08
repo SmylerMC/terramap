@@ -1,28 +1,28 @@
 package fr.thesmyler.terramap.gui.screens;
 
-import java.util.ArrayList;
-import java.util.List;
-import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.Animation;
-import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
-import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
-import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
-import net.smyler.smylib.gui.widgets.text.TextAlignment;
-import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.gui.screens.config.LayerConfigurationPopup;
 import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
+import java.util.ArrayList;
+import java.util.List;
+import net.smyler.smylib.Animation;
+import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
+import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
+import net.smyler.smylib.gui.widgets.sliders.FloatSliderWidget;
+import net.smyler.smylib.gui.widgets.text.TextAlignment;
+import net.smyler.smylib.gui.widgets.text.TextWidget;
 import org.jetbrains.annotations.Nullable;
 
-import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
-import static net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites.*;
 import static java.util.Comparator.comparing;
 import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;
+import static net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites.*;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
 

@@ -1,24 +1,24 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.math.*;
 import net.smyler.smylib.threading.DefaultThreadLocal;
-import net.minecraft.client.renderer.GlStateManager;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import org.jetbrains.annotations.Nullable;
 
-import static net.smyler.terramap.geo.GeoUtil.getAzimuthInRange;
 import static java.lang.Math.pow;
 import static java.lang.Math.toRadians;
+import static net.smyler.terramap.geo.GeoUtil.getAzimuthInRange;
 
 /**
  * A layer of a map.

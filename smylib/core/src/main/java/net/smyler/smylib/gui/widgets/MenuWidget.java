@@ -2,13 +2,13 @@ package net.smyler.smylib.gui.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import org.jetbrains.annotations.Nullable;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import org.jetbrains.annotations.Nullable;
 
 public class MenuWidget implements Widget {
 

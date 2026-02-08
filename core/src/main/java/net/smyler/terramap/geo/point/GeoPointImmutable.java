@@ -1,7 +1,7 @@
 package net.smyler.terramap.geo.point;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
+import org.jetbrains.annotations.NotNull;
 
 import static java.util.Objects.requireNonNull;
 import static net.smyler.smylib.Preconditions.checkArgument;

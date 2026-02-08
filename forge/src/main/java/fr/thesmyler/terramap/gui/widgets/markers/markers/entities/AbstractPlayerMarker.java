@@ -1,9 +1,5 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.gui.gl.GlContext;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.AbstractPlayerMarkerController;
@@ -12,6 +8,10 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.gl.GlContext;
 
 import static net.smyler.smylib.Color.WHITE;
 import static net.smyler.smylib.gui.gl.DrawMode.TRIANGLE_FAN;

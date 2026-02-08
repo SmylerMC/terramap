@@ -2,9 +2,9 @@ package net.smyler.terramap.http;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
-import net.buildtheearth.terraplusplus.util.http.Http;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
+import net.buildtheearth.terraplusplus.util.http.Http;
 
 public class TerraplusplusHttpClient implements HttpClient {
 

@@ -1,12 +1,12 @@
 package net.smyler.smylib.gui;
 
-import net.smyler.smylib.Color;
-import net.smyler.smylib.text.*;
-import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import net.smyler.smylib.Color;
+import net.smyler.smylib.text.*;
+import org.jetbrains.annotations.NotNull;
 
 import static java.lang.Math.max;
 import static java.util.Arrays.stream;

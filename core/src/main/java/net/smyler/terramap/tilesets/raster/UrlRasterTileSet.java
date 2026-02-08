@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import javax.imageio.ImageIO;
 import net.smyler.smylib.Identifier;
-import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.text.Text;
-import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.geo.mercator.TilePosImmutable;
 import net.smyler.terramap.geo.mercator.WebMercatorBounds;
-import javax.imageio.ImageIO;
+import net.smyler.terramap.util.CopyrightHolder;
+import net.smyler.terramap.util.ImageUtil;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;

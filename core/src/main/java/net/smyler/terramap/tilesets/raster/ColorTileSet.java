@@ -1,10 +1,10 @@
 package net.smyler.terramap.tilesets.raster;
 
+import java.awt.image.BufferedImage;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
-import net.smyler.terramap.util.ImageUtil;
 import net.smyler.terramap.geo.mercator.TilePosImmutable;
-import java.awt.image.BufferedImage;
+import net.smyler.terramap.util.ImageUtil;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

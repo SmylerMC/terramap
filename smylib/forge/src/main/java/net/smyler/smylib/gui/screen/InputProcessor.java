@@ -1,7 +1,7 @@
 package net.smyler.smylib.gui.screen;
 
-import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.minecraft.client.Minecraft;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import org.lwjgl.input.Mouse;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

@@ -1,16 +1,16 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
+import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.input.KeyBindings;
+import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.Color;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.input.KeyBindings;
 import net.smyler.smylib.gui.gl.GlContext;
-import net.smyler.terramap.geo.point.GeoPointView;
-import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dMutable;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
+import net.smyler.terramap.geo.point.GeoPointView;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 

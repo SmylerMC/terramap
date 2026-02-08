@@ -6,12 +6,9 @@ import fr.thesmyler.terramap.gui.HudScreenHandler;
 import fr.thesmyler.terramap.gui.screens.LayerRenderingOffsetPopup;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.input.KeyBindings;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.smyler.terramap.world.PositionMutable;
-import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.geo.GeoServices;
+import java.util.Objects;
 import net.buildtheearth.terraplusplus.util.CardinalDirection;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -25,8 +22,11 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smyler.smylib.gui.popups.Popup;
+import net.smyler.terramap.geo.GeoServices;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import java.util.Objects;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.world.PositionMutable;
 
 import static net.minecraft.client.Minecraft.getMinecraft;
 import static net.smyler.smylib.SmyLib.getGameClient;

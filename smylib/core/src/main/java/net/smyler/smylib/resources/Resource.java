@@ -1,9 +1,9 @@
 package net.smyler.smylib.resources;
 
-import net.smyler.smylib.Identifier;
-import org.jetbrains.annotations.NotNull;
 import java.io.Closeable;
 import java.io.InputStream;
+import net.smyler.smylib.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A resource from the currently loaded resource packs.

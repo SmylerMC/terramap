@@ -1,20 +1,20 @@
 package fr.thesmyler.terramap.network;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.google.gson.JsonParseException;
-import net.smyler.smylib.text.Text;
-import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
-import org.apache.logging.log4j.util.Strings;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
-import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
-import net.smyler.terramap.geo.mercator.WebMercatorBounds;
 import io.netty.buffer.ByteBuf;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.smyler.smylib.text.Text;
+import net.smyler.terramap.geo.mercator.WebMercatorBounds;
+import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;
+import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
+import org.apache.logging.log4j.util.Strings;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

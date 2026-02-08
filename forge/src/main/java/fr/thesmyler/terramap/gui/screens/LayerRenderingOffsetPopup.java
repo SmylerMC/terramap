@@ -1,34 +1,34 @@
 package fr.thesmyler.terramap.gui.screens;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.gui.popups.Popup;
-import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.widgets.Widget;
-import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
-import net.smyler.smylib.gui.widgets.text.TextAlignment;
-import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
-import net.smyler.smylib.gui.widgets.text.TextWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.gui.widgets.map.MapController;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
-import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.mercator.WebMercatorUtil;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.popups.Popup;
+import net.smyler.smylib.gui.widgets.Widget;
+import net.smyler.smylib.gui.widgets.buttons.TextButtonWidget;
+import net.smyler.smylib.gui.widgets.text.TextAlignment;
+import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
+import net.smyler.smylib.gui.widgets.text.TextWidget;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
+import net.smyler.terramap.geo.mercator.WebMercatorUtil;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapLayerRegistry.OFFSET_PREVIEW;
-import static net.smyler.terramap.geo.GeoServices.formatZoomLevelForDisplay;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.ofTranslation;
+import static net.smyler.terramap.geo.GeoServices.formatZoomLevelForDisplay;
 
 public class LayerRenderingOffsetPopup extends Popup {
     

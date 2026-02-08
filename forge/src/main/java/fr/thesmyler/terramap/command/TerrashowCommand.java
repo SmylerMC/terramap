@@ -1,13 +1,12 @@
 package fr.thesmyler.terramap.command;
 
-import java.util.List;
-import java.util.UUID;
-import org.jetbrains.annotations.Nullable;
 import fr.thesmyler.terramap.TerramapVersion;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.command.TranslationContextBuilder.TranslationContext;
-import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
 import fr.thesmyler.terramap.permissions.Permission;
+import fr.thesmyler.terramap.saving.server.TerramapServerPreferences;
+import java.util.List;
+import java.util.UUID;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -19,6 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.WorldServer;
+import org.jetbrains.annotations.Nullable;
 
 import static fr.thesmyler.terramap.permissions.PermissionManager.hasPermission;
 

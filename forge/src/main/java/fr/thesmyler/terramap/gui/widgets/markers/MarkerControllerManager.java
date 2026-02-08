@@ -1,16 +1,11 @@
 package fr.thesmyler.terramap.gui.widgets.markers;
 
+import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.gui.widgets.markers.controllers.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.AnimalMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MainPlayerMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.MobMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.OtherPlayerMarkerController;
-import fr.thesmyler.terramap.gui.widgets.markers.controllers.RightClickMarkerController;
 
 import static net.smyler.terramap.Terramap.getTerramap;
 

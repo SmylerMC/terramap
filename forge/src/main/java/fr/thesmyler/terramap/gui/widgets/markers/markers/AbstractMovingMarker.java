@@ -1,12 +1,12 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers;
 
-import net.smyler.smylib.Animation;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
+import net.smyler.smylib.Animation;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.point.GeoPointView;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
 
 public abstract class AbstractMovingMarker extends Marker {
 

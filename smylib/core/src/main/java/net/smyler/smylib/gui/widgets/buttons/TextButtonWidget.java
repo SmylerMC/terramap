@@ -1,11 +1,11 @@
 package net.smyler.smylib.gui.widgets.buttons;
 
+import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.sprites.Sprite;
 import net.smyler.smylib.gui.sprites.SpriteLibrary;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.Color;
-import net.smyler.smylib.gui.UiDrawContext;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 

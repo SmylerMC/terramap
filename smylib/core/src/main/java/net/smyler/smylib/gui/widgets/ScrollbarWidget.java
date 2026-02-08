@@ -1,10 +1,10 @@
 package net.smyler.smylib.gui.widgets;
 
-import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
+import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget;
 import net.smyler.smylib.gui.widgets.buttons.SpriteButtonWidget.ButtonSprites;
-import net.smyler.smylib.gui.UiDrawContext;
 
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;

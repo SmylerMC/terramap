@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
+import net.smyler.smylib.game.Key;
+import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.screen.Screen;
-import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.widgets.MenuWidget;
+import net.smyler.smylib.gui.widgets.Widget;
 import org.jetbrains.annotations.Nullable;
-import net.smyler.smylib.game.Key;
-import net.smyler.smylib.gui.Font;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.doBoxesCollide;

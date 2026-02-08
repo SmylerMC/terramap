@@ -1,12 +1,9 @@
 package fr.thesmyler.smylibgui.widgets;
 
+import fr.thesmyler.smylibgui.screen.HudScreen;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import net.smyler.smylib.game.Key;
-import net.smyler.smylib.gui.widgets.Widget;
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import fr.thesmyler.smylibgui.screen.HudScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
@@ -14,7 +11,10 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ITabCompleter;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.UiDrawContext;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.widgets.Widget;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getLogger;

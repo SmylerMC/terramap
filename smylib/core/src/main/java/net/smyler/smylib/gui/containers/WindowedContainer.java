@@ -1,11 +1,11 @@
 package net.smyler.smylib.gui.containers;
 
+import net.smyler.smylib.Color;
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.Cursor;
 import net.smyler.smylib.gui.UiDrawContext;
-import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;
 
 import static net.smyler.smylib.Preconditions.checkArgument;

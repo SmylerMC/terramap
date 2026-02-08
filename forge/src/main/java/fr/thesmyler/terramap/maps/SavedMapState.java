@@ -1,10 +1,10 @@
 package fr.thesmyler.terramap.maps;
 
-import net.smyler.terramap.geo.point.GeoPointMutable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.smyler.terramap.geo.point.GeoPointMutable;
 
 /**
  * A map saved state.

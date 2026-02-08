@@ -1,21 +1,22 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import net.smyler.smylib.gui.containers.WidgetContainer;
-import net.smyler.smylib.game.GameClient;
-import net.smyler.smylib.game.Translator;
-import net.smyler.smylib.gui.widgets.MenuWidget;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.entities.MainPlayerMarker;
-import net.smyler.smylib.gui.Font;
-import net.smyler.terramap.geo.*;
-import net.smyler.terramap.geo.point.GeoPoint;
-import net.smyler.terramap.geo.point.GeoPointView;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.world.PositionMutable;
 import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.smyler.smylib.game.GameClient;
+import net.smyler.smylib.game.Translator;
+import net.smyler.smylib.gui.Font;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.smylib.gui.widgets.MenuWidget;
+import net.smyler.terramap.geo.GeoServices;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointView;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.world.PositionMutable;
 import org.jetbrains.annotations.Nullable;
 
 import static java.lang.Math.floorDiv;

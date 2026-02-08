@@ -1,19 +1,19 @@
 package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
-import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.gui.widgets.markers.controllers.MarkerController;
-import net.smyler.terramap.geo.point.GeoPoint;
-import net.smyler.terramap.geo.point.GeoPointMutable;
-import net.smyler.terramap.geo.projection.GeoProjection;
-import net.smyler.terramap.geo.OutOfGeoBoundsException;
-import net.smyler.terramap.world.PositionMutable;
-import net.smyler.terramap.world.Position;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.smyler.smylib.gui.containers.WidgetContainer;
+import net.smyler.terramap.geo.OutOfGeoBoundsException;
+import net.smyler.terramap.geo.point.GeoPoint;
+import net.smyler.terramap.geo.point.GeoPointMutable;
+import net.smyler.terramap.geo.projection.GeoProjection;
+import net.smyler.terramap.world.Position;
+import net.smyler.terramap.world.PositionMutable;
 
 /**
  * This class represents a marker for the actual player corresponding to this client
