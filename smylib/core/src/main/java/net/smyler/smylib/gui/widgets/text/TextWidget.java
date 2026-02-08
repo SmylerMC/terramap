@@ -80,7 +80,7 @@ public class TextWidget implements Widget {
             String formattedText = line.getFormattedText();
             float lineWidth = this.font.computeWidth(formattedText);
             float lx = x + this.anchorX - this.x;
-            switch(this.alignment) {
+            switch (this.alignment) {
                 case RIGHT:
                     break;
                 case LEFT:
@@ -101,7 +101,7 @@ public class TextWidget implements Widget {
         this.height = this.font.computeHeight(this.lines) + this.padding * 2;
         this.width = this.font.computeWidth(this.lines) + this.padding * 2;
         this.x = this.anchorX;
-        switch(this.alignment) {
+        switch (this.alignment) {
             case RIGHT:
                 this.x -= this.padding;
                 break;
@@ -123,7 +123,7 @@ public class TextWidget implements Widget {
         Text line = this.lines[lineIndex];
         float pos = this.padding;
         float lineWidth = this.font.computeWidth(line.getFormattedText());
-        switch(this.alignment) {
+        switch (this.alignment) {
             case RIGHT:
                 break;
             case LEFT:

@@ -438,7 +438,7 @@ public class TerramapClientContext {
      * @return true if the map should be accessible
      */
     public boolean allowsMap(MapContext context) {
-        switch(context) {
+        switch (context) {
             case FULLSCREEN:
                 return this.proxyForcesGlobalMap
                         || TerramapConfig.CLIENT.forceTerraWorld

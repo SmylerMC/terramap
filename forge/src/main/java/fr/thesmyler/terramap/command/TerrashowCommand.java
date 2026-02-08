@@ -71,7 +71,7 @@ public class TerrashowCommand extends CommandBase {
         UUID uuid = player.getPersistentID();
         WorldServer world = player.getServerWorld();
         ITextComponent message = transCtx.getComponent("terramap.commands.terrashow.invalid_action");
-        switch(args[0]) {
+        switch (args[0]) {
             case "status":
                 String key = TerramapServerPreferences.shouldDisplayPlayer(world, uuid) ? "terramap.commands.terrashow.getvisible": "terramap.commands.terrashow.gethidden";
                 message = transCtx.getComponent(key, player.getDisplayName().getFormattedText());

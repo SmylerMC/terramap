@@ -112,7 +112,7 @@ public abstract class WidgetContainer implements Widget {
             for (Widget widget: this.widgets) {
                 boolean propagate = true;
                 if (!this.isOverWidget(event.mouseX, event.mouseY, widget)) {
-                    switch(event.type) {
+                    switch (event.type) {
                         case CLICK:
                             propagate = widget.onParentClick(event.mouseX, event.mouseY, event.button, this);
                             break;

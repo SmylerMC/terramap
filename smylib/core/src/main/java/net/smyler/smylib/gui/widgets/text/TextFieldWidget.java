@@ -253,7 +253,7 @@ public class TextFieldWidget implements Widget {
             return;
         }
         if (key != null) {
-            switch(key) {
+            switch (key) {
                 case KEY_BACK:
                     this.selecting = false;
                     this.erase(-1);

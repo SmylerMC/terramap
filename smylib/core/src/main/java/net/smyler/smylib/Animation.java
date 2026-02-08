@@ -31,7 +31,7 @@ public class Animation {
         if (this.duration == 0) {
             this.progress = 1f;
         } else {
-            switch(this.state) {
+            switch (this.state) {
                 case ENTER:
                     float f = (float)age/(float)this.duration;
                     this.progress = saturate(f);

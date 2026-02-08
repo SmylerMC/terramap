@@ -82,7 +82,7 @@ public class GuiScreenProxy extends GuiScreen {
     }
 
     private void drawBackground() {
-        switch(this.screen.background) {
+        switch (this.screen.background) {
             case NONE:
                 break;
             case DEFAULT:

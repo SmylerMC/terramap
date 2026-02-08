@@ -100,7 +100,7 @@ public abstract class AbstractSliderWidget implements Widget {
         if (key == null) {
             return;
         }
-        switch(key) {
+        switch (key) {
             case KEY_DOWN:
             case KEY_LEFT:
                 this.goToPrevious();

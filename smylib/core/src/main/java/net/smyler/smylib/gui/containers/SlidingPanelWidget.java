@@ -44,7 +44,7 @@ public class SlidingPanelWidget extends FlexibleWidgetContainer {
     }
 
     public PanelTarget getTarget() {
-        switch(this.mainAnimation.getState()) {
+        switch (this.mainAnimation.getState()) {
             case LEAVE:
                 return PanelTarget.CLOSED;
             case ENTER:
