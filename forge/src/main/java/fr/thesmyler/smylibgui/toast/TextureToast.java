@@ -1,7 +1,6 @@
 package fr.thesmyler.smylibgui.toast;
 
 import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.toasts.GuiToast;
 import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.renderer.BufferBuilder;

@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.network;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
 

@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.saving.client;
 
 import com.google.gson.Gson;
 import net.smyler.smylib.game.MinecraftServerInfo;
-
 import java.io.*;
 import java.nio.file.Path;
 import java.util.UUID;

@@ -5,7 +5,6 @@ import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.gl.Scissor;
 import net.smyler.smylib.gui.sprites.Sprite;
-
 import java.awt.image.BufferedImage;
 
 public interface UiDrawContext {

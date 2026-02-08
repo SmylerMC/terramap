@@ -5,7 +5,6 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.text.TextFieldWidget;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
-
 import java.util.Optional;
 import java.util.function.Consumer;
 

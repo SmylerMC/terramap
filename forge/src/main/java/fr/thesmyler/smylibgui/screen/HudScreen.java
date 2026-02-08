@@ -2,7 +2,6 @@ package fr.thesmyler.smylibgui.screen;
 
 import java.lang.reflect.Field;
 import java.util.List;
-
 import net.smyler.smylib.gui.containers.RootContainer;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -23,7 +22,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.smyler.smylib.game.GameClient;
-
 import net.smyler.smylib.game.Mouse;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;

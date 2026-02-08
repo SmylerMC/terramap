@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.network;
 
 import java.util.UUID;
-
 import fr.thesmyler.terramap.network.playersync.PlayerSyncStatus;
 import io.netty.buffer.ByteBuf;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;

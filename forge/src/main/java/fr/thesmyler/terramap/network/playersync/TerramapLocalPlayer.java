@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.network.playersync;
 
 import java.util.UUID;
-
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import net.smyler.terramap.geo.point.GeoPointMutable;

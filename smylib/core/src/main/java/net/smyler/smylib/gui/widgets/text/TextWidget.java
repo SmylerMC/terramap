@@ -4,7 +4,6 @@ import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;
-
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.gui.widgets.Widget;

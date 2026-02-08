@@ -3,9 +3,7 @@ package fr.thesmyler.smylibgui.widgets;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import net.smyler.smylib.game.Key;
-
 import net.smyler.smylib.gui.widgets.Widget;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import fr.thesmyler.smylibgui.screen.HudScreen;
@@ -16,7 +14,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ITabCompleter;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
 import net.smyler.smylib.gui.UiDrawContext;
 import org.jetbrains.annotations.Nullable;
 

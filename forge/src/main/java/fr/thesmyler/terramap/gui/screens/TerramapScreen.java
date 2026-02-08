@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.screens;
 
 import java.util.*;
 import java.util.function.Consumer;
-
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.Scissor;
@@ -16,7 +15,6 @@ import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import org.jetbrains.annotations.Nullable;
-
 import fr.thesmyler.terramap.gui.widgets.map.*;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
@@ -25,7 +23,6 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Translator;
 import net.smyler.smylib.gui.Font;
-
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.ScrollableWidgetContainer;
 import net.smyler.smylib.gui.containers.SlidingPanelWidget;

@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.widgets.map.layer;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import net.smyler.smylib.Identifier;
 import net.smyler.smylib.Profiler;
 import net.smyler.smylib.gui.gl.GlContext;

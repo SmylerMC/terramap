@@ -1,7 +1,6 @@
 package net.smyler.terramap.http;
 
 import net.smyler.terramap.Terramap;
-
 import java.util.concurrent.CompletableFuture;
 
 /**

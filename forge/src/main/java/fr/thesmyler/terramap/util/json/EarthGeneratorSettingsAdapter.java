@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.util.json;
 
 import com.google.gson.*;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
-
 import java.lang.reflect.Type;
 
 public class EarthGeneratorSettingsAdapter implements JsonSerializer<EarthGeneratorSettings>, JsonDeserializer<EarthGeneratorSettings> {

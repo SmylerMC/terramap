@@ -2,7 +2,6 @@ package net.smyler.smylib.text;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;

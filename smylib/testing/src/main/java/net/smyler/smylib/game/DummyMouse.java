@@ -1,7 +1,6 @@
 package net.smyler.smylib.game;
 
 import net.smyler.smylib.threading.DefaultThreadLocal;
-
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.network;
 
 import java.util.*;
-
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapMod;
 import fr.thesmyler.terramap.TerramapVersion;

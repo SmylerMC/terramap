@@ -1,7 +1,6 @@
 package net.smyler.smylib.gui.widgets.buttons;
 
 import java.util.function.Consumer;
-
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.sprites.Sprite;

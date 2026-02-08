@@ -3,7 +3,6 @@ package net.smyler.terramap.gui.widgets;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.math.Vec2dMutable;
-
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Animation;
 import net.smyler.smylib.Animation.AnimationState;

@@ -2,7 +2,6 @@ package net.smyler.smylib.resources;
 
 import org.jetbrains.annotations.Nullable;
 
-
 import static java.util.Arrays.stream;
 
 

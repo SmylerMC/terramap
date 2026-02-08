@@ -5,7 +5,6 @@ import net.smyler.smylib.Color;
 import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.text.*;
 import org.jetbrains.annotations.Nullable;
-
 import java.lang.reflect.Type;
 
 import static java.util.Objects.requireNonNull;

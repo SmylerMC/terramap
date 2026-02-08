@@ -16,7 +16,6 @@ import fr.thesmyler.terramap.maps.SavedMapState;
 import net.smyler.terramap.tilesets.raster.RasterTileSet;
 import net.minecraft.client.Minecraft;
 import net.smyler.terramap.geo.projection.GeoProjection;
-
 import java.util.Optional;
 
 import static net.smyler.smylib.SmyLib.getGameClient;

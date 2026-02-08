@@ -29,7 +29,6 @@ import net.smyler.smylib.text.Formatting;
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import net.smyler.smylib.text.TextStyle;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

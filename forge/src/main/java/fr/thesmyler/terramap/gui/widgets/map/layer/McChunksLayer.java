@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.smyler.smylib.gui.UiDrawContext;

@@ -12,7 +12,6 @@ import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.gl.*;
 import net.smyler.smylib.gui.sprites.Sprite;
 import org.lwjgl.opengl.GL11;
-
 import java.awt.image.BufferedImage;
 import java.util.concurrent.atomic.AtomicInteger;
 

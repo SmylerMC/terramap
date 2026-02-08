@@ -2,15 +2,12 @@ package net.smyler.smylib.gui.widgets.text;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-
 import net.smyler.smylib.gui.*;
 import net.smyler.smylib.gui.gl.ColorLogic;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.smylib.gui.sprites.SmyLibSprites;
 import org.jetbrains.annotations.Nullable;
-
 import net.smyler.smylib.game.Key;
-
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.game.Keyboard;
 import net.smyler.smylib.Animation;

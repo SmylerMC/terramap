@@ -15,6 +15,11 @@
   <module name="TreeWalker">
     <module name="UnusedImports"/>
     <module name="RedundantImport"/>
+    <module name="CustomImportOrder">
+      <property name="separateLineBetweenGroups" value="true"/>
+      <property name="customImportOrderRules"
+                value="THIRD_PARTY_PACKAGE, STATIC"/>
+    </module>
   </module>
 
 </module>

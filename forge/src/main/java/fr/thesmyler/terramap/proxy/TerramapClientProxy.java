@@ -24,7 +24,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.smyler.terramap.Terramap;
-
 import javax.imageio.ImageIO;
 
 import static net.smyler.terramap.Terramap.getTerramap;

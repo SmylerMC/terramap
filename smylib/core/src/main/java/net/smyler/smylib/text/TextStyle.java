@@ -3,8 +3,6 @@ package net.smyler.smylib.text;
 import net.smyler.smylib.Color;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;

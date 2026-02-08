@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-
 import java.nio.IntBuffer;
 
 public final class Lwjgl2Cursor implements Cursor {

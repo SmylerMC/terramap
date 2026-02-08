@@ -2,7 +2,6 @@ package net.smyler.smylib;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import fr.thesmyler.smylibgui.toast.TextureToast;
 import net.buildtheearth.terraplusplus.projection.GeographicProjection;
 import net.smyler.smylib.game.GameClient;
@@ -37,7 +36,6 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.geo.projection.GeoProjection;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;

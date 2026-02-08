@@ -6,7 +6,6 @@ import net.smyler.smylib.resources.CursorResourceMetadata;
 import net.smyler.smylib.resources.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;

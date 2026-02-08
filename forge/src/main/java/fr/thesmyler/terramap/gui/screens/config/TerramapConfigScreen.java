@@ -3,14 +3,12 @@ package fr.thesmyler.terramap.gui.screens.config;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.util.Set;
-
 import net.smyler.terramap.tilesets.raster.CachingRasterTileSet;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.game.Key;
 import net.smyler.smylib.game.Translator;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
 import org.jetbrains.annotations.Nullable;
-
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.screen.BackgroundOption;

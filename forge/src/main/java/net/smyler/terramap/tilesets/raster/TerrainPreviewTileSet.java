@@ -4,7 +4,6 @@ import fr.thesmyler.terramap.TerramapClientContext;
 import net.buildtheearth.terraplusplus.generator.TerrainPreview;
 import net.smyler.smylib.Identifier;
 import net.smyler.terramap.geo.mercator.TilePosImmutable;
-
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

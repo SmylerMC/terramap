@@ -3,7 +3,6 @@ package fr.thesmyler.terramap.gui.screens;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.smylib.Color;

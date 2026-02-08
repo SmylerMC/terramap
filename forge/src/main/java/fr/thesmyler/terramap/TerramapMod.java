@@ -2,7 +2,6 @@ package fr.thesmyler.terramap;
 
 import java.io.File;
 import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
@@ -13,7 +12,6 @@ import net.smyler.terramap.Terramap;
 import net.smyler.terramap.http.HttpClient;
 import net.smyler.terramap.http.TerraplusplusHttpClient;
 import org.apache.logging.log4j.Logger;
-
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
 import fr.thesmyler.terramap.TerramapVersion.ReleaseType;
 import fr.thesmyler.terramap.eventhandlers.CommonTerramapEventHandler;

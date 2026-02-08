@@ -2,12 +2,9 @@ package fr.thesmyler.terramap;
 
 import java.util.Arrays;
 import java.util.Map;
-
 import net.smyler.terramap.Terramap;
 import org.jetbrains.annotations.NotNull;
-
 import org.apache.logging.log4j.util.Strings;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.handshake.NetworkDispatcher;
 

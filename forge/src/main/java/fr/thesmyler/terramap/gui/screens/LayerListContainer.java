@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.screens;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -18,7 +17,6 @@ import fr.thesmyler.terramap.gui.widgets.map.InputLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.MapWidget;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
-
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.gui.sprites.SmyLibSprites.*;

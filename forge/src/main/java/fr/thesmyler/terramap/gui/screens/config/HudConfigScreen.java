@@ -1,7 +1,6 @@
 package fr.thesmyler.terramap.gui.screens.config;
 
 import java.util.*;
-
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.smyler.smylib.gui.containers.FlexibleWidgetContainer;
 import net.smyler.smylib.gui.containers.SlidingPanelWidget;

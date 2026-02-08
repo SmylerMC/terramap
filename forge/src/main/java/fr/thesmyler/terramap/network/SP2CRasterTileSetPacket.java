@@ -2,12 +2,10 @@ package fr.thesmyler.terramap.network;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.google.gson.JsonParseException;
 import net.smyler.smylib.text.Text;
 import net.smyler.terramap.tilesets.raster.UrlRasterTileSet;
 import org.apache.logging.log4j.util.Strings;
-
 import fr.thesmyler.terramap.TerramapClientContext;
 import fr.thesmyler.terramap.TerramapConfig;
 import net.smyler.terramap.tilesets.raster.RasterTileSetProvider;

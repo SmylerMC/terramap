@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.widgets.markers.markers.entities;
 
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.GlContext;
-
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.Color;
 import fr.thesmyler.smylibgui.util.RenderUtil;

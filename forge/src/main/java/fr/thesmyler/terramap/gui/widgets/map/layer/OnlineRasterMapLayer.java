@@ -17,7 +17,6 @@ import net.smyler.terramap.util.CopyrightHolder;
 import net.smyler.smylib.game.GameClient;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.Font;
-
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
 import org.jetbrains.annotations.Nullable;

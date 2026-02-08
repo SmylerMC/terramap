@@ -11,7 +11,6 @@ import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
 import net.smyler.smylib.math.Mat2d;
 import net.smyler.smylib.math.Vec2dMutable;
-
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 

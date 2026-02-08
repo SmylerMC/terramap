@@ -4,7 +4,6 @@ import fr.thesmyler.terramap.gui.widgets.map.layer.GenerationPreviewLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.McChunksLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RenderingDeltaPreviewLayer;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;

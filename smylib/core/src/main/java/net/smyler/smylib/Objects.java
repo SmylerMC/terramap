@@ -2,7 +2,6 @@ package net.smyler.smylib;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;

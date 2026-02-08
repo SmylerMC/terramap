@@ -10,7 +10,6 @@ import net.smyler.smylib.gui.sprites.SpriteLibrary;
 import net.smyler.smylib.resources.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.nio.file.Path;
 import java.util.Optional;
 

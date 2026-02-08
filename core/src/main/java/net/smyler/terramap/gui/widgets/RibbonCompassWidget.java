@@ -4,7 +4,6 @@ import net.smyler.smylib.Identifier;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.gl.GlContext;
 import net.smyler.terramap.Terramap;
-
 import net.smyler.smylib.gui.containers.WidgetContainer;
 import net.smyler.smylib.gui.widgets.Widget;
 

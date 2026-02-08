@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointMutable;
 import net.smyler.terramap.geo.mercator.WebMercatorUtil;
-
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.terramap.geo.GeoUtil.getAzimuthInRange;

@@ -26,7 +26,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.smyler.smylib.gui.popups.Popup;
 import net.smyler.terramap.geo.OutOfGeoBoundsException;
-
 import java.util.Objects;
 
 import static net.minecraft.client.Minecraft.getMinecraft;

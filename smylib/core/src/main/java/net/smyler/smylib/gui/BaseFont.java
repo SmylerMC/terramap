@@ -3,7 +3,6 @@ package net.smyler.smylib.gui;
 import net.smyler.smylib.Color;
 import net.smyler.smylib.text.*;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

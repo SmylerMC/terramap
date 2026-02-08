@@ -13,14 +13,13 @@ import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
-
 import net.smyler.terramap.geo.formats.kml.KmlDocument;
 import net.smyler.terramap.geo.formats.kml.KmlFile;
 import net.smyler.terramap.geo.formats.kml.KmlPlacemark;
 import net.smyler.terramap.geo.formats.kml.KmlPoint;
+import net.smyler.terramap.geo.point.GeoPoint;
 
 import static net.smyler.terramap.Terramap.getTerramap;
-import net.smyler.terramap.geo.point.GeoPoint;
 
 /**
  * Utility class to open various geo services such as osm, Google Maps, Earth, etc...

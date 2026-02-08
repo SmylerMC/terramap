@@ -7,9 +7,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
 import com.google.gson.JsonSyntaxException;
-
 import fr.thesmyler.terramap.TerramapConfig;
 import net.minecraft.world.WorldServer;
 

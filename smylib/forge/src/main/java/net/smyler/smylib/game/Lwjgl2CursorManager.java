@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
-
 import java.util.IdentityHashMap;
 
 public class Lwjgl2CursorManager extends CursorManager<Lwjgl2Cursor> {

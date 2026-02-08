@@ -3,7 +3,6 @@ package net.smyler.smylib.resources;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.client.resources.data.TextureMetadataSection;
-
 import java.util.Arrays;
 import java.util.Optional;
 

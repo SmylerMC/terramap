@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.command;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import fr.thesmyler.smylibgui.screen.HudScreen;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;

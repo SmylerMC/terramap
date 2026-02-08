@@ -7,7 +7,6 @@ import com.google.gson.JsonParseException;
 import net.minecraft.client.resources.data.BaseMetadataSectionSerializer;
 import net.minecraft.util.JsonUtils;
 import org.jetbrains.annotations.NotNull;
-
 import java.lang.reflect.Type;
 
 public class DebugMetadataSerializer extends BaseMetadataSectionSerializer<DebugMetadataSection> {

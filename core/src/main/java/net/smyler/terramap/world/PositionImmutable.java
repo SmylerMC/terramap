@@ -1,7 +1,6 @@
 package net.smyler.terramap.world;
 
 import org.jetbrains.annotations.Contract;
-
 import java.util.Objects;
 
 public class PositionImmutable implements Position {

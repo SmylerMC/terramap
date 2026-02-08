@@ -16,7 +16,6 @@ import net.buildtheearth.terraplusplus.control.PresetEarthGui;
 import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-
 import org.jetbrains.annotations.Nullable;
 
 import static java.lang.Math.floorDiv;

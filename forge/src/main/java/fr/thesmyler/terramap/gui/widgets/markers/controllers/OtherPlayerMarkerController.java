@@ -2,7 +2,6 @@ package fr.thesmyler.terramap.gui.widgets.markers.controllers;
 
 import java.util.Map;
 import java.util.UUID;
-
 import net.smyler.smylib.gui.widgets.buttons.ToggleButtonWidget;
 import fr.thesmyler.terramap.MapContext;
 import fr.thesmyler.terramap.TerramapClientContext;
