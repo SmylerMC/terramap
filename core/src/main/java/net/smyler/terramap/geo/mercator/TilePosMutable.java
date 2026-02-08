@@ -69,7 +69,7 @@ public class TilePosMutable extends TilePos {
      */
     public void setZoom(int zoom) {
         checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, this.yPosition), "Invalid zoom level " + zoom);
-        synchronized(this) {
+        synchronized (this) {
             int delta = zoom - this.zoom;
             this.zoom = zoom;
             if (delta > 0) {
@@ -89,7 +89,7 @@ public class TilePosMutable extends TilePos {
      * @param zoom - the zoom level to set, between 0 and 30
      */
     public void setZoomSafe(int zoom) {
-        synchronized(this) {
+        synchronized (this) {
             int newZoom = Math.max(0, Math.min(WebMercatorUtil.MAX_ZOOM, zoom));
             int delta = newZoom - this.zoom;
             this.zoom = newZoom;
@@ -112,7 +112,7 @@ public class TilePosMutable extends TilePos {
      */
     public void setX(int x) {
         checkArgument(WebMercatorUtil.isValidTilePosition(zoom, x, this.yPosition), "Invalid x value " + x + " for zoom level " + this.zoom);
-        synchronized(this) {
+        synchronized (this) {
             this.xPosition = x;
         }
     }
@@ -134,7 +134,7 @@ public class TilePosMutable extends TilePos {
      */
     public void setY(int y) {
         checkArgument(WebMercatorUtil.isValidTilePosition(zoom, this.xPosition, y), "Invalid y value " + y + " for zoom level " + this.zoom);
-        synchronized(this) {
+        synchronized (this) {
             this.yPosition = y;
         }
     }

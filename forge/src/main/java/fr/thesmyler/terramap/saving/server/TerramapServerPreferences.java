@@ -42,7 +42,7 @@ public class TerramapServerPreferences {
     public static boolean shouldDisplayPlayer(WorldServer world, UUID uuid) {
         try {
             WorldPreferences preferences = TerramapServerPreferences.getWorldPreferences(world);
-            synchronized(preferences) {
+            synchronized (preferences) {
                 return preferences.players.containsKey(uuid) ? preferences.players.get(uuid).display : TerramapConfig.SERVER.playersDisplayDefault;
             }
         } catch (Exception e) {
@@ -64,9 +64,9 @@ public class TerramapServerPreferences {
      */
     public static void setShouldDisplayPlayer(WorldServer world, UUID uuid, boolean yesNo) {
         try {
-            synchronized(preferences) {
+            synchronized (preferences) {
                 WorldPreferences worldPreferences = TerramapServerPreferences.getWorldPreferences(world);
-                synchronized(worldPreferences) {
+                synchronized (worldPreferences) {
                     PlayerPreferences pp = worldPreferences.players.getOrDefault(uuid, new PlayerPreferences());
                     pp.display = yesNo;
                     worldPreferences.players.put(uuid, pp);
@@ -87,7 +87,7 @@ public class TerramapServerPreferences {
     public static UUID getWorldUUID(WorldServer world) {
         try {
             WorldPreferences prefs = TerramapServerPreferences.getWorldPreferences(world);
-            synchronized(prefs) {
+            synchronized (prefs) {
                 UUID uuid = prefs.world_uuid;
                 if (uuid.getLeastSignificantBits() == 0 && uuid.getMostSignificantBits() == 0) {
                     uuid = UUID.randomUUID();
@@ -106,7 +106,7 @@ public class TerramapServerPreferences {
     public static void unloadWorldPreferences(WorldServer world) {
         try {
             File file = TerramapServerPreferences.getFileForWorld(world);
-            synchronized(preferences) {
+            synchronized (preferences) {
                 TerramapServerPreferences.preferences.remove(file.getAbsolutePath());
             }
         } catch (Exception e) {
@@ -124,7 +124,7 @@ public class TerramapServerPreferences {
         try {
             File file = TerramapServerPreferences.getFileForWorld(world);
             WorldPreferences prefs = TerramapServerPreferences.getWorldPreferences(world);
-            synchronized(prefs) {
+            synchronized (prefs) {
                 save(file, prefs);
             }
         } catch (Exception e) {
@@ -142,7 +142,7 @@ public class TerramapServerPreferences {
      */
     public static void saveAllPreferences() {
         try {
-            synchronized(preferences) {
+            synchronized (preferences) {
                 for (String key: TerramapServerPreferences.preferences.keySet()) {
                     WorldPreferences preferences = TerramapServerPreferences.preferences.get(key);
                     File file = new File(key);
@@ -179,7 +179,7 @@ public class TerramapServerPreferences {
         } else {
             getTerramap().logger().info("Loaded new empty server preferences as file did not exist");
         }
-        synchronized(TerramapServerPreferences.preferences) {
+        synchronized (TerramapServerPreferences.preferences) {
             TerramapServerPreferences.preferences.put(fileToLoad.getAbsolutePath(), preferences);
         }
     }
@@ -195,7 +195,7 @@ public class TerramapServerPreferences {
 
     private static WorldPreferences getWorldPreferences(WorldServer world) {
         File file = TerramapServerPreferences.getFileForWorld(world);
-        synchronized(preferences) {
+        synchronized (preferences) {
             WorldPreferences prefs = TerramapServerPreferences.preferences.getOrDefault(file.toString(), new WorldPreferences());
             preferences.put(file.getAbsolutePath(), prefs);
             return prefs;
