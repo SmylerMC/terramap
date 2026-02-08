@@ -203,7 +203,7 @@ abstract public class RasterMapLayer extends MapLayer {
                 }
 
                 if (lowerResRender) {
-                    int sizeFactor = (1 <<(bestTile.getPosition().getZoom() - tile.getPosition().getZoom()));
+                    int sizeFactor = (1 << (bestTile.getPosition().getZoom() - tile.getPosition().getZoom()));
 
                     int xInBiggerTile = bestTile.getPosition().getX() - sizeFactor * tile.getPosition().getX();
                     int yInBiggerTile = bestTile.getPosition().getY() - sizeFactor * tile.getPosition().getY();

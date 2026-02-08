@@ -73,11 +73,11 @@ public class TilePosMutable extends TilePos {
             int delta = zoom - this.zoom;
             this.zoom = zoom;
             if (delta > 0) {
-                int fact = 1<<delta;
+                int fact = 1 << delta;
                 this.xPosition *= fact;
                 this.yPosition *= fact;
             } else {
-                int fact = 1<<(-delta);
+                int fact = 1 << (-delta);
                 this.xPosition /= fact;
                 this.yPosition /= fact;
             }
@@ -94,11 +94,11 @@ public class TilePosMutable extends TilePos {
             int delta = newZoom - this.zoom;
             this.zoom = newZoom;
             if (delta > 0) {
-                int fact = 1<<delta;
+                int fact = 1 << delta;
                 this.xPosition *= fact;
                 this.yPosition *= fact;
             } else {
-                int fact = 1<<(-delta);
+                int fact = 1 << (-delta);
                 this.xPosition /= fact;
                 this.yPosition /= fact;
             }
