@@ -147,7 +147,7 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
         }
         for (int zoom=this.getMinZoom(); zoom<=Math.min(this.getMaxZoom(), LOW_ZOOM); zoom++) {
             int size = WebMercatorUtil.getDimensionsInTile(zoom);
-            for(int x=0; x<size; x++) for(int y=0; y<size; y++) {
+            for (int x=0; x<size; x++) for (int y=0; y<size; y++) {
                 try {
                     this.getTile(zoom, x, y).getTexture();
                 } catch (Throwable e) {

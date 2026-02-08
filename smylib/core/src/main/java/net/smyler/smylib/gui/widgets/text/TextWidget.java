@@ -76,7 +76,7 @@ public class TextWidget implements Widget {
         float h = this.getHeight();
         context.drawRectangle(x, y, x + w, y + h, this.backgroundColor);
         float drawY = y + this.padding;
-        for(Text line: this.lines) {
+        for (Text line: this.lines) {
             String formattedText = line.getFormattedText();
             float lineWidth = this.font.computeWidth(formattedText);
             float lx = x + this.anchorX - this.x;
@@ -133,7 +133,7 @@ public class TextWidget implements Widget {
                 pos = (this.width - lineWidth) / 2;
                 break;
         }
-        for(Text child: line) {
+        for (Text child: line) {
             pos += this.font.computeWidth(child.getFormattedText());
             if (pos >= x) return child;
         }

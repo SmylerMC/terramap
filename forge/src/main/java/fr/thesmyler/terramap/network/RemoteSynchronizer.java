@@ -38,17 +38,17 @@ public abstract class RemoteSynchronizer {
         if (playersToUpdate.isEmpty()) return;
         long ctime = System.currentTimeMillis();
         List<TerramapLocalPlayer> players = new ArrayList<>();
-        for(EntityPlayer player: world.playerEntities) {
+        for (EntityPlayer player: world.playerEntities) {
             if (!TerramapServerPreferences.shouldDisplayPlayer(world, player.getPersistentID())) continue;
             TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
             if (terraPlayer.isSpectator() && !TerramapConfig.SERVER.synchronizeSpectators) continue;
             players.add(terraPlayer);
         }
         IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[0]));
-        for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
+        for (RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
             TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(pkt, player.player);
         }
-        for(RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
+        for (RegisteredForUpdatePlayer player: RemoteSynchronizer.playersToUpdate.values()) {
             if (ctime - player.lastRegisterTime > TerramapConfig.SERVER.syncHeartbeatTimeout - 10000 && !player.noticeSent) {
                 getTerramap().logger().debug("Sending registration expires notice to {}", player.player.getName());
                 TerramapNetworkManager.CHANNEL_MAPSYNC.sendTo(new SP2CRegistrationExpiresPacket(), player.player);
@@ -118,7 +118,7 @@ public abstract class RemoteSynchronizer {
         if (clientVersion == null) return;
         boolean compat = clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS;
         if (TerramapConfig.SERVER.sendCusomMapsToClient) {
-            for(UrlRasterTileSet map: getTerramap().rasterTileSetManager().getUserMaps().values()) {
+            for (UrlRasterTileSet map: getTerramap().rasterTileSetManager().getUserMaps().values()) {
                 if (!TerramapConfig.enableDebugMaps && map.isDebug()) continue;
                 SP2CRasterTileSetPacket pkt = new SP2CRasterTileSetPacket(map);
                 if (compat) pkt.setBackwardCompat();

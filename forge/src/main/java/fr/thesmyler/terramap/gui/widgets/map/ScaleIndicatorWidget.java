@@ -96,7 +96,7 @@ public class ScaleIndicatorWidget implements Widget {
                 double scale = this.point1.distanceTo(point2);
                 String[] units = {"cm", "m", "km"};
                 int j=1;
-                for(; scale >= 1000 && j<units.length-1; j++) scale /= 1000;
+                for (; scale >= 1000 && j<units.length-1; j++) scale /= 1000;
                 if (scale < 1) {
                     scale *= 100;
                     j = 0;

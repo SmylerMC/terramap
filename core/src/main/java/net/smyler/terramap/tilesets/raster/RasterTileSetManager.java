@@ -222,7 +222,7 @@ public class RasterTileSetManager {
     private Map<String, UrlRasterTileSet> loadFromJson(String json, RasterTileSetProvider provider) {
         TileSetFile savedStyles = getTerramap().gson().fromJson(json, TileSetFile.class);
         Map<String, UrlRasterTileSet> styles = new HashMap<>();
-        for(String id: savedStyles.maps.keySet()) {
+        for (String id: savedStyles.maps.keySet()) {
             UrlRasterTileSet style = readFromSaved(id, savedStyles.maps.get(id), provider, savedStyles.metadata.version, savedStyles.metadata.comment);
             styles.put(id, style);
         }

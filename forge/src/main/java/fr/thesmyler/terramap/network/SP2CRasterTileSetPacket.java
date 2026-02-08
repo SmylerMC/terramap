@@ -58,7 +58,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         this.maxConcurrentConnections = map.getMaxConcurrentRequests();
         this.debug = map.isDebug();
         this.bounds = new HashMap<>();
-        for(int i=map.getMinZoom(); i <= map.getMaxZoom(); i++) {
+        for (int i=map.getMinZoom(); i <= map.getMaxZoom(); i++) {
             WebMercatorBounds bound = map.getBounds(i);
             if (bound != null) this.bounds.put(i, bound);
         }
@@ -74,7 +74,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         String urlPattern = NetworkUtil.decodeStringFromByteBuf(buf);
         int nameCount = buf.readInt();
         Map<String, String> names = new HashMap<>();
-        for(int i=0; i < nameCount; i++) {
+        for (int i=0; i < nameCount; i++) {
             String key = NetworkUtil.decodeStringFromByteBuf(buf);
             String name = NetworkUtil.decodeStringFromByteBuf(buf);
             names.put(key, name);
@@ -82,7 +82,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         this.names = names;
         int copyrightCount = buf.readInt();
         Map<String, Text> copyrights = new HashMap<>();
-        for(int i=0; i < copyrightCount; i++) {
+        for (int i=0; i < copyrightCount; i++) {
             String key = NetworkUtil.decodeStringFromByteBuf(buf);
             String copyrightJson = NetworkUtil.decodeStringFromByteBuf(buf);
             try {
@@ -110,7 +110,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         
         if (buf.isReadable()) {
             int length = buf.readInt();
-            for(int i=0; i<length; i++) {
+            for (int i=0; i<length; i++) {
                 int zoom = buf.readInt();
                 int lowerX = buf.readInt();
                 int lowerY = buf.readInt();
@@ -128,12 +128,12 @@ public class SP2CRasterTileSetPacket implements IMessage {
         String singleUrl = this.backwardCompat ? this.urlPatterns[0]: "";
         NetworkUtil.encodeStringToByteBuf(singleUrl, buf);
         buf.writeInt(this.names.size());
-        for(String key: this.names.keySet()) {
+        for (String key: this.names.keySet()) {
             NetworkUtil.encodeStringToByteBuf(key, buf);
             NetworkUtil.encodeStringToByteBuf(this.names.get(key), buf);
         }
         buf.writeInt(this.copyrights.size());
-        for(String key: this.copyrights.keySet()) {
+        for (String key: this.copyrights.keySet()) {
             NetworkUtil.encodeStringToByteBuf(key, buf);
             NetworkUtil.encodeStringToByteBuf(getTerramap().gson().toJson(this.copyrights.get(key)), buf);
         }
@@ -146,7 +146,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         NetworkUtil.encodeStringArrayToByteBuf(this.urlPatterns, buf);
         buf.writeBoolean(this.debug);
         buf.writeInt(this.bounds.size());
-        for(int zoom: this.bounds.keySet()) {
+        for (int zoom: this.bounds.keySet()) {
             buf.writeInt(zoom);
             WebMercatorBounds bounds = this.bounds.get(zoom);
             buf.writeInt(bounds.lowerX);

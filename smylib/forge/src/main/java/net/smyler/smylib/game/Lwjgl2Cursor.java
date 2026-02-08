@@ -56,7 +56,7 @@ public final class Lwjgl2Cursor implements Cursor {
         IntBuffer buffer = BufferUtils.createIntBuffer(this.width * this.height);
         GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, format, GL11.GL_UNSIGNED_BYTE, buffer);
         for (int x = 0; x < width; x++) { // Flip the image along the X axis
-            for(int i = 0; i < height / 2; i++) {
+            for (int i = 0; i < height / 2; i++) {
                 int yBottom = width * (height - i - 1) + x;
                 int yTop = width * i + x;
                 int pixel = buffer.get(yBottom);

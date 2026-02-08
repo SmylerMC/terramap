@@ -16,7 +16,7 @@ public abstract class MarkerControllerManager {
 
     static {
         CONTROLLER_CLASSES = new HashMap<>();
-        for(MapContext c: MapContext.values()) {
+        for (MapContext c: MapContext.values()) {
             CONTROLLER_CLASSES.put(c, new ArrayList<>());
         }
 
@@ -36,7 +36,7 @@ public abstract class MarkerControllerManager {
     public static MarkerController<?>[] createControllers(MapContext context) {
         MarkerController<?>[] controllers = new MarkerController[CONTROLLER_CLASSES.get(context).size()];
         int i = 0;
-        for(Class<? extends MarkerController<?>> clazz: CONTROLLER_CLASSES.get(context)) {
+        for (Class<? extends MarkerController<?>> clazz: CONTROLLER_CLASSES.get(context)) {
             try {
                 controllers[i++] = clazz.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {

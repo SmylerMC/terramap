@@ -71,7 +71,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
         checkArgument(version >= 0, "Map version number must be positive");
         checkArgument(comment != null, "A valid map comment needs to be provided");
         checkArgument(maxConcurrentDownloads > 0 ,"Max concurrent downloads must be at least 1");
-        for(String pattern: urlPatterns) {
+        for (String pattern: urlPatterns) {
             checkUrlPattern(pattern);
         }
         this.urlPatterns = urlPatterns;
@@ -297,7 +297,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
     }
 
     private void enforceMaxConcurrentRequests() {
-        for(String urlPattern: this.getUrlPatterns()) {
+        for (String urlPattern: this.getUrlPatterns()) {
             String url = urlPattern.replace("{z}", "0").replace("{x}", "0").replace("{y}", "0");
             try {
                 URL parsed = new URL(url);

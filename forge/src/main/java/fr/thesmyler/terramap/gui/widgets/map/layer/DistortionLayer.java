@@ -50,8 +50,8 @@ public class DistortionLayer extends MapLayer {
         double maxX = this.renderSpaceDimensions.x();
         double maxY = this.renderSpaceDimensions.y();
         double res = 20d;
-        for(double dx = -1; dx < maxX; dx += res) {
-            for(double dy = -1; dy < maxY; dy += res) {
+        for (double dx = -1; dx < maxX; dx += res) {
+            for (double dy = -1; dy < maxY; dy += res) {
                 this.getLocationAtPositionInRenderSpace(this.renderedLocations, this.screenPositions.set(dx + res / 2, dy + res / 2));
                 if (!WebMercatorUtil.PROJECTION_BOUNDS.contains(this.renderedLocations)) continue;
                 Color color = Color.TRANSPARENT;

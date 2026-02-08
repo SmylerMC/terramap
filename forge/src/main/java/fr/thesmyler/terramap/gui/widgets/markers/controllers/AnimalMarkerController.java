@@ -38,18 +38,18 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
     public AnimalMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
         if (TerramapClientContext.getContext().getProjection() == null) return new AnimalMarker[0];
         Map<UUID, Entity> entities = new HashMap<>();
-        for(Entity entity: TerramapClientContext.getContext().getEntities()) {
+        for (Entity entity: TerramapClientContext.getContext().getEntities()) {
             if (entity instanceof IAnimals && !(entity instanceof IMob)) {
                 entities.put(entity.getPersistentID(), entity);
             }
         }
-        for(Marker rawMarker: existingMarkers) {
+        for (Marker rawMarker: existingMarkers) {
             AnimalMarker marker = (AnimalMarker) rawMarker;
             entities.remove(marker.getEntity().getUniqueID());
         }
         AnimalMarker[] newMarkers = new AnimalMarker[entities.size()];
         int i = 0;
-        for(Entity entity: entities.values()) {
+        for (Entity entity: entities.values()) {
             newMarkers[i++] = new AnimalMarker(this, entity);
         }
         return newMarkers;

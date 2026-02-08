@@ -349,13 +349,13 @@ public class MapWidget extends FlexibleWidgetContainer {
     private void updateMarkers(float mouseX, float mouseY) {
         // Gather the existing classes
         Map<Class<?>, List<Marker>> markers = new HashMap<>();
-        for(MarkerController<?> controller: this.markerControllers.values()) {
+        for (MarkerController<?> controller: this.markerControllers.values()) {
             markers.put(controller.getMarkerType(), new ArrayList<>());
         }
 
         // Sort the markers by class
-        for(Marker marker: this.markers) {
-            for(Class<?> clazz: markers.keySet()) {
+        for (Marker marker: this.markers) {
+            for (Class<?> clazz: markers.keySet()) {
                 if (clazz.isInstance(marker)) {
                     markers.get(clazz).add(marker);
                 }
@@ -363,17 +363,17 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
 
         // Update the markers
-        for(MarkerController<?> controller: this.markerControllers.values()) {
+        for (MarkerController<?> controller: this.markerControllers.values()) {
             Marker[] existingMarkers = markers.get(controller.getMarkerType()).toArray(new Marker[] {});
             Marker[] newMarkers = controller.getNewMarkers(existingMarkers, this);
-            for(Marker markerToAdd: newMarkers) {
+            for (Marker markerToAdd: newMarkers) {
                 this.addMarker(markerToAdd);
             }
             if (controller.getMarkerType().equals(MainPlayerMarker.class) && newMarkers.length > 0) {
                 this.mainPlayerMarker = (MainPlayerMarker) newMarkers[0];
             }
             if (this.restoreTrackingId != null) {
-                for(Marker markerToAdd: newMarkers) {
+                for (Marker markerToAdd: newMarkers) {
                     String id = markerToAdd.getIdentifier();
                     if (id != null && id.equals(this.restoreTrackingId)) {
                         this.controller.track(markerToAdd);
@@ -387,14 +387,14 @@ public class MapWidget extends FlexibleWidgetContainer {
         // Update right click marker visibility
         if (this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
 
-        for(Marker marker: this.markers) marker.onUpdate(mouseX, mouseY, this);
+        for (Marker marker: this.markers) marker.onUpdate(mouseX, mouseY, this);
 
     }
 
     public void updateCopyright() {
         ImmutableText component = ImmutableText.EMPTY;
         ImmutableText separator = ofPlainText(" | ");
-        for(Widget widget: this.widgets)
+        for (Widget widget: this.widgets)
             if (widget instanceof CopyrightHolder){
                 if (!component.getFormattedText().isEmpty()) {
                     component = component.withNewSiblings(separator);
@@ -688,7 +688,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void discardPreviousErrors(Object source) {
         List<ReportedError> errsToRm = new ArrayList<>();
-        for(ReportedError e: this.reportedErrors) {
+        for (ReportedError e: this.reportedErrors) {
             if (e.source.equals(source)) errsToRm.add(e);
         }
         this.reportedErrors.removeAll(errsToRm);

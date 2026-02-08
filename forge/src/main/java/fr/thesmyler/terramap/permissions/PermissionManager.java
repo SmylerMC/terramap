@@ -21,7 +21,7 @@ public abstract class PermissionManager {
     }
 
     private static void registerForgeNodes() {
-        for(Permission perm: Permission.values()) {
+        for (Permission perm: Permission.values()) {
             PermissionAPI.registerNode(
                     perm.getNodeName(),
                     perm.getDefaultPermissionLevel(),

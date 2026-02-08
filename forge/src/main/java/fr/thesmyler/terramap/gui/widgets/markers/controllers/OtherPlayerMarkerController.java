@@ -39,7 +39,7 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
         int factor = minimap? 2: 1;
 
         Map<UUID, TerramapPlayer> players = minimap ? TerramapClientContext.getContext().getLocalPlayersMap(): TerramapClientContext.getContext().getPlayerMap();
-        for(Marker marker: existingMarkers) {
+        for (Marker marker: existingMarkers) {
             TerramapPlayer player = ((OtherPlayerMarker) marker).getPlayer();
             players.remove(player.getUUID());
         }
@@ -50,7 +50,7 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
         OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
         int i = 0;
-        for(TerramapPlayer player: players.values()) {
+        for (TerramapPlayer player: players.values()) {
             newMarkers[i++] = new OtherPlayerMarker(this, player, factor);
         }
 

@@ -147,7 +147,7 @@ public class Lwjgl2UiDrawContext implements UiDrawContext {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
         builder.begin(glType, DefaultVertexFormats.POSITION);
-        for(int i=0; i<points.length; i+=2) {
+        for (int i=0; i<points.length; i+=2) {
             builder.pos(points[i], points[i+1], z).endVertex();
         }
         tessellator.draw();

@@ -37,18 +37,18 @@ public class MobMarkerController extends MarkerController<MobMarker> {
     public MobMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
         if (TerramapClientContext.getContext().getProjection() == null) return new MobMarker[0];
         Map<UUID, Entity> entities = new HashMap<>();
-        for(Entity entity: TerramapClientContext.getContext().getEntities()) {
+        for (Entity entity: TerramapClientContext.getContext().getEntities()) {
             if (entity instanceof IMob) {
                 entities.put(entity.getPersistentID(), entity);
             }
         }
-        for(Marker rawMarker: existingMarkers) {
+        for (Marker rawMarker: existingMarkers) {
             MobMarker marker = (MobMarker) rawMarker;
             entities.remove(marker.getEntity().getUniqueID());
         }
         MobMarker[] newMarkers = new MobMarker[entities.size()];
         int i = 0;
-        for(Entity entity: entities.values()) {
+        for (Entity entity: entities.values()) {
             newMarkers[i++] = new MobMarker(this, entity);
         }
         return newMarkers;

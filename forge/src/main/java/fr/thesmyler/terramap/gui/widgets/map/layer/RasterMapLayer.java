@@ -103,9 +103,9 @@ abstract public class RasterMapLayer extends MapLayer {
 
         Color whiteWithAlpha = WHITE.withAlpha(this.getAlpha());
 
-        for(int tileX = lowerTileX; tileX * renderSize < maxX; tileX++) {
+        for (int tileX = lowerTileX; tileX * renderSize < maxX; tileX++) {
 
-            for(int tileY = lowerTileY; tileY * renderSize < maxY; tileY++) {
+            for (int tileY = lowerTileY; tileY * renderSize < maxY; tileY++) {
 
                 RasterTile tile;
 

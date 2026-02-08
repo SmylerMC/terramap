@@ -248,13 +248,13 @@ public class McChunksLayer extends MapLayer {
 
     private void renderTile(UiDrawContext context, float x, float y, int discriminator, Color color, float lineWidth, boolean[] loopingConditions) {
         try {
-            for(int i=0; i<this.projectedCorners.length; i++) {
+            for (int i=0; i<this.projectedCorners.length; i++) {
                 this.cache.getRenderPos(this.projectedCorners[i], this.corners[i], discriminator);
             }
         } catch(OutOfGeoBoundsException silenced) {
             return; // Skip the tile
         }
-        for(Vec2dMutable corner: this.projectedCorners) {
+        for (Vec2dMutable corner: this.projectedCorners) {
             loopingConditions[0] = loopingConditions[0] || corner.x >= 0;
             loopingConditions[1] = loopingConditions[1] || corner.x <= this.extendedDimensions.x();
             loopingConditions[2] = loopingConditions[2] || corner.y >= 0;

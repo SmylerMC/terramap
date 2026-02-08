@@ -117,7 +117,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
                     throw new InvalidVersionString("Invalid target build version: " + target[2]);
                 }
                 if (parts.length > 1) {
-                    for(ReleaseType type: ReleaseType.values()) {
+                    for (ReleaseType type: ReleaseType.values()) {
                         if (type.equals(ReleaseType.RELEASE)) continue;
                         if (parts[1].startsWith(type.name)) {
                             this.releaseType = type;

@@ -141,7 +141,7 @@ public final class HudScreen {
             @SuppressWarnings("unchecked") // Taken care of in the catch block
             List<ChatLine> lines = (List<ChatLine>)NEW_CHAT_DRAW_CHAT_LINES_FIELD.get(chat);
             int visibleChatLines = 0;
-            for(ChatLine line: lines) {
+            for (ChatLine line: lines) {
                 if (chatOpen || (line != null && updateCounter - line.getUpdatedCounter() < 200)) visibleChatLines++;
             }
             chatBottom = renderHeight - 40;

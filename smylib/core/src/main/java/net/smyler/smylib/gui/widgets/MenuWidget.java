@@ -74,7 +74,7 @@ public class MenuWidget implements Widget {
         context.drawRectangle(x, y, x + width, y+1, borderColor);
         context.drawRectangle(x, y + height, x + width + 1, y + height + 1, borderColor);
         float ty = y;
-        for(MenuEntry entry: this.entries) {
+        for (MenuEntry entry: this.entries) {
             int tx = 0;
             if (entry.text != null) {
                 boolean hovered = mouseX >= x && mouseX <= x + width && mouseY >= ty && mouseY <= ty + lh - 1;
@@ -127,7 +127,7 @@ public class MenuWidget implements Widget {
             float fh = this.font.height();
             float lh = fh + padding * 2;
             float sh = 3;
-            for(MenuEntry entry: this.entries) {
+            for (MenuEntry entry: this.entries) {
                 float h = entry.text == null ? sh: lh;
                 boolean hovered = mouseX >= 0 && mouseX < width && mouseY >= ty && mouseY <= ty + h - 1;
                 if (hovered) {
@@ -203,7 +203,7 @@ public class MenuWidget implements Widget {
     @Override
     public float getWidth() {
         float mw = 0;
-        for(MenuEntry e: this.entries) {
+        for (MenuEntry e: this.entries) {
             String text = e.getText();
             if (text == null) {
                 continue;
@@ -219,7 +219,7 @@ public class MenuWidget implements Widget {
         float fh = this.font.height();
         float lh = fh + padding * 2;
         float sh = 3;
-        for(MenuEntry entry: this.entries) {
+        for (MenuEntry entry: this.entries) {
             if (entry.text != null) {
                 h += lh;
             } else {

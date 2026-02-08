@@ -233,7 +233,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         float y = this.distortionText.getY() + this.distortionText.getHeight() + 3;
         float lineHeight = 0;
         float x = 5;
-        for(FeatureVisibilityController provider: this.getButtonProviders()) {
+        for (FeatureVisibilityController provider: this.getButtonProviders()) {
             if (!provider.showButton()) continue;
             AbstractButtonWidget button = provider.getButton();
             if (button == null) continue;
@@ -308,7 +308,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         if (!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
             StringBuilder warningBuilder = new StringBuilder();
-            for(int i=1; translator.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
+            for (int i=1; translator.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
                 if (warningBuilder.length() > 0) warningBuilder.append('\n');
                 warningBuilder.append(translator.format("terramap.terramapscreen.projection_warning.line" + i));
             }
@@ -576,7 +576,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         BackgroundStylePanelListContainer() {
             super(0, 0, 0, 0, 0);
             Widget lw = null;
-            for(RasterTileSetProvider provider: RasterTileSetProvider.values()) {
+            for (RasterTileSetProvider provider: RasterTileSetProvider.values()) {
                 Throwable e = provider.getLastError();
                 if (e == null) continue;
                 float x = 0;
@@ -590,7 +590,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             }
             ArrayList<RasterTileSet> maps = new ArrayList<>(TerramapClientContext.getContext().getRasterTileSets().values());
             maps.sort((m1, m2) -> Integer.compare(m2.getDisplayPriority(), m1.getDisplayPriority()));
-            for(RasterTileSet map: maps) {
+            for (RasterTileSet map: maps) {
                 MapPreview w = new MapPreview(50, map, m -> {
                     TerramapScreen.this.map.getRasterBackgroundLayer().ifPresent(l -> {
                         l.setTiledMap(m.previewLayer.getTiledMap());

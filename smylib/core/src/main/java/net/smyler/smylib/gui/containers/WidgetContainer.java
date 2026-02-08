@@ -96,7 +96,7 @@ public abstract class WidgetContainer implements Widget {
     }
 
     public WidgetContainer removeAllWidgets() {
-        for(Widget widget: this.widgets) widget.onRemoved();
+        for (Widget widget: this.widgets) widget.onRemoved();
         this.widgets.clear();
         return this;
     }
@@ -107,9 +107,9 @@ public abstract class WidgetContainer implements Widget {
         long ctime = System.currentTimeMillis();
         this.processTasks(ctime, this.scheduledForUpdatePre);
 
-        for(MouseAction event: this.delayedActions) {
+        for (MouseAction event: this.delayedActions) {
             boolean processed = false;
-            for(Widget widget: this.widgets) {
+            for (Widget widget: this.widgets) {
                 boolean propagate = true;
                 if (!this.isOverWidget(event.mouseX, event.mouseY, widget)) {
                     switch(event.type) {
@@ -163,7 +163,7 @@ public abstract class WidgetContainer implements Widget {
                 this.focusedWidget = null;
             }
         }
-        for(int i=0; i < this.draggedWidget.length; i++) {
+        for (int i=0; i < this.draggedWidget.length; i++) {
             if (this.draggedWidget[i] != null) {
                 this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this, this.dClickT[i]);
                 this.dClickX[i] = 0;
@@ -174,7 +174,7 @@ public abstract class WidgetContainer implements Widget {
         this.delayedActions.clear();
         float thisx = this.getX();
         float thisy = this.getY();
-        for(Widget w: this.widgets) w.onUpdate(mouseX - thisx, mouseY - thisy, this);
+        for (Widget w: this.widgets) w.onUpdate(mouseX - thisx, mouseY - thisy, this);
 
         if (this.menuToShow != null) {
             if (parent != null) parent.showMenu(thisx + this.menuToShowX, thisy + this.menuToShowY, this.menuToShow);
@@ -262,7 +262,7 @@ public abstract class WidgetContainer implements Widget {
      */
     @Nullable 
     protected Widget getWidgetUnder(float x, float y) {
-        for(Widget widget: this.widgets) if (this.isOverWidget(x, y, widget)) return widget;
+        for (Widget widget: this.widgets) if (this.isOverWidget(x, y, widget)) return widget;
         return null;
     }
 
@@ -356,7 +356,7 @@ public abstract class WidgetContainer implements Widget {
         }
         Widget wf = null;
         if (screenHovered) {
-            for(Widget widget: this.widgets) {
+            for (Widget widget: this.widgets) {
                 if (!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) continue;
                 if (this.isOverWidget(mouseX - x, mouseY - y, widget)) {
                     wf = widget;

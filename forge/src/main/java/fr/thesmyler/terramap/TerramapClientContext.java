@@ -120,7 +120,7 @@ public class TerramapClientContext {
 
     public Map<UUID, TerramapPlayer> getLocalPlayersMap() {
         Map<UUID, TerramapPlayer> players = new HashMap<>();
-        for(EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) {
+        for (EntityPlayer player: Minecraft.getMinecraft().world.playerEntities) {
             players.put(player.getPersistentID(), new TerramapLocalPlayer(player));
         }
         return players;
@@ -165,7 +165,7 @@ public class TerramapClientContext {
     public void syncPlayers(TerramapRemotePlayer[] players) {
         Set<TerramapRemotePlayer> toAdd = new HashSet<>();
         Set<UUID> toRemove = new HashSet<>(this.remotePlayers.keySet());
-        for(TerramapRemotePlayer player: players) {
+        for (TerramapRemotePlayer player: players) {
             if (toRemove.remove(player.getUUID())) {
                 TerramapRemotePlayer savedPlayer = this.remotePlayers.get(player.getUUID());
                 savedPlayer.setDisplayName(player.getDisplayName());
@@ -177,8 +177,8 @@ public class TerramapClientContext {
                 savedPlayer.setGamemode(player.getGamemode());
             } else toAdd.add(player);
         }
-        for(UUID uid: toRemove) this.remotePlayers.remove(uid);
-        for(TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
+        for (UUID uid: toRemove) this.remotePlayers.remove(uid);
+        for (TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
     }
 
 
@@ -465,7 +465,7 @@ public class TerramapClientContext {
     }
 
     public void setupMaps() {
-        for(RasterTileSet map: this.getRasterTileSets().values()) {
+        for (RasterTileSet map: this.getRasterTileSets().values()) {
             map.setup();
         }
     }

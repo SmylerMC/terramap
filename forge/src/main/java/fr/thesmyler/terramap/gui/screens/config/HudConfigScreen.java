@@ -217,7 +217,7 @@ public class HudConfigScreen extends Screen {
         while(buttonsTexts.size() > 0) {
             float lineWidth = 0;
             int lineCount = 0;
-            for(; lineCount < buttonsTexts.size(); lineCount++) {
+            for (; lineCount < buttonsTexts.size(); lineCount++) {
                 TextWidget text = buttonsTexts.get(lineCount);
                 ToggleButtonWidget button = buttons.get(lineCount);
                 float newWidth = lineWidth + text.getWidth() + textButtonSpace +button.getWidth();
@@ -226,7 +226,7 @@ public class HudConfigScreen extends Screen {
             }
             float padding = (width  - lineWidth) / (lineCount + 1);
             float x = padding;
-            for(int i=0; i<lineCount; i++) {
+            for (int i=0; i<lineCount; i++) {
                 TextWidget text = buttonsTexts.pop();
                 ToggleButtonWidget button = buttons.pop();
                 text.setAnchorX(x).setAnchorY(lineY + 4);
@@ -321,7 +321,7 @@ public class HudConfigScreen extends Screen {
         MapController minimapController = this.minimap.getController();
         minimapController.setTracksRotation(TerramapConfig.CLIENT.minimap.playerRotation);
         if (!TerramapConfig.CLIENT.minimap.playerRotation) minimapController.setRotation(0f, false);
-        for(RasterTileSetSliderEntry map: this.tileSets) if (map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
+        for (RasterTileSetSliderEntry map: this.tileSets) if (map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
             this.styleSlider.setCurrentOption(map);
             break;
         }

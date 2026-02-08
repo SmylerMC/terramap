@@ -172,7 +172,7 @@ public class CircularCompassWidget implements Widget {
         this.vertices = new double[vertexCount][2];
         this.vertexCalculationHelper.set(0, -radius);
         Mat2d rot = Mat2d.forRotation(-Math.PI*2 / vertexCount);
-        for(int i = 0; i < vertexCount; i++) {
+        for (int i = 0; i < vertexCount; i++) {
             this.vertices[i] = new double[] {
                     this.vertexCalculationHelper.x(),
                     this.vertexCalculationHelper.y()

@@ -307,7 +307,7 @@ public class TerramapConfigScreen extends Screen {
         }
 
         static TileScalingOption getFromValue(double val) {
-            for(TileScalingOption o: TileScalingOption.values()) {
+            for (TileScalingOption o: TileScalingOption.values()) {
                 if (o.value == val) return o;
             }
             return AUTO;

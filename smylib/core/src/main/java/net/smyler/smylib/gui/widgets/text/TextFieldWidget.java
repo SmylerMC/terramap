@@ -403,7 +403,7 @@ public class TextFieldWidget implements Widget {
 
     private int getWordSkipPosition(int wordCount, int startFromPos, boolean includeSpaces) {
         int pos = startFromPos;
-        for(int i = 0; i < Math.abs(wordCount); ++i) {
+        for (int i = 0; i < Math.abs(wordCount); ++i) {
             if (wordCount > 0) {
                 int textLength = this.text.length();
                 pos = this.text.indexOf(' ', pos);
@@ -701,7 +701,7 @@ public class TextFieldWidget implements Widget {
 
     public static String stripInvalidChars(String str) {
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < str.length(); ++i) {
+        for (int i = 0; i < str.length(); ++i) {
             char c = str.charAt(i);
             if (isValidChar(c)) builder.append(c);
         }

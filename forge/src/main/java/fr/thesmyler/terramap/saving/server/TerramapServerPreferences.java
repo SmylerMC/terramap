@@ -143,7 +143,7 @@ public class TerramapServerPreferences {
     public static void saveAllPreferences() {
         try {
             synchronized(preferences) {
-                for(String key: TerramapServerPreferences.preferences.keySet()) {
+                for (String key: TerramapServerPreferences.preferences.keySet()) {
                     WorldPreferences preferences = TerramapServerPreferences.preferences.get(key);
                     File file = new File(key);
                     TerramapServerPreferences.save(file, preferences);
