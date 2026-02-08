@@ -1,7 +1,5 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.game.Key;
-import net.smyler.smylib.game.Keyboard;
 
 public class Lwjgl2Keyboard implements Keyboard {
 

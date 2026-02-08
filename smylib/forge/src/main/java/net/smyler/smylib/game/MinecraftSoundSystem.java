@@ -1,6 +1,5 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.game.SoundSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;

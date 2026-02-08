@@ -1,6 +1,5 @@
 package net.smyler.smylib.game;
 
-import net.smyler.smylib.game.Clipboard;
 import net.minecraft.client.gui.GuiScreen;
 
 public class AwtClipboard implements Clipboard {
