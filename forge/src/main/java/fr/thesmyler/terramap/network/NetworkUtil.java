@@ -37,7 +37,7 @@ public final class NetworkUtil {
         PacketBuffer packetBuffer = getPacketBuffer(buf);
         int strCount = packetBuffer.readVarInt();
         String[] strings = new String[strCount]; 
-        for (int i = 0; i<strCount; i++) {
+        for (int i = 0; i < strCount; i++) {
             strings[i] = packetBuffer.readString(Integer.MAX_VALUE / 4);
         }
         return strings;
@@ -54,7 +54,7 @@ public final class NetworkUtil {
     public static Map<String, String> decodeStringMapFromByteBuf(ByteBuf buf) {
         Map<String, String> map = new HashMap<>();
         int length = buf.readInt();
-        for (int i = 0; i<length; i++) {
+        for (int i = 0; i < length; i++) {
             String key = decodeStringFromByteBuf(buf);
             String value = decodeStringFromByteBuf(buf);
             map.put(key, value);

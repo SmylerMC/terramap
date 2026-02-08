@@ -248,7 +248,7 @@ public class McChunksLayer extends MapLayer {
 
     private void renderTile(UiDrawContext context, float x, float y, int discriminator, Color color, float lineWidth, boolean[] loopingConditions) {
         try {
-            for (int i = 0; i<this.projectedCorners.length; i++) {
+            for (int i = 0; i < this.projectedCorners.length; i++) {
                 this.cache.getRenderPos(this.projectedCorners[i], this.corners[i], discriminator);
             }
         } catch (OutOfGeoBoundsException silenced) {

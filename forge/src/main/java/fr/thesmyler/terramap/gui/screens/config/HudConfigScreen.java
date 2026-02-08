@@ -226,7 +226,7 @@ public class HudConfigScreen extends Screen {
             }
             float padding = (width  - lineWidth) / (lineCount + 1);
             float x = padding;
-            for (int i = 0; i<lineCount; i++) {
+            for (int i = 0; i < lineCount; i++) {
                 TextWidget text = buttonsTexts.pop();
                 ToggleButtonWidget button = buttons.pop();
                 text.setAnchorX(x).setAnchorY(lineY + 4);

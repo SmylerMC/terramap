@@ -110,7 +110,7 @@ public class SP2CRasterTileSetPacket implements IMessage {
         
         if (buf.isReadable()) {
             int length = buf.readInt();
-            for (int i = 0; i<length; i++) {
+            for (int i = 0; i < length; i++) {
                 int zoom = buf.readInt();
                 int lowerX = buf.readInt();
                 int lowerY = buf.readInt();
