@@ -48,8 +48,11 @@ public class MapMenuWidget extends MenuWidget {
     private final MenuEntry copy2drMenuEntry;
     private final MenuEntry setProjectionMenuEntry;
 
-    // This only exists is so we can use it to send chat messages
-    private static final GuiScreen CHAT_SENDER_GUI = new GuiScreen() {};
+    // This only exists so we can use it to send chat messages
+    private static final GuiScreen CHAT_SENDER_GUI = new GuiScreen() {
+        // GuiScreen is abstract, so we need to create an anonymous class here
+        // so we can use its abstract methods (a bit hacky).
+    };
 
     static { CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
 

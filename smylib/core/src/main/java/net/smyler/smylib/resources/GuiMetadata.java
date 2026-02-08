@@ -24,9 +24,16 @@ public class GuiMetadata {
         return this.scaling;
     }
 
-    public interface Scaling {}
+    public interface Scaling {
+        // The only purpose of this interface is to be inherited from
+    }
 
-    public static class Stretch implements Scaling {}
+    /**
+     * The texture should be stretched to fit the GUI element.
+     */
+    public static class Stretch implements Scaling {
+        // No specific parameters needed for stretching
+    }
 
     public static class Tile implements Scaling {
 

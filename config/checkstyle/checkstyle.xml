@@ -35,7 +35,6 @@
       <property name="allowEmptyLoops" value="true"/>
       <property name="allowEmptyMethods" value="true"/>
       <property name="allowEmptySwitchBlockStatements" value="true"/>
-      <property name="allowEmptyTypes" value="true"/>
     </module>
 
   </module>
