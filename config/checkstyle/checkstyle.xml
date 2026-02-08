@@ -18,6 +18,7 @@
     <module name="ImportOrder">
       <property name="option" value="bottom"/>
       <property name="separated" value="true"/>
+      <property name="useContainerOrderingForStatic" value="true"/>
     </module>
   </module>
 

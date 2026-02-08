@@ -5,7 +5,7 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 import net.smyler.smylib.math.Vec2d;
 import net.smyler.smylib.math.Vec2dImmutable;
 import net.smyler.smylib.math.Vec2dMutable;
-import net.smyler.terramap.geo.*;
+import net.smyler.terramap.geo.GeoBounds;
 import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.terramap.geo.point.GeoPointImmutable;
 import net.smyler.terramap.geo.point.GeoPointMutable;
@@ -13,10 +13,10 @@ import net.smyler.terramap.geo.point.GeoPointView;
 import net.smyler.terramap.util.math.Snapper;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
-import static net.smyler.smylib.SmyLib.getGameClient;
-import static net.smyler.terramap.geo.GeoUtil.getAzimuthInRange;
-import static net.smyler.smylib.math.Math.clamp;
 import static java.lang.Math.*;
+import static net.smyler.smylib.SmyLib.getGameClient;
+import static net.smyler.smylib.math.Math.clamp;
+import static net.smyler.terramap.geo.GeoUtil.getAzimuthInRange;
 
 /**
  * Handles moving a map according to its inputs and animations.
