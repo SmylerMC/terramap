@@ -27,35 +27,35 @@ public class Animation {
     public void update() {
         this.updated = System.currentTimeMillis();
         long age = this.getAge();
-        long halfDuration = this.duration/2;
+        long halfDuration = this.duration / 2;
         if (this.duration == 0) {
             this.progress = 1f;
         } else {
             switch (this.state) {
                 case ENTER:
-                    float f = (float)age/(float)this.duration;
+                    float f = (float)age / (float)this.duration;
                     this.progress = saturate(f);
                     if (this.progress == 1f) this.state = AnimationState.STOPPED;
                     break;
                 case LEAVE:
-                    float g = (float)age/(float)this.duration;
+                    float g = (float)age / (float)this.duration;
                     this.progress = 1 - saturate(g);
                     if (this.progress == 0f) this.state = AnimationState.STOPPED;
                     break;
                 case FLASH:
-                    float k = 2 * saturate(abs(((float)(age % this.duration) - halfDuration)/halfDuration));
+                    float k = 2 * saturate(abs(((float)(age % this.duration) - halfDuration) / halfDuration));
                     this.progress = (int)k;
                     break;
                 case CONTINUOUS_ENTER:
-                    float h = (float)(age % this.duration)/(float)this.duration;
+                    float h = (float)(age % this.duration) / (float)this.duration;
                     this.progress = saturate(h);
                     break;
                 case CONTINUOUS_LEAVE:
-                    float i = (float)(age % this.duration)/(float)this.duration;
+                    float i = (float)(age % this.duration) / (float)this.duration;
                     this.progress = 1 - saturate(i);
                     break;
                 case BACK_AND_FORTH:
-                    float j = ((float)(age % this.duration) - halfDuration)/halfDuration;
+                    float j = ((float)(age % this.duration) - halfDuration) / halfDuration;
                     this.progress = saturate(abs(j));
                     break;
                 case STOPPED:

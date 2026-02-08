@@ -83,17 +83,17 @@ public class CircularCompassWidget implements Widget {
         gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
         gl.setColor(WHITE);
         gl.vertex().position(0d, -radius, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
-        gl.vertex().position(-radius/3, radius * 0.1, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
+        gl.vertex().position(-radius / 3, radius * 0.1, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
         gl.vertex().position(0d, 0d, 0d).color(north.redf(), north.greenf(), north.bluef(), north.alphaf()).end();
-        gl.vertex().position(radius/3, radius * 0.1, 0d).color(northDark.redf(), northDark.greenf(), northDark.bluef(), northDark.alphaf()).end();
+        gl.vertex().position(radius / 3, radius * 0.1, 0d).color(northDark.redf(), northDark.greenf(), northDark.bluef(), northDark.alphaf()).end();
         gl.draw();
 
         // South arrow
         gl.startDrawing(TRIANGLE_FAN, POSITION_COLOR);
         gl.vertex().position(0, 0, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
-        gl.vertex().position(-radius/3, radius * 0.1, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
+        gl.vertex().position(-radius / 3, radius * 0.1, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
         gl.vertex().position(0, radius, 0).color(south.redf(), south.greenf(), south.bluef(), south.alphaf()).end();
-        gl.vertex().position(radius/3, radius * 0.1, 0).color(southColor.redf(), southColor.greenf(), southColor.bluef(), southColor.alphaf()).end();
+        gl.vertex().position(radius / 3, radius * 0.1, 0).color(southColor.redf(), southColor.greenf(), southColor.bluef(), southColor.alphaf()).end();
         gl.draw();
 
         gl.popViewMatrix();

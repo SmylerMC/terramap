@@ -43,9 +43,9 @@ public class RibbonCompassWidget implements Widget {
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         double blendBorder = 10d; // How many pixels to fade to alpha=0 on the sides
         double leftU = (double)(this.azimuth - 180) / 360 + (double)(this.textureWidth - this.width) / this.textureWidth / 2;
-        double leftCU = leftU + blendBorder/this.textureWidth;
+        double leftCU = leftU + blendBorder / this.textureWidth;
         double rightU = leftU + (double) this.width / this.textureWidth;
-        double rightCU = rightU - blendBorder/this.textureWidth;
+        double rightCU = rightU - blendBorder / this.textureWidth;
 
         GlContext gl = context.gl();
 

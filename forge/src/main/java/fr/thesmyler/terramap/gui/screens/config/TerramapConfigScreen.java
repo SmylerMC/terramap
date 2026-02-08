@@ -129,23 +129,23 @@ public class TerramapConfigScreen extends Screen {
                         .setX(chatOnMapText.getX() + chatOnMapText.getWidth() + 9).setY(chatOnMapText.getAnchorY() - 4));
         mapConfigScreen.addWidget(
                 this.tileScalingSlider
-                        .setX(mapConfigScreen.getWidth()/2 - 130).setY(this.showChatOnMapToggle.getY() + this.unlockZoomToggle.getHeight() + inter)
+                        .setX(mapConfigScreen.getWidth() / 2 - 130).setY(this.showChatOnMapToggle.getY() + this.unlockZoomToggle.getHeight() + inter)
                         .setWidth(125)
                         .setDisplayPrefix(translator.format("terramap.configmenu.tilescaling")));
         mapConfigScreen.addWidget(
                 this.doubleClickDelaySlider
-                    .setX(mapConfigScreen.getWidth()/2 + 5).setY(this.tileScalingSlider.getY())
+                    .setX(mapConfigScreen.getWidth() / 2 + 5).setY(this.tileScalingSlider.getY())
                         .setWidth(this.tileScalingSlider.getWidth())
                         .setDisplayPrefix(translator.format("terramap.configmenu.doubleclick")));
         this.maxLoadedTilesSlider.setTooltip(translator.format("terramap.configmenu.tilecache.tooltip"));
         mapConfigScreen.addWidget(
                 this.maxLoadedTilesSlider
-                        .setX(mapConfigScreen.getWidth()/2 - 130).setY(this.doubleClickDelaySlider.getY() + this.doubleClickDelaySlider.getHeight() + inter)
+                        .setX(mapConfigScreen.getWidth() / 2 - 130).setY(this.doubleClickDelaySlider.getY() + this.doubleClickDelaySlider.getHeight() + inter)
                         .setWidth(125)
                         .setDisplayPrefix(translator.format("terramap.configmenu.tilecache")));
         this.lowZoomLevelSlider.setTooltip(translator.format("terramap.configmenu.lowzoom.tooltip"));
         mapConfigScreen.addWidget(this.lowZoomLevelSlider
-                .setX(mapConfigScreen.getWidth()/2 + 5).setY(this.maxLoadedTilesSlider.getY())
+                .setX(mapConfigScreen.getWidth() / 2 + 5).setY(this.maxLoadedTilesSlider.getY())
                 .setWidth(this.maxLoadedTilesSlider.getWidth())
                 .setDisplayPrefix(translator.format("terramap.configmenu.lowzoom")));
         TextButtonWidget hudButton = new TextButtonWidget(

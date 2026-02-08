@@ -229,9 +229,9 @@ public class Color {
         } else {
             float q = l < 0.5 ? l * (1 + s) : l + s - l * s;
             float p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1f/3f);
+            r = hue2rgb(p, q, h + 1f / 3f);
             g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1f/3f);
+            b = hue2rgb(p, q, h - 1f / 3f);
         }
 
         return new Color(r, g, b);
@@ -241,9 +241,9 @@ public class Color {
         float t = r;
         if (t < 0) t += 1;
         if (t > 1) t -= 1;
-        if (t < 1f/6f) return p + (q - p) * 6f * t;
-        if (t < 1f/2f) return q;
-        if (t < 2f/3f) return p + (q - p) * (2f/3f - t) * 6f;
+        if (t < 1f / 6f) return p + (q - p) * 6f * t;
+        if (t < 1f / 2f) return q;
+        if (t < 2f / 3f) return p + (q - p) * (2f / 3f - t) * 6f;
         return p;
     }
 

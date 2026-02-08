@@ -158,7 +158,7 @@ public class MapWidget extends FlexibleWidgetContainer {
 
         this.setDoScissor(true);
 
-        this.updateMouseGeoPos(this.getWidth()/2, this.getHeight()/2);
+        this.updateMouseGeoPos(this.getWidth() / 2, this.getHeight() / 2);
 
         for (MarkerController<?> controller: MarkerControllerManager.createControllers(this.context)) {
             if (controller instanceof RightClickMarkerController) {

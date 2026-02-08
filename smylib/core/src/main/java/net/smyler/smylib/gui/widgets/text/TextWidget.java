@@ -87,7 +87,7 @@ public class TextWidget implements Widget {
                     lx -= lineWidth;
                     break;
                 case CENTER:
-                    lx -= lineWidth/2;
+                    lx -= lineWidth / 2;
                     break;
             }
             this.font.draw(lx, drawY, formattedText, this.baseColor, this.shadow);
@@ -109,7 +109,7 @@ public class TextWidget implements Widget {
                 this.x -= this.width - this.padding;
                 break;
             case CENTER:
-                this.x -= this.width/2;
+                this.x -= this.width / 2;
                 break;
         }
         this.y = this.anchorY;

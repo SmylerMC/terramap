@@ -112,7 +112,7 @@ public class MenuWidget implements Widget {
                 if (subMenu != null) this.font.draw(x + width - dw - padding, ty + padding, " >", c, false);
                 ty += lh;
             } else {
-                context.drawRectangle(x + 1, ty + sh/2, x + width, ty + sh/2 + 1, separatorColor);
+                context.drawRectangle(x + 1, ty + sh / 2, x + width, ty + sh / 2 + 1, separatorColor);
                 ty += sh;
             }
         }

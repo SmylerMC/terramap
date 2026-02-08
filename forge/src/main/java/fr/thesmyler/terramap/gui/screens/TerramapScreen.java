@@ -748,7 +748,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
             context.drawRectangle(x, y + height - parent.getFont().height() - 4, x + width, y + height, Color.DARK_GRAY);
             context.drawRectangle(x, y, x + 4, y + height, Color.DARK_GRAY);
             context.drawRectangle(x + width - 4, y, x + width, y + height, Color.DARK_GRAY);
-            parent.getFont().drawCentered(x + width/2, y + height - parent.getFont().height() - 2, text, textColor, true);
+            parent.getFont().drawCentered(x + width / 2, y + height - parent.getFont().height() - 2, text, textColor, true);
 
         }
 

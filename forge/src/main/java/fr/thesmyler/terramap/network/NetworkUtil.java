@@ -21,7 +21,7 @@ public final class NetworkUtil {
 
     public static String decodeStringFromByteBuf(ByteBuf buf) {
         PacketBuffer packetBuffer = getPacketBuffer(buf);
-        return packetBuffer.readString(Integer.MAX_VALUE/4);
+        return packetBuffer.readString(Integer.MAX_VALUE / 4);
     }
 
     public static void encodeStringArrayToByteBuf(String[] strings, ByteBuf buf) {
@@ -38,7 +38,7 @@ public final class NetworkUtil {
         int strCount = packetBuffer.readVarInt();
         String[] strings = new String[strCount]; 
         for (int i = 0; i<strCount; i++) {
-            strings[i] = packetBuffer.readString(Integer.MAX_VALUE/4);
+            strings[i] = packetBuffer.readString(Integer.MAX_VALUE / 4);
         }
         return strings;
     }

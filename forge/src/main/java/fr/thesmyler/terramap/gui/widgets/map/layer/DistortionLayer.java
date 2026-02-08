@@ -58,7 +58,7 @@ public class DistortionLayer extends MapLayer {
                 try {
                     projection.tissot(this.tissot, this.renderedLocations);
                     float red = (float) Math.min(this.tissot.areaInflation() / 4f, 1f);
-                    float green = (float) Math.min(this.tissot.maxAngularDistortion() / 2/Math.PI, 1f);
+                    float green = (float) Math.min(this.tissot.maxAngularDistortion() / 2 / Math.PI, 1f);
                     float alpha = Math.min(red + green, 1f);
                     color = new Color(red, green, 0f, alpha);
                 } catch (OutOfGeoBoundsException e) {

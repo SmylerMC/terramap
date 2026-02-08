@@ -47,7 +47,7 @@ public class ScrollableWidgetContainer extends FlexibleWidgetContainer {
         float thisWidth = this.getWidth(), thisHeight = this.getHeight();
         float contWidth = this.content.getWidth(), contHeight = this.content.getHeight();
         this.horizontalScrollbar.setViewPort((thisWidth - 15f) / contWidth);
-        this.verticalScrollbar.setViewPort((thisHeight - 15f)/ contHeight);
+        this.verticalScrollbar.setViewPort((thisHeight - 15f) / contHeight);
         boolean vertVisible = this.verticalScrollbar.isVisible(this);
         boolean horzVisible = this.horizontalScrollbar.isVisible(this);
         this.content.setPosition(

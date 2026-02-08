@@ -24,7 +24,7 @@ public final class WebMercatorUtil {
 
     /* Constants */
     public static final int TILE_DIMENSIONS = 256;
-    public static final double LIMIT_LATITUDE_RADIANS = 2d * atan(pow(E, PI)) - PI/2d;
+    public static final double LIMIT_LATITUDE_RADIANS = 2d * atan(pow(E, PI)) - PI / 2d;
     public static final double LIMIT_LATITUDE = toDegrees(LIMIT_LATITUDE_RADIANS);
     
     public static final GeoBounds PROJECTION_BOUNDS = new GeoBounds(

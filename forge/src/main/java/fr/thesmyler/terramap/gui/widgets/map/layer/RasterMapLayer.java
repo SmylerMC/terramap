@@ -169,7 +169,7 @@ abstract public class RasterMapLayer extends MapLayer {
 
                     while (tile.getPosition().getZoom() > 0 && !tile.isTextureAvailable()) {
                         try {
-                            tile = tiledMap.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() /2, tile.getPosition().getY() /2);
+                            tile = tiledMap.getTile(tile.getPosition().getZoom()-1, tile.getPosition().getX() / 2, tile.getPosition().getY() / 2);
                         } catch (InvalidTilePositionException silenced) {
                             break;
                         }
@@ -246,9 +246,9 @@ abstract public class RasterMapLayer extends MapLayer {
                             dispX + displayWidth - 1, dispY + displayHeight - 1,
                             dispX + displayWidth - 1, dispY
                             );
-                    smallFont.drawCentered((float)(dispX + displayWidth/2), (float)(dispY + displayHeight/2), String.valueOf(tile.getPosition().getZoom()), lineColor, false);
-                    smallFont.draw((float)dispX + 2, (float)(dispY + displayHeight/2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
-                    smallFont.drawCentered((float)(dispX + displayWidth/2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
+                    smallFont.drawCentered((float)(dispX + displayWidth / 2), (float)(dispY + displayHeight / 2), String.valueOf(tile.getPosition().getZoom()), lineColor, false);
+                    smallFont.draw((float)dispX + 2, (float)(dispY + displayHeight / 2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
+                    smallFont.drawCentered((float)(dispX + displayWidth / 2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
             }
         }
