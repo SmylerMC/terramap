@@ -69,7 +69,7 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
      * Unloads tiles until we are at the max number of loaded tiles
      */
     public void unloadToMaxLoad() {
-        while(this.tileList.size() > CACHE_SIZE) {
+        while (this.tileList.size() > CACHE_SIZE) {
             RasterTile toUnload = this.tileList.removeLast();
             this.tileMap.remove(toUnload.getPosition());
             this.unloadTile(toUnload);
@@ -80,7 +80,7 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
      * Unloads all tiles, after this operation, this map will be as if it was just instantiated.
      */
     public void unloadAll() {
-        while(!this.tileList.isEmpty()) {
+        while (!this.tileList.isEmpty()) {
             RasterTile toUnload = this.tileList.removeLast();
             this.tileMap.remove(toUnload.getPosition());
             this.unloadTile(toUnload);

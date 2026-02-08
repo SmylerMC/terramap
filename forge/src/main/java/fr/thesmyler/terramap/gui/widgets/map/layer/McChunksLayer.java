@@ -211,10 +211,10 @@ public class McChunksLayer extends MapLayer {
         inTop = inBottom = inLeft = inRight = true;
         
         // Spiral out from the center tile until we aren't rendering anything onto the screen
-        while((inTop || inBottom || inRight || inLeft) && safety++ < maxTiles) {
+        while ((inTop || inBottom || inRight || inLeft) && safety++ < maxTiles) {
             
             boolean[] linesInlineIn = new boolean[4];
-            while(2*dX*direction < size) {
+            while (2*dX*direction < size) {
                 if ((direction < 0 && inBottom) || (direction > 0 && inTop))
                     this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
                 dX += direction;
@@ -228,7 +228,7 @@ public class McChunksLayer extends MapLayer {
             if (!linesInlineIn[3]) inBottom = false;
             linesInlineIn = new boolean[4];
 
-            while(2*dY*direction < size) {
+            while (2*dY*direction < size) {
                 if ((direction < 0 && inLeft) || (direction > 0 && inRight))
                     this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
                 dY += direction;

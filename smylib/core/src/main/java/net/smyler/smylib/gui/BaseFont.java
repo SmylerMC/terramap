@@ -304,7 +304,7 @@ abstract class BaseFont implements Font {
         for (int i = text.length() - 1; i >= 0; i--) {
             computedWidth += widths[i];
             if (computedWidth > width) {  // Found desired length
-                while(i < text.length()  - 1 && widths[i] == 0) {
+                while (i < text.length()  - 1 && widths[i] == 0) {
                     i++;  // Skip heading style characters
                 }
                 return styles[i] + text.substring(i + 1);

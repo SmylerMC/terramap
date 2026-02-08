@@ -73,7 +73,7 @@ public class RasterTileSetManager {
             try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(in))) {
                 StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
-                while(line != null) {
+                while (line != null) {
                     json.append(line);
                     line = txtReader.readLine();
                 }
@@ -119,7 +119,7 @@ public class RasterTileSetManager {
             try(BufferedReader txtReader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(b)))) {
                 StringBuilder json = new StringBuilder();
                 String line = txtReader.readLine();
-                while(line != null) {
+                while (line != null) {
                     json.append(line);
                     line = txtReader.readLine();
                 }

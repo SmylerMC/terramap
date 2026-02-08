@@ -318,7 +318,7 @@ public class WrappedMinecraft implements GameClient {
     @Override
     public int closeAllPopups() {
         int i = 0;
-        while(this.getCurrentScreen() instanceof PopupScreen) {
+        while (this.getCurrentScreen() instanceof PopupScreen) {
             this.closeTopPopup();
             i++;
         }

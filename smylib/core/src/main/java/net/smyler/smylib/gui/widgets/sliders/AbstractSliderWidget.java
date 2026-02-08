@@ -152,7 +152,7 @@ public abstract class AbstractSliderWidget implements Widget {
         float fontSize = game.defaultFont().height();
         double gameScale = game.scaleFactor();
         float fontScale = 1f;
-        while(fontSize / fontScale > this.height - 1 && fontScale < gameScale) {
+        while (fontSize / fontScale > this.height - 1 && fontScale < gameScale) {
             fontScale++;
         }
         Font font = game.defaultFont().withScale(1 / fontScale + 0.0001f);

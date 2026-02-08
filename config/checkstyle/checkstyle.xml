@@ -29,7 +29,7 @@
       <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
     </module>
     <module name="WhitespaceAround">
-      <property name="tokens" value="LITERAL_IF, LITERAL_FOR"/>
+      <property name="tokens" value="LITERAL_IF, LITERAL_FOR, LITERAL_WHILE"/>
     </module>
 
   </module>

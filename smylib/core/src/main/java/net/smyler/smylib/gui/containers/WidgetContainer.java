@@ -196,7 +196,7 @@ public abstract class WidgetContainer implements Widget {
     
     private void processTasks(long currentTime, List<ScheduledTask> tasks) {
         int j = tasks.size();
-        while(--j >= 0) {
+        while (--j >= 0) {
             ScheduledTask task = tasks.get(j);
             if (currentTime > task.getWhen()) {
                 task.execute();

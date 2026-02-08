@@ -214,7 +214,7 @@ public class HudConfigScreen extends Screen {
         float textButtonSpace = 3;
         float lineSpace = 4;
         ToggleButtonWidget lastButton = null;
-        while(buttonsTexts.size() > 0) {
+        while (buttonsTexts.size() > 0) {
             float lineWidth = 0;
             int lineCount = 0;
             for (; lineCount < buttonsTexts.size(); lineCount++) {

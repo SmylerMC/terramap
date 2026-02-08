@@ -409,13 +409,13 @@ public class TextFieldWidget implements Widget {
                 pos = this.text.indexOf(' ', pos);
                 if (pos == -1) pos = textLength;
                 else if (includeSpaces) {
-                    while(pos < textLength && this.text.charAt(pos) == ' ') {
+                    while (pos < textLength && this.text.charAt(pos) == ' ') {
                         ++pos;
                     }
                 }
             } else {
-                while(includeSpaces && pos > 0 && this.text.charAt(pos - 1) == ' ') --pos;
-                while(pos > 0 && this.text.charAt(pos - 1) != ' ') --pos;
+                while (includeSpaces && pos > 0 && this.text.charAt(pos - 1) == ' ') --pos;
+                while (pos > 0 && this.text.charAt(pos - 1) != ' ') --pos;
             }
         }
 
