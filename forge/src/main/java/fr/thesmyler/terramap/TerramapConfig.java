@@ -16,7 +16,7 @@ import static net.smyler.smylib.SmyLib.getGameClient;
  * Terramap's config
  * 
  */
-@Config(modid=Terramap.MOD_ID)
+@Config(modid = Terramap.MOD_ID)
 public class TerramapConfig {
 
     public static final class Minimap {
@@ -34,35 +34,35 @@ public class TerramapConfig {
         @Config.Name("minimap_position_x")
         @Config.LangKey("terramap.config.minimap.pos_x")
         @Config.Comment("X position of the minimap on screen, in percents")
-        @Config.RangeDouble(min=0, max=100)
+        @Config.RangeDouble(min = 0, max = 100)
         @Config.SlidingOption
         public float posX = 1;
 
         @Config.Name("minimap_position_y")
         @Config.LangKey("terramap.config.minimap.pos_y")
         @Config.Comment("Y position of the minimap on screen, in percents")
-        @Config.RangeDouble(min=0, max=100)
+        @Config.RangeDouble(min = 0, max = 100)
         @Config.SlidingOption
         public float posY = 1;
 
         @Config.Name("minimap_width")
         @Config.LangKey("terramap.config.minimap.width")
         @Config.Comment("Minimap width, in percents")
-        @Config.RangeDouble(min=0, max=100)
+        @Config.RangeDouble(min = 0, max = 100)
         @Config.SlidingOption
         public float width = 20;
 
         @Config.Name("minimap_height")
         @Config.LangKey("terramap.config.minimap.height")
         @Config.Comment("Minimap height, in percents")
-        @Config.RangeDouble(min=0, max=100)
+        @Config.RangeDouble(min = 0, max = 100)
         @Config.SlidingOption
         public float height = 15;
 
         @Config.Name("minimap_zoom")
         @Config.LangKey("terramap.config.minimap.zoom")
         @Config.Comment("Minimap zoom level")
-        @Config.RangeDouble(min=0, max=19)
+        @Config.RangeDouble(min = 0, max = 19)
         @Config.SlidingOption
         public float zoomLevel = 18;
 
@@ -79,7 +79,7 @@ public class TerramapConfig {
         @Config.Name("minimap_tile_scaling")
         @Config.LangKey("terramap.config.minimap.tile_scaling")
         @Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. This is for the minimap.")
-        @Config.RangeDouble(min=0.0, max=8.0)
+        @Config.RangeDouble(min = 0.0, max = 8.0)
         public double tileScaling = 0.0;
 
         @Config.Name("minimap_player_directions")
@@ -116,21 +116,21 @@ public class TerramapConfig {
         @Config.Name("compass_position_x")
         @Config.LangKey("terramap.config.compass.position.x")
         @Config.Comment("Compass X position, as % of the screen's width")
-        @Config.RangeDouble(min=0, max=100)
+        @Config.RangeDouble(min = 0, max = 100)
         @Config.SlidingOption
         public float posX = 1;
 
         @Config.Name("compass_position_y")
         @Config.LangKey("terramap.config.compass.position.y")
         @Config.Comment("Compass Y position, as % of the screen's height")
-        @Config.RangeDouble(min=0, max=100)
+        @Config.RangeDouble(min = 0, max = 100)
         @Config.SlidingOption
         public float posY = 16;
 
         @Config.Name("compass_width")
         @Config.LangKey("terramap.config.compass.width")
         @Config.Comment("Compass width, as % of the screen's width")
-        @Config.RangeDouble(min=0, max=100)
+        @Config.RangeDouble(min = 0, max = 100)
         @Config.SlidingOption
         public float width = 20;
     }
@@ -150,7 +150,7 @@ public class TerramapConfig {
         @Config.Name("tile_scaling")
         @Config.LangKey("terramap.config.tile_scaling")
         @Config.Comment("Try lowering this value if you have pixelated map because of vanilla GUI scalling. This is for the full-screen map.")
-        @Config.RangeDouble(min=0.0, max=8.0)
+        @Config.RangeDouble(min = 0.0, max = 8.0)
         public double tileScaling = 0;
 
         @Config.Ignore public final int LOW_ZOOM_LEVEL_MIN = 0;
@@ -164,7 +164,7 @@ public class TerramapConfig {
                 + "\t2 -> 21\n"
                 + "\t3 -> 85\n"
                 + "Honnestly, you shouldn't be changing that option, it's mostly for testing purposes")
-        @Config.RangeInt(min=LOW_ZOOM_LEVEL_MIN, max=LOW_ZOOM_LEVEL_MAX)
+        @Config.RangeInt(min = LOW_ZOOM_LEVEL_MIN, max = LOW_ZOOM_LEVEL_MAX)
         @Config.SlidingOption
         public int lowZoomLevel = LOW_ZOOM_LEVEL_DEFAULT;
 
@@ -179,7 +179,7 @@ public class TerramapConfig {
         @Config.Name("double_click_delay")
         @Config.LangKey("terramap.config.double_click_delay")
         @Config.Comment("Double click delay to use in guis, in milliscondes")
-        @Config.RangeInt(min=DOUBLE_CLICK_DELAY_MIN, max=DOUBLE_CLICK_DELAY_MAX)
+        @Config.RangeInt(min = DOUBLE_CLICK_DELAY_MIN, max = DOUBLE_CLICK_DELAY_MAX)
         @Config.SlidingOption
         public int doubleClickDelay = DOUBLE_CLICK_DELAY_DEFAULT;
 
@@ -227,13 +227,13 @@ public class TerramapConfig {
         @Config.Name("sync_interval")
         @Config.LangKey("terramap.config.sync_interval")
         @Config.Comment("Synchronization time interval, int ticks, higher means better server perfomance but a map which lags behind a bit more")
-        @Config.RangeInt(min=1, max=100)
+        @Config.RangeInt(min = 1, max = 100)
         @Config.SlidingOption
         public int syncInterval = 10;
 
         @Config.Name("sync_hearthbeet_timeout")
         @Config.LangKey("terramap.config.sync_heartbeet")
-        @Config.RangeInt(min=20000)
+        @Config.RangeInt(min = 20000)
         @Config.Comment("If a client keeps its map open more than this time, the server asks the client to confirm that it still needs map updates. This is in milliseconds")
         public int syncHeartbeatTimeout = 120000;
 

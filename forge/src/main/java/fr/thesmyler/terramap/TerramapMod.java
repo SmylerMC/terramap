@@ -36,7 +36,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 //TODO Credit TwelveMonkeys in the readme
-@Mod(modid=Terramap.MOD_ID, useMetadata=true, dependencies="required-after:terraplusplus@[1.0.569,)")
+@Mod(modid = Terramap.MOD_ID, useMetadata = true, dependencies = "required-after:terraplusplus@[1.0.569,)")
 public class TerramapMod implements Terramap {
 
     private static TerramapVersion version; // Read from the metadata
@@ -75,7 +75,7 @@ public class TerramapMod implements Terramap {
         String versionStr = event.getModMetadata().version;
         if (System.getProperties().containsKey("terramap.debug")) {
             this.logger.info("Debug flag is set, forcing a development version string.");
-            versionStr= "${version}";
+            versionStr = "${version}";
         }
         try {
             TerramapMod.version = new TerramapVersion(versionStr);

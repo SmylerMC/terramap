@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class AbstractSolidWidget implements Widget {
 
     protected boolean visible = true;
-    protected boolean enabled= true;
+    protected boolean enabled = true;
     protected final int z;
     protected float x, y, width, height;
     protected String tooltip = null;

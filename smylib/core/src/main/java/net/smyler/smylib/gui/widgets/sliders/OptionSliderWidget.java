@@ -75,7 +75,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
      */
     @SuppressWarnings("unchecked")
     public void setCurrentOption(T option) {
-        for (int i=0; i<this.options.length; i++) {
+        for (int i = 0; i<this.options.length; i++) {
             if (option.equals(this.options[i])) {
                 this.option = i;
             }

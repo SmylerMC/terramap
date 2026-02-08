@@ -308,7 +308,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
 
         if (!TerramapClientContext.getContext().isInstalledOnServer() && TerramapClientContext.getContext().getProjection() == null && TerramapClientContext.getContext().isOnEarthWorld()) {
             StringBuilder warningBuilder = new StringBuilder();
-            for (int i=1; translator.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
+            for (int i = 1; translator.hasKey("terramap.terramapscreen.projection_warning.line" + i); i++) {
                 if (warningBuilder.length() > 0) warningBuilder.append('\n');
                 warningBuilder.append(translator.format("terramap.terramapscreen.projection_warning.line" + i));
             }

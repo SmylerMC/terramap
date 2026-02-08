@@ -163,7 +163,7 @@ public abstract class WidgetContainer implements Widget {
                 this.focusedWidget = null;
             }
         }
-        for (int i=0; i < this.draggedWidget.length; i++) {
+        for (int i = 0; i < this.draggedWidget.length; i++) {
             if (this.draggedWidget[i] != null) {
                 this.draggedWidget[i].onMouseDragged(this.lastClickX[i] - this.draggedWidget[i].getX(), this.lastClickY[i] - this.draggedWidget[i].getY(), this.dClickX[i], this.dClickY[i], i, this, this.dClickT[i]);
                 this.dClickX[i] = 0;

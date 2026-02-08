@@ -30,7 +30,7 @@ public class KmlPoint {
         this.latitude = latitude;
     }
 
-    @XmlElement(name="coordinates")
+    @XmlElement(name = "coordinates")
     public String getCoordinates() {
         return this.longitude + "," + this.latitude;
     }

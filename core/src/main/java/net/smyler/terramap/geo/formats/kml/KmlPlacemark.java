@@ -5,13 +5,13 @@ import javax.xml.bind.annotation.XmlTransient;
 
 public class KmlPlacemark {
 
-    @XmlElement(name="name")
+    @XmlElement(name = "name")
     private String name;
 
-    @XmlElement(name="description")
+    @XmlElement(name = "description")
     private String description;
 
-    @XmlElement(name="Point")
+    @XmlElement(name = "Point")
     private KmlPoint point;
 
     @XmlTransient

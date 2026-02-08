@@ -35,7 +35,7 @@ public class SP2CPlayerSyncPacket implements IMessage {
     public void fromBytes(ByteBuf buf) {
         this.remotePlayers = new TerramapRemotePlayer[buf.readInt()];
         GeoPointMutable playerLocation = new GeoPointMutable();
-        for (int i=0; i<this.remotePlayers.length; i++) {
+        for (int i = 0; i<this.remotePlayers.length; i++) {
             long leastUUID = buf.readLong();
             long mostUUID = buf.readLong();
             ITextComponent name = ITextComponent.Serializer.jsonToComponent(NetworkUtil.decodeStringFromByteBuf(buf));

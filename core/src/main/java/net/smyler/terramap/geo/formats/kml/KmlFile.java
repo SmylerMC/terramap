@@ -18,10 +18,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import static net.smyler.terramap.Terramap.getTerramap;
 
 
-@XmlRootElement(name="kml")
+@XmlRootElement(name = "kml")
 public class KmlFile {
 
-    @XmlElement(name="Document")
+    @XmlElement(name = "Document")
     private final KmlDocument document = new KmlDocument();
 
     @XmlAttribute

@@ -8,10 +8,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 public class KmlDocument {
 
-    @XmlElement(name="name")
+    @XmlElement(name = "name")
     private String name;
 
-    @XmlElement(name="Placemark")
+    @XmlElement(name = "Placemark")
     private final List<KmlPlacemark> placemarks = new ArrayList<>();
 
     public KmlDocument(String name) {
