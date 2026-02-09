@@ -31,7 +31,9 @@ public class S2CTerramapHelloPacket implements IMessage {
 
     //TODO Warp support
 
-    public S2CTerramapHelloPacket() {}
+    public S2CTerramapHelloPacket() {
+        // This empty constructor is necessary so Forge can reflectively create an instance of the class
+    }
 
     public S2CTerramapHelloPacket(
             String serverVersion,
@@ -96,8 +98,9 @@ public class S2CTerramapHelloPacket implements IMessage {
 
     public static class S2CTerramapHelloPacketHandler implements IMessageHandler<S2CTerramapHelloPacket, IMessage> {
 
-        //Required by forge
-        public S2CTerramapHelloPacketHandler() {}
+        public S2CTerramapHelloPacketHandler() {
+            // This empty constructor is necessary so Forge can reflectively create an instance of the class
+        }
 
         @Override
         public IMessage onMessage(S2CTerramapHelloPacket message, MessageContext ctx) {

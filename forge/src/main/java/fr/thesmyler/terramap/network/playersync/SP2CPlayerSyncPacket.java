@@ -25,7 +25,9 @@ public class SP2CPlayerSyncPacket implements IMessage {
     protected TerramapLocalPlayer[] localPlayers;
     protected TerramapRemotePlayer[] remotePlayers;
 
-    public SP2CPlayerSyncPacket() {} // Required by forge
+    public SP2CPlayerSyncPacket() {
+        // This empty constructor is necessary so Forge can reflectively create an instance of the class
+    }
 
     public SP2CPlayerSyncPacket(TerramapLocalPlayer[] players) {
         this.localPlayers = players;
@@ -78,8 +80,9 @@ public class SP2CPlayerSyncPacket implements IMessage {
 
     public static class S2CPlayerSyncPacketHandler implements IMessageHandler<SP2CPlayerSyncPacket, IMessage> {
 
-        //Required by forge
-        public S2CPlayerSyncPacketHandler() {}
+        public S2CPlayerSyncPacketHandler() {
+             // This empty constructor is necessary so Forge can reflectively create an instance of the class
+        }
 
         @Override
         public IMessage onMessage(SP2CPlayerSyncPacket message, MessageContext ctx) {

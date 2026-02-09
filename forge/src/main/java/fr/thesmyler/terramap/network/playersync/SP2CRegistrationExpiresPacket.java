@@ -12,14 +12,18 @@ import static net.smyler.terramap.Terramap.getTerramap;
 
 public class SP2CRegistrationExpiresPacket implements IMessage {
 
-    public SP2CRegistrationExpiresPacket() {}
+    public SP2CRegistrationExpiresPacket() {
+        // This empty constructor is necessary so Forge can reflectively create an instance of the class
+    }
 
     @Override
     public void fromBytes(ByteBuf buf) {
+        // This packet is empty
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
+        // This packet is empty
     }
 
     public static class S2CRegistrationExpiresPacketHandler implements IMessageHandler<SP2CRegistrationExpiresPacket, C2SPRegisterForUpdatesPacket> {

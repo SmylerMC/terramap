@@ -20,8 +20,6 @@ import static java.lang.Math.*;
  */
 public final class WebMercatorUtil {
     
-    private WebMercatorUtil() {}
-
     /* Constants */
     public static final int TILE_DIMENSIONS = 256;
     public static final double LIMIT_LATITUDE_RADIANS = 2d * atan(pow(E, PI)) - PI / 2d;
@@ -181,6 +179,10 @@ public final class WebMercatorUtil {
      */
     public static int getDimensionsInTile(int zoomLevel) {
         return 1 << zoomLevel;
+    }
+
+    private WebMercatorUtil() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

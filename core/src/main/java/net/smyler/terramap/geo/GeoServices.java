@@ -31,8 +31,6 @@ import static net.smyler.terramap.Terramap.getTerramap;
 //TODO Open places on services other than gmaps and refactor this mess
 public final class GeoServices {
     
-    private GeoServices() {}
-
     public static final String GMAPS_BASE_URL = "https://www.google.com/maps/@{latitude},{longitude},{zoom}z";
     public static final String GMAPS_PLACE_URL = "https://www.google.com/maps/place/{place}/@{latitude},{longitude},{zoom}z";
     public static final String OSM_SITE_BASE_URL = "https://www.openstreetmap.org/#map={zoom}/{latitude}/{longitude}";
@@ -180,6 +178,10 @@ public final class GeoServices {
         String formatedLongitude = longitudeDegrees + "°" + longitudeMinutes + "'" + decFormat1.format(secLon) + "\"" + eo;
         String formatedLatitude = latitudeDegrees + "°" + latitudeMinutes + "'" + decFormat1.format(secLat) + "\"" + ns;
         return formatedLatitude + " " + formatedLongitude;
+    }
+
+    private GeoServices() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

@@ -22,8 +22,6 @@ import io.github.opencubicchunks.cubicchunks.core.server.CubeProviderServer;
  */
 public final class TerramapUtil {
     
-    private TerramapUtil() {}
-
     public static final EarthGeneratorSettings BTE_GENERATOR_SETTINGS = EarthGeneratorSettings.parse(EarthGeneratorSettings.BTE_DEFAULT_SETTINGS);
 
     public static boolean isServerEarthWorld(World world) {
@@ -58,6 +56,10 @@ public final class TerramapUtil {
         return 
                 gen != null &&
                 gen.projection().toString().equals(BTE_GENERATOR_SETTINGS.projection().toString());
+    }
+
+    private TerramapUtil() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

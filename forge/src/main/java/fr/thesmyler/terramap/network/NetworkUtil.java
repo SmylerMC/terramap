@@ -9,8 +9,6 @@ import io.netty.buffer.ByteBuf;
 
 public final class NetworkUtil {
     
-    private NetworkUtil() {}
-    
     public static void encodeStringToByteBuf(String str, ByteBuf buf) {
         int readerIndex = buf.readerIndex();
         int writerIndex = buf.writerIndex();
@@ -68,6 +66,10 @@ public final class NetworkUtil {
         PacketBuffer packetBuffer = new PacketBuffer(buf);
         packetBuffer.setIndex(readerIndex, writerIndex);
         return packetBuffer;
+    }
+
+    private NetworkUtil() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

@@ -50,8 +50,6 @@ public final class HudScreen {
     private static final Field NEW_CHAT_DRAW_CHAT_LINES_FIELD = ObfuscationReflectionHelper.findField(GuiNewChat.class, "field_146253_i");
     private static final Field GUI_INGAME_UPDATE_COUNTER_FIELD = ObfuscationReflectionHelper.findField(GuiIngame.class, "field_73837_f");
 
-    private HudScreen() {}
-
     @SubscribeEvent
     public static void onRenderHUD(RenderGameOverlayEvent.Pre e) {
         if (!e.getType().equals(ElementType.HOTBAR)) return;
@@ -186,6 +184,10 @@ public final class HudScreen {
             return renderHeight;
         }
 
+    }
+
+    private HudScreen() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

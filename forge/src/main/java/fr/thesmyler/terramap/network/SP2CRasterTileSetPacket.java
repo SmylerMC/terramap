@@ -64,7 +64,9 @@ public class SP2CRasterTileSetPacket implements IMessage {
         }
     }
 
-    public SP2CRasterTileSetPacket() {}
+    public SP2CRasterTileSetPacket() {
+        // This empty constructor is necessary so Forge can reflectively create an instance of the class
+    }
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -186,7 +188,9 @@ public class SP2CRasterTileSetPacket implements IMessage {
 
     public static class SP2CRasterTileSetPacketTerramapHandler implements IMessageHandler<SP2CRasterTileSetPacket, IMessage> {
 
-        public SP2CRasterTileSetPacketTerramapHandler() {}
+        public SP2CRasterTileSetPacketTerramapHandler() {
+            // This empty constructor is necessary so Forge can reflectively create an instance of the class
+        }
 
         @Override
         public IMessage onMessage(SP2CRasterTileSetPacket message, MessageContext ctx) {
@@ -211,7 +215,9 @@ public class SP2CRasterTileSetPacket implements IMessage {
 
     public static class SP2CRasterTileSetPacketSledgehammerHandler implements IMessageHandler<SP2CRasterTileSetPacket, IMessage> {
 
-        public SP2CRasterTileSetPacketSledgehammerHandler() {}
+        public SP2CRasterTileSetPacketSledgehammerHandler() {
+            // This empty constructor is necessary so Forge can reflectively create an instance of the class
+        }
 
         @Override
         public IMessage onMessage(SP2CRasterTileSetPacket message, MessageContext ctx) {

@@ -18,7 +18,9 @@ public class KmlDocument {
         this.name = name;
     }
 
-    public KmlDocument() {}
+    public KmlDocument() {
+        this(null);
+    }
 
     @XmlTransient
     public String getName() {

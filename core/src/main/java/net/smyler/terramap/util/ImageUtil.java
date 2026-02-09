@@ -10,8 +10,6 @@ import java.awt.image.BufferedImage;
  */
 public final class ImageUtil {
     
-    private ImageUtil() {}
-
     /**
      * Creates an image and sets it background to the specified color
      * 
@@ -26,6 +24,10 @@ public final class ImageUtil {
         graphics.setPaint(new Color(color[0], color[1], color[2]));
         graphics.fillRect(0, 0, width, height);
         return img;
+    }
+
+    private ImageUtil() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

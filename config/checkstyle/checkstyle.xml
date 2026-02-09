@@ -30,7 +30,6 @@
     </module>
     <module name="WhitespaceAround">
       <property name="allowEmptyCatches" value="true"/>
-      <property name="allowEmptyConstructors" value="true"/>
       <property name="allowEmptyMethods" value="true"/>
     </module>
 

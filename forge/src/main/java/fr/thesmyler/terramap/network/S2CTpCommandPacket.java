@@ -12,13 +12,16 @@ import io.netty.buffer.ByteBuf;
 
 public class S2CTpCommandPacket implements IMessage {
 
-    public String cmd = "";
+    public String cmd;
 
     public S2CTpCommandPacket(String cmd) {
         this.cmd = cmd;
     }
 
-    public S2CTpCommandPacket() {}
+    public S2CTpCommandPacket() {
+        this("");
+        // This constructor is necessary so Forge can reflectively create an instance of the class
+    }
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -32,7 +35,9 @@ public class S2CTpCommandPacket implements IMessage {
 
     public static class S2CTpCommandPacketHandler implements IMessageHandler<S2CTpCommandPacket, IMessage> {
 
-        public S2CTpCommandPacketHandler() {}
+        public S2CTpCommandPacketHandler() {
+             // This empty constructor is necessary so Forge can reflectively create an instance of the class
+        }
 
         @Override
         public IMessage onMessage(S2CTpCommandPacket message, MessageContext ctx) {

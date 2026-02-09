@@ -80,6 +80,8 @@ public final class HttpStatusCodes {
     public static final int HTTP_NOT_EXTENDED = 510;
     public static final int HTTP_NETWORK_AUTHENTICATION_REQUIRED = 511;
 
-    private HttpStatusCodes() {}
+    private HttpStatusCodes() {
+        throw new IllegalStateException("Utility class");
+    }
 
 }
