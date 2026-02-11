@@ -29,7 +29,6 @@
       <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
     </module>
     <module name="WhitespaceAround">
-      <property name="allowEmptyCatches" value="true"/>
     </module>
 
   </module>

@@ -335,8 +335,9 @@ public class WrappedMinecraft implements GameClient {
         try {
             IResource vanilla = this.minecraft.getResourceManager().getResource(new ResourceLocation(resource.namespace, resource.path));
             return Optional.of(new WrappedResource(resource, vanilla));
-        } catch (IOException ignored) {}
-        return Optional.empty();
+        } catch (IOException ignored) {
+            return Optional.empty();
+        }
     }
 
     @SubscribeEvent

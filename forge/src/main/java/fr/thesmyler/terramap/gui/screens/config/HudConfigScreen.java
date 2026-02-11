@@ -370,7 +370,9 @@ public class HudConfigScreen extends Screen {
                     this.playerPosition.set(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
                     try {
                         this.compass.setAzimuth(p.azimuth(this.playerPosition));
-                    } catch (OutOfGeoBoundsException ignored) {}
+                    } catch (OutOfGeoBoundsException ignored) {
+                        // Simply stop updating the compas when out of projection bounds
+                    }
                 }
             });
         }
