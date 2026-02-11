@@ -161,7 +161,9 @@ public class ContentPreviewWidget implements Widget {
         }
 
         @Override
-        public void dispose() {}
+        public void dispose() {
+            // Nothing to dispose of
+        }
 
     }
 

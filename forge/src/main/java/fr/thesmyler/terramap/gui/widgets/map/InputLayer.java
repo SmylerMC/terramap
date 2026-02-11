@@ -72,7 +72,9 @@ public class InputLayer extends MapLayer {
     }
 
     @Override
-    protected void initialize() {}
+    protected void initialize() {
+        // Nothing specific to initialize
+    }
 
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {

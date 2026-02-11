@@ -76,7 +76,9 @@ public abstract class Marker implements Widget {
         }
     }
 
-    public void update(MapWidget map) {}
+    public void update(MapWidget map) {
+        // It's up to the marker to update itself
+    }
 
     @Override
     public boolean isVisible(WidgetContainer parent) {

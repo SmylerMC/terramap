@@ -183,7 +183,9 @@ public interface Widget {
      * @param parent            the widget container
      * @param timeSinceLastMove the time since this method was last called for the same press, in milliseconds
      */
-    default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long timeSinceLastMove) {}
+    default void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long timeSinceLastMove) {
+        // Nothing to do by default
+    }
 
     /**
      * Called when the mouse is released over this widget.
@@ -194,7 +196,9 @@ public interface Widget {
      * @param draggedWidget the widget the user was dragging and drop on this widget
      *
      */
-    default void onMouseReleased(float mouseX, float mouseY, int button, @Nullable Widget draggedWidget) {}
+    default void onMouseReleased(float mouseX, float mouseY, int button, @Nullable Widget draggedWidget) {
+        // Nothing to do by default
+    }
 
     /**
      * Called between the time the events are processed and the screen is drawn.
@@ -203,7 +207,9 @@ public interface Widget {
      * @param mouseY    the Y position of the mouse
      * @param parent    the parent widget container
      */
-    default void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {}
+    default void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
+        // Nothing to do by default
+    }
 
     /**
      * Called when a key is typed.
@@ -212,7 +218,9 @@ public interface Widget {
      * @param key           the physical key that was pressed, might be null in case of a combo (e.g. Alt Gr + ...)
      * @param parent        the parent widget container
      */
-    default void onKeyTyped(char typedChar, @Nullable Key key, @Nullable WidgetContainer parent) {}
+    default void onKeyTyped(char typedChar, @Nullable Key key, @Nullable WidgetContainer parent) {
+        // Nothing to do by default
+    }
 
     /**
      * Called when the mouse is over this widget and the wheel is turned
@@ -245,6 +253,8 @@ public interface Widget {
     /**
      * Called when the screen is closed or this widget is removed from the screen
      */
-    default void onRemoved() {}
+    default void onRemoved() {
+        // Do nothing by default
+    }
 
 }
