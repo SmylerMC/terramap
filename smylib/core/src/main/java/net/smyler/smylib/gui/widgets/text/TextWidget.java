@@ -1,6 +1,7 @@
 package net.smyler.smylib.gui.widgets.text;
 
 import net.smyler.smylib.Color;
+import net.smyler.smylib.SmyLib;
 import net.smyler.smylib.gui.Font;
 import net.smyler.smylib.gui.UiDrawContext;
 import net.smyler.smylib.gui.containers.WidgetContainer;
@@ -146,6 +147,7 @@ public class TextWidget implements Widget {
         if (clicked != null) {
             //FIXME TextWidget click
             //Minecraft.getMinecraft().currentScreen.handleComponentClick(clicked);
+            SmyLib.getLogger().warn("TextWidget click action is not implemented");
         }
         parent.setFocus(null); //We don't want to retain focus
         return false;

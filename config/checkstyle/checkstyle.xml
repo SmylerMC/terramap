@@ -28,9 +28,8 @@
       <property name="allowNoEmptyLineBetweenFields" value="true"/>
       <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
     </module>
-    <module name="WhitespaceAround">
-    </module>
-
+    <module name="WhitespaceAround"/>
+    <module name="EmptyBlock"/>
   </module>
 
 </module>
