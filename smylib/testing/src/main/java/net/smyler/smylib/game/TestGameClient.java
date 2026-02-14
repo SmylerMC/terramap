@@ -261,7 +261,7 @@ public class TestGameClient implements GameClient {
 
     public void setTargetFps(int fps) {
         this.targetFps = fps;
-        this.frameTime = (int)(round(1 / (double)fps * 100));
+        this.frameTime = (int) (round(1 / (double) fps * 100));
     }
 
     public void doTick() throws InterruptedException {

@@ -29,7 +29,29 @@
       <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
     </module>
     <module name="WhitespaceAround"/>
+    <module name="WhitespaceAfter"/>
 
+    <module name="SingleSpaceSeparator"/>
+    <module name="EmptyForInitializerPad"/>
+    <module name="EmptyForIteratorPad"/>
+    <module name="GenericWhitespace"/>
+    <module name="NoWhitespaceBefore"/>
+    <module name="NoWhitespaceBeforeCaseDefaultColon"/>
+    <module name="NoWhitespaceAfter">
+      <property name="tokens" value="AT, INC, DEC, UNARY_MINUS, UNARY_PLUS, BNOT, LNOT, DOT, ARRAY_DECLARATOR, INDEX_OP"/>
+    </module>
+    <module name="NoLineWrap"/>
+    <module name="MethodParamPad"/>
+    <module name="ParenPad"/>
+    <module name="TypecastParenPad"/>
+    <module name="SeparatorWrap">
+      <property name="tokens" value="DOT"/>
+      <property name="option" value="nl"/>
+    </module>
+    <module name="SeparatorWrap">
+      <property name="tokens" value="COMMA"/>
+      <property name="option" value="eol"/>
+    </module>
 
     <module name="EmptyBlock"/>
     <module name="EmptyCatchBlock">

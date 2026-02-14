@@ -267,7 +267,7 @@ public class WrappedMinecraft implements GameClient {
             return null;
         }
         if (currentGuiScreen instanceof GuiScreenProxy) {
-            return ((GuiScreenProxy)currentGuiScreen).getScreen();
+            return ((GuiScreenProxy) currentGuiScreen).getScreen();
         }
         // If it is not a SmyLib screen avoid creating a new wrapper each time
         if (this.lastAccessedVanillaScreen != null && currentGuiScreen == this.lastAccessedVanillaScreen.getWrapped()) {

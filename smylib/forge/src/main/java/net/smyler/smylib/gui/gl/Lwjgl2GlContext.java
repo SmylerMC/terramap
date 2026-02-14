@@ -118,7 +118,7 @@ public class Lwjgl2GlContext implements GlContext {
 
     @Override
     public void rotate(double angle) {
-        GlStateManager.rotate((float)angle, 0, 0, 1f);
+        GlStateManager.rotate((float) angle, 0, 0, 1f);
     }
 
     @Override

@@ -81,7 +81,7 @@ public class ContentPreviewWidget implements Widget {
         this.font.drawCenteredLines(x + this.width / 2f, y + this.padding, MEDIUM_GRAY, false, lines);
         context.drawStrokeLine(
                 LIGHT_GRAY, 1f,
-                x + this.padding,  y + this.padding * 2 + mimeHeight,
+                x + this.padding, y + this.padding * 2 + mimeHeight,
                 x + this.width - this.padding * 2, y + this.padding * 2 + mimeHeight
         );
         if (this.preview != null) {

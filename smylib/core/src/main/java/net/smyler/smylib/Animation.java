@@ -33,33 +33,33 @@ public class Animation {
         } else {
             switch (this.state) {
                 case ENTER:
-                    float f = (float)age / (float)this.duration;
+                    float f = (float) age / (float) this.duration;
                     this.progress = saturate(f);
                     if (this.progress == 1f) {
                         this.state = AnimationState.STOPPED;
                     }
                     break;
                 case LEAVE:
-                    float g = (float)age / (float)this.duration;
+                    float g = (float) age / (float) this.duration;
                     this.progress = 1 - saturate(g);
                     if (this.progress == 0f) {
                         this.state = AnimationState.STOPPED;
                     }
                     break;
                 case FLASH:
-                    float k = 2 * saturate(abs(((float)(age % this.duration) - halfDuration) / halfDuration));
-                    this.progress = (int)k;
+                    float k = 2 * saturate(abs(((float) (age % this.duration) - halfDuration) / halfDuration));
+                    this.progress = (int) k;
                     break;
                 case CONTINUOUS_ENTER:
-                    float h = (float)(age % this.duration) / (float)this.duration;
+                    float h = (float) (age % this.duration) / (float) this.duration;
                     this.progress = saturate(h);
                     break;
                 case CONTINUOUS_LEAVE:
-                    float i = (float)(age % this.duration) / (float)this.duration;
+                    float i = (float) (age % this.duration) / (float) this.duration;
                     this.progress = 1 - saturate(i);
                     break;
                 case BACK_AND_FORTH:
-                    float j = ((float)(age % this.duration) - halfDuration) / halfDuration;
+                    float j = ((float) (age % this.duration) - halfDuration) / halfDuration;
                     this.progress = saturate(abs(j));
                     break;
                 case STOPPED:
@@ -69,11 +69,11 @@ public class Animation {
     }
 
     public long blend(long end, long start) {
-        return round((end - start) * (double)this.progress + start);
+        return round((end - start) * (double) this.progress + start);
     }
 
     public int blend(int end, int start) {
-        return (int) this.blend(end, (long)start);
+        return (int) this.blend(end, (long) start);
     }
 
     public double blend(double end, double start) {
@@ -81,7 +81,7 @@ public class Animation {
     }
 
     public float blend(float end, float start) {
-        return (float) this.blend(end, (double)start);
+        return (float) this.blend(end, (double) start);
     }
 
     /**

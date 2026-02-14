@@ -61,7 +61,7 @@ public class TerramapLocalPlayer extends TerramapPlayer {
     @Override
     @SideOnly(Side.CLIENT)
     public ResourceLocation getSkin() {
-        return ((AbstractClientPlayer)this.player).getLocationSkin();
+        return ((AbstractClientPlayer) this.player).getLocationSkin();
     }
 
     public EntityPlayer getPlayer() {

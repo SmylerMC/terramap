@@ -97,7 +97,7 @@ public class WindowedContainer extends FlexibleWidgetContainer {
         this.subScreen.setPosition(this.effectiveBorderSize, this.effectiveBorderSize + this.effectiveTopBarHeight);
         this.subScreen.setSize(
                 this.getWidth() - this.effectiveBorderSize * 2,
-                this.getHeight() - this.effectiveBorderSize * 2 -  this.effectiveTopBarHeight
+                this.getHeight() - this.effectiveBorderSize * 2 - this.effectiveTopBarHeight
                 );
     }
 

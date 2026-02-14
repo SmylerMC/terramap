@@ -90,7 +90,7 @@ public abstract class Marker implements Widget {
             return false;
         }
         if (parent instanceof MapWidget) {
-            MapWidget map = (MapWidget)parent;
+            MapWidget map = (MapWidget) parent;
             double zoom = map.getController().getZoom();
             return this.minZoom <= zoom && zoom <= this.maxZoom;
         }

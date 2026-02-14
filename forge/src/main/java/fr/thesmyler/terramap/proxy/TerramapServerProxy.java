@@ -45,7 +45,7 @@ public class TerramapServerProxy extends TerramapProxy {
 
     @Override
     public GameType getGameMode(EntityPlayer e) {
-        EntityPlayerMP player = (EntityPlayerMP)e;
+        EntityPlayerMP player = (EntityPlayerMP) e;
         return player.interactionManager.getGameType();
     }
 

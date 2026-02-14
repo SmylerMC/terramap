@@ -32,7 +32,7 @@ public class Snapper {
     }
 
     public float snap(float value) {
-        return (float) this.snap((double)value);
+        return (float) this.snap((double) value);
     }
 
     public double getPeriod() {

@@ -28,7 +28,7 @@ public class MultiChoicePopup extends Popup {
         float y = 5f;
         for (String optionLangKey: options.keySet()) {
             Runnable run = options.get(optionLangKey);
-            container.addWidget(new TextButtonWidget(45f , y, 0, 200f, getGameClient().translator().format(optionLangKey), () -> {
+            container.addWidget(new TextButtonWidget(45f, y, 0, 200f, getGameClient().translator().format(optionLangKey), () -> {
                 this.close();
                 run.run();
             }));

@@ -169,7 +169,7 @@ public class TerramapConfigScreen extends Screen {
         TextWidget baseText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 40, 10, ofTranslation("terramap.configmenu.mapstyles.base", baseIDs.size(), String.join(", ", baseIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
         TextWidget proxyText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 57, 10, ofTranslation("terramap.configmenu.mapstyles.proxy", proxyIDs.size(), String.join(", ", proxyIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
         TextWidget serverText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 74, 10, ofTranslation("terramap.configmenu.mapstyles.server", serverIDs.size(), String.join(", ", serverIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
-        TextWidget userText = new TextWidget( tileSetsConfigScreen.getWidth() / 2, 91, 10, ofTranslation("terramap.configmenu.mapstyles.custom", userIDs.size(), String.join(", ", userIDs)),TextAlignment.CENTER, getGameClient().defaultFont());
+        TextWidget userText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 91, 10, ofTranslation("terramap.configmenu.mapstyles.custom", userIDs.size(), String.join(", ", userIDs)), TextAlignment.CENTER, getGameClient().defaultFont());
         TextWidget effectiveText = new TextWidget(tileSetsConfigScreen.getWidth() / 2, 108, 10, ofTranslation("terramap.configmenu.mapstyles.effective", resolved.size(), String.join(", ", resolved)), TextAlignment.CENTER, getGameClient().defaultFont());
         tileSetsConfigScreen.addWidget(baseText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(debugRasterTileSetsToggle.getY() + debugRasterTileSetsToggle.getHeight() + 10));
         tileSetsConfigScreen.addWidget(proxyText.setMaxWidth(mapConfigScreen.getWidth()).setAnchorY(baseText.getY() + baseText.getHeight() + inter));
@@ -181,7 +181,7 @@ public class TerramapConfigScreen extends Screen {
             TerramapConfigScreen.this.init();
         });
         tileSetsConfigScreen.addWidget(reloadRasterTileSetsButton);
-        tileSetsConfigScreen.addWidget(new TextButtonWidget(reloadRasterTileSetsButton.getX() + reloadRasterTileSetsButton.getWidth() + 3, reloadRasterTileSetsButton.getY(), 10, 150, translator.format("terramap.configmenu.mapstyles.open"), () ->  {
+        tileSetsConfigScreen.addWidget(new TextButtonWidget(reloadRasterTileSetsButton.getX() + reloadRasterTileSetsButton.getWidth() + 3, reloadRasterTileSetsButton.getY(), 10, 150, translator.format("terramap.configmenu.mapstyles.open"), () -> {
             try {
                 Desktop.getDesktop().open(tileSetManager.getFile());
             } catch (IOException e) {

@@ -10,7 +10,7 @@ public class SpriteWidget extends AbstractSolidWidget {
     private final Sprite sprite;
 
     public SpriteWidget(float x, float y, int z, Sprite sprite) {
-        super(x, y, z, (float)sprite.width(), (float)sprite.height());
+        super(x, y, z, (float) sprite.width(), (float) sprite.height());
         this.sprite = sprite;
     }
 

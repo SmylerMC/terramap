@@ -16,7 +16,7 @@ public class OutOfGeoBoundsException extends GeoException {
         super(message);
     }
 
-    public  OutOfGeoBoundsException(String message, Throwable cause) {
+    public OutOfGeoBoundsException(String message, Throwable cause) {
         super(message, cause);
     }
 

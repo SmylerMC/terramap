@@ -147,7 +147,7 @@ public final class HudScreen {
         try {
             int updateCounter = getChatUpdateCounter();
             @SuppressWarnings("unchecked") // Taken care of in the catch block
-            List<ChatLine> lines = (List<ChatLine>)NEW_CHAT_DRAW_CHAT_LINES_FIELD.get(chat);
+            List<ChatLine> lines = (List<ChatLine>) NEW_CHAT_DRAW_CHAT_LINES_FIELD.get(chat);
             int visibleChatLines = 0;
             for (ChatLine line: lines) {
                 if (chatOpen || (line != null && updateCounter - line.getUpdatedCounter() < 200)) {
@@ -171,7 +171,7 @@ public final class HudScreen {
         @Override
         public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {
             if (HudScreen.gui.mc == null || HudScreen.gui.width != renderWidth || HudScreen.gui.height != renderHeight) {
-                HudScreen.gui.setWorldAndResolution(Minecraft.getMinecraft(), (int)renderWidth, (int)renderHeight);
+                HudScreen.gui.setWorldAndResolution(Minecraft.getMinecraft(), (int) renderWidth, (int) renderHeight);
             }
             super.onUpdate(mouseX, mouseY, parent);
         }

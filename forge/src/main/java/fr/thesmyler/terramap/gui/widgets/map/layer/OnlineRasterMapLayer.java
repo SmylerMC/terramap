@@ -53,7 +53,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
     @Override
     public Text getCopyright(String localeKey) {
         if (this.tiledMap instanceof CopyrightHolder) {
-            return ((CopyrightHolder)this.tiledMap).getCopyright(localeKey);
+            return ((CopyrightHolder) this.tiledMap).getCopyright(localeKey);
         }
         return ImmutableText.EMPTY;
     }
@@ -180,7 +180,7 @@ public class OnlineRasterMapLayer extends RasterMapLayer implements CopyrightHol
                 if (this.selected) {
                     background = selectedColor;
                 }
-                context.drawRectangleWithContours(x, y, x + width, y + height, background , 1f, Color.DARK_GRAY);
+                context.drawRectangleWithContours(x, y, x + width, y + height, background, 1f, Color.DARK_GRAY);
                 super.draw(context, x, y, mouseX, mouseY, screenHovered, screenFocused, parent);
             }
 

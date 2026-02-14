@@ -165,7 +165,7 @@ public class ClientSaveManager {
         if (!exists(directory)) {
             getTerramap().logger().debug("Created directory {}", directory);
             createDirectories(directory);
-        } else if (!isDirectory(directory) || ! isWritable(directory)) {
+        } else if (!isDirectory(directory) || !isWritable(directory)) {
             getTerramap().logger().error("{} exists and is not a directory, or is not writeable. Terramap will fallback to a temporary directory instead.", directory);
             directory = createTempDirectory(directory, "terramap");
             directory.toFile().deleteOnExit();

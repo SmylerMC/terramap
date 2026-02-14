@@ -70,7 +70,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
         checkArgument(provider != null, "A valid map provider needs to be provided");
         checkArgument(version >= 0, "Map version number must be positive");
         checkArgument(comment != null, "A valid map comment needs to be provided");
-        checkArgument(maxConcurrentDownloads > 0 ,"Max concurrent downloads must be at least 1");
+        checkArgument(maxConcurrentDownloads > 0, "Max concurrent downloads must be at least 1");
         for (String pattern: urlPatterns) {
             checkUrlPattern(pattern);
         }
@@ -292,7 +292,7 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
     private void registerErrorTexture() {
         int[] color = {170, 211, 223};
-        BufferedImage image = ImageUtil.imageFromColor(256,  256, color);
+        BufferedImage image = ImageUtil.imageFromColor(256, 256, color);
         this.errorTileTexture = getGameClient().guiDrawContext().loadDynamicTexture(image);
     }
 

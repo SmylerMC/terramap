@@ -33,7 +33,7 @@ public class IntegerSliderWidget extends AbstractSliderWidget {
 
     @Override
     protected float getPosition() {
-        return (float)(this.value - this.min) / (this.max - this.min);
+        return (float) (this.value - this.min) / (this.max - this.min);
     }
 
     @Override

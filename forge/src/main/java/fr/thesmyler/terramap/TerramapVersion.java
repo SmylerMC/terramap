@@ -81,7 +81,7 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
             String mcVersion;
             if (versions.length == 2) {
                 mcVersion = versions[1];
-            } else  if (versions.length == 1) {
+            } else if (versions.length == 1) {
                 mcVersion = "";
             } else {
                 throw new InvalidVersionString("Invalid version string " + versionString);

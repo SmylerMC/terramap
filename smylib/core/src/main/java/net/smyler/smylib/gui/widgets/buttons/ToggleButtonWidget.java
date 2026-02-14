@@ -28,7 +28,7 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
             boolean startValue,
             Consumer<Boolean> onChange
     ) {
-        super(x, y, z, (float)onEnabledSprite.width(), (float)onEnabledSprite.height(), null);
+        super(x, y, z, (float) onEnabledSprite.width(), (float) onEnabledSprite.height(), null);
         this.onEnabledSprite = onEnabledSprite;
         this.offEnabledSprite = offEnabledSprite;
         this.onDisabledSprite = onDisabledSprite;

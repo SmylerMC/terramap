@@ -151,7 +151,7 @@ public class PositionImmutable implements Position {
         if (o == null || !PositionImmutable.class.equals(o.getClass())) {
             return false;
         }
-        Position other =  (Position)o;
+        Position other = (Position) o;
         return this.x() == other.x()
                 && this.y() == other.y()
                 && this.z() == other.z()

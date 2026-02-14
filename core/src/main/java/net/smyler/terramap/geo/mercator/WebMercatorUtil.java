@@ -116,7 +116,7 @@ public final class WebMercatorUtil {
      *         on a web-mercator map of the given zoom level, with 0;0 being the top left corner of the map.
      */
     public static double getYFromLatitudeRads(double latitude, double zoom) {
-        return 128d / PI * pow(2d, zoom) * (PI - log(Math.tan( PI / 4d  + latitude / 2d)));
+        return 128d / PI * pow(2d, zoom) * (PI - log(Math.tan(PI / 4d + latitude / 2d)));
     }
 
     /** 

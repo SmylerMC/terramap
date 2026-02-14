@@ -174,7 +174,7 @@ public class TerramapScreen extends Screen implements ITabCompleter {
         this.zoomInButton.enable();
         this.addWidget(this.zoomInButton);
         this.zoomText = new TextWidget(49, game.defaultFont());
-        this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() +  this.zoomInButton.getHeight() + 2);
+        this.zoomText.setAnchorX(this.zoomInButton.getX() + this.zoomInButton.getWidth() / 2 + 1).setAnchorY(this.zoomInButton.getY() + this.zoomInButton.getHeight() + 2);
         this.zoomText.setAlignment(TextAlignment.CENTER).setBackgroundColor(Color.DARKER_OVERLAY).setPadding(3);
         this.zoomText.setVisibility(!this.f1Mode);
         this.addWidget(this.zoomText);

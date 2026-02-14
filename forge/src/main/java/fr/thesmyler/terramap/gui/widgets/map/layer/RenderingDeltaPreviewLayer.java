@@ -60,7 +60,7 @@ public class RenderingDeltaPreviewLayer extends MapLayer {
                 x + width / 2, y + height);
         context.drawStrokeLine(Color.DARK_GRAY, linesWidth,
                 x, y + height / 2,
-                x + width / 2 -  centerHole, y + height / 2);
+                x + width / 2 - centerHole, y + height / 2);
         context.drawStrokeLine(Color.DARK_GRAY, linesWidth,
                 x + width / 2 + centerHole, y + height / 2,
                 x + width, y + height / 2);

@@ -237,7 +237,7 @@ public class RasterTileSetManager {
         Attributes attributes = iDirC.getAttributes("dns:/" + inetAddress.getHostName(), new String[] {"TXT"});
         String attribute;
         try {
-            attribute =  attributes.get("TXT").get().toString();
+            attribute = attributes.get("TXT").get().toString();
         } catch (NullPointerException e) {
             throw new UnknownHostException(String.format("No txt record was found at %s ?? Something is wrong, either with the name server or with your dns provider!", hostname));
         }

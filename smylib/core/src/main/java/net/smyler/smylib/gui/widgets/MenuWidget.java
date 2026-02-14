@@ -138,7 +138,7 @@ public class MenuWidget implements Widget {
                 float h = entry.text == null ? sh : lh;
                 boolean hovered = mouseX >= 0 && mouseX < width && mouseY >= ty && mouseY <= ty + h - 1;
                 if (hovered) {
-                    if (entry.text != null && entry.enabled && entry.action != null ) {
+                    if (entry.text != null && entry.enabled && entry.action != null) {
                         entry.exec();
                         this.hide(parent);
                         return this.isSubMenu;

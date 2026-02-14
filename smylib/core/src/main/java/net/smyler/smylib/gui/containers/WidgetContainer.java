@@ -85,7 +85,7 @@ public abstract class WidgetContainer implements Widget {
     public void init() {
         for (Widget widget: this.widgets) {
             if (widget instanceof WidgetContainer) {
-                ((WidgetContainer)widget).init();
+                ((WidgetContainer) widget).init();
             }
         }
     }

@@ -16,7 +16,7 @@ public class SpriteButtonWidget extends AbstractButtonWidget {
     protected Sprite spriteHighlighted;
 
     public SpriteButtonWidget(float x, float y, int z, Sprite sprite, Sprite spriteDisabled, Sprite spriteHighlighted, @Nullable Runnable onClick, @Nullable Runnable onDoubleClick) {
-        super(x, y, z, (float)sprite.width(), (float)sprite.height(), onClick, onDoubleClick);
+        super(x, y, z, (float) sprite.width(), (float) sprite.height(), onClick, onDoubleClick);
         this.sprite = sprite;
         this.spriteDisabled = spriteDisabled;
         this.spriteHighlighted = spriteHighlighted;

@@ -53,12 +53,12 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
         float height = this.getHeight();
         float width = this.getWidth();
-        float topContentY =  y + this.buttonSelectedHeight;
-        context.drawRectangle(x, topContentY,  x + this.selectedTab.button.getX() + 1f, topContentY + 1f, LIGHT_TRANSPARENT);
-        context.drawRectangle(x + 1f, topContentY + 1f,  x + this.selectedTab.button.getX() + 2f, topContentY + 2f, UNSELECTED_COLOR);
+        float topContentY = y + this.buttonSelectedHeight;
+        context.drawRectangle(x, topContentY, x + this.selectedTab.button.getX() + 1f, topContentY + 1f, LIGHT_TRANSPARENT);
+        context.drawRectangle(x + 1f, topContentY + 1f, x + this.selectedTab.button.getX() + 2f, topContentY + 2f, UNSELECTED_COLOR);
 
-        context.drawRectangle(x + this.selectedTab.button.getX() + this.selectedTab.button.getWidth() - 1f, topContentY,  x + width, topContentY + 1f, LIGHT_TRANSPARENT);
-        context.drawRectangle(x + this.selectedTab.button.getX() + this.selectedTab.button.getWidth() - 2f, topContentY + 1f,  x + width, topContentY + 2f, UNSELECTED_COLOR);
+        context.drawRectangle(x + this.selectedTab.button.getX() + this.selectedTab.button.getWidth() - 1f, topContentY, x + width, topContentY + 1f, LIGHT_TRANSPARENT);
+        context.drawRectangle(x + this.selectedTab.button.getX() + this.selectedTab.button.getWidth() - 2f, topContentY + 1f, x + width, topContentY + 2f, UNSELECTED_COLOR);
 
         context.drawRectangle(x + 1f, y + height - 2f, x + width, y + height - 1f, UNSELECTED_COLOR);
         context.drawRectangle(x, y + height - 1f, x + width, y + height, LIGHT_TRANSPARENT);
@@ -252,7 +252,7 @@ public class TabbedContainer extends FlexibleWidgetContainer {
                 text = font.trimRight(text, this.getWidth() - 14f - font.computeWidth("..."));
                 text = ImmutableText.of(text).withNewSiblings(ImmutableText.ofPlainText("..."));
             }
-            font.drawCentered(x + this.getWidth() / 2f, y + textY + 2f,  text, WHITE, true);
+            font.drawCentered(x + this.getWidth() / 2f, y + textY + 2f, text, WHITE, true);
         }
 
         @Override

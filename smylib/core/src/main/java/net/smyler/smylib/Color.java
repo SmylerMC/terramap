@@ -69,7 +69,7 @@ public class Color {
         return this.green() / 255f;
     }
 
-    public float bluef( ) {
+    public float bluef() {
         return this.blue() / 255f;
     }
 
@@ -183,7 +183,7 @@ public class Color {
         } else {
             value |= 0xFF000000L;
         }
-        return new Color((int)value);
+        return new Color((int) value);
     }
 
     public static boolean isValidHexColorCode(String text) {

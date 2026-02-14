@@ -42,7 +42,7 @@ public class RibbonCompassWidget implements Widget {
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         double blendBorder = 10d; // How many pixels to fade to alpha=0 on the sides
-        double leftU = (double)(this.azimuth - 180) / 360 + (double)(this.textureWidth - this.width) / this.textureWidth / 2;
+        double leftU = (double) (this.azimuth - 180) / 360 + (double) (this.textureWidth - this.width) / this.textureWidth / 2;
         double leftCU = leftU + blendBorder / this.textureWidth;
         double rightU = leftU + (double) this.width / this.textureWidth;
         double rightCU = rightU - blendBorder / this.textureWidth;
@@ -74,8 +74,8 @@ public class RibbonCompassWidget implements Widget {
 
         gl.setColor(WHITE);
 
-        double indX = x + (double)(this.width - this.indicatorWidth) / 2;
-        double indY = y + (double)(this.height - this.indicatorHeight) / 2;
+        double indX = x + (double) (this.width - this.indicatorWidth) / 2;
+        double indY = y + (double) (this.height - this.indicatorHeight) / 2;
 
         gl.startDrawing(QUADS, POSITION_TEXTURE);
         gl.setTexture(COMPASS_INDICATOR_TEXTURE);

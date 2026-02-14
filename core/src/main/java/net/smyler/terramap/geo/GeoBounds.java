@@ -148,7 +148,7 @@ public class GeoBounds {
         } else {
             double lowerLat = max(this.lowerCorner.latitude(), other.lowerCorner.latitude());
             double upperLat = min(this.upperCorner.latitude(), other.upperCorner.latitude());
-            double lowerLon = max(this.lowerCorner.longitude(),  other.lowerCorner.longitude());
+            double lowerLon = max(this.lowerCorner.longitude(), other.lowerCorner.longitude());
             double upperLon = min(this.upperCorner.longitude(), other.upperCorner.longitude());
             return new GeoBounds[] { new GeoBounds(new GeoPointImmutable(lowerLon, lowerLat), new GeoPointImmutable(upperLon, upperLat)) };
         }

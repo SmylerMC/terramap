@@ -62,7 +62,7 @@ public class ChatWidget implements Widget, ITabCompleter {
         int width = (int) hud.getWidth();
         int height = (int) hud.getHeight();
         if (this.guiChat.mc == null || this.guiChat.width != width || this.guiChat.height != height) {
-            this.guiChat.setWorldAndResolution(Minecraft.getMinecraft(), (int)hud.getWidth(), (int)hud.getHeight());
+            this.guiChat.setWorldAndResolution(Minecraft.getMinecraft(), (int) hud.getWidth(), (int) hud.getHeight());
         }
         if (parent != null && this.open) {
             parent.setFocus(this);
@@ -104,7 +104,7 @@ public class ChatWidget implements Widget, ITabCompleter {
             return;
         }
         Minecraft mc = Minecraft.getMinecraft();
-        GuiScreen previousScreen =  mc.currentScreen;
+        GuiScreen previousScreen = mc.currentScreen;
         if (this.open) {
             mc.currentScreen = this.guiChat;
             this.guiChat.drawScreen(Math.round(mouseX), Math.round(mouseY), 0);
@@ -138,7 +138,7 @@ public class ChatWidget implements Widget, ITabCompleter {
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
         try {
             Minecraft mc = Minecraft.getMinecraft();
-            GuiScreen previousScreen =  mc.currentScreen;
+            GuiScreen previousScreen = mc.currentScreen;
             mc.currentScreen = this.guiChat; // We need to swap the screen or GuiChat refuses the click...
             GUI_CHAT_MOUSE_CLICKED_METHOD.invoke(this.guiChat, Math.round(mouseX), Math.round(mouseY), mouseButton);
             mc.currentScreen = previousScreen;

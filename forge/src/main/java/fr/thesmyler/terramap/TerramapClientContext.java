@@ -267,7 +267,7 @@ public class TerramapClientContext {
             getTerramap().logger().debug("Loaded proxy saved state for UUID {} (world unknown)", this.proxyUUID);
         } else if (serverInfo != null) {
             this.state = this.saveManager.loadServerState(serverInfo);
-            getTerramap().logger().debug("Loaded server saved state for server {} ({})",serverInfo.name, serverInfo.host);
+            getTerramap().logger().debug("Loaded server saved state for server {} ({})", serverInfo.name, serverInfo.host);
         } else {
             this.state = this.saveManager.getDefaultState();
             getTerramap().logger().debug("Went back to default state");
@@ -287,7 +287,7 @@ public class TerramapClientContext {
             getTerramap().logger().debug("Saved proxy state for UUID {} (world unknown)", this.proxyUUID);
         } else if (servData != null) {
             this.saveManager.saveServerState(servData, this.state);
-            getTerramap().logger().debug("Saved server state for server {} ({})",servData.name, servData.host);
+            getTerramap().logger().debug("Saved server state for server {} ({})", servData.name, servData.host);
         } else {
             getTerramap().logger().debug("Did not save state for unreliable context");
         }

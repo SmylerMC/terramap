@@ -158,7 +158,7 @@ public class TestScreen extends Screen {
         this.spritesTab.addWidget(new ScrollableWidgetContainer(0f, 0f, 0, this.spritesTab.getWidth(), this.spritesTab.getHeight(), this.spritesContainer));
 
         // Widgets
-        this.widgetTab.addWidget(new TextWidget(PADDING, 10f, 0, ImmutableText.ofPlainText("Text widget"),  this.getFont()));
+        this.widgetTab.addWidget(new TextWidget(PADDING, 10f, 0, ImmutableText.ofPlainText("Text widget"), this.getFont()));
         this.widgetTab.addWidget(new TextWidget(
                 this.widgetTab.getWidth() / 2f, 10f, 0,
                 ImmutableText.ofPlainText("Centered colored text widget").withStyle(new TextStyle(Formatting.BLUE.color())),

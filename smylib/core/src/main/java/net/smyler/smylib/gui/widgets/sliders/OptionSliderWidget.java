@@ -56,7 +56,7 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
 
     @Override
     protected float getPosition() {
-        return (float)this.option / (this.options.length - 1);
+        return (float) this.option / (this.options.length - 1);
     }
 
     @Override

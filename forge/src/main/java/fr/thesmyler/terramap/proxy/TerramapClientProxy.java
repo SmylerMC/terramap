@@ -75,7 +75,7 @@ public class TerramapClientProxy extends TerramapProxy {
     @Override
     public GameType getGameMode(EntityPlayer e) {
         if (e instanceof EntityPlayerMP) {
-            EntityPlayerMP player = (EntityPlayerMP)e;
+            EntityPlayerMP player = (EntityPlayerMP) e;
             return player.interactionManager.getGameType();
         }
         NetHandlerPlayClient connection = Minecraft.getMinecraft().getConnection();

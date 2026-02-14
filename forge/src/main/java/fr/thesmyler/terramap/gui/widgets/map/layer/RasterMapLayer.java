@@ -214,8 +214,8 @@ abstract public class RasterMapLayer extends MapLayer {
                     int xInBiggerTile = bestTile.getPosition().getX() - sizeFactor * tile.getPosition().getX();
                     int yInBiggerTile = bestTile.getPosition().getY() - sizeFactor * tile.getPosition().getY();
 
-                    double factorX = (double)xInBiggerTile / (double)sizeFactor;
-                    double factorY = (double)yInBiggerTile / (double)sizeFactor;
+                    double factorX = (double) xInBiggerTile / (double) sizeFactor;
+                    double factorY = (double) yInBiggerTile / (double) sizeFactor;
                     renderSizedSize *= sizeFactor;
                     dX += factorX * renderSizedSize;
                     dY += factorY * renderSizedSize;
@@ -255,14 +255,14 @@ abstract public class RasterMapLayer extends MapLayer {
                             dispX + displayWidth - 1, dispY + displayHeight - 1,
                             dispX + displayWidth - 1, dispY
                             );
-                    smallFont.drawCentered((float)(dispX + displayWidth / 2), (float)(dispY + displayHeight / 2), String.valueOf(tile.getPosition().getZoom()), lineColor, false);
-                    smallFont.draw((float)dispX + 2, (float)(dispY + displayHeight / 2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
-                    smallFont.drawCentered((float)(dispX + displayWidth / 2), (float)dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
+                    smallFont.drawCentered((float) (dispX + displayWidth / 2), (float) (dispY + displayHeight / 2), String.valueOf(tile.getPosition().getZoom()), lineColor, false);
+                    smallFont.draw((float) dispX + 2, (float) (dispY + displayHeight / 2), GeoServices.formatGeoCoordForDisplay(dispX), lineColor, false);
+                    smallFont.drawCentered((float) (dispX + displayWidth / 2), (float) dispY + 2, GeoServices.formatGeoCoordForDisplay(dispY), lineColor, false);
                 }
             }
         }
 
-        WebMercatorUtil.fromGeo(this.minusCenterPos, this.focusedPoint, 0d).scale(- 1 / 256d);
+        WebMercatorUtil.fromGeo(this.minusCenterPos, this.focusedPoint, 0d).scale(-1 / 256d);
         // Filter out tiles that are not needed and order the needed ones for loading.
         if (zoomLevel <= this.getTiledMap().getMaxZoom()) {
             neededTiles.stream().filter(t -> !t.isTextureAvailable()).sorted((t1, t2) -> {

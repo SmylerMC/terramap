@@ -136,7 +136,7 @@ public class MapMenuWidget extends MenuWidget {
 
     private void setProjection() {
         EarthGeneratorSettings stg = TerramapClientContext.getContext().getGeneratorSettings();
-        Minecraft.getMinecraft().displayGuiScreen(new PresetEarthGui(null, stg != null ? stg.toString() : PresetEarthGui.DEFAULT_PRESETS.get("default"), s ->  {
+        Minecraft.getMinecraft().displayGuiScreen(new PresetEarthGui(null, stg != null ? stg.toString() : PresetEarthGui.DEFAULT_PRESETS.get("default"), s -> {
             TerramapClientContext.getContext().setGeneratorSettings(EarthGeneratorSettings.parse(s));
             TerramapClientContext.getContext().saveState();
         }));
@@ -167,21 +167,21 @@ public class MapMenuWidget extends MenuWidget {
         if (playerMarker != null) {
             if (playerMarker.isVisible(this.map)) {
                 GeoPoint playerLocation = playerMarker.getLocation();
-                GeoServices.openPlaceInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), playerLocation.longitude(), playerLocation.latitude());
+                GeoServices.openPlaceInGoogleMaps(round((float) this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), playerLocation.longitude(), playerLocation.latitude());
             } else {
-                GeoServices.openInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
+                GeoServices.openInGoogleMaps(round((float) this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
             }
         } else {
-            GeoServices.openInGoogleMaps(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
+            GeoServices.openInGoogleMaps(round((float) this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude());
         }
     }
 
     private void getOpenInBTEMap() {
-        GeoServices.openInBTEMap(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude());
+        GeoServices.openInBTEMap(round((float) this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude());
     }
 
     private void getOpenInOSMWeb() {
-        GeoServices.openInOSMWeb(round((float)this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude());
+        GeoServices.openInOSMWeb(round((float) this.controller.getZoom()), this.mouseLocation.longitude(), this.mouseLocation.latitude(), this.mouseLocation.longitude(), this.mouseLocation.latitude());
     }
 
     private void copy2drPosition() {

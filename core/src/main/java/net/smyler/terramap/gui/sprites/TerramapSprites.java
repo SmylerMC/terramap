@@ -16,7 +16,7 @@ public final class TerramapSprites {
     private static final Map<Identifier, Sprite> sprites = new HashMap<>();
 
     public static final Sprite
-            MARKER_CAT = register( "marker_cat", builder()
+            MARKER_CAT = register("marker_cat", builder()
                     .texture(SPRITES_MAP_MARKERS.resolve("cat.png"))
                     .textureDimensions(5d, 5d)
                     .fullTexture()

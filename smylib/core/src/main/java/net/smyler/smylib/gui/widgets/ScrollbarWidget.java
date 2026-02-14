@@ -230,7 +230,7 @@ public class ScrollbarWidget extends WidgetContainer {
             context.drawRectangle(x, y, x + this.getWidth(), y + 1, DRAG_BORDER_COLOR);
             context.drawRectangle(x, y + height - 1, x + this.getWidth(), y + height, DRAG_BORDER_COLOR);
             context.drawRectangle(x, y, x + 1, y + height, DRAG_BORDER_COLOR);
-            context.drawRectangle(x + this.getWidth() - 1, y, x + this.getWidth(), y  + height, DRAG_BORDER_COLOR);
+            context.drawRectangle(x + this.getWidth() - 1, y, x + this.getWidth(), y + height, DRAG_BORDER_COLOR);
 
         }
 

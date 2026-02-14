@@ -45,7 +45,7 @@ public final class TerramapUtil {
     public static EarthGeneratorSettings getEarthGeneratorSettingsFromWorld(World world) {
         if (TerramapUtil.isServerEarthWorld(world)) {
             ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
-            EarthGenerator generator = (EarthGenerator)((CubeProviderServer) provider).getCubeGenerator();
+            EarthGenerator generator = (EarthGenerator) ((CubeProviderServer) provider).getCubeGenerator();
             return generator.settings;
         } else {
             return null;

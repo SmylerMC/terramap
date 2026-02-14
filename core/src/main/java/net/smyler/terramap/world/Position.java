@@ -61,7 +61,7 @@ public interface Position extends Immutable<PositionMutable>, Mutable<PositionIm
         double dX = this.x() - other.x();
         double dY = this.y() - other.y();
         double dZ = this.z() - other.z();
-        return sqrt(dX * dX +  dY * dY + dZ * dZ);
+        return sqrt(dX * dX + dY * dY + dZ * dZ);
     }
 
     /**

@@ -22,7 +22,7 @@ public class PopupScreenImplementation extends PopupScreen {
     @Override
     public void init() {
         if (this.other != null) {
-            this.other.setWorldAndResolution(Minecraft.getMinecraft(), (int)this.getWidth(), (int)this.getHeight());
+            this.other.setWorldAndResolution(Minecraft.getMinecraft(), (int) this.getWidth(), (int) this.getHeight());
         }
         super.init();
     }

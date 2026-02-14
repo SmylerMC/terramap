@@ -139,7 +139,7 @@ public class McChunksLayer extends MapLayer {
 
     @Override
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
-        MapWidget map = (MapWidget)parent;
+        MapWidget map = (MapWidget) parent;
         GeoProjection projection = TerramapClientContext.getContext().getProjection();
         if (projection == null) {
             return;
@@ -207,7 +207,7 @@ public class McChunksLayer extends MapLayer {
         
         final int maxTiles = 100; // Maximum drawing iterations, for safety
 
-        this.centerTile.set(floorDiv((long) floor(this.mcCenter.x()), tileSize), floorDiv((long)floor(this.mcCenter.z()), tileSize));
+        this.centerTile.set(floorDiv((long) floor(this.mcCenter.x()), tileSize), floorDiv((long) floor(this.mcCenter.z()), tileSize));
         int dX = 0;
         int dY = 0;
         this.corners[0].set(this.centerTile).scale(tileSize);
@@ -346,7 +346,7 @@ public class McChunksLayer extends MapLayer {
                 }
             }
             
-            if (! WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) {
+            if (!WebMercatorUtil.PROJECTION_BOUNDS.contains(location)) {
                 throw new OutOfGeoBoundsException();
             }
             McChunksLayer.this.getLocationPositionInRenderSpace(destination, location);

@@ -52,7 +52,7 @@ public class TerrashowCommand extends CommandBase {
         } else if (args.length == 2) {
             player = server.getPlayerList().getPlayerByUsername(args[1]);
         } else if (sender instanceof EntityPlayerMP) {
-            player = (EntityPlayerMP)sender;
+            player = (EntityPlayerMP) sender;
         } else {
             throw transCtx.playerNotFoundException("terramap.commands.terrashow.console_player_name");
         }

@@ -43,7 +43,7 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         if (this.showDirection(hovered) && Float.isFinite(this.azimuth)) {
             float azimuth = this.azimuth;
             if (parent instanceof MapWidget) {
-                azimuth += ((MapWidget)parent).getController().getRotation();
+                azimuth += ((MapWidget) parent).getController().getRotation();
             }
 
             GlContext gl = context.gl();
@@ -103,12 +103,12 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
 
     @Override
     public float getDeltaX() {
-        return - this.getWidth() / 2;
+        return -this.getWidth() / 2;
     }
 
     @Override
     public float getDeltaY() {
-        return - this.getHeight() / 2;
+        return -this.getHeight() / 2;
     }
 
     @Override

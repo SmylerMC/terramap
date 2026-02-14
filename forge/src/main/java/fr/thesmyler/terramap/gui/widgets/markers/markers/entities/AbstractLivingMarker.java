@@ -34,7 +34,7 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
     private boolean isOutOfBounds = false;
 
     public AbstractLivingMarker(MarkerController<?> controller, @NotNull Sprite sprite, @NotNull Entity entity) {
-        super(controller, (float) sprite.width(), (float) sprite.height() ,16, Integer.MAX_VALUE);  //FIXME should not cast size
+        super(controller, (float) sprite.width(), (float) sprite.height(), 16, Integer.MAX_VALUE);  //FIXME should not cast size
         this.entity = entity;
         this.sprite = sprite;
     }

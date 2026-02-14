@@ -88,7 +88,7 @@ public final class TrivialFunctions {
         return arg -> constantValue;
     }
 
-    private  TrivialFunctions() {
+    private TrivialFunctions() {
         throw new IllegalStateException("Utility class");
     }
 
