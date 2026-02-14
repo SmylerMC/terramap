@@ -149,17 +149,9 @@ public abstract class RemoteSynchronizer {
             jsonWorldSettings = pkt.worldSettings.toString();
         }
         getTerramap().logger().debug(
-                "Server version: " + pkt.serverVersion + "\t" +
-                        "Server worldSettings: " + jsonWorldSettings + "\t" +
-                        "Server UUID: " + pkt.worldUUID + "\t" +
-                        "Sync players: " + pkt.syncPlayers + "\t" +
-                        "Sync spectators: " + pkt.syncSpectators + "\t" +
-                        "Enable player radar: " + pkt.enablePlayerRadar + "\t" +
-                        "Enable animal radar: " + pkt.enableAnimalRadar + "\t" +
-                        "Enable mob radar: " + pkt.enableMobRadar + "\t" +
-                        "Enable deco radar: " + pkt.enableDecoRadar + "\t" +
-                        "Warp support: " + pkt.hasWarpSupport + "\t"
-                );
+                "Server version: {}, Server worldSettings: {}, Server UUID: {}, Sync players: {}, Sync spectators: {}, Enable player radar: {}, Enable animal radar: {}, Enable mob radar: {}, Enable deco radar: {}, Warp support: {}",
+                pkt.serverVersion, jsonWorldSettings, pkt.worldUUID, pkt.syncPlayers, pkt.syncSpectators, pkt.enablePlayerRadar, pkt.enableAnimalRadar, pkt.enableMobRadar, pkt.enableDecoRadar, pkt.hasWarpSupport
+        );
         TerramapClientContext ctx = TerramapClientContext.getContext();
 
         try {

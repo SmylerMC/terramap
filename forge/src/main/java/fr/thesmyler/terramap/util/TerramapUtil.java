@@ -61,9 +61,8 @@ public final class TerramapUtil {
     }
 
     public static boolean isBteCompatible(EarthGeneratorSettings gen) {
-        return 
-                gen != null &&
-                gen.projection().toString().equals(BTE_GENERATOR_SETTINGS.projection().toString());
+        return gen != null
+                && gen.projection().toString().equals(BTE_GENERATOR_SETTINGS.projection().toString());
     }
 
     private TerramapUtil() {

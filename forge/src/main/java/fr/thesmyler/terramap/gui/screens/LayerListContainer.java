@@ -156,9 +156,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
                     () -> LayerListContainer.this.scheduleBeforeNextUpdate(() -> getGameClient().displayPopup(new LayerRenderingOffsetPopup(layer)))
             );
             offsetButton.setTooltip(getGameClient().translator().format(
-                    layer.hasRenderingOffset() ?
-                    "terramap.terramapscreen.layerscreen.raster_background.offset" :
-                    "terramap.terramapscreen.layerscreen.raster_background.no_offset"
+                    layer.hasRenderingOffset()
+                            ? "terramap.terramapscreen.layerscreen.raster_background.offset"
+                            : "terramap.terramapscreen.layerscreen.raster_background.no_offset"
             ));
             this.addWidget(offsetButton);
             this.setHeight(37);

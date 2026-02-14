@@ -17,12 +17,14 @@ public class Color {
     }
 
     public Color(int red, int green, int blue, int alpha) {
+        boolean isValidColor = red >= 0 && red < 256
+                && green >= 0 && green < 256
+                && blue >= 0 && blue < 256
+                && alpha >= 0 && alpha < 256;
         checkArgument(
-                red >= 0 && red < 256 &&
-                green >= 0 && green < 256 &&
-                blue >= 0 && blue < 256 &&
-                alpha >= 0 && alpha < 256,
-                String.format("Invalid color operand, R=%s, G=%s, B=%s, A=%s", red, green, blue, alpha));
+                isValidColor,
+                String.format("Invalid color operand, R=%s, G=%s, B=%s, A=%s", red, green, blue, alpha)
+        );
         this.color = blue;
         this.color += green << 8;
         this.color += red << 16;

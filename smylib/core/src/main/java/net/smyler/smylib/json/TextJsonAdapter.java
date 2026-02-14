@@ -207,8 +207,8 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
         if ("keybind".equals(contentType) && object.has("keybind")) {
             return this.parseKeyBindingContent(object);
         }
-        if ("nbt".equals(contentType) && object.has("nbt") &&
-                (object.has("block") || object.has("entity") || object.has("storage"))
+        if ("nbt".equals(contentType) && object.has("nbt")
+                && (object.has("block") || object.has("entity") || object.has("storage"))
         ) {
             return this.parseNbtContent(object);
         }
@@ -288,10 +288,8 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
         if (name == null || objective == null) {
             return null;
         }
-        SmyLib.getLogger().warn(
-                "SmyLib is trying to deserialize a score text from JSON. " +
-                        "This is not yet supported. Will use the objective name as plain text."
-        );
+        SmyLib.getLogger().warn("SmyLib is trying to deserialize a score text from JSON. "
+                + "This is not yet supported. Will use the objective name as plain text.");
         //TODO support parsing score text contents
         return new PlainTextContent(objective);
     }
@@ -302,10 +300,8 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
         if (selector == null) {
             return null;
         }
-        SmyLib.getLogger().warn(
-                "SmyLib is trying to deserialize a selector text from JSON. " +
-                        "This is not yet supported. Will use the selector as plain text."
-        );
+        SmyLib.getLogger().warn("SmyLib is trying to deserialize a selector text from JSON. "
+                + "This is not yet supported. Will use the selector as plain text.");
         //TODO support parsing selector text contents
         return new PlainTextContent(selector);
     }
@@ -316,10 +312,8 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
         if (keybind == null) {
             return null;
         }
-        SmyLib.getLogger().warn(
-                "SmyLib is trying to deserialize a key binding text from JSON. " +
-                        "This is not yet supported. Will use the binding name as plain text."
-        );
+        SmyLib.getLogger().warn("SmyLib is trying to deserialize a key binding text from JSON. "
+                + "This is not yet supported. Will use the binding name as plain text.");
         //TODO support parsing key bindings text contents
         return new PlainTextContent(keybind);
     }
@@ -355,10 +349,8 @@ public class TextJsonAdapter implements JsonSerializer<Text>, JsonDeserializer<T
             return null;
         }
 
-        SmyLib.getLogger().warn(
-                "SmyLib is trying to deserialize a nbt text from JSON. " +
-                        "This is not yet supported. Will use the nbt source as plain text."
-        );
+        SmyLib.getLogger().warn("SmyLib is trying to deserialize a nbt text from JSON. "
+                + "This is not yet supported. Will use the nbt source as plain text.");
         //TODO support parsing nbt text contents
         return new PlainTextContent(displayedSource + "." + nbt);
     }

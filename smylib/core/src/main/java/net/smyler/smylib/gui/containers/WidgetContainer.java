@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static net.smyler.smylib.SmyLib.getGameClient;
@@ -383,7 +384,7 @@ public abstract class WidgetContainer implements Widget {
         Widget wf = null;
         if (screenHovered) {
             for (Widget widget: this.widgets) {
-                if (!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) {
+                if (!this.shouldDrawWidget(widget)) {
                     continue;
                 }
                 if (this.isOverWidget(mouseX - x, mouseY - y, widget)) {
@@ -394,40 +395,23 @@ public abstract class WidgetContainer implements Widget {
         }
         this.hoveredWidget = wf;
         this.widgets.descendingIterator().forEachRemaining((widget) -> {
-            if (
-                    !widget.isVisible(this) ||
-                    this.isOutsideScreen(widget) ||
-                    !doBoxesCollide(
-                            x + widget.getX(),
-                            y + widget.getY(),
-                            widget.getWidth(),
-                            widget.getHeight(),
-                            x,
-                            y,
-                            this.getWidth(),
-                            this.getHeight())) {
-                return;
+            if (this.shouldDrawWidget(widget)) {
+                widget.draw(context, x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
             }
-            widget.draw(context, x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
         });
         if (this.doScissor) {
             scissor.pop();
         }
     }
 
-    /**
-     * Indicates whether the widget is worth rendering
-     * 
-     * @param widget    the widget to check
-     * 
-     * @return false if the widget overlaps with the screen, true otherwise
-     */
-    protected boolean isOutsideScreen(Widget widget) {
-        float minX = widget.getX();
-        float minY = widget.getY();
-        float maxX = minX + widget.getWidth();
-        float maxY = minY + widget.getHeight();
-        return maxX < 0 || minX > this.getWidth() || maxY < 0 || minY > this.getHeight();
+    private boolean shouldDrawWidget(@NotNull Widget widget) {
+        if (!widget.isVisible(this)) {
+            return false;
+        }
+        return doBoxesCollide(
+                widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(),
+                0, 0, this.getWidth(), this.getHeight()
+        );
     }
 
     /**
