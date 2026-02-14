@@ -33,4 +33,8 @@ public final class RenderUtil {
         drawModalRectWithCustomSizedTexture(x, y, 0d, u, v, width, height, textureWidth, textureHeight);
     }
 
+    private RenderUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }

@@ -148,7 +148,7 @@ public class ContentPreviewWidget implements Widget {
 
     }
 
-    private class UnsupportedPreview implements Preview {
+    private final class UnsupportedPreview implements Preview {
 
         @Override
         public void draw(UiDrawContext context, float x, float y, float width, float height) {

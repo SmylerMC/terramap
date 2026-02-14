@@ -30,7 +30,7 @@ public class TranslationContextBuilder {
         return new TranslationContext(sender);
     }
 
-    public class TranslationContext {
+    public final class TranslationContext {
 
         public final TerramapVersion senderVersion;
         public final boolean senderSupportsTranslation;

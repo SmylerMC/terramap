@@ -93,7 +93,7 @@ public class DummyGlContext implements GlContext {
 
     }
 
-    private static class DummyVertexBuilder implements VertexBuilder {
+    private static final class DummyVertexBuilder implements VertexBuilder {
 
         @Override
         public VertexBuilder position(double x, double y, double z) {

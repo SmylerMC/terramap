@@ -21,7 +21,7 @@ import static net.smyler.terramap.Terramap.getTerramap;
  * @author SmylerMC
  *
  */
-public class TerramapServerPreferences {
+public final class TerramapServerPreferences {
 
     public static final String FILENAME = "terramap_server_preferences.json";
 
@@ -202,13 +202,17 @@ public class TerramapServerPreferences {
         }
     }
 
-    private static class WorldPreferences {
+    private static final class WorldPreferences {
         public UUID world_uuid = new UUID(0, 0);
         public Map<UUID, PlayerPreferences> players = new HashMap<>();
     }
 
-    private static class PlayerPreferences {
+    private static final class PlayerPreferences {
         public boolean display = TerramapConfig.SERVER.playersDisplayDefault;
+    }
+
+    private TerramapServerPreferences() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

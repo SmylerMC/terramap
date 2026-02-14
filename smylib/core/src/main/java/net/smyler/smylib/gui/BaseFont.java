@@ -372,7 +372,7 @@ abstract class BaseFont implements Font {
         return EMPTY.withNewSiblings(siblings);
     }
 
-    private static class StyleState {
+    private static final class StyleState {
         private boolean bold = false;
         private boolean italic = false;
         private boolean underline = false;

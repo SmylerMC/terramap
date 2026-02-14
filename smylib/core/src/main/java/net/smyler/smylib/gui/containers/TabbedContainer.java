@@ -102,7 +102,7 @@ public class TabbedContainer extends FlexibleWidgetContainer {
         return this.centerTabs;
     }
 
-    public class TabContainer extends WidgetContainer {
+    public final class TabContainer extends WidgetContainer {
 
         boolean selected = false;
         private final TabButton button;
@@ -159,7 +159,7 @@ public class TabbedContainer extends FlexibleWidgetContainer {
 
     }
 
-    public class TabButton implements Widget {
+    public final class TabButton implements Widget {
 
         private final TabContainer tab;
         private final int index;

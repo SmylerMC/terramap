@@ -28,13 +28,17 @@ public interface Terramap {
 
     RasterTileSetManager rasterTileSetManager();
 
-    class InstanceHolder {
+    final class InstanceHolder {
 
         private static Terramap instance;
 
         public static void setInstance(Terramap instance) {
             instance.logger().info("Setting Terramap instance of class {}", instance.getClass().getName());
             InstanceHolder.instance = instance;
+        }
+
+        private InstanceHolder() {
+            throw new IllegalStateException("Utility class");
         }
 
     }

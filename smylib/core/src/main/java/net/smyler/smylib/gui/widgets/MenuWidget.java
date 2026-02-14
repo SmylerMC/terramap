@@ -366,7 +366,7 @@ public class MenuWidget implements Widget {
         this.disabledTextColor = disabledTextColor;
     }
 
-    public static class MenuEntry {
+    public static final class MenuEntry {
 
         public final String text;
         private final Runnable action;

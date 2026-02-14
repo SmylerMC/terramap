@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.Preconditions.checkState;
 
-public class SmyLib {
+public final class SmyLib {
 
     public static final String MODDING_NAMESPACE = "smylib";
 
@@ -47,6 +47,10 @@ public class SmyLib {
             SmyLib.isDebug = true;
         }
         SmyLibSprites.registerAllSmyLibSprites();
+    }
+
+    private SmyLib() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

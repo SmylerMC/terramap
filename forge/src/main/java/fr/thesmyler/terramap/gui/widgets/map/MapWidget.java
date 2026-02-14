@@ -714,7 +714,7 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.reportedErrors.removeAll(errsToRm);
     }
 
-    private static class ReportedError {
+    private static final class ReportedError {
 
         private final Object source;
         private final String message;

@@ -400,7 +400,7 @@ public class HudConfigScreen extends Screen {
 
     }
 
-    private static class RasterTileSetSliderEntry {
+    private static final class RasterTileSetSliderEntry {
 
         private final RasterTileSet map;
 

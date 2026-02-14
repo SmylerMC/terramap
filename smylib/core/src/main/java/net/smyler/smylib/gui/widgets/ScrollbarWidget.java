@@ -186,7 +186,7 @@ public class ScrollbarWidget extends WidgetContainer {
         return this;
     }
     
-    private class Draggable implements Widget {
+    private final class Draggable implements Widget {
 
         @Override
         public float getX() {

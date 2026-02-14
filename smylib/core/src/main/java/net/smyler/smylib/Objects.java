@@ -49,4 +49,8 @@ public final class Objects {
         return object;
     }
 
+    private Objects() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }

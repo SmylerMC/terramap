@@ -8,7 +8,7 @@ import static java.lang.Double.isFinite;
 import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.Preconditions.checkState;
 
-public class Sprite {
+public final class Sprite {
 
     public final Identifier texture;
     public final double textureWidth, textureHeight;

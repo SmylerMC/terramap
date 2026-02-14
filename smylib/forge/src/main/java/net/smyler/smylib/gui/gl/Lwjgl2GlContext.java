@@ -203,7 +203,7 @@ public class Lwjgl2GlContext implements GlContext {
         this.currentFormat = null;
     }
 
-    private class VertexBuilderImplementation implements VertexBuilder {
+    private final class VertexBuilderImplementation implements VertexBuilder {
 
         private double x, y, z;
         private float r, g, b, a;

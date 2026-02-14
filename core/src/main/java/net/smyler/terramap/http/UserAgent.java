@@ -46,4 +46,9 @@ public final class UserAgent {
                 javaString()
         );
     }
+
+    private UserAgent() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }

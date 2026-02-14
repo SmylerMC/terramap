@@ -9,4 +9,8 @@ public final class PopupImplementationProxy {
         popup.setPosition(x, y);
     }
 
+    private PopupImplementationProxy() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }

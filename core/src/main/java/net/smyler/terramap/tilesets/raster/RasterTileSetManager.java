@@ -253,7 +253,7 @@ public class RasterTileSetManager {
     }
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private static class TileSetDefinition {
+    private static final class TileSetDefinition {
 
         String url; // Used by legacy versions
         String[] urls;

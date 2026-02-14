@@ -12,4 +12,8 @@ public final class TestScreenProxy {
         screen.init();
     }
 
+    private TestScreenProxy() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }

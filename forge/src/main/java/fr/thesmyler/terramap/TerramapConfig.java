@@ -17,7 +17,7 @@ import static net.smyler.smylib.SmyLib.getGameClient;
  * 
  */
 @Config(modid = Terramap.MOD_ID)
-public class TerramapConfig {
+public final class TerramapConfig {
 
     public static final class Minimap {
 
@@ -284,7 +284,7 @@ public class TerramapConfig {
     }
 
     @Mod.EventBusSubscriber(modid = Terramap.MOD_ID)
-    private static class EventHandler {
+    private static final class EventHandler {
 
         /**
          * Inject the new values and save to the config file when the config has been changed from the GUI.
@@ -299,6 +299,10 @@ public class TerramapConfig {
             TerramapMod.proxy.onConfigChanged(event);
         }
 
+    }
+
+    private TerramapConfig() {
+        throw new IllegalStateException("Utility class");
     }
 
 }

@@ -219,7 +219,7 @@ public final class ImmutableText implements Text {
         return "ImmutableText{" + this.getFormattedText() + "}";
     }
 
-    private class ImmutableTextIterator implements Iterator<Text> {
+    private final class ImmutableTextIterator implements Iterator<Text> {
         private Iterator<Text> rootNode;
         private Iterator<Text> currentNode;
 

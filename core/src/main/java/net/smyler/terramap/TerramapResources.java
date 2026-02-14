@@ -10,4 +10,8 @@ public final class TerramapResources {
     public static final Identifier SPRITES = GUI_TEXTURES.resolve("sprites");
     public static final Identifier SPRITES_MAP_MARKERS = SPRITES.resolve("markers");
 
+    private TerramapResources() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }

@@ -166,7 +166,7 @@ public final class HudScreen {
         return GUI_INGAME_UPDATE_COUNTER_FIELD.getInt(Minecraft.getMinecraft().ingameGUI);
     }
 
-    private static class HudScreenContainer extends RootContainer {
+    private static final class HudScreenContainer extends RootContainer {
 
         @Override
         public void onUpdate(float mouseX, float mouseY, @Nullable WidgetContainer parent) {

@@ -564,4 +564,8 @@ public final class SmyLibSprites {
         }
     }
 
+    private SmyLibSprites() {
+        throw new IllegalStateException("Utility class");
+    }
+
 }
