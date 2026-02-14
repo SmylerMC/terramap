@@ -231,16 +231,30 @@ public final class TextStyle {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         TextStyle textStyle = (TextStyle) o;
 
-        if (!Objects.equals(color, textStyle.color)) return false;
-        if (bold != textStyle.bold) return false;
-        if (italic != textStyle.italic) return false;
-        if (strikethrough != textStyle.strikethrough) return false;
-        if (underlined != textStyle.underlined) return false;
+        if (!Objects.equals(color, textStyle.color)) {
+            return false;
+        }
+        if (bold != textStyle.bold) {
+            return false;
+        }
+        if (italic != textStyle.italic) {
+            return false;
+        }
+        if (strikethrough != textStyle.strikethrough) {
+            return false;
+        }
+        if (underlined != textStyle.underlined) {
+            return false;
+        }
         return obfuscated == textStyle.obfuscated;
     }
 

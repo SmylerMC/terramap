@@ -105,10 +105,13 @@ public class TerrainPreviewTileSet extends CachingRasterTileSet {
         @Override
         public Identifier getTexture() throws Throwable {
 
-            if (this.getPosition().getZoom() < TerrainPreviewTileSet.BASE_ZOOM_LEVEL)
+            if (this.getPosition().getZoom() < TerrainPreviewTileSet.BASE_ZOOM_LEVEL) {
                 throw new IllegalArgumentException("Trying to request a terrain preview with a zoom that's too low (" + this.position.getZoom() + ")");
+            }
 
-            if (this.getPosition().getZoom() != TerrainPreviewTileSet.BASE_ZOOM_LEVEL) return null;
+            if (this.getPosition().getZoom() != TerrainPreviewTileSet.BASE_ZOOM_LEVEL) {
+                return null;
+            }
 
             if (this.texture == null) {
                 if (this.textureTask == null) {
@@ -116,7 +119,9 @@ public class TerrainPreviewTileSet extends CachingRasterTileSet {
                     if (preview != null) {
                         this.textureTask = preview.tile(this.position.getX(), this.position.getY(), TerrainPreviewTileSet.BASE_ZOOM_LEVEL - this.position.getZoom());
                     }
-                } else this.tryLoadingTexture();
+                } else {
+                    this.tryLoadingTexture();
+                }
             }
             return this.texture;
         }

@@ -35,7 +35,9 @@ public abstract class AbstractPlayerMarker extends AbstractMovingMarker {
         boolean drawName = this.showName(hovered);
         float textureSize = 128f / this.downScaleFactor;
         glState.enableAlpha();
-        if (hovered) context.drawRectangle(x + 1, y + 1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.DARK_OVERLAY);
+        if (hovered) {
+            context.drawRectangle(x + 1, y + 1, x + this.getWidth() + 1, y + this.getHeight() + 1, Color.DARK_OVERLAY);
+        }
 
         // Draw the direction arrow
         if (this.showDirection(hovered) && Float.isFinite(this.azimuth)) {

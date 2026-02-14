@@ -20,8 +20,10 @@ import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.Nullable;
 
+import static java.lang.Double.isFinite;
 import static java.lang.Math.pow;
 import static java.lang.Math.toRadians;
+import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.terramap.geo.GeoUtil.getAzimuthInRange;
 
 /**
@@ -323,7 +325,7 @@ public abstract class MapLayer implements Widget {
      * @throws IllegalArgumentException if offset is not finite
      */
     public void setRenderingOffset(Vec2d offset) {
-        if (!offset.isFinite()) throw new IllegalArgumentException("Map offset has to be finite");
+        checkArgument(offset.isFinite(), "Map offset has to be finite");
         this.renderingOffset.set(offset);
         this.updateViewPorts();
     }
@@ -338,7 +340,7 @@ public abstract class MapLayer implements Widget {
      * @throws IllegalArgumentException if offset is not finite
      */
     public void setPixelRenderingOffset(Vec2d offset) {
-        if (!offset.isFinite()) throw new IllegalArgumentException("Layer offset has to be finite");
+        checkArgument(offset.isFinite(), "Layer offset has to be finite");
         this.renderingOffset.set(offset).downscale(pow(2d, this.controller.getZoom()) * 256);
         this.updateViewPorts();
     }
@@ -358,7 +360,7 @@ public abstract class MapLayer implements Widget {
      * @throws IllegalArgumentException if rotationOffset is not a finite number
      */
     public void setRotationOffset(float rotationOffset) {
-        if (!Double.isFinite(rotationOffset)) throw new IllegalArgumentException("Layer rotation offset has to be finite");
+        checkArgument(isFinite(rotationOffset), "Layer rotation offset has to be finite");
         this.rotationOffset = rotationOffset;
         this.updateViewPorts();
     }
@@ -421,7 +423,7 @@ public abstract class MapLayer implements Widget {
      * @throws IllegalArgumentException if alpha is not finite and in range
      */
     public void setAlpha(float alpha) {
-        if (!Double.isFinite(alpha) || !ALPHA_RANGE.matches(alpha)) {
+        if (!isFinite(alpha) || !ALPHA_RANGE.matches(alpha)) {
             throw new IllegalArgumentException("Layer alpha should be between 0 and 1, not " + alpha);
         }
         this.alpha = alpha;

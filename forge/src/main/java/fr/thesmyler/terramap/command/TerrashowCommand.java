@@ -58,11 +58,13 @@ public class TerrashowCommand extends CommandBase {
         }
 
         if (player != null && player.equals(senderPlayer)) {
-            if (senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF))
+            if (senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_SELF)) {
                 throw transCtx.commandException("terramap.commands.terrashow.cannot_change_own_visibility");
+            }
         } else {
-            if (senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER))
+            if (senderPlayer != null && !hasPermission(senderPlayer, Permission.UPDATE_PLAYER_VISIBILITY_OTHER)) {
                 throw transCtx.commandException("terramap.commands.terrashow.cannot_change_others_visibility");
+            }
         }
 
         if (player == null) {

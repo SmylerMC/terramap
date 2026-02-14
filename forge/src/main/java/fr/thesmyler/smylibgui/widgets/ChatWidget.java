@@ -64,8 +64,12 @@ public class ChatWidget implements Widget, ITabCompleter {
         if (this.guiChat.mc == null || this.guiChat.width != width || this.guiChat.height != height) {
             this.guiChat.setWorldAndResolution(Minecraft.getMinecraft(), (int)hud.getWidth(), (int)hud.getHeight());
         }
-        if (parent != null && this.open) parent.setFocus(this);
-        if (parent != null && this.equals(parent.getFocusedWidget()) && !this.open) parent.setFocus(null);
+        if (parent != null && this.open) {
+            parent.setFocus(this);
+        }
+        if (parent != null && this.equals(parent.getFocusedWidget()) && !this.open) {
+            parent.setFocus(null);
+        }
         this.guiChat.updateScreen();
     }
 
@@ -186,7 +190,9 @@ public class ChatWidget implements Widget, ITabCompleter {
     }
 
     public void setOpen(boolean open) {
-        if (open) this.guiChat.initGui(); // Reset chat content
+        if (open) {
+            this.guiChat.initGui(); // Reset chat content
+        }
         this.open = open;
     }
 

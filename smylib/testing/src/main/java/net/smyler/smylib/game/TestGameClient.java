@@ -278,7 +278,9 @@ public class TestGameClient implements GameClient {
 
     public void runFor(long milliseconds) throws InterruptedException {
         long stime = this.screenTime;
-        while (this.screenTime < stime + milliseconds) this.doTick();
+        while (this.screenTime < stime + milliseconds) {
+            this.doTick();
+        }
     }
 
     public void moveMouse(float x, float y, long time) throws InterruptedException {
@@ -317,7 +319,9 @@ public class TestGameClient implements GameClient {
     }
 
     public void scrollMouse(int amount) {
-        if (amount == 0) return;
+        if (amount == 0) {
+            return;
+        }
         int inc = amount / abs(amount);
         for (int i = 0; i != amount; i += inc) {
             this.mouseWheelEvents.add(new MouseWheelEvent(inc, this.screenTime));
@@ -360,8 +364,12 @@ public class TestGameClient implements GameClient {
         Iterator<MouseWheelEvent> iterator = this.mouseWheelEvents.iterator();
         while (iterator.hasNext()) {
             MouseWheelEvent wheelEvent = iterator.next();
-            if (wheelEvent.time > this.screenTime) break;
-            if (wheelEvent.scroll != 0) this.currentScreen.onMouseWheeled(this.mouse.x(), this.mouse.y(), wheelEvent.scroll, null);
+            if (wheelEvent.time > this.screenTime) {
+                break;
+            }
+            if (wheelEvent.scroll != 0) {
+                this.currentScreen.onMouseWheeled(this.mouse.x(), this.mouse.y(), wheelEvent.scroll, null);
+            }
             iterator.remove();
         }
     }
@@ -370,7 +378,9 @@ public class TestGameClient implements GameClient {
         Iterator<MouseEvent> iterator = this.mouseEvents.iterator();
         while (iterator.hasNext()) {
             MouseEvent event = iterator.next();
-            if (event.time > this.screenTime) break;
+            if (event.time > this.screenTime) {
+                break;
+            }
             this.processMouseEvent(event);
             iterator.remove();
         }
@@ -380,7 +390,9 @@ public class TestGameClient implements GameClient {
         Iterator<KeyboardEvent> iterator = this.keyboardEvents.iterator();
         while (iterator.hasNext()) {
             KeyboardEvent event = iterator.next();
-            if (event.time > this.screenTime) break;
+            if (event.time > this.screenTime) {
+                break;
+            }
             this.currentScreen.onKeyTyped(event.character, event.eventKey, null);
             iterator.remove();
         }

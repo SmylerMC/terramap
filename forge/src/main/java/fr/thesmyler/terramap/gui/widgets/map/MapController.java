@@ -15,7 +15,10 @@ import fr.thesmyler.terramap.gui.widgets.markers.markers.AbstractMovingMarker;
 import fr.thesmyler.terramap.gui.widgets.markers.markers.Marker;
 
 import static fr.thesmyler.terramap.gui.widgets.map.MapWidget.ZOOM_RANGE;
+import static java.lang.Double.isFinite;
 import static java.lang.Math.*;
+import static java.util.Objects.requireNonNull;
+import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.math.Math.clamp;
 import static net.smyler.terramap.geo.GeoUtil.getAzimuthInRange;
@@ -95,7 +98,9 @@ public final class MapController {
                 this.movingSpeed.subtract(this.positionCalculationResult).downscale(100);
                 double speed = this.movingSpeed.norm();
                 double maxSpeed = this.positionCalculationResult.distanceTo(this.map.getWidth() / 2, this.map.getHeight() / 2) / dt;
-                if (speed > maxSpeed) this.movingSpeed.downscale(speed).scale(maxSpeed);
+                if (speed > maxSpeed) {
+                    this.movingSpeed.downscale(speed).scale(maxSpeed);
+                }
             }
         }
         //TODO move the Mouse.isButtonDown(0) out of here
@@ -116,7 +121,9 @@ public final class MapController {
     private void processZoom(long dt) {
 
         double deltaZoom = abs(this.zoom - this.zoomTarget);
-        if (deltaZoom <= 0d) return;
+        if (deltaZoom <= 0d) {
+            return;
+        }
 
         this.setStaticLocation(this.zoomLocation);
         if (deltaZoom < 0.01d) {
@@ -138,7 +145,9 @@ public final class MapController {
 
     private void processRotation(long dt) {
 
-        if (abs(this.rotation - this.rotationTarget) <= 0d) return;
+        if (abs(this.rotation - this.rotationTarget) <= 0d) {
+            return;
+        }
 
         this.setStaticLocation(this.rotateLocation);
 
@@ -215,7 +224,9 @@ public final class MapController {
      * @throws IllegalArgumentException if amount is not a finite number
      */
     public void zoom(double amount, boolean animate) {
-        if (!Double.isFinite(amount)) throw new IllegalArgumentException("Zoom delta has to be a finite number");
+        if (!isFinite(amount)) {
+            throw new IllegalArgumentException("Zoom delta has to be a finite number");
+        }
         this.setZoom(this.zoom + amount, animate);
     }
 
@@ -233,8 +244,9 @@ public final class MapController {
      * @throws IllegalArgumentException if either dX or dY is not a finite double
      */
     public void moveMap(double dX, double dY, boolean animate) {
-        if (!Double.isFinite(dX) || !Double.isFinite(dY))
+        if (!isFinite(dX) || !isFinite(dY)) {
             throw new IllegalArgumentException("Cannot move the map of a non finite number");
+        }
         this.stopTracking();
         this.inputLayer.getPositionOnWidget(this.positionCalculationResult, this.centerLocationTarget);
         this.inputLayer.getLocationAtPositionOnWidget(this.centerLocationTarget, this.positionCalculationResult.subtract(dX, dY));
@@ -330,7 +342,7 @@ public final class MapController {
      * @throws IllegalArgumentException if zoom is not a finite number
      */
     public void setZoom(double zoom, boolean animate) {
-        if (!Double.isFinite(zoom)) throw new IllegalArgumentException("Zoom has to be a finite number");
+        checkArgument(isFinite(zoom), "Zoom has to be a finite number");
         this.zoomTarget = clamp(this.zoomSnapper.snap(zoom), this.minZoom, this.maxZoom);
         if (!animate) {
             this.setStaticLocation(this.zoomLocation);
@@ -361,7 +373,7 @@ public final class MapController {
      * @throws IllegalArgumentException if position is not finite
      */
     public void setZoomStaticPosition(Vec2d position) {
-        if (!position.isFinite()) throw new IllegalArgumentException("Zoom static position needs to be finite");
+        checkArgument(position.isFinite(), "Zoom static position needs to be finite");
         this.inputLayer.getLocationAtPositionOnWidget(this.zoomLocation, position);
     }
 
@@ -393,7 +405,7 @@ public final class MapController {
      * @param animate  whether to transition smoothly to the new value with an animation or to set it immediately
      */
     public void setRotation(float rotation, boolean animate) {
-        if (!Float.isFinite(rotation)) throw new IllegalArgumentException("Layer rotation has to be a finite number");
+        checkArgument(isFinite(rotation), "Layer rotation has to be a finite number");
         this.rotationTarget = getAzimuthInRange(this.rotationSnapper.snap(rotation));
         if (!animate) {
             this.setStaticLocation(this.rotateLocation);
@@ -424,7 +436,7 @@ public final class MapController {
      * @throws IllegalArgumentException if position is not finite
      */
     public void setRotationStaticPosition(Vec2d position) {
-        if (!position.isFinite()) throw new IllegalArgumentException("Static rotation position has to be finite");
+        checkArgument(position.isFinite(), "Static rotation position has to be finite");
         this.inputLayer.getLocationAtPositionOnWidget(this.rotateLocation, position);
     }
 
@@ -439,7 +451,7 @@ public final class MapController {
      * @throws IllegalArgumentException if either X or Y is not finite
      */
     public void setRotationStaticPosition(double x, double y) {
-        if (!Double.isFinite(x) || !Double.isFinite(y)) {
+        if (!isFinite(x) || !isFinite(y)) {
             throw new IllegalArgumentException("Static rotation position has to be finite");
         }
         this.inputLayer.getLocationAtPositionOnWidget(this.rotateLocation, x, y);
@@ -492,7 +504,7 @@ public final class MapController {
      * @throws NullPointerException if marker is null
      */
     public void track(Marker marker) {
-        if (marker == null) throw new NullPointerException("Cannot track a null marker");
+        requireNonNull(marker, "Cannot track a null marker");
         this.trackedMarker = marker;
     }
 
@@ -547,7 +559,7 @@ public final class MapController {
      * @throws IllegalArgumentException if minZoom is not in the [0, 25] range
      */
     public void setMinZoom(double minZoom) {
-        if (!Double.isFinite(minZoom) || !ZOOM_RANGE.matches(minZoom)) {
+        if (!isFinite(minZoom) || !ZOOM_RANGE.matches(minZoom)) {
             throw new IllegalArgumentException("Minimum zoom shall be between 0 and 25 inclusive. Not " + minZoom);
         }
         this.minZoom = minZoom;
@@ -567,7 +579,7 @@ public final class MapController {
      * @throws IllegalArgumentException if maxZoom is not in the [0, 25] range
      */
     public void setMaxZoom(double maxZoom) {
-        if (!Double.isFinite(maxZoom) || !ZOOM_RANGE.matches(maxZoom)) {
+        if (!isFinite(maxZoom) || !ZOOM_RANGE.matches(maxZoom)) {
             throw new IllegalArgumentException("Maximum zoom shall be between 0 and 25 inclusive. Not " + maxZoom);
         }
         this.maxZoom = maxZoom;

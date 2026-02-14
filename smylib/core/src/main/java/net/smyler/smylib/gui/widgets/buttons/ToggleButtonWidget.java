@@ -126,7 +126,9 @@ public class ToggleButtonWidget extends AbstractButtonWidget {
 
     public void toggle() {
         this.value = !this.value;
-        if (this.onChange != null) this.onChange.accept(this.value);
+        if (this.onChange != null) {
+            this.onChange.accept(this.value);
+        }
     }
 
     public boolean getState() {

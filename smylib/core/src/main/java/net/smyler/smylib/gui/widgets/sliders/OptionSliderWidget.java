@@ -99,7 +99,9 @@ public class OptionSliderWidget<T> extends AbstractSliderWidget {
     }
 
     protected void onCycle() {
-        if (this.onCycle != null) this.onCycle.accept(this.getCurrentOption());
+        if (this.onCycle != null) {
+            this.onCycle.accept(this.getCurrentOption());
+        }
     }
 
     public OptionSliderWidget<T> setOnChange(Consumer<T> onChange) {

@@ -40,7 +40,9 @@ public class MainPlayerMarker extends AbstractPlayerMarker {
             parent.scheduleBeforeNextUpdate(() -> parent.removeWidget(this));
             return;
         }
-        if (TerramapClientContext.getContext().getProjection() == null) return;
+        if (TerramapClientContext.getContext().getProjection() == null) {
+            return;
+        }
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         GeoProjection projection = TerramapClientContext.getContext().getProjection();
         Position position = new PositionMutable(player.posX, player.posY, player.posZ, player.cameraYaw, player.cameraPitch);

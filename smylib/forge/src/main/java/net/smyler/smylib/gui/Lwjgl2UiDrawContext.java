@@ -121,7 +121,9 @@ public class Lwjgl2UiDrawContext implements UiDrawContext {
         GlStateManager.translate(rx, ry, 0);
         currentScreen.drawHoveringText(text, px, py);
         GlStateManager.popMatrix();
-        if (!lighting) GlStateManager.disableLighting();
+        if (!lighting) {
+            GlStateManager.disableLighting();
+        }
     }
 
     @Override

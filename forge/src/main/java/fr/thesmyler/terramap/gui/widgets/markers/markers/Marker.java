@@ -82,9 +82,13 @@ public abstract class Marker implements Widget {
 
     @Override
     public boolean isVisible(WidgetContainer parent) {
-        if (!this.controller.isVisible()) return false;
+        if (!this.controller.isVisible()) {
+            return false;
+        }
         GeoPoint location = this.getLocation();
-        if (location == null || !WebMercatorUtil.PROJECTION_BOUNDS.contains(this.getLocation())) return false;
+        if (location == null || !WebMercatorUtil.PROJECTION_BOUNDS.contains(this.getLocation())) {
+            return false;
+        }
         if (parent instanceof MapWidget) {
             MapWidget map = (MapWidget)parent;
             double zoom = map.getController().getZoom();

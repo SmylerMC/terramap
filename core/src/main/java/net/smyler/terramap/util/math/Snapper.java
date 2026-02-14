@@ -2,6 +2,7 @@ package net.smyler.terramap.util.math;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.round;
+import static net.smyler.smylib.Preconditions.checkArgument;
 
 /**
  * Snaps values to given values at fixed interval if they are closed enough.
@@ -24,7 +25,9 @@ public class Snapper {
 
     public double snap(double value) {
         double closetsPeriod = round(value / this.period) * this.period;
-        if (abs(closetsPeriod - value) < this.distance) value = closetsPeriod;
+        if (abs(closetsPeriod - value) < this.distance) {
+            value = closetsPeriod;
+        }
         return value;
     }
 
@@ -37,7 +40,7 @@ public class Snapper {
     }
 
     public void setPeriod(double period) {
-        if (period < 0) throw new IllegalArgumentException("Snapping period shall be positive, not " + period);
+        checkArgument(period >= 0, "Snapping period shall be positive, not " + period);
         this.period = period;
     }
 
@@ -46,7 +49,7 @@ public class Snapper {
     }
 
     public void setDistance(double distance) {
-        if (distance < 0) throw new IllegalArgumentException("Snapping distance shall be positive, not " + distance);
+        checkArgument(distance > 0, "Snapping distance must be positive, not " + distance);
         this.distance = distance;
     }
 

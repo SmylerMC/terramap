@@ -98,8 +98,11 @@ public class HudConfigScreen extends Screen {
             this.zoomSlider.setMax(map.map.getMaxZoom());
         }));
         this.tileScalingSlider.setOnChange(v -> {
-            if (v == TileScalingOption.AUTO) this.minimap.setTileScaling(getGameClient().scaleFactor());
-            else this.minimap.setTileScaling(v.value);
+            if (v == TileScalingOption.AUTO) {
+                this.minimap.setTileScaling(getGameClient().scaleFactor());
+            } else {
+                this.minimap.setTileScaling(v.value);
+            }
         });
         this.minimapButton.setOnChange(this.minimapWindow::setVisibility);
         this.compassButton.setOnChange(this.compassWindow::setVisibility);
@@ -112,7 +115,9 @@ public class HudConfigScreen extends Screen {
         this.chunksButton.setOnChange(b -> this.minimap.trySetFeatureVisibility(McChunksLayer.ID, b));
         this.rotationButton.setOnChange(b -> {
             controller.setTracksRotation(b);
-            if (!b) controller.setRotation(0, true);
+            if (!b) {
+                controller.setRotation(0, true);
+            }
         });
         this.minimapWindow.setEnableTopBar(false);
         this.minimapWindow.setCenterDragColor(Color.TRANSPARENT);
@@ -148,8 +153,11 @@ public class HudConfigScreen extends Screen {
             this.minimapWindow.setWidth(this.minimapWindow.getWidth() / this.lastWidth * width);
             this.minimapWindow.setHeight(this.minimapWindow.getHeight() / this.lastHeight * height);
             double t = this.tileScalingSlider.getCurrentOption().value;
-            if (t == 0) this.minimap.setTileScaling(game.scaleFactor());
-            else this.minimap.setTileScaling(t);
+            if (t == 0) {
+                this.minimap.setTileScaling(game.scaleFactor());
+            } else {
+                this.minimap.setTileScaling(t);
+            }
             this.compassWindow.setX(this.compassWindow.getX() * width / this.lastWidth);
             this.compassWindow.setY(this.compassWindow.getY() * height / this.lastHeight);
             this.compassWindow.setWidth(this.compassWindow.getWidth() / this.lastWidth * width);
@@ -221,7 +229,9 @@ public class HudConfigScreen extends Screen {
                 TextWidget text = buttonsTexts.get(lineCount);
                 ToggleButtonWidget button = buttons.get(lineCount);
                 float newWidth = lineWidth + text.getWidth() + textButtonSpace + button.getWidth();
-                if (lineCount > 0 && newWidth > 0.75 * width) break;
+                if (lineCount > 0 && newWidth > 0.75 * width) {
+                    break;
+                }
                 lineWidth = newWidth;
             }
             float padding = (width  - lineWidth) / (lineCount + 1);
@@ -320,10 +330,14 @@ public class HudConfigScreen extends Screen {
         this.minimap.trySetFeatureVisibility(McChunksLayer.ID, TerramapConfig.CLIENT.minimap.chunksRender);
         MapController minimapController = this.minimap.getController();
         minimapController.setTracksRotation(TerramapConfig.CLIENT.minimap.playerRotation);
-        if (!TerramapConfig.CLIENT.minimap.playerRotation) minimapController.setRotation(0f, false);
-        for (RasterTileSetSliderEntry map: this.tileSets) if (map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
-            this.styleSlider.setCurrentOption(map);
-            break;
+        if (!TerramapConfig.CLIENT.minimap.playerRotation) {
+            minimapController.setRotation(0f, false);
+        }
+        for (RasterTileSetSliderEntry map: this.tileSets) {
+            if (map.map.getId().equals(TerramapConfig.CLIENT.minimap.style)) {
+                this.styleSlider.setCurrentOption(map);
+                break;
+            }
         }
         this.tileScalingSlider.setCurrentOption(TileScalingOption.getFromValue(TerramapConfig.CLIENT.minimap.tileScaling));
         this.directionsButton.setState(TerramapConfig.CLIENT.minimap.playerDirections);

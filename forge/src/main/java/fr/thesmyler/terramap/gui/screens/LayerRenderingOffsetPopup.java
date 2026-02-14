@@ -158,13 +158,17 @@ public class LayerRenderingOffsetPopup extends Popup {
     
     private void onTextFieldsChange(String unused) {
         Widget focused = this.getContent().getFocusedWidget();
-        if (focused != this.xInput && focused != this.yInput) return; // We don't want an infinite loop !
+        if (focused != this.xInput && focused != this.yInput) {
+            return; // We don't want an infinite loop !
+        }
         boolean okX = false, okY = false;
         double dX = 0, dY = 0;
         double mapZoom = this.map.getController().getZoom();
         try {
             dX = Double.parseDouble(this.xInput.getText());
-            if (!Double.isFinite(dX)) throw new NumberFormatException();
+            if (!Double.isFinite(dX)) {
+                throw new NumberFormatException();
+            }
             okX = true;
             this.xInput.setEnabledTextColor(Color.WHITE);
             this.xInput.setFocusedTextColor(Color.WHITE);
@@ -174,8 +178,9 @@ public class LayerRenderingOffsetPopup extends Popup {
         }
         try {
             dY = Double.parseDouble(this.yInput.getText());
-            if (!Double.isFinite(dY) || dY > 256 * Math.pow(2d, mapZoom))
+            if (!Double.isFinite(dY) || dY > 256 * Math.pow(2d, mapZoom)) {
                 throw new NumberFormatException();
+            }
             okY = true;
             this.yInput.setEnabledTextColor(Color.WHITE);
             this.yInput.setFocusedTextColor(Color.WHITE);
@@ -183,7 +188,9 @@ public class LayerRenderingOffsetPopup extends Popup {
             this.yInput.setEnabledTextColor(Color.RED);
             this.yInput.setFocusedTextColor(Color.RED);
         }
-        if (okX && okY) this.setRenderedOffset(new Vec2dImmutable(dX, dY).downscale(256 * Math.pow(2d, mapZoom)));
+        if (okX && okY) {
+            this.setRenderedOffset(new Vec2dImmutable(dX, dY).downscale(256 * Math.pow(2d, mapZoom)));
+        }
         this.doneButton.setEnabled(okY && okX);
     }
     

@@ -132,8 +132,12 @@ public class Color {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || this.getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
         Color color1 = (Color) o;
         return color == color1.color;
     }
@@ -239,11 +243,21 @@ public class Color {
 
     public static float hue2rgb(float p, float q, float r) {
         float t = r;
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1f / 6f) return p + (q - p) * 6f * t;
-        if (t < 1f / 2f) return q;
-        if (t < 2f / 3f) return p + (q - p) * (2f / 3f - t) * 6f;
+        if (t < 0) {
+            t += 1;
+        }
+        if (t > 1) {
+            t -= 1;
+        }
+        if (t < 1f / 6f) {
+            return p + (q - p) * 6f * t;
+        }
+        if (t < 1f / 2f) {
+            return q;
+        }
+        if (t < 2f / 3f) {
+            return p + (q - p) * (2f / 3f - t) * 6f;
+        }
         return p;
     }
 

@@ -6,12 +6,14 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 
+import static net.smyler.smylib.Preconditions.checkArgument;
+
 public class MinecraftSoundSystem implements SoundSystem {
 
     @Override
     public void playUiSound(String soundId) throws IllegalArgumentException {
         SoundEvent sound = SoundEvent.REGISTRY.getObject(new ResourceLocation(soundId));
-        if (sound == null) throw new IllegalArgumentException("Unknown sound: " + soundId);
+        checkArgument(sound != null, "Unknown sound: " + soundId);
         this.playSound(sound);
     }
 

@@ -129,7 +129,9 @@ public class TextFieldWidget implements Widget {
         Color textColor = this.disabledTextColor;
 
         if (this.isEnabled()) {
-            if (hovered) borderColor = this.borderColorHovered;
+            if (hovered) {
+                borderColor = this.borderColorHovered;
+            }
             textColor = focused ? this.focusedTextColor : this.enabledTextColor;
         }
 
@@ -206,10 +208,14 @@ public class TextFieldWidget implements Widget {
 
     @Override
     public boolean onClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if (!this.isEnabled()) return false;
+        if (!this.isEnabled()) {
+            return false;
+        }
         if (mouseButton == 0) {
             float mPos = mouseX;
-            if (this.hasBackground) mPos -= 4;
+            if (this.hasBackground) {
+                mPos -= 4;
+            }
             String string = this.getVisibleText();
             this.setCursor(this.font.trimRight(string, mPos).length() + this.firstCharacterIndex);
         } else if (mouseButton == 1 && this.menuEnabled) {
@@ -220,7 +226,9 @@ public class TextFieldWidget implements Widget {
 
     @Override
     public boolean onDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if (!this.isEnabled()) return false;
+        if (!this.isEnabled()) {
+            return false;
+        }
         if (mouseButton == 0) {
             this.setSelectionStart(this.getWordSkipPosition(-1, this.getCursor(), false));
             this.setSelectionEnd(this.getWordSkipPosition(1, this.getCursor(), false));
@@ -300,10 +308,14 @@ public class TextFieldWidget implements Widget {
 
     @Override
     public void onMouseDragged(float mouseX, float mouseY, float dX, float dY, int mouseButton, @Nullable WidgetContainer parent, long dt) {
-        if (!this.isEnabled()) return;
+        if (!this.isEnabled()) {
+            return;
+        }
         if (mouseButton == 0) {
             float mPos = mouseX;
-            if (this.hasBackground) mPos -= 4;
+            if (this.hasBackground) {
+                mPos -= 4;
+            }
             String string = this.getVisibleText();
             this.setSelectionEnd(this.font.trimRight(string, mPos).length() + this.firstCharacterIndex);
         }
@@ -326,7 +338,9 @@ public class TextFieldWidget implements Widget {
         int end = Math.max(this.selectionStart, this.selectionEnd);
         int availableTextSpace = this.maxLength - this.text.length() - (start - end);
 
-        if (!this.text.isEmpty()) newText = this.text.substring(0, start);
+        if (!this.text.isEmpty()) {
+            newText = this.text.substring(0, start);
+        }
 
         int endOfText;
         if (availableTextSpace < typedText.length()) {
@@ -350,8 +364,11 @@ public class TextFieldWidget implements Widget {
     }
 
     private void erase(int count) {
-        if (getGameClient().keyboard().isControlPressed()) this.eraseWords(count);
-        else this.eraseCharacters(count);
+        if (getGameClient().keyboard().isControlPressed()) {
+            this.eraseWords(count);
+        } else {
+            this.eraseCharacters(count);
+        }
     }
 
     public void eraseWords(int wordCount) {
@@ -383,7 +400,9 @@ public class TextFieldWidget implements Widget {
 
                 if (this.textValidator.test(string)) {
                     this.text = string;
-                    if (backward) this.moveCursor(charCount);
+                    if (backward) {
+                        this.moveCursor(charCount);
+                    }
                     this.onChange();
                 }
             }
@@ -408,15 +427,20 @@ public class TextFieldWidget implements Widget {
             if (wordCount > 0) {
                 int textLength = this.text.length();
                 pos = this.text.indexOf(' ', pos);
-                if (pos == -1) pos = textLength;
-                else if (includeSpaces) {
+                if (pos == -1) {
+                    pos = textLength;
+                } else if (includeSpaces) {
                     while (pos < textLength && this.text.charAt(pos) == ' ') {
                         ++pos;
                     }
                 }
             } else {
-                while (includeSpaces && pos > 0 && this.text.charAt(pos - 1) == ' ') --pos;
-                while (pos > 0 && this.text.charAt(pos - 1) != ' ') --pos;
+                while (includeSpaces && pos > 0 && this.text.charAt(pos - 1) == ' ') {
+                    --pos;
+                }
+                while (pos > 0 && this.text.charAt(pos - 1) != ' ') {
+                    --pos;
+                }
             }
         }
 
@@ -433,7 +457,9 @@ public class TextFieldWidget implements Widget {
 
     public void setCursor(int cursor) {
         this.setSelectionStart(cursor);
-        if (!this.selecting) this.setSelectionEnd(this.selectionStart);
+        if (!this.selecting) {
+            this.setSelectionEnd(this.selectionStart);
+        }
         //FIXME this shouldn't get called here, why is it ?
         this.onChange();
     }
@@ -464,7 +490,9 @@ public class TextFieldWidget implements Widget {
     }
 
     private void onChange() {
-        if (this.onChangeCallback != null) this.onChangeCallback.accept(this.text);
+        if (this.onChangeCallback != null) {
+            this.onChangeCallback.accept(this.text);
+        }
     }
 
     public String getSelectedText() {
@@ -704,7 +732,9 @@ public class TextFieldWidget implements Widget {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < str.length(); ++i) {
             char c = str.charAt(i);
-            if (isValidChar(c)) builder.append(c);
+            if (isValidChar(c)) {
+                builder.append(c);
+            }
         }
         return builder.toString();
     }

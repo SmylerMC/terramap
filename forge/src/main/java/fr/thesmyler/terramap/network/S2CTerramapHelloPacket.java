@@ -83,7 +83,9 @@ public class S2CTerramapHelloPacket implements IMessage {
     public void toBytes(ByteBuf buf) {
         NetworkUtil.encodeStringToByteBuf(this.serverVersion, buf);
         String stgs = this.isLegacyTerraClient ? this.worldSettings.getLegacyGeneratorString() : this.worldSettings.toString();
-        if (stgs == null) stgs = "";
+        if (stgs == null) {
+            stgs = "";
+        }
         NetworkUtil.encodeStringToByteBuf(stgs, buf);
         buf.writeLong(this.worldUUID.getLeastSignificantBits());
         buf.writeLong(this.worldUUID.getMostSignificantBits());

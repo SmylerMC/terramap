@@ -35,13 +35,19 @@ public abstract class RemoteSynchronizer {
     public static final Map<UUID, RegisteredForUpdatePlayer> playersToUpdate = new HashMap<>();
 
     public static void syncPlayers(WorldServer world) {
-        if (playersToUpdate.isEmpty()) return;
+        if (playersToUpdate.isEmpty()) {
+            return;
+        }
         long ctime = System.currentTimeMillis();
         List<TerramapLocalPlayer> players = new ArrayList<>();
         for (EntityPlayer player: world.playerEntities) {
-            if (!TerramapServerPreferences.shouldDisplayPlayer(world, player.getPersistentID())) continue;
+            if (!TerramapServerPreferences.shouldDisplayPlayer(world, player.getPersistentID())) {
+                continue;
+            }
             TerramapLocalPlayer terraPlayer = new TerramapLocalPlayer(player);
-            if (terraPlayer.isSpectator() && !TerramapConfig.SERVER.synchronizeSpectators) continue;
+            if (terraPlayer.isSpectator() && !TerramapConfig.SERVER.synchronizeSpectators) {
+                continue;
+            }
             players.add(terraPlayer);
         }
         IMessage pkt = new SP2CPlayerSyncPacket(players.toArray(new TerramapLocalPlayer[0]));
@@ -85,7 +91,9 @@ public abstract class RemoteSynchronizer {
         }
         // Send world data to the client
         World world = player.getEntityWorld();
-        if (!TerramapUtil.isServerEarthWorld(world)) return;
+        if (!TerramapUtil.isServerEarthWorld(world)) {
+            return;
+        }
         EarthGeneratorSettings settings = TerramapUtil.getEarthGeneratorSettingsFromWorld(world);
         S2CTerramapHelloPacket data = new S2CTerramapHelloPacket(
                 "", // We fill in the version latter
@@ -109,19 +117,26 @@ public abstract class RemoteSynchronizer {
     }
 
     public static void sendTpCommandToClient(EntityPlayerMP player) {
-        if (TerramapConfig.SERVER.forceClientTpCmd)
+        if (TerramapConfig.SERVER.forceClientTpCmd) {
             TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(new S2CTpCommandPacket(TerramapConfig.tpllcmd), player);
+        }
     }
 
     public static void sendRasterTileSetsToClient(EntityPlayerMP player) {
         TerramapVersion clientVersion = TerramapVersion.getClientVersion(player);
-        if (clientVersion == null) return;
+        if (clientVersion == null) {
+            return;
+        }
         boolean compat = clientVersion.getTerraDependency() != TerraDependency.TERRAPLUSPLUS;
         if (TerramapConfig.SERVER.sendCusomMapsToClient) {
             for (UrlRasterTileSet map: getTerramap().rasterTileSetManager().getUserMaps().values()) {
-                if (!TerramapConfig.enableDebugMaps && map.isDebug()) continue;
+                if (!TerramapConfig.enableDebugMaps && map.isDebug()) {
+                    continue;
+                }
                 SP2CRasterTileSetPacket pkt = new SP2CRasterTileSetPacket(map);
-                if (compat) pkt.setBackwardCompat();
+                if (compat) {
+                    pkt.setBackwardCompat();
+                }
                 TerramapNetworkManager.CHANNEL_TERRAMAP.sendTo(pkt, player);
             }
         }

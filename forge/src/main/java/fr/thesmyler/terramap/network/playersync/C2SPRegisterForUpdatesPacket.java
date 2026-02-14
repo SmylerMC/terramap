@@ -38,8 +38,11 @@ public class C2SPRegisterForUpdatesPacket implements IMessage {
         public C2SPRegisterForUpdatesPacket onMessage(C2SPRegisterForUpdatesPacket message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
             WorldServer world = player.getServerWorld();
-            if (message.update) world.addScheduledTask(() -> RemoteSynchronizer.registerPlayerForUpdates(player));
-            else world.addScheduledTask(() -> RemoteSynchronizer.unregisterPlayerForUpdates(player));
+            if (message.update) {
+                world.addScheduledTask(() -> RemoteSynchronizer.registerPlayerForUpdates(player));
+            } else {
+                world.addScheduledTask(() -> RemoteSynchronizer.unregisterPlayerForUpdates(player));
+            }
             return null;
         }
 

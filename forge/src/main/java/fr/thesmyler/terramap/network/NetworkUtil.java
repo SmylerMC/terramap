@@ -28,7 +28,9 @@ public final class NetworkUtil {
         PacketBuffer packetBuffer = new PacketBuffer(buf);
         packetBuffer.setIndex(readerIndex, writerIndex);
         packetBuffer.writeVarInt(strings.length);
-        for (String str: strings) packetBuffer.writeString(str);
+        for (String str: strings) {
+            packetBuffer.writeString(str);
+        }
     }
 
     public static String[] decodeStringArrayFromByteBuf(ByteBuf buf) {

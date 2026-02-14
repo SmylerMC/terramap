@@ -187,14 +187,22 @@ public final class ImmutableText implements Text {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ImmutableText texts = (ImmutableText) o;
 
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(siblings, texts.siblings)) return false;
-        if (!content.equals(texts.content)) return false;
+        if (!Arrays.equals(siblings, texts.siblings)) {
+            return false;
+        }
+        if (!content.equals(texts.content)) {
+            return false;
+        }
         return style.equals(texts.style);
     }
 

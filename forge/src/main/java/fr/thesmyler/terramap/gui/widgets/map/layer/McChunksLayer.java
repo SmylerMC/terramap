@@ -141,7 +141,9 @@ public class McChunksLayer extends MapLayer {
     public void draw(UiDrawContext context, float x, float y, float mouseX, float mouseY, boolean hovered, boolean focused, WidgetContainer parent) {
         MapWidget map = (MapWidget)parent;
         GeoProjection projection = TerramapClientContext.getContext().getProjection();
-        if (projection == null) return;
+        if (projection == null) {
+            return;
+        }
         map.getProfiler().enterSection("layer-" + ID);
         
         this.cache.projection = projection;
@@ -159,10 +161,18 @@ public class McChunksLayer extends MapLayer {
             projection.fromGeo(this.mcCenter, this.geoCenter);
             projection.fromGeo(this.nearCenterPosition, this.nearCenterLocation);
             double d = this.mcCenter.distanceTo(this.nearCenterPosition);
-            if (d < renderThreshold) render2dr = this.render2dr;
-            if (d < renderThreshold / 2) render3dr = this.render3dr;
-            if (d < renderThreshold / 16) renderChunks = this.renderChunks;
-            if (d < renderThreshold / 128) renderBlocks = this.renderBlocks;
+            if (d < renderThreshold) {
+                render2dr = this.render2dr;
+            }
+            if (d < renderThreshold / 2) {
+                render3dr = this.render3dr;
+            }
+            if (d < renderThreshold / 16) {
+                renderChunks = this.renderChunks;
+            }
+            if (d < renderThreshold / 128) {
+                renderBlocks = this.renderBlocks;
+            }
         } catch (OutOfGeoBoundsException silenced) {
             // The center is out of bounds, let's not render anything
             return;
@@ -215,31 +225,53 @@ public class McChunksLayer extends MapLayer {
             
             boolean[] linesInlineIn = new boolean[4];
             while (2 * dX * direction < size) {
-                if ((direction < 0 && inBottom) || (direction > 0 && inTop))
+                if ((direction < 0 && inBottom) || (direction > 0 && inTop)) {
                     this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
+                }
                 dX += direction;
                 long step = tileSize * direction;
-                for (Vec2dMutable corner : this.corners) corner.add(step, 0);
+                for (Vec2dMutable corner : this.corners) {
+                    corner.add(step, 0);
+                }
             }
             
-            if (!linesInlineIn[0]) inLeft = false;
-            if (!linesInlineIn[1]) inRight = false;
-            if (!linesInlineIn[2]) inTop = false;
-            if (!linesInlineIn[3]) inBottom = false;
+            if (!linesInlineIn[0]) {
+                inLeft = false;
+            }
+            if (!linesInlineIn[1]) {
+                inRight = false;
+            }
+            if (!linesInlineIn[2]) {
+                inTop = false;
+            }
+            if (!linesInlineIn[3]) {
+                inBottom = false;
+            }
             linesInlineIn = new boolean[4];
 
             while (2 * dY * direction < size) {
-                if ((direction < 0 && inLeft) || (direction > 0 && inRight))
+                if ((direction < 0 && inLeft) || (direction > 0 && inRight)) {
                     this.renderTile(context, x, y, discriminator, color, lineWidth, linesInlineIn);
+                }
                 dY += direction;
                 long step = tileSize * direction;
-                for (Vec2dMutable corner : this.corners) corner.add(0, step);
+                for (Vec2dMutable corner : this.corners) {
+                    corner.add(0, step);
+                }
             }
             
-            if (!linesInlineIn[0]) inLeft = false;
-            if (!linesInlineIn[1]) inRight = false;
-            if (!linesInlineIn[2]) inTop = false;
-            if (!linesInlineIn[3]) inBottom = false;
+            if (!linesInlineIn[0]) {
+                inLeft = false;
+            }
+            if (!linesInlineIn[1]) {
+                inRight = false;
+            }
+            if (!linesInlineIn[2]) {
+                inTop = false;
+            }
+            if (!linesInlineIn[3]) {
+                inBottom = false;
+            }
 
             direction *= -1;
             size++;

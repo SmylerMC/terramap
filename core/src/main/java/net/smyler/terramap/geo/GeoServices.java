@@ -142,12 +142,16 @@ public final class GeoServices {
     }
 
     public static String formatGeoCoordForDisplay(double coordinate) {
-        if (Double.isNaN(coordinate)) return "-";
+        if (Double.isNaN(coordinate)) {
+            return "-";
+        }
         return decFormat6.format(coordinate);
     }
 
     public static String formatAzimuthForDisplay(float az) {
-        if (Float.isNaN(az)) return "-";
+        if (Float.isNaN(az)) {
+            return "-";
+        }
         return decFormat1.format(az);
     }
 
@@ -156,7 +160,9 @@ public final class GeoServices {
     }
 
     public static String formatZoomLevelForDisplay(double zoomLevel) {
-        if (Double.isNaN(zoomLevel)) return "-";
+        if (Double.isNaN(zoomLevel)) {
+            return "-";
+        }
         return decFormat1.format(zoomLevel);
     }
 

@@ -31,8 +31,9 @@ public class CommonTerramapEventHandler {
 
     @SubscribeEvent
     public void onChangeDimension(PlayerChangedDimensionEvent event) {
-        if (!event.player.world.isRemote)
+        if (!event.player.world.isRemote) {
             RemoteSynchronizer.sendHelloToClient((EntityPlayerMP) event.player);
+        }
     }
 
     @SubscribeEvent
@@ -43,7 +44,9 @@ public class CommonTerramapEventHandler {
 
     @SubscribeEvent
     public void onWorldTick(WorldTickEvent event) {
-        if (event.phase.equals(TickEvent.Phase.END) || event.world.isRemote) return;
+        if (event.phase.equals(TickEvent.Phase.END) || event.world.isRemote) {
+            return;
+        }
         WorldServer world = event.world.getMinecraftServer().worlds[0]; //event.world has no entity or players
         if (TerramapConfig.SERVER.synchronizePlayers && TerramapUtil.isServerEarthWorld(world) && this.tickCounter == 0) {
             RemoteSynchronizer.syncPlayers(world);

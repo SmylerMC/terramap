@@ -54,7 +54,9 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
     public RasterTile getTile(TilePos position) {
         TilePosImmutable pos = position.getImmutable();
         WebMercatorBounds b = this.getBounds(pos.getZoom());
-        if (b != null && !b.contains(pos)) throw new InvalidTilePositionException();
+        if (b != null && !b.contains(pos)) {
+            throw new InvalidTilePositionException();
+        }
         RasterTile tile = this.tileMap.get(pos);
         if (tile != null) {
             this.needTile(tile);
@@ -147,15 +149,17 @@ public abstract class CachingRasterTileSet implements RasterTileSet {
         }
         for (int zoom = this.getMinZoom(); zoom <= Math.min(this.getMaxZoom(), LOW_ZOOM); zoom++) {
             int size = WebMercatorUtil.getDimensionsInTile(zoom);
-            for (int x = 0; x < size; x++) for (int y = 0; y < size; y++) {
-                try {
-                    this.getTile(zoom, x, y).getTexture();
-                } catch (Throwable e) {
-                    getTerramap().logger().error(
-                            "Failed to load a low level texture for map: {}-{}v{} at {}/{}/{}",
-                            this.getId(), this.getProvider(), this.getProviderVersion(), zoom, x, y
-                    );
-                    getTerramap().logger().catching(e);
+            for (int x = 0; x < size; x++) {
+                for (int y = 0; y < size; y++) {
+                    try {
+                        this.getTile(zoom, x, y).getTexture();
+                    } catch (Throwable e) {
+                        getTerramap().logger().error(
+                                "Failed to load a low level texture for map: {}-{}v{} at {}/{}/{}",
+                                this.getId(), this.getProvider(), this.getProviderVersion(), zoom, x, y
+                        );
+                        getTerramap().logger().catching(e);
+                    }
                 }
             }
         }

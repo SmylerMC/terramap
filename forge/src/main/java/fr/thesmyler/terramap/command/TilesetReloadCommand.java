@@ -64,7 +64,9 @@ public class TilesetReloadCommand extends CommandBase {
 
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        if (!(sender instanceof EntityPlayer)) return true;
+        if (!(sender instanceof EntityPlayer)) {
+            return true;
+        }
         return PermissionManager.hasPermission((EntityPlayer) sender, Permission.RELOAD_MAP_STYLES);
     }
 

@@ -79,8 +79,9 @@ public class MenuWidget implements Widget {
             if (entry.text != null) {
                 boolean hovered = mouseX >= x && mouseX <= x + width && mouseY >= ty && mouseY <= ty + lh - 1;
                 Color c = textColor;
-                if (!entry.enabled) c = disabledTextColor;
-                else if (hovered || (entry.getSubMenu() != null && entry.getSubMenu().equals(this.displayedSubMenu))) {
+                if (!entry.enabled) {
+                    c = disabledTextColor;
+                } else if (hovered || (entry.getSubMenu() != null && entry.getSubMenu().equals(this.displayedSubMenu))) {
                     if (!entry.equals(this.hoveredEntry)) {
                         this.hoveredEntry = entry;
                         this.hoverAnimation.start(AnimationState.ENTER);
@@ -102,14 +103,20 @@ public class MenuWidget implements Widget {
                     float subY = ty - parent.getY();
                     float subH = subMenu.getHeight();
                     float subW = subMenu.getWidth();
-                    if (subY + subH > parent.getHeight()) subY = parent.getHeight() - subH - 1;
-                    if (subX + subW > parent.getWidth()) subX -= subW + width + 1;
+                    if (subY + subH > parent.getHeight()) {
+                        subY = parent.getHeight() - subH - 1;
+                    }
+                    if (subX + subW > parent.getWidth()) {
+                        subX -= subW + width + 1;
+                    }
                     subMenu.z = this.z + 1;
                     subMenu.isSubMenu = true;
                     subMenu.show(subX, subY);
                 }
                 this.font.draw(x + padding * 2 + tx, ty + padding, entry.getText(), c, false);
-                if (subMenu != null) this.font.draw(x + width - dw - padding, ty + padding, " >", c, false);
+                if (subMenu != null) {
+                    this.font.draw(x + width - dw - padding, ty + padding, " >", c, false);
+                }
                 ty += lh;
             } else {
                 context.drawRectangle(x + 1, ty + sh / 2, x + width, ty + sh / 2 + 1, separatorColor);
@@ -153,7 +160,9 @@ public class MenuWidget implements Widget {
 
     @Override
     public boolean onParentClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if (this.isSubMenu) return true;
+        if (this.isSubMenu) {
+            return true;
+        }
         if (this.isVisible(parent)) {
             this.hide(parent);
             return false;
@@ -163,8 +172,12 @@ public class MenuWidget implements Widget {
             float y = mouseY;
             float w = this.getWidth();
             float h = this.getHeight();
-            if (x + w > parent.getWidth()) x -= w;
-            if (y + h > parent.getHeight()) y -= h;
+            if (x + w > parent.getWidth()) {
+                x -= w;
+            }
+            if (y + h > parent.getHeight()) {
+                y -= h;
+            }
             this.show(x, y);
             parent.setFocus(this);
             return false;
@@ -174,7 +187,9 @@ public class MenuWidget implements Widget {
 
     @Override
     public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if (mouseButton == 1) return this.onParentClick(mouseX, mouseY, mouseButton, parent);
+        if (mouseButton == 1) {
+            return this.onParentClick(mouseX, mouseY, mouseButton, parent);
+        }
         return true;
     }
 
@@ -246,8 +261,11 @@ public class MenuWidget implements Widget {
 
     public void hide(@Nullable WidgetContainer parent) {
         this.hideSubMenu(parent);
-        if (parent != null) parent.scheduleBeforeNextUpdate(() -> this.visible = false);
-        else this.visible = false;
+        if (parent != null) {
+            parent.scheduleBeforeNextUpdate(() -> this.visible = false);
+        } else {
+            this.visible = false;
+        }
         if (parent != null && this.equals(parent.getFocusedWidget())) {
             parent.setFocus(null);
         }
@@ -268,8 +286,9 @@ public class MenuWidget implements Widget {
     public void show(float x, float y) {
         this.x = x;
         this.y = y;
-        if (!this.visible)
+        if (!this.visible) {
             this.mainAnimation.start(AnimationState.ENTER);
+        }
         this.hoveredEntry = null;
         this.visible = true;
     }
@@ -362,7 +381,9 @@ public class MenuWidget implements Widget {
         }
 
         public void exec() {
-            if (this.action != null && this.enabled) this.action.run();
+            if (this.action != null && this.enabled) {
+                this.action.run();
+            }
         }
 
         @Nullable

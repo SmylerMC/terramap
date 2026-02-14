@@ -87,7 +87,9 @@ public class Popup extends WidgetContainer {
 
     @Override
     public boolean onParentDoubleClick(float mouseX, float mouseY, int mouseButton, WidgetContainer parent) {
-        if (this.closeOnClickOutContent) return this.onParentClick(mouseX, mouseY, mouseButton, parent);
+        if (this.closeOnClickOutContent) {
+            return this.onParentClick(mouseX, mouseY, mouseButton, parent);
+        }
         return super.onParentDoubleClick(mouseX, mouseY, mouseButton, parent);
     }
 

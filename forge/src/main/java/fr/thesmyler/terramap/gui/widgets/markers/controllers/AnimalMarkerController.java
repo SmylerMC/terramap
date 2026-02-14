@@ -36,7 +36,9 @@ public class AnimalMarkerController extends MarkerController<AnimalMarker> {
 
     @Override
     public AnimalMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-        if (TerramapClientContext.getContext().getProjection() == null) return new AnimalMarker[0];
+        if (TerramapClientContext.getContext().getProjection() == null) {
+            return new AnimalMarker[0];
+        }
         Map<UUID, Entity> entities = new HashMap<>();
         for (Entity entity: TerramapClientContext.getContext().getEntities()) {
             if (entity instanceof IAnimals && !(entity instanceof IMob)) {

@@ -14,7 +14,9 @@ public enum PlayerSyncStatus {
 
     public static PlayerSyncStatus getFromNetworkCode(byte code) {
         for (PlayerSyncStatus s : PlayerSyncStatus.values()) {
-            if (s.VALUE == code) return s;
+            if (s.VALUE == code) {
+                return s;
+            }
         }
         return UNKNOWN;
     }

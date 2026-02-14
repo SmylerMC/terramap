@@ -25,10 +25,16 @@ public final class TerramapUtil {
     public static final EarthGeneratorSettings BTE_GENERATOR_SETTINGS = EarthGeneratorSettings.parse(EarthGeneratorSettings.BTE_DEFAULT_SETTINGS);
 
     public static boolean isServerEarthWorld(World world) {
-        if (!(world.getWorldType() instanceof EarthWorldType)) return false; // Is this a terra save?
-        if (!(world.getChunkProvider() instanceof ICubeProvider)) return false; // Is a CC world (could be a different dimension)
+        if (!(world.getWorldType() instanceof EarthWorldType)) {
+            return false; // Is this a terra save?
+        }
+        if (!(world.getChunkProvider() instanceof ICubeProvider)) {
+            return false; // Is a CC world (could be a different dimension)
+        }
         ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
-        if (!(provider instanceof CubeProviderServer)) return false; // Are we on server ?
+        if (!(provider instanceof CubeProviderServer)) {
+            return false; // Are we on server ?
+        }
         return ((CubeProviderServer) provider).getCubeGenerator() instanceof EarthGenerator; // Is it the overworld ?
     }
 
@@ -41,7 +47,9 @@ public final class TerramapUtil {
             ICubeProvider provider = (ICubeProvider) world.getChunkProvider();
             EarthGenerator generator = (EarthGenerator)((CubeProviderServer) provider).getCubeGenerator();
             return generator.settings;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     public static GeoProjection getWorldProjection(@NotNull World world) {

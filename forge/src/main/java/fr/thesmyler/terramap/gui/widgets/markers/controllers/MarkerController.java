@@ -33,7 +33,9 @@ public abstract class MarkerController<T extends Marker> implements FeatureVisib
     public void setVisibility(boolean yesNo) {
         this.visibility = yesNo;
         ToggleButtonWidget b = this.getButton();
-        if (b != null) b.setState(this.visibility);
+        if (b != null) {
+            b.setState(this.visibility);
+        }
     }
 
     public void toggleVisibility() {

@@ -1,5 +1,8 @@
 package net.smyler.smylib.math;
 
+import static java.lang.Double.isNaN;
+import static net.smyler.smylib.Preconditions.checkArgument;
+
 public class DoubleRange {
     
     public static final DoubleRange REALS = new DoubleRange(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
@@ -17,8 +20,8 @@ public class DoubleRange {
      * @throws {@link IllegalArgumentException} if upperBound > lowerBound 
      */
     public DoubleRange(double lowerBound, double upperBound) {
-        if (upperBound < lowerBound) throw new IllegalArgumentException("lowerBound > upperBound");
-        if (Double.isNaN(lowerBound) || Double.isNaN(upperBound)) throw new IllegalArgumentException("NaN bounds are not permitted in DoubleRange");
+        checkArgument(!isNaN(lowerBound) && !isNaN(upperBound), "NaN bounds are not permitted in DoubleRange");
+        checkArgument(upperBound >= lowerBound, "lowerBound > upperBound");
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
     }
@@ -52,7 +55,9 @@ public class DoubleRange {
      * @return true if the other range is strictly above this range (if both of its bounds are), false otherwise or if other is null
      */
     public boolean above(DoubleRange other) {
-        if (other == null) return false;
+        if (other == null) {
+            return false;
+        }
         return this.above(other.lowerBound) && this.above(other.upperBound);
     }
     
@@ -61,7 +66,9 @@ public class DoubleRange {
      * @return true if the other range is strictly below this range (if both of its bounds are), false otherwise or if other is null
      */
     public boolean below(DoubleRange other) {
-        if (other == null) return false;
+        if (other == null) {
+            return false;
+        }
         return this.below(other.lowerBound) && this.below(other.upperBound);
     }
     
@@ -71,7 +78,9 @@ public class DoubleRange {
      * @return true if the other range intersects with this one (inclusive)
      */
     public boolean intersects(DoubleRange other) {
-        if (other == null) return false;
+        if (other == null) {
+            return false;
+        }
         return this.matches(other.lowerBound) || this.matches(other.upperBound) || other.matches(this.lowerBound);
     }
     

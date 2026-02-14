@@ -175,10 +175,16 @@ public class TerramapClientContext {
                     savedPlayer.setOutOfProjection();
                 }
                 savedPlayer.setGamemode(player.getGamemode());
-            } else toAdd.add(player);
+            } else {
+                toAdd.add(player);
+            }
         }
-        for (UUID uid: toRemove) this.remotePlayers.remove(uid);
-        for (TerramapRemotePlayer sp: toAdd) this.remotePlayers.put(sp.getUUID(), sp);
+        for (UUID uid: toRemove) {
+            this.remotePlayers.remove(uid);
+        }
+        for (TerramapRemotePlayer sp: toAdd) {
+            this.remotePlayers.put(sp.getUUID(), sp);
+        }
     }
 
 
@@ -226,12 +232,17 @@ public class TerramapClientContext {
 
     public void registerForUpdates(boolean yesNo) {
         this.isRegisteredForUpdates = yesNo;
-        if (this.arePlayersSynchronized()) TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+        if (this.arePlayersSynchronized()) {
+            TerramapNetworkManager.CHANNEL_MAPSYNC.sendToServer(new C2SPRegisterForUpdatesPacket(this.isRegisteredForUpdates));
+        }
     }
 
     public String getTpCommand() {
-        if (this.tpCommand == null) return TerramapConfig.tpllcmd;
-        else return this.tpCommand;
+        if (this.tpCommand == null) {
+            return TerramapConfig.tpllcmd;
+        } else {
+            return this.tpCommand;
+        }
     }
 
     public void setTpCommand(String tpCmd) {
@@ -458,7 +469,9 @@ public class TerramapClientContext {
      * @return true if the current world is a Terra world
      */
     public boolean isOnEarthWorld() {
-        if (TerramapConfig.CLIENT.forceTerraWorld) return true;
+        if (TerramapConfig.CLIENT.forceTerraWorld) {
+            return true;
+        }
         WorldClient world = Minecraft.getMinecraft().world;
         EntityPlayerSP player = Minecraft.getMinecraft().player;
         return world != null && player != null && world.getWorldType() instanceof EarthWorldType && player.dimension == 0;
@@ -471,8 +484,12 @@ public class TerramapClientContext {
     }
 
     public boolean shouldShowWelcomeToast() {
-        if (!this.allowsMap(MapContext.FULLSCREEN)) return false;
-        if (!(Minecraft.getMinecraft().currentScreen == null)) return false;
+        if (!this.allowsMap(MapContext.FULLSCREEN)) {
+            return false;
+        }
+        if (!(Minecraft.getMinecraft().currentScreen == null)) {
+            return false;
+        }
         return !this.getSavedState().hasShownWelcome;
     }
 
@@ -513,7 +530,9 @@ public class TerramapClientContext {
 
     @NotNull
     public static TerramapClientContext getContext() {
-        if (TerramapClientContext.instance == null) TerramapClientContext.resetContext();
+        if (TerramapClientContext.instance == null) {
+            TerramapClientContext.resetContext();
+        }
         return TerramapClientContext.instance;
     }
 

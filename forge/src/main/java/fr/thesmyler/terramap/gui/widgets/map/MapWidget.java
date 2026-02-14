@@ -34,6 +34,7 @@ import java.util.function.Supplier;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static net.smyler.smylib.Preconditions.checkArgument;
 import static net.smyler.smylib.SmyLib.getGameClient;
 import static net.smyler.smylib.text.ImmutableText.of;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
@@ -200,7 +201,7 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public MapLayer createLayer(String layerTypeId) throws IllegalArgumentException {
         MapLayerRegistry.LayerRegistration<?> registration = MapLayerRegistry.INSTANCE.getRegistrations(layerTypeId);
-        if (registration == null) throw new IllegalArgumentException("No such layer type registered: " + layerTypeId);
+        checkArgument(registration != null, "No such layer type registered: " + layerTypeId);
         Supplier<? extends MapLayer> constructor = registration.getConstructor();
         MapLayer layer = constructor.get();
         layer.setMap(this);
@@ -243,7 +244,9 @@ public class MapWidget extends FlexibleWidgetContainer {
     }
 
     public void setLayerZ(MapLayer layer, int z) {
-        if (layer.getMap() != this) throw new IllegalArgumentException("Cannot move a layer that does not belong to this map");
+        if (layer.getMap() != this) {
+            throw new IllegalArgumentException("Cannot move a layer that does not belong to this map");
+        }
         super.removeWidget(layer);
         layer.setZ(z);
         super.addWidget(layer);
@@ -310,7 +313,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         this.copyright.setAnchorX(this.getWidth() - 3).setAnchorY(this.getHeight() - this.copyright.getHeight()).setMaxWidth(this.getWidth());
         this.scale.setX(15).setY(this.copyright.getAnchorY() - 15);
         this.errorText.setAnchorX(this.getWidth() / 2).setAnchorY(0).setMaxWidth(this.getWidth() - 40);
-        if (!this.rightClickMenu.isVisible(this)) this.updateMouseGeoPos(mouseX, mouseY);
+        if (!this.rightClickMenu.isVisible(this)) {
+            this.updateMouseGeoPos(mouseX, mouseY);
+        }
         if (!this.reportedErrors.isEmpty()) {
             String errorText = getGameClient().translator().format("terramap.mapwidget.error.header") + "\n" + this.reportedErrors.get((int) ((System.currentTimeMillis() / 3000) % this.reportedErrors.size())).message;
             this.errorText.setText(ofPlainText(errorText));
@@ -385,23 +390,28 @@ public class MapWidget extends FlexibleWidgetContainer {
         }
 
         // Update right click marker visibility
-        if (this.rcmMarkerController != null) this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
+        if (this.rcmMarkerController != null) {
+            this.rcmMarkerController.setVisibility(this.rightClickMenu.isVisible(this));
+        }
 
-        for (Marker marker: this.markers) marker.onUpdate(mouseX, mouseY, this);
+        for (Marker marker: this.markers) {
+            marker.onUpdate(mouseX, mouseY, this);
+        }
 
     }
 
     public void updateCopyright() {
         ImmutableText component = ImmutableText.EMPTY;
         ImmutableText separator = ofPlainText(" | ");
-        for (Widget widget: this.widgets)
+        for (Widget widget: this.widgets) {
             if (widget instanceof CopyrightHolder) {
                 if (!component.getFormattedText().isEmpty()) {
                     component = component.withNewSiblings(separator);
                 }
-                Text copyright = ((CopyrightHolder)widget).getCopyright(getGameClient().translator().language());
+                Text copyright = ((CopyrightHolder) widget).getCopyright(getGameClient().translator().language());
                 component = component.withNewSiblings(of(copyright));
             }
+        }
         this.copyright.setText(component);
         this.copyright.setVisibility(!component.getFormattedText().isEmpty());
     }
@@ -415,8 +425,12 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public Map<String, FeatureVisibilityController> getVisibilityControllers() {
         Map<String, FeatureVisibilityController> m = new LinkedHashMap<>(this.markerControllers); // Order matters !
-        if (this.directionVisibility != null ) m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
-        if (this.nameVisibility != null) m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
+        if (this.directionVisibility != null ) {
+            m.put(this.directionVisibility.getSaveName(), this.directionVisibility);
+        }
+        if (this.nameVisibility != null) {
+            m.put(this.nameVisibility.getSaveName(), this.nameVisibility);
+        }
         return m;
     }
     
@@ -597,7 +611,9 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void trySetFeatureVisibility(String controllerId, boolean value) {
         FeatureVisibilityController c = this.getVisibilityControllers().get(controllerId);
-        if (c != null) c.setVisibility(value);
+        if (c != null) {
+            c.setVisibility(value);
+        }
     }
 
     /**
@@ -674,7 +690,9 @@ public class MapWidget extends FlexibleWidgetContainer {
      */
     public void reportError(Object source, String errorMessage) {
         ReportedError error = new ReportedError(source, errorMessage);
-        if (this.reportedErrors.contains(error)) return;
+        if (this.reportedErrors.contains(error)) {
+            return;
+        }
         this.reportedErrors.add(error);
         if (this.reportedErrors.size() > MAX_ERRORS_KEPT) {
             this.reportedErrors.remove(0);
@@ -689,7 +707,9 @@ public class MapWidget extends FlexibleWidgetContainer {
     public void discardPreviousErrors(Object source) {
         List<ReportedError> errsToRm = new ArrayList<>();
         for (ReportedError e: this.reportedErrors) {
-            if (e.source.equals(source)) errsToRm.add(e);
+            if (e.source.equals(source)) {
+                errsToRm.add(e);
+            }
         }
         this.reportedErrors.removeAll(errsToRm);
     }
@@ -763,7 +783,9 @@ public class MapWidget extends FlexibleWidgetContainer {
         Map<String, FeatureVisibilityController> controllers = this.getVisibilityControllers();
         for (String key: state.visibilitySettings.keySet()) {
             FeatureVisibilityController controller = controllers.get(key);
-            if (controller != null) controller.setVisibility(state.visibilitySettings.get(key));
+            if (controller != null) {
+                controller.setVisibility(state.visibilitySettings.get(key));
+            }
         }
     }
 

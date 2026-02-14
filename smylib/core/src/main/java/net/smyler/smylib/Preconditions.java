@@ -11,7 +11,7 @@ public final class Preconditions {
      * Checks whether an argument is valid.
      *
      * @param validity  a boolean indicating whether the argument is valid
-     * @param message   the exception message in case the argument is valid
+     * @param message   the exception message in case the argument is invalid
      *
      * @throws IllegalArgumentException if <code>validity</code> is <code>false</code>
      */
@@ -25,7 +25,7 @@ public final class Preconditions {
      * Checks whether a state is valid.
      *
      * @param validity  a boolean indicating whether the state is valid
-     * @param message   the exception message in case the argument is valid
+     * @param message   the exception message in case the state is invalid
      *
      * @throws IllegalStateException if <code>validity</code> is <code>false</code>
      */

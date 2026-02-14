@@ -61,7 +61,9 @@ public class Mat2d {
 
     public Mat2d inverse() {
         double det = this.determinant();
-        if (det == 0) throw new IllegalStateException("Matrix has no inverse: determinant is 0");
+        if (det == 0) {
+            throw new IllegalStateException("Matrix has no inverse: determinant is 0");
+        }
         return new Mat2d(
                 this.lig2.y, -this.lig2.x,
                 -this.lig1.y, this.lig1.x)

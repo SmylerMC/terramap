@@ -60,7 +60,9 @@ public class SP2CRasterTileSetPacket implements IMessage {
         this.bounds = new HashMap<>();
         for (int i = map.getMinZoom(); i <= map.getMaxZoom(); i++) {
             WebMercatorBounds bound = map.getBounds(i);
-            if (bound != null) this.bounds.put(i, bound);
+            if (bound != null) {
+                this.bounds.put(i, bound);
+            }
         }
     }
 

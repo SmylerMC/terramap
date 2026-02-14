@@ -52,7 +52,9 @@ public final class HudScreen {
 
     @SubscribeEvent
     public static void onRenderHUD(RenderGameOverlayEvent.Pre e) {
-        if (!e.getType().equals(ElementType.HOTBAR)) return;
+        if (!e.getType().equals(ElementType.HOTBAR)) {
+            return;
+        }
         GameClient game = getGameClient();
         Mouse mouse = game.mouse();
         UiDrawContext drawContext = game.guiDrawContext();
@@ -90,10 +92,14 @@ public final class HudScreen {
 
     @SubscribeEvent
     public static void onMouseInput(MouseInputEvent.Pre event) {
-        if (!(event.getGui() instanceof GuiChat)) return;
+        if (!(event.getGui() instanceof GuiChat)) {
+            return;
+        }
         float mouseX = getGameClient().mouse().x();
         float mouseY = getGameClient().mouse().y();
-        if (isOverChat(mouseX, mouseY)) return;
+        if (isOverChat(mouseX, mouseY)) {
+            return;
+        }
         event.setCanceled(true);
         PROCESSOR.processMouseEvent();
     }
@@ -109,7 +115,9 @@ public final class HudScreen {
 
     public static boolean isOverChat(float x, float y) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.ingameGUI == null) return false;
+        if (mc.ingameGUI == null) {
+            return false;
+        }
         boolean chatOpen = mc.currentScreen instanceof GuiChat;
 
         // Check if we are on top of the text box
@@ -118,7 +126,9 @@ public final class HudScreen {
             float chatRight = renderWidth - 2;
             float chatTop = renderHeight - 14;
             float chatBottom = renderHeight - 2;
-            if (x >= chatLeft && x <= chatRight && y >= chatTop && y <= chatBottom) return true;
+            if (x >= chatLeft && x <= chatRight && y >= chatTop && y <= chatBottom) {
+                return true;
+            }
         }
 
         float[] chatBbox = getChatLinesBoundingBox();
@@ -140,7 +150,9 @@ public final class HudScreen {
             List<ChatLine> lines = (List<ChatLine>)NEW_CHAT_DRAW_CHAT_LINES_FIELD.get(chat);
             int visibleChatLines = 0;
             for (ChatLine line: lines) {
-                if (chatOpen || (line != null && updateCounter - line.getUpdatedCounter() < 200)) visibleChatLines++;
+                if (chatOpen || (line != null && updateCounter - line.getUpdatedCounter() < 200)) {
+                    visibleChatLines++;
+                }
             }
             chatBottom = renderHeight - 40;
             chatTop = chatBottom - Math.min(visibleChatLines * 9 / scale, chat.getChatHeight());

@@ -147,7 +147,9 @@ public class InputLayer extends MapLayer {
             // We don't care about double right and middle clicks
             this.onClick(mouseX, mouseY, mouseButton, parent);
         } else if (this.map.isInteractive()) {
-            if (this.map.isFocusedZoom()) this.controller.setZoomStaticPosition(mouseX, mouseY);
+            if (this.map.isFocusedZoom()) {
+                this.controller.setZoomStaticPosition(mouseX, mouseY);
+            }
             this.controller.zoom(this.controller.getZoomSnapping(), true);
             this.updateViewPorts();
         }

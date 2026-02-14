@@ -341,7 +341,9 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         @Override
         public boolean isTextureAvailable() {
-            if (texture != null) return true; // Don't try loading the texture if it has already been loaded
+            if (texture != null) {
+                return true; // Don't try loading the texture if it has already been loaded
+            }
             try {
                 this.tryLoadingTexture();
             } catch (Throwable e) {
@@ -355,7 +357,9 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
             if (this.texture == null) {
                 if (this.textureTask == null) {
                     this.textureTask = getTerramap().http().get(this.getURL());
-                } else this.tryLoadingTexture();
+                } else {
+                    this.tryLoadingTexture();
+                }
             }
             return this.texture;
         }
@@ -376,10 +380,14 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
                     return;
                 }
                 byte[] buf = this.textureTask.get();
-                if (buf == null) throw new IOException("404 response");
+                if (buf == null) {
+                    throw new IOException("404 response");
+                }
                 try (ByteArrayInputStream is = new ByteArrayInputStream(buf)) {
                     BufferedImage image = ImageIO.read(is);
-                    if (image == null) throw new IOException("Failed to read image! url: " + this.getURL());
+                    if (image == null) {
+                        throw new IOException("Failed to read image! url: " + this.getURL());
+                    }
                     this.texture = getGameClient().guiDrawContext().loadDynamicTexture(image);
                 }
             }
@@ -404,9 +412,15 @@ public class UrlRasterTileSet extends CachingRasterTileSet implements CopyrightH
 
         @Override
         public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null) return false;
-            if (!(obj instanceof UrlRasterTile)) return false;
+            if (obj == this) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (!(obj instanceof UrlRasterTile)) {
+                return false;
+            }
             UrlRasterTile other = (UrlRasterTile) obj;
             return other.url.equals(this.url);
         }

@@ -16,7 +16,9 @@ public class RightClickMarkerController extends MarkerController<RightClickMarke
 
     @Override
     public RightClickMarker[] getNewMarkers(Marker[] existingMarkers, MapWidget map) {
-        if (existingMarkers.length > 0) return new RightClickMarker[] {};
+        if (existingMarkers.length > 0) {
+            return new RightClickMarker[] {};
+        }
         return new RightClickMarker[] { new RightClickMarker(this)};
     }
 

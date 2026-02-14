@@ -54,7 +54,8 @@ public class MapMenuWidget extends MenuWidget {
         // so we can use its abstract methods (a bit hacky).
     };
 
-    static { CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
+    static {
+        CHAT_SENDER_GUI.mc = Minecraft.getMinecraft(); }
 
     public MapMenuWidget(MapWidget map) {
         super(1500, getGameClient().defaultFont());

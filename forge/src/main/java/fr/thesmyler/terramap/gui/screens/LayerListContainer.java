@@ -55,7 +55,9 @@ class LayerListContainer extends FlexibleWidgetContainer {
 
         LayerEntry previous = null;
         for (MapLayer layer: layers) {
-            if (layer instanceof InputLayer) continue; // We don't want the user to have to deal with the input layer
+            if (layer instanceof InputLayer) {
+                continue; // We don't want the user to have to deal with the input layer
+            }
             LayerEntry entry;
             if (layer.getZ() == Integer.MIN_VALUE && layer instanceof RasterMapLayer) {
                 entry = new BackgroundLayerEntry(ly, (RasterMapLayer) layer);

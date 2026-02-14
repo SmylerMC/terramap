@@ -34,10 +34,18 @@ public abstract class WidgetContainer implements Widget {
 
     protected final TreeSet<Widget> widgets = new TreeSet<>(
             (w2, w1) -> {
-                if (w2 != null && w2.equals(w1)) return 0;
-                if (w1 == null && w2 == null) return 0;
-                if (w1 == null) return -1;
-                if (w2 == null) return 1;
+                if (w2 != null && w2.equals(w1)) {
+                    return 0;
+                }
+                if (w1 == null && w2 == null) {
+                    return 0;
+                }
+                if (w1 == null) {
+                    return -1;
+                }
+                if (w2 == null) {
+                    return 1;
+                }
                 int r = Integer.compare(w1.getZ(), w2.getZ());
                 return r == 0 ? w1.hashCode() - w2.hashCode() : r;
             }
@@ -96,7 +104,9 @@ public abstract class WidgetContainer implements Widget {
     }
 
     public WidgetContainer removeAllWidgets() {
-        for (Widget widget: this.widgets) widget.onRemoved();
+        for (Widget widget: this.widgets) {
+            widget.onRemoved();
+        }
         this.widgets.clear();
         return this;
     }
@@ -138,11 +148,15 @@ public abstract class WidgetContainer implements Widget {
                         switch (event.type) {
                             case CLICK:
                                 propagate = widget.onClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
-                                if (!propagate) this.focusedWidget = widget;
+                                if (!propagate) {
+                                    this.focusedWidget = widget;
+                                }
                                 break;
                             case DOUBLE_CLICK:
                                 propagate = widget.onDoubleClick(event.mouseX - widget.getX(), event.mouseY - widget.getY(), event.button, this);
-                                if (!propagate) this.focusedWidget = widget;
+                                if (!propagate) {
+                                    this.focusedWidget = widget;
+                                }
                                 break;
                             case RELEASE:
                                 this.draggedWidget[event.button] = null;
@@ -174,16 +188,23 @@ public abstract class WidgetContainer implements Widget {
         this.delayedActions.clear();
         float thisx = this.getX();
         float thisy = this.getY();
-        for (Widget w: this.widgets) w.onUpdate(mouseX - thisx, mouseY - thisy, this);
+        for (Widget w: this.widgets) {
+            w.onUpdate(mouseX - thisx, mouseY - thisy, this);
+        }
 
         if (this.menuToShow != null) {
-            if (parent != null) parent.showMenu(thisx + this.menuToShowX, thisy + this.menuToShowY, this.menuToShow);
-            else {
+            if (parent != null) {
+                parent.showMenu(thisx + this.menuToShowX, thisy + this.menuToShowY, this.menuToShow);
+            } else {
                 this.addWidget(this.menuToShow);
                 float w = this.menuToShow.getWidth();
                 float h = this.menuToShow.getHeight();
-                if (this.menuToShowX + w > this.getWidth()) this.menuToShowX -= w;
-                if (this.menuToShowY + h > this.getHeight()) this.menuToShowY -= h;
+                if (this.menuToShowX + w > this.getWidth()) {
+                    this.menuToShowX -= w;
+                }
+                if (this.menuToShowY + h > this.getHeight()) {
+                    this.menuToShowY -= h;
+                }
                 this.menuToShow.show(this.menuToShowX, this.menuToShowY);
             }
             this.menuToShow = null;
@@ -262,7 +283,11 @@ public abstract class WidgetContainer implements Widget {
      */
     @Nullable 
     protected Widget getWidgetUnder(float x, float y) {
-        for (Widget widget: this.widgets) if (this.isOverWidget(x, y, widget)) return widget;
+        for (Widget widget: this.widgets) {
+            if (this.isOverWidget(x, y, widget)) {
+                return widget;
+            }
+        }
         return null;
     }
 
@@ -317,8 +342,9 @@ public abstract class WidgetContainer implements Widget {
      * 
      */
     public Widget getFocusedWidget() {
-        if (this.focusedWidget instanceof WidgetContainer)
+        if (this.focusedWidget instanceof WidgetContainer) {
             return ((WidgetContainer) this.focusedWidget).getFocusedWidget();
+        }
         return this.focusedWidget;
     }
 
@@ -357,7 +383,9 @@ public abstract class WidgetContainer implements Widget {
         Widget wf = null;
         if (screenHovered) {
             for (Widget widget: this.widgets) {
-                if (!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) continue;
+                if (!widget.isVisible(this) || this.isOutsideScreen(widget) || !doBoxesCollide(x + widget.getX(), y + widget.getY(), widget.getWidth(), widget.getHeight(), x, y, this.getWidth(), this.getHeight())) {
+                    continue;
+                }
                 if (this.isOverWidget(mouseX - x, mouseY - y, widget)) {
                     wf = widget;
                     break;
@@ -377,8 +405,9 @@ public abstract class WidgetContainer implements Widget {
                             x,
                             y,
                             this.getWidth(),
-                            this.getHeight()))
+                            this.getHeight())) {
                 return;
+            }
             widget.draw(context, x + widget.getX(), y + widget.getY(), mouseX, mouseY, widget.equals(this.hoveredWidget), screenFocused && widget.equals(this.focusedWidget), this);
         });
         if (this.doScissor) {
@@ -520,8 +549,9 @@ public abstract class WidgetContainer implements Widget {
     }
 
     @Nullable public Widget getHoveredWidget() {
-        if (this.hoveredWidget instanceof WidgetContainer)
+        if (this.hoveredWidget instanceof WidgetContainer) {
             return ((WidgetContainer) this.hoveredWidget).getHoveredWidget();
+        }
         return this.hoveredWidget;
     }
 

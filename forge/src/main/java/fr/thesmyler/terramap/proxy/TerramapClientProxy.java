@@ -84,7 +84,9 @@ public class TerramapClientProxy extends TerramapProxy {
         }
         if (e instanceof AbstractClientPlayer) {
             NetworkPlayerInfo i = connection.getPlayerInfo(e.getUniqueID());
-            if (i != null) return i.getGameType();
+            if (i != null) {
+                return i.getGameType();
+            }
         }
         getTerramap().logger().error("Failed to determine player gamemode.");
         return GameType.NOT_SET;

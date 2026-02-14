@@ -46,7 +46,9 @@ public class OtherPlayerMarkerController extends AbstractPlayerMarkerController<
 
         // The main player has its own controller
         EntityPlayerSP self = Minecraft.getMinecraft().player;
-        if (self != null) players.remove(self.getUniqueID());
+        if (self != null) {
+            players.remove(self.getUniqueID());
+        }
 
         OtherPlayerMarker[] newMarkers = new OtherPlayerMarker[players.size()];
         int i = 0;

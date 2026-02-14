@@ -59,8 +59,7 @@ public class TextButtonWidget extends AbstractButtonWidget {
         if (!this.isEnabled()) {
             textColor = this.disabledTextColor;
             sprite = this.buttonDisabledSprite;
-        }
-        else if (hovered || hasFocus) {
+        } else if (hovered || hasFocus) {
             textColor = this.activeTextColor;
             sprite = this.buttonHighlightedSprite;
         }

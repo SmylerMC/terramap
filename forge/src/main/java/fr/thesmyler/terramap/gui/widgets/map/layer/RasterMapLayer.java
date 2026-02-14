@@ -111,7 +111,9 @@ abstract public class RasterMapLayer extends MapLayer {
 
                 try {
                     tile = tiledMap.getTile(zoomLevel, Math.floorMod(tileX, maxTileXY), tileY);
-                } catch (InvalidTilePositionException silenced) { continue ; }
+                } catch (InvalidTilePositionException silenced) {
+                    continue;
+                }
 
                 // This is the tile we would like to render, but it is not possible if it hasn't been cached yet
                 RasterTile bestTile = tile;
@@ -152,10 +154,14 @@ abstract public class RasterMapLayer extends MapLayer {
                 this.bottom.subtract(this.halfRenderingSpaceDimensions);
                 this.left.subtract(this.halfRenderingSpaceDimensions);
 
-                if (this.bottom.dotProd(yvec) < -heightViewPort / 2) continue;
-                if (this.top.dotProd(yvec) > heightViewPort / 2) continue;
-                if (this.right.dotProd(xvec) < -widthViewPort / 2) continue;
-                if (this.left.dotProd(xvec) > widthViewPort / 2) continue;
+                boolean tileIsOutsideWidget =
+                        this.bottom.dotProd(yvec) < -heightViewPort / 2
+                        || this.top.dotProd(yvec) > heightViewPort / 2
+                        || this.right.dotProd(xvec) < -widthViewPort / 2
+                        || this.left.dotProd(xvec) > widthViewPort / 2;
+                if (tileIsOutsideWidget) {
+                    continue;
+                }
 
                 neededTiles.add(bestTile);
                 boolean lowerResRender = false;
@@ -217,8 +223,11 @@ abstract public class RasterMapLayer extends MapLayer {
 
                 Identifier texture = defaultTexture;
                 try {
-                    if (tile.isTextureAvailable()) texture = tile.getTexture();
-                    else perfectDraw = false;
+                    if (tile.isTextureAvailable()) {
+                        texture = tile.getTexture();
+                    } else {
+                        perfectDraw = false;
+                    }
                 } catch (Throwable e) {
                     perfectDraw = false;
                     parentMap.reportError(this, e.toString());
@@ -260,7 +269,9 @@ abstract public class RasterMapLayer extends MapLayer {
                 TilePos pos1 = t1.getPosition();
                 TilePos pos2 = t2.getPosition();
                 int dz = Integer.compare(pos1.getZoom(), pos2.getZoom());
-                if (dz != 0) return dz;
+                if (dz != 0) {
+                    return dz;
+                }
                 double factor = 1d / (1 << pos1.getZoom());
                 double dis1 = this.distanceToCenterCalculator.set(pos1.getX() + 0.5d, pos1.getY() + 0.5d)
                         .scale(factor)
@@ -279,7 +290,9 @@ abstract public class RasterMapLayer extends MapLayer {
                 }
             });
         }
-        if (perfectDraw) parentMap.discardPreviousErrors(this);
+        if (perfectDraw) {
+            parentMap.discardPreviousErrors(this);
+        }
         this.lastNeededTiles.removeAll(neededTiles);
         this.lastNeededTiles.forEach(RasterTile::cancelTextureLoading);
         this.lastNeededTiles = neededTiles;

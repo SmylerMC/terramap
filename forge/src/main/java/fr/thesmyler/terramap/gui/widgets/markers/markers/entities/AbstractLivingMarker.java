@@ -76,7 +76,9 @@ public abstract class AbstractLivingMarker extends AbstractMovingMarker {
             this.isOutOfBounds = true;
         }
         super.onUpdate(mouseX, mouseY, parent);
-        if (this.entity.isDead) parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
+        if (this.entity.isDead) {
+            parent.scheduleBeforeNextUpdate(() -> map.removeMarker(this));
+        }
     }
 
     @Override

@@ -31,7 +31,9 @@ public class InputProcessor {
         long ctime = System.currentTimeMillis();
 
         if (Mouse.getEventButtonState()) {
-            if (this.mc.gameSettings.touchscreen && this.touchContactsCount++ > 0) return;
+            if (this.mc.gameSettings.touchscreen && this.touchContactsCount++ > 0) {
+                return;
+            }
             this.mouseButtonsPressed[mouseButton] = true;
             //TODO read double click delay from config (or even better, system config)
             if (ctime - this.lastClickTime[mouseButton] <= 500 && this.lastClickX[mouseButton] == mouseX && this.lastClickY[mouseButton] == mouseY) {
@@ -44,7 +46,9 @@ public class InputProcessor {
             this.lastClickX[mouseButton] = mouseX;
             this.lastClickY[mouseButton] = mouseY;
         } else if (mouseButton >= 0) {
-            if (this.mc.gameSettings.touchscreen && --this.touchContactsCount > 0) return;
+            if (this.mc.gameSettings.touchscreen && --this.touchContactsCount > 0) {
+                return;
+            }
             this.mouseButtonsPressed[mouseButton] = false;
             this.lastClickedButton = -1;
             this.container.onMouseReleased(mouseX, mouseY, mouseButton, null);
@@ -59,7 +63,9 @@ public class InputProcessor {
         }
 
         int scroll = Mouse.getDWheel();
-        if (scroll != 0) this.container.onMouseWheeled(mouseX, mouseY, scroll, null);
+        if (scroll != 0) {
+            this.container.onMouseWheeled(mouseX, mouseY, scroll, null);
+        }
     }
 
 }

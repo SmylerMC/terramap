@@ -98,13 +98,21 @@ public abstract class KeyBindings {
             }
         }
 
-        if (ZOOM_IN.isPressed()) HudScreenHandler.zoomInMinimap();
+        if (ZOOM_IN.isPressed()) {
+            HudScreenHandler.zoomInMinimap();
+        }
 
-        if (ZOOM_OUT.isPressed()) HudScreenHandler.zoomOutMinimap();
+        if (ZOOM_OUT.isPressed()) {
+            HudScreenHandler.zoomOutMinimap();
+        }
 
-        if (TOGGLE_MINIMAP.isPressed()) HudScreenHandler.toggleWidgets();
+        if (TOGGLE_MINIMAP.isPressed()) {
+            HudScreenHandler.toggleWidgets();
+        }
 
-        if (OPEN_HUD_CONFIG.isPressed()) getGameClient().displayScreen(new HudConfigScreen());
+        if (OPEN_HUD_CONFIG.isPressed()) {
+            getGameClient().displayScreen(new HudConfigScreen());
+        }
     }
 
 }

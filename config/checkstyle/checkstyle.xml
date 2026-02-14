@@ -29,7 +29,19 @@
       <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
     </module>
     <module name="WhitespaceAround"/>
+
+
     <module name="EmptyBlock"/>
+    <module name="EmptyCatchBlock">
+      <property name="exceptionVariableName" value="expected|ignore"/>
+    </module>
+    <module name="AvoidNestedBlocks">
+      <property name="allowInSwitchCase" value="true"/>
+    </module>
+    <module name="LeftCurly"/>
+    <module name="NeedBraces"/>
+    <module name="RightCurly"/>
+
   </module>
 
 </module>

@@ -99,7 +99,9 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
                     this.devBuild = false;
                 }
                 String[] target = parts[0].split("\\.");
-                if (target.length != 3) throw new InvalidVersionString("Invalid target version " + parts[0]);
+                if (target.length != 3) {
+                    throw new InvalidVersionString("Invalid target version " + parts[0]);
+                }
                 devRun = false;
                 try {
                     this.majorTarget = Integer.parseInt(target[0]);
@@ -118,7 +120,9 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
                 }
                 if (parts.length > 1) {
                     for (ReleaseType type: ReleaseType.values()) {
-                        if (type.equals(ReleaseType.RELEASE)) continue;
+                        if (type.equals(ReleaseType.RELEASE)) {
+                            continue;
+                        }
                         if (parts[1].startsWith(type.name)) {
                             this.releaseType = type;
                             parts[1] = parts[1].substring(type.name.length());
@@ -211,8 +215,12 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
 
     @Override
     public boolean equals(Object other) {
-        if (other == null) return false;
-        if (!(other instanceof TerramapVersion)) return false;
+        if (other == null) {
+            return false;
+        }
+        if (!(other instanceof TerramapVersion)) {
+            return false;
+        }
         return this.compareTo((TerramapVersion) other) == 0;
     }
 
@@ -233,19 +241,29 @@ public class TerramapVersion implements Comparable<TerramapVersion> {
         }
 
         int majorComp = this.majorTarget - other.majorTarget;
-        if (majorComp != 0) return majorComp;
+        if (majorComp != 0) {
+            return majorComp;
+        }
 
         int minorComp = this.minorTarget - other.minorTarget;
-        if (minorComp != 0) return minorComp;
+        if (minorComp != 0) {
+            return minorComp;
+        }
 
         int buildComp = this.buildTarget - other.buildTarget;
-        if (buildComp != 0) return buildComp;
+        if (buildComp != 0) {
+            return buildComp;
+        }
 
         int typeComp = this.releaseType.priority - other.releaseType.priority;
-        if (typeComp != 0) return typeComp;
+        if (typeComp != 0) {
+            return typeComp;
+        }
 
         int rComp = this.build - other.build;
-        if (rComp != 0) return rComp;
+        if (rComp != 0) {
+            return rComp;
+        }
 
         return this.revision - other.revision;
 

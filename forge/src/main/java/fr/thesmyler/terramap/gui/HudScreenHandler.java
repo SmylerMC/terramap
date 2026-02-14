@@ -40,7 +40,9 @@ public abstract class HudScreenHandler {
             if (map == null) {
                 map = new MinimapWidget(10);
             }
-            if (!(getGameClient().getTopPopup() instanceof LayerRenderingOffsetPopup)) updateMinimap();
+            if (!(getGameClient().getTopPopup() instanceof LayerRenderingOffsetPopup)) {
+                updateMinimap();
+            }
             screen.addWidget(map);
             offsetWarning.setTooltip(getGameClient().translator().format("terramap.hud.minimap.offset_warning"));
             screen.addWidget(offsetWarning);
@@ -99,7 +101,9 @@ public abstract class HudScreenHandler {
     }
 
     public static void zoomInMinimap() {
-        if (map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
+        if (map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
+            return;
+        }
         map.getController().setZoomStaticLocation(map.getController().getCenterLocation());
         map.getController().zoom(1, true);
         TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getController().getTargetZoom();
@@ -107,7 +111,9 @@ public abstract class HudScreenHandler {
     }
 
     public static void zoomOutMinimap() {
-        if (map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) return;
+        if (map == null || !TerramapClientContext.getContext().allowsMap(MapContext.MINIMAP)) {
+            return;
+        }
         map.getController().setZoomStaticLocation(map.getController().getCenterLocation());
         map.getController().zoom(-1, true);
         TerramapConfig.CLIENT.minimap.zoomLevel = (float) map.getController().getTargetZoom();
