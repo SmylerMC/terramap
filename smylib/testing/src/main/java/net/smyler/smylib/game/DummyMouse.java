@@ -58,23 +58,23 @@ public class DummyMouse implements Mouse {
 
     @Override
     public boolean isButtonPressed(int button) throws IllegalArgumentException {
-        checkButtonIdArgument(button);
+        this.checkButtonIdArgument(button);
         return this.buttons.get()[button];
     }
 
     public void setButtonPressed(int button, boolean yesNo) {
-        checkButtonIdArgument(button);
+        this.checkButtonIdArgument(button);
         this.buttons.get()[button] = yesNo;
     }
 
     @Override
     public String getButtonName(int button) throws IllegalArgumentException {
-        checkButtonIdArgument(button);
+        this.checkButtonIdArgument(button);
         return this.buttonNames.get()[button];
     }
 
     public void setButtonName(int button, String name) {
-        checkButtonIdArgument(button);
+        this.checkButtonIdArgument(button);
         this.buttonNames.get()[button] = name;
     }
 
@@ -90,7 +90,7 @@ public class DummyMouse implements Mouse {
         throw new IllegalArgumentException("Button " + name + " does not exist");
     }
 
-    private static void checkButtonIdArgument(int buttonId) {
+    private void checkButtonIdArgument(int buttonId) {
         checkArgument(buttonId >= 0 && buttonId < this.getButtonCount(), "Invalid button id: " + buttonId);
     }
 
