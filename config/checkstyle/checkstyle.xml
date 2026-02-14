@@ -67,6 +67,8 @@
 
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
+    <module name="OneTopLevelClass"/>
+    <module name="InterfaceIsType"/>
 
   </module>
 
