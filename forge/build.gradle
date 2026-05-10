@@ -64,13 +64,13 @@ minecraft {
 }
 
 repositories {
-	maven {
-   		name = "JitPack"
-        url = "https://jitpack.io/"
-    }
     maven { //used for leveldb
         name = "DaPorkchop_"
         url = "https://maven.daporkchop.net/"
+    }
+	maven {
+   		name = "JitPack"
+        url = "https://jitpack.io/"
     }
     maven { //used for leveldb
         name = "OpenCollab Snapshots"
@@ -84,17 +84,17 @@ dependencies {
     implementation project(":smylib:core")
     implementation project(":smylib:forge")
 
-    minecraft(group: "net.minecraftforge", name: "forge", version: project.minecraft_version + '-' + project.forge_version)
+    minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
 
-    implementation group: "com.twelvemonkeys.imageio", name: "imageio-webp", version: project.twelvemonkeys_version
+    implementation "com.twelvemonkeys.imageio:imageio-webp:${project.twelvemonkeys_version}"
 
-    implementation fg.deobf(group: "com.github.OpenCubicChunks.CubicChunks", name: "cubicchunks", version: project.cc_version) {
+    implementation fg.deobf("io.github.opencubicchunks:cubicchunks:${project.cc_version}") {
         transitive = false
     }
-    implementation fg.deobf(group: "com.github.OpenCubicChunks", name: "CubicWorldGen", version: project.cwg_version) {
+    implementation("io.github.opencubicchunks:cubicworldgen:${project.cwg_version}") {
         transitive = false
     }
-    implementation fg.deobf(group: "com.github.BuildTheEarth", name: "terraplusplus", version: project.terrapp_version) {
+    implementation fg.deobf("com.github.BuildTheEarth:terraplusplus:${project.terrapp_version}") {
         transitive = true
     }
 
@@ -103,7 +103,7 @@ dependencies {
         force = true
     }
 
-    runtimeOnly group: "org.apache.commons", name: "commons-imaging", version: "1.0-alpha2"
+    runtimeOnly "org.apache.commons:commons-imaging:1.0-alpha2"
 
     testImplementation project(":smylib:testing")
 
