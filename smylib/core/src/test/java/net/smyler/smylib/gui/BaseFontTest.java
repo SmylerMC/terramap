@@ -2,6 +2,7 @@ package net.smyler.smylib.gui;
 
 import net.smyler.smylib.text.ImmutableText;
 import net.smyler.smylib.text.Text;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -12,7 +13,8 @@ import static net.smyler.smylib.gui.DummyFont.CHAR_WIDTH;
 import static net.smyler.smylib.text.Formatting.*;
 import static net.smyler.smylib.text.ImmutableText.EMPTY;
 import static net.smyler.smylib.text.ImmutableText.ofPlainText;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Timeout.ThreadMode.SEPARATE_THREAD;
 
 @Timeout(value = 1, unit = SECONDS, threadMode = SEPARATE_THREAD)

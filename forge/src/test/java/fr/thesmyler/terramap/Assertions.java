@@ -1,7 +1,8 @@
 package fr.thesmyler.terramap;
 
-import net.smyler.terramap.geo.point.GeoPoint;
 import net.smyler.smylib.math.Vec2d;
+
+import net.smyler.terramap.geo.point.GeoPoint;
 
 /**
  * Useful assertions for Terramap specific objects.
@@ -32,6 +33,10 @@ public final class Assertions {
     public static void assertCloseEnough(GeoPoint expected, GeoPoint actual, double distance) {
         org.junit.jupiter.api.Assertions.assertEquals(0d, expected.distanceTo(actual), distance,
                 "GeoPoints are different. Expected: " + expected + " Actual: " + actual);
+    }
+
+    private Assertions() {
+        throw new UnsupportedOperationException("Utility class");
     }
 
 }

@@ -1,16 +1,20 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
-import com.google.gson.JsonPrimitive;
 import net.smyler.smylib.game.TestGameClient;
+import net.smyler.smylib.gui.screen.Screen;
+import net.smyler.smylib.math.Vec2dImmutable;
+
+import net.smyler.terramap.geo.point.GeoPointImmutable;
+import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
+
 import fr.thesmyler.terramap.TerramapTest;
 import fr.thesmyler.terramap.gui.widgets.map.layer.OnlineRasterMapLayer;
 import fr.thesmyler.terramap.gui.widgets.map.layer.RasterMapLayer;
 import fr.thesmyler.terramap.maps.SavedLayerState;
 import fr.thesmyler.terramap.maps.SavedMapState;
-import net.smyler.smylib.gui.screen.Screen;
-import net.smyler.smylib.math.Vec2dImmutable;
-import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
-import net.smyler.terramap.geo.point.GeoPointImmutable;
+
+import com.google.gson.JsonPrimitive;
+
 import org.junit.jupiter.api.Test;
 
 import static fr.thesmyler.terramap.Assertions.assertCloseEnough;

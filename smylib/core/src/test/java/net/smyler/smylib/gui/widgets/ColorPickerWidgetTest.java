@@ -1,12 +1,13 @@
 package net.smyler.smylib.gui.widgets;
 
-import net.smyler.smylib.game.TestGameClient;
 import net.smyler.smylib.SmyLibTest;
 import net.smyler.smylib.game.Key;
+import net.smyler.smylib.game.TestGameClient;
 import net.smyler.smylib.gui.screen.Screen;
-import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.junit.jupiter.api.Test;
 
 import static net.smyler.smylib.Color.BLACK;
 import static net.smyler.smylib.Color.RED;
@@ -57,7 +58,7 @@ class ColorPickerWidgetTest extends SmyLibTest {
         client.moveMouse(10f, 10f, 500);
         client.click(0);
         for (int i = 0; i < 10; i++) {
-            client.pressKey((char)Key.KEY_RIGHT.code, Key.KEY_RIGHT);
+            client.pressKey((char) Key.KEY_RIGHT.code, Key.KEY_RIGHT);
             client.doTick();
         }
 

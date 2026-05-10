@@ -1,11 +1,12 @@
 package net.smyler.smylib.resources;
 
-import com.google.gson.*;
-import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import com.google.gson.*;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,7 +65,7 @@ class GuiMetadataSerializerTest {
 
     JsonElement getTestJson(String name) throws IOException {
         Class<GuiMetadata> clazz = GuiMetadata.class;
-        try(InputStream in = clazz.getResourceAsStream(TEST_RESOURCE)) {
+        try (InputStream in = clazz.getResourceAsStream(TEST_RESOURCE)) {
             assertNotNull(in);
             JsonElement element = new JsonParser().parse(new InputStreamReader(in));
             assertTrue(element.isJsonObject());

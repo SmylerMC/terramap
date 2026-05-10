@@ -4,9 +4,10 @@ package net.smyler.smylib.gui.widgets.buttons;
 import net.smyler.smylib.SmyLibTest;
 import net.smyler.smylib.game.TestGameClient;
 import net.smyler.smylib.gui.screen.Screen;
-import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

@@ -1,11 +1,13 @@
 package fr.thesmyler.terramap;
 
 import fr.thesmyler.terramap.TerramapVersion.InvalidVersionString;
-import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TerramapVersionTest {
 
@@ -21,9 +23,9 @@ public class TerramapVersionTest {
                 "1.0.0-beta7.3-dev",
                 "1.0.0-beta7.3",
                 "1.0.0-dev",
-                "1.0.0"
+                "1.0.0",
         };
-        for(String versionString: validVersions) {
+        for (String versionString: validVersions) {
             TerramapVersion version = new TerramapVersion(versionString);
             String otherVersionString = version.toString();
             assertEquals(otherVersionString, versionString);
@@ -31,7 +33,7 @@ public class TerramapVersionTest {
     }
 
     @Test
-    public void testInvalidVersionString()  {
+    public void testInvalidVersionString() {
         String[] invalidVersions = {
                 "_1.12.2",
                 "1",
@@ -42,7 +44,7 @@ public class TerramapVersionTest {
                 "1.0.0--dev",
                 "1.0.0__beta7.3",
                 "1.0.",
-                "1..0"
+                "1..0",
         };
         Arrays.stream(invalidVersions).forEach(s -> assertThrows(InvalidVersionString.class,
                 () -> new TerramapVersion(s)
@@ -71,10 +73,10 @@ public class TerramapVersionTest {
                 "2.0.0",
                 "${version}",
         };
-        for(int i=1; i<versions.length; i++) {
+        for (int i = 1; i < versions.length; i++) {
             TerramapVersion v1 = new TerramapVersion(versions[i]);
-            for(int j=0; j<versions.length; j++) {
-                TerramapVersion v2 = j==0 ? null: new TerramapVersion(versions[j]);
+            for (int j = 0; j < versions.length; j++) {
+                TerramapVersion v2 = (j == 0) ? null : new TerramapVersion(versions[j]);
                 assertEquals(v1.isOlder(v2), i < j, v1 + " isOlder " + v2 + " failed");
                 assertEquals(v1.isOlderOrSame(v2), i <= j, v1 + " isOlderOrSame " + v2 + " failed");
                 assertEquals(v1.equals(v2), (i == j), v1 + " equals " + v2 + " failed");

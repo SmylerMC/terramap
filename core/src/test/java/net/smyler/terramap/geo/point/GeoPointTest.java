@@ -1,12 +1,13 @@
 package net.smyler.terramap.geo.point;
 
 import net.smyler.smylib.math.Vec2dImmutable;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Locale;
 import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -99,16 +100,16 @@ public class GeoPointTest {
         double latitude = coordinates[1];
 
         assertThrows(IllegalArgumentException.class,
-                () ->  new GeoPointMutable(longitude, latitude)
+                () -> new GeoPointMutable(longitude, latitude)
         );
         assertThrows(IllegalArgumentException.class,
-                () ->  new GeoPointMutable(coordinates)
+                () -> new GeoPointMutable(coordinates)
         );
         assertThrows(IllegalArgumentException.class,
-                () ->  new GeoPointMutable(new double[] {0d, longitude, latitude})
+                () -> new GeoPointMutable(new double[] {0d, longitude, latitude})
         );
         assertThrows(IllegalArgumentException.class,
-                () ->  new GeoPointMutable(new double[] {longitude})
+                () -> new GeoPointMutable(new double[] {longitude})
         );
     }
 
@@ -145,16 +146,16 @@ public class GeoPointTest {
         final GeoPointMutable point = new GeoPointMutable();
 
         assertThrows(IllegalArgumentException.class,
-                () ->  point.set(longitude, latitude)
+                () -> point.set(longitude, latitude)
         );
         assertThrows(IllegalArgumentException.class,
-                () ->  point.set(coordinates)
+                () -> point.set(coordinates)
         );
         assertThrows(IllegalArgumentException.class,
-                () ->  point.set(new double[] {0d, longitude, latitude})
+                () -> point.set(new double[] {0d, longitude, latitude})
         );
         assertThrows(IllegalArgumentException.class,
-                () ->  point.set(new double[] {longitude})
+                () -> point.set(new double[] {longitude})
         );
     }
 
@@ -378,59 +379,59 @@ public class GeoPointTest {
         return Stream.of(
                 new double[][] {
                         new double[]{0d, 0d},
-                        new double[]{0d, 0d}
+                        new double[]{0d, 0d},
                 },
                 new double[][]{
                         new double[]{-0d, 0d},
-                        new double[]{0d, 0d}
+                        new double[]{0d, 0d},
                 },
                 new double[][]{
                         new double[]{0d, -0d},
-                        new double[]{0d, 0d}
+                        new double[]{0d, 0d},
                 },
                 new double[][]{
                         new double[]{-0d, -0d},
-                        new double[]{0d, 0d}
+                        new double[]{0d, 0d},
                 },
                 new double[][]{
                         new double[]{-180d, 0d},
-                        new double[]{-180d, 0d}
+                        new double[]{-180d, 0d},
                 },
                 new double[][]{
                         new double[]{180d, 0d},
-                        new double[]{180d, 0d}
+                        new double[]{180d, 0d},
                 },
                 new double[][]{
                         new double[]{270d, 0d},
-                        new double[]{-90d, 0d}
+                        new double[]{-90d, 0d},
                 },
                 new double[][]{
                         new double[]{-270d, 0d},
-                        new double[]{90d, 0d}
+                        new double[]{90d, 0d},
                 },
                 new double[][]{
                         new double[]{360d, 0d},
-                        new double[]{0d, 0d}
+                        new double[]{0d, 0d},
                 },
                 new double[][]{
                         new double[]{-360d, 0d},
-                        new double[]{0d, 0d}
+                        new double[]{0d, 0d},
                 },
                 new double[][]{
                         new double[]{-540d, 0d},
-                        new double[]{-180d, 0d}
+                        new double[]{-180d, 0d},
                 },
                 new double[][]{
                         new double[]{810d, 0d},
-                        new double[]{90d, 0d}
+                        new double[]{90d, 0d},
                 },
                 new double[][]{
                         new double[]{-810d, 0d},
-                        new double[]{-90, 0d}
+                        new double[]{-90, 0d},
                 },
                 new double[][]{
                         new double[]{45d, 45d},
-                        new double[]{45d, 45d}
+                        new double[]{45d, 45d},
                 }
         );
     }
@@ -439,43 +440,43 @@ public class GeoPointTest {
         return Stream.of(
                 new double[][]{
                         new double[]{0d, 0d},
-                        new double[]{0d, 1d}
+                        new double[]{0d, 1d},
                 },
                 new double[][]{
                         new double[]{0d, 45d},
-                        new double[]{0d, -45d}
+                        new double[]{0d, -45d},
                 },
                 new double[][]{
                         new double[]{-45d, 45d},
-                        new double[]{45d, 45d}
+                        new double[]{45d, 45d},
                 },
                 new double[][]{
                         new double[]{180d, 0d},
-                        new double[]{-180d, 0d}
+                        new double[]{-180d, 0d},
                 },
                 new double[][]{
                         new double[]{0d, 90d},
-                        new double[]{-180d, 90d}
+                        new double[]{-180d, 90d},
                 },
                 new double[][]{
                         new double[]{-180d, 0d},
-                        new double[]{180d, 0d}
+                        new double[]{180d, 0d},
                 },
                 new double[][]{
                         new double[]{180d, 0d},
-                        new double[]{-180d, 0d}
+                        new double[]{-180d, 0d},
                 },
                 new double[][]{
                         new double[]{180d, 90d},
-                        new double[]{-180d, 90d}
+                        new double[]{-180d, 90d},
                 },
                 new double[][]{
                         new double[]{180d, -90d},
-                        new double[]{-180d, -90d}
+                        new double[]{-180d, -90d},
                 },
                 new double[][]{
                         new double[]{180d, -45d},
-                        new double[]{-180d, -45d}
+                        new double[]{-180d, -45d},
                 }
         );
     }
@@ -486,23 +487,23 @@ public class GeoPointTest {
                 Stream.of(
                         new double[][]{
                                 new double[]{0d, 90d},
-                                new double[]{-54.4d, 90d}
+                                new double[]{-54.4d, 90d},
                         },
                         new double[][]{
                                 new double[]{78.73d, -90d},
-                                new double[]{-65.44d, -90d}
+                                new double[]{-65.44d, -90d},
                         },
                         new double[][]{
                                 new double[]{180d, 47d},
-                                new double[]{-180, 47d}
+                                new double[]{-180, 47d},
                         },
                         new double[][]{
                                 new double[]{180d, 90d},
-                                new double[]{-180, 90d}
+                                new double[]{-180, 90d},
                         },
                         new double[][]{
                                 new double[]{180d, -90d},
-                                new double[]{-180, -90}
+                                new double[]{-180, -90},
                         }
                 )
         );
@@ -557,7 +558,7 @@ public class GeoPointTest {
 
     static Stream<DistanceFixture> distanceFixtureSource() {
         return Stream.of(
-                distance("Sidney", SIDNEY, "Seattle" ,SEATTLE, 12470810d, 1000d),
+                distance("Sidney", SIDNEY, "Seattle", SEATTLE, 12470810d, 1000d),
                 distance("Beijing", BEIJING, "Seattle", SEATTLE, 8689000d, 1000d),
                 distance("Paris", PARIS, "New York", NEW_YORK, 5837000d, 1000d),
                 distance("Paris", PARIS, "London", LONDON, 344240d, 100d),

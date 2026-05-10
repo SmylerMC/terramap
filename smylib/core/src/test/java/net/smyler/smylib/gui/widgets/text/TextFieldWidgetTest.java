@@ -1,6 +1,7 @@
 package net.smyler.smylib.gui.widgets.text;
 
 import net.smyler.smylib.SmyLibTest;
+
 import org.junit.jupiter.api.Test;
 
 public class TextFieldWidgetTest extends SmyLibTest {

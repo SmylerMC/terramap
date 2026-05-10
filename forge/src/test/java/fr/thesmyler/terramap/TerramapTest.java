@@ -1,17 +1,23 @@
 package fr.thesmyler.terramap;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
 import net.smyler.smylib.SmyLibTest;
 import net.smyler.smylib.json.TextJsonAdapter;
 import net.smyler.smylib.text.Text;
+
 import net.smyler.terramap.Terramap;
 import net.smyler.terramap.http.HttpClient;
 import net.smyler.terramap.tilesets.raster.RasterTileSetManager;
+
+import fr.thesmyler.terramap.util.json.EarthGeneratorSettingsAdapter;
+
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.jupiter.api.BeforeEach;
 
 public class TerramapTest extends SmyLibTest {

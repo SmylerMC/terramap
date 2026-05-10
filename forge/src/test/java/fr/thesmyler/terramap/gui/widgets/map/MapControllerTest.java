@@ -1,11 +1,14 @@
 package fr.thesmyler.terramap.gui.widgets.map;
 
 import net.smyler.smylib.game.TestGameClient;
-import fr.thesmyler.terramap.MapContext;
-import fr.thesmyler.terramap.TerramapTest;
 import net.smyler.smylib.gui.screen.Screen;
 import net.smyler.smylib.math.Vec2dMutable;
+
 import net.smyler.terramap.geo.point.GeoPointImmutable;
+
+import fr.thesmyler.terramap.MapContext;
+import fr.thesmyler.terramap.TerramapTest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +29,7 @@ public class MapControllerTest extends TerramapTest {
         client.setWindowDimensions(1280f, 720f);
         client.setTargetFps(60);
         this.screen = client.getCurrentScreen();
-        this.map = new MapWidget(-4f, -2f, 10,  141f, 83f, MapContext.MINIMAP, 2.0f);
+        this.map = new MapWidget(-4f, -2f, 10, 141f, 83f, MapContext.MINIMAP, 2.0f);
         this.screen.addWidget(this.map);
         this.controller = this.map.getController();
     }

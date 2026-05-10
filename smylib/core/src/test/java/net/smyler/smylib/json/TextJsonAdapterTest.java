@@ -1,14 +1,17 @@
 package net.smyler.smylib.json;
 
+import net.smyler.smylib.text.PlainTextContent;
+import net.smyler.smylib.text.Text;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import net.smyler.smylib.text.PlainTextContent;
-import net.smyler.smylib.text.Text;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TextJsonAdapterTest {
 

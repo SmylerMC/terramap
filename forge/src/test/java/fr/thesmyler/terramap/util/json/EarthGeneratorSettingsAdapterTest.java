@@ -1,12 +1,14 @@
 package fr.thesmyler.terramap.util.json;
 
+import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings;
+
 import org.junit.jupiter.api.Test;
 
 import static net.buildtheearth.terraplusplus.generator.EarthGeneratorSettings.BTE_DEFAULT_SETTINGS;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EarthGeneratorSettingsAdapterTest {
 

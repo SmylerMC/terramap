@@ -51,8 +51,8 @@ public class Vec2dTest {
     @Test
     public void canComputeVec2dNorms() {
         Vec2dMutable vec = new Vec2dMutable(-5d, 8.5d);
-        assertEquals(sqrt(5d*5d + 8.5d*8.5d), vec.norm());
-        assertEquals(5d*5d + 8.5d*8.5d, vec.normSquared());
+        assertEquals(sqrt(5d * 5d + 8.5d * 8.5d), vec.norm());
+        assertEquals(5d * 5d + 8.5d * 8.5d, vec.normSquared());
         assertEquals(5d + 8.5d, vec.taxicabNorm());
         assertEquals(8.5d, vec.maximumNorm());
     }
@@ -245,7 +245,7 @@ public class Vec2dTest {
     @Test
     public void canApply2dMatrixToVec2dMutable() {
         Mat2d matrix = new Mat2d(1d, 2d, 3d, 4d);
-        Vec2dMutable vec =  new Vec2dMutable(-2d, 3d).apply(matrix);
+        Vec2dMutable vec = new Vec2dMutable(-2d, 3d).apply(matrix);
         assertVec2d(4d, 6d, vec);
     }
 
