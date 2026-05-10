@@ -83,6 +83,7 @@ public final class TextStyle {
                     break;
                 case BOLD:
                     bold = TRUE;
+                    break;
                 case STRIKETHROUGH:
                     strikethrough = TRUE;
                     break;

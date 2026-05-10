@@ -52,11 +52,11 @@ public class InputLayer extends MapLayer {
         for (int i = 0; i < ROTATION_POLYGON_VERTEX_COUNT; i++) {
             ROTATION_POLYGON_VERTICES_OUTER[i] = new double[] {
                     outer.x,
-                    outer.y
+                    outer.y,
             };
             ROTATION_POLYGON_VERTICES_INNER[i] = new double[] {
                     inner.x,
-                    inner.y
+                    inner.y,
             };
             outer.apply(rot);
             inner.apply(rot);

@@ -120,7 +120,7 @@ public class Color {
                 this.alpha(),
                 this.red(),
                 this.green(),
-                this.blue()
+                this.blue(),
         };
     }
 
@@ -128,7 +128,7 @@ public class Color {
         return new int[] {
                 this.red(),
                 this.green(),
-                this.blue()
+                this.blue(),
         };
     }
 

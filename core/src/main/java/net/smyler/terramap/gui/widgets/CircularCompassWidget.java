@@ -179,7 +179,7 @@ public class CircularCompassWidget implements Widget {
         for (int i = 0; i < vertexCount; i++) {
             this.vertices[i] = new double[] {
                     this.vertexCalculationHelper.x(),
-                    this.vertexCalculationHelper.y()
+                    this.vertexCalculationHelper.y(),
             };
             this.vertexCalculationHelper.apply(rot);
         }

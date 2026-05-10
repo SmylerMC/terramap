@@ -70,6 +70,16 @@
     <module name="OneTopLevelClass"/>
     <module name="InterfaceIsType"/>
 
+    <module name="ArrayTrailingComma"/>
+    <module name="AvoidDoubleBraceInitialization"/>
+    <module name="ConstructorsDeclarationGrouping"/>
+    <module name="CovariantEquals"/>
+    <module name="EqualsHashCode"/>
+    <module name="DefaultComesLast"/>
+    <module name="EmptyStatement"/>
+    <module name="EqualsAvoidNull"/>
+    <module name="FallThrough"/>
+
   </module>
 
 </module>

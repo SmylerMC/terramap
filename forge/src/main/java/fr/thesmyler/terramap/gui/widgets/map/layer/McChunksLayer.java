@@ -72,13 +72,13 @@ public class McChunksLayer extends MapLayer {
             new Vec2dMutable(),
             new Vec2dMutable(),
             new Vec2dMutable(),
-            new Vec2dMutable()
+            new Vec2dMutable(),
     };
     private final Vec2dMutable[] projectedCorners = {
             new Vec2dMutable(),
             new Vec2dMutable(),
             new Vec2dMutable(),
-            new Vec2dMutable()
+            new Vec2dMutable(),
     };
     private final Vec2dMutable centerTile = new Vec2dMutable();
     private final Vec2dMutable deltaCalculator = new Vec2dMutable();

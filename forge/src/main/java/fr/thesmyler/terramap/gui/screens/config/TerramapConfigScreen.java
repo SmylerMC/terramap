@@ -101,12 +101,12 @@ public class TerramapConfigScreen extends Screen {
         this.pages = new FlexibleWidgetContainer[] {
                 mapConfigScreen,
                 tileSetsConfigScreen,
-                otherConfigScreen
+                otherConfigScreen,
         };
         this.titles = new String[] {
                 translator.format("terramap.configmenu.title.mapsettings"),
                 translator.format("terramap.configmenu.title.mapstyles"),
-                translator.format("terramap.configmenu.title.other")
+                translator.format("terramap.configmenu.title.other"),
         };
 
         // Map settings
